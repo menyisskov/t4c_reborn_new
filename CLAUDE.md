@@ -2,7 +2,14 @@
 
 Instructions for Claude Code (and any other AI agent) working in this repo.
 This file is about **process**; for engineering/architecture rules see
-`AGENT.md`, and for PR-review protocol see `AGENTS.md`.
+`AGENT.md`, and for PR review, test scope and model routing see
+[AGENTS.md](AGENTS.md). Read its section 6 before choosing a model or delegating work.
+It is the single source for the owner's cheap coding / mid-tier RCA / top-tier
+architecture, milestone-planning and design policy, including Claude model preferences.
+Resolve the requested model against the actual installed provider catalog; do not
+invent a model ID, silently upgrade tiers or copy a competing routing table here.
+For multiplayer roadmap/checklist locations and required updates, follow AGENTS.md
+section 7. Detailed milestone criteria live in `multiplayer/MILESTONES.md`.
 
 ## Changelog & task tracking — do this on every content/feature change
 

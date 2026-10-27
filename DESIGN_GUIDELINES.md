@@ -2,6 +2,9 @@
 
 ## Multiplayer delivery and single-player compatibility (T4C-0156)
 
+- Owner-facing milestones and exact acceptance scenarios live in multiplayer/MILESTONES.md; TASKS.md tracks implementation deliveries, ACCEPTANCE.md tracks release evidence, and HANDOFF.md tracks model/session continuation. A proposed two-player starter checkpoint does not silently replace the agreed full 20-player Beta or freeze an unapproved smaller content scope. Mark milestones complete only from integrated native gameplay and recovery evidence, not from merged task counts.
+- Model routing is defined once in AGENTS.md section 6 and referenced by AGENT.md and CLAUDE.md. Apply it to new implementation, investigation and planning phases; document unavailable provider models rather than silently changing tiers.
+
 - The first online story slice reuses Kilhiam's authored location, appearance, letter and greeting rules. It grants only when the existing flag is exactly zero, preserves nonzero legacy flags, and commits item/flag atomically. Conversation uses the shared strict range and raw terrain sight, so sanctuary does not prevent talking. Only the exact proven letter flag is allowed through restricted combat; unknown story scripts remain fail-closed. Repeated greetings may acknowledge unchanged revisions, but changed interactions must increase revision and native commands never auto-replay after ambiguous failure. Public NPC data contains no private story state. Rendered dialogue and full quest chains remain separate release gates.
 
 - Model continuity is a delivery requirement: keep multiplayer/HANDOFF.md current with architecture, durable invariants, reproducible setup/test commands, evidence versus unverified claims, active file ownership, and the next release tasks. Record lasting decisions and limitations in tracked documentation alongside the code; never put private profiles, credentials or raw crash reports in it.

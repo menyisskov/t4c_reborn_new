@@ -6,7 +6,7 @@ Last reviewed: 2026-10-27, Asia/Jerusalem. This file is the restart point for a 
 
 1. `../AGENT.md`, `../AGENTS.md`, `../CLAUDE.md` are authoritative engineering, review and delivery instructions.
 2. `../DESIGN_GUIDELINES.md`, section Multiplayer delivery, records lasting owner decisions and implementation contracts.
-3. `ACCEPTANCE.md` is the release evidence checklist. Unchecked Alpha/Beta gates remain unfinished.
+3. `MILESTONES.md` is the owner-facing stage/six-milestone roadmap with exact completion criteria. `ACCEPTANCE.md` is the release evidence checklist. Unchecked Alpha/Beta gates remain unfinished.
 4. `../TASKS.md` and `../CHANGELOG.md` record shipped work. This document records integration state and what to do next.
 
 The owner is PM/QA and has authorized autonomous implementation, focused tests, PRs, CI, self-review and merges. Use parallel sub-agents for independent tasks with explicit file ownership. Continue assigning the next crucial release item; optional polish does not outrank required gameplay. Never claim Beta complete from service unit tests alone.
@@ -38,7 +38,7 @@ Native melee is currently a restricted immediate-impact preview: Space attempts 
 - T4C-0192: configurable HTTPS, standard native trust/hostname validation, origin allowlist and local administration are implemented and tested; merged as 4a453cd5 after green CI. See TLS.md for foreground server/client commands and external deployment requirements.
 - T4C-0193: authored portal catalog/export/destination audit and MAP_TRANSFER_DESIGN.md merged as 01593c7f after green CI.
 - T4C-0194 / PR #118, merged as e7989d7d: protocol 4/schema 9 two-region runtime, native map switching and persistence read/cache fixes passed green CI. Full PostgreSQL verification passed; both two-HTTP-client and actual two-native-adapter direction-only 16/17 round trips/reconnect/isolation passed. Native read-race tests pass without replaying mutation. Rendered map switching remains pending.
-- T4C-0195: shared Kilhiam letter rules, NPC catalog/replication, authenticated transactional interaction and native network intent are implemented and being delivered. Full PostgreSQL reactor passed 18 domain plus 72 server tests; 17 focused desktop tests and the two-actual-native-adapter NPC probe passed. First letter/flag, repeat greeting, observer isolation, unrelated-state preservation and reconnect UUID retention are verified. Visible NPC rendering/dialogue controls and the full quest chain remain unfinished. See NPC_INTERACTION_DESIGN.md and tools/NATIVE_NPC_PROBE.md.
+- T4C-0195 / PR #119, merged as397d9ace after green CI: shared Kilhiam letter rules, NPC catalog/replication, authenticated transactional interaction and native network intent are delivered. Full PostgreSQL reactor passed 18 domain plus 72 server tests; 17 focused desktop tests and the two-actual-native-adapter NPC probe passed. First letter/flag, repeat greeting, observer isolation, unrelated-state preservation and reconnect UUID retention are verified. Visible NPC rendering/dialogue controls and the full quest chain remain unfinished. See NPC_INTERACTION_DESIGN.md and tools/NATIVE_NPC_PROBE.md.
 
 Root coordinates shared docs, selective commits and GUI QA. The map/server agent has drafted the next authenticated account-roster slice; the NPC agent has completed service integration; the load-test agent owns the fresh isolated two-hour baseline. Inspect actual live agent status rather than assuming these agents remain available after a model switch.
 
@@ -79,7 +79,7 @@ Re-export the compendium after changes as required by ship-pr, check `scripts/co
 
 ## Running isolated stability check
 
-The immutable protocol3/schema8 baseline is preserved at `target/soak-runtime-20261027_082605_f43e4b6d`. It recorded a persistence disconnect after about 30 minutes while health/ticks stayed normal, and was stopped gracefully after about 50 minutes. `soak-report-at-requested-stop.json`, supervisor logs and `DIAGNOSIS.md` retain the evidence. It is **not** a clean two-hour pass. Two separate deterministic regressions failed before and passed after the corpse-read queue separation and pending-aggro read fence; this does not establish the precise cause of that baseline disconnect. Final PostgreSQL verification after these fixes passed on 2026-10-27 (`$env:TEMP/t4c-0194-final-verify.log`). A fresh immutable protocol4/schema9 smoke passed: 180 seconds, 146 seconds at twenty connected adapters, 213 attacks/126 accepted, 63 HP changes, ten reconnects, zero adapter/invariant/health failures, observed 33.99 Hz. Its snapshot and fresh long-run restore live at `target/soak-runtime-v4-20261027_092643_4e10b372`. The long run started 09:34:58 Asia/Jerusalem on port18766, but recorded a player disconnect after about 101 seconds. Sanitized diagnostics report PSQLException SQLSTATE08001 (connection establishment); that player had made no attacks. It is not a clean pass. Inspect `long/soak-report.json`, supervisor logs and current investigation before restarting. Connection churn/socket limits and PG availability are being investigated; the cause is not yet proven. Server/adapter/supervisor initial PIDs were 43180/35372/42856; verify identities before actions. `long/stop.request` requests bounded graceful adapter logout and isolated server stop. Binary/source/map/supervisor hashes match the clean smoke. This run predates NPC integration and cannot establish final release acceptance. Never stop copied servers by broad Java-process commands. Main local 18765 realm runs the fixed protocol4/schema9 two-region build for adapter QA; its metadata is separate.
+The immutable protocol3/schema8 baseline is preserved at `target/soak-runtime-20261027_082605_f43e4b6d`. It recorded a persistence disconnect after about 30 minutes while health/ticks stayed normal, and was stopped gracefully after about 50 minutes. `soak-report-at-requested-stop.json`, supervisor logs and `DIAGNOSIS.md` retain the evidence. It is **not** a clean two-hour pass. Two separate deterministic regressions failed before and passed after the corpse-read queue separation and pending-aggro read fence; this does not establish the precise cause of that baseline disconnect. Final PostgreSQL verification after these fixes passed on 2026-10-27 (`$env:TEMP/t4c-0194-final-verify.log`). A fresh immutable protocol4/schema9 smoke passed: 180 seconds, 146 seconds at twenty connected adapters, 213 attacks/126 accepted, 63 HP changes, ten reconnects, zero adapter/invariant/health failures, observed 33.99 Hz. Its snapshot and fresh long-run restore live at `target/soak-runtime-v4-20261027_092643_4e10b372`. The long run started 09:34:58 Asia/Jerusalem on port18766, but recorded a player disconnect after about 101 seconds. It was subsequently stopped gracefully using stop.request; the supervisor records operator_stop/serverStopped=true/completed=false. Sanitized diagnostics report PSQLException SQLSTATE08001 (connection establishment); that player had made no attacks. It is not a clean pass. Inspect `long/soak-report.json`, supervisor logs and current investigation before restarting. High connection churn is measured, but ephemeral-port exhaustion is not established: Windows PG TIME_WAIT3345 versus 16384 dynamic ports, WSL TIME_WAIT1685, PG max_connections100 versus six observed backends, and no PG FATAL at the failure. The precise network cause is unproven. T4C-0197 is adding bounded JDBC reuse and sanitized cause diagnostics without automatic write retries. Server/adapter/supervisor initial PIDs were 43180/35372/42856; verify identities before actions. `long/stop.request` requests bounded graceful adapter logout and isolated server stop. Binary/source/map/supervisor hashes match the clean smoke. This run predates NPC integration and cannot establish final release acceptance. Never stop copied servers by broad Java-process commands. Main local 18765 realm runs the fixed protocol4/schema9 two-region build for adapter QA; its metadata is separate.
 
 ## Native QA and desktop state
 
@@ -95,4 +95,63 @@ Use ship-pr/steward. Self-review the actual scoped diff. Commit task/changelog/d
 
 ## Remaining release sequence
 
-Map-transfer delivery is merged and reliability regressions pass; diagnose the new SQL08001 load failure without mutating its captured runtime, then rerun after a verified fix. Finish the opening NPC service delivery, then complete its rendered interaction and native character selection/account lifecycle, quests/general ground loot, required spells/abilities/inventory controls, broader hosted world routes and encounters, full creation-to-progression playthrough, crash/reconnect/database/restore playthroughs, and attack/replay/duplication abuse checks. Repeat sustained two-hour 20-client mixed gameplay on the final integrated release with tick/DB/latency/resource measurements. HTTPS configuration exists, while external deployment and native remote QA remain open. Follow ACCEPTANCE.md rather than declaring Beta from this list alone. Deployment credentials or external hosting choices may need the owner; exhaust local work before asking.
+Map-transfer delivery is merged and reliability regressions pass; diagnose the new SQL08001 load failure without mutating its captured runtime, then rerun after a verified fix. The opening NPC service is merged; complete its rendered interaction and native character selection/account lifecycle, quests/general ground loot, required spells/abilities/inventory controls, broader hosted world routes and encounters, full creation-to-progression playthrough, crash/reconnect/database/restore playthroughs, and attack/replay/duplication abuse checks. Repeat sustained two-hour 20-client mixed gameplay on the final integrated release with tick/DB/latency/resource measurements. HTTPS configuration exists, while external deployment and native remote QA remain open. Follow ACCEPTANCE.md rather than declaring Beta from this list alone. Deployment credentials or external hosting choices may need the owner; exhaust local work before asking.
+
+## Current work and model routing checkpoint
+
+Read AGENTS.md section 6 before selecting or delegating a model. The owner explicitly requests
+cheap models for implementation, mid-tier models for bug investigation/RCA, and top-tier models
+for deep architecture, milestone planning and design. Exact preferred names/tool aliases are
+maintained there only; AGENT.md and CLAUDE.md reference that policy. Existing test/build processes
+need not be restarted solely to change tiers; route the next phase correctly. A fresh gpt-6-sol
+agent validated milestone/policy links and consistency without touching runtime code.
+
+Owner-facing requirements: start with MILESTONES.md. TASKS.md tracks child deliveries; ACCEPTANCE.md
+records release evidence. None of the six two-player milestones is complete, and the two-player
+checkpoint is not an approved replacement for the agreed twenty-player Beta. Scope choices and
+unverified checks are explicit. Do not infer a release date or completion percentage from task counts.
+
+Current base: main merge397d9ace (PR119, opening NPC service); all CI passed on541fd5b3. The current
+pending integration includes0196 roster service/native account adapter,0197 bounded database pool
+and teardown,0198 scalar runtime metrics and new fault/roster probes. They remain unmerged.
+
+Verified on the working tree at approximately10:05 Asia/Jerusalem: full PostgreSQL reactor
+verify/package passed18domain+81server=99tests, zero failures/errors/skips. Twenty focused desktop
+tests/package passed (`$env:TEMP/t4c-0196-native-account.log`). NativeRosterProbe passed owner-only
+roster discovery, active-lease availability, selected-character joins and unchanged progress.
+NativeNetworkFaultProbe passed150ms delayed reads and loss of a confirmed committed NPC reply:
+owner disconnected without automatic replay, observer continued, reconnect retained the exact
+single-letter UUID/progress. See ACCOUNT_LIFECYCLE.md, tools/NATIVE_ROSTER_PROBE.md and
+ tools/NATIVE_NETWORK_FAULTS.md. This is networking evidence, not rendered UI or real packet loss.
+
+Subsequent self-review found a shutdown timeout issue not covered by that99-test result: the pool
+could close before persistence workers exited while shutdown appeared successful. The server agent
+fixed bounded write/read/creature termination, aggregate region cleanup and explicit incomplete-flush
+failure reporting. Ten focused PostgreSQL shutdown tests passed at10:14 (`$env:TEMP/t4c-shutdown-tests.log`),
+including a blocked accepted write and concurrent closers. Full verification/package/restart after
+that correction is still required. Align stop-preview.ps1 from60to90seconds before delivery.
+
+Ownership: root owns milestone/task/changelog/design/handoff docs, selective commits/PRs and visual
+integration. The former roster/server agent most recently owned the shutdown correction plus
+SimulationLoop/ServerRuntimeMetrics/LOAD_METRICS groundwork. The native agent owns fault-probe files
+and completed the integrated verification/probes. The original pool agent failed due to model
+capacity; do not assume it remains active. Inspect live agents/processes and coordinate build windows.
+
+Main18765 currently runs the earlier pooled99-test QA package on t4c_online, before the last shutdown
+correction. Native GUI control remains paused after the owner's physical Escape stop. Both previous
+immutable long runs failed and were stopped; no passing two-hour result exists. Do not restart another
+long run before scoped self-review, final integrated verification/probes and a useful clean smoke.
+Metrics code is not yet wired into an operator endpoint or soak report; no benchmark is established.
+
+Visual feedback remains pending. The owner asked to show the preview again, which is not approval.
+The tracked review document is design/online-ui-preview.html, and the inline preview is
+`C:/Users/menyi/.codex/visualizations/2026/10/26/01a178e3-4d45-78f0-b0c7-d7aa3bdc5c2c/multiplayer-ui-preview.html`.
+Reload the full visualize skill before creating/updating a visualization. AGENT.md requires previews
+and incorporating feedback before live installation. Backend work continues; never treat silence
+as approval. Opening/showing a preview does not authorize resuming desktop game automation.
+
+Next integration order: finish pooled shutdown verification and align operator wait; run actual
+roster/fault probes against the matching final package; fresh isolated measured smoke; self-review,
+CI and merge the pending account/pool delivery. Then wire metrics/reporting, resume the failed
+sustained gate after a verified fix, and implement M1–M4 gameplay/UI/creation/loot/quest/ability work
+with the correct model tiers. Independent work can run in parallel with explicit file ownership.

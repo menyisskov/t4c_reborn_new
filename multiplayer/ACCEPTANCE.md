@@ -4,6 +4,11 @@ This is a working evidence checklist, not a declaration that Alpha or Beta is co
 Single-player must remain independently launchable and must retain its existing saves and rules.
 Do not turn an unchecked item into a release claim without a passing, recorded check.
 
+The owner-facing stage definitions, six intermediate two-player milestones and exact
+native completion scenarios are in [MILESTONES.md](MILESTONES.md). That checkpoint does
+not replace the agreed 20-player Beta gates below. [TASKS.md](../TASKS.md) tracks individual
+implementation deliveries; a completed task is not automatically a completed milestone.
+
 ## Verified foundation (updated 2026-10-27)
 
 - Kilhiam's authored first-letter service now replicates public NPC data and validates authenticated, ready, current-revision/current-epoch, same-region, strict-range/raw-sight interaction. Letter/flag commit atomically; repeat greetings and reconnect do not regrant. Full PG reactor passed 18 domain/72 server tests, 17 focused desktop checks passed, and two actual native adapters verified first/repeat dialogue, observer isolation, unchanged unrelated progress and the same letter UUID after reconnect. Visible NPC/dialogue controls and full quest completion remain unfinished; see NPC_INTERACTION_DESIGN.md.

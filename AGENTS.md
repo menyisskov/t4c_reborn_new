@@ -1,7 +1,9 @@
-# AGENTS.md — PR Review Protocol
+# AGENTS.md — Agent Policy and PR Review Protocol
 
 Sections 1–4 govern automated agents that review or babysit a pull request.
-Section 5 governs agents that author or modify tests. This file does **not**
+Section 5 governs agents that author or modify tests. Section 6 is the canonical
+model-routing policy for every agent working in this repository. Section 7 governs
+milestone, task and evidence tracking for all multiplayer work. This file does **not**
 relax or replace `AGENT.md` (the general engineering charter).
 
 The two failure modes this file exists to prevent: a reviewer that wanders
@@ -125,3 +127,73 @@ the first place.
 - When removing tests, identify the surviving coverage for each removed
   behavior. Fewer tests is useful only if the suite still catches meaningful
   regressions.
+
+## 6. Model routing for all agent work
+
+Owner policy, added 2026-10-27. Choose the model by the work being performed,
+including delegated work. These tier labels express the owner's routing preference;
+they are not claims about current provider pricing or model availability.
+
+| Work | Tier | Owner's preferred model names | Exact IDs where exposed by the current Codex agent tools |
+|---|---|---|---|
+| Coding and implementation, including implementing agreed fixes and tests | Cheap | `gpt-6-sol`, `haiku-5.5` | `gpt-6-sol`; resolve Haiku against the actual installed provider catalog |
+| Bug investigation and root-cause analysis (RCA) | Mid-tier | `gpt-terra-6.1`, `gpt-sol-6`, `sonnet 5.5` | `gpt-6.1-terra`, `gpt-6-sol`; resolve Sonnet against the actual installed provider catalog |
+| Deep architecture investigation, milestone planning and design | Top tier | `gpt-sol-6.1`, `opus 5-5` | `gpt-6.1-sol`; resolve Opus against the actual installed provider catalog |
+
+Application rules:
+
+- Read this section before selecting a model or delegating work. `AGENT.md` and
+  `CLAUDE.md` refer here; do not maintain conflicting copies of the routing table.
+- Split mixed requests into phases: a top-tier model may establish architecture or
+  milestones, a cheap model implements the agreed plan, and a mid-tier model investigates
+  a failing behavior. An architecture phase does not justify keeping every coding task
+  on the top-tier model.
+- The owner deliberately lists the Sol 6 model in both cheap coding and mid-tier RCA.
+  Preserve that overlap rather than silently assigning a different preference.
+- Use an available listed model from the requested tier. Preferred names are not always
+  executable IDs: inspect the host's advertised model catalog, use its exact ID, and
+  never invent a Claude/provider identifier or assume that a named model is installed.
+- If one preferred model is unavailable, use another available model listed for that
+  tier. If none is available, report that limitation rather than silently upgrading to
+  a more expensive tier. Continue independent work that has an available authorized model.
+- Where the current primary session cannot switch its own model, delegate the relevant
+  phase to the correctly routed model through available agent tools. Do not claim that
+  changing this document changed the running session or installed provider configuration.
+- In Codex collaboration, an explicit model override requires `fork_turns="none"`.
+  Give the agent a concise brief with repository path, required instruction files,
+  scope/file ownership, constraints and validation expectations. Do not inherit an
+  entire top-tier conversation just to perform a bounded coding task.
+- Apply routing when starting or handing off a phase. Do not interrupt an already running
+  test/build merely to change models; route the next implementation/investigation phase
+  correctly. All tiers still follow the same engineering, security, review and test rules.
+
+## 7. Multiplayer milestone checklists and task tracking
+
+Read these documents before choosing the next multiplayer task or reporting completion:
+
+| Document | Purpose |
+|---|---|
+| [multiplayer/MILESTONES.md](multiplayer/MILESTONES.md) | Canonical roadmap: Alpha, the intermediate two-player checkpoint, full 20-player Beta, essential GA and Post-GA; exact requirements, completion evidence and final two-player QA script. |
+| [TASKS.md](TASKS.md) | Individual implementation task IDs, status, commits and changelog links. A completed task does not mean its parent milestone is complete. |
+| [multiplayer/ACCEPTANCE.md](multiplayer/ACCEPTANCE.md) | Verified release evidence and unchecked Alpha/Beta/GA gates. |
+| [multiplayer/HANDOFF.md](multiplayer/HANDOFF.md) | Model/session continuation: architecture, current working state, commands, ownership, failures, limitations and next work. |
+
+The six two-player milestones are:
+
+1. **M1 — Enter and interact:** online accounts, native character creation/selection and authored NPC interaction.
+2. **M2 — Inventory and loot:** usable authoritative inventory/equipment, drops, pickup and ownership/quantity integrity.
+3. **M3 — Complete authored adventure:** a full quest/reward loop and all required hosted routes, with durable progress.
+4. **M4 — Supported combat and abilities:** required monster behavior and the declared starter roles' usable abilities.
+5. **M5 — Reliability and anti-cheat:** safe shutdown/recovery, abuse/duplication protection, restored gameplay and measured stability.
+6. **M6 — Package and native acceptance:** reproducible distribution/operations and the complete two-rendered-client playthrough with offline regression checks.
+
+Use MILESTONES.md for the detailed criteria; do not create a competing checklist here.
+Every relevant delivery must update its TASKS row, milestone status, ACCEPTANCE evidence
+and HANDOFF continuation notes together. Record exact build/content/schema versions,
+reproduction commands, observed results and limitations; keep credentials/personal state out.
+
+Never mark a milestone complete from merged PR counts, unit/service tests or native network
+adapters alone. Distinguish implemented, verified, merged, rendered-client and remote evidence.
+Preserve failed runs and unchecked gates. The two-player checkpoint does not replace the
+agreed 20-player Beta, and its exact content/class scope must be explicit before completion.
+Single-player launch, gameplay, existing saves and preferences remain protected throughout.
