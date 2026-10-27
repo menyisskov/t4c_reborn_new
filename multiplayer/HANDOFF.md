@@ -194,6 +194,54 @@ roster/service/adapter but not rendered account UI.0198metrics source remains un
 Self-review handled the slow-worker teardown and operator exit-status findings. CI/merge is next;
 claims on shared core files remain held until the corresponding explicit release in PEER_WORK.md.
 Claude's0201/0202 scope/loot lane remains distinct; the coordinator documentation is0203, not0201.
+
+## Latest delivered checkpoint — PR124
+
+T4C-0196/0197 merged as55ea45ff after all checks passed onb20e1dc1. Database reuse, safe teardown,
+operator exit-status enforcement and roster discovery are delivered. Operational proof and limits
+are in DATABASE_RUNTIME.md; normal single-player bootstrap was not changed and protected file
+hashes match baseline. A100-test local PG pass included pending separate0198 metrics prep;
+CI verified the actual delivered diff. The3-minute20-adapter smoke/recovery probes passed, but
+no2-hour/full Beta/rendered-selector claim exists. The recorded QA server runs the verified pooled
+package; desktop package refresh after merge is underway. See PEER_WORK.md for exact current windows.
+
+Codex explicitly releases the completed0196/0197 file holds in PEER_WORK.md. PreviewServer and
+0198 metrics/harness files remain Codex-owned. Claude has acknowledged the register in PR123 and
+owns its distinct0201/0202 scope/loot work; it can claim released core files for a new declared phase,
+while requesting handoff for still-owned PreviewServer. Root must not duplicate Claude's M2 work.
+The cheap-model0198 agent is completing a protected loopback metrics endpoint and bounded load
+report collection; no0198 completion claimed until actual endpoint/harness checks pass.
+
+Post-merge desktop package refresh completed successfully.0197 is fully delivered in PR124;
+0196 roster discovery delivered alongside it. The actual20-adapter/operator/native recovery checks
+remain bounded evidence, not full Beta completion. PEER_WORK.md now records Claude's explicit
+PR123 acknowledgement and exact pure-loot file scope.0198 code is prepared and awaiting focused
+validation; no root Maven is currently running.
+
+## T4C-0198 verification checkpoint
+
+Metrics implementation is complete for delivery: protected actual-loopback/private-token endpoint,
+nonblocking fixed scalar simulator/JVM snapshots, optional bounded operator sampling in the native
+load report, missing-control unavailable state and explicit whole-response timeout/cancellation.
+FullPGverify passed18domain+83server checks on55ea45ff plus0198; actual20s enabled/10s disabled
+20-adapter reporting checks passed. The stalled-body diagnostic regression failed beforefix
+(5.123s) and passedafter (2.021s). See LOAD_METRICS.md/NATIVE_ADAPTER_SOAK.md and ignoredreports.
+Claude's PR123/main89dd0f64 is integrated without overwriting its tasks/docs. The combined source
+passed 19 focused desktop tests, 21 domain plus 86 PostgreSQL server tests; the durable stalled-body
+probe returned in 2.026 seconds. A 15-second 20-native-adapter metrics run collected four private
+operator samples with zero metric/adapter/health failures and 13.975 seconds at twenty connected;
+the credential/path was absent from its ignored report. These are local adapter checks, not full
+Beta, two-hour or rendered-client evidence. Delivery still requires green CI and merge. Current QA metrics server
+PID52688 runs the matching persistent build; verify current metadata before actions.
+
 ## Loot groundwork checkpoint (T4C-0201/0202, Claude lane)
 
 Delivered: SCOPE_PROPOSAL.md (all PROPOSED, awaiting owner approval) and LOOT_DESIGN.md; loot tasks L1–L5 (shared MonsterLootTables, CarryCapacityRules, ItemKeys, GroundLootView/LootDropDraft, server OnlineLootDrafts and OnlinePickupRules). Verified by unit tests only (root targeted + multiplayer reactor; PostgreSQL tests skipped); no server wiring, no rendered or native evidence. Remaining: L6 schema, L7 server loot handling, L8 melee wiring, L9 pickup endpoint, L10 native client, L11 corpse weight (needs owner decision), L12 acceptance — L6/L7/L9/L11 wait for the Codex lane's pending OnlineStore/PersistentSessions/PreviewServer changes to merge. OnlinePickupRules.effectiveStrength throws on active buffs; L7 must map to a refusal.
+
+Peer task-ID correction: remotePR125 had already reserved0204 for Claude loot wiring. Keep that
+claim; independent Codex distribution packaging is0205 and nextID0206. Root missed the fresh
+remote claim when allocating locally; both agents paused and preserved all work. AGENTS8 now
+requires remote-main claim refresh plus the canonical shared ledger. Claude's requested
+OnlineStore/PersistentSessions/HostedWorlds handoff is granted explicitly in PEER_WORK; keep
+PreviewServer/SimulationLoop reserved until0198 merge. Packaging remains static-only pending
+0198's validation/delivery window release.

@@ -12,6 +12,61 @@ import java.util.concurrent.*;
 /** Standalone QA driver using the desktop client's real network adapter, without a renderer. */
 class NativeAdapterSoak {
   static final Gson JSON=new GsonBuilder().setPrettyPrinting().create();
+  static final int METRICS_RESPONSE_LIMIT=64*1024;
+  static final class BoundedBody implements HttpResponse.BodySubscriber<byte[]> {
+    private final HttpResponse.BodySubscriber<byte[]> delegate=HttpResponse.BodySubscribers.ofByteArray();
+    private Flow.Subscription subscription;
+    private long received;
+    @Override public CompletionStage<byte[]> getBody() { return delegate.getBody(); }
+    @Override public void onSubscribe(Flow.Subscription value) { subscription=value; delegate.onSubscribe(value); }
+    @Override public void onNext(List<java.nio.ByteBuffer> buffers) {
+      for(var buffer:buffers) received+=buffer.remaining();
+      if(received>METRICS_RESPONSE_LIMIT) {
+        subscription.cancel();delegate.onError(new java.io.IOException("Operator metrics response exceeded limit"));
+      } else delegate.onNext(buffers);
+    }
+    @Override public void onError(Throwable failure) { delegate.onError(failure); }
+    @Override public void onComplete() { delegate.onComplete(); }
+  }
+  static final class RuntimeSamples {
+    final String controlToken;
+    JsonObject initial,latest,max;
+    long samples,failures;
+    RuntimeSamples(String controlToken) { this.controlToken=controlToken; }
+    void sample(HttpClient http,URI endpoint) {
+      if(controlToken==null) return;
+      CompletableFuture<HttpResponse<byte[]>> pending=null;
+      try {
+        pending=http.sendAsync(HttpRequest.newBuilder(endpoint.resolve("/admin/metrics"))
+            .header("Authorization","Bearer "+controlToken).timeout(Duration.ofSeconds(2)).GET().build(),
+            ignored -> new BoundedBody());
+        var response=pending.get(2,TimeUnit.SECONDS);
+        if(response.statusCode()!=200) throw new IllegalStateException("operator metrics unavailable");
+        var value=JsonParser.parseString(new String(response.body(),java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();
+        if(initial==null) { initial=value.deepCopy(); max=value.deepCopy(); }
+        latest=value.deepCopy(); mergeMax(max,value); samples++;
+      } catch(Exception unavailable) {
+        if(pending!=null) pending.cancel(true);
+        if(unavailable instanceof InterruptedException) Thread.currentThread().interrupt();
+        failures++;
+      }
+    }
+    Map<String,Object> report() {
+      var result=new LinkedHashMap<String,Object>();
+      result.put("available",samples>0); result.put("samples",samples); result.put("failures",failures);
+      if(samples>0) { result.put("initial",initial); result.put("latest",latest); result.put("max",max); }
+      return result;
+    }
+  }
+  static void mergeMax(JsonObject max,JsonObject current) {
+    for(var entry:current.entrySet()) {
+      if(entry.getValue().isJsonObject()) mergeMax(max.getAsJsonObject(entry.getKey()),entry.getValue().getAsJsonObject());
+      else if(entry.getValue().isJsonPrimitive() && entry.getValue().getAsJsonPrimitive().isNumber()
+          && (!max.has(entry.getKey()) || max.get(entry.getKey()).isJsonNull()
+              || entry.getValue().getAsBigDecimal().compareTo(max.get(entry.getKey()).getAsBigDecimal())>0))
+        max.add(entry.getKey(),entry.getValue().deepCopy());
+    }
+  }
   static final int[][] DIRECTIONS={{1,0},{-1,0},{0,1},{0,-1}};
   static final class Player {
     final OnlineConnection.Credentials credentials;
@@ -33,6 +88,21 @@ class NativeAdapterSoak {
   public static void main(String[] args) throws Exception {
     if(args.length!=6) throw new IllegalArgumentException("Expected endpoint profiles-directory seconds collision-file report-file server-pid-or-0");
     URI endpoint=URI.create(args[0]); Path profiles=Path.of(args[1]),report=Path.of(args[4]);
+    String controlFile=System.getenv("T4C_SOAK_CONTROL_FILE");
+    String controlToken=null;
+    if(controlFile!=null && !controlFile.isBlank()) {
+      if(!"127.0.0.1".equals(endpoint.getHost()) && !"::1".equals(endpoint.getHost()))
+        throw new IllegalArgumentException("Operator metrics require a loopback endpoint");
+      try(var input=Files.newInputStream(Path.of(controlFile))) {
+        byte[] content=input.readNBytes(69);
+        if(content.length>68) throw new IllegalArgumentException("Invalid operator metrics credential");
+        controlToken=new String(content,java.nio.charset.StandardCharsets.US_ASCII).trim();
+      } catch(java.io.IOException|java.nio.file.InvalidPathException unreadable) {
+        throw new IllegalArgumentException("Operator metrics credential unreadable");
+      }
+      if(!controlToken.matches("[0-9a-f]{64}")) throw new IllegalArgumentException("Invalid operator metrics credential");
+    }
+    var runtimeSamples=new RuntimeSamples(controlToken);
     int duration=Integer.parseInt(args[2]); if(duration<10 || duration>86400) throw new IllegalArgumentException("Duration must be 10..86400 seconds");
     long serverPid=Long.parseLong(args[5]);
     String stopFileSetting=System.getenv("T4C_SOAK_STOP_FILE");
@@ -66,6 +136,7 @@ class NativeAdapterSoak {
       p.reconnectAt=start+120_000+i*6_000L; p.lastFresh=start;
     }
     try(var http=HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build()) {
+      runtimeSamples.sample(http,endpoint);
       while(ms()<end && (stopFile==null || !Files.exists(stopFile))) {
         long now=ms(); int connected=0;
         for(int i=0;i<players.size();i++) {
@@ -161,6 +232,7 @@ class NativeAdapterSoak {
         }
         connectedMillis[connected]+=now-lastSample; lastSample=now;
         if(now>=nextReport) {
+          runtimeSamples.sample(http,endpoint);
           try {
             long before=System.nanoTime();
             var response=http.send(HttpRequest.newBuilder(endpoint.resolve("/health")).timeout(Duration.ofSeconds(2)).GET().build(),HttpResponse.BodyHandlers.ofString());
@@ -171,7 +243,7 @@ class NativeAdapterSoak {
             lastTick=tick; lastTickTime=now;
           } catch(Exception unavailable) { healthFailures++; }
           write(report,players,startedAt,start,connectedMillis,maxObserved,firstTick,lastTick,firstTickTime,lastTickTime,
-              healthFailures,healthSamples,healthNanos,cpuStart,cpu(serverPid),databaseBefore,Map.of(),false);
+              healthFailures,healthSamples,healthNanos,cpuStart,cpu(serverPid),databaseBefore,Map.of(),runtimeSamples,false);
           nextReport=now+5000;
         }
         Thread.sleep(100);
@@ -180,7 +252,7 @@ class NativeAdapterSoak {
     } finally {
       for(var p:players) p.connection.close();
       write(report,players,startedAt,start,connectedMillis,maxObserved,firstTick,lastTick,firstTickTime,lastTickTime,
-          healthFailures,healthSamples,healthNanos,cpuStart,cpu(serverPid),databaseBefore,database(),completed);
+          healthFailures,healthSamples,healthNanos,cpuStart,cpu(serverPid),databaseBefore,database(),runtimeSamples,completed);
     }
     System.out.println("Native network-adapter soak finished; report: "+report.toAbsolutePath());
   }
@@ -223,7 +295,7 @@ class NativeAdapterSoak {
   }
   static void write(Path file,List<Player> players,Instant started,long start,long[] connected,int maxObserved,
       long first,long last,long firstTime,long lastTime,long failures,long samples,long nanos,long cpuStart,long cpuEnd,
-      Map<String,Object> dbBefore,Map<String,Object> dbAfter,boolean finished) throws Exception {
+      Map<String,Object> dbBefore,Map<String,Object> dbAfter,RuntimeSamples runtimeSamples,boolean finished) throws Exception {
     var report=new LinkedHashMap<String,Object>();
     report.put("kind","20 actual native OnlineConnection adapters; no rendered clients");
     report.put("protocolVersion",com.perso.T4C.online.model.OnlineProtocol.VERSION);
@@ -234,6 +306,7 @@ class NativeAdapterSoak {
     report.put("tickDeficitProxy",lastTime>firstTime?Math.max(0,(lastTime-firstTime)*34.0/1000-(last-first)):0);
     report.put("serverCpuNanos",cpuStart>=0 && cpuEnd>=cpuStart?cpuEnd-cpuStart:-1);
     report.put("databaseBefore",dbBefore); report.put("databaseAfter",dbAfter);
+    report.put("serverRuntime",runtimeSamples.report());
     report.put("latencyBucketsMillis",List.of("<=50","<=100","<=250","<=500","<=1000","<=2000","<=5000",">5000"));
     var results=new ArrayList<Map<String,Object>>();
     for(int i=0;i<players.size();i++) {

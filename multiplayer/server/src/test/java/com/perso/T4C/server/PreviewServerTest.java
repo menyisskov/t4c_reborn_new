@@ -25,6 +25,27 @@ class PreviewServerTest {
   }
   private JsonObject object(HttpResponse<String> response) { return JsonParser.parseString(response.body()).getAsJsonObject(); }
 
+  @Test void operatorMetricsRequirePrivateLocalControlAndReportBoundedUnits() throws Exception {
+    var map = new PreviewMap(new boolean[8][8],0,0,3,3);
+    String admin = "a".repeat(64);
+    try(var server = new PreviewServer(map,0,null,admin); var client = HttpClient.newHttpClient()) {
+      server.start(); String url = server.url();
+      assertEquals(401,client.send(request(url,"/admin/metrics",null,null),HttpResponse.BodyHandlers.ofString()).statusCode());
+      assertEquals(403,client.send(request(url,"/admin/metrics","b".repeat(64),null),HttpResponse.BodyHandlers.ofString()).statusCode());
+      var response=client.send(request(url,"/admin/metrics",admin,null),HttpResponse.BodyHandlers.ofString());
+      assertEquals(200,response.statusCode());
+      var metrics=object(response);
+      assertTrue(metrics.get("processUptimeMillis").getAsLong()>=0);
+      assertTrue(metrics.get("heapUsedBytes").getAsLong()>=0);
+      assertTrue(metrics.get("availableProcessors").getAsInt()>0);
+      var simulation=metrics.getAsJsonObject("simulation");
+      assertEquals(1_000_000_000L/PreviewWorld.TICK_RATE,simulation.get("stepNanos").getAsLong());
+      assertTrue(simulation.get("completedTicks").getAsLong()>=0);
+      assertFalse(response.body().contains(admin));
+      assertEquals(200,client.send(request(url,"/health",null,null),HttpResponse.BodyHandlers.ofString()).statusCode());
+    }
+  }
+
   @Test void twentyClientsReplicateAndReconnectOverRealHttpWithoutSharingCredentials() throws Exception {
     var map = new PreviewMap(new boolean[60][80], 0, 0, 30, 30);
     try (var server = new PreviewServer(map, 0); var client = HttpClient.newHttpClient()) {

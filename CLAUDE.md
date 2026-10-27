@@ -18,8 +18,7 @@ and the canonical [peer work register](multiplayer/PEER_WORK.md) before editing 
 Do not assume this session knows the other agent's task or sees its messages.
 
 - Declare/acknowledge your task, concrete files, branch/base and resource needs under the short
-  coordination lock; reread existing claims first. The current register reserves Codex's0196–0198
-  integration and records Claude's0201/0202 scope/loot lane claimed in PR121; exact file/resource claims still belong in the live register.
+  coordination lock; reread existing claims first. Resolve current assignments exclusively from that live register; task completion does not authorize taking over an unreleased file.
 - Do not change another agent's claimed files without an explicit recorded handoff. New scope
   requires updating the claim first; a different task name does not make shared-file edits safe.
 - In a shared checkout, obey the named Git integrator. Do not switch branches, stage, commit,

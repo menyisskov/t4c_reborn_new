@@ -46,6 +46,22 @@ For graceful operator cancellation, set `T4C_SOAK_STOP_FILE` to an initially abs
 path before launch, then create that file to stop. All adapters close through their normal logout
 path and the report remains `finished: false` when the requested duration did not complete.
 
+For local operator runtime metrics, set `T4C_SOAK_CONTROL_FILE` to the private
+shutdown-control token file before launching the wrapper. The harness accepts this
+only with a loopback endpoint and reads the 64-hex token privately. It makes a
+protected `GET /admin/metrics` request at startup and on each five-second report
+cycle. Neither the token nor its path is printed or written to JSON. The optional
+`serverRuntime` report section contains availability, sample/failure counts, and
+initial/latest/maximum scalar snapshots. Without the variable it explicitly says
+`available: false`; the ordinary harness still runs. Values include tick duration
+and scheduler debt in nanoseconds, process CPU time in nanoseconds, JVM uptime in
+milliseconds, and heap/non-heap usage in bytes. See [LOAD_METRICS.md](../LOAD_METRICS.md)
+for field definitions and consistency limits.
+Operator replies are capped at 64 KiB and the complete response has a two-second
+deadline; a stalled or oversized response increments the sample failure count.
+`NativeAdapterSoakDeadlineProbe` exercises a local HTTP peer that stalls after
+headers and a partial body, without touching the QA server.
+
 The driver routes movement through the real collision map, distributes targets across available
 creatures, rotates assignments every thirty seconds, attacks at bounded intervals, prioritizes
 its own corpse recovery, and reconnects players on staggered schedules after two minutes.
@@ -68,6 +84,9 @@ The report records:
   to the isolated server. Optional PostgreSQL database-wide size, connections, commits, rollbacks,
   and deadlocks at start/end; these include other workloads on that database. Without DB environment
   variables, those metrics are marked unavailable.
+- Optional protected server runtime snapshots give internal tick timing/debt and JVM
+  CPU/memory observations. They do not measure request bytes, network throughput,
+  database operation latency or pool wait; these remain Beta measurement gaps.
 
 `finished: true` means the requested timer ended and cleanup was requested, not that Beta passed.
 Require zero invariant/connection errors, useful accepted gameplay and HP changes, successful
