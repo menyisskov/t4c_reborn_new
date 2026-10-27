@@ -147,44 +147,37 @@ class HostedTransferTest {
   /** Exercise only network direction inputs; route uses the real server collision crop. */
   private static com.google.gson.JsonObject walkPortal(java.net.http.HttpClient client,String url,String token,long ownId,
       PreviewMap map,int goalX,int goalY,long epoch,int destinationWorld) throws Exception {
-    var initial=http(client,url,"/state",token,null);var own=actor(initial,ownId);
-    int start=(int)own.get("y").getAsDouble()*map.width+(int)own.get("x").getAsDouble(),goal=goalY*map.width+goalX;
-    var previous=new int[map.width*map.height];Arrays.fill(previous,-1);previous[start]=start;
-    var queue=new ArrayDeque<Integer>();queue.add(start);
-    while(!queue.isEmpty() && previous[goal]<0) {
-      int node=queue.remove(),x=node%map.width,y=node/map.width;
-      for(var delta:new int[][]{{1,0},{-1,0},{0,1},{0,-1}}) {
-        int nx=x+delta[0],ny=y+delta[1];if(!map.canStand(nx+.5,ny+.5)) continue;
-        int next=ny*map.width+nx;if(previous[next]>=0) continue;previous[next]=node;queue.add(next);
-      }
-    }
-    assertTrue(previous[goal]>=0,"Authored portal must be reachable");
-    var route=new ArrayList<Integer>();for(int node=goal;node!=start;node=previous[node]) route.add(node);Collections.reverse(route);
     long sequence=2,deadline=System.nanoTime()+java.util.concurrent.TimeUnit.SECONDS.toNanos(35);
-    var state=initial;
-    for(int waypoint:route) {
-      while(System.nanoTime()<deadline) {
-        state=http(client,url,"/state",token,null);
-        if(state.getAsJsonObject("region").get("world").getAsInt()==destinationWorld) return state;
-        own=actor(state,ownId);
-        double dx=waypoint%map.width+.5-own.get("x").getAsDouble(),dy=waypoint/map.width+.5-own.get("y").getAsDouble();
-        int moveX=Math.abs(dx)<.16 ? 0 : (dx>0 ? 1 : -1),moveY=Math.abs(dy)<.16 ? 0 : (dy>0 ? 1 : -1);
-        if(moveX==0 && moveY==0) break;
-        var response=client.send(request(url,"/input",token,epoch+" "+sequence+++" "+moveX+" "+moveY),java.net.http.HttpResponse.BodyHandlers.ofString());
-        if(response.statusCode()==409) assertEquals("region_epoch",com.google.gson.JsonParser.parseString(response.body()).getAsJsonObject().get("error").getAsString());
-        else assertEquals(200,response.statusCode(),"Movement rejected");
-        var stopped=client.send(request(url,"/input",token,epoch+" "+sequence+++" 0 0"),java.net.http.HttpResponse.BodyHandlers.ofString());
-        assertTrue(stopped.statusCode()==200 || stopped.statusCode()==409,"Stop rejected");
-        Thread.sleep(20);
-      }
-    }
+    int goal=goalY*map.width+goalX;
+    com.google.gson.JsonObject state=null;
     while(System.nanoTime()<deadline) {
       state=http(client,url,"/state",token,null);
       if(state.getAsJsonObject("region").get("world").getAsInt()==destinationWorld) return state;
-      Thread.sleep(20);
+      var own=actor(state,ownId);
+      int start=(int)own.get("y").getAsDouble()*map.width+(int)own.get("x").getAsDouble();
+      if(start==goal) { Thread.sleep(50);continue; }
+      var previous=new int[map.width*map.height];Arrays.fill(previous,-1);previous[start]=start;
+      var queue=new ArrayDeque<Integer>();queue.add(start);
+      while(!queue.isEmpty() && previous[goal]<0) {
+        int node=queue.remove(),x=node%map.width,y=node/map.width;
+        for(var delta:new int[][]{{1,0},{-1,0},{0,1},{0,-1}}) {
+          int nx=x+delta[0],ny=y+delta[1];if(!map.canStand(nx+.5,ny+.5)) continue;
+          int next=ny*map.width+nx;if(previous[next]>=0) continue;previous[next]=node;queue.add(next);
+        }
+      }
+      assertTrue(previous[goal]>=0,"Authored portal must be reachable");
+      int next=goal;while(previous[next]!=start) next=previous[next];
+      int moveX=Integer.compare(next%map.width,start%map.width),moveY=Integer.compare(next/map.width,start/map.width);
+      var response=client.send(request(url,"/input",token,epoch+" "+sequence+++" "+moveX+" "+moveY),java.net.http.HttpResponse.BodyHandlers.ofString());
+      if(response.statusCode()==409) assertEquals("region_epoch",com.google.gson.JsonParser.parseString(response.body()).getAsJsonObject().get("error").getAsString());
+      else assertEquals(200,response.statusCode(),"Movement rejected");
+      // Retain intent across a simulation tick. Immediate input/stop can both be drained
+      // before a single tick on fast CI, so wall-clock HTTP speed must not determine motion.
+      Thread.sleep(50);
     }
     fail("Direction-only authored portal traversal timed out at "+actor(state,ownId).get("x")+","+actor(state,ownId).get("y"));return state;
   }
+
   private static com.google.gson.JsonObject actor(com.google.gson.JsonObject state,long id) {
     for(var entry:state.getAsJsonArray("players")) if(entry.getAsJsonObject().get("id").getAsLong()==id) return entry.getAsJsonObject();
     throw new AssertionError("Own actor missing");
