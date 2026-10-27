@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Native sessions during hostile HTTP (T4C-0226)
+
+### Verified
+- On an isolated local server, two connected players kept seeing and moving with each other while slow and forged requests were open. The health check remained available, and both players left with their progress intact. This short native network check does not cover rendered play, remote attacks or the two-hour Beta stability run.
+
 ## 2026-10-27 — Classify authored online actors (T4C-0224)
 
 ### Added

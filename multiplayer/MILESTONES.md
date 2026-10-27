@@ -200,6 +200,12 @@ Required behavior:
   while eight slow public and eight forged-body requests were held, and separately while
   two persistent roster reads were SQL-blocked. A third roster request returned 503;
   this is bounded local resilience, not a full denial-of-service or remote abuse proof.
+  T4C-0226 separately exercised two actual native network adapters against the
+  merged admission code on immutable `f6175cc7` (protocol 5/schema 11): both
+  moved and saw each other while eight incomplete joins and eight forged-body
+  requests were open, and health stayed 200. This measured under 200 ms of
+  hostile-phase native progress, not a four-second soak, rendered play, remote
+  abuse or the two-hour mixed gate.
 - [ ] Restore a backup into a separate database and finish a native gameplay/reconnect check there;
   matching table hashes alone do not satisfy restored gameplay acceptance. T4C-0213 verified
   a live schema-10 exported-snapshot restore across all eleven online tables, including
