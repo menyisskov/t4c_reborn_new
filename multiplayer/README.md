@@ -4,6 +4,8 @@ For model/session continuation, start with [HANDOFF.md](HANDOFF.md).
 
 For optional saved native characters, follow [persistent-mode setup](PERSISTENCE.md#running-persistent-native-clients).
 
+Encrypted remote configuration is documented in [TLS.md](TLS.md); the local preview launcher continues to manage loopback HTTP.
+
 Release evidence and remaining gates are tracked in [ACCEPTANCE.md](ACCEPTANCE.md).
 The PostgreSQL groundwork and its current integration limits are in [PERSISTENCE.md](PERSISTENCE.md).
 

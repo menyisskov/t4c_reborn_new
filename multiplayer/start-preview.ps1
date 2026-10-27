@@ -1,5 +1,9 @@
 param([ValidateRange(1024,65535)][int]$Port = 18765, [switch]$Build, [switch]$Persistent)
 $ErrorActionPreference = 'Stop'
+if ($env:T4C_TLS_KEYSTORE -or $env:T4C_TLS_PASSWORD_FILE -or $env:T4C_PUBLIC_ORIGIN -or
+    ($env:T4C_BIND_ADDRESS -and $env:T4C_BIND_ADDRESS -ne '127.0.0.1')) {
+    throw 'start-preview.ps1 manages local HTTP only. For TLS, run the foreground server command in multiplayer/TLS.md.'
+}
 $previewRoot = Split-Path $PSScriptRoot -Parent
 $previewTarget = Join-Path $PSScriptRoot 'server/target'
 $previewJar = Join-Path $previewTarget 't4c-server.jar'

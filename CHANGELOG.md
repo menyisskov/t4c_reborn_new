@@ -6,6 +6,12 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Encrypted online transport (T4C-0192)
+
+### Added
+- Online clients can connect to an HTTPS realm with a trusted certificate. Remote plaintext connections are refused before account credentials are sent; local development keeps its existing connection.
+- Operators can configure a realm certificate and public address. Administrative shutdown remains limited to the local machine.
+
 ## 2026-10-27 — Realm backup verification (T4C-0191)
 
 ### Added

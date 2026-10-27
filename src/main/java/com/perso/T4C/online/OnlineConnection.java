@@ -65,16 +65,7 @@ public final class OnlineConnection implements AutoCloseable {
   }
 
   public OnlineConnection(URI endpoint, Credentials credentials) {
-    if (!"http".equals(endpoint.getScheme())
-        || !"127.0.0.1".equals(endpoint.getHost())
-        || endpoint.getPort() < 1
-        || endpoint.getPort() > 65535
-        || endpoint.getUserInfo() != null
-        || endpoint.getQuery() != null
-        || endpoint.getFragment() != null
-        || !(endpoint.getPath().isEmpty() || "/".equals(endpoint.getPath())))
-      throw new IllegalArgumentException("Local Alpha requires http://127.0.0.1:PORT");
-    this.endpoint = URI.create("http://127.0.0.1:" + endpoint.getPort());
+    this.endpoint = OnlineEndpoint.validate(endpoint);
     this.credentials = credentials;
     worker = new Thread(this::run, "online-client-network");
     // Keep the process alive for the bounded logout request after the render window closes.
@@ -152,7 +143,7 @@ public final class OnlineConnection implements AutoCloseable {
 
   private void run() {
     String token = null;
-    try (var client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build()) {
+    try (var client = OnlineEndpoint.client()) {
       try {
         MapInfo map = JSON.fromJson(send(client, "/map", null, null), MapInfo.class);
         if (map == null || map.protocolVersion() != OnlineProtocol.VERSION)
