@@ -6,6 +6,8 @@ Do not turn an unchecked item into a release claim without a passing, recorded c
 
 ## Verified foundation (updated 2026-10-27)
 
+- Online Windows startup now selects its own pinned/checksummed GLFW build with an owned-window lookup. Two rendered clients loaded separate corrected DLLs and survived repeated direct activation plus ordinary Alt-Tab; combat input and shared state remained responsive. Native build, checksum packaging test, desktop adapter/death-rule tests and runnable package pass. The earlier crash is corrected for this reproduction; sustained multiplayer soak remains outstanding. Desktop control was subsequently stopped with Escape, so further rendered QA awaits a resumed desktop session.
+
 Entries below record incremental checks; later integration evidence supersedes earlier unconnected-service limitations.
 
 - Online melee rejects authored stationary targets before mutating character/cooldown or creature life; the existing PostgreSQL melee integration also proves passive nonstationary targets still receive hits/rewards.
@@ -123,7 +125,7 @@ Entries below record incremental checks; later integration evidence supersedes e
 
 ## Next integration order
 
-Open reliability issue: during automated focus switching between two native clients on Windows,
+Historical reliability reproduction (corrected above): during automated focus switching between two native clients on Windows,
 one process crashed in GLFW's Win32 event polling (`glfw.dll+0x101ab`, LWJGL 3.3.3).
 The second client survived and restored its saved position after restart. The cause is not yet
 confirmed; native multi-client stability remains an unmet Beta gate. The local JVM crash report

@@ -1,0 +1,18 @@
+diff --git a/src/win32_window.c b/src/win32_window.c
+index e6a9496..69a3bd1 100644
+--- a/src/win32_window.c
++++ b/src/win32_window.c
+@@ -2136,7 +2136,12 @@ void _glfwPollEventsWin32(void)
+     handle = GetActiveWindow();
+     if (handle)
+     {
+-        window = GetPropW(handle, L"GLFW");
++        // T4C online: attached input queues can return another process' window.
++        // Never dereference its GLFW property, which is a foreign address.
++        // Resolve only windows owned by this library instance instead.
++        window = _glfw.windowListHead;
++        while (window && window->win32.handle != handle)
++            window = window->next;
+         if (window)
+         {
+             int i;

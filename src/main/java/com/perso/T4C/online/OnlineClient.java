@@ -95,6 +95,7 @@ public final class OnlineClient extends ApplicationAdapter {
   }
 
   public static void main(String[] args) {
+    OnlineNativeLibrary.configure();
     URI endpoint = URI.create(args.length == 0 ? "http://127.0.0.1:18765" : args[0]);
     var client = new OnlineClient(endpoint);
     String profile = System.getenv("T4C_ONLINE_PROFILE");
