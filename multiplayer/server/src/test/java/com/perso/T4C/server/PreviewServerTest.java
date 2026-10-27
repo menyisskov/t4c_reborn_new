@@ -368,9 +368,10 @@ class PreviewServerTest {
       assertEquals(426,client.send(pickupRequest(url,token,"4",revision+" 0 "+uuid),HttpResponse.BodyHandlers.ofString()).statusCode());
       assertEquals(401,client.send(pickupRequest(url,null,current,revision+" 0 "+uuid),HttpResponse.BodyHandlers.ofString()).statusCode());
       assertEquals(409,client.send(pickupRequest(url,token,current,(revision+1)+" 0 "+uuid),HttpResponse.BodyHandlers.ofString()).statusCode(),"A stale revision is refused before any claim");
-      var refused=client.send(pickupRequest(url,foreign,current,revision+" 0 "+uuid),HttpResponse.BodyHandlers.ofString());
+      long strangerRevision=object(client.send(request(url,"/character",foreign,null),HttpResponse.BodyHandlers.ofString())).get("revision").getAsLong();
+      var refused=client.send(pickupRequest(url,foreign,current,strangerRevision+" 0 "+uuid),HttpResponse.BodyHandlers.ofString());
       assertEquals(409,refused.statusCode(),"Only the owner may claim during the owner window");
-      assertTrue(refused.body().contains("loot_reserved"));
+      assertTrue(refused.body().contains("loot_reserved"),refused.body());
       var claimed=client.send(pickupRequest(url,token,current,revision+" 0 "+uuid),HttpResponse.BodyHandlers.ofString());
       assertEquals(200,claimed.statusCode(),claimed.body());
       assertTrue(object(claimed).get("revision").getAsLong()>revision);
