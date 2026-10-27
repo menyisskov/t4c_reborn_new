@@ -48,6 +48,7 @@ public final class PreviewServer implements AutoCloseable {
   private final OnlineRetaliation retaliation;
   private final String controlToken;
   private final SimulationLoop loop;
+  private final HttpTrafficMetrics traffic = new HttpTrafficMetrics();
   private final ServerRuntimeMetrics runtimeMetrics;
   private final Thread simulation;
   private final AtomicBoolean closed = new AtomicBoolean();
@@ -104,7 +105,7 @@ public final class PreviewServer implements AutoCloseable {
       }
       hosted.step();
     });
-    runtimeMetrics = new ServerRuntimeMetrics(loop);
+    runtimeMetrics = new ServerRuntimeMetrics(loop, traffic);
     simulation = new Thread(() -> {
       try { loop.run(Long.MAX_VALUE); }
       catch (Throwable error) { failure = error; }
@@ -233,6 +234,7 @@ public final class PreviewServer implements AutoCloseable {
   }
 
   private void handle(HttpExchange exchange) throws IOException {
+    var observation=traffic.begin(exchange.getRequestMethod(),exchange.getRequestURI().getRawPath());
     HttpRequestAdmission.Permit permit=null;
     try {
       String host = exchange.getRequestHeaders().getFirst("Host");
@@ -260,20 +262,34 @@ public final class PreviewServer implements AutoCloseable {
             : ("/equip".equals(path) || "/unequip".equals(path) || "/recover".equals(path) || "/pickup".equals(path)) ? 96 : 64;
         checkDeclaredBodyLength(exchange,limit);
         permit=admitPost(exchange,path);
-        byte[] bytes = exchange.getRequestBody().readNBytes(limit+1);
-        if (bytes.length > limit) throw new PreviewWorld.Rejected(413, "input");
-        String body = new String(bytes, StandardCharsets.US_ASCII);
+        byte[] bytes = new byte[limit+1];
+        int count=0;
+        try {
+          var input=exchange.getRequestBody();
+          while(count<bytes.length) {
+            int read=input.read(bytes,count,bytes.length-count);
+            if(read<0) break;
+            if(read==0) {
+              int one=input.read();
+              if(one<0) break;
+              bytes[count++]=(byte)one;
+              observation.read(1);
+            } else { count+=read;observation.read(read); }
+          }
+        } catch(IOException failedRead) { observation.readFailed();throw failedRead; }
+        if (count > limit) throw new PreviewWorld.Rejected(413, "input");
+        String body = new String(bytes,0,count,StandardCharsets.US_ASCII);
         switch (path) {
           case "/admin/shutdown" -> {
             requireLocalAdmin(exchange);
             if (!body.isEmpty()) throw new PreviewWorld.Rejected(400,"input");
-            json(exchange,200,Map.of("stopping",true));
+            json(exchange,observation,200,Map.of("stopping",true));
             new Thread(this::close,"online-admin-stop").start();
           }
           case "/join" -> {
             if (store==null) {
               if (!body.isEmpty()) throw new PreviewWorld.Rejected(400, "input");
-              json(exchange, 200, onWorld(() -> { var joined=world.join();return new RegionJoined(joined.token(),joined.id(),hosted.regions.getFirst().descriptor(0)); }));
+              json(exchange,observation, 200, onWorld(() -> { var joined=world.join();return new RegionJoined(joined.token(),joined.id(),hosted.regions.getFirst().descriptor(0)); }));
             } else {
               if (!body.matches("[0-9a-f]{64} [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"))
                 throw new PreviewWorld.Rejected(400,"input");
@@ -284,7 +300,7 @@ public final class PreviewServer implements AutoCloseable {
               try {
                 var joined=onWorld(() -> persistent.join(session,started));
                 attached=true;
-                json(exchange,200,onWorld(() -> new RegionJoined(joined.token(),joined.id(),persistent.region(joined.token()))));
+                json(exchange,observation,200,onWorld(() -> new RegionJoined(joined.token(),joined.id(),persistent.region(joined.token()))));
               } finally { if (!attached) store.release(session); }
             }
           }
@@ -298,7 +314,7 @@ public final class PreviewServer implements AutoCloseable {
             catch (NumberFormatException e) { throw new PreviewWorld.Rejected(400, "input"); }
             int dx = Integer.parseInt(parts[2]), dy = Integer.parseInt(parts[3]);
             onWorld(() -> { var context=admit(token,epoch);context.world.input(token, sequence, dx, dy); return null; });
-            json(exchange, 200, Map.of("ok", true));
+            json(exchange,observation, 200, Map.of("ok", true));
           }
           case "/attack" -> {
             if (melee==null) throw new PreviewWorld.Rejected(404,"route");
@@ -309,7 +325,7 @@ public final class PreviewServer implements AutoCloseable {
             catch (NumberFormatException bad) { throw new PreviewWorld.Rejected(400,"input"); }
             var pending=onWorld(() -> { return admit(token,epoch).melee.attack(token,revision,target); });
             var committed=pending.toCompletableFuture().get(2,TimeUnit.SECONDS);
-            json(exchange,200,Map.of("revision",committed.character().revision()));
+            json(exchange,observation,200,Map.of("revision",committed.character().revision()));
           }
           case "/recover" -> {
             if (persistent==null) throw new PreviewWorld.Rejected(404,"route");
@@ -321,7 +337,7 @@ public final class PreviewServer implements AutoCloseable {
             catch (IllegalArgumentException bad) { throw new PreviewWorld.Rejected(400,"input"); }
             var pending=onWorld(() -> { admit(token,epoch); return persistent.recoverCorpse(token,revision,corpse); });
             var committed=pending.toCompletableFuture().get(2,TimeUnit.SECONDS);
-            json(exchange,200,Map.of("revision",committed.character().revision()));
+            json(exchange,observation,200,Map.of("revision",committed.character().revision()));
           }
           case "/equip", "/unequip" -> {
             if (persistent == null) throw new PreviewWorld.Rejected(404, "route");
@@ -347,7 +363,7 @@ public final class PreviewServer implements AutoCloseable {
               return persistent.commitGameplayEvent(token, revision, java.util.UUID.randomUUID(), 0, 0, changed);
             });
             var committed = pending.toCompletableFuture().get(2, TimeUnit.SECONDS);
-            json(exchange, 200, Map.of("revision", committed.character().revision()));
+            json(exchange,observation, 200, Map.of("revision", committed.character().revision()));
           }
           case "/interact" -> {
             if(persistent==null) throw new PreviewWorld.Rejected(404,"route");
@@ -360,7 +376,7 @@ public final class PreviewServer implements AutoCloseable {
             // Optional authored topic index; the NPC dispatcher rejects an index the NPC does not have.
             var topic=parts.length==4 ? java.util.OptionalInt.of(Integer.parseInt(parts[3])) : java.util.OptionalInt.empty();
             var pending=onWorld(()->{ admit(token,epoch);return persistent.interact(token,revision,parts[2],topic); });
-            json(exchange,200,pending.toCompletableFuture().get(2,TimeUnit.SECONDS));
+            json(exchange,observation,200,pending.toCompletableFuture().get(2,TimeUnit.SECONDS));
           }
           case "/pickup" -> {
             if (persistent==null) throw new PreviewWorld.Rejected(404,"route");
@@ -375,20 +391,20 @@ public final class PreviewServer implements AutoCloseable {
             try { committed=pending.toCompletableFuture().get(2,TimeUnit.SECONDS); }
             // Definite refusals arrive as the completion's cause; unwrap them into their 409 code.
             catch (ExecutionException error) { if(error.getCause() instanceof PreviewWorld.Rejected rejected) throw rejected; throw error; }
-            json(exchange,200,Map.of("revision",committed.character().revision()));
+            json(exchange,observation,200,Map.of("revision",committed.character().revision()));
           }
           case "/region-ready" -> {
             String token=token(exchange);if(!body.matches("[0-9]{1,19}")) throw new PreviewWorld.Rejected(400,"input");
             long epoch;try { epoch=Long.parseLong(body); } catch(NumberFormatException invalid) { throw new PreviewWorld.Rejected(400,"input"); }
             onWorld(() -> { admit(token,epoch);if(persistent!=null) persistent.regionReady(token,epoch);return null; });
-            json(exchange,200,Map.of("ok",true));
+            json(exchange,observation,200,Map.of("ok",true));
           }
           case "/leave" -> {
             if (!body.isEmpty()) throw new PreviewWorld.Rejected(400, "input");
             String token = token(exchange);
             if (persistent==null) onWorld(() -> { world.leave(token); return null; });
             else onWorld(() -> persistent.leave(token)).get(2,TimeUnit.SECONDS);
-            json(exchange, 200, Map.of("ok", true));
+            json(exchange,observation, 200, Map.of("ok", true));
           }
           default -> throw new PreviewWorld.Rejected(404, "route");
         }
@@ -396,10 +412,10 @@ public final class PreviewServer implements AutoCloseable {
         if (!GET_ROUTES.contains(path)) throw new PreviewWorld.Rejected(404,"route");
         permit=admitGet(exchange,path);
         switch (path) {
-          case "/" -> resource(exchange, "index.html", "text/html; charset=utf-8");
-          case "/client.js" -> resource(exchange, "client.js", "text/javascript; charset=utf-8");
-          case "/style.css" -> resource(exchange, "style.css", "text/css; charset=utf-8");
-          case "/strings" -> json(exchange, 200, strings);
+          case "/" -> resource(exchange,observation, "index.html", "text/html; charset=utf-8");
+          case "/client.js" -> resource(exchange,observation, "client.js", "text/javascript; charset=utf-8");
+          case "/style.css" -> resource(exchange,observation, "style.css", "text/css; charset=utf-8");
+          case "/strings" -> json(exchange,observation, 200, strings);
           case "/account/characters" -> {
             if(accounts==null) throw new PreviewWorld.Rejected(404,"route");
             var versions=exchange.getRequestHeaders().get(OnlineProtocol.VERSION_HEADER);
@@ -414,7 +430,7 @@ public final class PreviewServer implements AutoCloseable {
             if(authorization==null || authorization.size()!=1 || !authorization.getFirst().matches("Bearer [0-9a-f]{64}"))
               throw new PreviewWorld.Rejected(401,"account");
             var pending=accounts.request(exchange.getRemoteAddress().getAddress().getHostAddress(),authorization.getFirst().substring(7),after);
-            try { json(exchange,200,pending.get(3,TimeUnit.SECONDS)); }
+            try { json(exchange,observation,200,pending.get(3,TimeUnit.SECONDS)); }
             catch(ExecutionException error) { if(error.getCause() instanceof PreviewWorld.Rejected rejected) throw rejected;throw error; }
             catch(TimeoutException timeout) { pending.cancel(false);throw new PreviewWorld.Rejected(503,"account_busy"); }
           }
@@ -422,11 +438,11 @@ public final class PreviewServer implements AutoCloseable {
             String authorization=exchange.getRequestHeaders().getFirst("Authorization");
             String description=authorization==null ? mapJson : onWorld(() -> { String token=token(exchange);var context=admit(token,null);
               return mapJson(context,persistent==null ? 0 : persistent.region(token).locationEpoch()); });
-            send(exchange,200,"application/json",description.getBytes(StandardCharsets.UTF_8));
+            send(exchange,observation,200,"application/json",description.getBytes(StandardCharsets.UTF_8));
           }
           case "/state" -> {
             String token = token(exchange);
-            json(exchange, 200, onWorld(() -> {
+            json(exchange,observation, 200, onWorld(() -> {
               var context=admit(token,null);var snapshot=context.world.snapshot(token);
               return new PersistentSnapshot(snapshot.tick(),snapshot.players(),persistent==null ? 0 : persistent.character(token).revision(),
                   snapshot.creatures(),context.descriptor(persistent==null ? 0 : persistent.region(token).locationEpoch()),context.npcs.views(),
@@ -436,7 +452,7 @@ public final class PreviewServer implements AutoCloseable {
           case "/character" -> {
             String token=token(exchange);
             if (persistent==null) throw new PreviewWorld.Rejected(404,"route");
-            json(exchange,200,onWorld(() -> {
+            json(exchange,observation,200,onWorld(() -> {
               admit(token,null);
               var saved=persistent.character(token);
               return new OnlineCharacterView(saved.id(),saved.name(),saved.gold(),saved.experience(),
@@ -448,28 +464,31 @@ public final class PreviewServer implements AutoCloseable {
             String token=token(exchange);
             var pending=onWorld(() -> { admit(token,null); return persistent.corpses(token); });
             var found=pending.toCompletableFuture().get(2,TimeUnit.SECONDS);
-            json(exchange,200,found.stream().map(c -> Map.of("id",c.id(),"world",c.world(),"x",c.x(),"y",c.y(),
+            json(exchange,observation,200,found.stream().map(c -> Map.of("id",c.id(),"world",c.world(),"x",c.x(),"y",c.y(),
                 "itemCount",c.items().size(),"gold",c.gold())).toList());
           }
-          case "/health" -> json(exchange, 200,
+          case "/health" -> json(exchange,observation, 200,
               Map.of("tick", loop.completedTicks(), "mode", store==null ? "local-preview" : "local-persistent", "capacity", PreviewWorld.MAX_PLAYERS));
           case "/admin/metrics" -> {
             requireLocalAdmin(exchange);
-            json(exchange,200,runtimeMetrics.snapshot());
+            json(exchange,observation,200,runtimeMetrics.snapshot());
           }
           default -> throw new PreviewWorld.Rejected(404, "route");
         }
       } else throw new PreviewWorld.Rejected(405, "method");
     } catch (PreviewWorld.Rejected rejected) {
-      json(exchange, rejected.status, Map.of("error", rejected.getMessage()));
+      json(exchange,observation, rejected.status, Map.of("error", rejected.getMessage()));
     } catch (OnlineStore.Conflict rejected) {
-      json(exchange,409,Map.of("error","account_or_session"));
+      json(exchange,observation,409,Map.of("error","account_or_session"));
     } catch (Exception error) {
       if (error instanceof InterruptedException) Thread.currentThread().interrupt();
-      json(exchange, 503, Map.of("error", "busy"));
+      json(exchange,observation, 503, Map.of("error", "busy"));
     } finally {
       try { exchange.close(); }
-      finally { if(permit!=null) permit.close(); }
+      finally {
+        try { if(permit!=null) permit.close(); }
+        finally { observation.finish(); }
+      }
     }
   }
 
@@ -516,10 +535,11 @@ public final class PreviewServer implements AutoCloseable {
       throw new PreviewWorld.Rejected(403,"admin");
   }
 
-  private void resource(HttpExchange exchange, String name, String type) throws IOException {
+  private void resource(HttpExchange exchange, HttpTrafficMetrics.Request observation,
+      String name, String type) throws IOException {
     try (var in = PreviewServer.class.getResourceAsStream("/preview/" + name)) {
       if (in == null) throw new IOException("Missing preview resource " + name);
-      send(exchange, 200, type, in.readAllBytes());
+      send(exchange,observation, 200, type, in.readAllBytes());
     }
   }
 
@@ -534,19 +554,29 @@ public final class PreviewServer implements AutoCloseable {
     }
   }
 
-  private void json(HttpExchange exchange, int status, Object value) throws IOException {
-    send(exchange, status, "application/json; charset=utf-8", JSON.toJson(value).getBytes(StandardCharsets.UTF_8));
+  private void json(HttpExchange exchange, HttpTrafficMetrics.Request observation,
+      int status, Object value) throws IOException {
+    send(exchange,observation, status, "application/json; charset=utf-8", JSON.toJson(value).getBytes(StandardCharsets.UTF_8));
   }
 
-  private void send(HttpExchange exchange, int status, String type, byte[] data) throws IOException {
+  private void send(HttpExchange exchange, HttpTrafficMetrics.Request observation,
+      int status, String type, byte[] data) throws IOException {
     var headers = exchange.getResponseHeaders();
     headers.set("Content-Type", type);
     headers.set("Cache-Control", "no-store");
     headers.set("X-Content-Type-Options", "nosniff");
     headers.set("Referrer-Policy", "no-referrer");
     headers.set("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; frame-ancestors 'none'");
-    exchange.sendResponseHeaders(status, data.length);
-    exchange.getResponseBody().write(data);
+    observation.selected(status);
+    try {
+      exchange.sendResponseHeaders(status, data.length);
+      observation.headersSent();
+      exchange.getResponseBody().write(data);
+      observation.fullyWritten(data.length);
+    } catch(IOException | RuntimeException incomplete) {
+      observation.responseFailed();
+      throw incomplete;
+    }
   }
 
   private void requestStop() {

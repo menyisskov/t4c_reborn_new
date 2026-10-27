@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Bounded HTTP application metrics (T4C-0227)
+
+### Added
+- The private local operator metrics now show bounded counts of request body bytes read, complete response bodies written, selected statuses and handler lifetimes. The native soak sampler accepts the fixed-label response within a 1 MiB cap and keeps its two-second deadline. These measurements help diagnose local server traffic; they do not measure network bandwidth, database latency or sustained Beta performance.
+
 ## 2026-10-27 — Native sessions during hostile HTTP (T4C-0226)
 
 ### Verified

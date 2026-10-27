@@ -14,6 +14,40 @@ not automatically a completed milestone.
 
 ## Verified foundation (updated 2026-10-27)
 
+T4C-0227 adds `httpTraffic` to the existing loopback/private-token
+`GET /admin/metrics` snapshot, using fixed route/method/status labels and
+bounded lifetime buckets. The source counts bytes actually returned by
+application body reads and full response writes, selected response status,
+read/write failures and completed handler lifetime. It omits raw paths,
+identifiers, tokens and payloads; its counters are not TCP/TLS/header wire
+bandwidth, client delivery acknowledgement or isolated database latency.
+The exact six source/test/doc bytes match private
+`%TEMP%/t4c-0227-httptraffic-3ee1-6c5b/final-six-file-hashes.tsv`
+(SHA-256 `834B0FE49AB137FB16B770DFAB95AFCF7C450D185367CC54449E7CB466A12067`)
+against immutable `3ee10fcb` (protocol 5/schema 11). Isolated focused checks
+passed two traffic metrics, two admission and five enabled PreviewServer tests
+with five expected PostgreSQL skips. The full no-DB multiplayer verify passed
+44 domain and 144 server tests, with 57 expected PostgreSQL skips and zero
+failures/errors; log SHA-256
+`A9672CF2B777C17A66641F0CD63885CD5A27B51ACF245435DA8E1BABFBB9C5F5`.
+The early shared HTTP context-attribute design was rejected before the frozen
+test run; a real overlapping slow-POST regression verifies request-local
+attribution through explicit observation arguments. No live load, renderer,
+database latency, wire bandwidth or mixed two-hour M5/Beta result is claimed.
+
+Premerge review found that the existing native soak sampler's 64 KiB response
+cap could reject a valid accumulated `httpTraffic` snapshot. Read-only fixed
+label cardinality proof measured 897 possible rows and 434,724 bytes for a
+dense all-`Long.MAX_VALUE` schema; a plausible 273-row case measured 65,745
+bytes. Three additional consumer files now use a finite 1 MiB cap while
+retaining the two-second whole-body deadline. Their exact manifest SHA-256 is
+`19C68CA670681504E77510016B616D2A5E41E7CFCA42A935D992E722E8A9C2AB`.
+An owned ephemeral-loopback probe passed a 2,013 ms stalled-body failure,
+accepted a valid 433,111-byte/897-row snapshot with intact `initial` and
+`latest`, and refused a 1,048,590-byte response. Probe log SHA-256
+`ACBBE924AB75141E2B1C2A3F6BDC85591C9F975430F0B8D207FFD7F8B61B2319`.
+The first green PR163 head preceded this consumer fix; new-head CI is required.
+
 T4C-0226's [native HTTP resilience probe](tools/NATIVE_HTTP_RESILIENCE_PROBE.md)
 passed with two actual `OnlineConnection` adapters on a private archive of
 immutable `f6175cc78a6738f73700cfdaf014a6f44ab3219d` (protocol 5/schema 11),

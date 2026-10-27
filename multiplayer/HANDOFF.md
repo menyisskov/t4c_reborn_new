@@ -549,6 +549,40 @@ hosted crop, protocol, schema, client renderer and single-player behavior stay
 unchanged. The staged inventories are not live actors or an M3/Beta pass.
 Dependent clan/hosted implementation still requires exact Claude handoff.
 
+## T4C-0227 private HTTP application traffic counters
+
+Six released files (`PreviewServer.java`/test, `ServerRuntimeMetrics.java`,
+new `HttpTrafficMetrics.java`/test and [LOAD_METRICS.md](LOAD_METRICS.md))
+match private `%TEMP%/t4c-0227-httptraffic-3ee1-6c5b/final-six-file-hashes.tsv`
+SHA-256 `834B0FE49AB137FB16B770DFAB95AFCF7C450D185367CC54449E7CB466A12067`.
+Immutable base `3ee10fcb` (protocol 5/schema 11) plus those six files passed
+focused traffic metrics 2/2, admission 2/2 and PreviewServer 5 enabled tests
+(five expected PG skips); full isolated no-DB multiplayer verify passed
+domain 44 and server 144 total, 57 expected PG skips, zero failures/errors,
+log SHA-256 `A9672CF2B777C17A66641F0CD63885CD5A27B51ACF245435DA8E1BABFBB9C5F5`.
+The first shared-context-attribute approach was caught and replaced before
+the frozen test run; explicit request observation arguments pass a real
+overlapping slow-POST attribution regression. Private loopback operator
+samples now include bounded fixed-label application bytes actually read,
+fully written response-body bytes, selected statuses and handler-lifetime
+buckets. Premerge review proved the old native soak 64 KiB consumer cap was
+too small for this fixed-label schema: 897 dense rows serialize to at most
+434,724 bytes with all numeric values at `Long.MAX_VALUE`, and a plausible
+273-row case measured 65,745 bytes. The released three-file sampler fix
+(NativeAdapterSoak, its existing deadline probe and guide) has manifest
+SHA-256 `19C68CA670681504E77510016B616D2A5E41E7CFCA42A935D992E722E8A9C2AB`.
+It raises the finite response cap to 1 MiB while retaining the two-second
+whole-body deadline. Private ephemeral-loopback validation passed a 2,013 ms
+stalled-body failure, accepted a valid 433,111-byte/897-row snapshot in
+`initial`/`latest`, and refused a 1,048,590-byte response; log SHA-256
+`ACBBE924AB75141E2B1C2A3F6BDC85591C9F975430F0B8D207FFD7F8B61B2319`.
+The original green PR163 head predates this fix and cannot establish the
+final contract; rerun current-head CI after the follow-up commit.
+These are not wire bandwidth, database latency, live load,
+rendered play or the two-hour M5/Beta gate. No DB/server/GUI/owner QA
+resource was used for the isolated checks. T4C-0225 remains Planned pending
+Claude handoff; next free ID T4C-0228.
+
 ## T4C-0226 two native sessions under hostile HTTP
 
 The two released new files are [NativeHttpResilienceProbe.java](tools/NativeHttpResilienceProbe.java)

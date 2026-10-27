@@ -13,7 +13,7 @@ import java.util.concurrent.*;
 /** Standalone QA driver using the desktop client's real network adapter, without a renderer. */
 class NativeAdapterSoak {
   static final Gson JSON=new GsonBuilder().setPrettyPrinting().create();
-  static final int METRICS_RESPONSE_LIMIT=64*1024;
+  static final int METRICS_RESPONSE_LIMIT=1024*1024;
   static final class BoundedBody implements HttpResponse.BodySubscriber<byte[]> {
     private final HttpResponse.BodySubscriber<byte[]> delegate=HttpResponse.BodySubscribers.ofByteArray();
     private Flow.Subscription subscription;
