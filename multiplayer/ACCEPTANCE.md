@@ -6,6 +6,7 @@ Do not turn an unchecked item into a release claim without a passing, recorded c
 
 ## Verified foundation (2026-10-26)
 
+- Native networking now supports single-flight equip/unequip intents, publishes refreshed private state before completion, retains the session after a normal conflict and disconnects without replay on ambiguous failure. Adapter tests cover authentication, stale rejection, pending-action bounds and logout after failure. A local probe using the actual adapter and PostgreSQL server unequipped/re-equipped the QA paladin's headgear and verified complete progress and gold were unchanged afterward. This was a network integration check, not rendered inventory interaction; native controls and appearance remain unimplemented.
 - Authenticated equipment commands commit reference-only equip/unequip transitions through the gameplay save queue. Tests cover owned-instance checks, base requirements, wrong slots, two-hand displacement, shield/quiver alias conflicts, stale commands, private committed publication and logout/server restart recovery with unchanged inventory/currency. Existing offline equip and class kit tests pass with shared eligibility rules. Native controls and equipped rendering remain absent.
 - Separate headless reactor and server lifecycle; shared pure combat and static collision rules.
 - Equipment boost evaluation is shared with offline play, retaining base-stat/skill expressions,
