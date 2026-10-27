@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Authoritative equipment changes (T4C-0175)
+
+### Added
+- The online server can now save equip and unequip actions, checking ownership, attributes and hand conflicts without duplicating belongings. Changes survive logout and restart. Native inventory controls and equipped appearance are not connected yet.
+
 ## 2026-10-27 — Shared equipment bonuses (T4C-0174)
 
 ### Changed

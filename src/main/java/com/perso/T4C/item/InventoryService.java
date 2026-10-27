@@ -183,8 +183,7 @@ public final class InventoryService {
   }
 
   private static boolean isQuiver(ItemDefinition item) {
-    String key = item.getKey();
-    return key != null && (key.contains("quiver") || key.contains("arrow"));
+    return com.perso.T4C.combat.EquipmentEligibilityRules.isQuiver(item.getKey());
   }
 
   public static Result unequip(Player player, BodyPart slot) {
@@ -316,14 +315,12 @@ public final class InventoryService {
   }
 
   private static boolean meetsRequirements(Player player, ItemDefinition definition) {
-    int attack = player.getSkillLevel("attack");
-    if (attack <= 0) attack = player.getLevel() + player.getDexterity();
-    return player.getEndurance() >= definition.getMinEnd()
-        && player.getStrength() >= definition.getReqStr()
-        && player.getDexterity() >= definition.getReqAgi()
-        && player.getIntelligence() >= definition.getMinInt()
-        && player.getWisdom() >= definition.getMinWis()
-        && attack >= definition.getReqAttack();
+    return com.perso.T4C.combat.EquipmentEligibilityRules.meets(
+        new com.perso.T4C.combat.WeaponDamageRules.Stats(player.getStrength(), player.getEndurance(),
+            player.getDexterity(), player.getIntelligence(), player.getWisdom(), player.getLevel()),
+        player.getSkillLevel("attack"), new com.perso.T4C.combat.EquipmentEligibilityRules.Requirements(
+            definition.getMinEnd(), definition.getReqStr(), definition.getReqAgi(), definition.getMinInt(),
+            definition.getMinWis(), definition.getReqAttack()));
   }
 
   private static String offHandOccupant(Player player, BodyPart slot) {
@@ -335,13 +332,7 @@ public final class InventoryService {
   }
 
   private static boolean slotMatches(BodyPart requested, BodyPart defined) {
-    if (requested == null || defined == null) return false;
-    if (requested == defined) return true;
-    if ((requested == BodyPart.RING1 || requested == BodyPart.RING2)
-        && (defined == BodyPart.RING1 || defined == BodyPart.RING2)) {
-      return true;
-    }
-    return requested == BodyPart.SHIELD && defined == BodyPart.WEAPON2;
+    return com.perso.T4C.combat.EquipmentEligibilityRules.slotMatches(requested, defined);
   }
 
   private static boolean isMirroredSecondarySlot(

@@ -20,6 +20,7 @@ public final class PreviewServer implements AutoCloseable {
   private record PersistentSnapshot(long tick, java.util.List<PreviewWorld.PlayerView> players,
       long characterRevision, java.util.List<com.perso.T4C.online.model.CreatureView> creatures) {}
   private static final Gson JSON = new Gson();
+  private final com.perso.T4C.online.model.ItemContent items;
   private final HttpServer http;
   private final ThreadPoolExecutor requests = new ThreadPoolExecutor(
       8, 8, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<>(128),
@@ -49,7 +50,7 @@ public final class PreviewServer implements AutoCloseable {
     this.controlToken=controlToken;
     this.store=store;
     strings = loadStrings();
-    ItemCatalog.loadBundled(); // Validate packaged equipment before accepting sessions.
+    items = ItemCatalog.loadBundled(); // Validate packaged equipment before accepting sessions.
     world = new PreviewWorld(map,MonsterCatalog.loadBundled());
     persistent=store==null ? null : new PersistentSessions(store,map,world);
     mapJson = JSON.toJson(Map.of("width", map.width, "height", map.height,
@@ -130,7 +131,8 @@ public final class PreviewServer implements AutoCloseable {
         String type = exchange.getRequestHeaders().getFirst("Content-Type");
         if (type == null || !type.toLowerCase(java.util.Locale.ROOT).startsWith("text/plain"))
           throw new PreviewWorld.Rejected(415, "input");
-        int limit=store!=null && "/join".equals(path) ? 101 : 64;
+        int limit=store!=null && "/join".equals(path) ? 101
+            : ("/equip".equals(path) || "/unequip".equals(path)) ? 96 : 64;
         byte[] bytes = exchange.getRequestBody().readNBytes(limit+1);
         if (bytes.length > limit) throw new PreviewWorld.Rejected(413, "input");
         String body = new String(bytes, StandardCharsets.US_ASCII);
@@ -172,6 +174,31 @@ public final class PreviewServer implements AutoCloseable {
             int dx = Integer.parseInt(parts[1]), dy = Integer.parseInt(parts[2]);
             onWorld(() -> { world.input(token, sequence, dx, dy); return null; });
             json(exchange, 200, Map.of("ok", true));
+          }
+          case "/equip", "/unequip" -> {
+            if (persistent == null) throw new PreviewWorld.Rejected(404, "route");
+            String token = token(exchange);
+            boolean equip = "/equip".equals(path);
+            String pattern = equip ? "[0-9]{1,19} [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12} [A-Z_]{1,16}"
+                : "[0-9]{1,19} [A-Z_]{1,16}";
+            if (!body.matches(pattern)) throw new PreviewWorld.Rejected(400, "input");
+            String[] parts = body.split(" ");
+            long revision;
+            com.perso.T4C.player.BodyPart slot;
+            java.util.UUID instance;
+            try {
+              revision = Long.parseLong(parts[0]);
+              slot = com.perso.T4C.player.BodyPart.valueOf(parts[equip ? 2 : 1]);
+              instance = equip ? java.util.UUID.fromString(parts[1]) : null;
+            } catch (IllegalArgumentException error) { throw new PreviewWorld.Rejected(400, "input"); }
+            var pending = onWorld(() -> {
+              var saved = persistent.character(token);
+              var changed = equip ? OnlineEquipmentCommands.equip(saved.progress(), items, instance, slot)
+                  : OnlineEquipmentCommands.unequip(saved.progress(), slot);
+              return persistent.commitGameplayEvent(token, revision, java.util.UUID.randomUUID(), 0, 0, changed);
+            });
+            var committed = pending.toCompletableFuture().get(2, TimeUnit.SECONDS);
+            json(exchange, 200, Map.of("revision", committed.character().revision()));
           }
           case "/leave" -> {
             if (!body.isEmpty()) throw new PreviewWorld.Rejected(400, "input");
