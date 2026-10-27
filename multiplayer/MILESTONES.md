@@ -48,7 +48,7 @@ playthrough and recovery criteria pass. Never infer Done from a task count or te
 | M1 — Enter and interact | Roster/NPC backend and actual adapter probes pass; visible controls/creation incomplete | T4C-0192, 0195, 0196 | Native selection/creation and NPC controls; account lifecycle integration |
 | M2 — Inventory and loot | Partial equipment/corpse services | Existing inventory/equipment work; T4C-0201, 0202 (design and pickup/drop rules only) | Visible inventory, general monster loot, claim/quantity integrity |
 | M3 — Complete authored adventure | Opening letter only; full loop incomplete | T4C-0193, 0194, 0195 | Full quest service, kill credit, rewards and required hosted routes |
-| M4 — Supported combat and abilities | Restricted melee/physical retaliation, including a brief rendered two-client attack/death check | T4C-0189, 0190 | Pursuit/AI and the declared classes' required abilities and state |
+| M4 — Supported combat and abilities | Restricted melee/physical retaliation and a brief rendered two-client attack/death check; T4C-0209 pursuit design documented, not implemented | T4C-0189, 0190, 0209 | Pursuit/AI and the declared classes' required abilities and state |
 | M5 — Reliability and anti-cheat | Pool/shutdown/fault probes, short operator-metrics checks, isolated two-adapter restart probe and brief rendered reconnect pass; sustained recovery/load/abuse gates open | T4C-0191, 0197, 0198, 0207 | Database recovery, broader rendered restart, failure drills, sustained measured stability and abuse checks |
 | M6 — Package and native acceptance | Create-only package, headless integrity checks and brief two-window local bundle smoke pass; clean-machine, remote and full rendered playthrough open | T4C-0205 and cross-cutting work | Clean-machine delivery and complete two-rendered-client playthrough |
 
@@ -130,6 +130,8 @@ Required behavior:
   presented as a functional caster or as complete launch combat.
 - [ ] Required monsters acquire valid targets, pursue where authored, attack/retaliate, lose or
   reset targets under the declared rules, die and respawn with durable life identities.
+  [MONSTER_PURSUIT_DESIGN.md](MONSTER_PURSUIT_DESIGN.md) records the T4C-0209 architecture and
+  required peer handoffs; no online pursuit behavior or M4 completion follows from that document.
 - [ ] Server validates movement speed/collision, attack/cast timing, range, sight, sanctuary,
   resource costs, attribute eligibility, effects and any applicable interruption rules.
 - [ ] Required skills/spells, mana, charges, buffs, cooldowns and advancement are usable through
