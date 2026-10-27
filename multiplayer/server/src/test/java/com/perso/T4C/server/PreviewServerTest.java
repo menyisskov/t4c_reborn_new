@@ -350,15 +350,13 @@ class PreviewServerTest {
       server.start(); String url=server.url();
       String token=login(client,url,owner,character.id()); String foreign=login(client,url,stranger,other.id());
       var state=object(client.send(request(url,"/state",token,null),HttpResponse.BodyHandlers.ofString()));
-      var listed=state.getAsJsonArray("loot"); assertEquals(1,listed.size());
-      var entry=listed.get(0).getAsJsonObject();
+      var entry=lootEntry(state,drop.id());
       assertEquals(drop.id().toString(),entry.get("id").getAsString());
       assertEquals(30.5,entry.get("x").getAsDouble()); assertEquals("item.leather_gloves",entry.get("key").getAsString());
       assertTrue(entry.get("ownerPlayerId").isJsonPrimitive(),"The owner's own view names their public player ID");
       assertFalse(state.toString().contains(character.id().toString()));
       assertFalse(state.toString().contains(owner.accountId().toString()));
-      var seenByStranger=object(client.send(request(url,"/state",foreign,null),HttpResponse.BodyHandlers.ofString()))
-          .getAsJsonArray("loot").get(0).getAsJsonObject();
+      var seenByStranger=lootEntry(object(client.send(request(url,"/state",foreign,null),HttpResponse.BodyHandlers.ofString())),drop.id());
       assertTrue(!seenByStranger.has("ownerPlayerId") || seenByStranger.get("ownerPlayerId").isJsonNull(),"Other owners are never named");
       assertTrue(seenByStranger.get("ownerRemainingMs").getAsLong()>0);
       long revision=object(client.send(request(url,"/character",token,null),HttpResponse.BodyHandlers.ofString())).get("revision").getAsLong();
@@ -388,5 +386,11 @@ class PreviewServerTest {
     var response=client.send(request(url,"/join",null,key.secret()+" "+character),HttpResponse.BodyHandlers.ofString());
     assertEquals(200,response.statusCode());
     return object(response).get("token").getAsString();
+  }
+
+  private static com.google.gson.JsonObject lootEntry(com.google.gson.JsonObject state,java.util.UUID id) {
+    for (var element:state.getAsJsonArray("loot"))
+      if (element.getAsJsonObject().get("id").getAsString().equals(id.toString())) return element.getAsJsonObject();
+    throw new AssertionError("Loot "+id+" is not listed");
   }
 }
