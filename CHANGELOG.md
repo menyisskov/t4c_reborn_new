@@ -6,6 +6,12 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Online opening story service (T4C-0195)
+
+### Added
+- The online server now supports Kilhiam's authored first conversation: one Crimsonscale letter and its story progress are saved together. Repeat conversations and reconnecting keep the same letter grant; other characters receive nothing from that conversation.
+- The native networking client can request this interaction and receive the saved result. Visible NPC dialogue controls remain a separate unfinished step.
+
 ## 2026-10-27 — Hosted world travel (T4C-0194)
 
 ### Added

@@ -15,8 +15,10 @@ on:
       - 'src/test/java/com/perso/T4C/helper/DiceFormulaTest.java'
       - 'src/main/java/com/perso/T4C/helper/Character*.java'
       - 'src/main/java/com/perso/T4C/player/BodyPart.java'
+      - 'src/main/java/com/perso/T4C/quest/CrimsonscaleLetterRules.java'
       - 'src/test/java/com/perso/T4C/helper/CharacterCreationRulesTest.java'
       - 'assets/maps/worldmap/worldmap.colbin'
+      - 'assets/maps/dungeon/DungeonMap.colbin'
       - 'assets/i18n/lang.json'
       - 'src/test/java/com/perso/T4C/world/**'
       - 'src/test/java/com/perso/T4C/combat/**'
@@ -34,8 +36,10 @@ on:
       - 'src/test/java/com/perso/T4C/helper/DiceFormulaTest.java'
       - 'src/main/java/com/perso/T4C/helper/Character*.java'
       - 'src/main/java/com/perso/T4C/player/BodyPart.java'
+      - 'src/main/java/com/perso/T4C/quest/CrimsonscaleLetterRules.java'
       - 'src/test/java/com/perso/T4C/helper/CharacterCreationRulesTest.java'
       - 'assets/maps/worldmap/worldmap.colbin'
+      - 'assets/maps/dungeon/DungeonMap.colbin'
       - 'assets/i18n/lang.json'
       - 'src/test/java/com/perso/T4C/world/**'
       - 'src/test/java/com/perso/T4C/combat/**'
@@ -72,7 +76,7 @@ jobs:
           java-version: '21'
           cache: maven
       - name: Verify persistence against real PostgreSQL
-        run: mvn -B -f multiplayer/pom.xml -Dtest=OnlineStoreTest,OnlineStoreCrashTest,PreviewServerTest,PersistentSessionsTest -Dsurefire.failIfNoSpecifiedTests=false test
+        run: mvn -B -f multiplayer/pom.xml verify
   headless:
     name: Headless build and lifecycle
     runs-on: ubuntu-latest

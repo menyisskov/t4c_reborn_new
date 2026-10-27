@@ -14,6 +14,7 @@ final class HostedWorlds implements AutoCloseable {
     PersistentCreatures creatures;
     OnlineMelee melee;
     OnlineRetaliation retaliation;
+    RegionNpcs npcs;
     Region(RegionMapLoader.Spec spec,PreviewMap map,PreviewWorld world) { this.spec=spec;this.map=map;this.world=world; }
     OnlineRegion descriptor(long epoch) { return new OnlineRegion(spec.world(),spec.key(),map.originX,map.originY,map.width,map.height,epoch); }
   }
@@ -23,9 +24,11 @@ final class HostedWorlds implements AutoCloseable {
   HostedWorlds(PreviewMap map,PreviewWorld world) {
     plan=HostedRegionPlan.single(map);regions=List.of(new Region(plan.regions.getFirst().spec(),map,world));sessions=null;
   }
-  HostedWorlds(HostedRegionPlan plan,OnlineStore store,ItemContent items,MonsterContent monsters) throws SQLException {
+  HostedWorlds(HostedRegionPlan plan,OnlineStore store,ItemContent items,MonsterContent monsters) throws SQLException,java.io.IOException {
+    var catalog=NpcInteractionCatalog.loadBundled();
     this.plan=plan;
     regions=plan.regions.stream().map(r->new Region(r.spec(),r.map(),new PreviewWorld(r.map(),monsters,r.spec().world()))).toList();
+    for(var region:regions) region.npcs=new RegionNpcs(catalog,items,region.spec);
     sessions=store==null ? null : new PersistentSessions(store,this);
     try {
       for(var region:regions) if(store!=null) {
