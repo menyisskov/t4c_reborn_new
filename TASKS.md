@@ -13,7 +13,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0186 | Use shared progression for durable online level gains | Multiplayer / Alpha | In Progress | pending | [2026-10-27](CHANGELOG.md#2026-10-27--online-progression-rules-t4c-0186) |
+| T4C-0186 | Use shared progression for durable online level gains | Multiplayer / Alpha | Done | `0c96e55a` | [2026-10-27](CHANGELOG.md#2026-10-27--online-progression-rules-t4c-0186) |
 | T4C-0185 | Keep creature damage and its rewards together across recovery | Multiplayer / Alpha | Done | `5dd94255` | [2026-10-27](CHANGELOG.md#2026-10-27--persistent-creature-damage-t4c-0185) |
 | T4C-0184 | Restore and respawn persistent creatures in the running world | Multiplayer / Alpha | Done | `f6ca92d0` | [2026-10-27](CHANGELOG.md#2026-10-27--live-creature-recovery-t4c-0184) |
 | T4C-0183 | Persist creature spawn generations across recovery | Multiplayer / Alpha | Done | 116a1ea5 | [2026-10-27](CHANGELOG.md#2026-10-27--persistent-creature-life-tracking-t4c-0183) |
