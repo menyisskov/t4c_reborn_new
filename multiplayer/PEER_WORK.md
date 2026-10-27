@@ -17,10 +17,10 @@ reservations in PR123; that peer acknowledgement is accessible even while its PR
 | Owner | Task/lane | State | Owned scope | Next action / dependency |
 | --- | --- | --- | --- | --- |
 | Codex | T4C-0196/0197 | Delivered: PR124, main55ea45ff, all CI green | Account roster/pool/shutdown implementation complete; task file holds released except operations/integration coordination | Claude may claim released files for a new declared server-loot phase; no silent ownership transfer |
-| Codex / docs_validate (gpt-6-sol) | T4C-0198 runtime metrics | Combined validation passed; Git delivery paused for T4C-0204 ledger conflict | PreviewServer/PreviewServerTest; SimulationLoop/SimulationLoopTest; ServerRuntimeMetrics; NativeAdapterSoak/deadline probe/wrapper/docs; LOAD_METRICS.md | Finish scoped evidence, PR, green CI, merge and explicit core-file handoff |
+| Codex / docs_validate (gpt-6-sol) | T4C-0198 runtime metrics | Combined validation passed; Git delivery resumed after canonical ID resolution | PreviewServer/PreviewServerTest; SimulationLoop/SimulationLoopTest; ServerRuntimeMetrics; NativeAdapterSoak/deadline probe/wrapper/docs; LOAD_METRICS.md | Finish scoped evidence, PR, green CI, merge and explicit core-file handoff |
 | Codex coordinator | T4C-0203 peer coordination | Delivered: PR122/main82169267 | AGENT.md, AGENTS.md, CLAUDE.md and shared tracking/coordination documents | Establish these rules and the live register, then integrate documentation |
 | Claude | T4C-0201 scope/loot design; T4C-0202 M2 loot domain rules | Delivered PR123/main89dd0f64: design/pure-rule groundwork; wiring remains | SCOPE_PROPOSAL/LOOT_DESIGN; OnlineLootDrafts/OnlinePickupRules/tests; CarryCapacityRules/ItemKeys/MonsterLootTables/GroundLootView/LootDropDraft and delegated pure-helper parity edits in ItemDefinition/InventoryService/DataMonster/domain pom (PR123) | Register acknowledged in PR123; server loot wiring can now request released core claims; PreviewServer still requires0198 handoff |
-| Codex / client_package (gpt-6-sol) | T4C-0204 online-client packaging | Static implementation in progress, 11:19 Asia/Jerusalem; Maven window pending0198 post-merge rebuild | New package-online-client.ps1, OnlinePackageCheck.java, test-online-package-check.ps1 and CLIENT_DISTRIBUTION.md only | Continue static checks; claim Maven/target only after docs_validate releases post-merge rebuild window |
+| Codex / client_package (gpt-6-sol) | T4C-0205 online-client packaging | Static implementation in progress, 11:19 Asia/Jerusalem; Maven window pending0198 post-merge rebuild | New package-online-client.ps1, OnlinePackageCheck.java, test-online-package-check.ps1 and CLIENT_DISTRIBUTION.md only | Continue static checks; claim Maven/target only after docs_validate releases post-merge rebuild window |
 
 T4C-0201/0202 form the claimed independent workstream, not a claim that content rules or UI design
 are approved. Use existing item/loot rules, preserve offline behavior, and follow AGENT.md visual
@@ -51,7 +51,7 @@ independent worktree may own its own Git branch/index while respecting this cano
 | Resource | Current owner/state | Rule |
 | --- | --- | --- |
 | Git branch, index, commits, PRs and merges in this physical checkout | Codex docs_validate, temporary exclusive T4C-0198 delivery role | Stage only reviewed 0198 files; create/check/merge PR; return integrator role to root afterward |
-| Maven/root and multiplayer target outputs | Codex T4C-0198 post-merge rebuild reserved; T4C-0204 packaging waiting | No T4C-0204 Maven/target changes until docs_validate explicitly releases post-merge window |
+| Maven/root and multiplayer target outputs | Codex T4C-0198 post-merge rebuild reserved; T4C-0205 packaging waiting | No T4C-0205 Maven/target changes until docs_validate explicitly releases post-merge window |
 | Main QA server `127.0.0.1:18765`, QA DB `t4c_online` | Released by Codex T4C-0198 at 11:17 | Healthy persistent server PID52688, no active leases; request a new window before provisioning/load/stop/restart/schema changes |
 | Test DB `t4c_test` | Codex integration window | Serialize migrations, data-mutating suites and database restart drills with the current owner |
 | Isolated server `18766` / preserved failed soak runtimes | Stopped; reserved evidence | Preserve immutable reports/binaries; do not restart/replace without a declared new run |
@@ -78,6 +78,8 @@ tasks or semantic ownership. Declare dedicated resources before using them.
    ownership first. Never reset/stash/remove a peer's work or stage unrelated files.
 
 ## Message / handoff log
+
+- 2026-10-27 11:24 Asia/Jerusalem: Coordinator merged mainac1cbe2a and resolved the unique IDs: Claude server loot wiring is0204, Codex independent packaging is0205, next0206. Codex docs_validate resumed exclusive0198 Git delivery. Combined runtime checks remain valid; no runtime code changed.
 
 - 2026-10-27 11:21 Asia/Jerusalem: T4C-0198 delivery paused before push/PR. Remote main ac1cbe2a (#125) assigns T4C-0204 to Claude M2 wiring while local unstaged TASKS.md assigns it to Codex packaging. Neither task/file claim was overwritten. Coordinator and packaging agent notified; await explicit ID resolution before normal merge.
 
@@ -156,9 +158,9 @@ under the short lock. Preserve retained0198 reservations and claim released file
   test target is Windowsx64 with an installed Java21runtime. Package/checker outputs get a separate
   new target directory and must never overwrite existing bundles. Build/QA windows remain coordinated.
 
-- 2026-10-27 11:17 Asia/Jerusalem: Codex T4C-0204 implementation agent claims exclusive Maven/root target window for online-client bundle build and headless fixture checks. Git integration remains with docs_validate; no QA server or GUI window claimed. Source base 121be412f727334edd9bfb6b73fe69f9d68fe57b, branch codex/runtime-metrics; exact owned new files are package-online-client.ps1, OnlinePackageCheck.java, test-online-package-check.ps1 and CLIENT_DISTRIBUTION.md. Next action: build create-only package and run checker/PowerShell 5/7 validation.
+- 2026-10-27 11:17 Asia/Jerusalem: Codex T4C-0205 implementation agent claims exclusive Maven/root target window for online-client bundle build and headless fixture checks. Git integration remains with docs_validate; no QA server or GUI window claimed. Source base 121be412f727334edd9bfb6b73fe69f9d68fe57b, branch codex/runtime-metrics; exact owned new files are package-online-client.ps1, OnlinePackageCheck.java, test-online-package-check.ps1 and CLIENT_DISTRIBUTION.md. Next action: build create-only package and run checker/PowerShell 5/7 validation.
 
-- 2026-10-27 11:18 Asia/Jerusalem: T4C-0204 agent immediately releases its just-claimed Maven/target window after coordinator clarified that T4C-0198 post-merge rebuild retains priority. No Maven, target, checker or bundle command was run. T4C-0204 remains static-only pending explicit post-merge release.
+- 2026-10-27 11:18 Asia/Jerusalem: T4C-0205 agent immediately releases its just-claimed Maven/target window after coordinator clarified that T4C-0198 post-merge rebuild retains priority. No Maven, target, checker or bundle command was run. T4C-0205 remains static-only pending explicit post-merge release.
 
 - Coordination correction: Claude PR125 reserved0204/mainac1cbe2a before Codex's local packaging
   allocation. Preserve Claude0204; the independent Codex packaging task is now0205, nextID0206.
