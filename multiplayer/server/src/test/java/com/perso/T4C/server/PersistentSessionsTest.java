@@ -377,8 +377,10 @@ class PersistentSessionsTest {
   }
 
   private static HostedWorlds hostedFor(OnlineStore store,PreviewMap map) throws Exception {
+    var source=MonsterCatalog.loadBundled().monsters();
+    var guard=source.get("Olin Haad Guard 3");
     return new HostedWorlds(HostedRegionPlan.single(map),store,ItemCatalog.loadBundled(),
-        new MonsterContent(MonsterContent.VERSION,Map.of(),List.of()));
+        new MonsterContent(MonsterContent.VERSION,Map.of(guard.getName(),guard),List.of()));
   }
 
   private static void await(PersistentSessions sessions,CompletableFuture<?> result) throws Exception {
