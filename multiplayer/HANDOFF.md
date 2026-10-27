@@ -386,6 +386,10 @@ No server pursuit is active or rendered movement verified. T4C-0212 reserves a s
 new server controller/test slice; existing moving core files remain conditional on
 explicit Claude handoff, so neither task completes M4.
 
+## Loot and quest server checkpoint (T4C-0204/0206, Claude lane)
+
+Merged and CI-verified (including PostgreSQL tests): schema v10 ground loot and receipt-bound atomic claim (PR128); region loot cache, pickup, expiry sweep, lethal-kill drops, looted monsters attackable (PR130); spell/quest catalogs and quest drafts (PR132); self-cast and potion drafts (PR134); quest flag allowlist and Warden Aelric greeting (PR135); quest turn-in commits gold/XP/item/spell/flags once (PR138); protocol 5 `/pickup`, `loot` in `/state`, `/interact` topics (PR142). At this checkpoint, native loot/dialogue controls L10, NativeLootProbe L12, `/cast` and `/use` A7, regeneration A5, renewed_wards Q10 and corpse-item recovery L11 remained open. The later owner L11 decision and current file holds are recorded below. This checkpoint is backend/CI evidence, with no rendered-client M2 or M3 evidence. SCOPE_PROPOSAL.md remains unapproved.
+
 ## Current peer coordination after PR145 (T4C-0203 follow-up)
 
 Claude PR144 released PreviewServer, PreviewServerTest and OnlineProtocol after the shared HTTP/protocol work; PR145 delivered native loot controls, but its OnlineClient hold has no recorded release. Claude still holds OnlineStore, PersistentSessions, HostedWorlds and OnlineMelee. PersistentCreatures is reserved for Codex but not edited.

@@ -21,7 +21,9 @@ import com.perso.T4C.helper.ModifSprites;
 import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.monster.core.MonsterAnimations;
+import com.perso.T4C.objects.GroundItem;
 import com.perso.T4C.online.model.CreatureView;
+import com.perso.T4C.online.model.GroundLootView;
 import com.perso.T4C.player.PlayerAnimations;
 import com.perso.T4C.player.PlayerMovement;
 import com.perso.T4C.render.ObjectRenderer;
@@ -50,6 +52,13 @@ public final class OnlineClient extends ApplicationAdapter {
   private final OrthographicCamera hudCamera = new OrthographicCamera();
   private final Map<Long, Avatar> avatars = new HashMap<>();
   private final Map<Long, CreatureAvatar> creatures = new HashMap<>();
+  /** Ground drops of the current snapshot, keyed by their server identity. Textures are shared. */
+  private final Map<java.util.UUID, GroundItem> groundLoot = new HashMap<>();
+  /** Same reach as offline pickup (OBJECT_MAX_INTERACTION_DISTANCE); the server enforces it again. */
+  private static final float PICKUP_RANGE_TILES = 8f;
+  private static final long PICKUP_MESSAGE_MS = 3000L;
+  private volatile String pickupMessageKey;
+  private volatile long pickupMessageUntil;
   private long lastTick = -1;
   private long targetCreature;
   private String error;
@@ -161,6 +170,7 @@ public final class OnlineClient extends ApplicationAdapter {
               if (!focused || connection == null) return false;
               if (code == Input.Keys.SPACE) { attackNearest(); return true; }
               if (code == Input.Keys.E) { recoverNearest(); return true; }
+              if (code == Input.Keys.G) { pickUpNearest(); return true; }
               if (code != Input.Keys.W
                   && code != Input.Keys.A
                   && code != Input.Keys.S
@@ -200,6 +210,7 @@ public final class OnlineClient extends ApplicationAdapter {
     avatars.values().forEach(a -> a.animation.dispose());
     avatars.clear();
     creatures.clear(); // Textures belong to the shared SpriteLoader.
+    groundLoot.clear();
     error = null;
     lastTick = -1;
     targetCreature = 0;
@@ -246,6 +257,47 @@ public final class OnlineClient extends ApplicationAdapter {
     catch (IllegalStateException pendingOrDisconnected) { /* Single-flight commands stay bounded. */ }
   }
 
+  /** Nearest drop within reach. The server still decides ownership, capacity and the item instance. */
+  private void pickUpNearest() {
+    var view=connection.view();
+    if (view==null || view.character()==null || !"connected".equals(connection.status())) return;
+    var own=view.snapshot().players().stream().filter(a -> a.id()==view.ownId()).findFirst().orElse(null);
+    if (own==null) return;
+    var nearest=view.snapshot().loot().stream()
+        .filter(drop -> lootDistance(own,drop) <= PICKUP_RANGE_TILES)
+        .min(java.util.Comparator.comparingDouble(drop -> lootDistance(own,drop)))
+        .orElse(null);
+    if (nearest==null) return;
+    try {
+      connection.pickUp(nearest.id())
+          .thenAccept(result -> { if (result.messageKey()!=null) showPickupMessage(result.messageKey()); })
+          .exceptionally(failed -> null);
+    }
+    catch (IllegalStateException pendingOrDisconnected) { /* Single-flight commands stay bounded. */ }
+  }
+
+  /** Chebyshev tile distance, matching the server's reach check. Both sides are region-local tiles. */
+  private static double lootDistance(OnlineConnection.Actor own, GroundLootView drop) {
+    return Math.max(Math.abs(drop.x()-own.x()), Math.abs(drop.y()-own.y()));
+  }
+
+  private void showPickupMessage(String key) {
+    pickupMessageKey=key;
+    pickupMessageUntil=System.currentTimeMillis()+PICKUP_MESSAGE_MS;
+  }
+
+  /** Keeps one render object per current drop; positions use the same region-to-world mapping as creatures. */
+  private void syncGroundLoot(OnlineConnection.View view) {
+    var present=new HashSet<java.util.UUID>();
+    for (var drop : view.snapshot().loot()) {
+      present.add(drop.id());
+      var item=groundLoot.computeIfAbsent(drop.id(), ignored -> GroundItem.ofItem(drop.key(), 0f, 0f));
+      item.getPosition().set((float) (view.map().originX()+drop.x())*GRID_W,
+          (float) (view.map().originY()+drop.y())*GRID_H);
+    }
+    groundLoot.keySet().retainAll(present);
+  }
+
   /** Install only allowlisted local assets, on the render thread, before acknowledging a region. */
   private void prepareRegion(OnlineConnection.View view) throws Exception {
     var region=view.map();
@@ -262,7 +314,7 @@ public final class OnlineClient extends ApplicationAdapter {
       renderer=nextRenderer; map=nextMap;
     }
     if (renderedWorld!=region.world() || !java.util.Objects.equals(renderedRegion,region.key()) || renderedEpoch!=region.locationEpoch()) {
-      avatars.values().forEach(a -> a.animation.dispose()); avatars.clear(); creatures.clear();
+      avatars.values().forEach(a -> a.animation.dispose()); avatars.clear(); creatures.clear(); groundLoot.clear();
       inputKeys.clear(); connection.stopInput(); lastTick=-1; targetCreature=0;
       renderedWorld=region.world(); renderedRegion=region.key(); renderedEpoch=region.locationEpoch();
     }
@@ -326,6 +378,7 @@ public final class OnlineClient extends ApplicationAdapter {
               (float) (view.map().originY() + actor.y()) * GRID_H);
         }
         creatures.keySet().retainAll(presentCreatures);
+        syncGroundLoot(view);
       } catch (Exception failure) {
         error = I18n.key("online.client.load_error");
         Gdx.app.error("online", "Could not load online creature", failure);
@@ -336,6 +389,7 @@ public final class OnlineClient extends ApplicationAdapter {
     if (view == null) {
       avatars.values().forEach(a -> a.moving = false);
       creatures.values().forEach(c -> c.motion.stop());
+      groundLoot.clear();
     }
     camera.update();
     if (renderer != null) {
@@ -370,6 +424,13 @@ public final class OnlineClient extends ApplicationAdapter {
             false, null, (float) creature.state.health() / creature.state.maxHealth());
         actors.add(item);
       }
+      for (var drop : groundLoot.values()) {
+        var item = new ObjectRenderer.RenderItem();
+        item.isObject = false;
+        item.y = drop.getDepthY();
+        item.renderAction = () -> drop.render(decor, null);
+        actors.add(item);
+      }
       renderer.renderEntitiesWithDecors(camera, -1, -1, x0, x1, y0, y1, actors);
     }
     hudCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -387,6 +448,9 @@ public final class OnlineClient extends ApplicationAdapter {
         && "connected".equals(connection.status())) state = I18n.key("online.client.persistent");
     font.draw(hud, state, 16, Gdx.graphics.getHeight() - 16);
     font.draw(hud, I18n.key(view!=null && view.map().persistent() ? "online.client.combat_controls" : "online.client.controls"), 16, 24);
+    String pickupKey=pickupMessageKey;
+    if (pickupKey!=null && System.currentTimeMillis()<pickupMessageUntil)
+      font.draw(hud, I18n.key(pickupKey), 16, 46);
     if (view != null)
       font.draw(
           hud,

@@ -26,7 +26,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0207 | Two-native-adapter graceful and forced server restart recovery probe | Multiplayer / Beta | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--two-adapter-server-restart-probe-t4c-0207) |
 | T4C-0206 | M3/M4 shared quest, spell-cast and heal rules plus quest/ability design (Claude lane) | Multiplayer / Beta | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--shared-quest-and-spell-rules-t4c-0206) |
 | T4C-0205 | Package the online client without developer checkout dependencies | Multiplayer / Beta | Done | `cd9e2a44` | [2026-10-27](CHANGELOG.md#2026-10-27--online-client-test-package-t4c-0205) |
-| T4C-0204 | M2 server loot wiring L6-L12, with owner-approved L11 partial corpse-item recovery and client/HTTP integration (Claude lane) | Multiplayer / Beta | In Progress | PR128, PR130, PR144, PR145 partial | pending |
+| T4C-0204 | M2 server loot wiring L6-L12, with owner-approved L11 individual corpse-item recovery (Claude lane) | Multiplayer / Beta | In Progress | PR128, PR130, PR142, PR144, PR145 partial | pending |
 | T4C-0203 | Coordinate Codex and Claude task/file/resource ownership | Process/Tooling | Done | `0e258e40` | [2026-10-27](CHANGELOG.md#2026-10-27--peer-agent-coordination-t4c-0203) |
 | T4C-0202 | M2 general monster loot and claim rules: domain rules first (Claude lane) | Multiplayer / Beta | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--online-loot-rules-t4c-0201-t4c-0202) |
 | T4C-0201 | Two-player scope proposal and M2 loot design docs (Claude lane) | Multiplayer / Beta | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--online-loot-rules-t4c-0201-t4c-0202) |

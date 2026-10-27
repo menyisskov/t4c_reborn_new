@@ -6,6 +6,17 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Online monster drops and quest turn-in groundwork (T4C-0204, T4C-0206)
+
+### Added
+- Looted monsters such as Skeletons can now be fought in the online game. Their drops are saved on the ground, reserved for the player who made the kill for a short time, then open to others, and disappear after fifteen minutes.
+- Picking up an item respects range, the reservation and carrying weight; a full or overweight inventory leaves the item on the ground. Two players racing for one item cannot both receive it.
+- Warden Aelric's ward-renewal quest can be turned in online: the gold, experience, spell and quest progress arrive together and only once, even if the player repeats the request or reconnects.
+- Online potions and the Light Heal style self-cast spells follow the same rules as single-player. These are not yet usable from the online game's controls.
+
+### Changed
+- Accepting a quest no longer stops a character from fighting online.
+
 ## 2026-10-27 — Native creature motion from server snapshots (T4C-0211)
 
 ### Changed

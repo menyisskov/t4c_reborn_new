@@ -1,5 +1,5 @@
 'use strict';
-const protocolVersion = 4;
+const protocolVersion = 5;
 const canvas = document.querySelector('#map');
 const ctx = canvas.getContext('2d');
 const status = document.querySelector('#status');
@@ -11,7 +11,7 @@ const t = key => words[key] || key;
 function message(key) { status.textContent = t(key); }
 async function api(path, body, token = session?.token) {
   const options = { headers: {}, signal: AbortSignal.timeout(3000), cache: 'no-store' };
-  if (path === '/join') options.headers['X-T4C-Protocol'] = String(protocolVersion);
+  options.headers['X-T4C-Protocol'] = String(protocolVersion);
   if (token) options.headers.Authorization = `Bearer ${token}`;
   if (body !== undefined) {
     options.method = 'POST'; options.body = body;
