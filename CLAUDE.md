@@ -103,6 +103,7 @@ Its step 1 is the full checklist; at minimum:
 
 ## Mistakes past reviews caught (don't repeat them)
 
+- A cumulative online XP ledger must be checked against both bounds of the declared level before applying progression. Earlier storage-only awards can exceed the next threshold without a matching level payload; these need explicit migration, not retroactive random resource/stat grants. OnlineProgressionTest covers both inconsistent bounds and the exact cap.
 - Shared equipment occupancy does not imply shared damage inputs: falling back from WEAPON2 to SHIELD granted dual-weapon damage from a shield. The online loadout regression checks zero shield off-hand damage while preserving shield armor.
 Add a line here whenever a review finds a new *class* of mistake, along with the test or rule
 that now guards against it.

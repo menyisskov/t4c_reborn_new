@@ -25,7 +25,9 @@ final class OnlineProgression {
     long cap=CURVE.getTotalXp(GameConstants.MAX_PLAYER_LEVEL);
     // Online experience is cumulative within this incarnation, not XP remaining in this level.
     if (level>GameConstants.MAX_PLAYER_LEVEL || character.experience()<CURVE.getTotalXp(level)
-        || character.experience()>cap) throw new PreviewWorld.Rejected(409,"invalid_progression");
+        || character.experience()>cap
+        || (level<GameConstants.MAX_PLAYER_LEVEL && character.experience()>=CURVE.getTotalXp(level+1)))
+      throw new PreviewWorld.Rejected(409,"invalid_progression");
     long award=Math.min(cap-character.experience(),PlayerProgression.scaledAward(baseExperience,0,false));
     if (award<=0) return new Result(0,p);
     var draft=new Draft();

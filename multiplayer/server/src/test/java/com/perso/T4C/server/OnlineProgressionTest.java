@@ -46,6 +46,8 @@ class OnlineProgressionTest {
     var unchanged=OnlineProgression.award(state(atCap,curve.getTotalXp(cap)),Long.MAX_VALUE,100,new Random(1));
     assertEquals(0,unchanged.experience()); assertEquals(atCap,unchanged.progress());
     assertThrows(PreviewWorld.Rejected.class,() -> OnlineProgression.award(state(p,0),1,100,new Random(1)));
+    assertThrows(PreviewWorld.Rejected.class,() -> OnlineProgression.award(state(wounded(1),curve.getTotalXp(2)),1,100,new Random(1)),
+        "Legacy ledger awards cannot silently roll retroactive level gains without migration");
   }
 
   @Test @EnabledIfEnvironmentVariable(named="T4C_DB_URL",matches=".+")
