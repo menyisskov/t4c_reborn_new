@@ -6,13 +6,14 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0185`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0186`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0185 | Keep creature damage and its rewards together across recovery | Multiplayer / Alpha | In Progress | pending | [2026-10-27](CHANGELOG.md#2026-10-27--persistent-creature-damage-t4c-0185) |
 | T4C-0184 | Restore and respawn persistent creatures in the running world | Multiplayer / Alpha | Done | `f6ca92d0` | [2026-10-27](CHANGELOG.md#2026-10-27--live-creature-recovery-t4c-0184) |
 | T4C-0183 | Persist creature spawn generations across recovery | Multiplayer / Alpha | Done | 116a1ea5 | [2026-10-27](CHANGELOG.md#2026-10-27--persistent-creature-life-tracking-t4c-0183) |
 | T4C-0182 | Commit one recipient for shared-world rewards | Multiplayer / Alpha | Done | fef7b707 | [2026-10-27](CHANGELOG.md#2026-10-27--shared-world-reward-protection-t4c-0182) |

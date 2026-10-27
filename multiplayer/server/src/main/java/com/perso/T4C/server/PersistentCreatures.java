@@ -28,6 +28,7 @@ final class PersistentCreatures implements AutoCloseable {
     for (var spawn:world.creatureSpawns()) {
       var saved=store.loadOrCreateSpawn(spawn.spawn().persistenceKey());
       entries.put(spawn.id(),new Entry(spawn,saved));
+      world.creatureHealth(spawn.id(),saved.health());
       world.creatureActive(spawn.id(),saved.recipient()==null);
     }
     worker=new ThreadPoolExecutor(1,1,0,TimeUnit.SECONDS,new ArrayBlockingQueue<>(256),
@@ -42,9 +43,19 @@ final class PersistentCreatures implements AutoCloseable {
 
   /** Called only after a world-reward transaction commits. */
   void rewardCommitted(long id) {
+    reload(id,true);
+  }
+
+  /** Refresh committed partial damage without briefly removing the still-living actor. */
+  void damageCommitted(long id) {
+    reload(id,false);
+  }
+
+  private void reload(long id, boolean hide) {
     var entry=entries.get(id);
     if (entry==null) throw new IllegalArgumentException("Unknown creature");
-    world.creatureActive(id,false); entry.recovering=true;
+    if (hide) world.creatureActive(id,false);
+    entry.recovering=true;
     if (!entry.pending) submit(entry);
   }
 
@@ -54,6 +65,7 @@ final class PersistentCreatures implements AutoCloseable {
       var entry=entries.get(result.id()); entry.pending=false;
       if (result.saved()!=null) {
         entry.saved=result.saved(); entry.recovering=false;
+        world.creatureHealth(result.id(),entry.saved.health());
         world.creatureActive(result.id(),entry.saved.recipient()==null);
       }
     }

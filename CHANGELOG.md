@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Persistent creature damage (T4C-0185)
+
+### Added
+- Online combat preparation now keeps damage and its rewards together through reconnects and server restarts. Wounded creatures retain their saved health, and competing attacks cannot both earn rewards for the same damage. Player attacks are not connected yet.
+
 ## 2026-10-27 — Live creature recovery (T4C-0184)
 
 ### Added
