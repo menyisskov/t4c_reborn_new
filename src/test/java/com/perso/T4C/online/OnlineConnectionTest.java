@@ -2,14 +2,22 @@ package com.perso.T4C.online;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.perso.T4C.online.model.GroundLootView;
 import com.sun.net.httpserver.HttpServer;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BooleanSupplier;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -218,6 +226,177 @@ class OnlineConnectionTest {
       assertTrue(leave.await(3, TimeUnit.SECONDS), "Closing must release the temporary session");
     } finally {
       releaseEquipment.countDown();
+      server.stop(0);
+    }
+  }
+
+  private static final String LOOT_TOKEN = "a".repeat(64);
+
+  private static String regionJson(long epoch) {
+    return "{\"world\":" + epoch + ",\"key\":\"region-" + epoch + "\",\"locationEpoch\":" + epoch
+        + ",\"originX\":" + (epoch == 0 ? 2904 : 264) + ",\"originY\":" + (epoch == 0 ? 1029 : 353)
+        + ",\"width\":80,\"height\":60}";
+  }
+
+  private static void awaitTrue(BooleanSupplier condition) throws InterruptedException {
+    long deadline = System.nanoTime() + Duration.ofSeconds(5).toNanos();
+    while (!condition.getAsBoolean() && System.nanoTime() < deadline) Thread.sleep(10);
+    assertTrue(condition.getAsBoolean());
+  }
+
+  @Test
+  void groundLootIsStagedByLocationAndPickupRefusalsStaySingleFlight() throws Exception {
+    var credentials = new OnlineConnection.Credentials("b".repeat(64), UUID.randomUUID());
+    var revision = new AtomicLong(1);
+    var regionEpoch = new AtomicLong();
+    var claimed = new AtomicBoolean();
+    var holdPickup = new AtomicBoolean();
+    var pickupAccepted = new AtomicBoolean();
+    var releasePickup = new CountDownLatch(1);
+    var pickupCalls = new AtomicInteger();
+    var pickupBodies = new CopyOnWriteArrayList<String>();
+    var lootA = UUID.randomUUID();
+    var lootB = UUID.randomUUID();
+    var server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+    server.createContext("/", exchange -> {
+      String path = exchange.getRequestURI().getPath();
+      String request = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+      String loot = regionEpoch.get() == 0
+          ? (claimed.get() ? "[]"
+              : "[{\"id\":\"" + lootA + "\",\"x\":21,\"y\":37,\"key\":\"item.leather_gloves\","
+                  + "\"ownerPlayerId\":null,\"ownerRemainingMs\":4000}]")
+          : "[{\"id\":\"" + lootB + "\",\"x\":3,\"y\":4,\"key\":\"item.leather_gloves\","
+              + "\"ownerPlayerId\":7,\"ownerRemainingMs\":0}]";
+      int status = 200;
+      String reply = "{}";
+      switch (path) {
+        case "/map" -> reply = "{\"protocolVersion\":" + com.perso.T4C.online.model.OnlineProtocol.VERSION
+            + ",\"persistent\":true," + regionJson(regionEpoch.get()).substring(1);
+        case "/join" -> reply = "{\"token\":\"" + LOOT_TOKEN + "\",\"id\":7,\"region\":" + regionJson(0) + "}";
+        case "/state" -> reply = "{\"tick\":8,\"region\":" + regionJson(regionEpoch.get())
+            + ",\"characterRevision\":" + revision.get()
+            + ",\"players\":[{\"id\":7,\"x\":40.5,\"y\":30.5,\"sequence\":0,\"hp\":27,\"maxHp\":40}],\"loot\":" + loot + "}";
+        case "/character" -> reply = "{\"id\":\"" + credentials.characterId() + "\",\"name\":\"Loot tester\",\"gold\":0,"
+            + "\"experience\":0,\"revision\":" + revision.get() + ",\"locationEpoch\":" + regionEpoch.get() + "}";
+        case "/corpses" -> reply = "[]";
+        case "/pickup" -> {
+          pickupCalls.incrementAndGet();
+          pickupBodies.add(request);
+          try { if (holdPickup.get()) releasePickup.await(3, TimeUnit.SECONDS); }
+          catch (InterruptedException interrupted) { Thread.currentThread().interrupt(); }
+          if (pickupAccepted.get()) {
+            claimed.set(true);
+            reply = "{\"revision\":" + revision.incrementAndGet() + "}";
+          } else {
+            status = 409;
+            reply = "{\"error\":\"loot_reserved\"}";
+          }
+        }
+        default -> { }
+      }
+      byte[] bytes = reply.getBytes(StandardCharsets.UTF_8);
+      exchange.sendResponseHeaders(status, bytes.length);
+      exchange.getResponseBody().write(bytes);
+      exchange.close();
+    });
+    server.start();
+    try (var connection = new OnlineConnection(
+        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials)) {
+      awaitTrue(() -> connection.view() != null && connection.view().snapshot().loot().size() == 1);
+      var seen = connection.view().snapshot().loot().getFirst();
+      assertEquals(lootA, seen.id());
+      assertEquals("item.leather_gloves", seen.key());
+      assertEquals(21.0, seen.x());
+      assertEquals(37.0, seen.y(), "Loot uses region-local tiles like creatures");
+      assertNull(seen.ownerPlayerId());
+      assertEquals(4000, seen.ownerRemainingMs());
+      assertEquals(0, connection.view().map().locationEpoch());
+
+      var refused = connection.pickUp(lootA).toCompletableFuture().get(3, TimeUnit.SECONDS);
+      assertFalse(refused.accepted());
+      assertEquals("online.loot.reserved", refused.messageKey());
+      assertEquals("connected", connection.status(), "A refused pickup is a normal conflict, not a broken connection");
+      assertEquals("1 0 " + lootA, pickupBodies.getFirst(), "Pickup sends only revision, epoch and loot identity");
+
+      holdPickup.set(true);
+      pickupAccepted.set(true);
+      var inFlight = connection.pickUp(lootA).toCompletableFuture();
+      awaitTrue(() -> pickupCalls.get() == 2);
+      assertThrows(IllegalStateException.class, () -> connection.pickUp(lootA), "Only one pickup is in flight");
+      releasePickup.countDown();
+      var picked = inFlight.get(3, TimeUnit.SECONDS);
+      assertTrue(picked.accepted());
+      assertNull(picked.messageKey());
+      assertEquals(2, picked.character().revision());
+      awaitTrue(() -> connection.view().snapshot().loot().isEmpty());
+
+      holdPickup.set(false);
+      pickupAccepted.set(false);
+      regionEpoch.set(1);
+      awaitTrue(() -> connection.view() != null && connection.view().map().locationEpoch() == 1
+          && !connection.view().snapshot().loot().isEmpty());
+      assertEquals(List.of(lootB), connection.view().snapshot().loot().stream().map(GroundLootView::id).toList(),
+          "Drops from the old location never survive a region change");
+      long currentRevision = connection.view().character().revision();
+      var moved = connection.pickUp(lootB).toCompletableFuture().get(3, TimeUnit.SECONDS);
+      assertFalse(moved.accepted());
+      assertEquals("online.loot.reserved", moved.messageKey());
+      assertEquals(currentRevision + " 1 " + lootB, pickupBodies.getLast(),
+          "Pickup intent names the location epoch of the drop it was staged in");
+    } finally {
+      releasePickup.countDown();
+      server.stop(0);
+    }
+  }
+
+  @Test
+  void ambiguousPickupDisconnectsWithoutReplay() throws Exception {
+    var credentials = new OnlineConnection.Credentials("b".repeat(64), UUID.randomUUID());
+    var lootA = UUID.randomUUID();
+    var pickupCalls = new AtomicInteger();
+    var release = new CountDownLatch(1);
+    var server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+    server.createContext("/", exchange -> {
+      String path = exchange.getRequestURI().getPath();
+      exchange.getRequestBody().readAllBytes();
+      if (path.equals("/pickup")) {
+        pickupCalls.incrementAndGet();
+        // Hold past the client's bounded request budget so the outcome is unknown to the client.
+        try { release.await(5, TimeUnit.SECONDS); }
+        catch (InterruptedException interrupted) { Thread.currentThread().interrupt(); }
+        exchange.close();
+        return;
+      }
+      String reply = switch (path) {
+        case "/map" -> "{\"protocolVersion\":" + com.perso.T4C.online.model.OnlineProtocol.VERSION
+            + ",\"persistent\":true," + regionJson(0).substring(1);
+        case "/join" -> "{\"token\":\"" + LOOT_TOKEN + "\",\"id\":7,\"region\":" + regionJson(0) + "}";
+        case "/state" -> "{\"tick\":8,\"region\":" + regionJson(0) + ",\"characterRevision\":1,"
+            + "\"players\":[{\"id\":7,\"x\":40.5,\"y\":30.5,\"sequence\":0,\"hp\":27,\"maxHp\":40}],"
+            + "\"loot\":[{\"id\":\"" + lootA + "\",\"x\":21,\"y\":37,\"key\":\"item.leather_gloves\","
+            + "\"ownerPlayerId\":null,\"ownerRemainingMs\":0}]}";
+        case "/character" -> "{\"id\":\"" + credentials.characterId() + "\",\"name\":\"Loot tester\",\"gold\":0,"
+            + "\"experience\":0,\"revision\":1,\"locationEpoch\":0}";
+        case "/corpses" -> "[]";
+        default -> "{}";
+      };
+      byte[] bytes = reply.getBytes(StandardCharsets.UTF_8);
+      exchange.sendResponseHeaders(200, bytes.length);
+      exchange.getResponseBody().write(bytes);
+      exchange.close();
+    });
+    server.start();
+    try (var connection = new OnlineConnection(
+        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials)) {
+      awaitTrue(() -> connection.view() != null && !connection.view().snapshot().loot().isEmpty());
+      var uncertain = connection.pickUp(lootA).toCompletableFuture();
+      assertThrows(java.util.concurrent.ExecutionException.class, () -> uncertain.get(6, TimeUnit.SECONDS));
+      awaitTrue(() -> "disconnected".equals(connection.status()));
+      assertNull(connection.view());
+      assertEquals(1, pickupCalls.get(), "An ambiguous pickup must never be automatically replayed");
+      assertThrows(IllegalStateException.class, () -> connection.pickUp(lootA));
+    } finally {
+      release.countDown();
       server.stop(0);
     }
   }

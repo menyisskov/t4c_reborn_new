@@ -6,7 +6,8 @@ import java.util.UUID;
 
 /**
  * Public view of an item lying on the ground in a region. The owner is only a public player ID,
- * never a character or account ID; {@code ownerPlayerId} is null once the owner window has closed.
+ * never a character or account ID. {@code ownerPlayerId} is named only for the viewer's own owner
+ * window; another owner's window is reported with a null ID and its approximate remaining time.
  */
 public record GroundLootView(UUID id, double x, double y, String key, String ownerPlayerId,
     long ownerRemainingMs) {
@@ -18,8 +19,5 @@ public record GroundLootView(UUID id, double x, double y, String key, String own
       throw new IllegalArgumentException("Unnormalized loot item key");
     }
     if (ownerRemainingMs < 0) throw new IllegalArgumentException("Owner window must not be negative");
-    if (ownerPlayerId == null && ownerRemainingMs != 0) {
-      throw new IllegalArgumentException("Closed owner window must have no remaining time");
-    }
   }
 }
