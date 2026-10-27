@@ -49,14 +49,17 @@ public final class ServerMain {
       System.setProperty("sun.net.httpserver.maxReqTime", "5");
       System.setProperty("sun.net.httpserver.maxRspTime", "5");
       var transport=ServerTransport.fromEnvironment(System.getenv());
-      var store="--online".equals(args[0]) ? com.perso.T4C.server.persistence.OnlineStore.fromEnvironment() : null;
+      var store="--online".equals(args[0]) ? com.perso.T4C.server.persistence.OnlineStore.pooledFromEnvironment() : null;
+      boolean serverOwnsStore=false;
+      try {
       if (store!=null) store.migrate();
       String controlFile=System.getenv("T4C_CONTROL_FILE");
       String controlToken=store!=null && controlFile!=null && !controlFile.isBlank()
           ? OnlineProvisioner.controlToken(java.nio.file.Path.of(controlFile)) : null;
       var plan=store==null ? HostedRegionPlan.single(PreviewMap.load(java.nio.file.Path.of(args[1])))
           : HostedRegionPlan.startingSlice(java.nio.file.Path.of(args[1]));
-      try (var server = new PreviewServer(plan, Integer.parseInt(args[2]),store,controlToken,transport)) {
+      try (var server = new PreviewServer(plan, Integer.parseInt(args[2]),store,controlToken,transport,store!=null)) {
+        serverOwnsStore=true;
         Thread shutdown = new Thread(server::close, "preview-shutdown");
         Runtime.getRuntime().addShutdownHook(shutdown);
         try {
@@ -70,6 +73,7 @@ public final class ServerMain {
           catch (IllegalStateException ignored) { }
         }
       }
+      } finally { if(!serverOwnsStore && store!=null) store.close(); }
       return;
     }
     if (args.length == 1 && "--help".equals(args[0])) {

@@ -83,3 +83,9 @@ progress. The separate `NativeRosterProbe` also passed owner-only roster discove
 active-lease reporting and two selected-character joins without progress changes.
 The QA server remained healthy afterward, with an empty error log. No GUI was opened;
 the rendering and actual packet-loss limitations above still apply.
+
+After the explicit shutdown-failure correction, full PostgreSQL verification/package passed
+18 domain +82 server tests with no failures/errors/skips. Both roster and fault probes passed
+again against the restarted matching QA server. Logs: `$env:TEMP/t4c-0200-integrated-reverify.log`,
+`t4c-0200-roster-probe.log`, `t4c-0200-network-fault-probe.log`. This delivery includes the probe
+source, with the same no-rendering/no-real-packet-loss limits.

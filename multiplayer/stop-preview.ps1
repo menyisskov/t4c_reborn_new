@@ -18,11 +18,17 @@ if ($command.Contains('--online') -and !$Force) {
     $controlFile = Join-Path $PSScriptRoot ('server/target/' + $record.controlFile)
     $controlToken = (Get-Content -LiteralPath $controlFile -Raw).Trim()
     if ($controlToken -notmatch '^[0-9a-f]{64}$') { throw 'Invalid shutdown credentials.' }
+    # Retain the process handle before shutdown so ExitCode remains readable after it exits.
+    try { $null = $process.Handle }
+    catch { throw 'Server exit status cannot be monitored. No shutdown request was sent.' }
     $controlUrl = "http://127.0.0.1:$($record.port)"
     try {
         $null = Invoke-RestMethod "$controlUrl/admin/shutdown" -Method Post -Body '' -ContentType 'text/plain' -Headers @{ Origin = $controlUrl; Authorization = 'Bearer ' + $controlToken } -TimeoutSec 3
     } catch { if (!$process.HasExited) { throw 'Graceful shutdown request failed. Use -Force only for intentional crash testing.' } }
-    if (!$process.WaitForExit(20000)) { throw 'Graceful shutdown has not completed. Inspect server logs; -Force discards uncommitted movement.' }
+    if (!$process.WaitForExit(90000)) { throw 'Graceful shutdown has not completed. Inspect server logs; -Force discards uncommitted movement.' }
+    try { $exitCode = $process.ExitCode }
+    catch { throw 'Server exit status could not be read. Inspect server logs and recover the last committed state before continuing.' }
+    if ($null -eq $exitCode -or $exitCode -ne 0) { throw 'Server exited with a failure or unreadable status. Inspect server logs and recover the last committed state before continuing.' }
     Write-Host 'Persistent server stopped after its bounded checkpoint flush. Check server logs for persistence failures.'
     return
 }

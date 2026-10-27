@@ -6,6 +6,17 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Online database reliability (T4C-0197)
+
+### Fixed
+- Persistent online servers reuse a bounded set of database connections. A slow database cannot make connection requests wait indefinitely.
+- Server shutdown waits for accepted saves and worker cleanup; incomplete saves or failed exits are reported as failures rather than successful shutdowns. Reconnecting recovers committed progress without repeating uncertain rewards.
+
+## 2026-10-27 — Online character discovery (T4C-0196)
+
+### Added
+- Online accounts can securely discover their own saved characters and whether each is available. Discovery does not reserve a player slot or expose another account's inventory or credentials. The visible character selector remains a separate step.
+
 ## 2026-10-27 — Peer-agent coordination (T4C-0203)
 
 ### Changed

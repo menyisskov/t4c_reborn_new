@@ -55,7 +55,12 @@ final class HostedWorlds implements AutoCloseable {
     for(var region:regions) { if(region.creatures!=null) region.creatures.step();if(region.retaliation!=null) region.retaliation.step(); }
   }
   @Override public void close() {
-    if(sessions!=null) sessions.shutdown();
-    for(var region:regions) if(region.creatures!=null) region.creatures.close();
+    RuntimeException failure=null;
+    try { if(sessions!=null) sessions.shutdown(); } catch(RuntimeException error) { failure=error; }
+    for(var region:regions) if(region.creatures!=null) {
+      try { region.creatures.close(); }
+      catch(RuntimeException error) { if(failure==null) failure=error;else failure.addSuppressed(error); }
+    }
+    if(failure!=null) throw failure;
   }
 }
