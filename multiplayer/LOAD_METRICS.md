@@ -139,3 +139,19 @@ contained no control token or path. It recorded eight attacks, six accepted comm
 three HP changes and an observed 34.029 Hz tick rate. The report is
 `target/native-adapter-soak-0198-combined-smoke.json` (ignored local evidence).
 This check does not replace the two-hour mixed Beta run or rendered-client QA.
+
+## Retained two-hour native-adapter baseline (T4C-0198)
+
+Read-only assessment of retained %TEMP%/t4c-0198-soak-t4c_soak_0198_4e09eaef1c6a/soak-report.json and status.json on 2026-10-27. The report SHA-256 is 76B0DD1C0B1A29E06CAEF09073685FFDE94C2BE90227B74AC9796C8AC62E03F7 and status SHA-256 FF53DB2F7DB08134F72A9575C0B7D78CC3982F4810B8E092F84016050C56FDF1. Metadata records immutable source 0fb90aeb5ff61a937b86d78b03077d1e099f863a, protocol 4/schema 10, server JAR SHA-256 FC54A617660D0DDEAD2757FE59C0B3EA205DF640A49A33E799AEC964C71BEEC8, client JAR C7CAA3512E24442C7641044520B5E543522C3C5987590FB9C64DD8D8DB751890, and soak source 6C761B92C68C0B572E4005BB2568ED8E8A53E2F9EADE24364DB3424394653003. Those three file hashes matched the retained runtime and current harness source. Private control/profiles were not read or copied during assessment.
+
+| Measure | Retained result |
+| --- | --- |
+| Duration and occupancy | 7,200.031 s; maximum 20; 3,492.784 s (58.213 min, 48.511%) at 20, 3,706.076 s (61.768 min) at 19; brief 16/0 transitions |
+| Lifecycle and failures | Adapter/server exit 0; supervisor/server/adapter PIDs gone; loopback18770 listener absent; 0 health failures, 0 metric sample failures, 0 player failures/errors; all three stderr logs empty |
+| Activity | 6,428 attacks, 41 recoveries; 4,461 accepted/2,008 rejected commands; 1,151 reconnects; 525,830 movement observations; 1,785 HP changes; 0 world transfers; 0 pending commands at report |
+| Command latency | 6,469 observations: 1,573 <=250 ms, 4,877 <=500 ms, 19 <=1000 ms, none above1000; no exact percentile or DB-operation latency implied |
+| Health and ticks | Mean health request 5.990 ms; 33.999 observed ticks/s; 244,720 completed/0 failed ticks; mean callback 0.555 ms, maximum147.470 ms; 2 over-budget callbacks, 1 deadline reset, maximum start lateness121.637 ms, maximum deadline debt134.751 ms |
+| Operator JVM metrics | 1,428 successful/0 failed samples; process CPU delta 10.889% of one core on average (28 reported available processors); used heap latest548.189 MiB/peak612.172 MiB; nonheap peak40.231 MiB. These are JVM memory pools, not resident memory. |
+| Database snapshot counters | Deadlocks0 before/after; rollbacks0→56, commits195→285,037, DB available at both endpoints. Snapshot counters do not identify the cause of 56 rollbacks or provide per-operation latency/pool waits. |
+
+The loop was running and internally consistent at the last operator sample; the report subsequently finished and the supervisor recorded both child exit codes 0. The sampled simulation had one schedule reset and two callbacks over the 29.412 ms step budget; its lifetime maxima are isolated spikes, not latency percentiles. Twenty connected clients did not remain present for two full hours, primarily because the harness intentionally reconnected each adapter 57–58 times. This ran native network adapters, not 20 rendered clients, and its activity omitted quest, loot, travel, mixed two-player play and actual network loss. It lacks byte throughput, DB operation/pool-wait latency and resident/native-memory observations. Preserve previous short-run, deadline-reproduction and failed diagnostic evidence above. This is a completed narrow baseline with useful measurements, not the final mixed 20-player Beta or M5 acceptance pass.

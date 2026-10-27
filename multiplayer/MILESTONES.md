@@ -49,7 +49,7 @@ playthrough and recovery criteria pass. Never infer Done from a task count or te
 | M2 — Inventory and loot | Partial equipment/corpse services | Existing inventory/equipment work; T4C-0201, 0202 (design and pickup/drop rules only) | Visible inventory, general monster loot, claim/quantity integrity |
 | M3 — Complete authored adventure | Opening letter only; full loop incomplete | T4C-0193, 0194, 0195 | Full quest service, kill credit, rewards and required hosted routes |
 | M4 — Supported combat and abilities | Restricted melee/physical retaliation and brief rendered attack/death check; pure pursuit decisions and snapshot-driven native creature animation prepared, with no server pursuit | T4C-0189, 0190, 0209, 0210, 0211 | Server pursuit/AI and the declared classes' required abilities and state |
-| M5 — Reliability and anti-cheat | Pool/shutdown/fault probes, short operator-metrics checks, isolated two-adapter server restart and schema-9/schema-10 database-crash probes, and brief rendered reconnect pass; sustained recovery/load/abuse gates open | T4C-0191, 0197, 0198, 0207, 0208 | Broader gameplay recovery, rendered restart, failure drills, sustained measured stability and abuse checks |
+| M5 — Reliability and anti-cheat | Pool/shutdown/fault probes, final two-hour native-adapter baseline with partial 20-player occupancy, isolated two-adapter restart and schema-9/schema-10 database-crash probes, and brief rendered reconnect pass; full mixed recovery/load/abuse gates open | T4C-0191, 0197, 0198, 0207, 0208 | Broader gameplay recovery, rendered restart, full-capacity mixed soak, bandwidth/DB latency and abuse checks |
 | M6 — Package and native acceptance | Create-only client and local-loopback server QA packages, headless integrity checks, isolated persistent server stop and brief two-window local client smoke pass; clean-machine, remote and full rendered playthrough open | T4C-0205, 0215 and cross-cutting work | Clean-machine delivery and complete two-rendered-client playthrough |
 
 Task IDs not yet claimed are deliberately not represented as completed or assigned work.
@@ -187,7 +187,9 @@ Required behavior:
   Include combat, loot, quests, travel and intentional reconnects rather than idle connections.
 - [ ] Record actual tick duration/debt, CPU/memory, bandwidth, database/command latency, occupancy
   and every error/recovery. Investigate stalls and growing queues/resources; do not count a failed
-  run as passed because its timer ended. Final 20-player acceptance is still a separate requirement.
+  run as passed because its timer ended. T4C-0198 recorded a two-hour native-adapter baseline,
+  but 20-player occupancy lasted only 58.213 minutes and the run lacked quest/loot/travel,
+  bandwidth and database-latency measures. Final 20-player acceptance is still a separate requirement.
 
 Done evidence: reproducible fault/abuse scripts, separate restored-database playthrough, and the
 completed two-player report tied to exact client/server/content/schema versions. HTTP reply faults
