@@ -280,6 +280,11 @@ quiz is gone; its i18n strings were deleted with it.
 - **Macros belong to the character, not the install.** They bind spell names, and spells are
   per-character, so they live in the save (`PlayerStateDto.macros`), not `game_preferences.json`.
   Anything else that is per-character in the same way belongs there too.
+- **Starter kit calls (owner, 2026-10-27):** Paladin opens with a mace and shield; Archer opens
+  with a basic bow, quiver and arrows; every mage (Mage and Battle Mage) opens with Arcane
+  Spark, a non-elemental bolt with no requirements, kept slightly weaker than Fire Dart at equal
+  intelligence. Cleric and Healer keep their own starting spells; extending Arcane
+  Spark to them is a one-line kit change if the owner wants it.
 - **Kits are worn, not carried.** `LocalCharacterStore` writes them straight into the save's
   equipment map. Only shared supplies (torches, potions) and stacked ammunition go in the bag.
 - **Starting spells are referenced by key and resolved through the registry**, because saves store

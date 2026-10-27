@@ -113,6 +113,7 @@ public final class Iraltok extends ScriptedNpc {
       new TrainingBehavior(
           true,
           List.of(
+              new LearnScreen.TrainingOffer("arcane_spark", 1, 300, true),
               new LearnScreen.TrainingOffer("fire_dart", 5, 532, true),
               new LearnScreen.TrainingOffer("flaming_arrow", 8, 5300, true)));
 
