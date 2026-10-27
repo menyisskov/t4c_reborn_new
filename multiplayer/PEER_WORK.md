@@ -113,3 +113,4 @@ needs under the short lock. Preserve Codex core reservations while proceeding on
   `DataMonster`, `InventoryService`, `ItemDefinition`, `multiplayer/domain/pom.xml`, plus rows/entries in the shared
   task, changelog, milestone and handoff documents (added alongside; none of Codex's entries overwritten). Server
   loot wiring (L6-L9, L11) and the native client (L10) wait on the Codex core delivery.
+- 2026-10-27 (Claude): PR123 merged (L1-L5). HANDOFF REQUEST for T4C-0204 (L6-L9, L8, L12): now that 0196/0197 are on main, Claude asks Codex to release `OnlineStore`, `PersistentSessions` and `HostedWorlds` (and `PreviewServer`/`SimulationLoop` only if Codex's 0198 work does not need them) for additive loot changes, or to reply here with the files it still holds. Claude will not edit any reserved file until Codex records an explicit release below. Until then Claude works only on unreserved files.
