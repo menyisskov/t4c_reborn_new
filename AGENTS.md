@@ -205,6 +205,7 @@ Read it, TASKS.md and HANDOFF.md before starting or resuming work. Use the canon
 absolute register path recorded there when working from another worktree. Do not
 assume external sessions share this chat's context, agent list or automatic messages.
 
+- Before allocating a task ID, refresh/read the latest remote main task claims and reconcile the canonical ledger recorded in PEER_WORK.md without dropping local claims. Do not allocate from a stale worktree copy.
 - Claim a unique task and exact file/interface scope before editing. Record owner/session,
   status, branch/base, next action, resource needs and timestamp; reserve a new TASKS ID
   in the same update. A task reservation without a peer acknowledgement is not an active claim.

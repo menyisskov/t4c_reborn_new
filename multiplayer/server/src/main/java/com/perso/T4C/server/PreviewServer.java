@@ -39,6 +39,7 @@ public final class PreviewServer implements AutoCloseable {
   private final OnlineRetaliation retaliation;
   private final String controlToken;
   private final SimulationLoop loop;
+  private final ServerRuntimeMetrics runtimeMetrics;
   private final Thread simulation;
   private final AtomicBoolean closed = new AtomicBoolean();
   private final AtomicBoolean disposed = new AtomicBoolean();
@@ -94,6 +95,7 @@ public final class PreviewServer implements AutoCloseable {
       }
       hosted.step();
     });
+    runtimeMetrics = new ServerRuntimeMetrics(loop);
     simulation = new Thread(() -> {
       try { loop.run(Long.MAX_VALUE); }
       catch (Throwable error) { failure = error; }
@@ -192,10 +194,7 @@ public final class PreviewServer implements AutoCloseable {
         String body = new String(bytes, StandardCharsets.US_ASCII);
         switch (path) {
           case "/admin/shutdown" -> {
-            if (!exchange.getRemoteAddress().getAddress().isLoopbackAddress()
-                || controlToken==null || !java.security.MessageDigest.isEqual(
-                controlToken.getBytes(StandardCharsets.US_ASCII),token(exchange).getBytes(StandardCharsets.US_ASCII)))
-              throw new PreviewWorld.Rejected(403,"admin");
+            requireLocalAdmin(exchange);
             if (!body.isEmpty()) throw new PreviewWorld.Rejected(400,"input");
             json(exchange,200,Map.of("stopping",true));
             new Thread(this::close,"online-admin-stop").start();
@@ -363,6 +362,10 @@ public final class PreviewServer implements AutoCloseable {
           }
           case "/health" -> json(exchange, 200,
               Map.of("tick", loop.completedTicks(), "mode", store==null ? "local-preview" : "local-persistent", "capacity", PreviewWorld.MAX_PLAYERS));
+          case "/admin/metrics" -> {
+            requireLocalAdmin(exchange);
+            json(exchange,200,runtimeMetrics.snapshot());
+          }
           default -> throw new PreviewWorld.Rejected(404, "route");
         }
       } else throw new PreviewWorld.Rejected(405, "method");
@@ -381,6 +384,14 @@ public final class PreviewServer implements AutoCloseable {
     if (value == null || !value.matches("Bearer [0-9a-f]{64}"))
       throw new PreviewWorld.Rejected(401, "session");
     return value.substring(7);
+  }
+
+  private void requireLocalAdmin(HttpExchange exchange) {
+    if (!exchange.getRemoteAddress().getAddress().isLoopbackAddress() || controlToken==null)
+      throw new PreviewWorld.Rejected(403,"admin");
+    if (!java.security.MessageDigest.isEqual(controlToken.getBytes(StandardCharsets.US_ASCII),
+        token(exchange).getBytes(StandardCharsets.US_ASCII)))
+      throw new PreviewWorld.Rejected(403,"admin");
   }
 
   private void resource(HttpExchange exchange, String name, String type) throws IOException {
