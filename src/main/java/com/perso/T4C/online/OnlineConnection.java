@@ -3,6 +3,7 @@ package com.perso.T4C.online;
 import com.google.gson.Gson;
 import com.perso.T4C.online.model.OnlineCharacterView;
 import com.perso.T4C.online.model.CreatureView;
+import com.perso.T4C.online.model.GroundLootView;
 import com.perso.T4C.online.model.OnlineProtocol;
 import com.perso.T4C.online.model.OnlineRegion;
 import com.perso.T4C.online.model.NpcView;
@@ -36,8 +37,9 @@ public final class OnlineConnection implements AutoCloseable {
 
   public record Actor(long id, double x, double y, long sequence, long appearance, int hp, int maxHp) {}
 
+  /** Loot is region-local like creatures; it is published only with a snapshot whose region matches the map epoch. */
   public record Snapshot(long tick, List<Actor> players, Long characterRevision, List<CreatureView> creatures,
-      OnlineRegion region, List<NpcView> npcs) {}
+      OnlineRegion region, List<NpcView> npcs, List<GroundLootView> loot) {}
 
   public record Corpse(java.util.UUID id, int world, double x, double y, int itemCount, long gold) {}
 
@@ -54,9 +56,13 @@ public final class OnlineConnection implements AutoCloseable {
   private record Committed(Long revision) {}
   private static final class Rejected extends IllegalStateException {
     private final int code;
-    Rejected(int code) { super("Server rejected request: " + code); this.code = code; }
+    private final String reason;
+    Rejected(int code, String reason) { super("Server rejected request: " + code); this.code = code; this.reason = reason; }
   }
+  private record ErrorBody(String error) {}
 
+  /** Server cap for ground loot in one snapshot. */
+  private static final int MAX_GROUND_LOOT = 128;
   private static final Gson JSON = new Gson();
   private final URI endpoint;
   private final Credentials credentials;
@@ -140,6 +146,14 @@ public final class OnlineConnection implements AutoCloseable {
     return gameplayCommand("/recover",java.util.Objects.requireNonNull(corpse).toString());
   }
 
+  /**
+   * Ground loot pickup by identity only. The server decides range, owner window, capacity and the
+   * item instance; refusals return a readable {@link CommandResult#messageKey()}. Never replayed.
+   */
+  public java.util.concurrent.CompletionStage<CommandResult> pickUp(java.util.UUID loot) {
+    return gameplayCommand("/pickup", java.util.Objects.requireNonNull(loot).toString());
+  }
+
   /** Authored identity only; the server resolves dialogue, proximity and any item grant. */
   public java.util.concurrent.CompletionStage<CommandResult> interact(String npc) {
     if(npc==null || !npc.matches("[A-Za-z][A-Za-z0-9_]{0,63}"))
@@ -219,6 +233,7 @@ public final class OnlineConnection implements AutoCloseable {
             } catch (Rejected rejected) {
               if (rejected.code != 409) throw rejected;
               // A normal conflict leaves the session usable. Refresh, but never replay stale intent.
+              if (command.path().equals("/pickup")) messageKey = pickupRefusalKey(rejected.reason);
             }
           }
           int intent = direction.get();
@@ -273,6 +288,13 @@ public final class OnlineConnection implements AutoCloseable {
           for(var npc:npcs)
             if(npc==null || npc.x()>=map.width() || npc.y()>=map.height() || !npcIds.add(npc.id()))
               throw new IllegalStateException("Invalid NPC snapshot");
+          var loot = snapshot.loot()==null ? List.<GroundLootView>of() : snapshot.loot();
+          if (loot.size() > MAX_GROUND_LOOT) throw new IllegalStateException("Invalid loot count");
+          var lootIds = new java.util.HashSet<java.util.UUID>();
+          for (var drop : loot)
+            if (drop == null || drop.x() < 0 || drop.y() < 0 || drop.x() >= map.width() || drop.y() >= map.height()
+                || !lootIds.add(drop.id()))
+              throw new IllegalStateException("Invalid loot snapshot");
           if (map.persistent()) {
             if (snapshot.characterRevision() == null || snapshot.characterRevision() < 0)
               throw new IllegalStateException("Missing committed character revision");
@@ -307,7 +329,7 @@ public final class OnlineConnection implements AutoCloseable {
             view =
               new View(
                   joined.id(), map,
-                  new Snapshot(snapshot.tick(), List.copyOf(snapshot.players()), snapshot.characterRevision(), List.copyOf(creatures),snapshot.region(),List.copyOf(npcs)),
+                  new Snapshot(snapshot.tick(), List.copyOf(snapshot.players()), snapshot.characterRevision(), List.copyOf(creatures),snapshot.region(),List.copyOf(npcs),List.copyOf(loot)),
                   character,corpses);
             status = "connected";
           }
@@ -348,6 +370,28 @@ public final class OnlineConnection implements AutoCloseable {
     return loaded;
   }
 
+  /** Maps a pickup 409 code to a readable message. Unknown or non-loot conflicts use one generic refusal. */
+  static String pickupRefusalKey(String code) {
+    if (code == null) return "online.loot.refused";
+    return switch (code) {
+      case "loot_unavailable" -> "online.loot.unavailable";
+      case "loot_reserved" -> "online.loot.reserved";
+      case "out_of_range" -> "online.loot.out_of_range";
+      case "too_heavy" -> "online.loot.too_heavy";
+      case "unsupported_item" -> "online.loot.unsupported_item";
+      default -> "online.loot.refused";
+    };
+  }
+
+  private static String refusalReason(byte[] body) {
+    try {
+      var error = JSON.fromJson(new String(body, java.nio.charset.StandardCharsets.UTF_8), ErrorBody.class);
+      return error == null ? null : error.error();
+    } catch (RuntimeException malformed) {
+      return null;
+    }
+  }
+
   private String send(HttpClient client, String path, String body, String token) throws Exception {
     var request = HttpRequest.newBuilder(endpoint.resolve(path)).timeout(Duration.ofSeconds(2));
     if ("/join".equals(path)) request.header(OnlineProtocol.VERSION_HEADER, Integer.toString(OnlineProtocol.VERSION));
@@ -367,7 +411,7 @@ public final class OnlineConnection implements AutoCloseable {
       throw error;
     }
     if (response.statusCode() != 200)
-      throw new Rejected(response.statusCode());
+      throw new Rejected(response.statusCode(), refusalReason(response.body()));
     return new String(response.body(), java.nio.charset.StandardCharsets.UTF_8);
   }
 
