@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0214`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0216`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,7 +18,9 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0213 | Verify restored schema checks through PostgreSQL canonical parsing | Multiplayer / Beta reliability | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--backup-check-verification-on-schema-10-t4c-0213) |
+| T4C-0215 | Package a clean local QA server runtime and safe lifecycle tools | Multiplayer / Beta operations | In Progress | pending | pending |
+| T4C-0214 | Design authored starter-route hosting without fabricated portals | Multiplayer / Beta architecture only | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--authored-starter-route-hosting-design-t4c-0214) |
+| T4C-0213 | Verify restored schema checks and read committed state through two native adapters | Multiplayer / Beta reliability | Done | PR148; adapter-read evidence in [ACCEPTANCE](multiplayer/ACCEPTANCE.md) | [2026-10-27](CHANGELOG.md#2026-10-27--backup-check-verification-on-schema-10-t4c-0213) |
 | T4C-0212 | Build bounded server monster pursuit controller before core integration | Multiplayer / Beta groundwork | In Progress | pending | pending |
 | T4C-0211 | Render authoritative native creature movement and facing | Multiplayer / Beta groundwork | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--native-creature-motion-from-server-snapshots-t4c-0211) |
 | T4C-0210 | Share authored monster acquisition, leash and reach decisions | Multiplayer / Beta groundwork | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--shared-monster-pursuit-decisions-t4c-0210) |

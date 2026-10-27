@@ -113,6 +113,10 @@ Required behavior:
   through a stale flag, consumed shared objective, duplicated claim or unsupported-state guard.
 - [ ] Every required map/encounter is hosted. Authored entrances/returns and valid respawns work;
   unknown/unhosted destinations produce an explicit refusal rather than a silent substitute.
+  [HOSTED_STARTER_ROUTE_DESIGN.md](HOSTED_STARTER_ROUTE_DESIGN.md) records T4C-0214's
+  read-only candidate 249×117 contiguous starting region and its real collision paths;
+  the region has not been enabled. Sundial needs explicit NPC-owned-spawn classification,
+  and unhosted authored routes still need player-visible refusal.
 - [ ] Native map assets switch before movement resumes. Players in separate regions cannot see,
   target, damage or recover items from one another across that boundary.
 - [ ] Logout/rejoin and server restart preserve objective state, rewards and destination; delayed
@@ -173,8 +177,11 @@ Required behavior:
 - [ ] Restore a backup into a separate database and finish a native gameplay/reconnect check there;
   matching table hashes alone do not satisfy restored gameplay acceptance. T4C-0213 verified
   a live schema-10 exported-snapshot restore across all eleven online tables, including
-  PostgreSQL-reparsed equivalent CHECK definitions; both new loot tables were empty and
-  no native client connected to the restored realm.
+  PostgreSQL-reparsed equivalent CHECK definitions; both new loot tables were empty. Two
+  actual native network adapters subsequently rejoined the isolated restore and read matching
+  committed progress, balances and positions after real lease expiry, then left normally.
+  This was a network read check without rendered gameplay, new loot, combat or travel on the
+  restore, so the full playthrough gate remains open.
 - [ ] Run a two-hour mixed two-player session on the integrated candidate, with zero unexplained
   disconnects, crashes, invariant violations, duplicate value or lost acknowledged progress.
   Include combat, loot, quests, travel and intentional reconnects rather than idle connections.

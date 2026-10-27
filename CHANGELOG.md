@@ -6,11 +6,18 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Authored starter-route hosting design (T4C-0214)
+
+### Documented
+- A read-only map/content audit identified a candidate contiguous world-0 hosted region `[2735,2984) × [1029,1146)` (249 × 117 tiles), within the existing 256-tile axis cap. Collision paths reach Warden Aelric and all 13 authored quest Skeletons. The design records the NPC-owned Sundial startup blocker, unsupported NPC/routes, capacity estimates and coordinate/recovery handoffs.
+- This is architecture only. No region was expanded, quest scope/classes approved, native loot probe run or M2/M3/Beta milestone completed.
+
 ## 2026-10-27 — Backup CHECK verification on schema 10 (T4C-0213)
 
 ### Fixed
 - Backup verification now lets PostgreSQL reparse differing CHECK definitions on temporary restore-database tables before comparison. All other schema definitions, table row counts and hashes remain strict; no source database DDL is used.
 - A fresh backup of the running schema-10 twenty-adapter realm restored into a new database with all eleven online tables matching. Ground-loot and loot-claim tables were empty in that snapshot. Native gameplay from the restore remains unverified.
+- A later isolated read used two native network adapters against that verified restore. Both recovered their exact committed private state and positions, then left normally; rendered/full restored gameplay remains unverified.
 
 ## 2026-10-27 — Online monster drops and quest turn-in groundwork (T4C-0204, T4C-0206)
 
