@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.perso.T4C.online.model.OnlineCharacterView;
 import com.perso.T4C.online.model.CreatureView;
 import com.perso.T4C.online.model.OnlineProtocol;
+import com.perso.T4C.online.model.OnlineRegion;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -14,7 +15,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /** Network-only adapter for the local Alpha server; never touches graphics or character files. */
 public final class OnlineConnection implements AutoCloseable {
-  public record MapInfo(int originX, int originY, int width, int height, boolean persistent, int protocolVersion) {}
+  public record MapInfo(int originX, int originY, int width, int height, boolean persistent, int protocolVersion,
+      int world,String key,long locationEpoch) {
+    public OnlineRegion region() { return new OnlineRegion(world,key,originX,originY,width,height,locationEpoch); }
+  }
 
   public record Credentials(String secret, java.util.UUID characterId) {
     public Credentials {
@@ -30,14 +34,15 @@ public final class OnlineConnection implements AutoCloseable {
 
   public record Actor(long id, double x, double y, long sequence, long appearance, int hp, int maxHp) {}
 
-  public record Snapshot(long tick, List<Actor> players, Long characterRevision, List<CreatureView> creatures) {}
+  public record Snapshot(long tick, List<Actor> players, Long characterRevision, List<CreatureView> creatures,
+      OnlineRegion region) {}
 
   public record Corpse(java.util.UUID id, int world, double x, double y, int itemCount, long gold) {}
 
   public record View(long ownId, MapInfo map, Snapshot snapshot, OnlineCharacterView character,
       List<Corpse> corpses) {}
 
-  private record Joined(String token, long id) {}
+  private record Joined(String token, long id, OnlineRegion region) {}
 
   public record CommandResult(boolean accepted, OnlineCharacterView character) {}
   private record GameplayCommand(String path, String body, long revision,
@@ -53,6 +58,8 @@ public final class OnlineConnection implements AutoCloseable {
   private final Credentials credentials;
   private final AtomicInteger direction = new AtomicInteger(4);
   private final AtomicInteger pendingTap = new AtomicInteger(-1);
+  private final java.util.concurrent.atomic.AtomicLong readyRegion = new java.util.concurrent.atomic.AtomicLong(-1);
+  private volatile long acknowledgedRegion = -1;
   private final java.util.concurrent.atomic.AtomicReference<GameplayCommand> gameplay =
       new java.util.concurrent.atomic.AtomicReference<>();
   private final Thread worker;
@@ -94,6 +101,13 @@ public final class OnlineConnection implements AutoCloseable {
     return view;
   }
 
+  /** The renderer acknowledges only after the matching map assets are installed. */
+  public void confirmRegionReady(long locationEpoch) {
+    var current=view;
+    if (current!=null && current.map().locationEpoch()==locationEpoch && acknowledgedRegion!=locationEpoch)
+      readyRegion.set(locationEpoch);
+  }
+
   public String status() {
     return status;
   }
@@ -127,7 +141,7 @@ public final class OnlineConnection implements AutoCloseable {
     if (closed || current == null || current.character() == null || !status.equals("connected"))
       throw new IllegalStateException("Persistent session is not connected");
     long revision = current.character().revision();
-    var command = new GameplayCommand(path, revision + " " + arguments, revision,
+    var command = new GameplayCommand(path, revision + " " + current.map().locationEpoch() + " " + arguments, revision,
         new java.util.concurrent.CompletableFuture<>());
     if (!gameplay.compareAndSet(null, command)) throw new IllegalStateException("Gameplay command pending");
     // Close/disconnect may race publication of the command after the initial state check.
@@ -152,16 +166,25 @@ public final class OnlineConnection implements AutoCloseable {
           throw new IllegalStateException("Invalid server map");
         if (map.persistent() != (credentials != null))
           throw new IllegalStateException("Profile and server mode do not match");
+        map.region();
         String login =
             credentials == null ? "" : credentials.secret() + " " + credentials.characterId();
         Joined joined = JSON.fromJson(send(client, "/join", login, null), Joined.class);
         if (joined.id() <= 0 || joined.token() == null || !joined.token().matches("[0-9a-f]{64}"))
           throw new IllegalStateException("Invalid server session");
         token = joined.token();
+        if (joined.region()==null) throw new IllegalStateException("Missing joined region");
+        map=readMap(client,token,map.persistent());
+        if (!map.region().equals(joined.region())) throw new IllegalStateException("Joined map changed unexpectedly");
         long sequence = 0;
         OnlineCharacterView character = null;
         List<Corpse> corpses = List.of();
         while (!closed) {
+          long ready=readyRegion.getAndSet(-1);
+          if (ready==map.locationEpoch() && acknowledgedRegion!=ready) {
+            try { send(client,"/region-ready",Long.toString(ready),token); acknowledgedRegion=ready; }
+            catch (Rejected rejected) { if (rejected.code!=409) throw rejected; }
+          }
           var command = gameplay.get();
           boolean accepted = false;
           long requiredRevision = character == null ? 0 : character.revision();
@@ -180,12 +203,24 @@ public final class OnlineConnection implements AutoCloseable {
           int intent = direction.get();
           int tap = pendingTap.getAndSet(-1);
           if (intent == 4 && tap >= 0) intent = tap;
-          send(
+          if (acknowledgedRegion!=map.locationEpoch()) intent=4;
+          try { send(
               client,
               "/input",
-              sequence++ + " " + (intent / 3 - 1) + " " + (intent % 3 - 1),
-              token);
+              map.locationEpoch()+" "+sequence++ + " " + (intent / 3 - 1) + " " + (intent % 3 - 1),
+              token); }
+          catch (Rejected rejected) { if (rejected.code!=409) throw rejected; }
+          int regionRetries=0;
+          while (true) {
           Snapshot snapshot = JSON.fromJson(send(client, "/state", null, token), Snapshot.class);
+          if (snapshot==null || snapshot.region()==null) throw new IllegalStateException("Missing region state");
+          if (!map.region().equals(snapshot.region())) {
+            stopInput(); acknowledgedRegion=-1; readyRegion.set(-1);
+            map=readMap(client,token,map.persistent());
+            snapshot=JSON.fromJson(send(client,"/state",null,token),Snapshot.class);
+            if (snapshot==null || !map.region().equals(snapshot.region()))
+              throw new IllegalStateException("Region state did not stabilize");
+          }
           if (snapshot.players() == null || snapshot.players().size() > 20)
             throw new IllegalStateException("Invalid server snapshot");
           boolean hasSelf = false;
@@ -214,7 +249,8 @@ public final class OnlineConnection implements AutoCloseable {
           if (map.persistent()) {
             if (snapshot.characterRevision() == null || snapshot.characterRevision() < 0)
               throw new IllegalStateException("Missing committed character revision");
-            if (command != null || character == null || character.revision() < snapshot.characterRevision()) {
+            if (command != null || character == null || character.revision() < snapshot.characterRevision()
+                || character.locationEpoch()!=map.locationEpoch()) {
               OnlineCharacterView updated =
                   JSON.fromJson(send(client, "/character", null, token), OnlineCharacterView.class);
               if (updated == null || !credentials.characterId().equals(updated.id())
@@ -232,15 +268,23 @@ public final class OnlineConnection implements AutoCloseable {
               }
               corpses=List.of(found);
             }
+            if (character.locationEpoch()!=map.locationEpoch()) {
+              stopInput(); acknowledgedRegion=-1; readyRegion.set(-1);
+              map=readMap(client,token,map.persistent()); character=null; corpses=List.of();
+              if (++regionRetries>=3) throw new IllegalStateException("Private region state did not stabilize");
+              continue; // Refresh reads only. Never replay the gameplay mutation already sent above.
+            }
           }
           synchronized (this) {
             if (closed) break;
             view =
               new View(
                   joined.id(), map,
-                  new Snapshot(snapshot.tick(), List.copyOf(snapshot.players()), snapshot.characterRevision(), List.copyOf(creatures)),
+                  new Snapshot(snapshot.tick(), List.copyOf(snapshot.players()), snapshot.characterRevision(), List.copyOf(creatures),snapshot.region()),
                   character,corpses);
             status = "connected";
+          }
+          break;
           }
           if (command != null && gameplay.compareAndSet(command, null))
             command.result().complete(new CommandResult(accepted, character));
@@ -267,6 +311,14 @@ public final class OnlineConnection implements AutoCloseable {
       view = null;
       failCommand();
     }
+  }
+
+  private MapInfo readMap(HttpClient client,String token,boolean persistent) throws Exception {
+    var loaded=JSON.fromJson(send(client,"/map",null,token),MapInfo.class);
+    if (loaded==null || loaded.protocolVersion()!=OnlineProtocol.VERSION || loaded.persistent()!=persistent)
+      throw new IllegalStateException("Invalid region map");
+    loaded.region(); // Validate the bounded descriptor before publishing actor coordinates.
+    return loaded;
   }
 
   private String send(HttpClient client, String path, String body, String token) throws Exception {

@@ -6,7 +6,7 @@ For optional saved native characters, follow [persistent-mode setup](PERSISTENCE
 
 Encrypted remote configuration is documented in [TLS.md](TLS.md); the local preview launcher continues to manage loopback HTTP.
 
-The authored travel graph and concrete next runtime slice are documented in [MAP_TRANSFER_DESIGN.md](MAP_TRANSFER_DESIGN.md).
+The authored travel graph and implemented two-region runtime are documented in [MAP_TRANSFER_DESIGN.md](MAP_TRANSFER_DESIGN.md).
 
 Release evidence and remaining gates are tracked in [ACCEPTANCE.md](ACCEPTANCE.md).
 The PostgreSQL groundwork and its current integration limits are in [PERSISTENCE.md](PERSISTENCE.md).
@@ -26,7 +26,7 @@ input from the previous window. Close one window to disconnect. If the server is
 press R to reconnect. Escape closes only that online client. The normal `launch.bat` still
 starts single-player.
 
-Persistent profiles now also support restricted melee: Space attacks nearest, guards retaliate in reach, HP/rewards/death persist, and E recovers a nearby owned corpse. The HUD shows committed health, XP, gold and nearest corpse distance/contents. Physical retaliation currently uses authored stationary positions; pursuit, spells, general loot, quests and map transfer remain unfinished. Two rendered-client retaliation validation is still pending after the owner stopped desktop control. See [ACCEPTANCE.md](ACCEPTANCE.md).
+Persistent profiles now also support restricted melee: Space attacks nearest, guards retaliate in reach, HP/rewards/death persist, and E recovers a nearby owned corpse. The HUD shows committed health, XP, gold and nearest corpse distance/contents. Authored portals 16/17 connect the starting crop and first interior, with saved destinations and region isolation. Physical retaliation currently uses authored stationary positions; pursuit, spells, general loot, quests and broader travel remain unfinished. Rendered retaliation and map-switch validation are still pending after the owner stopped desktop control. See [ACCEPTANCE.md](ACCEPTANCE.md).
 
 The default temporary mode remains a native movement slice, not complete Alpha. In the default preview, characters are temporary and
 use default appearances (male/female alternating by temporary ID). No saved character is
@@ -108,6 +108,8 @@ yet. Players may overlap. Online movement parity remains future work.
 
 ## Authority, isolation and limits
 
+Temporary-preview restrictions below apply to `--preview`. Persistent `--online` uses PostgreSQL account credentials/leases, committed gameplay state and region-isolated views; configurable trusted HTTPS is described in TLS.md. The convenience launcher remains local HTTP.
+
 - One simulation thread owns every player. HTTP workers submit bounded commands and
   receive immutable snapshots; clients never supply authoritative positions or time deltas.
 - Fixed server time and the existing speed constant control movement. Extra input packets
@@ -118,10 +120,10 @@ yet. Players may overlap. Online movement parity remains future work.
   sessions, **not user accounts or production authentication**.
 - At most 20 sessions, 128 queued simulation commands, eight HTTP workers, bounded HTTP
   queues/connections/headers/body sizes and request timeouts. Input expires after silence;
-  idle sessions expire after about 30 seconds at the target tick rate. All preview positions
-  are intentionally replicated to all local clients; production interest/privacy filtering
-  has not been implemented.
-- The listener binds only `127.0.0.1`; Host and mutation Origin checks reject foreign
+  idle sessions expire after about 30 seconds at the target tick rate. Temporary-preview positions
+  are replicated to its local clients. Persistent actors are isolated by region; private
+  character state and corpse summaries are owner-only.
+- The temporary-preview listener binds only `127.0.0.1`; Host and mutation Origin checks reject foreign
   websites and DNS rebinding. No CORS is enabled. Do not proxy or expose this preview
   publicly. Remote play requires authenticated TLS transport and abuse controls.
 - HTTP polling is a replaceable diagnostic transport. Java's built-in
@@ -144,10 +146,10 @@ The desktop suite covers unchanged collision behavior through its adapter.
 The native desktop client now renders server-owned player movement, and the owner has
 verified facing and two connected players in the actual game windows.
 
-Remaining Alpha work: extract full player movement and entity state from rendering;
-implement combat/quest/loot and map transfer; introduce real
-authentication and remote encrypted transport; persist online characters and transactional
-rewards separately from offline files; verify reconnect, restart and recovery.
+Persistent mode already integrates movement, accounts, PostgreSQL state, restricted combat,
+equipment intents, retaliation/death/corpses, two-region travel and configurable HTTPS. Remaining
+Alpha work includes native account/character selection, required abilities, inventory/loot/quest
+interactions, supported encounters and broader routes, plus rendered gameplay and recovery checks.
 Beta completes launch gameplay and validates sustained play with 20 users. GA requires
 essential end-to-end gameplay, security and operations. Optional tooling and content follow GA.
 

@@ -19,7 +19,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /** Loopback-only QA transport with optional persistent sessions and no desktop dependencies. */
 public final class PreviewServer implements AutoCloseable {
   private record PersistentSnapshot(long tick, java.util.List<PreviewWorld.PlayerView> players,
-      long characterRevision, java.util.List<com.perso.T4C.online.model.CreatureView> creatures) {}
+      long characterRevision, java.util.List<com.perso.T4C.online.model.CreatureView> creatures,com.perso.T4C.online.model.OnlineRegion region) {}
+  private record RegionJoined(String token,long id,com.perso.T4C.online.model.OnlineRegion region) {}
   private static final Gson JSON = new Gson();
   private final com.perso.T4C.online.model.ItemContent items;
   private final HttpServer http;
@@ -28,6 +29,7 @@ public final class PreviewServer implements AutoCloseable {
       8, 8, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<>(128),
       Thread.ofPlatform().name("preview-http-", 0).factory(), new ThreadPoolExecutor.AbortPolicy());
   private final ArrayBlockingQueue<Runnable> commands = new ArrayBlockingQueue<>(128);
+  private final HostedWorlds hosted;
   private final PreviewWorld world;
   private final OnlineStore store;
   private final PersistentSessions persistent;
@@ -55,49 +57,54 @@ public final class PreviewServer implements AutoCloseable {
   }
 
   public PreviewServer(PreviewMap map, int port, OnlineStore store, String controlToken, ServerTransport transport) throws IOException {
+    this(HostedRegionPlan.single(map),port,store,controlToken,transport);
+  }
+
+  PreviewServer(HostedRegionPlan plan,int port,OnlineStore store,String controlToken,ServerTransport transport) throws IOException {
     this.transport=java.util.Objects.requireNonNull(transport);
     if (controlToken!=null && !controlToken.matches("[0-9a-f]{64}")) throw new IllegalArgumentException("Invalid control token");
     this.controlToken=controlToken;
     this.store=store;
     strings = loadStrings();
     items = ItemCatalog.loadBundled(); // Validate packaged equipment before accepting sessions.
-    world = new PreviewWorld(map,MonsterCatalog.loadBundled());
-    persistent=store==null ? null : new PersistentSessions(store,map,world);
-    try { persistentCreatures=store==null ? null : new PersistentCreatures(store,world); }
-    catch (java.sql.SQLException failedRecovery) {
-      if (persistent!=null) persistent.shutdown();
-      throw new IOException("Could not recover persistent creatures",failedRecovery);
-    }
-    melee=persistent==null ? null : new OnlineMelee(map,world,persistent,persistentCreatures,items,
-        new java.security.SecureRandom(),System::currentTimeMillis);
-    retaliation=persistent==null ? null : new OnlineRetaliation(map,world,persistent,persistentCreatures,items,
-        new java.security.SecureRandom(),System::currentTimeMillis);
-    mapJson = JSON.toJson(Map.of("width", map.width, "height", map.height,
-        "originX", map.originX, "originY", map.originY, "blocked", map.cells(),
-        "maxPlayers", PreviewWorld.MAX_PLAYERS,"persistent",store!=null,"protocolVersion",OnlineProtocol.VERSION));
-    http = transport.create(port);
+    try { hosted=new HostedWorlds(plan,store,items,MonsterCatalog.loadBundled()); }
+    catch(java.sql.SQLException recovery) { throw new IOException("Could not recover hosted regions",recovery); }
+    var initial=hosted.regions.getFirst();world=initial.world;persistent=hosted.sessions;
+    persistentCreatures=initial.creatures;melee=initial.melee;retaliation=initial.retaliation;
+    mapJson=mapJson(initial,0);
+    try { http = transport.create(port); }
+    catch(IOException|RuntimeException failure) { hosted.close();throw failure; }
     loop = new SimulationLoop(PreviewWorld.TICK_RATE, tick -> {
       for (int i = 0; i < 128; i++) {
         Runnable command = commands.poll();
         if (command == null) break;
         command.run();
       }
-      world.step();
-      if (persistent!=null) persistent.step();
-      if (persistentCreatures!=null) persistentCreatures.step();
-      if (retaliation!=null) retaliation.step();
+      hosted.step();
     });
     simulation = new Thread(() -> {
       try { loop.run(Long.MAX_VALUE); }
       catch (Throwable error) { failure = error; }
       finally {
         close();
-        if (persistent!=null) persistent.shutdown();
-        if (persistentCreatures!=null) persistentCreatures.close();
+        hosted.close();
       }
     }, "preview-world");
     http.setExecutor(requests);
     http.createContext("/", this::handle);
+  }
+
+  private HostedWorlds.Region admit(String token,Long epoch) {
+    var context=hosted.actor(token);context.world.admitRequest(token);
+    if(epoch!=null) { if(persistent!=null) persistent.requireEpoch(token,epoch);else if(epoch!=0) throw new PreviewWorld.Rejected(409,"region_epoch"); }
+    return context;
+  }
+  private String mapJson(HostedWorlds.Region region,long epoch) {
+    var values=new java.util.LinkedHashMap<String,Object>();var map=region.map;
+    values.put("width",map.width);values.put("height",map.height);values.put("originX",map.originX);values.put("originY",map.originY);
+    values.put("blocked",map.cells());values.put("maxPlayers",PreviewWorld.MAX_PLAYERS);values.put("persistent",store!=null);
+    values.put("protocolVersion",OnlineProtocol.VERSION);values.put("world",region.spec.world());values.put("key",region.spec.key());values.put("locationEpoch",epoch);
+    return JSON.toJson(values);
   }
 
   public String url() { return transport.origin(http.getAddress().getPort()); }
@@ -160,7 +167,7 @@ public final class PreviewServer implements AutoCloseable {
             throw new PreviewWorld.Rejected(426, "protocol");
         }
         int limit=store!=null && "/join".equals(path) ? 101
-            : ("/equip".equals(path) || "/unequip".equals(path)) ? 96 : 64;
+            : ("/equip".equals(path) || "/unequip".equals(path) || "/recover".equals(path)) ? 96 : 64;
         byte[] bytes = exchange.getRequestBody().readNBytes(limit+1);
         if (bytes.length > limit) throw new PreviewWorld.Rejected(413, "input");
         String body = new String(bytes, StandardCharsets.US_ASCII);
@@ -177,7 +184,7 @@ public final class PreviewServer implements AutoCloseable {
           case "/join" -> {
             if (store==null) {
               if (!body.isEmpty()) throw new PreviewWorld.Rejected(400, "input");
-              json(exchange, 200, onWorld(world::join));
+              json(exchange, 200, onWorld(() -> { var joined=world.join();return new RegionJoined(joined.token(),joined.id(),hosted.regions.getFirst().descriptor(0)); }));
             } else {
               if (!body.matches("[0-9a-f]{64} [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"))
                 throw new PreviewWorld.Rejected(400,"input");
@@ -188,42 +195,42 @@ public final class PreviewServer implements AutoCloseable {
               try {
                 var joined=onWorld(() -> persistent.join(session,started));
                 attached=true;
-                json(exchange,200,joined);
+                json(exchange,200,onWorld(() -> new RegionJoined(joined.token(),joined.id(),persistent.region(joined.token()))));
               } finally { if (!attached) store.release(session); }
             }
           }
           case "/input" -> {
             String token = token(exchange);
-            if (!body.matches("[0-9]{1,19} -?[01] -?[01]"))
+            if (!body.matches("[0-9]{1,19} [0-9]{1,19} -?[01] -?[01]"))
               throw new PreviewWorld.Rejected(400, "input");
             String[] parts = body.split(" ");
-            long sequence;
-            try { sequence = Long.parseLong(parts[0]); }
+            long sequence,epoch;
+            try { epoch=Long.parseLong(parts[0]);sequence = Long.parseLong(parts[1]); }
             catch (NumberFormatException e) { throw new PreviewWorld.Rejected(400, "input"); }
-            int dx = Integer.parseInt(parts[1]), dy = Integer.parseInt(parts[2]);
-            onWorld(() -> { world.admitRequest(token); world.input(token, sequence, dx, dy); return null; });
+            int dx = Integer.parseInt(parts[2]), dy = Integer.parseInt(parts[3]);
+            onWorld(() -> { var context=admit(token,epoch);context.world.input(token, sequence, dx, dy); return null; });
             json(exchange, 200, Map.of("ok", true));
           }
           case "/attack" -> {
             if (melee==null) throw new PreviewWorld.Rejected(404,"route");
             String token=token(exchange);
-            if (!body.matches("[0-9]{1,19} [0-9]{1,19}")) throw new PreviewWorld.Rejected(400,"input");
-            String[] parts=body.split(" "); long revision,target;
-            try { revision=Long.parseLong(parts[0]); target=Long.parseLong(parts[1]); }
+            if (!body.matches("[0-9]{1,19} [0-9]{1,19} [0-9]{1,19}")) throw new PreviewWorld.Rejected(400,"input");
+            String[] parts=body.split(" "); long revision,epoch,target;
+            try { revision=Long.parseLong(parts[0]);epoch=Long.parseLong(parts[1]); target=Long.parseLong(parts[2]); }
             catch (NumberFormatException bad) { throw new PreviewWorld.Rejected(400,"input"); }
-            var pending=onWorld(() -> { world.admitRequest(token); return melee.attack(token,revision,target); });
+            var pending=onWorld(() -> { return admit(token,epoch).melee.attack(token,revision,target); });
             var committed=pending.toCompletableFuture().get(2,TimeUnit.SECONDS);
             json(exchange,200,Map.of("revision",committed.character().revision()));
           }
           case "/recover" -> {
             if (persistent==null) throw new PreviewWorld.Rejected(404,"route");
             String token=token(exchange);
-            if (!body.matches("[0-9]{1,19} [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"))
+            if (!body.matches("[0-9]{1,19} [0-9]{1,19} [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"))
               throw new PreviewWorld.Rejected(400,"input");
-            String[] parts=body.split(" "); long revision; java.util.UUID corpse;
-            try { revision=Long.parseLong(parts[0]); corpse=java.util.UUID.fromString(parts[1]); }
+            String[] parts=body.split(" "); long revision,epoch; java.util.UUID corpse;
+            try { revision=Long.parseLong(parts[0]);epoch=Long.parseLong(parts[1]); corpse=java.util.UUID.fromString(parts[2]); }
             catch (IllegalArgumentException bad) { throw new PreviewWorld.Rejected(400,"input"); }
-            var pending=onWorld(() -> { world.admitRequest(token); return persistent.recoverCorpse(token,revision,corpse); });
+            var pending=onWorld(() -> { admit(token,epoch); return persistent.recoverCorpse(token,revision,corpse); });
             var committed=pending.toCompletableFuture().get(2,TimeUnit.SECONDS);
             json(exchange,200,Map.of("revision",committed.character().revision()));
           }
@@ -231,20 +238,20 @@ public final class PreviewServer implements AutoCloseable {
             if (persistent == null) throw new PreviewWorld.Rejected(404, "route");
             String token = token(exchange);
             boolean equip = "/equip".equals(path);
-            String pattern = equip ? "[0-9]{1,19} [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12} [A-Z_]{1,16}"
-                : "[0-9]{1,19} [A-Z_]{1,16}";
+            String pattern = equip ? "[0-9]{1,19} [0-9]{1,19} [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12} [A-Z_]{1,16}"
+                : "[0-9]{1,19} [0-9]{1,19} [A-Z_]{1,16}";
             if (!body.matches(pattern)) throw new PreviewWorld.Rejected(400, "input");
             String[] parts = body.split(" ");
-            long revision;
+            long revision,epoch;
             com.perso.T4C.player.BodyPart slot;
             java.util.UUID instance;
             try {
-              revision = Long.parseLong(parts[0]);
-              slot = com.perso.T4C.player.BodyPart.valueOf(parts[equip ? 2 : 1]);
-              instance = equip ? java.util.UUID.fromString(parts[1]) : null;
+              revision = Long.parseLong(parts[0]);epoch=Long.parseLong(parts[1]);
+              slot = com.perso.T4C.player.BodyPart.valueOf(parts[equip ? 3 : 2]);
+              instance = equip ? java.util.UUID.fromString(parts[2]) : null;
             } catch (IllegalArgumentException error) { throw new PreviewWorld.Rejected(400, "input"); }
             var pending = onWorld(() -> {
-              world.admitRequest(token);
+              admit(token,epoch);
               var saved = persistent.character(token);
               var changed = equip ? OnlineEquipmentCommands.equip(saved.progress(), items, instance, slot)
                   : OnlineEquipmentCommands.unequip(saved.progress(), slot);
@@ -252,6 +259,12 @@ public final class PreviewServer implements AutoCloseable {
             });
             var committed = pending.toCompletableFuture().get(2, TimeUnit.SECONDS);
             json(exchange, 200, Map.of("revision", committed.character().revision()));
+          }
+          case "/region-ready" -> {
+            String token=token(exchange);if(!body.matches("[0-9]{1,19}")) throw new PreviewWorld.Rejected(400,"input");
+            long epoch;try { epoch=Long.parseLong(body); } catch(NumberFormatException invalid) { throw new PreviewWorld.Rejected(400,"input"); }
+            onWorld(() -> { admit(token,epoch);if(persistent!=null) persistent.regionReady(token,epoch);return null; });
+            json(exchange,200,Map.of("ok",true));
           }
           case "/leave" -> {
             if (!body.isEmpty()) throw new PreviewWorld.Rejected(400, "input");
@@ -268,30 +281,34 @@ public final class PreviewServer implements AutoCloseable {
           case "/client.js" -> resource(exchange, "client.js", "text/javascript; charset=utf-8");
           case "/style.css" -> resource(exchange, "style.css", "text/css; charset=utf-8");
           case "/strings" -> json(exchange, 200, strings);
-          case "/map" -> send(exchange, 200, "application/json", mapJson.getBytes(StandardCharsets.UTF_8));
+          case "/map" -> {
+            String authorization=exchange.getRequestHeaders().getFirst("Authorization");
+            String description=authorization==null ? mapJson : onWorld(() -> { String token=token(exchange);var context=admit(token,null);
+              return mapJson(context,persistent==null ? 0 : persistent.region(token).locationEpoch()); });
+            send(exchange,200,"application/json",description.getBytes(StandardCharsets.UTF_8));
+          }
           case "/state" -> {
             String token = token(exchange);
             json(exchange, 200, onWorld(() -> {
-              world.admitRequest(token);
-              var snapshot=world.snapshot(token);
-              return persistent==null ? snapshot : new PersistentSnapshot(snapshot.tick(),snapshot.players(),
-                  persistent.character(token).revision(),snapshot.creatures());
+              var context=admit(token,null);var snapshot=context.world.snapshot(token);
+              return new PersistentSnapshot(snapshot.tick(),snapshot.players(),persistent==null ? 0 : persistent.character(token).revision(),
+                  snapshot.creatures(),context.descriptor(persistent==null ? 0 : persistent.region(token).locationEpoch()));
             }));
           }
           case "/character" -> {
             String token=token(exchange);
             if (persistent==null) throw new PreviewWorld.Rejected(404,"route");
             json(exchange,200,onWorld(() -> {
-              world.admitRequest(token);
+              admit(token,null);
               var saved=persistent.character(token);
               return new OnlineCharacterView(saved.id(),saved.name(),saved.gold(),saved.experience(),
-                  saved.revision(),saved.progress());
+                  saved.revision(),saved.progress(),saved.locationEpoch());
             }));
           }
           case "/corpses" -> {
             if (persistent==null) throw new PreviewWorld.Rejected(404,"route");
             String token=token(exchange);
-            var pending=onWorld(() -> { world.admitRequest(token); return persistent.corpses(token); });
+            var pending=onWorld(() -> { admit(token,null); return persistent.corpses(token); });
             var found=pending.toCompletableFuture().get(2,TimeUnit.SECONDS);
             json(exchange,200,found.stream().map(c -> Map.of("id",c.id(),"world",c.world(),"x",c.x(),"y",c.y(),
                 "itemCount",c.items().size(),"gold",c.gold())).toList());

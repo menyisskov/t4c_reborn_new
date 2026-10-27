@@ -53,6 +53,9 @@ public final class OnlineClient extends ApplicationAdapter {
   private long lastTick = -1;
   private long targetCreature;
   private String error;
+  private int renderedWorld;
+  private String renderedRegion;
+  private long renderedEpoch=-1;
 
   private static final class CreatureAvatar {
     final Vector2 position = new Vector2();
@@ -225,7 +228,7 @@ public final class OnlineClient extends ApplicationAdapter {
   private OnlineConnection.Corpse nearestCorpse(OnlineConnection.View view) {
     var own=view.snapshot().players().stream().filter(a -> a.id()==view.ownId()).findFirst().orElse(null);
     if (own==null) return null;
-    return view.corpses().stream().filter(c -> c.world()==0)
+    return view.corpses().stream().filter(c -> c.world()==view.map().world())
         .min(java.util.Comparator.comparingDouble(c -> corpseDistance(view,own,c))).orElse(null);
   }
 
@@ -243,6 +246,29 @@ public final class OnlineClient extends ApplicationAdapter {
     catch (IllegalStateException pendingOrDisconnected) { /* Single-flight commands stay bounded. */ }
   }
 
+  /** Install only allowlisted local assets, on the render thread, before acknowledging a region. */
+  private void prepareRegion(OnlineConnection.View view) throws Exception {
+    var region=view.map();
+    if (renderedWorld!=region.world()) {
+      var definition=java.util.Arrays.stream(com.perso.T4C.config.MapDefinition.values())
+          .filter(candidate -> candidate.getZ()==region.world()).findFirst()
+          .orElseThrow(() -> new IllegalArgumentException("Unknown online world"));
+      var nextMap=new MapReader(new File(definition.getMapPath()));
+      MapRenderer nextRenderer;
+      try { nextRenderer=new MapRenderer(nextMap,SpriteLoader.getInstance(),ground,decor,null,ModifSprites.empty(),region.world()); }
+      catch (Exception failure) { nextMap.close(); throw failure; }
+      if (renderer!=null) renderer.dispose();
+      if (map!=null) map.close();
+      renderer=nextRenderer; map=nextMap;
+    }
+    if (renderedWorld!=region.world() || !java.util.Objects.equals(renderedRegion,region.key()) || renderedEpoch!=region.locationEpoch()) {
+      avatars.values().forEach(a -> a.animation.dispose()); avatars.clear(); creatures.clear();
+      inputKeys.clear(); connection.stopInput(); lastTick=-1; targetCreature=0;
+      renderedWorld=region.world(); renderedRegion=region.key(); renderedEpoch=region.locationEpoch();
+    }
+    connection.confirmRegionReady(region.locationEpoch());
+  }
+
   @Override
   public void render() {
     Gdx.gl.glClearColor(0.05f, 0.05f, 0.05f, 1);
@@ -252,6 +278,14 @@ public final class OnlineClient extends ApplicationAdapter {
         && Gdx.input.isKeyJustPressed(Input.Keys.R)
         && !"connected".equals(connection.status())) reconnect();
     var view = connection == null ? null : connection.view();
+    if (view!=null) {
+      try { prepareRegion(view); }
+      catch (Exception failure) {
+        error=I18n.key("online.client.load_error");
+        Gdx.app.error("online","Could not load online region",failure);
+        connection.close(); return;
+      }
+    }
     if (connection != null)
       connection.direction(
           focused ? key(Input.Keys.RIGHT, Input.Keys.D, Input.Keys.LEFT, Input.Keys.A) : 0,

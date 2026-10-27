@@ -15,7 +15,11 @@ public final class OnlineStore {
   private static final com.google.gson.Gson JSON = new com.google.gson.Gson();
   @FunctionalInterface public interface Connections { Connection open() throws SQLException; }
   public record CharacterState(UUID id, UUID accountId, String name, int world, double x, double y,
-      long gold, long experience, long revision, CharacterProgress progress) {}
+      long gold, long experience, long revision, CharacterProgress progress,long locationEpoch,long portalCooldownUntil) {
+    public CharacterState(UUID id,UUID accountId,String name,int world,double x,double y,long gold,long experience,long revision,CharacterProgress progress) {
+      this(id,accountId,name,world,x,y,gold,experience,revision,progress,0,0);
+    }
+  }
   public record RewardResult(boolean applied, CharacterState character) {}
   public record SpawnState(String key, long generation, UUID eventId, UUID recipient, java.time.Instant claimedAt,
       Integer health, UUID targetCharacter, long nextAttackAt) {}
@@ -86,7 +90,7 @@ public final class OnlineStore {
         int version = 0;
         try (var rows = s.executeQuery("SELECT version FROM online_schema ORDER BY version")) {
           while (rows.next()) {
-            if (rows.getInt(1) != ++version || version > 8) throw new SQLException("Unsupported online schema version");
+            if (rows.getInt(1) != ++version || version > 9) throw new SQLException("Unsupported online schema version");
           }
         }
         if (version == 0) {
@@ -166,6 +170,11 @@ public final class OnlineStore {
           s.execute("CREATE TABLE online_corpses (id uuid PRIMARY KEY REFERENCES online_combat_events(event_id), character_id uuid NOT NULL REFERENCES online_characters(id), world integer NOT NULL CHECK(world>=0), x double precision NOT NULL, y double precision NOT NULL, items jsonb NOT NULL CHECK(jsonb_typeof(items)='array'), gold bigint NOT NULL CHECK(gold>=0), recovered boolean NOT NULL DEFAULT false, created_at timestamptz NOT NULL DEFAULT now())");
           s.execute("CREATE INDEX online_corpses_owner ON online_corpses(character_id) WHERE NOT recovered");
           s.execute("INSERT INTO online_schema(version) VALUES (8)");
+        }
+        if (version < 9) {
+          s.execute("ALTER TABLE online_characters ADD COLUMN location_epoch bigint NOT NULL DEFAULT 0 CHECK(location_epoch>=0), ADD COLUMN portal_cooldown_until bigint NOT NULL DEFAULT 0 CHECK(portal_cooldown_until>=0)");
+          s.execute("CREATE TABLE online_transfer_events(event_id uuid PRIMARY KEY,character_id uuid NOT NULL REFERENCES online_characters(id),payload_hash varchar(64) NOT NULL,created_at timestamptz NOT NULL DEFAULT now())");
+          s.execute("INSERT INTO online_schema(version) VALUES (9)");
         }
         c.commit();
       } catch (SQLException | RuntimeException error) { c.rollback(); throw error; }
@@ -521,7 +530,7 @@ public final class OnlineStore {
           q.setObject(1,event);q.setObject(2,session.characterId());q.setString(3,digest);q.executeUpdate();
         }
         var destination=death==null ? new CharacterProgress.Respawn(state.world(),state.x(),state.y()) : death.destination();
-        try(var q=c.prepareStatement("UPDATE online_characters SET world=?,x=?,y=?,gold=gold-?,experience=experience-?,progress=?::jsonb,revision=revision+1,updated_at=now() WHERE id=?")) {
+        try(var q=c.prepareStatement("UPDATE online_characters SET world=?,x=?,y=?,gold=gold-?,experience=experience-?,progress=?::jsonb,revision=revision+1,location_epoch=location_epoch+"+(death==null ? 0 : 1)+",updated_at=now() WHERE id=?")) {
           q.setInt(1,destination.world());q.setDouble(2,destination.x());q.setDouble(3,destination.y());q.setLong(4,goldLost);q.setLong(5,xpLost);q.setString(6,encoded);q.setObject(7,session.characterId());q.executeUpdate();
         }
         if(death!=null) {
@@ -532,6 +541,40 @@ public final class OnlineStore {
           }
           try(var q=c.prepareStatement("UPDATE online_spawns SET target_character=NULL WHERE target_character=?")) { q.setObject(1,session.characterId());q.executeUpdate(); }
         }
+        state=load(c,session.accountId(),session.characterId(),false);c.commit();return new RewardResult(true,state);
+      } catch(SQLException|RuntimeException failure) { c.rollback();throw failure; }
+    }
+  }
+
+  /** Atomic server-authored portal movement, with durable epoch fencing and receipt replay. */
+  public RewardResult commitTransfer(Session session,long revision,UUID event,PortalTransfer transfer) throws SQLException {
+    Objects.requireNonNull(event);Objects.requireNonNull(transfer);
+    if(revision<0) throw new IllegalArgumentException("Invalid revision");
+    String digest=fingerprint(JSON.toJson(transfer));
+    try(var c=connections.open()) {
+      c.setAutoCommit(false);
+      try {
+        var state=lockSession(c,session);
+        try(var q=c.prepareStatement("SELECT character_id,payload_hash FROM online_transfer_events WHERE event_id=?")) {
+          q.setObject(1,event);try(var rows=q.executeQuery()) { if(rows.next()) {
+            if(!session.characterId().equals(rows.getObject(1,UUID.class)) || !digest.equals(rows.getString(2))) throw new Conflict("Transfer event payload mismatch");
+            c.commit();return new RewardResult(false,state);
+          } }
+        }
+        if(state.revision()!=revision || state.locationEpoch()!=transfer.expectedEpoch() || state.world()!=transfer.source().world())
+          throw new Conflict("Stale transfer");
+        try(var q=c.prepareStatement("SELECT portal_cooldown_until<=floor(extract(epoch FROM clock_timestamp())*1000) FROM online_characters WHERE id=?")) {
+          q.setObject(1,state.id());try(var rows=q.executeQuery()) { rows.next();if(!rows.getBoolean(1)) throw new Conflict("Portal cooldown"); }
+        }
+        Math.addExact(state.locationEpoch(),1);
+        try(var q=c.prepareStatement("INSERT INTO online_transfer_events(event_id,character_id,payload_hash) VALUES(?,?,?)")) {
+          q.setObject(1,event);q.setObject(2,state.id());q.setString(3,digest);q.executeUpdate();
+        }
+        var destination=transfer.destination();
+        try(var q=c.prepareStatement("UPDATE online_characters SET world=?,x=?,y=?,location_epoch=location_epoch+1,portal_cooldown_until=?,revision=revision+1,updated_at=now() WHERE id=?")) {
+          q.setInt(1,destination.world());q.setDouble(2,destination.x());q.setDouble(3,destination.y());q.setLong(4,transfer.cooldownUntil());q.setObject(5,state.id());q.executeUpdate();
+        }
+        try(var q=c.prepareStatement("UPDATE online_spawns SET target_character=NULL WHERE target_character=?")) { q.setObject(1,state.id());q.executeUpdate(); }
         state=load(c,session.accountId(),session.characterId(),false);c.commit();return new RewardResult(true,state);
       } catch(SQLException|RuntimeException failure) { c.rollback();throw failure; }
     }
@@ -671,7 +714,7 @@ public final class OnlineStore {
     }
     return new CharacterState(row.getObject("id", UUID.class), row.getObject("account_id", UUID.class),
         row.getString("name"), row.getInt("world"), row.getDouble("x"), row.getDouble("y"),
-        row.getLong("gold"), row.getLong("experience"), row.getLong("revision"),progress);
+        row.getLong("gold"), row.getLong("experience"), row.getLong("revision"),progress,row.getLong("location_epoch"),row.getLong("portal_cooldown_until"));
   }
 
   private static void position(int world, double x, double y) {

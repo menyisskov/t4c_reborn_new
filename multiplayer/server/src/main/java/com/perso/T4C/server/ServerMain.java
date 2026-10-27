@@ -54,7 +54,9 @@ public final class ServerMain {
       String controlFile=System.getenv("T4C_CONTROL_FILE");
       String controlToken=store!=null && controlFile!=null && !controlFile.isBlank()
           ? OnlineProvisioner.controlToken(java.nio.file.Path.of(controlFile)) : null;
-      try (var server = new PreviewServer(PreviewMap.load(java.nio.file.Path.of(args[1])), Integer.parseInt(args[2]),store,controlToken,transport)) {
+      var plan=store==null ? HostedRegionPlan.single(PreviewMap.load(java.nio.file.Path.of(args[1])))
+          : HostedRegionPlan.startingSlice(java.nio.file.Path.of(args[1]));
+      try (var server = new PreviewServer(plan, Integer.parseInt(args[2]),store,controlToken,transport)) {
         Thread shutdown = new Thread(server::close, "preview-shutdown");
         Runtime.getRuntime().addShutdownHook(shutdown);
         try {

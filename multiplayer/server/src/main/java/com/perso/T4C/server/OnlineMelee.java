@@ -29,6 +29,7 @@ final class OnlineMelee {
   }
 
   CompletionStage<OnlineStore.RewardResult> attack(String token,long revision,long target) {
+    if(!sessions.belongs(token,world)) throw rejected("region");
     var saved=sessions.character(token);
     if (saved.revision()!=revision) throw rejected("revision");
     var p=saved.progress(); long now=clock.getAsLong();

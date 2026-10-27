@@ -5,10 +5,13 @@ import java.util.UUID;
 
 /** Owner-only committed state. No account ID, access key, session token or database lease. */
 public record OnlineCharacterView(
-    UUID id, String name, long gold, long experience, long revision, CharacterProgress progress) {
+    UUID id, String name, long gold, long experience, long revision, CharacterProgress progress,long locationEpoch) {
+  public OnlineCharacterView(UUID id,String name,long gold,long experience,long revision,CharacterProgress progress) {
+    this(id,name,gold,experience,revision,progress,0);
+  }
   public OnlineCharacterView {
     Objects.requireNonNull(id);
-    if (name == null || name.isBlank() || gold < 0 || experience < 0 || revision < 0)
+    if (name == null || name.isBlank() || gold < 0 || experience < 0 || revision < 0 || locationEpoch<0)
       throw new IllegalArgumentException("Invalid online character");
     // Legacy movement-only profiles deliberately retain null progress until explicitly migrated.
   }

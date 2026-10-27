@@ -42,7 +42,7 @@ final class OnlineRetaliation {
       catch (PreviewWorld.Rejected busy) { continue; }
       if (life.recipient()!=null || life.targetCharacter()==null || life.nextAttackAt()>now) continue;
       String token=sessions.tokenForCharacter(life.targetCharacter());
-      if (token==null) continue; // Persisted target survives reconnect; no attacks against absent actors.
+      if (token==null || !sessions.belongs(token,world)) continue; // Persisted target survives reconnect; no attacks against absent actors.
       var position=world.position(token);
       double x=spawn.spawn().x()-map.originX,y=spawn.spawn().y()-map.originY;
       double distance=Math.hypot((position.x()-x)*GRID_W,(position.y()-y)*GRID_H);
@@ -75,12 +75,9 @@ final class OnlineRetaliation {
     CharacterProgress draft;
     OnlineStore.DeathTransition death=null;
     if (hp==0) {
-      var destination=progress.respawn();
-      if (destination==null || destination.world()!=0
-          || !map.canStand(destination.x()-map.originX,destination.y()-map.originY))
-        destination=new CharacterProgress.Respawn(0,map.originX+map.spawnX,map.originY+map.spawnY);
+      var destination=sessions.respawnDestination(progress.respawn());
       var prepared=OnlineDeath.prepare(saved,items,
-          new CharacterProgress.Respawn(0,map.originX+position.x(),map.originY+position.y()),destination,random);
+          new CharacterProgress.Respawn(world.worldId,map.originX+position.x(),map.originY+position.y()),destination,random);
       draft=prepared.progress(); death=prepared.transition();
     } else {
       var vitals=new CharacterProgress.Vitals(hp,progress.vitals().maxHp(),progress.vitals().mana(),progress.vitals().maxMana());
