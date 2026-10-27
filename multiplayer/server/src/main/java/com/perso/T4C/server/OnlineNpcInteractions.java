@@ -4,17 +4,35 @@ import com.perso.T4C.config.GameConstants;
 import com.perso.T4C.online.model.CharacterProgress;
 import com.perso.T4C.online.model.ItemContent;
 import com.perso.T4C.quest.CrimsonscaleLetterRules;
+import com.perso.T4C.quest.QuestDef;
+import com.perso.T4C.server.persistence.OnlineStore;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.random.RandomGenerator;
 
 /** Creates one immutable server-authored draft; publish dialogue only after its transaction commits. */
 public final class OnlineNpcInteractions {
-  public record Result(CharacterProgress progress, String messageKey, boolean changed) {}
+  /**
+   * A draft to commit once. Gold and experience are the reward the transaction adds (zero for dialogue
+   * that changes nothing); args carry numbers for the authored message, such as quest progress.
+   */
+  public record Result(CharacterProgress progress, String messageKey, boolean changed, long gold, long experience,
+      List<Integer> args) {
+    public Result {
+      Objects.requireNonNull(progress); Objects.requireNonNull(messageKey);
+      args=List.copyOf(args);
+    }
+    public Result(CharacterProgress progress, String messageKey, boolean changed) {
+      this(progress,messageKey,changed,0,0,List.of());
+    }
+  }
   private final NpcInteractionCatalog catalog;
   private final ItemContent.Definition letter;
+  private final ItemContent items;
   private final QuestCatalog quests;
   public OnlineNpcInteractions(NpcInteractionCatalog catalog,ItemContent items) {
     this.catalog=Objects.requireNonNull(catalog);
+    this.items=Objects.requireNonNull(items);
     this.quests=QuestCatalog.bundled();
     letter=items.items().get(CrimsonscaleLetterRules.ITEM);
     // This slice has no inventory-weight or unique-item admission engine. The authored letter
@@ -23,16 +41,22 @@ public final class OnlineNpcInteractions {
       throw new IllegalArgumentException("Unsupported letter reward definition");
   }
 
-  /** Position and sight must come from the simulation, never the request body. */
-  public Result prepare(CharacterProgress progress,int world,double x,double y,String npcId,
-      boolean hasLineOfSight,Supplier<UUID> instanceId) {
-    Objects.requireNonNull(progress); Objects.requireNonNull(instanceId);
+  /**
+   * Position and sight must come from the simulation, never the request body. An empty topic is a
+   * greeting: a quest giver's greeting turns in a ready quest, while a topic reads the authored line.
+   */
+  public Result prepare(OnlineStore.CharacterState saved,int world,double x,double y,String npcId,
+      boolean hasLineOfSight,OptionalInt topic,Supplier<UUID> instanceId,long now,RandomGenerator random) {
+    Objects.requireNonNull(saved); Objects.requireNonNull(topic); Objects.requireNonNull(instanceId);
+    Objects.requireNonNull(random);
+    var progress=Objects.requireNonNull(saved.progress());
     var npc=catalog.require(npcId);
     double dx=x-npc.x(),dy=y-npc.y();
     if(progress.vitals().hp()<=0 || world!=npc.world() || !Double.isFinite(x) || !Double.isFinite(y)
         || dx*dx+dy*dy>=GameConstants.NPC_INTERACTION_RANGE_TILES_SQUARED || !hasLineOfSight)
       throw new IllegalArgumentException("NPC is not reachable");
-    if(!CrimsonscaleLetterRules.NPC.equals(npcId)) return questGreeting(progress,npcId);
+    if(!CrimsonscaleLetterRules.NPC.equals(npcId)) return questInteraction(saved,npcId,topic,instanceId,now,random);
+    if(topic.isPresent()) throw new IllegalArgumentException("NPC has no topics");
     int flag=progress.questFlags().getOrDefault(CrimsonscaleLetterRules.LETTER_FLAG,0);
     String message=CrimsonscaleLetterRules.greeting(flag,
         progress.questFlags().getOrDefault(CrimsonscaleLetterRules.STORY_FLAG,0));
@@ -47,17 +71,16 @@ public final class OnlineNpcInteractions {
     return new Result(updated,message,true);
   }
 
-  /**
-   * A quest giver's greeting. Only the welcome line is online until reward-aware commits exist:
-   * a ready turn-in would grant gold and experience that the greeting transaction does not carry,
-   * so it is refused (fail closed) instead of completing the quest without its rewards.
-   */
-  private Result questGreeting(CharacterProgress progress,String npcId) {
-    var definition=quests.definitions().stream().filter(d->d.getGiverNpc().equals(npcId))
+  /** A quest giver: a greeting turns in a ready quest atomically; a topic reads the offer or progress line. */
+  private Result questInteraction(OnlineStore.CharacterState saved,String npcId,OptionalInt topic,
+      Supplier<UUID> instanceId,long now,RandomGenerator random) {
+    QuestDef definition=quests.definitions().stream().filter(d->d.getGiverNpc().equals(npcId))
         .findFirst().orElseThrow(()->new IllegalArgumentException("NPC has no online quest"));
-    if(OnlineQuests.readiness(progress,definition)==OnlineQuests.Readiness.READY)
-      throw new IllegalArgumentException("Quest turn-in awaits a reward-aware commit");
-    var reply=OnlineQuests.welcome(progress,definition);
-    return new Result(reply.progress(),reply.messageKey(),false);
+    if(topic.isEmpty()) return toResult(OnlineQuests.greet(saved,definition,items,instanceId,now,random));
+    return toResult(OnlineQuests.topic(saved.progress(),definition,topic.getAsInt()));
+  }
+
+  private static Result toResult(OnlineQuests.Result reply) {
+    return new Result(reply.progress(),reply.messageKey(),reply.changed(),reply.gold(),reply.experience(),reply.args());
   }
 }

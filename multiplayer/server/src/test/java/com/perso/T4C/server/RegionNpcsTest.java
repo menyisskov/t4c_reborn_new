@@ -14,14 +14,21 @@ class RegionNpcsTest {
     var map=new PreviewMap(new boolean[12][12],terrain,spec.originX(),spec.originY(),5,5);
     var progress=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(1)).progress();
     assertFalse(map.allowsCombat(3.5,5.5,5,5,false));
-    assertEquals("npc.kilhiam.letter",npcs.prepare(progress,map,3.5,5.5,authored.id()).messageKey());
+    assertEquals("npc.kilhiam.letter",talk(npcs,progress,map,authored.id()).messageKey());
     assertEquals(5,npcs.views().getFirst().x());
     terrain[5][4]=1;
     var wallMap=new PreviewMap(new boolean[12][12],terrain,spec.originX(),spec.originY(),5,5);
-    assertThrows(IllegalArgumentException.class,()->npcs.prepare(progress,wallMap,3.5,5.5,authored.id()));
+    assertThrows(IllegalArgumentException.class,()->talk(npcs,progress,wallMap,authored.id()));
     var other=new RegionNpcs(catalog,items,new RegionMapLoader.Spec(authored.world()+1,"other",0,0,12,12,5,5));
     assertTrue(other.views().isEmpty());
-    assertThrows(IllegalArgumentException.class,()->other.prepare(progress,map,3.5,5.5,authored.id()));
+    assertThrows(IllegalArgumentException.class,()->talk(other,progress,map,authored.id()));
+  }
+
+  private static OnlineNpcInteractions.Result talk(RegionNpcs npcs,
+      com.perso.T4C.online.model.CharacterProgress progress,PreviewMap map,String npcId) {
+    var saved=new com.perso.T4C.server.persistence.OnlineStore.CharacterState(java.util.UUID.randomUUID(),
+        java.util.UUID.randomUUID(),"Tester",0,3,3,0,0,0,progress);
+    return npcs.prepare(saved,map,3.5,5.5,npcId,java.util.OptionalInt.empty(),100,new Random(1));
   }
 
   @Test void wardenAelricIsListedOnlyInTheRegionThatContainsHisSpawn() throws Exception {
