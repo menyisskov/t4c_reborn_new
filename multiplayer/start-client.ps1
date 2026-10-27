@@ -1,4 +1,4 @@
-param([ValidateRange(1024,65535)][int]$Port = 18765, [string]$Profile, [string]$Endpoint)
+param([ValidateRange(1024,65535)][int]$Port = 18765, [string]$Profile, [string]$Endpoint, [switch]$Lobby)
 $ErrorActionPreference = 'Stop'
 if (!$Endpoint) { $Endpoint = "http://127.0.0.1:$Port" }
 $clientEndpoint = $null
@@ -24,6 +24,8 @@ $clientJava = (Get-Command java).Source
 $clientLog = Join-Path $clientRoot ('target/online-client-' + [guid]::NewGuid().ToString('N'))
 $clientEnvironment = @{ T4C_ONLINE_PROFILE = '' }
 if ($Profile) { $clientEnvironment.T4C_ONLINE_PROFILE = (Resolve-Path -LiteralPath $Profile -ErrorAction Stop).Path }
+# Opt-in only: -Lobby (needs -Profile) shows the native character lobby before connecting.
+if ($Lobby) { $clientEnvironment.T4C_ONLINE_LOBBY = '1' }
 $clientProcess = Start-Process -FilePath $clientJava -WorkingDirectory $clientRoot -WindowStyle Hidden -Environment $clientEnvironment -PassThru -ArgumentList @(
     '-cp', ('"' + $clientClasspath + '"'), 'com.perso.T4C.online.OnlineClient', $Endpoint
 ) -RedirectStandardOutput ($clientLog + '.log') -RedirectStandardError ($clientLog + '-error.log')
