@@ -56,7 +56,7 @@ playthrough and recovery criteria pass. Never infer Done from a task count or te
 | M1 — Enter and interact | Roster/NPC backend and actual adapter probes pass, including two local HTTPS adapters with trust/hostname refusal and a separate live account-key rotation check; visible creation/selection incomplete | T4C-0192, 0195, 0196, 0216, 0219 | Native selection/creation and full account lifecycle; remote deployment |
 | M2 — Inventory and loot | Partial equipment/corpse services | Existing inventory/equipment work; T4C-0201, 0202 (design and pickup/drop rules only) | Visible inventory, general monster loot, claim/quantity integrity |
 | M3 — Complete authored adventure | Opening letter only; full loop incomplete | T4C-0193, 0194, 0195 | Full quest service, kill credit, rewards and required hosted routes |
-| M4 — Supported combat and abilities | Restricted melee/physical retaliation, server-authoritative patrol/pursuit with guarded persistence, two-native-adapter pursuit/restart proof and brief rendered attack/death check; rendered pursuit remains unchecked | T4C-0189, 0190, 0209, 0210, 0211, 0212 | Rendered pursuit and declared classes' required abilities/state, reset/death and integrated gameplay acceptance |
+| M4 — Supported combat and abilities | Restricted melee/physical retaliation, server-authoritative patrol/pursuit with guarded persistence, two-native-adapter pursuit/restart proof and a brief two-client rendered pursuit/retaliation/reconnect check | T4C-0189, 0190, 0209, 0210, 0211, 0212 | Longer rendered pursuit and declared classes' required abilities/state, reset/death and integrated gameplay acceptance |
 | M5 — Reliability and anti-cheat | Pool/shutdown/fault probes, local HTTPS trust/hostname refusal and two-adapter reconnect, live two-account key-rotation fencing, historical two-hour native-adapter baseline with partial 20-player occupancy, isolated restart and database-crash probes, and brief rendered reconnect pass; full mixed recovery/load/abuse gates open | T4C-0191, 0197, 0198, 0207, 0208, 0216, 0219 | Broader gameplay recovery, rendered restart, two-real-client mixed soak, bandwidth/DB latency and abuse checks |
 | M6 — Package and native acceptance | Create-only client and local-loopback server QA packages, headless integrity checks, isolated persistent server stop and brief two-window local client smoke pass; clean-machine, remote and full rendered playthrough open | T4C-0205, 0215 and cross-cutting work | Clean-machine delivery and complete two-rendered-client playthrough |
 
@@ -144,12 +144,13 @@ Required behavior:
   presented as a functional caster or as complete launch combat.
 - [ ] Required monsters acquire valid targets, pursue where authored, attack/retaliate, lose or
   reset targets under the declared rules, die and respawn with durable life identities.
-  [MONSTER_PURSUIT_DESIGN.md](MONSTER_PURSUIT_DESIGN.md) records the T4C-0209 architecture and
-  required peer handoffs; no online pursuit behavior or M4 completion follows from that document.
-  T4C-0210 extracted offline-preserving scalar decisions and included the pure rule in the
-  multiplayer domain module; the moving server implementation awaits separate peer handoffs.
-  T4C-0211 chooses native facing/walk from committed position deltas; no moving server
-  snapshot or rendered pursuit verification is claimed yet.
+  [MONSTER_PURSUIT_DESIGN.md](MONSTER_PURSUIT_DESIGN.md) records the T4C-0209 architecture.
+  T4C-0210 extracted offline-preserving scalar decisions; T4C-0211 chooses native facing/walk
+  from committed position deltas. T4C-0212 delivered guarded server movement and a two-adapter
+  checkpoint/restart probe. A separate brief rendered two-client session observed the authored
+  guard move and retaliate after a player pressed Space, followed by that player's reconnect with saved
+  HP/gold/location. It did not test a long retreat, every facing, reset, death/respawn, all roles
+  or the full M4 playthrough; details are in [ACCEPTANCE.md](ACCEPTANCE.md).
 - [ ] Server validates movement speed/collision, attack/cast timing, range, sight, sanctuary,
   resource costs, attribute eligibility, effects and any applicable interruption rules.
 - [ ] Required skills/spells, mana, charges, buffs, cooldowns and advancement are usable through
@@ -208,7 +209,9 @@ Required behavior:
   but 20-player occupancy lasted only 58.213 minutes and the run lacked quest/loot/travel,
   bandwidth and database-latency measures. That historical 20-adapter run does not satisfy the
   current two-rendered-client mixed Beta/GA gate; further 20-player scale qualification is
-  follow-up evidence, not a release gate.
+  follow-up evidence, not a release gate. T4C-0221 repaired only Windows report replacement
+  under a focused file-lock fixture; the earlier 66-second schema-11 smoke remains failed and
+  no new sustained result is claimed.
 
 Done evidence: reproducible fault/abuse scripts, separate restored-database playthrough, and the
 completed two-player report tied to exact client/server/content/schema versions. HTTP reply faults
