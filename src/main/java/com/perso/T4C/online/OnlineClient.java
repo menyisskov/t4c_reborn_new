@@ -14,16 +14,20 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Align;
 import com.perso.T4C.config.Paths;
 import com.perso.T4C.helper.AppearanceDefaultsCatalog;
 import com.perso.T4C.helper.MapReader;
 import com.perso.T4C.helper.ModifSprites;
 import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.i18n.I18n;
+import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.monster.core.MonsterAnimations;
 import com.perso.T4C.objects.GroundItem;
 import com.perso.T4C.online.model.CreatureView;
 import com.perso.T4C.online.model.GroundLootView;
+import com.perso.T4C.online.model.NpcView;
+import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.player.PlayerAnimations;
 import com.perso.T4C.player.PlayerMovement;
 import com.perso.T4C.render.ObjectRenderer;
@@ -31,9 +35,13 @@ import com.perso.T4C.screens.MapRenderer;
 import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.OptionalInt;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Native online entry point sharing the offline renderer and sprites, with no local player model.
@@ -56,9 +64,17 @@ public final class OnlineClient extends ApplicationAdapter {
   private final Map<java.util.UUID, GroundItem> groundLoot = new HashMap<>();
   /** Same reach as offline pickup (OBJECT_MAX_INTERACTION_DISTANCE); the server enforces it again. */
   private static final float PICKUP_RANGE_TILES = 8f;
-  private static final long PICKUP_MESSAGE_MS = 3000L;
-  private volatile String pickupMessageKey;
-  private volatile long pickupMessageUntil;
+  private static final long MESSAGE_MS = 3000L;
+  /** Render-thread state. Network callbacks only enqueue outcomes to {@link #staged}. */
+  private String hudMessage;
+  private long hudMessageUntil;
+  private final ConcurrentLinkedQueue<Staged> staged = new ConcurrentLinkedQueue<>();
+  private boolean talkOpen;
+  private boolean inventoryOpen;
+  private String talkNpc;
+  private String talkName;
+  private String talkText;
+  private List<Integer> talkTopics = List.of();
   private long lastTick = -1;
   private long targetCreature;
   private String error;
@@ -168,6 +184,15 @@ public final class OnlineClient extends ApplicationAdapter {
             @Override
             public boolean keyDown(int code) {
               if (!focused || connection == null) return false;
+              if (code == Input.Keys.T) {
+                if (talkOpen) closePanels(); else { closePanels(); talkNearest(); }
+                return true;
+              }
+              if (code == Input.Keys.I) { toggleInventory(); return true; }
+              // Digits belong to an open panel only; with no panel open they fall through untouched.
+              int digit = digitFor(code);
+              if (digit > 0 && talkOpen) { chooseTopic(digit); return true; }
+              if (digit > 0 && inventoryOpen) { chooseRow(digit); return true; }
               if (code == Input.Keys.SPACE) { attackNearest(); return true; }
               if (code == Input.Keys.E) { recoverNearest(); return true; }
               if (code == Input.Keys.G) { pickUpNearest(); return true; }
@@ -214,6 +239,9 @@ public final class OnlineClient extends ApplicationAdapter {
     error = null;
     lastTick = -1;
     targetCreature = 0;
+    closePanels();
+    hudMessage = null;
+    staged.clear();
     connection = new OnlineConnection(endpoint, credentials);
   }
 
@@ -270,7 +298,7 @@ public final class OnlineClient extends ApplicationAdapter {
     if (nearest==null) return;
     try {
       connection.pickUp(nearest.id())
-          .thenAccept(result -> { if (result.messageKey()!=null) showPickupMessage(result.messageKey()); })
+          .thenAccept(this::stageCommand)
           .exceptionally(failed -> null);
     }
     catch (IllegalStateException pendingOrDisconnected) { /* Single-flight commands stay bounded. */ }
@@ -281,9 +309,178 @@ public final class OnlineClient extends ApplicationAdapter {
     return Math.max(Math.abs(drop.x()-own.x()), Math.abs(drop.y()-own.y()));
   }
 
-  private void showPickupMessage(String key) {
-    pickupMessageKey=key;
-    pickupMessageUntil=System.currentTimeMillis()+PICKUP_MESSAGE_MS;
+  private void showMessage(String key, Object... args) {
+    hudMessage = args.length == 0 ? I18n.key(key) : I18n.message(key, args);
+    hudMessageUntil = System.currentTimeMillis() + MESSAGE_MS;
+  }
+
+  private record Staged(boolean talk, boolean accepted, String npc, String messageKey, List<Integer> args) {}
+
+  /** Network thread: enqueue only. The render thread applies the outcome in {@link #applyStaged()}. */
+  private void stageCommand(OnlineConnection.CommandResult result) {
+    staged.add(new Staged(false, false, null, result.messageKey(), result.args()));
+  }
+
+  private void applyStaged() {
+    Staged outcome;
+    while ((outcome = staged.poll()) != null) {
+      if (outcome.talk() && outcome.accepted() && outcome.messageKey() != null)
+        openTalk(outcome.npc(), outcome.messageKey(), outcome.args());
+      else if (outcome.messageKey() != null) showMessage(outcome.messageKey(), outcome.args().toArray());
+    }
+  }
+
+  private void closePanels() {
+    talkOpen = false;
+    inventoryOpen = false;
+    talkText = null;
+    talkTopics = List.of();
+  }
+
+  private void openTalk(String npc, String messageKey, List<Integer> args) {
+    talkText = I18n.message(messageKey, args.toArray());
+    talkNpc = npc;
+    talkTopics = OnlineNpcTopics.available(npc, I18n::has);
+    talkOpen = true;
+    inventoryOpen = false;
+  }
+
+  /** Nearest NPC inside the server's interaction range. The server still decides dialogue and proximity. */
+  private void talkNearest() {
+    var view = connection.view();
+    if (view == null || view.character() == null || !"connected".equals(connection.status())) {
+      showMessage("online.talk.not_connected");
+      return;
+    }
+    var own = ownActor(view);
+    if (own == null) return;
+    var nearest = view.snapshot().npcs().stream()
+        .filter(npc -> npcDistanceSquared(own, npc) < NPC_INTERACTION_RANGE_TILES_SQUARED)
+        .min(Comparator.comparingDouble(npc -> npcDistanceSquared(own, npc)))
+        .orElse(null);
+    if (nearest == null) {
+      showMessage("online.talk.none");
+      return;
+    }
+    talkName = nearest.displayName();
+    startTalk(nearest.id(), OptionalInt.empty());
+  }
+
+  private void chooseTopic(int digit) {
+    var topic = OnlineNpcTopics.choose(talkTopics, digit);
+    if (topic.isPresent() && talkNpc != null) startTalk(talkNpc, topic);
+  }
+
+  private void startTalk(String npc, OptionalInt topic) {
+    try {
+      connection
+          .interact(npc, topic)
+          .thenAccept(
+              result ->
+                  staged.add(
+                      new Staged(true, result.accepted(), npc, result.messageKey(), result.args())))
+          .exceptionally(failed -> null);
+    } catch (IllegalStateException pendingOrDisconnected) {
+      showMessage("online.npc.refused");
+    }
+  }
+
+  private void toggleInventory() {
+    boolean open = !inventoryOpen;
+    closePanels();
+    inventoryOpen = open;
+  }
+
+  /** Equip a carried item into its authored slot, or unequip an equipped slot. The server decides both. */
+  private void chooseRow(int digit) {
+    var view = connection.view();
+    var progress = view == null || view.character() == null ? null : view.character().progress();
+    if (progress == null || !"connected".equals(connection.status())) {
+      showMessage("online.inventory.not_connected");
+      return;
+    }
+    var row =
+        OnlineInventoryRows.choose(OnlineInventoryRows.of(progress.inventory(), progress.equipment()), digit)
+            .orElse(null);
+    if (row == null) return;
+    try {
+      if (row.kind() == OnlineInventoryRows.Kind.EQUIPPED) {
+        connection.unequip(BodyPart.valueOf(row.slot())).thenAccept(this::stageCommand).exceptionally(failed -> null);
+      } else {
+        var definition = ItemRegistry.findByKey(row.itemKey());
+        if (definition == null || definition.getBodyPart() == null) {
+          showMessage("online.equip.no_slot");
+          return;
+        }
+        connection
+            .equip(row.instance(), definition.getBodyPart())
+            .thenAccept(this::stageCommand)
+            .exceptionally(failed -> null);
+      }
+    } catch (IllegalStateException pendingOrDisconnected) {
+      showMessage("online.equip.refused");
+    }
+  }
+
+  private static OnlineConnection.Actor ownActor(OnlineConnection.View view) {
+    return view.snapshot().players().stream().filter(a -> a.id() == view.ownId()).findFirst().orElse(null);
+  }
+
+  private static double npcDistanceSquared(OnlineConnection.Actor own, NpcView npc) {
+    double dx = npc.x() - own.x(), dy = npc.y() - own.y();
+    return dx * dx + dy * dy;
+  }
+
+  /** Top-row number keys 1-9 as digits 1-9; any other key is 0. */
+  private static int digitFor(int code) {
+    return code >= Input.Keys.NUM_1 && code <= Input.Keys.NUM_9 ? code - Input.Keys.NUM_1 + 1 : 0;
+  }
+
+  /** Talk and inventory are drawn as plain text in the HUD; only one panel is open at a time. */
+  private void drawPanels(OnlineConnection.View view) {
+    float width = Gdx.graphics.getWidth(), height = Gdx.graphics.getHeight();
+    float line = font.getLineHeight();
+    if (talkOpen && talkText != null) {
+      float y = height - 130;
+      font.draw(hud, I18n.message("online.talk.header", talkName == null ? "" : talkName), 16, y);
+      y -= line * 1.5f;
+      var layout = font.draw(hud, talkText, 16, y, width - 32, Align.left, true);
+      y -= layout.height + line;
+      for (int i = 0; i < talkTopics.size(); i++) {
+        font.draw(hud, I18n.message("online.talk.topic", i + 1, talkTopics.get(i)), 16, y);
+        y -= line;
+      }
+      font.draw(hud, I18n.key("online.talk.close"), 16, y);
+    } else if (inventoryOpen) {
+      float x = width - 360, y = height - 16;
+      font.draw(hud, I18n.key("online.inventory.title"), x, y);
+      y -= line * 1.5f;
+      var progress = view == null || view.character() == null ? null : view.character().progress();
+      if (progress == null) {
+        font.draw(hud, I18n.key("online.inventory.not_connected"), x, y);
+        y -= line;
+      } else {
+        var rows = OnlineInventoryRows.of(progress.inventory(), progress.equipment());
+        if (rows.isEmpty()) {
+          font.draw(hud, I18n.key("online.inventory.empty"), x, y);
+          y -= line;
+        }
+        for (int i = 0; i < rows.size() && i < OnlineInventoryRows.MAX_CHOICES; i++) {
+          var row = rows.get(i);
+          String name = I18n.key(row.itemKey(), row.itemKey());
+          String text = row.kind() == OnlineInventoryRows.Kind.EQUIPPED
+              ? I18n.message("online.inventory.unequip_row", i + 1, name, row.slot())
+              : I18n.message("online.inventory.equip_row", i + 1, name);
+          font.draw(hud, text, x, y);
+          y -= line;
+        }
+        if (rows.size() > OnlineInventoryRows.MAX_CHOICES) {
+          font.draw(hud, I18n.message("online.inventory.more", rows.size() - OnlineInventoryRows.MAX_CHOICES), x, y);
+          y -= line;
+        }
+      }
+      font.draw(hud, I18n.key("online.inventory.close"), x, y - line * 0.5f);
+    }
   }
 
   /** Keeps one render object per current drop; positions use the same region-to-world mapping as creatures. */
@@ -315,7 +512,7 @@ public final class OnlineClient extends ApplicationAdapter {
     }
     if (renderedWorld!=region.world() || !java.util.Objects.equals(renderedRegion,region.key()) || renderedEpoch!=region.locationEpoch()) {
       avatars.values().forEach(a -> a.animation.dispose()); avatars.clear(); creatures.clear(); groundLoot.clear();
-      inputKeys.clear(); connection.stopInput(); lastTick=-1; targetCreature=0;
+      inputKeys.clear(); connection.stopInput(); lastTick=-1; targetCreature=0; closePanels();
       renderedWorld=region.world(); renderedRegion=region.key(); renderedEpoch=region.locationEpoch();
     }
     connection.confirmRegionReady(region.locationEpoch());
@@ -325,7 +522,11 @@ public final class OnlineClient extends ApplicationAdapter {
   public void render() {
     Gdx.gl.glClearColor(0.05f, 0.05f, 0.05f, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-    if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) Gdx.app.exit();
+    // Esc closes an open panel first and exits the game only when no panel is open.
+    if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+      if (talkOpen || inventoryOpen) closePanels(); else Gdx.app.exit();
+    }
+    applyStaged();
     if (connection != null
         && Gdx.input.isKeyJustPressed(Input.Keys.R)
         && !"connected".equals(connection.status())) reconnect();
@@ -387,6 +588,7 @@ public final class OnlineClient extends ApplicationAdapter {
       }
     }
     if (view == null) {
+      closePanels();
       avatars.values().forEach(a -> a.moving = false);
       creatures.values().forEach(c -> c.motion.stop());
       groundLoot.clear();
@@ -448,9 +650,9 @@ public final class OnlineClient extends ApplicationAdapter {
         && "connected".equals(connection.status())) state = I18n.key("online.client.persistent");
     font.draw(hud, state, 16, Gdx.graphics.getHeight() - 16);
     font.draw(hud, I18n.key(view!=null && view.map().persistent() ? "online.client.combat_controls" : "online.client.controls"), 16, 24);
-    String pickupKey=pickupMessageKey;
-    if (pickupKey!=null && System.currentTimeMillis()<pickupMessageUntil)
-      font.draw(hud, I18n.key(pickupKey), 16, 46);
+    if (hudMessage!=null && System.currentTimeMillis()<hudMessageUntil)
+      font.draw(hud, hudMessage, 16, 46);
+    drawPanels(view);
     if (view != null)
       font.draw(
           hud,

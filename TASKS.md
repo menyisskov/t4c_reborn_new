@@ -19,7 +19,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
 | T4C-0219 | Verify live account-key rotation through two native sessions | Multiplayer / Beta security | In Progress | pending | pending |
-| T4C-0218 | Native online talk and inventory panels (Claude lane) | Multiplayer / Beta native UI | Done | PR155/main`0b350b42` | [2026-10-27](CHANGELOG.md#2026-10-27--native-client-talk-and-inventory-panels-t4c-0218) |
+| T4C-0218 | Native online client: talk to nearby NPCs with topic choices and an inventory panel to equip and unequip | Multiplayer / Beta client | Done | PR155/main`0b350b42` | [2026-10-27](CHANGELOG.md#2026-10-27--talk-to-nearby-people-and-manage-equipment-in-the-online-client-t4c-0218) |
 | T4C-0217 | Owner-approved starter kits: Paladin mace, Arcane Spark for mages, Archer quiver; checkpoint scope approval recorded | Content / Multiplayer | Done | PR152/main`91296e12` | [2026-10-27](CHANGELOG.md#2026-10-27--new-starting-gear-and-first-spell-t4c-0217) |
 | T4C-0216 | Verify two native adapters over trusted TLS | Multiplayer / Beta | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--local-native-tls-acceptance-t4c-0216) |
 | T4C-0215 | Package a clean local QA server runtime and safe lifecycle tools | Multiplayer / Beta operations | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--local-online-server-qa-package-t4c-0215) |
