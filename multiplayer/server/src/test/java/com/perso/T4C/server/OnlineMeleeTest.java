@@ -7,6 +7,7 @@ import com.perso.T4C.item.ItemKeys;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.MonsterExperience;
 import com.perso.T4C.online.model.MonsterContent;
+import com.perso.T4C.quest.QuestRules;
 import com.perso.T4C.server.persistence.OnlineStore;
 import java.util.*;
 import java.util.concurrent.*;
@@ -31,6 +32,7 @@ class OnlineMeleeTest {
     var key=store.provisionAccount(); var prepared=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(1));
     var story=gson.toJsonTree(prepared.progress()).getAsJsonObject();
     story.getAsJsonObject("questFlags").addProperty(com.perso.T4C.quest.CrimsonscaleLetterRules.LETTER_FLAG,1);
+    story.getAsJsonObject("questFlags").addProperty(QuestRules.killLogFlag(definition.getName()),Integer.MAX_VALUE);
     var firstProgress=gson.fromJson(story,com.perso.T4C.online.model.CharacterProgress.class);
     var first=store.create(key.accountId(),"Melee one",0,3.5,3.5,firstProgress,prepared.gold());
     var second=store.create(key.accountId(),"Melee two",0,3.5,3.5,prepared.progress(),prepared.gold());
@@ -56,6 +58,10 @@ class OnlineMeleeTest {
       var saved=attack.get().character();
       assertEquals(MonsterExperience.damageReward(definition.getXpPerHit(),1)+MonsterExperience.reward(definition.getXpOnDeath()),saved.experience());
       assertTrue(saved.gold()>first.gold());
+      assertEquals(Integer.MAX_VALUE,saved.progress().questFlags().get(QuestRules.killLogFlag(definition.getName())),
+          "An online kill log at its integer limit saturates without blocking the kill");
+      assertFalse(saved.progress().questFlags().containsKey("quest.renewed_wards.kills"),
+          "A non-objective guard kill grants no quest credit");
       assertEquals(second,store.load(key.accountId(),second.id()));
       assertEquals(world.snapshot(one).creatures(),world.snapshot(two).creatures());
       assertEquals(2,world.snapshot(two).creatures().size());
@@ -84,31 +90,46 @@ class OnlineMeleeTest {
     scripted.addProperty("name","Scripted skeleton");
     scripted.add("sourceEvents",gson.toJsonTree(Map.of("kill","quest")));
     var scriptedDefinition=gson.fromJson(scripted,MonsterDef.class);
-    var lootable=new MonsterContent.Spawn("skeleton-"+UUID.randomUUID(),definition.getName(),3,3,0,false,false);
-    var authored=new MonsterContent.Spawn("scripted-"+UUID.randomUUID(),scriptedDefinition.getName(),3,4,0,false,false);
+    // The authored anchor is one tile outside the quest circle; the current death tile is on its edge.
+    var lootable=new MonsterContent.Spawn("skeleton-"+UUID.randomUUID(),definition.getName(),2836,1095,0,false,false);
+    var authored=new MonsterContent.Spawn("scripted-"+UUID.randomUUID(),scriptedDefinition.getName(),2836,1096,0,false,false);
     var content=new MonsterContent(MonsterContent.VERSION,
         Map.of(definition.getName(),definition,scriptedDefinition.getName(),scriptedDefinition),List.of(lootable,authored));
-    var map=new PreviewMap(new boolean[10][10],0,0,3,3); var world=new PreviewWorld(map,content);
+    var map=new PreviewMap(new boolean[10][10],2831,1090,4,5); var world=new PreviewWorld(map,content);
     var sessions=new PersistentSessions(store,map,world);
     var key=store.provisionAccount(); var prepared=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(3));
-    var killer=store.create(key.accountId(),"Skeleton killer",0,3.5,3.5,prepared.progress(),prepared.gold());
+    var quest=QuestCatalog.bundled().definition("renewed_wards");
+    var flags=new HashMap<>(prepared.progress().questFlags());
+    flags.putAll(QuestRules.accept(k->flags.getOrDefault(k,0),quest));
+    var active=ProgressEdits.withFlags(prepared.progress(),flags);
+    var killer=store.create(key.accountId(),"Skeleton killer",0,2835.5,1095.5,active,prepared.gold());
     String token=sessions.join(store.acquire(key.secret(),killer.id()),System.nanoTime()).token();
-    long now=System.currentTimeMillis();
+    var now=new java.util.concurrent.atomic.AtomicLong(System.currentTimeMillis());
     try(var creatures=new PersistentCreatures(store,world)) {
+      world.creaturePosition(1,4,5); // Current global tile (2835,1095), distinct from the anchor.
       var rolls=new Random(1) { @Override public int nextInt(int bound) { return bound-1; } };
-      var melee=new OnlineMelee(map,world,sessions,creatures,ItemCatalog.loadBundled(),rolls,() -> now);
+      var melee=new OnlineMelee(map,world,sessions,creatures,ItemCatalog.loadBundled(),rolls,now::get);
       // Scripted definitions are still refused before any damage is dealt, even with an ordinary loot table.
       assertEquals("unsupported_combat",assertThrows(PreviewWorld.Rejected.class,() -> melee.attack(token,0,2)).getMessage());
       var attack=melee.attack(token,0,1).toCompletableFuture();
       await(sessions,creatures,attack);
       var saved=attack.get().character();
+      assertEquals(1,saved.progress().questFlags().get(QuestRules.killsFlag(quest)),
+          "The first real lethal strike credits the current death tile, not the authored anchor");
+      assertEquals(1,saved.progress().questFlags().get(QuestRules.killLogFlag(definition.getName())));
+      assertEquals(1,store.load(key.accountId(),killer.id()).progress().questFlags().get(QuestRules.killsFlag(quest)));
       assertTrue(saved.gold()-killer.gold()>=definition.getGoldMin() && saved.gold()-killer.gold()<=definition.getGoldMax(),
           "The single roll still supplies the authored gold");
-      var drops=store.listGroundLoot(0,new OnlineStore.TileRect(0,0,10,10)).stream()
+      var drops=store.listGroundLoot(0,new OnlineStore.TileRect(2831,1090,2841,1100)).stream()
           .filter(loot -> killer.id().equals(loot.ownerCharacter())).toList();
       assertEquals(1,drops.size(),"A lethal strike commits its rolled drop with the kill");
       assertEquals(ItemKeys.normalize("Leather gloves"),drops.getFirst().key());
-      assertEquals(3.0,drops.getFirst().x()); assertEquals(3.0,drops.getFirst().y());
+      assertEquals(2835.0,drops.getFirst().x()); assertEquals(1095.0,drops.getFirst().y());
+      now.set(saved.progress().cooldowns().get("attack")+1); // Pass only this hit's cooldown.
+      assertEquals("creature_unavailable",assertThrows(PreviewWorld.Rejected.class,
+          () -> melee.attack(token,saved.revision(),1)).getMessage());
+      assertEquals(1,store.load(key.accountId(),killer.id()).progress().questFlags().get(QuestRules.killsFlag(quest)),
+          "A terminal creature life cannot grant a second objective credit");
     } finally { sessions.shutdown(); }
   }
 
