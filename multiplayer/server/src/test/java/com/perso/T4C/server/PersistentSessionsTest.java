@@ -31,7 +31,7 @@ class PersistentSessionsTest {
     String token=sessions.join(lease,started).token();
     try {
       for (int i=0;i<PreviewWorld.TICK_RATE*5-1;i++) sessions.step();
-      var result=sessions.commitGameplayEvent(token,created.revision(),UUID.randomUUID(),1,0,prepared.progress()).toCompletableFuture();
+      var result=sessions.commitWorldReward(token,created.revision(),UUID.randomUUID(),1,0,prepared.progress()).toCompletableFuture();
       world.input(token,0,1,0); world.step();
       double movedX=world.position(token).x();
       // Reach the original deadline while the reward is in flight, then drain at the same tick
