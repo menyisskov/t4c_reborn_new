@@ -385,3 +385,7 @@ The live owner-controlled source-`8da43482`/schema-9 clients were not replaced.
 No server pursuit is active or rendered movement verified. T4C-0212 reserves a separate
 new server controller/test slice; existing moving core files remain conditional on
 explicit Claude handoff, so neither task completes M4.
+
+## Loot and quest server checkpoint (T4C-0204/0206, Claude lane)
+
+Merged and CI-verified (including PostgreSQL tests): schema v10 ground loot and receipt-bound atomic claim (PR128); region loot cache, pickup, expiry sweep, lethal-kill drops, looted monsters attackable (PR130); spell/quest catalogs and quest drafts (PR132); self-cast and potion drafts (PR134); quest flag allowlist and Warden Aelric greeting (PR135); quest turn-in commits gold/XP/item/spell/flags once (PR138); protocol 5 `/pickup`, `loot` in `/state`, `/interact` topics (PR142). Not done: native loot/dialogue controls (L10 in progress), NativeLootProbe (L12), `/cast` and `/use` routes (A7) and regeneration (A5, needs owner decision on logged-out regeneration), hosting the renewed_wards kill area (Q10, needs owner approval of the region), corpse carry-weight parity (L11, owner decision). All of this is backend/CI evidence: no rendered-client M2 or M3 evidence exists. SCOPE_PROPOSAL.md remains unapproved.
