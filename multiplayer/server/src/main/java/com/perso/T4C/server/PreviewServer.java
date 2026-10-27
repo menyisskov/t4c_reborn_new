@@ -1,6 +1,9 @@
 package com.perso.T4C.server;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.perso.T4C.server.persistence.OnlineStore;
 import com.perso.T4C.online.model.OnlineCharacterView;
@@ -19,7 +22,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /** Loopback-only QA transport with optional persistent sessions and no desktop dependencies. */
 public final class PreviewServer implements AutoCloseable {
   private record PersistentSnapshot(long tick, java.util.List<PreviewWorld.PlayerView> players,
-      long characterRevision, java.util.List<com.perso.T4C.online.model.CreatureView> creatures,com.perso.T4C.online.model.OnlineRegion region,java.util.List<com.perso.T4C.online.model.NpcView> npcs) {}
+      long characterRevision, java.util.List<com.perso.T4C.online.model.CreatureView> creatures,com.perso.T4C.online.model.OnlineRegion region,java.util.List<com.perso.T4C.online.model.NpcView> npcs,JsonArray loot) {}
+  /** Ground loot shown in one snapshot: at most this many drops, nearest the viewer first. */
+  static final int GROUND_LOOT_VIEW_LIMIT = 128;
   private record RegionJoined(String token,long id,com.perso.T4C.online.model.OnlineRegion region) {}
   private static final Gson JSON = new Gson();
   private final com.perso.T4C.online.model.ItemContent items;
@@ -180,7 +185,7 @@ public final class PreviewServer implements AutoCloseable {
         String type = exchange.getRequestHeaders().getFirst("Content-Type");
         if (type == null || !type.toLowerCase(java.util.Locale.ROOT).startsWith("text/plain"))
           throw new PreviewWorld.Rejected(415, "input");
-        if ("/join".equals(path)) {
+        if ("/join".equals(path) || "/pickup".equals(path)) {
           var versions = exchange.getRequestHeaders().get(OnlineProtocol.VERSION_HEADER);
           if (versions == null || versions.size() != 1
               || !Integer.toString(OnlineProtocol.VERSION).equals(versions.getFirst()))
@@ -188,7 +193,7 @@ public final class PreviewServer implements AutoCloseable {
         }
         int limit=store!=null && "/join".equals(path) ? 101
             : "/interact".equals(path) ? 128
-            : ("/equip".equals(path) || "/unequip".equals(path) || "/recover".equals(path)) ? 96 : 64;
+            : ("/equip".equals(path) || "/unequip".equals(path) || "/recover".equals(path) || "/pickup".equals(path)) ? 96 : 64;
         byte[] bytes = exchange.getRequestBody().readNBytes(limit+1);
         if (bytes.length > limit) throw new PreviewWorld.Rejected(413, "input");
         String body = new String(bytes, StandardCharsets.US_ASCII);
@@ -281,13 +286,30 @@ public final class PreviewServer implements AutoCloseable {
           case "/interact" -> {
             if(persistent==null) throw new PreviewWorld.Rejected(404,"route");
             String token=token(exchange);
-            if(!body.matches("[0-9]{1,19} [0-9]{1,19} [A-Za-z][A-Za-z0-9_]{0,63}"))
+            if(!body.matches("[0-9]{1,19} [0-9]{1,19} [A-Za-z][A-Za-z0-9_]{0,63}( [0-9]{1,2})?"))
               throw new PreviewWorld.Rejected(400,"input");
             String[] parts=body.split(" "); long revision,epoch;
             try { revision=Long.parseLong(parts[0]);epoch=Long.parseLong(parts[1]); }
             catch(NumberFormatException invalid) { throw new PreviewWorld.Rejected(400,"input"); }
-            var pending=onWorld(()->{ admit(token,epoch);return persistent.interact(token,revision,parts[2]); });
+            // Optional authored topic index; the NPC dispatcher rejects an index the NPC does not have.
+            var topic=parts.length==4 ? java.util.OptionalInt.of(Integer.parseInt(parts[3])) : java.util.OptionalInt.empty();
+            var pending=onWorld(()->{ admit(token,epoch);return persistent.interact(token,revision,parts[2],topic); });
             json(exchange,200,pending.toCompletableFuture().get(2,TimeUnit.SECONDS));
+          }
+          case "/pickup" -> {
+            if (persistent==null) throw new PreviewWorld.Rejected(404,"route");
+            String token=token(exchange);
+            if (!body.matches("[0-9]{1,19} [0-9]{1,19} [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"))
+              throw new PreviewWorld.Rejected(400,"input");
+            String[] parts=body.split(" "); long revision,epoch; java.util.UUID loot;
+            try { revision=Long.parseLong(parts[0]);epoch=Long.parseLong(parts[1]); loot=java.util.UUID.fromString(parts[2]); }
+            catch (IllegalArgumentException bad) { throw new PreviewWorld.Rejected(400,"input"); }
+            var pending=onWorld(() -> { admit(token,epoch); return persistent.pickup(token,revision,epoch,loot); });
+            OnlineStore.RewardResult committed;
+            try { committed=pending.toCompletableFuture().get(2,TimeUnit.SECONDS); }
+            // Definite refusals arrive as the completion's cause; unwrap them into their 409 code.
+            catch (ExecutionException error) { if(error.getCause() instanceof PreviewWorld.Rejected rejected) throw rejected; throw error; }
+            json(exchange,200,Map.of("revision",committed.character().revision()));
           }
           case "/region-ready" -> {
             String token=token(exchange);if(!body.matches("[0-9]{1,19}")) throw new PreviewWorld.Rejected(400,"input");
@@ -339,7 +361,8 @@ public final class PreviewServer implements AutoCloseable {
             json(exchange, 200, onWorld(() -> {
               var context=admit(token,null);var snapshot=context.world.snapshot(token);
               return new PersistentSnapshot(snapshot.tick(),snapshot.players(),persistent==null ? 0 : persistent.character(token).revision(),
-                  snapshot.creatures(),context.descriptor(persistent==null ? 0 : persistent.region(token).locationEpoch()),context.npcs.views());
+                  snapshot.creatures(),context.descriptor(persistent==null ? 0 : persistent.region(token).locationEpoch()),context.npcs.views(),
+                  groundLoot(token,context));
             }));
           }
           case "/character" -> {
@@ -377,6 +400,34 @@ public final class PreviewServer implements AutoCloseable {
       if (error instanceof InterruptedException) Thread.currentThread().interrupt();
       json(exchange, 503, Map.of("error", "busy"));
     } finally { exchange.close(); }
+  }
+
+  /**
+   * Region-local ground loot near the viewer, nearest first. Only this region's cache is read, so drops
+   * never cross regions. The owner is the viewer's own public player ID while the viewer holds the owner
+   * window; other owners are reported as null. No character or account ID leaves the server.
+   */
+  private JsonArray groundLoot(String token,HostedWorlds.Region region) {
+    var result=new JsonArray();
+    if (persistent==null) return result;
+    var self=region.world.position(token);
+    var character=persistent.character(token).id();
+    double viewerX=region.map.originX+self.x(),viewerY=region.map.originY+self.y();
+    var nearest=region.loot.snapshot().stream()
+        .sorted(java.util.Comparator.comparingDouble(loot -> Math.max(Math.abs(loot.x()-viewerX),Math.abs(loot.y()-viewerY))))
+        .limit(GROUND_LOOT_VIEW_LIMIT).toList();
+    for (var loot : nearest) {
+      var entry=new JsonObject();
+      boolean owned=character.equals(loot.ownerCharacter()) && loot.ownerRemainingMillis()>0;
+      entry.addProperty("id",loot.id().toString());
+      entry.addProperty("x",loot.x()-region.map.originX);
+      entry.addProperty("y",loot.y()-region.map.originY);
+      entry.addProperty("key",loot.key());
+      if (owned) entry.addProperty("ownerPlayerId",self.id()); else entry.add("ownerPlayerId",JsonNull.INSTANCE);
+      entry.addProperty("ownerRemainingMs",Math.max(0,loot.ownerRemainingMillis()));
+      result.add(entry);
+    }
+    return result;
   }
 
   private String token(HttpExchange exchange) {
