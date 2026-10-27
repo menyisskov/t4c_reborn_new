@@ -5,6 +5,28 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 class PreviewWorldTest {
+  @Test void commandFloodIsBoundedPerSessionAndRefillsOnlyWithServerTicks() {
+    var world = openWorld();
+    var flood = world.join();
+    var other = world.join();
+    int admitted = 0;
+    while (admitted < 1000) {
+      try { world.admitRequest(flood.token()); admitted++; }
+      catch (PreviewWorld.Rejected rejected) { assertEquals(429, rejected.status); break; }
+    }
+    assertTrue(admitted > 0 && admitted < 1000, "An unbounded same-tick flood must be rejected");
+    assertThrows(PreviewWorld.Rejected.class, () -> world.admitRequest(flood.token()));
+    assertDoesNotThrow(() -> world.admitRequest(other.token()), "One player's budget cannot consume another's");
+    // Internal snapshots and logout remain available even while external commands are throttled.
+    assertEquals(2, world.snapshot(flood.token()).players().size());
+    for (int i = 0; i < PreviewWorld.TICK_RATE; i++) world.step();
+    for (int i = 0; i < admitted; i++) world.admitRequest(flood.token());
+    assertEquals(429, assertThrows(PreviewWorld.Rejected.class, () -> world.admitRequest(flood.token())).status);
+    world.leave(flood.token());
+    assertEquals(401, assertThrows(PreviewWorld.Rejected.class, () -> world.admitRequest(flood.token())).status);
+    assertDoesNotThrow(() -> world.admitRequest(world.join().token()));
+  }
+
   @Test void bothPlayersSeeTheSameAuthoredCreaturesAndInputsCannotMoveThem() throws Exception {
     var map = PreviewMap.load(java.nio.file.Path.of("../../assets/maps/worldmap/worldmap.colbin"));
     var world = new PreviewWorld(map, MonsterCatalog.loadBundled());

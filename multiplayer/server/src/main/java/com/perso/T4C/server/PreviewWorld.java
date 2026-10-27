@@ -18,6 +18,8 @@ public final class PreviewWorld {
   public static final int TICK_RATE = 34;
   public static final long INPUT_TIMEOUT_TICKS = 12;
   public static final long SESSION_TIMEOUT_TICKS = TICK_RATE * 30;
+  private static final double REQUESTS_PER_SECOND = 60;
+  private static final double REQUEST_BURST = 60;
   public record Joined(String token, long id) {}
   public record PlayerView(long id, double x, double y, long sequence, long appearance) {}
   public record Snapshot(long tick, List<PlayerView> players, List<CreatureView> creatures) {}
@@ -29,6 +31,8 @@ public final class PreviewWorld {
     long id, sequence = -1, lastSeen, lastInput, appearance;
     int dx, dy;
     double x, y;
+    double requestCredits = REQUEST_BURST;
+    long budgetTick;
   }
   private final PreviewMap map;
   private final List<CreatureView> creatures;
@@ -79,6 +83,7 @@ public final class PreviewWorld {
     player.x = x;
     player.y = y;
     player.lastSeen = tick;
+    player.budgetTick = tick;
     players.put(token, player);
     return new Joined(token, player.id);
   }
@@ -88,6 +93,17 @@ public final class PreviewWorld {
     if (player == null) throw new Rejected(401, "session");
     player.lastSeen = tick;
     return player;
+  }
+
+  /** Network entry points only; internal simulation/storage reads do not spend client credits. */
+  void admitRequest(String token) {
+    Player player = players.get(token);
+    if (player == null) throw new Rejected(401, "session");
+    player.requestCredits = Math.min(REQUEST_BURST,
+        player.requestCredits + (tick - player.budgetTick) * REQUESTS_PER_SECOND / TICK_RATE);
+    player.budgetTick = tick;
+    if (player.requestCredits < 1) throw new Rejected(429, "rate");
+    player.requestCredits--;
   }
 
   public void input(String token, long sequence, int dx, int dy) {
