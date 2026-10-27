@@ -245,3 +245,36 @@ requires remote-main claim refresh plus the canonical shared ledger. Claude's re
 OnlineStore/PersistentSessions/HostedWorlds handoff is granted explicitly in PEER_WORK; keep
 PreviewServer/SimulationLoop reserved until0198 merge. Packaging remains static-only pending
 0198's validation/delivery window release.
+
+## Current checkpoint after PR126 (supersedes earlier pending statements)
+
+T4C-0198 merged as8da43482; all registeredCI green and post-merge desktop package passed.
+The actual combined source (including ClaudePR123) passed19focuseddesktop and107PGchecks
+(21domain+86server), deadlineprobe2.026s and a15-second20-adapter metrics smoke with4operator
+samples, zero metric/adapter/health failures. Metrics are private local operator observations,
+not a sustainedBeta/rendered-client/real-packet-loss acceptance result.
+
+Codex explicitly released the completed0198 core files, including PreviewServer/SimulationLoop,
+for new claims in PEER_WORK.md. Claude's0204loot wiring can claim them under the recordedhandoff;
+no duplicate gameplay lane is being started byCodex. Codex's next task is0205 client distribution.
+The packaging agent owns only new tools/docs and its isolated output windows. Its completed
+source-snapshot validation is recorded below. Source/UI game automation remains paused;
+prototype feedback is still pending.
+
+## T4C-0205 Windows online test package checkpoint
+
+The create-only builder/checker/fixture and installation guide are in
+`tools/package-online-client.ps1`, `tools/OnlinePackageCheck.java`,
+`tools/test-online-package-check.ps1` and `CLIENT_DISTRIBUTION.md`. The verified final bundle is
+`target/online-client-packages/qa-0205-8da43482-b`, built from committed source
+`8da43482ee5913cb7bf63273e49edce2cc2e38a2` in an isolated source archive. The isolated
+Maven package succeeded after freshly compiling all 8,655 desktop sources. Correct runtime scope
+contains 64 dependency JARs; 860 tracked assets and 929 manifest entries total 795,466,143 bytes.
+Manifest SHA-256: `a368c29c6f987003223421029259bd1bcfe9087ce4cdae517cdeb4bfd4b201c3`.
+
+The builder's headless self-check passed. Positive, unlisted-private-file, tampered-asset and
+duplicate-path checker fixtures passed against the earlier package with unchanged checker code.
+The corrected final bundle passed PowerShell 7, Windows PowerShell 5 and batch `-CheckOnly` from a
+copied path with spaces. The first bundle's 73 dependencies came from an incorrect scope property
+and are superseded; preserve it only as failure/correction evidence. No renderer, server connection,
+remote clean machine, offline regression or owner QA was run. M6 remains incomplete.

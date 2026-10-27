@@ -1,6 +1,9 @@
 # Multiplayer Alpha work
 
 For model/session continuation, start with [HANDOFF.md](HANDOFF.md).
+
+For a create-only Windows online test package and its headless integrity checks, see
+[CLIENT_DISTRIBUTION.md](CLIENT_DISTRIBUTION.md).
 For current Codex/Claude task, file and resource ownership, read [PEER_WORK.md](PEER_WORK.md) before editing.
 
 For the owner-facing roadmap and exact completion criteria for each of the six two-player

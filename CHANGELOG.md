@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Online client test package (T4C-0205)
+
+### Added
+- Players can install a complete online test client package on Windows and check its files before connecting, without the development checkout or build tools. Java 21 is required on the tester's machine.
+
 ## 2026-10-27 — Private server runtime observations (T4C-0198)
 
 ### Added
