@@ -37,4 +37,22 @@ class MonsterCatalogTest {
   private static ByteArrayInputStream bytes(String value) {
     return new ByteArrayInputStream(value.getBytes(StandardCharsets.UTF_8));
   }
+
+  @Test void classifiedResourceIsStagedWhileTheHeadlessRuntimeStillLoadsVersionOne() throws Exception {
+    assertEquals(1,MonsterCatalog.loadBundled().version());
+    try(var input=MonsterCatalog.class.getResourceAsStream("/content/monsters-v2.json")) {
+      assertNotNull(input);
+      var staged=new Gson().fromJson(new java.io.InputStreamReader(input,StandardCharsets.UTF_8),
+          com.perso.T4C.online.model.MonsterContent.Classified.class);
+      assertEquals(2,staged.version());
+      assertTrue(staged.spawns().stream().anyMatch(s->s.ownership()==
+          com.perso.T4C.online.model.MonsterContent.Ownership.NPC));
+      assertThrows(IllegalArgumentException.class,()->new com.perso.T4C.online.model.MonsterContent.Classified(
+          99,staged.monsters(),staged.authorities(),staged.relations(),staged.spawns()));
+      var malformed=new Gson().toJsonTree(staged).getAsJsonObject();
+      malformed.addProperty("version",99);
+      assertThrows(RuntimeException.class,()->new Gson().fromJson(malformed,
+          com.perso.T4C.online.model.MonsterContent.Classified.class));
+    }
+  }
 }

@@ -508,13 +508,46 @@ merge `d4dc908a`, protocol 5/schema 11). Design SHA-256
 `0A5B4A55C78E02F0EF160F96ADF6E2D8AB4FFA3A176685F14D197D3FF0A2FB66`;
 SCOPE correction SHA-256
 `186799300E88CF522E0740BD87F16FE9FD1518560CFB7064DC9F5903DCB6C5F6`.
-Next implementation must classify NPC-owned Sundial before monster lookup,
+Erratum after the v1/v2 source join: offline MonsterManager resolves MonsterDef
+before skipping a recognized NPC alias. There are 1,935 source records with both
+an NPC alias and a nonnull legacy MonsterDef (for example Skraug Grubbringah);
+early NPC filtering would remove existing single-player monsters. Keep these
+MONSTER records in the staged monster inventory and retain NPCManager's
+independent appearance inventory, even where the source anchor/type overlaps.
+Sundial's null MonsterDef is still NPC-only. Hosted membership must preserve
+both supported actors or explicitly refuse an unresolved dual registration;
+it must not silently deduplicate by anchor. The 39-record starter-crop census
+and prior read-only measurements are unchanged by this correction.
+The corrected design SHA-256 is
+`D00ECC4364B7C73BA02301723B564F58C07DDEC4CCF17BEB558B7C35CF9FA5BD`;
+the earlier `0A5B4A55` hash identifies the original PR160 design, not this erratum.
+Next implementation must classify Sundial with definition-first precedence,
 preserve every authored spawn, and add directional Goblin-to-Horse combat with
 durable life/reward separation before enabling the proposed 249×117 route.
 Request explicit Claude file/interface handoff before dependent B/C core edits.
 T4C-0224 independently implements classification/export preparation; its active
 files and evidence remain separate. No schema 12 reservation, route enablement,
 clan runtime, native test or M3/Beta completion follows from this design.
+
+## T4C-0224 staged actor classification
+
+The corrected 16-file source/data/test candidate is frozen against immutable
+main `55de14ce`; exact per-file hashes are in private
+`%TEMP%/t4c-0224-classified-55de-4a8c/final-candidate-hashes-v2.tsv`
+(SHA-256 `53531C0DFF3235C47003AB8C732ED619FA0D485B524ED43BB57168A382424643`).
+Isolated focused validation passed 20 offline/export/lookup tests and three
+server-catalog tests. Preserve the failed first nondeterministic NPC export,
+the real definition-precedence regression found during review, and old manifest
+`92267A93` as superseded evidence. MonsterManager keeps its legacy
+definition-first spawning; a real Skraug Grubbringah manager-spawn regression
+now covers the 1,935 dual-registered alias case. Monster-v2 has 14,393 primary
+records, 1,935 nonnull-definition MONSTER overlaps and 154 null-definition
+NPC-only records. The independent NPC appearance manifest has 2,574 entries.
+Both inventories retain their source anchors; future hosted membership must
+support a dual actor or refuse it explicitly. Current v1 JSON/default loader,
+hosted crop, protocol, schema, client renderer and single-player behavior stay
+unchanged. The staged inventories are not live actors or an M3/Beta pass.
+Dependent clan/hosted implementation still requires exact Claude handoff.
 
 ## T4C-0222 HTTP admission delivery history
 

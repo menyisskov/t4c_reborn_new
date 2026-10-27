@@ -14,13 +14,32 @@ not automatically a completed milestone.
 
 ## Verified foundation (updated 2026-10-27)
 
+T4C-0224 staged two unused generated inventories from immutable source
+`55de14ce` plus its exact 16-file candidate (final manifest SHA-256
+`53531C0DFF3235C47003AB8C732ED619FA0D485B524ED43BB57168A382424643`).
+The monster-v2 inventory retains all 14,393 v1 primary records: 1,935
+nonnull-definition NPC aliases remain MONSTER with canonical NPC metadata, and
+154 null-definition records are NPC-only. The separate NPC appearance inventory
+contains 2,574 records; overlapping source anchors are retained across the two
+inventories. Focused isolated checks passed 20 offline/export/lookup tests and
+three staged server-catalog tests. An initial export-freshness failure from
+nondeterministic map order, the subsequently found definition-precedence
+regression affecting existing offline monsters, and the superseded manifest
+`92267A93` remain retained; the corrected candidate passed the real Skraug
+Grubbringah manager-spawn regression. Existing v1 JSON, default loader and
+single-player spawn behavior remain unchanged. No staged v2 loader, hosted
+region, NPC renderer/interaction, clan combat, schema/protocol change, native
+test or M3/Beta acceptance is claimed.
+
 T4C-0223's [starter encounter authority design](STARTER_ENCOUNTER_AUTHORITY_DESIGN.md)
 is a read-only audit of main `55de14ce` plus the merged pursuit implementation
 (`d4dc908a`, protocol 5/schema 11). It identifies NPC-owned Sundial among the
 39 recorded spawns in the proposed 249×117 route, and specifies durable,
 directional Goblin-to-Horse combat without awarding player credit for clan kills.
-The design source SHA-256 is
-`0A5B4A55C78E02F0EF160F96ADF6E2D8AB4FFA3A176685F14D197D3FF0A2FB66`.
+The original PR160 design SHA-256 was
+`0A5B4A55C78E02F0EF160F96ADF6E2D8AB4FFA3A176685F14D197D3FF0A2FB66`;
+T4C-0224's definition-first/dual-inventory erratum makes the current design
+SHA-256 `D00ECC4364B7C73BA02301723B564F58C07DDEC4CCF17BEB558B7C35CF9FA5BD`.
 No content export, implementation, build, PostgreSQL, native adapter or rendered
 acceptance ran for T4C-0223. The region remains disabled and M3/Beta open.
 

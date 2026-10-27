@@ -10,7 +10,7 @@ import com.perso.T4C.config.MapDefinition;
 import com.perso.T4C.entity.NameableEntityHandler;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.helper.SanctuaryCombatRules;
-import com.perso.T4C.npc.core.NpcFactoryRegistry;
+import com.perso.T4C.npc.core.NpcSpawnOwnership;
 import com.perso.T4C.npc.core.NpcScriptRuntime;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spawn.SpawnRegistry;
@@ -573,9 +573,8 @@ public class MonsterManager {
         }
         MonsterDef def = MonsterRegistry.findByName(entry.type);
         if (def == null) {
-          // Hostile scripted NPCs (Skraug, Jarko, …) are registered as SpawnKind.MONSTER
-          // but spawned by NPCManager. Skip them here without a missing-def warning.
-          if (isNpcOwnedSpawn(entry.type)) {
+          // Preserve offline definition precedence for aliases that also name an NPC.
+          if (NpcSpawnOwnership.owns(entry.type)) {
             continue;
           }
           log.warn(
@@ -623,11 +622,6 @@ public class MonsterManager {
     if (lower.contains("/moontug/")) return 2;
     if (lower.contains("/ravensdust/")) return 4;
     return 0;
-  }
-
-  private static boolean isNpcOwnedSpawn(String type) {
-    return type != null
-        && ("SUNDIAL".equalsIgnoreCase(type) || NpcFactoryRegistry.find(type) != null);
   }
 
   private List<MonsterSpawnEntry> readJavaSpawns() {

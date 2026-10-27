@@ -18,7 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0224 | Classify authored NPC-owned spawns for online content | Multiplayer / Beta content authority | In Progress | pending | pending |
+| T4C-0224 | Classify authored NPC-owned spawns for online content | Multiplayer / Beta content authority | Done (staged content only) | this PR; corrected 23 focused checks, v1 runtime unchanged | [2026-10-27](CHANGELOG.md#2026-10-27--classify-authored-online-actors-t4c-0224) |
 | T4C-0223 | Design remaining authored encounter authority for starter quest hosting | Multiplayer / Beta architecture | Done (architecture only) | this PR; source audit and design only | [2026-10-27](CHANGELOG.md#2026-10-27--starter-encounter-authority-design-t4c-0223) |
 | T4C-0222 | Bound unauthenticated HTTP request abuse and slow-body stalls | Multiplayer / Beta security | Done | PR159 merged `50326fe9`; current-head Build, PostgreSQL and Headless CI passed; see [ACCEPTANCE](multiplayer/ACCEPTANCE.md) | [2026-10-27](CHANGELOG.md#2026-10-27--bound-slow-online-requests-t4c-0222) |
 | T4C-0221 | Keep stability reports safe through transient Windows file locks | Multiplayer / Beta tooling | Done | this PR; normal-policy Windows file-lock probe PASS | [2026-10-27](CHANGELOG.md#2026-10-27--safe-stability-report-replacement-t4c-0221) |

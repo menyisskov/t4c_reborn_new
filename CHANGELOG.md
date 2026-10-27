@@ -6,10 +6,15 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Classify authored online actors (T4C-0224)
+
+### Added
+- Prepared a separate, versioned inventory of authored monsters and NPC appearances for future online hosting. Existing defined monsters remain monsters even when their names also identify NPCs; Sundial is listed as an NPC-only actor. The current hosted region and game runtime still use their existing content, so no new characters, routes or clan combat are live yet.
+
 ## 2026-10-27 — Starter encounter authority design (T4C-0223)
 
 ### Planned
-- Audited the authored starter encounter's NPC-owned spawns and directional Goblin-to-Horse combat, and documented a durable authority and acceptance plan for hosting the full quest route. This is architecture only; the route, clan combat and quest playthrough are not implemented by this task.
+- Audited the authored starter encounter's overlapping monster/NPC discovery and directional Goblin-to-Horse combat, and documented a durable authority and acceptance plan for hosting the full quest route. A later source audit corrected the design to preserve monsters that also have NPC aliases. This is architecture only; the route, clan combat and quest playthrough are not implemented by this task.
 
 ## 2026-10-27 — Bound slow online requests (T4C-0222)
 

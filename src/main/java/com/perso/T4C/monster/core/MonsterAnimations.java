@@ -117,6 +117,20 @@ public class MonsterAnimations extends EntityAnimationsBase {
     return attackPattern != null && !attackAnimations.isEmpty();
   }
 
+  /** Build-time name check using the same pattern parser as the rendered animation loader. */
+  public static boolean hasFirstAttackFrameName(String attackPattern, java.util.Set<String> spriteNames) {
+    if (attackPattern == null || spriteNames == null) return false;
+    PatternParts parts=PatternParts.from(attackPattern);
+    if (parts.numericFrameCount>0)
+      return spriteNames.contains(parts.numericFrameName(0).toLowerCase(java.util.Locale.ROOT));
+    if (parts.angleless)
+      return spriteNames.contains((parts.baseName+"-"+FRAME_START).toLowerCase(java.util.Locale.ROOT));
+    for (String angle:ANGLES)
+      if (spriteNames.contains((parts.baseName+angle+"-"+FRAME_START).toLowerCase(java.util.Locale.ROOT)))
+        return true;
+    return false;
+  }
+
   public void startDeath() {
     if (isDying) return;
     isDying = true;
