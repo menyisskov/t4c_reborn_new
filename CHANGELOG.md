@@ -16,6 +16,11 @@ commit links, and finer-grained notes.
 - Paladins now start with a Recruit's Mace (and their shield) instead of a rusted long sword.
 - Archers now start with a quiver alongside their bow and arrows.
 
+## 2026-10-27 — Local native TLS acceptance (T4C-0216)
+
+### Verified
+- Two online clients connected through trusted encrypted local transport, saw each other move, and retained committed position after reconnect. Clients refused an unknown certificate authority or the wrong server name before entering the game. Remote deployment and rendered-client acceptance remain open.
+
 ## 2026-10-27 — Local online server QA package (T4C-0215)
 
 ### Added

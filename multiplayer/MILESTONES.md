@@ -50,11 +50,11 @@ playthrough and recovery criteria pass. Never infer Done from a task count or te
 
 | Milestone | Current status | Existing related tasks | Main outstanding work |
 | --- | --- | --- | --- |
-| M1 — Enter and interact | Roster/NPC backend and actual adapter probes pass; visible controls/creation incomplete | T4C-0192, 0195, 0196 | Native selection/creation and NPC controls; account lifecycle integration |
+| M1 — Enter and interact | Roster/NPC backend and actual adapter probes pass, including two local HTTPS adapters with trust/hostname refusal; visible controls/creation incomplete | T4C-0192, 0195, 0196, 0216 | Native selection/creation and NPC controls; account lifecycle integration and remote deployment |
 | M2 — Inventory and loot | Partial equipment/corpse services | Existing inventory/equipment work; T4C-0201, 0202 (design and pickup/drop rules only) | Visible inventory, general monster loot, claim/quantity integrity |
 | M3 — Complete authored adventure | Opening letter only; full loop incomplete | T4C-0193, 0194, 0195 | Full quest service, kill credit, rewards and required hosted routes |
 | M4 — Supported combat and abilities | Restricted melee/physical retaliation and brief rendered attack/death check; pure pursuit decisions and snapshot-driven native creature animation prepared, with no server pursuit | T4C-0189, 0190, 0209, 0210, 0211 | Server pursuit/AI and the declared classes' required abilities and state |
-| M5 — Reliability and anti-cheat | Pool/shutdown/fault probes, final two-hour native-adapter baseline with partial 20-player occupancy, isolated two-adapter restart and schema-9/schema-10 database-crash probes, and brief rendered reconnect pass; full mixed recovery/load/abuse gates open | T4C-0191, 0197, 0198, 0207, 0208 | Broader gameplay recovery, rendered restart, full-capacity mixed soak, bandwidth/DB latency and abuse checks |
+| M5 — Reliability and anti-cheat | Pool/shutdown/fault probes, local HTTPS trust/hostname refusal and two-adapter reconnect, final two-hour native-adapter baseline with partial 20-player occupancy, isolated restart and database-crash probes, and brief rendered reconnect pass; full mixed recovery/load/abuse gates open | T4C-0191, 0197, 0198, 0207, 0208, 0216 | Broader gameplay recovery, rendered restart, full-capacity mixed soak, bandwidth/DB latency and abuse checks |
 | M6 — Package and native acceptance | Create-only client and local-loopback server QA packages, headless integrity checks, isolated persistent server stop and brief two-window local client smoke pass; clean-machine, remote and full rendered playthrough open | T4C-0205, 0215 and cross-cutting work | Clean-machine delivery and complete two-rendered-client playthrough |
 
 Task IDs not yet claimed are deliberately not represented as completed or assigned work.
@@ -77,6 +77,8 @@ Required behavior:
   repeated greetings, reconnect and a lost response never grant another copy.
 - [ ] Credentials are absent from logs, public snapshots and ordinary preferences. Any non-loopback
   connection uses trusted HTTPS with hostname verification; no plaintext or trust-all workaround.
+  T4C-0216 passed local two-adapter HTTPS and separate standard-JSSE unknown-CA/hostname
+  refusals; remote deployment and rendered-client acceptance still require verification.
 
 Done evidence: both rendered clients create/select their own characters, connect, converse, close
 and reconnect. Retain operator profiles as a compatibility path. See [ACCOUNT_LIFECYCLE.md](ACCOUNT_LIFECYCLE.md)
@@ -170,6 +172,8 @@ Required behavior:
   fence old leases, without inventing success or automatically replaying uncertain mutations.
   T4C-0207 verified the narrow two-adapter opening-letter case on schema 9, including real lease
   expiry after a forced server-process kill; the integrated rendered and broader mutation cases remain open.
+  T4C-0216 additionally checked two native adapter reconnects and committed movement over local
+  trusted HTTPS, without a server restart or network fault.
 - [ ] Database unavailability/recovery fails safely and resumes from committed state. Test actual
   database recovery separately from an HTTP timeout or a mocked SQL failure.
   T4C-0208 passed a narrow two-adapter opening-letter drill against a newly created schema-9
