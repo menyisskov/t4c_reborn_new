@@ -419,7 +419,7 @@ public final class OnlineConnection implements AutoCloseable {
 
   private String send(HttpClient client, String path, String body, String token) throws Exception {
     var request = HttpRequest.newBuilder(endpoint.resolve(path)).timeout(Duration.ofSeconds(2));
-    if ("/join".equals(path)) request.header(OnlineProtocol.VERSION_HEADER, Integer.toString(OnlineProtocol.VERSION));
+    request.header(OnlineProtocol.VERSION_HEADER, Integer.toString(OnlineProtocol.VERSION));
     if (token != null) request.header("Authorization", "Bearer " + token);
     if (body != null)
       request
