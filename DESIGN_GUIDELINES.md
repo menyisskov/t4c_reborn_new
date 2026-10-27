@@ -290,6 +290,17 @@ quiz is gone; its i18n strings were deleted with it.
   this difference from single-player for the Beta. It is a narrow exception for the starter plan
   only, and the clan-combat guard still refuses every other area that would need it. Remove the
   exception when clan combat lands.
+- **OPEN owner decision: the Archer starts over its carry limit (found 2026-10-28).** A fresh
+  Archer carries 140 against a maximum of 86 (strength 25), because the 30 starting Wooden Arrows
+  weigh 3 each (90 on their own). The other six classes fit with room to spare. This predates
+  the Recruit's Quiver and is the same in single-player, since the kit data is shared. Online, a
+  character carrying more than its limit has every ground-loot pickup and corpse recovery refused,
+  so a fresh online Archer cannot loot. Options: (A) arrow weight 3 to 1, leaving only 6 spare;
+  (B, recommended) arrow weight 1 and a starting stack of 20, leaving 16 spare; (C) a higher Archer
+  strength spread, which changes class stats; (D) exempt kit weight online until the character
+  earns strength, which is a rule change. Any option that touches the arrows changes the
+  single-player game too. Until the owner picks one, do not give Beta testers an Archer.
+  `OnlinePickupRules.carriedWeight` and `CarryCapacityRules.maximumWeight` give the numbers.
 - **Kits are worn, not carried.** `LocalCharacterStore` writes them straight into the save's
   equipment map. Only shared supplies (torches, potions) and stacked ammunition go in the bag.
 - **Starting spells are referenced by key and resolved through the registry**, because saves store

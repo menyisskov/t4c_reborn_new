@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0246`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0247`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0246 | The Archer starts over its carry limit (140 carried against 86), which blocks all online looting for a fresh Archer; audit of all seven classes done, fix waits on the owner's balance choice (options A-D in DESIGN_GUIDELINES.md) | Multiplayer / balance | Planned (owner decision needed; recommended option B: arrow weight 1 and a starting stack of 20) | none yet | deferred |
 | T4C-0245 | Keep the native loot probe starter kit equipped while adding its overweight fixture, then run one isolated local probe | Multiplayer / M2 native acceptance tooling | Implementation done, probe NOT yet run (needs database access) | pending | deferred |
 | T4C-0244 | Stage native online character-creation form in the existing lobby for owner visual review | Multiplayer / M1 native UI | In Progress (taken over by Claude 2026-10-28 on the owner's instruction while Codex is out of tokens; draft design staging only; owner approval pending) | pending | deferred |
 | T4C-0243 | Authoritative online character creation from a fresh account through bounded server validation and durable roster insertion | Multiplayer / M1 backend | Done (merged; schema 13; PostgreSQL contracts passed in CI) | PR187; private PG domain55/server175 | deferred |
