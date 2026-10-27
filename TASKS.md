@@ -13,7 +13,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0195 | Authoritative Kilhiam opening story interaction | Multiplayer / Alpha | Done | pending | [2026-10-27](CHANGELOG.md#2026-10-27--online-opening-story-service-t4c-0195) |
+| T4C-0195 | Authoritative Kilhiam opening story interaction | Multiplayer / Alpha | Done | `2eb37078` | [2026-10-27](CHANGELOG.md#2026-10-27--online-opening-story-service-t4c-0195) |
 | T4C-0194 | Transfer native players between hosted worlds safely | Multiplayer / Alpha | Done | `62d80d48` | [2026-10-27](CHANGELOG.md#2026-10-27--hosted-world-travel-t4c-0194) |
 | T4C-0193 | Export and validate authored portal destinations | Multiplayer / Alpha | Done | `b7551ab8` | [2026-10-27](CHANGELOG.md#2026-10-27--online-portal-validation-t4c-0193) |
 | T4C-0192 | Configure verified encrypted remote transport | Multiplayer / Alpha | Done | `9a2f70d4` | [2026-10-27](CHANGELOG.md#2026-10-27--encrypted-online-transport-t4c-0192) |
