@@ -19,8 +19,7 @@ Owner amendments (2026-10-27):
 - The rest of the proposal is approved as written.
 
 Each item below was labelled **PROPOSED**. Rejecting any item did not authorize weakening the
-authored content to fit a smaller hosted area. This proposal does not replace the agreed
-20-player Beta.
+authored content to fit a smaller hosted area. This checkpoint does not replace full Beta; the owner later set its concurrency gate to two real rendered clients, with all other Beta gates unchanged.
 
 Every content fact below comes from the packaged definitions at commit `c11ca7a6`:
 `RenewedWards.java`, `WardenAelric.java`, `r215Skeleton.java`, `RenewArmor.java`, `QuestService.java`,

@@ -127,6 +127,9 @@ Required behavior:
   read-only candidate 249×117 contiguous starting region and its real collision paths;
   the region has not been enabled. Sundial needs explicit NPC-owned-spawn classification,
   and unhosted authored routes still need player-visible refusal.
+  [STARTER_ENCOUNTER_AUTHORITY_DESIGN.md](STARTER_ENCOUNTER_AUTHORITY_DESIGN.md)
+  records T4C-0223's read-only NPC-ownership and directional Goblin-to-Horse
+  authority plan. It does not enable the region, clan combat or quest completion.
 - [ ] Native map assets switch before movement resumes. Players in separate regions cannot see,
   target, damage or recover items from one another across that boundary.
 - [ ] Logout/rejoin and server restart preserve objective state, rewards and destination; delayed

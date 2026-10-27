@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Starter encounter authority design (T4C-0223)
+
+### Planned
+- Audited the authored starter encounter's NPC-owned spawns and directional Goblin-to-Horse combat, and documented a durable authority and acceptance plan for hosting the full quest route. This is architecture only; the route, clan combat and quest playthrough are not implemented by this task.
+
 ## 2026-10-27 — Bound slow online requests (T4C-0222)
 
 ### Fixed

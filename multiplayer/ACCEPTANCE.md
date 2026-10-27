@@ -14,6 +14,18 @@ not automatically a completed milestone.
 
 ## Verified foundation (updated 2026-10-27)
 
+T4C-0223's [starter encounter authority design](STARTER_ENCOUNTER_AUTHORITY_DESIGN.md)
+is a read-only audit of main `55de14ce` plus the merged pursuit implementation
+(`d4dc908a`, protocol 5/schema 11). It identifies NPC-owned Sundial among the
+39 recorded spawns in the proposed 249×117 route, and specifies durable,
+directional Goblin-to-Horse combat without awarding player credit for clan kills.
+The design source SHA-256 is
+`0A5B4A55C78E02F0EF160F96ADF6E2D8AB4FFA3A176685F14D197D3FF0A2FB66`.
+No content export, implementation, build, PostgreSQL, native adapter or rendered
+acceptance ran for T4C-0223. The region remains disabled and M3/Beta open.
+
+T4C-0222 PR159 subsequently merged at main `50326fe9`; current-head Build and test, PostgreSQL persistence contracts, Headless build/lifecycle, Vercel and Preview Comments all passed. The candidate chronology below retains prior failed CI heads and premerge status at each stage; final four-file manifest SHA-256 `6D1CD761ED14218564116DA853F36A44415BF97F07DB9864FD548705C64C321D`.
+
 Historical reports below retain their original 20-player gate language and measured limitations.
 T4C-0220 supersedes that concurrency threshold for current Beta/GA acceptance. The retained
 20-adapter baseline still does not pass the current two-rendered-client mixed M5/Beta gate:
