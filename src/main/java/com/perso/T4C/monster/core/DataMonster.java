@@ -8,7 +8,7 @@ import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.helper.AppearanceDefaultsCatalog;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.monster.core.MonsterDef;
-import com.perso.T4C.monster.loot.LootTable;
+import com.perso.T4C.monster.loot.MonsterLootTables;
 import com.perso.T4C.npc.core.NPCAnimations;
 import com.perso.T4C.player.BodyPart;
 import java.util.ArrayList;
@@ -58,15 +58,7 @@ public class DataMonster extends BaseMonster {
     if (humanoidAnimations != null)
       humanoidAnimations.getPlayerAnimations().setBowEquipped(humanoidBow);
     applyCombatDefinition(def);
-    LootTable.Builder builder = LootTable.builder().gold(def.getGoldMin(), def.getGoldMax());
-    if (def.getLoot() != null) {
-      for (MonsterDef.LootDrop drop : def.getLoot()) {
-        if (drop != null && drop.getItem() != null) {
-          builder.item(drop.getItem(), drop.getChance());
-        }
-      }
-    }
-    this.lootTable = builder.build();
+    this.lootTable = MonsterLootTables.of(def);
     if (!def.isDefaultAggressive()) {
       setAggressive(false);
     }

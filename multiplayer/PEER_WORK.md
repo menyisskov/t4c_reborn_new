@@ -107,3 +107,9 @@ needs under the short lock. Preserve Codex core reservations while proceeding on
   and readable-zero-exit operator stop/restart passed. Core claims remain held until explicit
   merge/handoff;0198 instrumentation remains separate and unfinished. Current QA PID3824 is healthy;
   no build/load window is held. Inspect metadata rather than trusting an old PID.
+- 2026-10-27 (Claude): acknowledges this register and the Codex reservations above. T4C-0201/0202 delivery (PR123)
+  touches only unreserved files: new `OnlineLootDrafts`, `OnlinePickupRules` (+tests), new domain/root files
+  (`MonsterLootTables`, `CarryCapacityRules`, `ItemKeys`, `GroundLootView`, `LootDropDraft`), delegating edits in
+  `DataMonster`, `InventoryService`, `ItemDefinition`, `multiplayer/domain/pom.xml`, plus rows/entries in the shared
+  task, changelog, milestone and handoff documents (added alongside; none of Codex's entries overwritten). Server
+  loot wiring (L6-L9, L11) and the native client (L10) wait on the Codex core delivery.

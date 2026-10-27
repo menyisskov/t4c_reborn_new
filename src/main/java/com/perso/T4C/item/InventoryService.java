@@ -40,17 +40,18 @@ public final class InventoryService {
   // clears 1000+ and strength should still visibly matter for carry capacity that far out.
   public static long maximumWeight(Player player) {
     if (player == null) return 0L;
-    long strength = Math.max(0, player.getEffectiveStrength());
-    return strength * 2000L / (550L + strength);
+    return CarryCapacityRules.maximumWeight(player.getEffectiveStrength());
   }
 
   public static long currentWeight(Player player) {
     if (player == null) return 0L;
-    long total = 0L;
-    for (String key : player.getInventory()) {
-      ItemDefinition definition = ItemRegistry.findByKey(key);
-      if (definition != null) total += Math.max(0L, definition.getWeight());
-    }
+    long total =
+        CarryCapacityRules.weightOf(
+            player.getInventory(),
+            key -> {
+              ItemDefinition definition = ItemRegistry.findByKey(key);
+              return definition == null ? 0L : definition.getWeight();
+            });
     Set<BodyPart> counted = new HashSet<>();
     for (Map.Entry<BodyPart, String> entry : player.getEquippedItems().entrySet()) {
       BodyPart slot = entry.getKey();
@@ -85,14 +86,16 @@ public final class InventoryService {
   public static boolean canAdd(Player player, String itemKey) {
     ItemDefinition definition = ItemRegistry.findByKey(itemKey);
     if (player == null || definition == null) return false;
-    return currentWeight(player) + Math.max(0L, definition.getWeight()) <= maximumWeight(player);
+    return CarryCapacityRules.canAdd(
+        currentWeight(player), definition.getWeight(), maximumWeight(player));
   }
 
   public static Result add(Player player, String itemKey, int remainingCharges) {
     ItemDefinition definition = ItemRegistry.findByKey(itemKey);
     if (player == null || definition == null) return Result.failure(Failure.UNKNOWN_ITEM, itemKey);
     String canonicalKey = definition.getKey();
-    if (currentWeight(player) + Math.max(0L, definition.getWeight()) > maximumWeight(player)) {
+    if (!CarryCapacityRules.canAdd(
+        currentWeight(player), definition.getWeight(), maximumWeight(player))) {
       return Result.failure(Failure.TOO_HEAVY, canonicalKey);
     }
     player.getInventory().add(canonicalKey);

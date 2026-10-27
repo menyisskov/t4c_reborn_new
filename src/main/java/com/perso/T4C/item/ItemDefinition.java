@@ -375,14 +375,7 @@ public class ItemDefinition {
   }
 
   public static String normalizeKey(String value) {
-    if (value == null || value.isBlank()) return value;
-    String raw = value.startsWith("item.") ? value.substring(5) : value;
-    String normalized =
-        raw.toLowerCase(Locale.ROOT)
-            .replaceAll("[^a-z0-9_]", "_")
-            .replaceAll("_+", "_")
-            .replaceAll("^_|_$", "");
-    return "item." + normalized;
+    return ItemKeys.normalize(value);
   }
 
   public ItemDefinition(
