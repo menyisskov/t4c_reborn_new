@@ -34,6 +34,17 @@ class HttpTrafficMetricsTest {
     assertEquals("OTHER", snapshot.rows().getFirst().method());
     assertEquals("503", snapshot.rows().getFirst().selectedStatus());
     assertFalse(new Gson().toJson(snapshot).contains("secret/path-with-account-id"));
+
+    var cast = metrics.begin("POST", "/cast");
+    cast.selected(200);
+    cast.finish();
+    var use = metrics.begin("POST", "/use");
+    use.selected(200);
+    use.finish();
+    var labeled = metrics.snapshot().rows();
+    assertTrue(labeled.stream().anyMatch(row -> row.route().equals("/cast") && row.method().equals("POST")));
+    assertTrue(labeled.stream().anyMatch(row -> row.route().equals("/use") && row.method().equals("POST")));
+    assertTrue(labeled.stream().anyMatch(row -> row.route().equals("other") && row.method().equals("OTHER")));
   }
 
   @Test

@@ -15,7 +15,7 @@ final class HttpTrafficMetrics {
     ACCOUNT_CHARACTERS("/account/characters"), MAP("/map"), STATE("/state"),
     CHARACTER("/character"), CORPSES("/corpses"), HEALTH("/health"),
     ADMIN_METRICS("/admin/metrics"), JOIN("/join"), ADMIN_SHUTDOWN("/admin/shutdown"),
-    INPUT("/input"), ATTACK("/attack"), RECOVER("/recover"), EQUIP("/equip"),
+    INPUT("/input"), ATTACK("/attack"), CAST("/cast"), USE("/use"), RECOVER("/recover"), EQUIP("/equip"),
     UNEQUIP("/unequip"), INTERACT("/interact"), PICKUP("/pickup"),
     REGION_READY("/region-ready"), LEAVE("/leave"), OTHER("other");
 
