@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0214`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0217`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,10 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0216 | Owner-approved starter kits: Paladin mace, Arcane Spark for mages, Archer quiver; checkpoint scope approval recorded | Content / Multiplayer | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--new-starting-gear-and-first-spell-t4c-0216) |
+| T4C-0215 | Package a clean local QA server runtime and safe lifecycle tools | Multiplayer / Beta operations | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--local-online-server-qa-package-t4c-0215) |
+| T4C-0214 | Design authored starter-route hosting without fabricated portals | Multiplayer / Beta architecture only | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--authored-starter-route-hosting-design-t4c-0214) |
+| T4C-0213 | Verify restored schema checks and read committed state through two native adapters | Multiplayer / Beta reliability | Done | PR148; adapter-read evidence in [ACCEPTANCE](multiplayer/ACCEPTANCE.md) | [2026-10-27](CHANGELOG.md#2026-10-27--backup-check-verification-on-schema-10-t4c-0213) |
 | T4C-0212 | Build bounded server monster pursuit controller before core integration | Multiplayer / Beta groundwork | In Progress | pending | pending |
 | T4C-0211 | Render authoritative native creature movement and facing | Multiplayer / Beta groundwork | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--native-creature-motion-from-server-snapshots-t4c-0211) |
 | T4C-0210 | Share authored monster acquisition, leash and reach decisions | Multiplayer / Beta groundwork | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--shared-monster-pursuit-decisions-t4c-0210) |
@@ -25,7 +29,6 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0208 | Isolated PostgreSQL crash/recovery through two native clients | Multiplayer / Beta | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--isolated-postgresql-recovery-probe-t4c-0208) |
 | T4C-0207 | Two-native-adapter graceful and forced server restart recovery probe | Multiplayer / Beta | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--two-adapter-server-restart-probe-t4c-0207) |
 | T4C-0206 | M3/M4 shared quest, spell-cast and heal rules plus quest/ability design (Claude lane) | Multiplayer / Beta | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--shared-quest-and-spell-rules-t4c-0206) |
-| T4C-0213 | Owner-approved starter kits: Paladin mace, Arcane Spark for mages, Archer quiver; checkpoint scope approval recorded | Content / Multiplayer | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--new-starting-gear-and-first-spell-t4c-0213) |
 | T4C-0205 | Package the online client without developer checkout dependencies | Multiplayer / Beta | Done | `cd9e2a44` | [2026-10-27](CHANGELOG.md#2026-10-27--online-client-test-package-t4c-0205) |
 | T4C-0204 | M2 server loot wiring L6-L12, with owner-approved L11 individual corpse-item recovery (Claude lane) | Multiplayer / Beta | In Progress | PR128, PR130, PR142, PR144, PR145 partial | pending |
 | T4C-0203 | Coordinate Codex and Claude task/file/resource ownership | Process/Tooling | Done | `0e258e40` | [2026-10-27](CHANGELOG.md#2026-10-27--peer-agent-coordination-t4c-0203) |

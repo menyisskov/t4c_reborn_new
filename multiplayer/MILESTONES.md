@@ -55,7 +55,7 @@ playthrough and recovery criteria pass. Never infer Done from a task count or te
 | M3 — Complete authored adventure | Opening letter only; full loop incomplete | T4C-0193, 0194, 0195 | Full quest service, kill credit, rewards and required hosted routes |
 | M4 — Supported combat and abilities | Restricted melee/physical retaliation and brief rendered attack/death check; pure pursuit decisions and snapshot-driven native creature animation prepared, with no server pursuit | T4C-0189, 0190, 0209, 0210, 0211 | Server pursuit/AI and the declared classes' required abilities and state |
 | M5 — Reliability and anti-cheat | Pool/shutdown/fault probes, short operator-metrics checks, isolated two-adapter server restart and schema-9/schema-10 database-crash probes, and brief rendered reconnect pass; sustained recovery/load/abuse gates open | T4C-0191, 0197, 0198, 0207, 0208 | Broader gameplay recovery, rendered restart, failure drills, sustained measured stability and abuse checks |
-| M6 — Package and native acceptance | Create-only package, headless integrity checks and brief two-window local bundle smoke pass; clean-machine, remote and full rendered playthrough open | T4C-0205 and cross-cutting work | Clean-machine delivery and complete two-rendered-client playthrough |
+| M6 — Package and native acceptance | Create-only client and local-loopback server QA packages, headless integrity checks, isolated persistent server stop and brief two-window local client smoke pass; clean-machine, remote and full rendered playthrough open | T4C-0205, 0215 and cross-cutting work | Clean-machine delivery and complete two-rendered-client playthrough |
 
 Task IDs not yet claimed are deliberately not represented as completed or assigned work.
 Independent implementation can proceed in parallel; acceptance must use an integrated build.
@@ -118,6 +118,10 @@ Required behavior:
   through a stale flag, consumed shared objective, duplicated claim or unsupported-state guard.
 - [ ] Every required map/encounter is hosted. Authored entrances/returns and valid respawns work;
   unknown/unhosted destinations produce an explicit refusal rather than a silent substitute.
+  [HOSTED_STARTER_ROUTE_DESIGN.md](HOSTED_STARTER_ROUTE_DESIGN.md) records T4C-0214's
+  read-only candidate 249×117 contiguous starting region and its real collision paths;
+  the region has not been enabled. Sundial needs explicit NPC-owned-spawn classification,
+  and unhosted authored routes still need player-visible refusal.
 - [ ] Native map assets switch before movement resumes. Players in separate regions cannot see,
   target, damage or recover items from one another across that boundary.
 - [ ] Logout/rejoin and server restart preserve objective state, rewards and destination; delayed
@@ -176,7 +180,13 @@ Required behavior:
 - [ ] Account-key rotation/foreign ownership, stale/reordered/duplicate commands, speed/stat/item
   edits, oversized requests and forged targets/rewards are rejected without corrupting valid play.
 - [ ] Restore a backup into a separate database and finish a native gameplay/reconnect check there;
-  matching table hashes alone do not satisfy restored gameplay acceptance.
+  matching table hashes alone do not satisfy restored gameplay acceptance. T4C-0213 verified
+  a live schema-10 exported-snapshot restore across all eleven online tables, including
+  PostgreSQL-reparsed equivalent CHECK definitions; both new loot tables were empty. Two
+  actual native network adapters subsequently rejoined the isolated restore and read matching
+  committed progress, balances and positions after real lease expiry, then left normally.
+  This was a network read check without rendered gameplay, new loot, combat or travel on the
+  restore, so the full playthrough gate remains open.
 - [ ] Run a two-hour mixed two-player session on the integrated candidate, with zero unexplained
   disconnects, crashes, invariant violations, duplicate value or lost acknowledged progress.
   Include combat, loot, quests, travel and intentional reconnects rather than idle connections.
@@ -190,6 +200,8 @@ are not real packet-loss or rendered-client evidence. See [BACKUP.md](BACKUP.md)
 [NATIVE_NETWORK_FAULTS.md](tools/NATIVE_NETWORK_FAULTS.md) and [LOAD_METRICS.md](LOAD_METRICS.md).
 
 ## M6 — Distribute and accept the real game
+
+T4C-0215 supplies a checked, create-only **local loopback server QA package** alongside the earlier client package. Its generated operator scripts passed preview and persistent schema-10 start/health/private graceful stop on a fresh isolated database, including a copied path with spaces and PowerShell 5/7 checks. This is partial operational evidence; clean-machine, trusted remote deployment, full rendered playthrough and owner acceptance remain unchecked.
 
 Required behavior:
 
