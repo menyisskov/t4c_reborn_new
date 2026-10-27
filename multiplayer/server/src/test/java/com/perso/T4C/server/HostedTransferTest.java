@@ -131,7 +131,7 @@ class HostedTransferTest {
       assertTrue(entered.await(2,java.util.concurrent.TimeUnit.SECONDS));
       var source=hosted.actor(joined.token());source.world.relocate(joined.token(),2931.5-source.map.originX,1056.5-source.map.originY);hosted.step();
       source.world.input(joined.token(),1,1,0);source.world.step();
-      assertEquals(27.5,source.world.position(joined.token()).x(),"Portal entry freezes even while checkpoint is waiting");
+      assertEquals(2931.5-source.map.originX,source.world.position(joined.token()).x(),"Portal entry freezes even while checkpoint is waiting");
       var closed=hosted.sessions.leave(joined.token());assertFalse(closed.isDone());
       pause.set(false);release.countDown();await(hosted,closed::isDone);closed.get();
       var saved=store.load(account.accountId(),created.id());assertEquals(1,saved.world());assertEquals(1,saved.locationEpoch());
