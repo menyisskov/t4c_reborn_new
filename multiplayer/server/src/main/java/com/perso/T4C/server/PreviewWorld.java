@@ -23,6 +23,7 @@ public final class PreviewWorld {
   public record Joined(String token, long id) {}
   public record PlayerView(long id, double x, double y, long sequence, long appearance, int hp, int maxHp) {}
   public record Snapshot(long tick, List<PlayerView> players, List<CreatureView> creatures) {}
+  record CreaturePosition(double x, double y) {}
   public static final class Rejected extends RuntimeException {
     public final int status;
     Rejected(int status, String code) { super(code); this.status = status; }
@@ -43,6 +44,7 @@ public final class PreviewWorld {
   private final List<CreatureSpawn> creatureSpawns;
   private final java.util.Set<Long> inactiveCreatures = new java.util.HashSet<>();
   private final Map<Long,Integer> creatureHealth = new java.util.HashMap<>();
+  private final Map<Long,CreaturePosition> creaturePositions = new java.util.HashMap<>();
   private final Map<String, Player> players = new LinkedHashMap<>();
   private final SecureRandom random = new SecureRandom();
   private long tick, nextId = 1;
@@ -74,9 +76,23 @@ public final class PreviewWorld {
     }
     creatures=List.copyOf(residents);
     creatureSpawns=List.copyOf(authored);
+    for (var creature : creatures)
+      creaturePositions.put(creature.id(), new CreaturePosition(creature.x(), creature.y()));
   }
 
   List<CreatureSpawn> creatureSpawns() { return creatureSpawns; }
+  PreviewMap map() { return map; }
+  CreaturePosition creaturePosition(long id) {
+    var position = creaturePositions.get(id);
+    if (position == null) throw new IllegalArgumentException("Unknown creature");
+    return position;
+  }
+  /** Committed simulation state only; network commands never supply creature coordinates. */
+  void creaturePosition(long id, double x, double y) {
+    if (!creaturePositions.containsKey(id)) throw new IllegalArgumentException("Unknown creature");
+    if (!map.canStand(x, y)) throw new IllegalArgumentException("Blocked creature position");
+    creaturePositions.put(id, new CreaturePosition(x, y));
+  }
   void creatureActive(long id, boolean active) {
     if (active) inactiveCreatures.remove(id); else inactiveCreatures.add(id);
   }
@@ -151,8 +167,12 @@ public final class PreviewWorld {
     List<PlayerView> result = new ArrayList<>(players.size());
     for (Player p : players.values()) result.add(new PlayerView(p.id, p.x, p.y, p.sequence,p.appearance,p.hp,p.maxHp));
     return new Snapshot(tick, List.copyOf(result),creatures.stream().filter(c -> !inactiveCreatures.contains(c.id()))
-        .map(c -> new CreatureView(c.id(),c.definition(),c.x(),c.y(),creatureHealth.getOrDefault(c.id(),c.health()),
-            c.maxHealth(),c.walkPattern(),c.attackPattern(),c.deathPattern())).toList());
+        .map(c -> {
+          var position=creaturePosition(c.id());
+          return new CreatureView(c.id(),c.definition(),position.x(),position.y(),
+              creatureHealth.getOrDefault(c.id(),c.health()),c.maxHealth(),
+              c.walkPattern(),c.attackPattern(),c.deathPattern());
+        }).toList());
   }
 
   public void leave(String token) { authenticate(token); players.remove(token); }

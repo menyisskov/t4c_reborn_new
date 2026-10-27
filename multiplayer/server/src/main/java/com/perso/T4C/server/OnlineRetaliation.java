@@ -4,6 +4,7 @@ import static com.perso.T4C.config.GameConstants.*;
 
 import com.perso.T4C.combat.*;
 import com.perso.T4C.monster.core.MonsterDef;
+import com.perso.T4C.monster.core.MonsterPursuitRules;
 import com.perso.T4C.online.model.CharacterProgress;
 import com.perso.T4C.online.model.ItemContent;
 import com.perso.T4C.server.persistence.OnlineStore;
@@ -43,14 +44,23 @@ final class OnlineRetaliation {
       if (life.recipient()!=null || life.targetCharacter()==null || life.nextAttackAt()>now) continue;
       String token=sessions.tokenForCharacter(life.targetCharacter());
       if (token==null || !sessions.belongs(token,world)) continue; // Persisted target survives reconnect; no attacks against absent actors.
+      if (life.targetEpoch()==null || life.targetEpoch()!=sessions.character(token).locationEpoch()) continue;
       var position=world.position(token);
-      double x=spawn.spawn().x()-map.originX,y=spawn.spawn().y()-map.originY;
-      double distance=Math.hypot((position.x()-x)*GRID_W,(position.y()-y)*GRID_H);
-      if (distance>MONSTER_ATTACK_RANGE || Math.round(distance/Math.max(GRID_W,GRID_H))>=2
-          || !map.allowsCombat(x,y,position.x(),position.y(),false)) continue;
+      if (!canStrike(map,world,spawn,position)) continue;
       try { attack(token,spawn,life,position,now); }
       catch (PreviewWorld.Rejected busyOrDisconnected) { /* Retry from committed state on a later tick. */ }
     }
+  }
+
+  static boolean canStrike(PreviewMap map, PreviewWorld world, PreviewWorld.CreatureSpawn spawn,
+      PreviewWorld.PlayerView player) {
+    if (player==null) return false;
+    var creature=world.creaturePosition(spawn.id());
+    float distance=(float)Math.hypot((player.x()-creature.x())*GRID_W,
+        (player.y()-creature.y())*GRID_H);
+    return MonsterPursuitRules.withinAttackReach(distance,spawn.definition().getAttacks())
+        && MonsterPursuitRules.tileRange(distance)<2
+        && map.allowsCombat(creature.x(),creature.y(),player.x(),player.y(),false);
   }
 
   private void attack(String token,PreviewWorld.CreatureSpawn spawn,OnlineStore.SpawnState life,
@@ -85,11 +95,12 @@ final class OnlineRetaliation {
           progress.advancement(),progress.inventory(),progress.equipment(),progress.skills(),progress.spells(),progress.questFlags(),
           progress.storage(),progress.storageGold(),progress.respawn(),progress.buffs(),progress.cooldowns(),progress.hiddenUntil(),progress.companion());
     }
+    var motion=creatures.capture(spawn.id());
     creatures.reserve(spawn.id());
     boolean fatal=death!=null;
     try {
       sessions.commitMonsterAttack(token,saved.revision(),UUID.randomUUID(),draft,
-          new OnlineStore.MonsterAttack(life.key(),life.eventId(),saved.id(),life.nextAttackAt(),Math.addExact(now,COOLDOWN_MILLIS)),death)
+          new OnlineStore.MonsterAttack(life.key(),life.eventId(),saved.id(),life.nextAttackAt(),Math.addExact(now,COOLDOWN_MILLIS),motion),death)
           .whenComplete((result,error) -> {
             creatures.release(spawn.id());
             // Reload authoritative next attack and life after both known and uncertain outcomes.

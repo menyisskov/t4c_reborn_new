@@ -118,9 +118,46 @@ final class PersistentSessions {
 
   String tokenForCharacter(UUID id) {
     for (var binding:bindings.values())
-      if (binding.saved.id().equals(id) && !binding.closing && binding.region.world.position(binding.token)!=null
+      if (binding.saved.id().equals(id) && !binding.closing && !binding.awaitingRegionReady
+          && binding.event==null && binding.region.world.position(binding.token)!=null
           && System.nanoTime()<binding.allowedUntil) return binding.token;
     return null;
+  }
+
+  /** Server-authored target eligibility; never uses a disconnected actor's last saved coordinates. */
+  List<OnlineMonsterPursuit.TargetView> targetViews() {
+    var views=new ArrayList<OnlineMonsterPursuit.TargetView>();
+    long now=System.nanoTime();
+    for(var binding:bindings.values()) {
+      if(binding.closing) continue;
+      var region=binding.region;
+      var position=region.world.position(binding.token);
+      if(position==null) continue;
+      var progress=binding.saved.progress();
+      boolean alive=progress!=null && progress.vitals().hp()>0;
+      boolean supported=alive && progress.companion()==null
+          && progress.skills().getOrDefault("stun_blow",0)==0
+          && OnlineQuestFlags.supported(progress.questFlags(),QuestCatalog.bundled());
+      if(supported) try {
+        var loadout=OnlineCombatLoadout.resolve(progress,hosted.items,System.currentTimeMillis(),false);
+        supported=loadout.profile().skill("stun_blow")==0
+            && (loadout.primary()==null || !loadout.primary().bow())
+            && (loadout.secondary()==null || !loadout.secondary().bow());
+      } catch(IllegalArgumentException unsupported) { supported=false; }
+      boolean ready=!binding.awaitingRegionReady && binding.event==null && supported;
+      views.add(new OnlineMonsterPursuit.TargetView(binding.saved.id(),binding.saved.locationEpoch(),
+          region.spec.world(),region.spec.key(),position.x(),position.y(),alive,ready,
+          now<binding.allowedUntil));
+    }
+    return views;
+  }
+
+  /** Only the storage worker receives this private lease handle for target acquisition fencing. */
+  OnlineStore.Session sessionForCharacter(UUID id) {
+    var token=tokenForCharacter(id);
+    if(token==null) return null;
+    var binding=bindings.get(token);
+    return binding.awaitingRegionReady || binding.event!=null ? null : binding.session;
   }
 
   CompletionStage<java.util.List<OnlineStore.CorpseState>> corpses(String token) {

@@ -45,6 +45,7 @@ final class OnlineMelee {
     if (spawn.spawn().stationary()) throw rejected("protected_target");
     var life=creatures.life(target);
     if (life.recipient()!=null) throw rejected("creature_unavailable");
+    var captured=creatures.capture(target);
     var definition=spawn.definition();
     // Never silently omit authored script/quest behavior. Loot is accepted only for tables the online roll can grant.
     if ((definition.getSourceEvents()!=null && !definition.getSourceEvents().isEmpty())
@@ -53,7 +54,7 @@ final class OnlineMelee {
         || !OnlineRetaliation.supported(definition))
       throw rejected("unsupported_combat");
     var position=world.position(token);
-    double x=spawn.spawn().x()-map.originX,y=spawn.spawn().y()-map.originY;
+    double x=captured.x()-map.originX,y=captured.y()-map.originY;
     if (Math.hypot((position.x()-x)*GRID_W,(position.y()-y)*GRID_H)>PLAYER_MELEE_ATTACK_RANGE
         || !map.allowsCombat(position.x(),position.y(),x,y,false)) throw rejected("out_of_range_or_blocked");
     OnlineCombatLoadout loadout;
@@ -79,7 +80,7 @@ final class OnlineMelee {
       experience=Math.addExact(experience,progression.experience());
       // One roll supplies both gold and drops, exactly as the offline kill does. Drops sit on the creature's tile.
       try {
-        var roll=OnlineLootDrafts.roll(definition,items,random,sessions.region(token).world(),spawn.spawn().x(),spawn.spawn().y());
+        var roll=OnlineLootDrafts.roll(definition,items,random,sessions.region(token).world(),captured.x(),captured.y());
         gold=roll.gold();
         drops=roll.drops();
       } catch (IllegalArgumentException unsupported) { throw rejected("unsupported_combat"); }
@@ -87,16 +88,22 @@ final class OnlineMelee {
     var cooldowns=new HashMap<>(progression.progress().cooldowns());
     cooldowns.put("attack",Math.addExact(now,Math.max(1,loadout.attackCooldownMillis())));
     var draft=withAttackState(progression.progress(),cooldowns);
+    var motion=after==0
+        ? new OnlineStore.SpawnMotion(captured.key(),captured.life(),captured.revision(),captured.x(),captured.y(),
+            "IDLE",null,null)
+        : definition.isCanAttack()
+        ? new OnlineStore.SpawnMotion(captured.key(),captured.life(),captured.revision(),captured.x(),captured.y(),
+            "RETALIATION",saved.id(),saved.locationEpoch()) : captured;
     var provocation=after>0 && definition.isCanAttack()
         ? new OnlineStore.CreatureProvocation(life.key(),life.eventId(),saved.id(),
-            life.targetCharacter()==null ? Math.addExact(now,OnlineRetaliation.COOLDOWN_MILLIS) : life.nextAttackAt()) : null;
+            life.targetCharacter()==null ? Math.addExact(now,OnlineRetaliation.COOLDOWN_MILLIS) : life.nextAttackAt(),motion) : null;
     creatures.reserve(target);
     pendingTargets.add(target);
     try {
       CompletionStage<OnlineStore.RewardResult> pending=damage==0
           ? sessions.commitGameplayEvent(token,revision,UUID.randomUUID(),0,0,draft,provocation)
           : sessions.commitCreatureStrike(token,revision,after==0 ? life.eventId() : UUID.randomUUID(),gold,experience,draft,
-              new OnlineStore.CreatureStrike(life.key(),life.eventId(),definition.getHealth(),before,after),provocation,drops);
+              new OnlineStore.CreatureStrike(life.key(),life.eventId(),definition.getHealth(),before,after,motion),provocation,drops);
       return pending.whenComplete((result,error) -> {
         // Session completions run on the simulation owner, including its shutdown drain.
         pendingTargets.remove(target);

@@ -17,6 +17,83 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 /** Runs against PostgreSQL, including in CI; no in-memory substitute for transaction semantics. */
 @EnabledIfEnvironmentVariable(named="T4C_DB_URL", matches=".+")
 class OnlineStoreTest {
+  @Test void movingCreatureCheckpointCannotRewindCommittedDamageOrTargetEpoch() throws Exception {
+    var life=store.loadOrCreateSpawn("motion:"+UUID.randomUUID());
+    assertNull(life.currentX());assertNull(life.currentY());
+    var key=store.provisionAccount();
+    var character=store.create(key.accountId(),"Motion fence",0,10,20,CharacterProgressTest.sample(),0);
+    var session=store.acquire(key.secret(),character.id());
+    var initial=new OnlineStore.SpawnMotion(life.key(),life.eventId(),life.stateRevision(),10.5,20.5,
+        "PATROL",null,null);
+    var checkpoint=store.checkpointSpawn(initial,null);
+    assertEquals(10.5,checkpoint.currentX());assertEquals(20.5,checkpoint.currentY());
+    assertEquals("PATROL",checkpoint.mode());
+    assertEquals(life.eventId(),checkpoint.eventId());
+    var impact=new OnlineStore.SpawnMotion(life.key(),life.eventId(),checkpoint.stateRevision(),10.75,20.5,
+        "RETALIATION",character.id(),character.locationEpoch());
+    var progress=CharacterProgressTest.sample();
+    var strike=new OnlineStore.CreatureStrike(life.key(),life.eventId(),20,20,12,impact);
+    var provoke=new OnlineStore.CreatureProvocation(life.key(),life.eventId(),character.id(),0,impact);
+    var event=UUID.randomUUID();
+    assertTrue(store.commitCreatureStrike(session,character.revision(),event,0,8,progress,strike,provoke).applied());
+    var committed=store.loadOrCreateSpawn(life.key());
+    assertEquals(12,committed.health());assertEquals(10.75,committed.currentX());
+    assertEquals(character.id(),committed.targetCharacter());
+    assertEquals(character.locationEpoch(),committed.targetEpoch());
+    assertEquals("RETALIATION",committed.mode());
+    var changedPose=new OnlineStore.SpawnMotion(life.key(),life.eventId(),checkpoint.stateRevision(),
+        10.6,20.5,"RETALIATION",character.id(),character.locationEpoch());
+    assertThrows(OnlineStore.Conflict.class,()->store.commitCreatureStrike(session,character.revision(),event,
+        0,8,progress,new OnlineStore.CreatureStrike(life.key(),life.eventId(),20,20,12,changedPose),
+        new OnlineStore.CreatureProvocation(life.key(),life.eventId(),character.id(),0,changedPose)),
+        "A replay with a different impact position must conflict");
+    assertThrows(OnlineStore.Conflict.class,()->store.checkpointSpawn(initial,null),
+        "A delayed pose cannot undo a committed hit and target");
+    var stale=new OnlineStore.CreatureStrike(life.key(),life.eventId(),20,12,9,
+        new OnlineStore.SpawnMotion(life.key(),life.eventId(),checkpoint.stateRevision(),10.5,20.5,
+            "PATROL",null,null));
+    assertThrows(OnlineStore.Conflict.class,()->store.commitCreatureStrike(session,1,UUID.randomUUID(),0,3,progress,stale));
+    assertEquals(committed,store.loadOrCreateSpawn(life.key()));
+    assertEquals(8,store.load(key.accountId(),character.id()).experience());
+    var lethalMotion=new OnlineStore.SpawnMotion(life.key(),life.eventId(),committed.stateRevision(),
+        committed.currentX(),committed.currentY(),"RETALIATION",character.id(),character.locationEpoch());
+    assertTrue(store.commitCreatureStrike(session,1,life.eventId(),0,0,progress,
+        new OnlineStore.CreatureStrike(life.key(),life.eventId(),20,12,0,lethalMotion),null).applied());
+    var killed=store.loadOrCreateSpawn(life.key());
+    assertEquals(0,killed.health());assertEquals(character.id(),killed.recipient());
+    assertThrows(OnlineStore.Conflict.class,()->store.checkpointSpawn(impact,session),
+        "A delayed moving pose cannot revive a rewarded life");
+    var next=store.respawn(life.key(),life.eventId(),0);
+    assertNotEquals(life.eventId(),next.eventId());assertNull(next.health());
+    assertNull(next.currentX());assertNull(next.currentY());assertNull(next.targetCharacter());
+    store.release(session);
+  }
+
+  @Test void schemaTenTargetMigratesWithoutHealingOrInventingACharacterEpoch() throws Exception {
+    String schema="pursuit_"+UUID.randomUUID().toString().replace("-","");
+    UUID event=UUID.randomUUID(),target=UUID.randomUUID();
+    try(var c=testConnection();var s=c.createStatement()) {
+      s.execute("CREATE SCHEMA "+schema);
+      s.execute("CREATE TABLE "+schema+".online_schema(version integer PRIMARY KEY)");
+      s.execute("INSERT INTO "+schema+".online_schema(version) SELECT generate_series(1,10)");
+      s.execute("CREATE TABLE "+schema+".online_spawns(spawn_key varchar(256) PRIMARY KEY,generation bigint NOT NULL DEFAULT 0,event_id uuid NOT NULL,health integer,target_character uuid,next_attack_at bigint NOT NULL DEFAULT 0)");
+      s.execute("CREATE TABLE "+schema+".online_world_rewards(event_id uuid,character_id uuid,claimed_at timestamptz)");
+      try(var insert=c.prepareStatement("INSERT INTO "+schema+".online_spawns VALUES (?,?,?,?,?,?)")) {
+        insert.setString(1,"legacy:"+event);insert.setLong(2,4);insert.setObject(3,event);
+        insert.setInt(4,7);insert.setObject(5,target);insert.setLong(6,1234);insert.executeUpdate();
+      }
+    }
+    String url=System.getenv("T4C_DB_URL")+(System.getenv("T4C_DB_URL").contains("?") ? "&" : "?")+"currentSchema="+schema;
+    var legacy=new OnlineStore(()->DriverManager.getConnection(url,System.getenv("T4C_DB_USER"),System.getenv("T4C_DB_PASSWORD")));
+    legacy.migrate();
+    var migrated=legacy.loadOrCreateSpawn("legacy:"+event);
+    assertEquals(event,migrated.eventId());assertEquals(4,migrated.generation());
+    assertEquals(7,migrated.health());assertEquals(target,migrated.targetCharacter());
+    assertEquals(1234,migrated.nextAttackAt());assertEquals("RETALIATION",migrated.mode());
+    assertNull(migrated.currentX());assertNull(migrated.currentY());assertNull(migrated.targetEpoch());
+    assertEquals(0,migrated.stateRevision());
+  }
+
   @Test void durableSpawnLifeSurvivesRecoveryAndRespawnsOnceOnlyAfterItsReward() throws Exception {
     String spawn="test:"+UUID.randomUUID();
     OnlineStore.SpawnState life;

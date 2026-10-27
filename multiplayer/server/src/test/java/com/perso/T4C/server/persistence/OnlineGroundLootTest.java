@@ -30,13 +30,15 @@ class OnlineGroundLootTest {
   private record Fixture(OnlineStore.AccountKey key, int world, LootDropDraft drop,
       OnlineStore.Session ownerSession, OnlineStore.CharacterState owner) {}
 
-  @Test void existingVersionNineRowsSurviveTheAdditiveVersionTenMigration() throws Exception {
+  @Test void existingVersionNineRowsSurviveTheAdditiveMigrations() throws Exception {
     String schema = "loot_migration_" + UUID.randomUUID().toString().replace("-", "");
     try (var c = testConnection(); var s = c.createStatement()) { s.execute("CREATE SCHEMA " + schema); }
     var store = inSchema(schema);
     store.migrate();
-    // Version ten only adds tables, so dropping them and its version row recreates the version-nine layout.
+    // Recreate the prior version-nine layout in this isolated test schema.
     try (var c = connectionIn(schema); var s = c.createStatement()) {
+      s.execute("ALTER TABLE online_spawns DROP COLUMN current_x CASCADE, DROP COLUMN current_y CASCADE, DROP COLUMN mode CASCADE, DROP COLUMN target_epoch CASCADE, DROP COLUMN state_revision CASCADE");
+      s.execute("DELETE FROM online_schema WHERE version = 11");
       s.execute("DROP TABLE online_loot_claims");
       s.execute("DROP TABLE online_ground_loot");
       s.execute("DELETE FROM online_schema WHERE version = 10");
@@ -52,7 +54,7 @@ class OnlineGroundLootTest {
     try (var c = connectionIn(schema); var s = c.createStatement();
         var rows = s.executeQuery("SELECT string_agg(version::text, ',' ORDER BY version) FROM online_schema")) {
       rows.next();
-      assertEquals("1,2,3,4,5,6,7,8,9,10", rows.getString(1));
+      assertEquals("1,2,3,4,5,6,7,8,9,10,11", rows.getString(1));
     }
     assertEquals(rewarded, store.load(key.accountId(), character.id()), "existing character state is untouched");
     assertFalse(store.reward(session, event, 3, 4).applied(), "existing reward receipts still replay");
@@ -65,8 +67,10 @@ class OnlineGroundLootTest {
     var killer = store.create(key.accountId(), "Drop killer", world, 10, 20, emptyProgress(), 0);
     var session = store.acquire(key.secret(), killer.id());
     var life = store.loadOrCreateSpawn("loot:" + UUID.randomUUID());
-    var drop = draft(world, 10, 20);
-    var strike = new OnlineStore.CreatureStrike(life.key(), life.eventId(), 10, 10, 0);
+    var motion = new OnlineStore.SpawnMotion(life.key(), life.eventId(), life.stateRevision(),
+        10.5, 20.5, "IDLE", null, null);
+    var drop = draft(world, motion.x(), motion.y());
+    var strike = new OnlineStore.CreatureStrike(life.key(), life.eventId(), 10, 10, 0, motion);
 
     assertThrows(OnlineStore.Conflict.class, () -> store.commitCreatureStrike(session,
         killer.revision() + 5, life.eventId(), 3, 4, emptyProgress(), strike, null, List.of(drop)));
@@ -78,6 +82,9 @@ class OnlineGroundLootTest {
     var listed = store.listGroundLoot(world, WHOLE_REGION);
     assertEquals(1, listed.size());
     assertEquals(drop.id(), listed.get(0).id());
+    assertEquals(motion.x(), listed.get(0).x());
+    assertEquals(motion.y(), listed.get(0).y());
+    assertEquals(motion.x(), store.loadOrCreateSpawn(life.key()).currentX());
     assertEquals(GLOVES, listed.get(0).key());
     assertEquals(killer.id(), listed.get(0).ownerCharacter(), "the killer owns the first window");
     assertTrue(listed.get(0).ownerRemainingMillis() > 0);

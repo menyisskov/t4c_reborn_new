@@ -19,6 +19,72 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
 @EnabledIfEnvironmentVariable(named="T4C_DB_URL", matches=".+")
 class PersistentCreaturesTest {
+  @Test void gracefulCloseReloadsCommittedStateAfterOneUncertainReadWithoutReplayingIt() throws Exception {
+    var failNext=new AtomicBoolean();var failureSeen=new CountDownLatch(1);
+    var store=new OnlineStore(() -> {
+      if(Thread.currentThread().getName().startsWith("creature-persistence-")
+          && failNext.compareAndSet(true,false)) {
+        failureSeen.countDown();throw new SQLException("Injected one-time read failure");
+      }
+      return DriverManager.getConnection(System.getenv("T4C_DB_URL"),System.getenv("T4C_DB_USER"),
+          System.getenv("T4C_DB_PASSWORD"));
+    });
+    store.migrate();
+    var definition=MonsterCatalog.loadBundled().monsters().get("Olin Haad Guard 3");
+    var spawn=new MonsterContent.Spawn("close-recover-"+UUID.randomUUID(),definition.getName(),3,3,0,false,false);
+    var map=new PreviewMap(new boolean[8][8],0,0,3,3);
+    var world=new PreviewWorld(map,new MonsterContent(MonsterContent.VERSION,
+        Map.of(definition.getName(),definition),List.of(spawn)));
+    try(var creatures=new PersistentCreatures(store,world)) {
+      var life=creatures.life(1);
+      failNext.set(true);creatures.damageCommitted(1);
+      assertTrue(failureSeen.await(2,TimeUnit.SECONDS));
+      for(int i=0;i<10;i++) { creatures.step();Thread.sleep(5); }
+      assertEquals(life.eventId(),store.loadOrCreateSpawn(spawn.persistenceKey()).eventId());
+      // close() must perform a read-only recovery despite the normal tick cadence stopping.
+    }
+  }
+
+  @Test void hostedChasePublishesCurrentPoseAndGracefulRestartRecoversSameLife() throws Exception {
+    var store=OnlineStore.fromEnvironment();store.migrate();
+    var definition=MonsterCatalog.loadBundled().monsters().get("Skeleton");
+    var spawn=new MonsterContent.Spawn("pursuit-"+UUID.randomUUID(),definition.getName(),5,8,0,false,true);
+    var content=new MonsterContent(MonsterContent.VERSION,Map.of(definition.getName(),definition),List.of(spawn));
+    var map=new PreviewMap(new boolean[20][20],0,0,12,8);
+    var plan=HostedRegionPlan.single(map);
+    var key=store.provisionAccount();
+    var prepared=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(1));
+    var character=store.create(key.accountId(),"Pursuit target",0,12.5,8.5,prepared.progress(),prepared.gold());
+    UUID life;
+    double beforeX, beforeY;
+    try(var hosted=new HostedWorlds(plan,store,ItemCatalog.loadBundled(),content)) {
+      var region=hosted.regions.getFirst();
+      var lease=store.acquire(key.secret(),character.id());
+      hosted.sessions.join(lease,System.nanoTime());
+      var initial=region.world.creaturePosition(1);
+      boolean advanced=false;
+      for(int tick=0;tick<240;tick++) {
+        hosted.step();
+        var position=region.world.creaturePosition(1);
+        if(position.x()>initial.x()+0.2) advanced=true;
+        Thread.sleep(2);
+      }
+      assertTrue(advanced,"An eligible nearby player must pull the authored creature off its anchor");
+      beforeX=region.world.creaturePosition(1).x();beforeY=region.world.creaturePosition(1).y();
+      life=store.loadOrCreateSpawn(spawn.persistenceKey()).eventId();
+    }
+    var committed=store.loadOrCreateSpawn(spawn.persistenceKey());
+    assertEquals(life,committed.eventId());
+    assertNotNull(committed.currentX());assertNotNull(committed.currentY());
+    assertEquals(beforeX,committed.currentX(),1e-6);assertEquals(beforeY,committed.currentY(),1e-6);
+    try(var restarted=new HostedWorlds(plan,store,ItemCatalog.loadBundled(),content)) {
+      var recovered=restarted.regions.getFirst().world.creaturePosition(1);
+      assertEquals(committed.currentX(),recovered.x(),1e-6);
+      assertEquals(committed.currentY(),recovered.y(),1e-6);
+      assertEquals(life,restarted.regions.getFirst().creatures.life(1).eventId());
+    }
+  }
+
   @Test void deathFencesAnInFlightReadWhoseCachedTargetIsStillUnknown() throws Exception {
     var pause=new AtomicBoolean(); var captured=new CountDownLatch(1); var release=new CountDownLatch(1);
     var store=new OnlineStore(() -> {

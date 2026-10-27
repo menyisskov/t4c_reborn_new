@@ -375,7 +375,9 @@ class PreviewServerTest {
       var claimed=client.send(pickupRequest(url,token,current,revision+" 0 "+uuid),HttpResponse.BodyHandlers.ofString());
       assertEquals(200,claimed.statusCode(),claimed.body());
       assertTrue(object(claimed).get("revision").getAsLong()>revision);
-      assertTrue(object(client.send(request(url,"/state",token,null),HttpResponse.BodyHandlers.ofString())).getAsJsonArray("loot").isEmpty());
+      var afterClaim=object(client.send(request(url,"/state",token,null),HttpResponse.BodyHandlers.ofString())).getAsJsonArray("loot");
+      for(var visible:afterClaim) assertNotEquals(uuid.toString(),visible.getAsJsonObject().get("id").getAsString(),
+          "The claimed drop must leave the public region view even when other drops remain");
       assertEquals(409,client.send(pickupRequest(url,token,current,revision+" 0 "+uuid),HttpResponse.BodyHandlers.ofString()).statusCode(),"A replay never claims twice");
       var saved=store.load(owner.accountId(),character.id());
       assertEquals(1,saved.progress().inventory().stream().filter(item->item.id().equals(uuid)).count());

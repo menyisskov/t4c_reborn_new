@@ -173,7 +173,7 @@ Read these documents before choosing the next multiplayer task or reporting comp
 
 | Document | Purpose |
 |---|---|
-| [multiplayer/MILESTONES.md](multiplayer/MILESTONES.md) | Canonical roadmap: Alpha, the intermediate two-player checkpoint, full 20-player Beta, essential GA and Post-GA; exact requirements, completion evidence and final two-player QA script. |
+| [multiplayer/MILESTONES.md](multiplayer/MILESTONES.md) | Canonical roadmap: Alpha, the intermediate two-player checkpoint, full two-rendered-client Beta, essential GA and Post-GA; exact requirements, completion evidence and final two-player QA script. |
 | [TASKS.md](TASKS.md) | Individual implementation task IDs, status, commits and changelog links. A completed task does not mean its parent milestone is complete. |
 | [multiplayer/ACCEPTANCE.md](multiplayer/ACCEPTANCE.md) | Verified release evidence and unchecked Alpha/Beta/GA gates. |
 | [multiplayer/HANDOFF.md](multiplayer/HANDOFF.md) | Model/session continuation: architecture, current working state, commands, ownership, failures, limitations and next work. |
@@ -194,8 +194,11 @@ reproduction commands, observed results and limitations; keep credentials/person
 
 Never mark a milestone complete from merged PR counts, unit/service tests or native network
 adapters alone. Distinguish implemented, verified, merged, rendered-client and remote evidence.
-Preserve failed runs and unchecked gates. The two-player checkpoint does not replace the
-agreed 20-player Beta, and its exact content/class scope must be explicit before completion.
+Preserve failed runs and unchecked gates. The two-player checkpoint does not by itself
+complete Beta: all intended gameplay, content, security, recovery and two-hour mixed-stability
+gates remain. The owner changed the Beta/GA concurrency threshold to two real rendered clients
+on 2026-10-27; qualifying 20-player scale is follow-up evidence, not a release gate or a
+runtime-cap change. The checkpoint's exact content/class scope must be explicit before completion.
 Single-player launch, gameplay, existing saves and preferences remain protected throughout.
 
 ## 8. Working with peer agents (Codex, Claude and sub-agents)

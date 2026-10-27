@@ -6,10 +6,20 @@ Do not turn an unchecked item into a release claim without a passing, recorded c
 
 The owner-facing stage definitions, six intermediate two-player milestones and exact
 native completion scenarios are in [MILESTONES.md](MILESTONES.md). That checkpoint does
-not replace the agreed 20-player Beta gates below. [TASKS.md](../TASKS.md) tracks individual
-implementation deliveries; a completed task is not automatically a completed milestone.
+not by itself complete Beta. On 2026-10-27 the owner changed the Beta/GA concurrency gate to
+two real rendered clients; all other gates below remain. Historical 20-player measurements
+remain scale evidence, and the server's 20-player runtime cap is unchanged.
+[TASKS.md](../TASKS.md) tracks individual implementation deliveries; a completed task is
+not automatically a completed milestone.
 
 ## Verified foundation (updated 2026-10-27)
+
+Historical reports below retain their original 20-player gate language and measured limitations.
+T4C-0220 supersedes that concurrency threshold for current Beta/GA acceptance. The retained
+20-adapter baseline still does not pass the current two-rendered-client mixed M5/Beta gate:
+quest/loot/travel play, required measurements and rendered clients were absent.
+
+- T4C-0212 integrates server-authored monster patrol, natural/provoked pursuit, bounded collision-aware navigation, safe-area/leash return, guarded schema-11 creature checkpoints and graceful flush. The frozen candidate was committed base `3ac9c0aadc7463043436f67ef9e5623364962ed1` plus 16 hash-verified source/test files (manifest SHA-256 `251D90B63649936738F4E84872E5760A1A30D21BA508051FA9007658EA9EA2C5`). A clean isolated PostgreSQL multiplayer suite passed 182 tests with zero failures/errors/skips; server JAR SHA-256 `4DB9A06E71F3B82080B07B78E7934EE1B97514A03BCE667E14B4ED376BB2D737`. On fresh `t4c_pursuit_0212_e827fc99a23e`, two actual `OnlineConnection` adapters (protocol 5/schema 11) passed an accepted hit on the authored guard (HP 55→28), 28.455 px of guard closure toward stopped A across six advancing settled snapshots/530 ms, unchanged A/B HP 35/37 and B progress, a durable RETALIATION checkpoint at revision 5/epoch 0, exact A private rejoin after normal lease release, and the same living guard life/HP/pose plus both committed private states after owned graceful restart. Probe and both owned server shutdowns exited 0; port 18771 was free. Client JAR SHA-256 `754F14BAF1552A841C099DDABBA39479CCD71D1418642A0A66C0504896C0CB09`, runtime source-manifest SHA-256 `B90609CFE404CE93C8322D3479707A2463343ED0383913461164F7CBAB039B6F`; sanitized report `%TEMP%/t4c-0212-native-runtime-1bdb4b74/output-08/report.txt` SHA-256 `F7288489F3CE18A8EED3BFE9F7D7FEF740C631BF11843FE2E5E9B9942383FC32`. Seven earlier distinct failed fixture/probe runs and their databases/reports remain retained. The optional separate 20-adapter smoke failed at about 66 seconds when unchanged harness report rotation hit Windows `AccessDeniedException`: 64.97 seconds at occupancy 20, 77 attacks/57 accepted, 11 HP changes, 8,296 movement actions, 15 operator samples and observed 34.010 Hz, with no player/health/metric failures; its 180-second and reconnect stages did not pass. The native PASS predates newer main-branch UI code; no rendered pursuit, remote test, complete M4/M5/Beta gate, reset/death/respawn or displaced loot/quest claim follows from it. Current-head CI must validate integration.
 
 - T4C-0219's [live native account-key rotation probe](tools/NATIVE_KEY_ROTATION_PROBE.md) passed against two actual `OnlineConnection` adapters on isolated committed source `130bc3c0389aa08f801c8c69f8f11abdc32c724d` (protocol 5/schema 10). Final Java/server/client SHA-256 values were `3FB42EA1628B924B6039318E6B54DF1D4E56C27FEDC914458214BB2C9DA37448`, `D5BBD75EAAC7E19AF976B316BA6FCFBD5321FC0803E604BB29760CB18A9F950C` and `EEF5FDD51199487D6F14F4B16686154A82C9168A22E81049AD1E87CE4E8D808B`. On fresh retained `t4c_rotation_0218_312c3ec2435a` at loopback 18775, old A's key lost roster (401), direct join (409) and native rejoin; its active adapter disconnected without a post-rotation committed change. The replacement key rejoined the same character/progress while B stayed connected, moved and kept its progress. The owned server logged the expected fenced-session conflict, drained and exited 0; schema 10, two accounts/characters, zero held leases and a free port were read afterward. Sanitized report `%TEMP%/t4c-0218-evidence-07fecbb11bff4844a72c1711703fc745/report.txt` SHA-256 `2F83E9DE19FB6473339FFC11627568FB14CB6F5FC7BA11E2AA7AC3D630A68569`. The first retained run on separate `t4c_rotation_0218_91def691bf71` failed because the probe expected 401 from join; early-abort cleanup exited nonzero while the revoked binding was still draining. Its report SHA-256 is `B8625B3C08B61E4D5D17F7FFB5BC5DCBC67EA50BA947ABDC7ADD3515F6299D12`. The task was renumbered from its original 0218 reservation; historical run labels remain unchanged. This checks local native rotation only, not foreign ownership, broader abuse, rendered clients or full M1/M5/Beta acceptance.
 
@@ -156,12 +166,14 @@ Entries below record incremental checks; later integration evidence supersedes e
 - [ ] Operator start/stop/restart, health, bounded logs and safe troubleshooting commands.
 - [ ] Verified offline launch, save/load and gameplay regression checks.
 
-## Beta: complete launch gameplay for 20 concurrent players
+## Beta: complete launch gameplay for two real rendered clients
 
 - [ ] All intended launch gameplay and content routes work through authoritative services.
 - [ ] A reproducible full playthrough covers creation, combat, loot, quests, travel and progression.
-- [ ] At least a two-hour 20-client mixed-gameplay soak; record hardware, tick debt, CPU/memory,
-  bandwidth, DB latency, command latency, errors and disconnect/recovery results.
+- [ ] At least a two-hour mixed-gameplay/stability soak with two real rendered clients on the
+  integrated candidate; record hardware, tick debt, CPU/memory, bandwidth, DB latency,
+  command latency, errors and disconnect/recovery results. Additional 20-player qualification
+  is follow-up scale evidence, not a Beta gate or a reduction of the existing server cap.
 - [ ] Native multi-client checks under delay and packet loss; verify reconciliation and facing.
 - [ ] Duplicate/reordered commands, client speed/stat edits, unauthorized account access, replayed
   rewards and inventory duplication attempts fail without corrupting legitimate progress.
@@ -178,12 +190,12 @@ GA is limited to required gameplay and the security/recovery needed to operate i
 - [ ] Players can obtain a reproducible client, connect through the deployed trusted encrypted endpoint, authenticate/select a character and retain progress across sessions.
 - [ ] Required account lifecycle, authorization, anti-cheat and economic integrity checks have no unresolved critical failures.
 - [ ] Operators can install/configure/start/stop/restart, diagnose incidents, back up and restore a realm using documented procedures; version rollback respects database compatibility.
-- [ ] The final 20-player sustained test and actual native multi-client/network tests pass with recorded results and honest limitations.
+- [ ] The final two-real-rendered-client sustained mixed test and actual native multi-client/network tests pass with recorded results and honest limitations; 20-player scale qualification remains follow-up evidence.
 - [ ] Owner QA has accepted the essential end-to-end game and the release has no known issue that strands players, loses progress or duplicates value.
 
 ## Post-GA: optional additions and improvements
 
-Prioritize these separately with the owner after the essential release is accepted: new optional content/features, utilities and administrative dashboards, convenience/UI polish, deeper observability/automation, and scaling beyond the agreed 20-player target. Existing-game rules, critical operator controls, security and save integrity stay release requirements rather than being deferred under this heading. No specific unrequested feature is promised by this list.
+Prioritize these separately with the owner after the essential release is accepted: new optional content/features, utilities and administrative dashboards, convenience/UI polish, deeper observability/automation, and further 20-player scale qualification. The existing 20-player runtime cap is unchanged. Existing-game rules, critical operator controls, security and save integrity stay release requirements rather than being deferred under this heading. No specific unrequested feature is promised by this list.
 
 ## Next integration order
 

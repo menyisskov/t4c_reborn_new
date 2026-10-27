@@ -94,13 +94,19 @@ public final class PreviewMap {
   }
 
   /** Local tile coordinates only. Outside/invalid positions never authorize combat. */
-  public boolean allowsCombat(double fromX, double fromY, double toX, double toY, boolean pvp) {
+  boolean combatEndpointsSafe(double fromX, double fromY, double toX, double toY, boolean pvp) {
     if (!contains(fromX, fromY) || !contains(toX, toY)) return false;
     int from = terrain[(int) fromY][(int) fromX] & 255;
     int to = terrain[(int) toY][(int) toX] & 255;
     if (pvp ? CollisionRules.isPvpSafeHaven(from) || CollisionRules.isPvpSafeHaven(to)
         : CollisionRules.isSafeHaven(from) || CollisionRules.isSafeHaven(to)) return false;
-    return hasLineOfSight(fromX, fromY, toX, toY);
+    return true;
+  }
+
+  /** Local tile coordinates only. Outside/invalid positions never authorize combat. */
+  public boolean allowsCombat(double fromX, double fromY, double toX, double toY, boolean pvp) {
+    return combatEndpointsSafe(fromX, fromY, toX, toY, pvp)
+        && hasLineOfSight(fromX, fromY, toX, toY);
   }
 
   /**
