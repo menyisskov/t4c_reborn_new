@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Persistent creature life tracking (T4C-0183)
+
+### Added
+- Online storage now retains a creature spawn's current life and reward claim across restarts. A new life can begin only after the previous reward is saved and its respawn delay has elapsed. Live creature behavior is not connected yet.
+
 ## 2026-10-27 — Shared-world reward protection (T4C-0182)
 
 ### Added

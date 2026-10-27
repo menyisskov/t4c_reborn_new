@@ -17,6 +17,7 @@ public final class OnlineStore {
   public record CharacterState(UUID id, UUID accountId, String name, int world, double x, double y,
       long gold, long experience, long revision, CharacterProgress progress) {}
   public record RewardResult(boolean applied, CharacterState character) {}
+  public record SpawnState(String key, long generation, UUID eventId, UUID recipient, java.time.Instant claimedAt) {}
   /** One-time delivery to an operator; never log or serialize this record into world snapshots. */
   public record AccountKey(UUID accountId, String secret) {
     @Override public String toString() { return "AccountKey[accountId=" + accountId + ", secret=REDACTED]"; }
@@ -59,7 +60,7 @@ public final class OnlineStore {
         int version = 0;
         try (var rows = s.executeQuery("SELECT version FROM online_schema ORDER BY version")) {
           while (rows.next()) {
-            if (rows.getInt(1) != ++version || version > 5) throw new SQLException("Unsupported online schema version");
+            if (rows.getInt(1) != ++version || version > 6) throw new SQLException("Unsupported online schema version");
           }
         }
         if (version == 0) {
@@ -117,9 +118,66 @@ public final class OnlineStore {
               """);
           s.execute("INSERT INTO online_schema(version) VALUES (5)");
         }
+        if (version < 6) {
+          // Legacy claims predate spawn persistence; use migration time conservatively.
+          s.execute("ALTER TABLE online_world_rewards ADD COLUMN claimed_at timestamptz NOT NULL DEFAULT clock_timestamp()");
+          s.execute("""
+              CREATE TABLE online_spawns (
+                spawn_key varchar(256) PRIMARY KEY CHECK (length(spawn_key)>0),
+                generation bigint NOT NULL DEFAULT 0 CHECK (generation>=0),
+                event_id uuid NOT NULL UNIQUE)
+              """);
+          s.execute("INSERT INTO online_schema(version) VALUES (6)");
+        }
         c.commit();
       } catch (SQLException | RuntimeException error) { c.rollback(); throw error; }
     }
+  }
+
+  /** Trusted authored spawn key, stable across content ordering and process restarts. Worker-thread only. */
+  public SpawnState loadOrCreateSpawn(String key) throws SQLException {
+    spawnKey(key);
+    try (var c=connections.open()) {
+      try (var s=c.prepareStatement("INSERT INTO online_spawns(spawn_key,event_id) VALUES (?,?) ON CONFLICT (spawn_key) DO NOTHING")) {
+        s.setString(1,key); s.setObject(2,UUID.randomUUID()); s.executeUpdate();
+      }
+      try (var s=c.prepareStatement("""
+          SELECT s.generation,s.event_id,r.character_id,r.claimed_at
+          FROM online_spawns s LEFT JOIN online_world_rewards r ON r.event_id=s.event_id
+          WHERE s.spawn_key=?
+          """)) {
+        s.setString(1,key);
+        try (var rows=s.executeQuery()) {
+          if (!rows.next()) throw new Conflict("Spawn unavailable");
+          var claimedAt=rows.getTimestamp(4);
+          return new SpawnState(key,rows.getLong(1),rows.getObject(2,UUID.class),rows.getObject(3,UUID.class),
+              claimedAt==null ? null : claimedAt.toInstant());
+        }
+      }
+    }
+  }
+
+  /** Advance only a committed rewarded life after its authored delay, using database time and CAS. */
+  public SpawnState respawn(String key, UUID expectedEvent, long delayMillis) throws SQLException {
+    spawnKey(key); Objects.requireNonNull(expectedEvent);
+    if (delayMillis<0) throw new IllegalArgumentException("Negative respawn delay");
+    try (var c=connections.open(); var s=c.prepareStatement("""
+        UPDATE online_spawns s SET generation=s.generation+1,event_id=?
+        FROM online_world_rewards r
+        WHERE s.spawn_key=? AND s.event_id=? AND r.event_id=s.event_id
+          AND r.claimed_at<=clock_timestamp()-(? * interval '1 millisecond')
+        RETURNING s.generation,s.event_id
+        """)) {
+      s.setObject(1,UUID.randomUUID()); s.setString(2,key); s.setObject(3,expectedEvent); s.setLong(4,delayMillis);
+      try (var rows=s.executeQuery()) {
+        if (!rows.next()) throw new Conflict("Spawn life changed or respawn not ready");
+        return new SpawnState(key,rows.getLong(1),rows.getObject(2,UUID.class),null,null);
+      }
+    }
+  }
+
+  private static void spawnKey(String key) {
+    if (key==null || key.isBlank() || key.length()>256) throw new IllegalArgumentException("Invalid spawn key");
   }
 
   /** Operator-only provisioning. The database stores a verifier, not the usable access key. */
