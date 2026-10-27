@@ -24,6 +24,12 @@ class OnlineConnectionTest {
     var revision = new java.util.concurrent.atomic.AtomicLong(1);
     var characterReads = new java.util.concurrent.atomic.AtomicInteger();
     var characterAuth = new AtomicReference<String>();
+    var equipmentBody = new AtomicReference<String>();
+    var equipmentAuth = new AtomicReference<String>();
+    var equipmentCode = new java.util.concurrent.atomic.AtomicInteger(200);
+    var equipmentCalls = new java.util.concurrent.atomic.AtomicInteger();
+    var equipmentReceived = new CountDownLatch(1);
+    var releaseEquipment = new CountDownLatch(1);
     var credentials = new OnlineConnection.Credentials("b".repeat(64), java.util.UUID.randomUUID());
     var leave = new CountDownLatch(1);
     var tapReceived = new CountDownLatch(1);
@@ -34,6 +40,15 @@ class OnlineConnectionTest {
         "/",
         exchange -> {
           String path = exchange.getRequestURI().getPath();
+          if (path.equals("/equip") || path.equals("/unequip")) {
+            equipmentCalls.incrementAndGet();
+            equipmentBody.set(new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8));
+            equipmentAuth.set(exchange.getRequestHeaders().getFirst("Authorization"));
+            equipmentReceived.countDown();
+            try { releaseEquipment.await(3, TimeUnit.SECONDS); }
+            catch (InterruptedException error) { Thread.currentThread().interrupt(); }
+            if (equipmentCode.get() == 200) revision.incrementAndGet();
+          }
           if (path.equals("/join"))
             login.set(new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8));
           if (path.equals("/input")) {
@@ -62,10 +77,11 @@ class OnlineConnectionTest {
                 case "/character" ->
                     "{\"id\":\"" + credentials.characterId() + "\",\"name\":\"Online tester\",\"gold\":"
                         + (200 + revision.get()) + ",\"experience\":0,\"revision\":" + revision.get() + "}";
+                case "/equip", "/unequip" -> "{\"revision\":" + revision.get() + "}";
                 default -> "{}";
               };
           byte[] bytes = result.getBytes(StandardCharsets.UTF_8);
-          exchange.sendResponseHeaders(200, bytes.length);
+          exchange.sendResponseHeaders(path.equals("/equip") || path.equals("/unequip") ? equipmentCode.get() : 200, bytes.length);
           exchange.getResponseBody().write(bytes);
           exchange.close();
         });
@@ -106,10 +122,38 @@ class OnlineConnectionTest {
           while (connection.view().character().revision() < 2 && System.nanoTime() < deadline) Thread.sleep(10);
           assertEquals(202, connection.view().character().gold());
           assertEquals(2, characterReads.get());
+          var instance = java.util.UUID.randomUUID();
+          var equipped = connection.equip(instance, com.perso.T4C.player.BodyPart.HEAD).toCompletableFuture();
+          assertTrue(equipmentReceived.await(2, TimeUnit.SECONDS));
+          assertFalse(equipped.isDone(), "An in-flight action cannot publish a predicted success");
+          assertThrows(IllegalStateException.class, () -> connection.unequip(com.perso.T4C.player.BodyPart.HEAD));
+          assertEquals(2, connection.view().character().revision());
+          releaseEquipment.countDown();
+          var result = equipped.get(3, TimeUnit.SECONDS);
+          assertTrue(result.accepted());
+          assertEquals(3, result.character().revision());
+          assertEquals(result.character(), connection.view().character(), "Publish committed private state before completion");
+          assertEquals("2 " + instance + " HEAD", equipmentBody.get());
+          assertEquals("Bearer " + token, equipmentAuth.get());
+
+          equipmentCode.set(409);
+          var rejected = connection.unequip(com.perso.T4C.player.BodyPart.HEAD).toCompletableFuture().get(3, TimeUnit.SECONDS);
+          assertFalse(rejected.accepted());
+          assertEquals("3 HEAD", equipmentBody.get());
+          assertEquals("connected", connection.status(), "A stale or ineligible action is not a broken connection");
+          assertEquals(4, characterReads.get(), "Conflicts must refresh private state before another action");
+
+          equipmentCode.set(503);
+          var uncertain = connection.equip(instance, com.perso.T4C.player.BodyPart.HEAD).toCompletableFuture();
+          assertThrows(java.util.concurrent.ExecutionException.class, () -> uncertain.get(3, TimeUnit.SECONDS));
+          assertEquals("disconnected", connection.status());
+          assertNull(connection.view());
+          assertEquals(3, equipmentCalls.get(), "An ambiguous mutation must never be automatically replayed");
         } else assertNull(connection.view().character());
       }
       assertTrue(leave.await(3, TimeUnit.SECONDS), "Closing must release the temporary session");
     } finally {
+      releaseEquipment.countDown();
       server.stop(0);
     }
   }

@@ -6,6 +6,14 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Native equipment commands (T4C-0176)
+
+### Added
+- The online client can now send equipment changes and receive the saved result. Rejected changes leave the connection usable; uncertain results require reconnecting before another attempt. Inventory controls and equipped appearance are still being built.
+
+### Fixed
+- Closing the online client after a failed action no longer interrupts its attempt to log out cleanly.
+
 ## 2026-10-27 — Authoritative equipment changes (T4C-0175)
 
 ### Added

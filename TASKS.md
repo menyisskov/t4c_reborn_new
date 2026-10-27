@@ -6,13 +6,14 @@ here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0176`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0177`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0176 | Send native equipment commands and refresh committed state | Multiplayer / Alpha | Done | 3a5e86ef | [2026-10-27](CHANGELOG.md#2026-10-27--native-equipment-commands-t4c-0176) |
 | T4C-0175 | Commit authenticated equipment changes without item duplication | Multiplayer / Alpha | Done | 265804dd | [2026-10-27](CHANGELOG.md#2026-10-27--authoritative-equipment-changes-t4c-0175) |
 | T4C-0174 | Share equipment boost evaluation with headless gameplay | Multiplayer / Alpha | Done | `0bacdab7` | [2026-10-27](CHANGELOG.md#2026-10-27--shared-equipment-bonuses-t4c-0174) |
 | T4C-0173 | Package authoritative equipment definitions for online combat | Multiplayer / Alpha | Done | `f4b95edc` | [2026-10-27](CHANGELOG.md#2026-10-27--online-equipment-content-t4c-0173) |
