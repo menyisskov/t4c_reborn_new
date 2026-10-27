@@ -13,7 +13,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0175 | Commit authenticated equipment changes without item duplication | Multiplayer / Alpha | In Progress | pending | [2026-10-27](CHANGELOG.md#2026-10-27--authoritative-equipment-changes-t4c-0175) |
+| T4C-0175 | Commit authenticated equipment changes without item duplication | Multiplayer / Alpha | Done | 265804dd | [2026-10-27](CHANGELOG.md#2026-10-27--authoritative-equipment-changes-t4c-0175) |
 | T4C-0174 | Share equipment boost evaluation with headless gameplay | Multiplayer / Alpha | Done | `0bacdab7` | [2026-10-27](CHANGELOG.md#2026-10-27--shared-equipment-bonuses-t4c-0174) |
 | T4C-0173 | Package authoritative equipment definitions for online combat | Multiplayer / Alpha | Done | `f4b95edc` | [2026-10-27](CHANGELOG.md#2026-10-27--online-equipment-content-t4c-0173) |
 | T4C-0172 | Share weapon damage and dice formulas with the headless server | Multiplayer / Alpha | Done | `9fa59ff2` | [2026-10-27](CHANGELOG.md#2026-10-27--shared-online-weapon-rules-t4c-0172) |
