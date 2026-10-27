@@ -13,7 +13,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0182 | Commit one recipient for shared-world rewards | Multiplayer / Alpha | In Progress | pending | [2026-10-27](CHANGELOG.md#2026-10-27--shared-world-reward-protection-t4c-0182) |
+| T4C-0182 | Commit one recipient for shared-world rewards | Multiplayer / Alpha | Done | fef7b707 | [2026-10-27](CHANGELOG.md#2026-10-27--shared-world-reward-protection-t4c-0182) |
 | T4C-0181 | Bound authenticated client command processing per session | Multiplayer / Alpha | Done | 4f9ca8d9 | [2026-10-27](CHANGELOG.md#2026-10-27--online-command-flood-limits-t4c-0181) |
 | T4C-0180 | Share authoritative weapon timing with offline combat | Multiplayer / Alpha | Done | 1264f841 | [2026-10-27](CHANGELOG.md#2026-10-27--shared-online-weapon-timing-t4c-0180) |
 | T4C-0179 | Keep shields out of online off-hand damage | Multiplayer / Alpha | Done | 24062be6 | [2026-10-27](CHANGELOG.md#2026-10-27--shield-combat-correction-t4c-0179) |
