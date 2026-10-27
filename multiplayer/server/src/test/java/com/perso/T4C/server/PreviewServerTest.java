@@ -4,11 +4,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import java.net.InetSocketAddress;
 import java.net.URI;
+import java.net.Socket;
 import java.net.http.*;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import com.perso.T4C.server.persistence.OnlineStore;
@@ -24,6 +28,78 @@ class PreviewServerTest {
     return builder.build();
   }
   private JsonObject object(HttpResponse<String> response) { return JsonParser.parseString(response.body()).getAsJsonObject(); }
+
+  @Test void slowPublicAndForgedSessionBodiesDoNotStallTwoJoinedPlayers() throws Exception {
+    var map=new PreviewMap(new boolean[8][8],0,0,3,3);
+    var sockets=new ArrayList<Socket>();
+    try(var server=new PreviewServer(map,0);var client=HttpClient.newHttpClient()) {
+      server.start();String url=server.url();int port=URI.create(url).getPort();
+      var joinedFirst=object(client.send(request(url,"/join",null,""),HttpResponse.BodyHandlers.ofString()));
+      var joinedSecond=object(client.send(request(url,"/join",null,""),HttpResponse.BodyHandlers.ofString()));
+      String first=joinedFirst.get("token").getAsString(),second=joinedSecond.get("token").getAsString();
+      long firstId=joinedFirst.get("id").getAsLong(),secondId=joinedSecond.get("id").getAsLong();
+      try {
+        for(int i=0;i<8;i++) sockets.add(slowBody(port,url,"/join",null));
+        for(int i=0;i<8;i++) sockets.add(slowBody(port,url,"/input","f".repeat(64)));
+        sockets.add(slowBody(port,url,"/unknown",null));
+        sockets.add(slowBody(port,url,"/join",null,1000));
+        Thread.sleep(150);
+        for(int i=8;i<16;i++) assertTrue(responseLine(sockets.get(i)).contains(" 401 "),
+            "A forged Bearer token must be refused before its body arrives");
+        assertTrue(responseLine(sockets.get(16)).contains(" 404 "),"Unknown routes must fail before body reads");
+        assertTrue(responseLine(sockets.get(17)).contains(" 413 "),"Oversized declared bodies must fail early");
+        long began=System.nanoTime();
+        var before=object(client.send(request(url,"/state",first,null),HttpResponse.BodyHandlers.ofString()));
+        assertEquals(2,before.getAsJsonArray("players").size(),"Slow joins must not allocate actors");
+        assertEquals(200,client.send(request(url,"/state",second,null),HttpResponse.BodyHandlers.ofString()).statusCode());
+        assertEquals(200,client.send(request(url,"/input",first,"0 1 1 0"),HttpResponse.BodyHandlers.ofString()).statusCode());
+        assertEquals(200,client.send(request(url,"/input",second,"0 1 0 1"),HttpResponse.BodyHandlers.ofString()).statusCode());
+        assertTrue(TimeUnit.NANOSECONDS.toMillis(System.nanoTime()-began)<2500,
+            "Two valid sessions waited behind held unauthenticated bodies");
+        Thread.sleep(120);
+        var after=object(client.send(request(url,"/state",first,null),HttpResponse.BodyHandlers.ofString()));
+        assertEquals(2,after.getAsJsonArray("players").size());
+        double firstX=Double.NaN,secondY=Double.NaN;
+        for(var player:after.getAsJsonArray("players")) {
+          var actor=player.getAsJsonObject();
+          if(actor.get("id").getAsLong()==firstId) firstX=actor.get("x").getAsDouble();
+          if(actor.get("id").getAsLong()==secondId) secondY=actor.get("y").getAsDouble();
+        }
+        assertTrue(firstX>3.5 && secondY>3.5,"Both private movement intents must reach the world");
+        assertEquals(200,client.send(request(url,"/input",first,"0 2 0 0"),HttpResponse.BodyHandlers.ofString()).statusCode());
+        assertEquals(200,client.send(request(url,"/input",second,"0 2 0 0"),HttpResponse.BodyHandlers.ofString()).statusCode());
+        var closing=CompletableFuture.runAsync(server::close);
+        closing.get(5,TimeUnit.SECONDS);
+      } finally { for(var socket:sockets) socket.close(); }
+    }
+  }
+
+  private static Socket slowBody(int port,String origin,String path,String token) throws Exception {
+    return slowBody(port,origin,path,token,64);
+  }
+
+  private static Socket slowBody(int port,String origin,String path,String token,int length) throws Exception {
+    var socket=new Socket();socket.connect(new InetSocketAddress("127.0.0.1",port),1000);
+    String headers="POST "+path+" HTTP/1.1\r\nHost: 127.0.0.1:"+port+"\r\nOrigin: "+origin
+        +"\r\nContent-Type: text/plain\r\nContent-Length: "+length+"\r\n"
+        +(path.equals("/join") ? com.perso.T4C.online.model.OnlineProtocol.VERSION_HEADER+": "
+            +com.perso.T4C.online.model.OnlineProtocol.VERSION+"\r\n" : "Authorization: Bearer "+token+"\r\n")
+        +"Connection: close\r\n\r\n";
+    socket.getOutputStream().write(headers.getBytes(StandardCharsets.US_ASCII));
+    socket.getOutputStream().flush();
+    return socket;
+  }
+
+  private static String responseLine(Socket socket) throws Exception {
+    socket.setSoTimeout(1500);
+    var bytes=new java.io.ByteArrayOutputStream();
+    for(int i=0;i<80;i++) {
+      int next=socket.getInputStream().read();
+      if(next<0 || next=='\n') break;
+      bytes.write(next);
+    }
+    return bytes.toString(StandardCharsets.US_ASCII);
+  }
 
   @Test void operatorMetricsRequirePrivateLocalControlAndReportBoundedUnits() throws Exception {
     var map = new PreviewMap(new boolean[8][8],0,0,3,3);
@@ -118,6 +194,63 @@ class PreviewServerTest {
         assertEquals(200, client.send(request(restarted.url(), "/health", null, null), HttpResponse.BodyHandlers.ofString()).statusCode());
       }
     }
+  }
+
+  @Test @EnabledIfEnvironmentVariable(named="T4C_DB_URL",matches=".+")
+  void blockedAccountRostersDoNotOccupyTwoGameplaySessions() throws Exception {
+    var store=OnlineStore.fromEnvironment();store.migrate();
+    var first=store.provisionAccount();var second=store.provisionAccount();
+    var firstCharacter=store.create(first.accountId(),"Roster gameplay A",0,3.5,3.5);
+    var secondCharacter=store.create(second.accountId(),"Roster gameplay B",0,4.5,3.5);
+    var map=new PreviewMap(new boolean[8][8],0,0,3,3);
+    try(var server=new PreviewServer(map,0,store);var client=HttpClient.newHttpClient();
+        var blocker=java.sql.DriverManager.getConnection(System.getenv("T4C_DB_URL"),
+            System.getenv("T4C_DB_USER"),System.getenv("T4C_DB_PASSWORD"))) {
+      server.start();String url=server.url();
+      String firstToken=login(client,url,first,firstCharacter.id());
+      String secondToken=login(client,url,second,secondCharacter.id());
+      blocker.setAutoCommit(false);
+      try(var lock=blocker.createStatement()) { lock.execute("LOCK TABLE online_accounts IN ACCESS EXCLUSIVE MODE"); }
+      var rosterOne=client.sendAsync(rosterRequest(url,first.secret()),HttpResponse.BodyHandlers.ofString());
+      var rosterTwo=client.sendAsync(rosterRequest(url,second.secret()),HttpResponse.BodyHandlers.ofString());
+      try {
+        long waitUntil=System.nanoTime()+TimeUnit.MILLISECONDS.toNanos(1500);
+        int waiting;
+        do {
+          try(var query=blocker.createStatement()) {
+            query.execute("SELECT pg_stat_clear_snapshot()");
+            try(var rows=query.executeQuery("""
+                SELECT count(*) FROM pg_stat_activity
+                WHERE datname=current_database() AND wait_event_type='Lock'
+                  AND query ILIKE '%online_accounts%' AND pid<>pg_backend_pid()
+                """)) { rows.next();waiting=rows.getInt(1); }
+          }
+          if(waiting<2) Thread.sleep(10);
+        } while(waiting<2 && System.nanoTime()<waitUntil);
+        assertEquals(2,waiting,"Both roster requests must be blocked by the database fixture");
+        assertEquals(503,client.send(rosterRequest(url,first.secret()),HttpResponse.BodyHandlers.ofString()).statusCode(),
+            "A third roster must not queue behind the blocked pair");
+        long began=System.nanoTime();
+        assertEquals(2,object(client.send(request(url,"/state",firstToken,null),HttpResponse.BodyHandlers.ofString()))
+            .getAsJsonArray("players").size());
+        assertEquals(200,client.send(request(url,"/state",secondToken,null),HttpResponse.BodyHandlers.ofString()).statusCode());
+        assertEquals(200,client.send(request(url,"/input",firstToken,"0 1 1 0"),HttpResponse.BodyHandlers.ofString()).statusCode());
+        assertEquals(200,client.send(request(url,"/input",secondToken,"0 1 0 1"),HttpResponse.BodyHandlers.ofString()).statusCode());
+        assertTrue(TimeUnit.NANOSECONDS.toMillis(System.nanoTime()-began)<1500,
+            "Gameplay requests stalled behind blocked account reads");
+        assertEquals(200,client.send(request(url,"/input",firstToken,"0 2 0 0"),HttpResponse.BodyHandlers.ofString()).statusCode());
+        assertEquals(200,client.send(request(url,"/input",secondToken,"0 2 0 0"),HttpResponse.BodyHandlers.ofString()).statusCode());
+      } finally { blocker.commit(); }
+      assertEquals(200,rosterOne.get(3,TimeUnit.SECONDS).statusCode());
+      assertEquals(200,rosterTwo.get(3,TimeUnit.SECONDS).statusCode());
+    }
+  }
+
+  private static HttpRequest rosterRequest(String url,String key) {
+    return HttpRequest.newBuilder(URI.create(url+"/account/characters")).timeout(Duration.ofSeconds(5))
+        .header(com.perso.T4C.online.model.OnlineProtocol.VERSION_HEADER,
+            Integer.toString(com.perso.T4C.online.model.OnlineProtocol.VERSION))
+        .header("Authorization","Bearer "+key).GET().build();
   }
 
   @Test @EnabledIfEnvironmentVariable(named="T4C_DB_URL",matches=".+")
