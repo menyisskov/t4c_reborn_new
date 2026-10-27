@@ -31,7 +31,8 @@ final class HostedWorlds implements AutoCloseable {
   HostedWorlds(HostedRegionPlan plan,OnlineStore store,ItemContent items,MonsterContent monsters) throws SQLException,java.io.IOException {
     var catalog=NpcInteractionCatalog.loadBundled();
     this.plan=plan;this.items=items;
-    regions=plan.regions.stream().map(r->new Region(r.spec(),r.map(),new PreviewWorld(r.map(),monsters,r.spec().world()))).toList();
+    var hostedMonsters=withoutNpcOwnedSpawns(monsters);
+    regions=plan.regions.stream().map(r->new Region(r.spec(),r.map(),new PreviewWorld(r.map(),hostedMonsters,r.spec().world()))).toList();
     for(var region:regions) region.npcs=new RegionNpcs(catalog,items,region.spec);
     sessions=store==null ? null : new PersistentSessions(store,this);
     try {
@@ -40,7 +41,7 @@ final class HostedWorlds implements AutoCloseable {
         // Refuse a hosted crop containing both until that transaction path exists.
         boolean goblins=region.world.creatureSpawns().stream().anyMatch(s->s.definition().getName().toLowerCase(Locale.ROOT).contains("goblin"));
         boolean horses=region.world.creatureSpawns().stream().anyMatch(s->s.definition().getName().toLowerCase(Locale.ROOT).contains("horse"));
-        if(goblins && horses) throw new IllegalArgumentException("Unsupported clan combat in hosted region");
+        if(goblins && horses && !plan.clanHostilityNotSimulated) throw new IllegalArgumentException("Unsupported clan combat in hosted region");
         region.creatures=new PersistentCreatures(store,region.world,region.map,region.spec.key(),sessions,items);
         region.melee=new OnlineMelee(region.map,region.world,sessions,region.creatures,items,new java.security.SecureRandom(),System::currentTimeMillis);
         region.retaliation=new OnlineRetaliation(region.map,region.world,sessions,region.creatures,items,new java.security.SecureRandom(),System::currentTimeMillis);
@@ -49,6 +50,32 @@ final class HostedWorlds implements AutoCloseable {
         if(unsupported>0) System.out.println("Region "+region.spec.key()+": "+unsupported+" creatures retain unsupported combat/script restrictions.");
       }
     } catch(SQLException|RuntimeException failure) { close();throw failure; }
+  }
+  /**
+   * Removes authored records the offline game hands to its NPC system (for example the SUNDIAL at
+   * 2881,1070). They are not monsters, so the creature world never sees them and no combat
+   * definition is invented. Ordinary monster records with no definition still fail PreviewWorld.
+   */
+  static MonsterContent withoutNpcOwnedSpawns(MonsterContent monsters) throws java.io.IOException {
+    if(monsters==null) return null;
+    var npcOwned=npcOwnedKeys();
+    var kept=monsters.spawns().stream().filter(s->s.definition()!=null || !npcOwned.contains(s.persistenceKey())).toList();
+    return new MonsterContent(monsters.version(),monsters.monsters(),kept);
+  }
+  private static volatile Set<String> npcOwned;
+  private static Set<String> npcOwnedKeys() throws java.io.IOException {
+    var cached=npcOwned;if(cached!=null) return cached;
+    synchronized(HostedWorlds.class) {
+      if(npcOwned==null) try(var in=HostedWorlds.class.getResourceAsStream("/content/monsters-v2.json")) {
+        if(in==null) throw new java.io.IOException("Missing classified monster content");
+        var bytes=in.readNBytes(16*1024*1024+1);if(bytes.length>16*1024*1024) throw new java.io.IOException("Classified monster content too large");
+        var classified=new com.google.gson.Gson().fromJson(new String(bytes,java.nio.charset.StandardCharsets.UTF_8),MonsterContent.Classified.class);
+        var keys=new HashSet<String>();
+        for(var spawn:classified.spawns()) if(spawn.ownership()==MonsterContent.Ownership.NPC) keys.add(spawn.persistenceKey());
+        npcOwned=Set.copyOf(keys);
+      } catch(RuntimeException invalid) { throw new java.io.IOException("Invalid classified monster content",invalid); }
+      return npcOwned;
+    }
   }
   Region require(int world,double x,double y) {
     return regions.stream().filter(r->r.spec.contains(world,x,y)).findFirst().orElseThrow(()->new PreviewWorld.Rejected(409,"unhosted_region"));

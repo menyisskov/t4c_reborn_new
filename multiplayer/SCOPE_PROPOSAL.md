@@ -172,7 +172,7 @@ None of these exclusions removes the feature from full Beta, and none is silentl
 ## Approval checklist (owner approved all items on 2026-10-27, with the amendments at the top)
 
 - [x] Classes: Warrior + Paladin (with Light Heal), Paladin on mace and shield.
-- [x] Quest `renewed_wards` unchanged, with the larger world-0 region it needs.
+- [x] Quest `renewed_wards` unchanged, with the larger world-0 region it needs. Server region hosted by T4C-0231 (Q10): `[2735,2984) x [1029,1146)`, 249 x 117; evidence in HOSTED_STARTER_ROUTE_DESIGN.md "Implemented".
 - [x] Lethal-claimant-only kill credit.
 - [x] Loot owner window of 60 s, expiry of 15 min, first-commit-wins, refusal on full inventory.
 - [x] Windows only; acceptance on two machines.

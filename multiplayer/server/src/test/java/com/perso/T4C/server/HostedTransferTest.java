@@ -82,6 +82,33 @@ class HostedTransferTest {
     }
   }
 
+  @Test void walkingOntoARefusedKillCirclePortalKeepsTheSessionAndPositionInTheStartRegion() throws Exception {
+    var store=OnlineStore.fromEnvironment();store.migrate();var account=store.provisionAccount();
+    var p=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(2)).progress();
+    var created=store.create(account.accountId(),"Refused portal walker",0,2944.5,1059.5,p,0);
+    var plan=HostedRegionPlan.startingSlice(Path.of("../../assets/maps/worldmap/worldmap.colbin"));
+    try(var hosted=new HostedWorlds(plan,store,ItemCatalog.loadBundled(),MonsterCatalog.loadBundled())) {
+      var joined=hosted.sessions.join(store.acquire(account.secret(),created.id()),System.nanoTime());
+      hosted.sessions.regionReady(joined.token(),0);
+      var start=hosted.actor(joined.token());int exercised=0;
+      for(var portal:plan.refusedPortals) {
+        double x=portal.sourceX()+.5-start.map.originX,y=portal.sourceY()+.5-start.map.originY;
+        if(!start.map.canStand(x,y)) continue;
+        start.world.relocate(joined.token(),x,y);
+        for(int i=0;i<PreviewWorld.TICK_RATE*2;i++) hosted.step();
+        assertSame(start,hosted.actor(joined.token()),"Portal "+portal.id()+" must not move the actor to another region");
+        assertEquals(0,hosted.sessions.region(joined.token()).world());
+        assertEquals(0,hosted.sessions.region(joined.token()).locationEpoch(),"No transfer committed for portal "+portal.id());
+        assertEquals(x,start.world.position(joined.token()).x(),1e-9);assertEquals(y,start.world.position(joined.token()).y(),1e-9);
+        exercised++;
+      }
+      assertTrue(exercised>0,"At least one refused source must be walkable so the refusal is actually exercised");
+      assertNotNull(hosted.sessions.character(joined.token()),"Session stays connected");
+      var left=hosted.sessions.leave(joined.token());await(hosted,left::isDone);left.get();
+      assertEquals(0,store.load(account.accountId(),created.id()).world());
+    }
+  }
+
   @Test void portalEntryQueuesBehindSlowCheckpointAndLogoutKeepsCommittedDestination() throws Exception {
     var pause=new java.util.concurrent.atomic.AtomicBoolean();
     var entered=new java.util.concurrent.CountDownLatch(1);var release=new java.util.concurrent.CountDownLatch(1);
@@ -102,7 +129,7 @@ class HostedTransferTest {
       hosted.sessions.regionReady(joined.token(),0);pause.set(true);
       for(int i=0;i<PreviewWorld.TICK_RATE*5;i++) hosted.sessions.step();
       assertTrue(entered.await(2,java.util.concurrent.TimeUnit.SECONDS));
-      var source=hosted.actor(joined.token());source.world.relocate(joined.token(),27.5,27.5);hosted.step();
+      var source=hosted.actor(joined.token());source.world.relocate(joined.token(),2931.5-source.map.originX,1056.5-source.map.originY);hosted.step();
       source.world.input(joined.token(),1,1,0);source.world.step();
       assertEquals(27.5,source.world.position(joined.token()).x(),"Portal entry freezes even while checkpoint is waiting");
       var closed=hosted.sessions.leave(joined.token());assertFalse(closed.isDone());
@@ -124,7 +151,7 @@ class HostedTransferTest {
       var b=http(client,server.url(),"/join",null,account.secret()+" "+second.id());
       String token=a.get("token").getAsString(),other=b.get("token").getAsString();
       http(client,server.url(),"/region-ready",token,"0");http(client,server.url(),"/region-ready",other,"0");
-      var state=walkPortal(client,server.url(),token,a.get("id").getAsLong(),plan.require(0,2944,1059).map(),27,27,0,1);
+      var state=walkPortal(client,server.url(),token,a.get("id").getAsLong(),plan.require(0,2944,1059).map(),2931-plan.require(0,2944,1059).map().originX,1056-plan.require(0,2944,1059).map().originY,0,1);
       assertEquals(1,state.getAsJsonObject("region").get("world").getAsInt());
       assertEquals(1,state.getAsJsonObject("region").get("locationEpoch").getAsLong());
       assertEquals(a.get("id"),state.getAsJsonArray("players").get(0).getAsJsonObject().get("id"));
