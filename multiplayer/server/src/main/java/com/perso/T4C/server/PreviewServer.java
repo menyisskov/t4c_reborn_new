@@ -30,6 +30,7 @@ public final class PreviewServer implements AutoCloseable {
   private final PreviewWorld world;
   private final OnlineStore store;
   private final PersistentSessions persistent;
+  private final PersistentCreatures persistentCreatures;
   private final String controlToken;
   private final SimulationLoop loop;
   private final Thread simulation;
@@ -54,6 +55,11 @@ public final class PreviewServer implements AutoCloseable {
     items = ItemCatalog.loadBundled(); // Validate packaged equipment before accepting sessions.
     world = new PreviewWorld(map,MonsterCatalog.loadBundled());
     persistent=store==null ? null : new PersistentSessions(store,map,world);
+    try { persistentCreatures=store==null ? null : new PersistentCreatures(store,world); }
+    catch (java.sql.SQLException failedRecovery) {
+      if (persistent!=null) persistent.shutdown();
+      throw new IOException("Could not recover persistent creatures",failedRecovery);
+    }
     mapJson = JSON.toJson(Map.of("width", map.width, "height", map.height,
         "originX", map.originX, "originY", map.originY, "blocked", map.cells(),
         "maxPlayers", PreviewWorld.MAX_PLAYERS,"persistent",store!=null,"protocolVersion",OnlineProtocol.VERSION));
@@ -66,6 +72,7 @@ public final class PreviewServer implements AutoCloseable {
       }
       world.step();
       if (persistent!=null) persistent.step();
+      if (persistentCreatures!=null) persistentCreatures.step();
     });
     simulation = new Thread(() -> {
       try { loop.run(Long.MAX_VALUE); }
@@ -73,6 +80,7 @@ public final class PreviewServer implements AutoCloseable {
       finally {
         close();
         if (persistent!=null) persistent.shutdown();
+        if (persistentCreatures!=null) persistentCreatures.close();
       }
     }, "preview-world");
     http.setExecutor(requests);
