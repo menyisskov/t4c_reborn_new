@@ -6,6 +6,25 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Online skeleton hunting ground (T4C-0231)
+
+### Added
+- The online starting area now reaches the whole skeleton hunting ground that Warden Aelric's Renewed Wards quest sends you to, in the same continuous map as the temple, so you can walk there from the temple without a loading step.
+
+### Changed
+- The online starting map is larger. Your saved position is unchanged; only the map you see grows to the west and south.
+- The caves around the hunting ground, and one shrine door near the temple, are still closed online: walking onto them does nothing and you stay where you are and connected.
+- The clock-tower statue near the temple is not shown online yet, and the goblins in the hunting ground do not yet fight the wild horse there.
+
+## 2026-10-27 — Online spells and potions (T4C-0230)
+
+### Added
+- In online play the server now accepts self-cast spells such as Light Heal and drinkable potions. Casting spends mana, heals you, and starts the same recovery delays as single-player. Reconnecting does not shorten a delay that is still running.
+- A cast or potion is refused, and nothing is spent, when you do not know the spell, are still recovering, or lack the mana. You stay connected after a refusal.
+
+### Changed
+- Health and mana now recover over time while you are online and are saved with your regular position saves. Right after a cast or a potion you cannot walk until the recovery delay ends, as in single-player.
+
 ## 2026-10-27 — Online natural regeneration (T4C-0229)
 
 ### Added

@@ -231,6 +231,27 @@ dead character also re-anchor without regenerating. HP uses `rapid_healing` from
 no meditate bonus, as offline `tickNaturalRegeneration` does. Effective endurance/intelligence/wisdom
 include committed equipment bonuses. The anchor lives in `cooldowns["regen_anchor"]`, so no schema change.
 
+### 4.5b Routes and settle points (A7, T4C-0230)
+
+**Implemented, additive, protocol stays 5.** `POST /cast` body `REVISION EPOCH SPELL_KEY` (cap 128) and
+`POST /use` body `REVISION EPOCH ITEM_UUID` (cap 96) require the protocol header like `/pickup` and 404
+without storage. Each request builds one draft with `OnlineCasting`/`OnlineItemUse` from committed,
+regeneration-settled state and commits it once through the shared single-flight `commitGameplayEvent`
+path (random event id, revision fence, no gold or XP). Reply: `{revision, healthGained, manaSpent,
+manaGained}`. Definite refusals (`not_learned`, `exhausted`, `not_enough_mana`, `spell_failed`,
+`no_healing_needed`, `revision`, `busy`, ...) are 409 with nothing committed and the player stays
+connected. A lost or timed-out response is never replayed: the revision fence refuses a repeat and an
+ambiguous commit disconnects through the shared persistence path.
+
+Regeneration settle points: `PersistentSessions.character(token)` settles before returning, so melee,
+retaliation, equipment, quest and ability drafts all read current vitals (no edit to `OnlineMelee` or
+`PersistentCreatures` was needed; retaliation reads through the same call). A plain checkpoint persists
+the settled progress (`checkpointCharacter`) only when vitals changed. The persisted anchor is raised to
+the join time on every join, which implements the logged-out decision above without a join-time write.
+
+Movement: `/input` with a non-zero direction while `physical_exhaustion` is active stops the actor,
+consumes the sequence and answers 409 `exhausted`; zero-direction input is always accepted.
+
 ### 4.6 Class gate
 
 Online creation accepts only the approved classes (Warrior, Paladin) and refuses others with
@@ -267,7 +288,7 @@ ID under the coordination lock when starting each one. "Reserved" means a file l
 | --- | --- | --- | --- | --- |
 | Q8 | `interact` passes draft gold/XP (today `0,0`), optional topic, single flight | `PersistentSessions.java`, `PersistentSessionsTest` | Turn-in commits gold/XP/flags/spell once; repeat and concurrent requests; ambiguous outcome disconnects without replay | Q5, Q7 |
 | Q9 | `/interact` topic parsing (body cap unchanged at 128), reply args; protocol bump shared with loot L9 | `PreviewServer.java`, `PreviewServerTest`; `OnlineProtocol.java` (shared model; coordinate) | Extend `OnlineNpcHttpTest`: accept, progress, turn-in, repeat turn-in, reconnect, foreign region | Q8 |
-| Q10 | Host the kill circle: larger world-0 region, portals 12-14 refused, `SUNDIAL` resolved, BFS connectivity | `HostedWorlds.java` (plus unreserved `HostedRegionPlan`) | `HostedTransferTest`-style region test | owner approval of region |
+| Q10 (DONE, T4C-0231) | Host the kill circle: larger world-0 region, portals 12-14 refused, `SUNDIAL` resolved, BFS connectivity | `HostedWorlds.java` (plus unreserved `HostedRegionPlan`) | `HostedTransferTest`-style region test | owner approval of region |
 | A7 | `/cast`, `/use` routes and session wrappers; regen settle at join/checkpoint and before retaliation; movement refused during physical exhaustion | `PreviewServer.java`, `PersistentSessions.java`, `PersistentCreatures.java` (retaliation caller) | HTTP: cast/use happy path, cooldown and mana refusals, reconnect keeps expiries; PostgreSQL restart keeps mana/cooldowns | A3, A4, A5 |
 | Q11/A8 | Native dialogue topics, quest progress text, cast/potion controls, HUD from committed state | Native files under `src/main/java/com/perso/T4C/online/` (check register: T4C-0196 adapter ownership) | Adapter tests; rendered visuals need the owner's preview approval (AGENT.md) | Q9, A7 |
 | Q12/A9 | `NativeQuestProbe`, `NativeAbilityProbe` (new tools) | none, but needs the integrated server | Two actual adapters: accept, kill, turn-in, repeat turn-in, lost response, restart; cast/potion costs persist. Not rendered evidence | all above |

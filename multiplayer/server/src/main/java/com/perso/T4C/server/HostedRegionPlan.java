@@ -14,8 +14,17 @@ public final class HostedRegionPlan {
   final List<Region> regions;
   final PortalCatalog portals;
   final boolean transitions;
+  /** Authored portal sources inside a hosted region whose route is deliberately not enabled. */
+  final List<PortalContent.Portal> refusedPortals;
+  /** Accepted checkpoint exclusion: Goblin-to-Horse hostility is not simulated in this plan. */
+  final boolean clanHostilityNotSimulated;
   private HostedRegionPlan(List<Region> regions,PortalCatalog portals,boolean transitions) {
+    this(regions,portals,transitions,List.of(),false);
+  }
+  private HostedRegionPlan(List<Region> regions,PortalCatalog portals,boolean transitions,
+      List<PortalContent.Portal> refusedPortals,boolean clanHostilityNotSimulated) {
     this.regions=List.copyOf(regions);this.portals=portals;this.transitions=transitions;
+    this.refusedPortals=List.copyOf(refusedPortals);this.clanHostilityNotSimulated=clanHostilityNotSimulated;
     var keys=new HashSet<String>();
     for(var region:regions) if(!keys.add(region.spec().key())) throw new IllegalArgumentException("Duplicate region key");
     for(int i=0;i<regions.size();i++) for(int j=i+1;j<regions.size();j++) {
@@ -30,6 +39,12 @@ public final class HostedRegionPlan {
         map.originX+(int)map.spawnX,map.originY+(int)map.spawnY);
     return new HostedRegionPlan(List.of(new Region(spec,map)),new PortalCatalog(new PortalContent(1,List.of())),false);
   }
+  /**
+   * World-0 starter region: the original temple crop plus every tile of the renewed_wards kill
+   * circle (radius 50 around 2785,1095), the smallest rectangle holding both. Same-world regions
+   * cannot be walked between, so the circle must live in the same region as the temple.
+   */
+  static final int START_X=2735,START_Y=1029,START_WIDTH=249,START_HEIGHT=117;
   public static HostedRegionPlan startingSlice(Path worldCollision) throws IOException {
     PortalContent content;
     try(var in=HostedRegionPlan.class.getResourceAsStream("/content/portals-v1.json")) {
@@ -41,7 +56,7 @@ public final class HostedRegionPlan {
     if(content==null) throw new IOException("Empty portal content");
     var enabled=content.portals().stream().filter(p->p.id()==16 || p.id()==17).toList();
     if(enabled.size()!=2) throw new IOException("Missing initial portal route");
-    var specs=List.of(new RegionMapLoader.Spec(0,"start",2904,1029,80,60,2944,1059),
+    var specs=List.of(new RegionMapLoader.Spec(0,"start",START_X,START_Y,START_WIDTH,START_HEIGHT,2944,1059),
         new RegionMapLoader.Spec(1,"lighthaven-interior",264,353,80,60,304,383));
     var primary=worldCollision.toAbsolutePath().normalize();
     var maps=Map.of(0,primary,1,primary.getParent().getParent().resolve("dungeon/DungeonMap.colbin"));
@@ -54,7 +69,17 @@ public final class HostedRegionPlan {
     }
     var regions=new ArrayList<Region>();
     for(var spec:specs) regions.add(new Region(spec,RegionMapLoader.load(maps.get(spec.world()),spec,enabled)));
-    return new HostedRegionPlan(regions,new PortalCatalog(new PortalContent(1,enabled)),true);
+    // Authored sources inside a hosted region that stay disabled (their targets are not hosted).
+    var refused=content.portals().stream().filter(p->enabled.stream().noneMatch(e->e.id()==p.id()))
+        .filter(p->specs.stream().anyMatch(s->s.contains(p.sourceWorld(),p.sourceX(),p.sourceY()))).toList();
+    for(var portal:refused) if(specs.stream().anyMatch(s->s.contains(portal.targetWorld(),portal.targetX(),portal.targetY())))
+      throw new IOException("Refused portal "+portal.id()+" unexpectedly has a hosted destination");
+    return new HostedRegionPlan(regions,new PortalCatalog(new PortalContent(1,enabled)),true,refused,true);
+  }
+  /** True when the tile is an authored portal source whose route is deliberately unavailable. */
+  public boolean isRefusedPortalSource(int world,double x,double y) {
+    if(!Double.isFinite(x) || !Double.isFinite(y)) return false;
+    return refusedPortals.stream().anyMatch(p->p.sourceWorld()==world && p.sourceX()==(int)Math.floor(x) && p.sourceY()==(int)Math.floor(y));
   }
   public Region require(int world,double x,double y) {
     return regions.stream().filter(r->r.spec().contains(world,x,y)).findFirst()

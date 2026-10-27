@@ -25,6 +25,9 @@ final class PersistentSessions {
       "out_of_range","too_heavy","unsupported_item","unsupported_pickup");
   private final OnlineStore store;
   private final HostedWorlds hosted;
+  /** Wall clock for absolute expiries and regeneration anchors; tests replace it. */
+  java.util.function.LongSupplier wallClock=System::currentTimeMillis;
+  private SpellCatalog spellCatalog;
   private long nextPlayerId=1;
   private final Map<String, Binding> bindings = new HashMap<>();
   private final ConcurrentLinkedQueue<Completion> completions = new ConcurrentLinkedQueue<>();
@@ -47,6 +50,10 @@ final class PersistentSessions {
     long checkpointSubmitted, allowedUntil;
     boolean pending, closing;
     boolean awaitingRegionReady;
+    /** In-memory progress (regeneration, join anchor) the next checkpoint must persist. */
+    boolean progressUnsaved;
+    /** Wall-clock join time: the earliest instant natural regeneration may count from. */
+    long joinedAt;
     HostedWorlds.Region region;
     GameplayEvent event;
     java.util.List<OnlineStore.CorpseState> corpses=java.util.List.of();
@@ -93,6 +100,8 @@ final class PersistentSessions {
     var joined=world.joinAt(saved.x()-map.originX,saved.y()-map.originY,appearance,nextPlayerId++);
     var binding=new Binding(joined.token(),session,world.position(joined.token()));
     binding.region=region;binding.awaitingRegionReady=hosted.plan.transitions;
+    // Time spent logged out never regenerates: settling never counts time before this join.
+    binding.joinedAt=wallClock.getAsLong();
     if(binding.awaitingRegionReady) world.freeze(joined.token(),true);
     binding.checkpointSubmitted=tick;
     binding.allowedUntil=acquisitionStarted+AUTHORITY_NANOS;
@@ -114,7 +123,96 @@ final class PersistentSessions {
 
   /** Committed state only, for server gameplay producers running on the simulation thread. */
   OnlineStore.CharacterState character(String token) {
-    return active(token).saved;
+    var binding=active(token);
+    settleRegeneration(binding);
+    return binding.saved;
+  }
+
+  /**
+   * Brings the in-memory committed state up to date with natural regeneration. Every producer that
+   * reads or changes vitals (cast, potion, melee, retaliation, equipment, quests) reads through here,
+   * so its draft already contains the settled vitals and anchor; the checkpoint persists changed vitals.
+   * A persisted anchor older than this join is raised to the join time, so logged-out time never counts.
+   * Settled state is kept only when it matters: vitals changed, or ticks were consumed while below maximum
+   * (dropping those would let a later call roll the same ticks again). A full or dead character keeps its
+   * committed state untouched.
+   */
+  private void settleRegeneration(Binding binding) {
+    var saved=binding.saved;var progress=saved.progress();
+    if(progress==null) return;
+    long now=wallClock.getAsLong();
+    var base=progress.cooldowns().getOrDefault(OnlineRegeneration.ANCHOR,-1L)<binding.joinedAt
+        ? OnlineRegeneration.reanchor(progress,binding.joinedAt) : progress;
+    CharacterProgress settled;
+    try {
+      settled=hosted.items==null ? OnlineRegeneration.settle(base,now,ThreadLocalRandom.current(),Map.of())
+          : OnlineRegeneration.settle(base,now,ThreadLocalRandom.current(),hosted.items);
+    } catch (IllegalArgumentException unknownEquipment) { return; }
+    var vitals=settled.vitals();
+    boolean changed=!vitals.equals(progress.vitals());
+    boolean idle=vitals.hp()==0 || (vitals.hp()==vitals.maxHp() && vitals.mana()==vitals.maxMana());
+    long anchorBefore=base.cooldowns().getOrDefault(OnlineRegeneration.ANCHOR,-1L);
+    boolean consumedTicks=settled.cooldowns().getOrDefault(OnlineRegeneration.ANCHOR,-1L)!=anchorBefore;
+    if(!changed && (idle || !consumedTicks)) return;
+    if(changed) binding.progressUnsaved=true;
+    binding.saved=withProgress(saved,settled);
+  }
+
+  private static OnlineStore.CharacterState withProgress(OnlineStore.CharacterState s,CharacterProgress progress) {
+    return new OnlineStore.CharacterState(s.id(),s.accountId(),s.name(),s.world(),s.x(),s.y(),s.gold(),s.experience(),
+        s.revision(),progress,s.locationEpoch(),s.portalCooldownUntil());
+  }
+
+  /** True while physical exhaustion from a cast or potion still forbids movement. */
+  boolean movementExhausted(String token) {
+    var progress=active(token).saved.progress();
+    return progress!=null && progress.cooldowns().getOrDefault(OnlineCasting.PHYSICAL_EXHAUSTION,0L)>wallClock.getAsLong();
+  }
+
+  /** What a committed self-cast or potion did, for the acknowledgement. */
+  record AbilityReply(long revision,int healthGained,int manaSpent,int manaGained) {}
+
+  /**
+   * Self-cast of a learned spell. The draft is rolled once from committed state and committed once through
+   * the shared single-flight event path; a refusal commits nothing and keeps the player connected, an ambiguous
+   * commit disconnects through the shared persistence path and is never replayed.
+   */
+  CompletionStage<AbilityReply> cast(String token,long revision,String spellKey) {
+    var saved=usableCharacter(token,revision);
+    var draft=OnlineCasting.prepareSelfCast(saved,spellKey,wallClock.getAsLong(),ThreadLocalRandom.current(),hosted.items,spells());
+    return commitAbility(token,revision,draft);
+  }
+
+  /** Uses one loose consumable instance on its owner; same commit rules as {@link #cast}. */
+  CompletionStage<AbilityReply> useItem(String token,long revision,UUID instance) {
+    var saved=usableCharacter(token,revision);
+    var draft=OnlineItemUse.prepareUse(saved,Objects.requireNonNull(instance),wallClock.getAsLong(),
+        ThreadLocalRandom.current(),hosted.items,spells());
+    return commitAbility(token,revision,draft);
+  }
+
+  private CompletionStage<AbilityReply> commitAbility(String token,long revision,OnlineCasting.Result draft) {
+    return commitGameplayEvent(token,revision,UUID.randomUUID(),0,0,draft.progress())
+        .thenApply(committed->new AbilityReply(committed.character().revision(),draft.healthGained(),
+            draft.manaSpent(),draft.manaGained()));
+  }
+
+  private OnlineStore.CharacterState usableCharacter(String token,long revision) {
+    var binding=active(token);
+    if(binding.event!=null || binding.awaitingRegionReady) throw new PreviewWorld.Rejected(409,"busy");
+    if(binding.saved.revision()!=revision) throw new PreviewWorld.Rejected(409,"revision");
+    var saved=character(token);
+    if(saved.progress()==null) throw new PreviewWorld.Rejected(409,"uninitialized_character");
+    if(hosted.items==null) throw new PreviewWorld.Rejected(409,"unsupported_ability");
+    return saved;
+  }
+
+  private SpellCatalog spells() {
+    if(spellCatalog==null) {
+      try { spellCatalog=SpellCatalog.loadBundled(); }
+      catch (java.io.IOException unavailable) { throw new java.io.UncheckedIOException(unavailable); }
+    }
+    return spellCatalog;
   }
 
   String tokenForCharacter(UUID id) {
@@ -432,6 +530,13 @@ final class PersistentSessions {
     if (event==null) binding.checkpointSubmitted=tick;
     boolean finalSave=binding.closing && event==null;
     var content=hosted.items;
+    // A plain checkpoint also persists settled regeneration and the join anchor, in the same revision-fenced write.
+    CharacterProgress checkpointProgress=null;
+    if (event==null && binding.saved.progress()!=null) {
+      settleRegeneration(binding);
+      if (binding.progressUnsaved) { checkpointProgress=binding.saved.progress();binding.progressUnsaved=false; }
+    }
+    final var persistProgress=checkpointProgress;
     try {
       writes.execute(() -> {
         OnlineStore.CharacterState saved=null; Exception failure=null;
@@ -440,7 +545,9 @@ final class PersistentSessions {
         try {
           store.renew(binding.session);
           if (event==null) {
-            saved=store.checkpoint(binding.session,revision,region.spec.world(),map.originX+position.x(),map.originY+position.y());
+            saved=persistProgress==null
+                ? store.checkpoint(binding.session,revision,region.spec.world(),map.originX+position.x(),map.originY+position.y())
+                : store.checkpointCharacter(binding.session,revision,region.spec.world(),map.originX+position.x(),map.originY+position.y(),persistProgress);
           } else if (event.loot()!=null) {
             try {
               reward=store.claimGroundLoot(binding.session,revision,event.id(),event.loot(),region.spec.world(),
