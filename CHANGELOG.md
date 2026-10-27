@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Online combat equipment stats (T4C-0178)
+
+### Added
+- Online combat preparation now accounts for equipped attributes, attack and dodge bonuses, armor, weapon damage bonuses and two-handed gear without counting it twice. Attacks and active spell effects are not enabled yet; single-player combat rules remain unchanged.
+
 ## 2026-10-27 — Online compatibility checks (T4C-0177)
 
 ### Added
