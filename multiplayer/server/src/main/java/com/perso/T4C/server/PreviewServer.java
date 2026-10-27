@@ -27,7 +27,7 @@ public final class PreviewServer implements AutoCloseable {
   /** Ground loot shown in one snapshot: at most this many drops, nearest the viewer first. */
   static final int GROUND_LOOT_VIEW_LIMIT = 128;
   private static final Set<String> POST_ROUTES=Set.of("/join","/admin/shutdown","/input","/attack",
-      "/recover","/equip","/unequip","/interact","/pickup","/region-ready","/leave");
+      "/recover","/equip","/unequip","/interact","/pickup","/cast","/use","/region-ready","/leave");
   private static final Set<String> GET_ROUTES=Set.of("/","/client.js","/style.css","/strings",
       "/account/characters","/map","/state","/character","/corpses","/health","/admin/metrics");
   private record RegionJoined(String token,long id,com.perso.T4C.online.model.OnlineRegion region) {}
@@ -200,7 +200,7 @@ public final class PreviewServer implements AutoCloseable {
       requireLocalAdmin(exchange);
       return admission.session(controlToken);
     }
-    if(store==null && Set.of("/attack","/recover","/equip","/unequip","/interact","/pickup").contains(path))
+    if(store==null && Set.of("/attack","/recover","/equip","/unequip","/interact","/pickup","/cast","/use").contains(path))
       throw new PreviewWorld.Rejected(404,"route");
     return knownSession(exchange);
   }
@@ -251,7 +251,7 @@ public final class PreviewServer implements AutoCloseable {
         String type = exchange.getRequestHeaders().getFirst("Content-Type");
         if (type == null || !type.toLowerCase(java.util.Locale.ROOT).startsWith("text/plain"))
           throw new PreviewWorld.Rejected(415, "input");
-        if ("/join".equals(path) || "/pickup".equals(path)) {
+        if ("/join".equals(path) || "/pickup".equals(path) || "/cast".equals(path) || "/use".equals(path)) {
           var versions = exchange.getRequestHeaders().get(OnlineProtocol.VERSION_HEADER);
           if (versions == null || versions.size() != 1
               || !Integer.toString(OnlineProtocol.VERSION).equals(versions.getFirst()))
@@ -259,8 +259,8 @@ public final class PreviewServer implements AutoCloseable {
         }
         int limit=store!=null && "/join".equals(path) ? 101
             : "/interact".equals(path) ? 128
-            : "/recover".equals(path) ? 128
-            : ("/equip".equals(path) || "/unequip".equals(path) || "/pickup".equals(path)) ? 96 : 64;
+            : "/recover".equals(path) || "/cast".equals(path) ? 128
+            : ("/equip".equals(path) || "/unequip".equals(path) || "/pickup".equals(path) || "/use".equals(path)) ? 96 : 64;
         checkDeclaredBodyLength(exchange,limit);
         permit=admitPost(exchange,path);
         byte[] bytes = new byte[limit+1];
@@ -314,7 +314,16 @@ public final class PreviewServer implements AutoCloseable {
             try { epoch=Long.parseLong(parts[0]);sequence = Long.parseLong(parts[1]); }
             catch (NumberFormatException e) { throw new PreviewWorld.Rejected(400, "input"); }
             int dx = Integer.parseInt(parts[2]), dy = Integer.parseInt(parts[3]);
-            onWorld(() -> { var context=admit(token,epoch);context.world.input(token, sequence, dx, dy); return null; });
+            onWorld(() -> {
+              var context=admit(token,epoch);
+              // Physical exhaustion after a cast or potion forbids movement: stop the actor, consume the
+              // sequence and refuse definitely. The player stays connected and moves again once it expires.
+              if ((dx!=0 || dy!=0) && persistent!=null && persistent.movementExhausted(token)) {
+                context.world.input(token, sequence, 0, 0);
+                throw new PreviewWorld.Rejected(409,"exhausted");
+              }
+              context.world.input(token, sequence, dx, dy); return null;
+            });
             json(exchange,observation, 200, Map.of("ok", true));
           }
           case "/attack" -> {
@@ -396,6 +405,27 @@ public final class PreviewServer implements AutoCloseable {
             // Definite refusals arrive as the completion's cause; unwrap them into their 409 code.
             catch (ExecutionException error) { if(error.getCause() instanceof PreviewWorld.Rejected rejected) throw rejected; throw error; }
             json(exchange,observation,200,Map.of("revision",committed.character().revision()));
+          }
+          case "/cast", "/use" -> {
+            if (persistent==null) throw new PreviewWorld.Rejected(404,"route");
+            String token=token(exchange);
+            boolean cast="/cast".equals(path);
+            String uuid="[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
+            if (!body.matches("[0-9]{1,19} [0-9]{1,19} "+(cast ? "spell\\.[a-z0-9_]{1,64}" : uuid)))
+              throw new PreviewWorld.Rejected(400,"input");
+            String[] parts=body.split(" "); long revision,epoch; java.util.UUID instance=null;
+            try { revision=Long.parseLong(parts[0]);epoch=Long.parseLong(parts[1]);
+              if (!cast) instance=java.util.UUID.fromString(parts[2]); }
+            catch (IllegalArgumentException bad) { throw new PreviewWorld.Rejected(400,"input"); }
+            final var consumable=instance;
+            // One receipt-bound commit per request: a refusal changes nothing, an ambiguous outcome is never replayed.
+            var pending=onWorld(() -> { admit(token,epoch);
+              return cast ? persistent.cast(token,revision,parts[2]) : persistent.useItem(token,revision,consumable); });
+            PersistentSessions.AbilityReply done;
+            try { done=pending.toCompletableFuture().get(2,TimeUnit.SECONDS); }
+            catch (ExecutionException error) { if(error.getCause() instanceof PreviewWorld.Rejected rejected) throw rejected; throw error; }
+            json(exchange,observation,200,Map.of("revision",done.revision(),"healthGained",done.healthGained(),
+                "manaSpent",done.manaSpent(),"manaGained",done.manaGained()));
           }
           case "/region-ready" -> {
             String token=token(exchange);if(!body.matches("[0-9]{1,19}")) throw new PreviewWorld.Rejected(400,"input");

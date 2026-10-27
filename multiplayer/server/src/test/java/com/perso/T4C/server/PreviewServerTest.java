@@ -598,6 +598,103 @@ class PreviewServerTest {
     }
   }
 
+  private static HttpRequest abilityRequest(String url, String path, String token, String version, String body) {
+    var builder = HttpRequest.newBuilder(URI.create(url + path)).timeout(Duration.ofSeconds(5))
+        .header("Origin", url).header("Content-Type", "text/plain");
+    if (version != null) builder.header(com.perso.T4C.online.model.OnlineProtocol.VERSION_HEADER, version);
+    if (token != null) builder.header("Authorization", "Bearer " + token);
+    return builder.POST(HttpRequest.BodyPublishers.ofString(body)).build();
+  }
+
+  @Test void castAndUseRoutesRequireCurrentProtocolAndStorageAndBoundTheirBodies() throws Exception {
+    var map = new PreviewMap(new boolean[8][8], 0, 0, 3, 3);
+    String current = Integer.toString(com.perso.T4C.online.model.OnlineProtocol.VERSION);
+    try (var server = new PreviewServer(map, 0); var client = HttpClient.newHttpClient()) {
+      server.start(); String url = server.url();
+      for (String path : new String[] {"/cast", "/use"}) {
+        String body = "1 0 " + ("/cast".equals(path) ? "spell.heal_light" : java.util.UUID.randomUUID());
+        assertEquals(426, client.send(abilityRequest(url, path, "a".repeat(64), null, body), HttpResponse.BodyHandlers.ofString()).statusCode());
+        assertEquals(426, client.send(abilityRequest(url, path, "a".repeat(64), "4", body), HttpResponse.BodyHandlers.ofString()).statusCode());
+        // Without a database there is no ability route.
+        assertEquals(404, client.send(abilityRequest(url, path, "a".repeat(64), current, body), HttpResponse.BodyHandlers.ofString()).statusCode());
+        assertEquals(413, client.send(abilityRequest(url, path, "a".repeat(64), current, "x".repeat(129)), HttpResponse.BodyHandlers.ofString()).statusCode());
+      }
+    }
+  }
+
+  @Test @EnabledIfEnvironmentVariable(named="T4C_DB_URL",matches=".+")
+  void castAndPotionHttpSpendResourcesRefuseDefinitelyAndKeepExpiriesAcrossReconnect() throws Exception {
+    var store=OnlineStore.fromEnvironment(); store.migrate();
+    var owner=store.provisionAccount(); var poor=store.provisionAccount();
+    var base=OnlineCharacterCreator.prepare(com.perso.T4C.helper.CharacterClass.WARRIOR,"male",false,new java.util.Random(7)).progress();
+    var potion=new com.perso.T4C.online.model.CharacterProgress.Item(java.util.UUID.randomUUID(),"item.critical_healing_potion",1,1);
+    // A day-old regeneration anchor: time spent logged out must not heal on join.
+    var stale=new java.util.HashMap<String,Long>(); stale.put(OnlineRegeneration.ANCHOR,System.currentTimeMillis()-86_400_000L);
+    var hurt=ProgressEdits.withInventory(ProgressEdits.withCooldowns(ProgressEdits.withSpells(
+        ProgressEdits.withVitals(base,new com.perso.T4C.online.model.CharacterProgress.Vitals(10,500,30,30)),
+        java.util.Set.of("spell.heal_light")),stale),java.util.List.of(potion));
+    var broke=ProgressEdits.withSpells(ProgressEdits.withVitals(base,
+        new com.perso.T4C.online.model.CharacterProgress.Vitals(10,500,0,0)),java.util.Set.of("spell.heal_light"));
+    var caster=store.create(owner.accountId(),"HTTP caster",0,30.5,30.5,hurt,0);
+    var poorCaster=store.create(poor.accountId(),"HTTP poor",0,30.5,30.5,broke,0);
+    String current=Integer.toString(com.perso.T4C.online.model.OnlineProtocol.VERSION);
+    try (var server=new PreviewServer(new PreviewMap(new boolean[60][80],0,0,30,30),0,store); var client=HttpClient.newHttpClient()) {
+      server.start(); String url=server.url();
+      String token=login(client,url,owner,caster.id());
+      var joined=object(client.send(request(url,"/character",token,null),HttpResponse.BodyHandlers.ofString()));
+      assertTrue(joined.getAsJsonObject("progress").getAsJsonObject("vitals").get("hp").getAsInt()<=16,"Logged-out time never heals");
+      long revision=joined.get("revision").getAsLong();
+      assertEquals(400,client.send(abilityRequest(url,"/cast",token,current,"abc"),HttpResponse.BodyHandlers.ofString()).statusCode());
+      assertEquals(400,client.send(abilityRequest(url,"/cast",token,current,revision+" 0 Spell.Heal"),HttpResponse.BodyHandlers.ofString()).statusCode());
+      assertEquals(401,client.send(abilityRequest(url,"/cast",null,current,revision+" 0 spell.heal_light"),HttpResponse.BodyHandlers.ofString()).statusCode());
+      assertEquals(409,client.send(abilityRequest(url,"/cast",token,current,(revision+1)+" 0 spell.heal_light"),HttpResponse.BodyHandlers.ofString()).statusCode(),"A stale revision commits nothing");
+      var unknown=client.send(abilityRequest(url,"/cast",token,current,revision+" 0 spell.fireball_of_doom"),HttpResponse.BodyHandlers.ofString());
+      assertEquals(409,unknown.statusCode()); assertTrue(unknown.body().contains("not_learned"),unknown.body());
+      var cast=client.send(abilityRequest(url,"/cast",token,current,revision+" 0 spell.heal_light"),HttpResponse.BodyHandlers.ofString());
+      assertEquals(200,cast.statusCode(),cast.body());
+      assertTrue(object(cast).get("revision").getAsLong()>revision);
+      assertEquals(2,object(cast).get("manaSpent").getAsInt());
+      var after=object(client.send(request(url,"/character",token,null),HttpResponse.BodyHandlers.ofString()));
+      var vitals=after.getAsJsonObject("progress").getAsJsonObject("vitals");
+      assertTrue(vitals.get("hp").getAsInt()>=19,"Light Heal restores at least its base roll");
+      assertTrue(vitals.get("mana").getAsInt()>=28,"Two mana spent, at most natural regeneration since");
+      long next=after.get("revision").getAsLong();
+      // Exhaustion: a second cast and movement are definite refusals that keep the player connected.
+      var again=client.send(abilityRequest(url,"/cast",token,current,next+" 0 spell.heal_light"),HttpResponse.BodyHandlers.ofString());
+      assertEquals(409,again.statusCode()); assertTrue(again.body().contains("exhausted"),again.body());
+      var moved=client.send(request(url,"/input",token,"0 1 1 0"),HttpResponse.BodyHandlers.ofString());
+      assertEquals(409,moved.statusCode()); assertTrue(moved.body().contains("exhausted"),moved.body());
+      assertEquals(200,client.send(request(url,"/character",token,null),HttpResponse.BodyHandlers.ofString()).statusCode());
+      var committed=store.load(owner.accountId(),caster.id()).progress().cooldowns();
+      long mental=committed.get(OnlineCasting.MENTAL_EXHAUSTION);
+      assertEquals(200,client.send(request(url,"/leave",token,""),HttpResponse.BodyHandlers.ofString()).statusCode());
+      // Reconnecting never shortens or resets an absolute expiry.
+      String again2=login(client,url,owner,caster.id());
+      long rejoinRevision=object(client.send(request(url,"/character",again2,null),HttpResponse.BodyHandlers.ofString())).get("revision").getAsLong();
+      assertTrue(store.load(owner.accountId(),caster.id()).progress().cooldowns().get(OnlineCasting.MENTAL_EXHAUSTION)>=mental);
+      if (System.currentTimeMillis()<mental) {
+        var stillExhausted=client.send(abilityRequest(url,"/cast",again2,current,rejoinRevision+" 0 spell.heal_light"),HttpResponse.BodyHandlers.ofString());
+        assertEquals(409,stillExhausted.statusCode()); assertTrue(stillExhausted.body().contains("exhausted"));
+      }
+      // Potion: owned loose instance, spends its only charge; a foreign instance is refused.
+      long waitMs=mental-System.currentTimeMillis(); if (waitMs>0) Thread.sleep(waitMs+50);
+      var potionState=object(client.send(request(url,"/character",again2,null),HttpResponse.BodyHandlers.ofString()));
+      long potionRevision=potionState.get("revision").getAsLong();
+      assertEquals(409,client.send(abilityRequest(url,"/use",again2,current,potionRevision+" 0 "+java.util.UUID.randomUUID()),HttpResponse.BodyHandlers.ofString()).statusCode());
+      var used=client.send(abilityRequest(url,"/use",again2,current,potionRevision+" 0 "+potion.id()),HttpResponse.BodyHandlers.ofString());
+      assertEquals(200,used.statusCode(),used.body());
+      assertEquals(7,object(used).get("manaSpent").getAsInt());
+      assertTrue(store.load(owner.accountId(),caster.id()).progress().inventory().stream().noneMatch(i->i.id().equals(potion.id())));
+      // Mana refusal for a character that cannot afford the spell.
+      String poorToken=login(client,url,poor,poorCaster.id());
+      long poorRevision=object(client.send(request(url,"/character",poorToken,null),HttpResponse.BodyHandlers.ofString())).get("revision").getAsLong();
+      var refused=client.send(abilityRequest(url,"/cast",poorToken,current,poorRevision+" 0 spell.heal_light"),HttpResponse.BodyHandlers.ofString());
+      assertEquals(409,refused.statusCode()); assertTrue(refused.body().contains("not_enough_mana"),refused.body());
+      assertEquals(200,client.send(request(url,"/character",poorToken,null),HttpResponse.BodyHandlers.ofString()).statusCode(),"A refusal keeps the player connected");
+      assertEquals(0,store.load(poor.accountId(),poorCaster.id()).progress().vitals().mana());
+    }
+  }
+
   private String login(HttpClient client,String url,OnlineStore.AccountKey key,java.util.UUID character) throws Exception {
     var response=client.send(request(url,"/join",null,key.secret()+" "+character),HttpResponse.BodyHandlers.ofString());
     assertEquals(200,response.statusCode());

@@ -231,6 +231,27 @@ dead character also re-anchor without regenerating. HP uses `rapid_healing` from
 no meditate bonus, as offline `tickNaturalRegeneration` does. Effective endurance/intelligence/wisdom
 include committed equipment bonuses. The anchor lives in `cooldowns["regen_anchor"]`, so no schema change.
 
+### 4.5b Routes and settle points (A7, T4C-0230)
+
+**Implemented, additive, protocol stays 5.** `POST /cast` body `REVISION EPOCH SPELL_KEY` (cap 128) and
+`POST /use` body `REVISION EPOCH ITEM_UUID` (cap 96) require the protocol header like `/pickup` and 404
+without storage. Each request builds one draft with `OnlineCasting`/`OnlineItemUse` from committed,
+regeneration-settled state and commits it once through the shared single-flight `commitGameplayEvent`
+path (random event id, revision fence, no gold or XP). Reply: `{revision, healthGained, manaSpent,
+manaGained}`. Definite refusals (`not_learned`, `exhausted`, `not_enough_mana`, `spell_failed`,
+`no_healing_needed`, `revision`, `busy`, ...) are 409 with nothing committed and the player stays
+connected. A lost or timed-out response is never replayed: the revision fence refuses a repeat and an
+ambiguous commit disconnects through the shared persistence path.
+
+Regeneration settle points: `PersistentSessions.character(token)` settles before returning, so melee,
+retaliation, equipment, quest and ability drafts all read current vitals (no edit to `OnlineMelee` or
+`PersistentCreatures` was needed; retaliation reads through the same call). A plain checkpoint persists
+the settled progress (`checkpointCharacter`) only when vitals changed. The persisted anchor is raised to
+the join time on every join, which implements the logged-out decision above without a join-time write.
+
+Movement: `/input` with a non-zero direction while `physical_exhaustion` is active stops the actor,
+consumes the sequence and answers 409 `exhausted`; zero-direction input is always accepted.
+
 ### 4.6 Class gate
 
 Online creation accepts only the approved classes (Warrior, Paladin) and refuses others with
