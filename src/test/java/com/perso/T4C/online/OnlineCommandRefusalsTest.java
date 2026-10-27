@@ -25,6 +25,30 @@ class OnlineCommandRefusalsTest {
   }
 
   @Test
+  void mapsSpellAndPotionRefusalsAndFallsBackToOneGenericRefusalEach() {
+    assertEquals("online.ability.not_enough_mana", OnlineCommandRefusals.messageKey("/cast", "not_enough_mana"));
+    assertEquals("online.ability.not_enough_mana", OnlineCommandRefusals.messageKey("/use", "not_enough_mana"));
+    assertEquals("online.cast.not_learned", OnlineCommandRefusals.messageKey("/cast", "not_learned"));
+    assertEquals("online.use.no_healing_needed", OnlineCommandRefusals.messageKey("/use", "no_healing_needed"));
+    assertEquals("online.ability.busy", OnlineCommandRefusals.messageKey("/cast", "revision"));
+    assertEquals("online.cast.refused", OnlineCommandRefusals.messageKey("/cast", "something_new"));
+    assertEquals("online.use.refused", OnlineCommandRefusals.messageKey("/use", null));
+  }
+
+  @Test
+  void everyAbilityRefusalKeyExistsInTheEnglishCatalogue() {
+    for (var path : List.of("/cast", "/use")) {
+      for (var reason : List.of("not_enough_mana", "cooldown", "exhausted", "spell_failed", "dead", "busy",
+          "revision", "not_learned", "item_not_owned", "item_equipped", "no_healing_needed", "no_mana_needed",
+          "chance_failed", "unsupported_spell", "unsupported_item", "unsupported_ability", "unsupported_effects",
+          "no_effect", "anything-unknown")) {
+        var key = OnlineCommandRefusals.messageKey(path, reason);
+        assertTrue(I18n.has(key), key);
+      }
+    }
+  }
+
+  @Test
   void commandsWithoutPlayerFacingRefusalsReturnNothing() {
     assertNull(OnlineCommandRefusals.messageKey("/attack", "busy"));
   }

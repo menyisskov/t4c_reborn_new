@@ -161,6 +161,21 @@ public final class OnlineConnection implements AutoCloseable {
     return gameplayCommand("/pickup", java.util.Objects.requireNonNull(loot).toString());
   }
 
+  /**
+   * Self-cast of a learned spell by authored key. Mana, cooldown, exhaustion and effect are server
+   * decisions; refusals carry a readable {@link CommandResult#messageKey()}. Never replayed.
+   */
+  public java.util.concurrent.CompletionStage<CommandResult> cast(String spellKey) {
+    if (spellKey == null || !spellKey.matches("spell\\.[a-z0-9_]{1,64}"))
+      throw new IllegalArgumentException("Invalid spell key");
+    return gameplayCommand("/cast", spellKey);
+  }
+
+  /** Uses one carried consumable instance by identity only; the server owns charges and effects. Never replayed. */
+  public java.util.concurrent.CompletionStage<CommandResult> useItem(java.util.UUID item) {
+    return gameplayCommand("/use", java.util.Objects.requireNonNull(item).toString());
+  }
+
   /** Authored identity only; the server resolves dialogue, proximity and any item grant. */
   public java.util.concurrent.CompletionStage<CommandResult> interact(String npc) {
     return interact(npc, java.util.OptionalInt.empty());
