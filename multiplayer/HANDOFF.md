@@ -226,9 +226,13 @@ load report, missing-control unavailable state and explicit whole-response timeo
 FullPGverify passed18domain+83server checks on55ea45ff plus0198; actual20s enabled/10s disabled
 20-adapter reporting checks passed. The stalled-body diagnostic regression failed beforefix
 (5.123s) and passedafter (2.021s). See LOAD_METRICS.md/NATIVE_ADAPTER_SOAK.md and ignoredreports.
-Root self-review complete; next integrate Claude's merged PR123/main89dd0f64 without overwriting
-its tasks/docs, verify the combined source and deliver0198 through CI. No fullBeta/2h/renderedclaim.
-Current QA metrics server PID60972 was restarted for these checks; verify currentmetadata beforeactions.
+Claude's PR123/main89dd0f64 is integrated without overwriting its tasks/docs. The combined source
+passed 19 focused desktop tests, 21 domain plus 86 PostgreSQL server tests; the durable stalled-body
+probe returned in 2.026 seconds. A 15-second 20-native-adapter metrics run collected four private
+operator samples with zero metric/adapter/health failures and 13.975 seconds at twenty connected;
+the credential/path was absent from its ignored report. These are local adapter checks, not full
+Beta, two-hour or rendered-client evidence. Delivery still requires green CI and merge. Current QA metrics server
+PID52688 runs the matching persistent build; verify current metadata before actions.
 
 ## Loot groundwork checkpoint (T4C-0201/0202, Claude lane)
 

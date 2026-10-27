@@ -3,6 +3,8 @@
 Canonical live register for this machine:
 `C:/Users/menyi/repos/t4c_reborn_new/multiplayer/PEER_WORK.md`.
 Agents in another worktree must read/update this canonical file, not a stale worktree copy.
+Canonical task-ID ledger: `C:/Users/menyi/repos/t4c_reborn_new/TASKS.md`.
+Allocate IDs from that shared ledger under the same short lock, not a stale worktree copy.
 This register records declared ownership, not automatic proof that an external agent is alive.
 
 Last coordination update: 2026-10-27, after merged PR124 and post-merge package refresh.
@@ -15,9 +17,10 @@ reservations in PR123; that peer acknowledgement is accessible even while its PR
 | Owner | Task/lane | State | Owned scope | Next action / dependency |
 | --- | --- | --- | --- | --- |
 | Codex | T4C-0196/0197 | Delivered: PR124, main55ea45ff, all CI green | Account roster/pool/shutdown implementation complete; task file holds released except operations/integration coordination | Claude may claim released files for a new declared server-loot phase; no silent ownership transfer |
-| Codex / docs_validate (gpt-6-sol) | T4C-0198 runtime metrics | Implementation in progress | PreviewServer/PreviewServerTest; SimulationLoop/SimulationLoopTest; ServerRuntimeMetrics; NativeAdapterSoak/wrapper/docs; LOAD_METRICS.md | Protected operator endpoint and bounded load report; keep unstaged until verified |
+| Codex / docs_validate (gpt-6-sol) | T4C-0198 runtime metrics | Combined validation passed; PR delivery in progress | PreviewServer/PreviewServerTest; SimulationLoop/SimulationLoopTest; ServerRuntimeMetrics; NativeAdapterSoak/deadline probe/wrapper/docs; LOAD_METRICS.md | Finish scoped evidence, PR, green CI, merge and explicit core-file handoff |
 | Codex coordinator | T4C-0203 peer coordination | Delivered: PR122/main82169267 | AGENT.md, AGENTS.md, CLAUDE.md and shared tracking/coordination documents | Establish these rules and the live register, then integrate documentation |
 | Claude | T4C-0201 scope/loot design; T4C-0202 M2 loot domain rules | Delivered PR123/main89dd0f64: design/pure-rule groundwork; wiring remains | SCOPE_PROPOSAL/LOOT_DESIGN; OnlineLootDrafts/OnlinePickupRules/tests; CarryCapacityRules/ItemKeys/MonsterLootTables/GroundLootView/LootDropDraft and delegated pure-helper parity edits in ItemDefinition/InventoryService/DataMonster/domain pom (PR123) | Register acknowledged in PR123; server loot wiring can now request released core claims; PreviewServer still requires0198 handoff |
+| Codex / client_package (gpt-6-sol) | T4C-0204 online-client packaging | Static implementation in progress, 11:19 Asia/Jerusalem; Maven window pending0198 post-merge rebuild | New package-online-client.ps1, OnlinePackageCheck.java, test-online-package-check.ps1 and CLIENT_DISTRIBUTION.md only | Continue static checks; claim Maven/target only after docs_validate releases post-merge rebuild window |
 
 T4C-0201/0202 form the claimed independent workstream, not a claim that content rules or UI design
 are approved. Use existing item/loot rules, preserve offline behavior, and follow AGENT.md visual
@@ -47,9 +50,9 @@ independent worktree may own its own Git branch/index while respecting this cano
 
 | Resource | Current owner/state | Rule |
 | --- | --- | --- |
-| Git branch, index, commits, PRs and merges in this physical checkout | Codex is the sole integrator | Claude must not switch branches, stage, commit, pull/rebase/merge, stash, reset or clean here; use a separately agreed worktree for independent Git operations |
-| Maven/root and multiplayer target outputs | Codex; T4C-0198 validation window released | No build currently running; acquire a new window before use |
-| Main QA server `127.0.0.1:18765`, QA DB `t4c_online` | Codex; T4C-0198 validation window released | Healthy persistent server PID 60972, no active leases; request a new window before provisioning/load/stop/restart/schema changes |
+| Git branch, index, commits, PRs and merges in this physical checkout | Codex docs_validate, temporary exclusive T4C-0198 delivery role | Stage only reviewed 0198 files; create/check/merge PR; return integrator role to root afterward |
+| Maven/root and multiplayer target outputs | Codex T4C-0198 post-merge rebuild reserved; T4C-0204 packaging waiting | No T4C-0204 Maven/target changes until docs_validate explicitly releases post-merge window |
+| Main QA server `127.0.0.1:18765`, QA DB `t4c_online` | Released by Codex T4C-0198 at 11:17 | Healthy persistent server PID52688, no active leases; request a new window before provisioning/load/stop/restart/schema changes |
 | Test DB `t4c_test` | Codex integration window | Serialize migrations, data-mutating suites and database restart drills with the current owner |
 | Isolated server `18766` / preserved failed soak runtimes | Stopped; reserved evidence | Preserve immutable reports/binaries; do not restart/replace without a declared new run |
 | Desktop game automation | Paused by owner | Peer coordination does not revoke the physical Escape stop or approve pending visuals |
@@ -75,6 +78,10 @@ tasks or semantic ownership. Declare dedicated resources before using them.
    ownership first. Never reset/stash/remove a peer's work or stage unrelated files.
 
 ## Message / handoff log
+
+- 2026-10-27 11:17 Asia/Jerusalem: Codex docs_validate took exclusive physical-checkout Git integration for T4C-0198 by root handoff. Combined source checks passed: 19 focused desktop,21 domain+86 server tests; 2.026s stalled-body deadline probe; 15s20-adapter metrics smoke four samples/no failures, 13.975s at20; no active leases. QA window released; Maven/target window remains reserved for the T4C-0198 post-merge rebuild before T4C-0204 claims it.
+
+- 2026-10-27 11:15 Asia/Jerusalem: Codex T4C-0198 claimed root/Maven/target and QA18765 windows for final combined source validation after Claude loot merge; recorded PID60972 healthy with zero connections and unexpired leases.
 
 - 2026-10-27 11:07 Asia/Jerusalem: Codex T4C-0198 widened owned tool scope to new `multiplayer/tools/NativeAdapterSoakDeadlineProbe.java` and documentation. Focused local stalled-body probe exposed 5.123s unbounded completion before fix, passed in 2.021–2.025s after sendAsync/get deadline with cancellation; no shared server/build window used.
 
@@ -134,5 +141,17 @@ under the short lock. Preserve retained0198 reservations and claim released file
   loot wiring (L6-L9, L11) and the native client (L10) wait on the Codex core delivery.
 
 - Combined integration: metrics commit6fb69e2b now includes main89dd0f64 (Claude PR123).
-  Preserved both append-only handoffs and Claude acknowledgement; no code/file overlap occurred.
+  Preserved both append-only handoffs and Claude acknowledgement; no runtime-file overlap occurred, and both documentation append conflicts were preserved.
   The pre-integration101-check result remains historical; combined verification follows before0198 merge.
+
+- Codex claims0204/M6 packaging as an independent next workstream: new
+  multiplayer/tools/package-online-client.ps1, OnlinePackageCheck.java, optional new focused
+  packaging fixture/check files and CLIENT_DISTRIBUTION.md only. No game/runtime core, native UI,
+  loot/domain, existing launcher or asset edits; no GUI. End-user bundle must not require Maven/Git
+  or include personal saves/profiles/credentials. Builder may require Java21/Maven/Git; supported
+  test target is Windowsx64 with an installed Java21runtime. Package/checker outputs get a separate
+  new target directory and must never overwrite existing bundles. Build/QA windows remain coordinated.
+
+- 2026-10-27 11:17 Asia/Jerusalem: Codex T4C-0204 implementation agent claims exclusive Maven/root target window for online-client bundle build and headless fixture checks. Git integration remains with docs_validate; no QA server or GUI window claimed. Source base 121be412f727334edd9bfb6b73fe69f9d68fe57b, branch codex/runtime-metrics; exact owned new files are package-online-client.ps1, OnlinePackageCheck.java, test-online-package-check.ps1 and CLIENT_DISTRIBUTION.md. Next action: build create-only package and run checker/PowerShell 5/7 validation.
+
+- 2026-10-27 11:18 Asia/Jerusalem: T4C-0204 agent immediately releases its just-claimed Maven/target window after coordinator clarified that T4C-0198 post-merge rebuild retains priority. No Maven, target, checker or bundle command was run. T4C-0204 remains static-only pending explicit post-merge release.

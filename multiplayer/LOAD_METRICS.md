@@ -122,3 +122,20 @@ setting: 5.123 seconds. Explicit future deadline/cancellation reduced the same c
 and one failed metric sample. Reproduce using `tools/NativeAdapterSoakDeadlineProbe.java` as
 shown in tools/NATIVE_ADAPTER_SOAK.md. The response cap is 64 KiB and token-file reads are bounded;
 raw errors, credentials and file paths are not included in reports. No mutation retries are added.
+
+## Combined source check after loot groundwork integration
+
+On the integrated source containing the separate T4C-0201/0202 loot-rule delivery,
+the focused desktop package passed 19 tests and the PostgreSQL reactor passed 21
+domain plus 86 server tests, with zero failures, errors or skips. Logs:
+`$env:TEMP/t4c-0198-combined-desktop.log` and
+`$env:TEMP/t4c-0198-combined-server.log`. The durable stalled-body probe returned
+in 2.026 seconds with one failed sample, staying within its bounded deadline.
+
+The restarted matching QA server then completed a 15-second 20-native-adapter
+reporting check: all 20 adapters were connected for 13.975 seconds, four private
+operator samples succeeded with zero metric/adapter/health failures, and the report
+contained no control token or path. It recorded eight attacks, six accepted commands,
+three HP changes and an observed 34.029 Hz tick rate. The report is
+`target/native-adapter-soak-0198-combined-smoke.json` (ignored local evidence).
+This check does not replace the two-hour mixed Beta run or rendered-client QA.
