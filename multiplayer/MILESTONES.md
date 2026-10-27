@@ -50,7 +50,7 @@ playthrough and recovery criteria pass. Never infer Done from a task count or te
 | M3 — Complete authored adventure | Opening letter only; full loop incomplete | T4C-0193, 0194, 0195 | Full quest service, kill credit, rewards and required hosted routes |
 | M4 — Supported combat and abilities | Restricted melee/physical retaliation | T4C-0189, 0190 | Pursuit/AI and the declared classes' required abilities and state |
 | M5 — Reliability and anti-cheat | Pool/shutdown/fault probes and short operator-metrics adapter checks pass on combined source; sustained recovery/load/abuse gates open | T4C-0191, 0197, 0198 | Failure drills, sustained measured stability and abuse checks |
-| M6 — Package and native acceptance | Earlier rendered movement/melee evidence only | Cross-cutting; child task IDs to be claimed | Clean-machine delivery and complete two-rendered-client playthrough |
+| M6 — Package and native acceptance | Create-only package and headless integrity checks pass; clean-machine, remote and full rendered playthrough open | T4C-0205 and cross-cutting work | Clean-machine delivery and complete two-rendered-client playthrough |
 
 Task IDs not yet claimed are deliberately not represented as completed or assigned work.
 Independent implementation can proceed in parallel; acceptance must use an integrated build.
