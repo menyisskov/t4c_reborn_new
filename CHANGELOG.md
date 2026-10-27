@@ -6,6 +6,12 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Talk to nearby people and manage equipment in the online client (T4C-0218)
+
+### Added
+- In the online client, press T to talk to the nearest person in range. Their reply appears in a text panel, and press 1 to 9 to ask about a topic they offer. Press T or Esc to close it.
+- In the online client, press I to open your inventory. Press 1 to 9 to equip a carried item into its place, or to take off an equipped item. Refusals, such as a missing requirement or an occupied slot, are shown as short messages.
+
 ## 2026-10-27 — New starting gear and first spell (T4C-0217)
 
 ### Added

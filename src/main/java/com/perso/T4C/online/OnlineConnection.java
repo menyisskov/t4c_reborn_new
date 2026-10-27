@@ -48,8 +48,15 @@ public final class OnlineConnection implements AutoCloseable {
 
   private record Joined(String token, long id, OnlineRegion region) {}
 
-  public record CommandResult(boolean accepted, OnlineCharacterView character, String messageKey) {
-    public CommandResult(boolean accepted, OnlineCharacterView character) { this(accepted,character,null); }
+  /** {@code args} fill a dialogue message's authored placeholders; refusals carry a key and no args. */
+  public record CommandResult(boolean accepted, OnlineCharacterView character, String messageKey, List<Integer> args) {
+    public CommandResult {
+      args = args == null ? List.of() : List.copyOf(args);
+    }
+    public CommandResult(boolean accepted, OnlineCharacterView character, String messageKey) {
+      this(accepted, character, messageKey, List.of());
+    }
+    public CommandResult(boolean accepted, OnlineCharacterView character) { this(accepted,character,null,List.of()); }
   }
   private record GameplayCommand(String path, String body, long revision,
       java.util.concurrent.CompletableFuture<CommandResult> result) {}
@@ -156,9 +163,17 @@ public final class OnlineConnection implements AutoCloseable {
 
   /** Authored identity only; the server resolves dialogue, proximity and any item grant. */
   public java.util.concurrent.CompletionStage<CommandResult> interact(String npc) {
+    return interact(npc, java.util.OptionalInt.empty());
+  }
+
+  /** As {@link #interact(String)}, with an optional authored topic index (0-99) that the server validates. */
+  public java.util.concurrent.CompletionStage<CommandResult> interact(String npc, java.util.OptionalInt topic) {
     if(npc==null || !npc.matches("[A-Za-z][A-Za-z0-9_]{0,63}"))
       throw new IllegalArgumentException("Invalid NPC identity");
-    return gameplayCommand("/interact",npc);
+    java.util.Objects.requireNonNull(topic);
+    if(topic.isPresent() && (topic.getAsInt()<0 || topic.getAsInt()>99))
+      throw new IllegalArgumentException("Invalid topic");
+    return gameplayCommand("/interact", topic.isEmpty() ? npc : npc+" "+topic.getAsInt());
   }
 
   private java.util.concurrent.CompletionStage<CommandResult> gameplayCommand(String path, String arguments) {
@@ -213,6 +228,7 @@ public final class OnlineConnection implements AutoCloseable {
           var command = gameplay.get();
           boolean accepted = false;
           String messageKey=null;
+          List<Integer> messageArgs=List.of();
           long requiredRevision = character == null ? 0 : character.revision();
           if (command != null) {
             try {
@@ -222,7 +238,7 @@ public final class OnlineConnection implements AutoCloseable {
                 if(dialogue==null || dialogue.revision()<command.revision()
                     || dialogue.changed() && dialogue.revision()==command.revision())
                   throw new IllegalStateException("Invalid dialogue acknowledgement");
-                requiredRevision=dialogue.revision();messageKey=dialogue.messageKey();
+                requiredRevision=dialogue.revision();messageKey=dialogue.messageKey();messageArgs=dialogue.args();
               } else {
                 var committed = JSON.fromJson(reply, Committed.class);
                 if (committed == null || committed.revision() == null || committed.revision() <= command.revision())
@@ -233,7 +249,8 @@ public final class OnlineConnection implements AutoCloseable {
             } catch (Rejected rejected) {
               if (rejected.code != 409) throw rejected;
               // A normal conflict leaves the session usable. Refresh, but never replay stale intent.
-              if (command.path().equals("/pickup")) messageKey = pickupRefusalKey(rejected.reason);
+              messageKey = OnlineCommandRefusals.messageKey(command.path(), rejected.reason);
+              messageArgs = List.of();
             }
           }
           int intent = direction.get();
@@ -336,7 +353,7 @@ public final class OnlineConnection implements AutoCloseable {
           break;
           }
           if (command != null && gameplay.compareAndSet(command, null))
-            command.result().complete(new CommandResult(accepted, character,messageKey));
+            command.result().complete(new CommandResult(accepted, character,messageKey,messageArgs));
           Thread.sleep(75);
         }
       } finally {
@@ -368,19 +385,6 @@ public final class OnlineConnection implements AutoCloseable {
       throw new IllegalStateException("Invalid region map");
     loaded.region(); // Validate the bounded descriptor before publishing actor coordinates.
     return loaded;
-  }
-
-  /** Maps a pickup 409 code to a readable message. Unknown or non-loot conflicts use one generic refusal. */
-  static String pickupRefusalKey(String code) {
-    if (code == null) return "online.loot.refused";
-    return switch (code) {
-      case "loot_unavailable" -> "online.loot.unavailable";
-      case "loot_reserved" -> "online.loot.reserved";
-      case "out_of_range" -> "online.loot.out_of_range";
-      case "too_heavy" -> "online.loot.too_heavy";
-      case "unsupported_item" -> "online.loot.unsupported_item";
-      default -> "online.loot.refused";
-    };
   }
 
   private static String refusalReason(byte[] body) {
