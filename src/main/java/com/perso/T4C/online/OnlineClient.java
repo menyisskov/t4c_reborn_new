@@ -909,8 +909,8 @@ public final class OnlineClient extends ApplicationAdapter {
           Gdx.graphics.getHeight() - 38);
     if (view != null && view.character() != null && view.character().progress() != null) {
       var character=view.character();
-      font.draw(hud,I18n.message("online.client.progress",character.progress().vitals().hp(),character.progress().vitals().maxHp(),character.progress().advancement().level(),
-          character.experience(),character.gold()),16,Gdx.graphics.getHeight()-60);
+      font.draw(hud,OnlineHudText.progressLine(character.progress(),character.experience(),character.gold()),
+          16,Gdx.graphics.getHeight()-60);
       view.snapshot().creatures().stream().filter(c -> c.id()==targetCreature).findFirst().ifPresent(c ->
           font.draw(hud,I18n.message("online.client.target_health",c.health(),c.maxHealth()),16,Gdx.graphics.getHeight()-82));
       var corpse=nearestCorpse(view);

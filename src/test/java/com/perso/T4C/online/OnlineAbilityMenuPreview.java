@@ -53,6 +53,7 @@ public final class OnlineAbilityMenuPreview extends ApplicationAdapter {
   private final OnlineAbilityMenu menu = new OnlineAbilityMenu();
   private SpellContent allowlist;
   private CharacterProgress progress;
+  private CharacterProgress warrior;
   private int frame;
   private int stage;
 
@@ -102,6 +103,11 @@ public final class OnlineAbilityMenuPreview extends ApplicationAdapter {
         List.of(new CharacterProgress.Item(UUID.randomUUID(), potionKey, 3, 1)), Map.of(), Map.of(),
         Set.of("spell.heal_light"), Map.of(), List.of(), 0, new CharacterProgress.Respawn(0, 1, 1),
         List.of(), Map.of(), 0, null);
+    warrior = new CharacterProgress(
+        1, "warrior", "male", new CharacterProgress.Attributes(10, 10, 10, 10, 10),
+        new CharacterProgress.Vitals(60, 60, 0, 0), new CharacterProgress.Advancement(3, 0, 0, 0, 0),
+        List.of(), Map.of(), Map.of(), Set.of(), Map.of(), List.of(), 0, new CharacterProgress.Respawn(0, 1, 1),
+        List.of(), Map.of(), 0, null);
   }
 
   @Override
@@ -120,7 +126,7 @@ public final class OnlineAbilityMenuPreview extends ApplicationAdapter {
     font.setColor(Color.WHITE);
     font.draw(hud, I18n.key("online.client.persistent"), 16, HEIGHT - 16);
     font.draw(hud, I18n.message("online.client.players", 1, 1), 16, HEIGHT - 38);
-    font.draw(hud, I18n.message("online.client.progress", 27, 40, 3, 0, 200), 16, HEIGHT - 60);
+    font.draw(hud, OnlineHudText.progressLine(stage >= 4 ? warrior : progress, 0, 200), 16, HEIGHT - 60);
     font.draw(hud, I18n.key("online.client.combat_controls"), 16, 24);
     if (stage == 2) font.draw(hud, I18n.message("online.ability.result", 9, -2), 16, 46);
     if (menu.isOpen()) OnlineAbilityMenu.draw(hud, font, menu.lines(progress, allowlist), WIDTH - 360, HEIGHT - 16);
@@ -144,6 +150,14 @@ public final class OnlineAbilityMenuPreview extends ApplicationAdapter {
       }
       case 2 -> {
         save("online-ability-menu-result.png");
+        stage = 3;
+      }
+      case 3 -> {
+        save("online-hud-mana-mage.png");
+        stage = 4;
+      }
+      case 4 -> {
+        save("online-hud-mana-warrior.png");
         Gdx.app.exit();
       }
       default -> {}
