@@ -18,7 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0220 | Record owner-approved two-rendered-client Beta/GA concurrency target | Process / Multiplayer milestones | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--two-player-beta-acceptance-target-t4c-0220) |
+| T4C-0220 | Record owner-approved two-rendered-client Beta/GA concurrency target | Process / Multiplayer milestones | Done | `813dcc17` (this PR) | [2026-10-27](CHANGELOG.md#2026-10-27--two-player-beta-acceptance-target-t4c-0220) |
 | T4C-0219 | Verify live account-key rotation through two native sessions | Multiplayer / Beta security | Done | PR156/main`b475b3f4` | [2026-10-27](CHANGELOG.md#2026-10-27--live-account-key-rotation-check-t4c-0219) |
 | T4C-0218 | Native online client: talk to nearby NPCs with topic choices and an inventory panel to equip and unequip | Multiplayer / Beta client | Done | PR155/main`0b350b42` | [2026-10-27](CHANGELOG.md#2026-10-27--talk-to-nearby-people-and-manage-equipment-in-the-online-client-t4c-0218) |
 | T4C-0217 | Owner-approved starter kits: Paladin mace, Arcane Spark for mages, Archer quiver; checkpoint scope approval recorded | Content / Multiplayer | Done | PR152/main`91296e12` | [2026-10-27](CHANGELOG.md#2026-10-27--new-starting-gear-and-first-spell-t4c-0217) |
@@ -26,7 +26,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0215 | Package a clean local QA server runtime and safe lifecycle tools | Multiplayer / Beta operations | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--local-online-server-qa-package-t4c-0215) |
 | T4C-0214 | Design authored starter-route hosting without fabricated portals | Multiplayer / Beta architecture only | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--authored-starter-route-hosting-design-t4c-0214) |
 | T4C-0213 | Verify restored schema checks and read committed state through two native adapters | Multiplayer / Beta reliability | Done | PR148; adapter-read evidence in [ACCEPTANCE](multiplayer/ACCEPTANCE.md) | [2026-10-27](CHANGELOG.md#2026-10-27--backup-check-verification-on-schema-10-t4c-0213) |
-| T4C-0212 | Activate guarded server monster patrol and pursuit in supported hosted regions | Multiplayer / Beta implementation and native-adapter verification | Done | this PR; 182 isolated tests, two-adapter pursuit/restart PASS | [2026-10-27](CHANGELOG.md#2026-10-27--monsters-patrol-and-pursue-in-online-regions-t4c-0212) |
+| T4C-0212 | Activate guarded server monster patrol and pursuit in supported hosted regions | Multiplayer / Beta implementation and native-adapter verification | Done | `813dcc17` (this PR); 182 isolated tests, two-adapter pursuit/restart PASS | [2026-10-27](CHANGELOG.md#2026-10-27--monsters-patrol-and-pursue-in-online-regions-t4c-0212) |
 | T4C-0211 | Render authoritative native creature movement and facing | Multiplayer / Beta groundwork | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--native-creature-motion-from-server-snapshots-t4c-0211) |
 | T4C-0210 | Share authored monster acquisition, leash and reach decisions | Multiplayer / Beta groundwork | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--shared-monster-pursuit-decisions-t4c-0210) |
 | T4C-0209 | Authoritative monster pursuit architecture and peer handoff | Multiplayer / Beta design only | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--monster-pursuit-architecture-t4c-0209) |
