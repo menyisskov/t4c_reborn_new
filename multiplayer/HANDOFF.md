@@ -278,3 +278,19 @@ The corrected final bundle passed PowerShell 7, Windows PowerShell 5 and batch `
 copied path with spaces. The first bundle's 73 dependencies came from an incorrect scope property
 and are superseded; preserve it only as failure/correction evidence. No renderer, server connection,
 remote clean machine, offline regression or owner QA was run. M6 remains incomplete.
+
+## T4C-0207 isolated restart probe checkpoint
+
+`tools/NativeRestartProbe.java` and `tools/NATIVE_RESTART_PROBE.md` provide a bounded two-adapter
+server-process restart drill. The exact final-source SHA-256
+`9F324B943D982B5D14F0FB20A60A5E3650DCE23020DF3E2D3894C091ECBA6AEA` passed on an
+immutable committed `8da43482` protocol-4/schema-9 runtime, fresh
+`t4c_restart_0207_final_03e1c342` database and isolated port 18767. Both distinct letter UUIDs,
+flags, complete progress hashes, positions, gold and XP survived graceful exit 0, forced child
+kill, real 29,690 ms lease expiry and rejoin. Revisions moved 1→2→3 across the graceful
+checkpoints; the forced kill left the committed revision at 2. The sanitized private report is
+`%TEMP%/t4c-0207-evidence-finalsource-03e1c342/report.txt`; keep the dedicated database and
+reports for inspection. The tool also compiled against the later combined schema-10 API in an
+isolated build snapshot, but that runtime was not played through. No shared QA server, rendered
+clients or PostgreSQL outage was involved. M5 still needs the wider recovery, anti-cheat and
+sustained-load gates.
