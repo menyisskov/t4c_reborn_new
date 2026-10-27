@@ -360,3 +360,28 @@ owned postmaster, left `PG_VERSION` and logs for inspection, and released ports 
 Earlier failed and preliminary runs are retained; see the tool document for their causes.
 The cluster is down and the shared PG55432/QA18765/owner clients were untouched. This
 does not establish current schema-10, rendered, backup-restore or broad M5 acceptance.
+
+The unchanged T4C-0208 tools subsequently passed on a clean committed-main `0fb90aeb`
+source archive with matching client/server binaries, protocol 4 and measured schema 10
+before/after actual PostgreSQL crash recovery. Server JAR SHA-256
+`FC54A617660D0DDEAD2757FE59C0B3EA205DF640A49A33E799AEC964C71BEEC8`, client JAR
+SHA-256 `C7CAA3512E24442C7641044520B5E543522C3C5987590FB9C64DD8D8DB751890`.
+The single outage request returned `503 busy` without replay; A kept its letter/full
+progress and B gained a letter only after explicit post-recovery native action. Both
+adapters rejoined, the owned server exited 0, the cluster is down and ports 55433/18768
+are free. Private report:
+`%TEMP%/t4c-0208-evidence-t4c_db_0208_db5ba020be71/report.txt`. This is still a
+narrow adapter drill, not rendered or broad M5 acceptance.
+
+## T4C-0211 native creature motion checkpoint
+
+`OnlineClient` now maps authoritative creature snapshot position deltas to existing
+`MonsterMovement`/`MonsterAnimations` facing and walk cycles. `OnlineCreatureMotion`
+idles on first spawn, region reset and disconnect, with no interpolation or predicted
+movement. A fresh isolated archive from committed main `0fb90aeb` plus only these three
+files compiled 8,665 desktop and 210 test sources; the focused test passed 1/1.
+Private log: `%TEMP%/t4c-0211-motion-7e2d32a3645649e3b3070a07db489875/focused-test.log`.
+The live owner-controlled source-`8da43482`/schema-9 clients were not replaced.
+No server pursuit is active or rendered movement verified. T4C-0212 reserves a separate
+new server controller/test slice; existing moving core files remain conditional on
+explicit Claude handoff, so neither task completes M4.

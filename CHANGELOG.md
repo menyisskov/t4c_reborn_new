@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Native creature motion from server snapshots (T4C-0211)
+
+### Changed
+- The online client selects creature facing and walking animation from authoritative snapshot position changes, and returns to idle on first spawn, region reset or disconnect. It does not predict movement or enable server pursuit.
+
 ## 2026-10-27 — Shared monster pursuit decisions (T4C-0210)
 
 ### Changed
