@@ -49,7 +49,7 @@ final class OnlineMelee {
     // Never silently omit authored script/quest behavior. Loot is accepted only for tables the online roll can grant.
     if ((definition.getSourceEvents()!=null && !definition.getSourceEvents().isEmpty())
         || !OnlineLootDrafts.supports(definition,items)
-        || com.perso.T4C.quest.CrimsonscaleLetterRules.hasUnsupportedCombatFlags(p.questFlags()) || p.companion()!=null || p.skills().getOrDefault("stun_blow",0)>0
+        || !OnlineQuestFlags.supported(p.questFlags(),QuestCatalog.bundled()) || p.companion()!=null || p.skills().getOrDefault("stun_blow",0)>0
         || !OnlineRetaliation.supported(definition))
       throw rejected("unsupported_combat");
     var position=world.position(token);

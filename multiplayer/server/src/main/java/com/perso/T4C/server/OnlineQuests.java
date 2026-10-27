@@ -91,6 +91,11 @@ final class OnlineQuests {
     };
   }
 
+  /** The giver's welcome line for a greeting that does not turn anything in. Never changes state. */
+  static Result welcome(CharacterProgress progress, QuestDef definition) {
+    return reply(progress, npcKey("welcome", definition, null), List.of(), false);
+  }
+
   private static Result progressReply(CharacterProgress progress, QuestDef definition) {
     Map<String, Integer> flags = progress.questFlags();
     int kills = QuestRules.kills(key -> flags.getOrDefault(key, 0), definition);
