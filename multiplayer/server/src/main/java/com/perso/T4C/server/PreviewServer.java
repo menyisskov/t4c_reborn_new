@@ -259,7 +259,8 @@ public final class PreviewServer implements AutoCloseable {
         }
         int limit=store!=null && "/join".equals(path) ? 101
             : "/interact".equals(path) ? 128
-            : ("/equip".equals(path) || "/unequip".equals(path) || "/recover".equals(path) || "/pickup".equals(path)) ? 96 : 64;
+            : "/recover".equals(path) ? 128
+            : ("/equip".equals(path) || "/unequip".equals(path) || "/pickup".equals(path)) ? 96 : 64;
         checkDeclaredBodyLength(exchange,limit);
         permit=admitPost(exchange,path);
         byte[] bytes = new byte[limit+1];
@@ -330,12 +331,15 @@ public final class PreviewServer implements AutoCloseable {
           case "/recover" -> {
             if (persistent==null) throw new PreviewWorld.Rejected(404,"route");
             String token=token(exchange);
-            if (!body.matches("[0-9]{1,19} [0-9]{1,19} [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"))
+            // Optional fourth token: one corpse stack to take. Absent takes every stack that fits.
+            String uuid="[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
+            if (!body.matches("[0-9]{1,19} [0-9]{1,19} "+uuid+"( "+uuid+")?"))
               throw new PreviewWorld.Rejected(400,"input");
-            String[] parts=body.split(" "); long revision,epoch; java.util.UUID corpse;
-            try { revision=Long.parseLong(parts[0]);epoch=Long.parseLong(parts[1]); corpse=java.util.UUID.fromString(parts[2]); }
+            String[] parts=body.split(" "); long revision,epoch; java.util.UUID corpse,item;
+            try { revision=Long.parseLong(parts[0]);epoch=Long.parseLong(parts[1]); corpse=java.util.UUID.fromString(parts[2]);
+              item=parts.length>3 ? java.util.UUID.fromString(parts[3]) : null; }
             catch (IllegalArgumentException bad) { throw new PreviewWorld.Rejected(400,"input"); }
-            var pending=onWorld(() -> { admit(token,epoch); return persistent.recoverCorpse(token,revision,corpse); });
+            var pending=onWorld(() -> { admit(token,epoch); return persistent.recoverCorpse(token,revision,corpse,item); });
             var committed=pending.toCompletableFuture().get(2,TimeUnit.SECONDS);
             json(exchange,observation,200,Map.of("revision",committed.character().revision()));
           }

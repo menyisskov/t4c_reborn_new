@@ -20,6 +20,7 @@ final class PersistentSessions {
   // Stop simulation well before the database's 30-second lease can expire or be taken over.
   private static final long AUTHORITY_NANOS = TimeUnit.SECONDS.toNanos(20);
   /** Definite refusals from the claim transaction: nothing was written, so the actor stays connected. */
+  private static final Set<String> CORPSE_REFUSALS=Set.of(OnlineStore.CORPSE_TOO_HEAVY,OnlineStore.CORPSE_ITEM_UNAVAILABLE);
   private static final Set<String> PICKUP_REFUSALS=Set.of("revision","loot_unavailable","loot_reserved",
       "out_of_range","too_heavy","unsupported_item","unsupported_pickup");
   private final OnlineStore store;
@@ -60,7 +61,7 @@ final class PersistentSessions {
    */
   private record GameplayEvent(UUID id, long gold, long experience, CharacterProgress progress, boolean worldReward,
       OnlineStore.CreatureStrike strike, OnlineStore.CreatureProvocation provocation,
-      OnlineStore.MonsterAttack monsterAttack, OnlineStore.DeathTransition death, UUID corpse,
+      OnlineStore.MonsterAttack monsterAttack, OnlineStore.DeathTransition death, UUID corpse, UUID corpseItem,
       com.perso.T4C.server.persistence.PortalTransfer transfer, UUID loot, List<LootDropDraft> drops,
       CompletableFuture<OnlineStore.RewardResult> result) {
     GameplayEvent { drops=List.copyOf(drops); }
@@ -225,6 +226,11 @@ final class PersistentSessions {
   }
 
   CompletionStage<OnlineStore.RewardResult> recoverCorpse(String token,long revision,UUID corpse) {
+    return recoverCorpse(token,revision,corpse,null);
+  }
+
+  /** {@code item} names one corpse stack to take; null takes every stack that fits, in order. */
+  CompletionStage<OnlineStore.RewardResult> recoverCorpse(String token,long revision,UUID corpse,UUID item) {
     var binding=active(token);
     if (binding.saved.progress()==null || binding.saved.progress().vitals().hp()<=0)
       throw new PreviewWorld.Rejected(409,"dead");
@@ -237,7 +243,7 @@ final class PersistentSessions {
       throw new PreviewWorld.Rejected(409,"out_of_range");
     binding.position=position;
     return commitEvent(token,revision,UUID.randomUUID(),0,0,binding.saved.progress(),false,null,null,null,null,
-        Objects.requireNonNull(corpse));
+        Objects.requireNonNull(corpse),List.of(),item);
   }
 
   /**
@@ -305,7 +311,7 @@ final class PersistentSessions {
     if (Math.max(Math.abs(x-found.x()),Math.abs(y-found.y()))>com.perso.T4C.server.OnlinePickupRules.MAX_TILE_DISTANCE)
       throw new PreviewWorld.Rejected(409,"out_of_range");
     var result=new CompletableFuture<OnlineStore.RewardResult>();
-    binding.event=new GameplayEvent(UUID.randomUUID(),0,0,progress,false,null,null,null,null,null,null,loot,List.of(),result);
+    binding.event=new GameplayEvent(UUID.randomUUID(),0,0,progress,false,null,null,null,null,null,null,null,loot,List.of(),result);
     if (!binding.pending) submit(binding);
     return result.minimalCompletionStage();
   }
@@ -325,13 +331,20 @@ final class PersistentSessions {
       UUID eventId, long gold, long experience, CharacterProgress progress, boolean worldReward, OnlineStore.CreatureStrike strike,
       OnlineStore.CreatureProvocation provocation,OnlineStore.MonsterAttack attack,OnlineStore.DeathTransition death,UUID corpse,
       List<LootDropDraft> drops) {
+    return commitEvent(token,expectedRevision,eventId,gold,experience,progress,worldReward,strike,provocation,attack,death,corpse,drops,null);
+  }
+
+  private CompletionStage<OnlineStore.RewardResult> commitEvent(String token, long expectedRevision,
+      UUID eventId, long gold, long experience, CharacterProgress progress, boolean worldReward, OnlineStore.CreatureStrike strike,
+      OnlineStore.CreatureProvocation provocation,OnlineStore.MonsterAttack attack,OnlineStore.DeathTransition death,UUID corpse,
+      List<LootDropDraft> drops,UUID corpseItem) {
     var binding=active(token);
     if (binding.event!=null || binding.awaitingRegionReady) throw new PreviewWorld.Rejected(409,"busy");
     if (binding.saved.revision()!=expectedRevision) throw new PreviewWorld.Rejected(409,"revision");
     if (gold<0 || experience<0) throw new IllegalArgumentException("Negative reward");
     var result=new CompletableFuture<OnlineStore.RewardResult>();
     binding.event=new GameplayEvent(Objects.requireNonNull(eventId),gold,experience,
-        Objects.requireNonNull(progress),worldReward,strike,provocation,attack,death,corpse,null,null,drops,result);
+        Objects.requireNonNull(progress),worldReward,strike,provocation,attack,death,corpse,corpseItem,null,null,drops,result);
     if (death!=null || corpse!=null) binding.region.world.freeze(token,true);
     if (!binding.pending) submit(binding);
     return result.minimalCompletionStage();
@@ -366,7 +379,7 @@ final class PersistentSessions {
     var draft=new com.perso.T4C.server.persistence.PortalTransfer(portal.portalId(),binding.region.spec.key(),target.spec.key(),
         portal.source(),portal.destination(),binding.saved.locationEpoch(),Math.addExact(System.currentTimeMillis(),350));
     binding.position=position;binding.region.world.freeze(binding.token,true);
-    binding.event=new GameplayEvent(UUID.randomUUID(),0,0,binding.saved.progress(),false,null,null,null,null,null,draft,null,List.of(),new CompletableFuture<>());
+    binding.event=new GameplayEvent(UUID.randomUUID(),0,0,binding.saved.progress(),false,null,null,null,null,null,null,draft,null,List.of(),new CompletableFuture<>());
   }
 
   private Binding active(String token) {
@@ -393,6 +406,19 @@ final class PersistentSessions {
       maybeTransfer(binding);
       if (!binding.pending && (binding.event!=null || binding.closing || tick-binding.checkpointSubmitted>=CHECKPOINT_TICKS)) submit(binding);
     }
+  }
+
+  /** Shared carry rule: capacity from effective strength, weights from the item catalog. */
+  private static OnlineStore.CarryRules carryRules(com.perso.T4C.online.model.ItemContent items) {
+    return new OnlineStore.CarryRules() {
+      public long maximumWeight(CharacterProgress progress) {
+        return com.perso.T4C.item.CarryCapacityRules.maximumWeight(progress.attributes().strength()
+            +OnlineEquipmentBonuses.resolve(progress,items).getOrDefault(3,0));
+      }
+      public long unitWeight(String key) {
+        var definition=items.items().get(key);return definition==null ? 0L : Math.max(0L,definition.weight());
+      }
+    };
   }
 
   private void submit(Binding binding) {
@@ -425,11 +451,19 @@ final class PersistentSessions {
               if (!PICKUP_REFUSALS.contains(conflict.getMessage())) throw conflict;
               refusal=conflict.getMessage();
             }
+          } else if (event.corpse()!=null) {
+            try {
+              reward=store.recoverCorpse(binding.session,revision,event.corpse(),event.corpseItem(),region.spec.world(),
+                  map.originX+position.x(),map.originY+position.y(),carryRules(content));
+              saved=reward.character();
+            } catch (OnlineStore.Conflict conflict) {
+              // A refused item rolled back before any write. Anything else fails closed.
+              if (!CORPSE_REFUSALS.contains(conflict.getMessage())) throw conflict;
+              refusal=conflict.getMessage();
+            }
           } else {
             reward=event.transfer()!=null
                 ? store.commitTransfer(binding.session,revision,event.id(),event.transfer())
-                : event.corpse()!=null
-                ? store.recoverCorpse(binding.session,revision,event.corpse(),region.spec.world(),map.originX+position.x(),map.originY+position.y())
                 : event.monsterAttack()!=null
                 ? store.commitMonsterAttack(binding.session,revision,event.id(),event.progress(),event.monsterAttack(),event.death())
                 : event.strike()!=null
@@ -476,6 +510,8 @@ final class PersistentSessions {
           binding.region.loot.remove(refused.loot());
           refreshLoot(binding.region);
         }
+        // Corpse recovery froze the actor for the write; a refusal ends that freeze.
+        if (refused.corpse()!=null) binding.region.world.freeze(binding.token,false);
         refused.result().completeExceptionally(new PreviewWorld.Rejected(409,completed.refusal()));
       } else {
         binding.saved=completed.saved();
