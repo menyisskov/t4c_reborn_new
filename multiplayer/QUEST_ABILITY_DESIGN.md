@@ -223,6 +223,14 @@ whole ticks; dead characters regenerate nothing and re-anchor at `now`. Every vi
 (cast, potion, melee, retaliation, turn-in) settles first, so the committed state is always current.
 **Owner decision:** whether time logged out regenerates. Proposed: no; re-anchor at join.
 
+**Implemented (T4C-0229, rule only):** `OnlineRegeneration` follows the proposed default. Logged-out
+time does not regenerate: join and checkpoint callers settle while online and call `reanchor(progress,
+now)` at join, so the anchor never spans an offline gap. Settling bounds a single gap to one hour of
+ticks (1800) and then re-anchors at `now`; a missing anchor, a future anchor (clock moved back) and a
+dead character also re-anchor without regenerating. HP uses `rapid_healing` from `skills`; mana uses
+no meditate bonus, as offline `tickNaturalRegeneration` does. Effective endurance/intelligence/wisdom
+include committed equipment bonuses. The anchor lives in `cooldowns["regen_anchor"]`, so no schema change.
+
 ### 4.6 Class gate
 
 Online creation accepts only the approved classes (Warrior, Paladin) and refuses others with

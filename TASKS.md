@@ -18,8 +18,8 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0229 | Online natural regeneration settle (Claude A5) | Multiplayer / Beta combat | In Progress | PR165 | deferred |
 | T4C-0228 | Corpse recovery respects carry limits with per-item partial pickup (Claude L11) | Multiplayer / Beta loot | Done | PR164, eacb3ea3; all checks passed | deferred |
+| T4C-0229 | Server-side natural health and mana regeneration settle for online characters (A5) | Multiplayer / M4 abilities | Done (rule only; routes follow in A7) | this PR; focused offline tests | [2026-10-27](CHANGELOG.md#2026-10-27--online-natural-regeneration-t4c-0229) |
 | T4C-0227 | Measure bounded HTTP application traffic for Beta stability evidence | Multiplayer / Beta reliability | Done (operator groundwork) | this PR; isolated focused and no-DB checks | [2026-10-27](CHANGELOG.md#2026-10-27--bounded-http-application-metrics-t4c-0227) |
 | T4C-0226 | Verify two native sessions stay live during hostile HTTP traffic | Multiplayer / Beta security acceptance | Done (local native adapter check) | this PR; immutable `f6175cc7`, final report `FFD24BFC` | [2026-10-27](CHANGELOG.md#2026-10-27--native-sessions-during-hostile-http-t4c-0226) |
 | T4C-0225 | Integrate durable authored creature-clan combat after peer handoff | Multiplayer / Beta gameplay | Planned | pending Claude handoff | pending |
