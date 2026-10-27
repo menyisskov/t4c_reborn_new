@@ -6,6 +6,12 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Native online melee (T4C-0187)
+
+### Added
+- Persistent online characters can press Space to attempt a melee attack on the nearest creature. The starting guards share damage and disappearance between players, award saved XP and gold, and return after their respawn delay. The display shows confirmed level, XP, gold and target health.
+- Attacks respect range, walls, sanctuaries and saved cooldowns. This is an early melee preview: guards do not retaliate yet, and ranged attacks, stun attacks, active quests, scripted creatures and item drops remain unavailable.
+
 ## 2026-10-27 — Online progression rules (T4C-0186)
 
 ### Added

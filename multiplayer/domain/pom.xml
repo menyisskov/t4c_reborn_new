@@ -33,6 +33,10 @@
                 <configuration>
                     <includes>
                         <include>com/perso/T4C/combat/CombatProfile.java</include>
+                        <include>com/perso/T4C/combat/MonsterCombatRules.java</include>
+                        <include>com/perso/T4C/monster/loot/LootTable.java</include>
+                        <include>com/perso/T4C/monster/loot/LootEntry.java</include>
+                        <include>com/perso/T4C/monster/loot/LootResult.java</include>
                         <include>com/perso/T4C/combat/CombatResolver.java</include>
                         <include>com/perso/T4C/combat/CombatResult.java</include>
                         <include>com/perso/T4C/combat/PhysicalAttackRequest.java</include>

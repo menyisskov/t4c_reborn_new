@@ -31,6 +31,7 @@ public final class PreviewServer implements AutoCloseable {
   private final OnlineStore store;
   private final PersistentSessions persistent;
   private final PersistentCreatures persistentCreatures;
+  private final OnlineMelee melee;
   private final String controlToken;
   private final SimulationLoop loop;
   private final Thread simulation;
@@ -60,6 +61,8 @@ public final class PreviewServer implements AutoCloseable {
       if (persistent!=null) persistent.shutdown();
       throw new IOException("Could not recover persistent creatures",failedRecovery);
     }
+    melee=persistent==null ? null : new OnlineMelee(map,world,persistent,persistentCreatures,items,
+        new java.security.SecureRandom(),System::currentTimeMillis);
     mapJson = JSON.toJson(Map.of("width", map.width, "height", map.height,
         "originX", map.originX, "originY", map.originY, "blocked", map.cells(),
         "maxPlayers", PreviewWorld.MAX_PLAYERS,"persistent",store!=null,"protocolVersion",OnlineProtocol.VERSION));
@@ -189,6 +192,17 @@ public final class PreviewServer implements AutoCloseable {
             int dx = Integer.parseInt(parts[1]), dy = Integer.parseInt(parts[2]);
             onWorld(() -> { world.admitRequest(token); world.input(token, sequence, dx, dy); return null; });
             json(exchange, 200, Map.of("ok", true));
+          }
+          case "/attack" -> {
+            if (melee==null) throw new PreviewWorld.Rejected(404,"route");
+            String token=token(exchange);
+            if (!body.matches("[0-9]{1,19} [0-9]{1,19}")) throw new PreviewWorld.Rejected(400,"input");
+            String[] parts=body.split(" "); long revision,target;
+            try { revision=Long.parseLong(parts[0]); target=Long.parseLong(parts[1]); }
+            catch (NumberFormatException bad) { throw new PreviewWorld.Rejected(400,"input"); }
+            var pending=onWorld(() -> { world.admitRequest(token); return melee.attack(token,revision,target); });
+            var committed=pending.toCompletableFuture().get(2,TimeUnit.SECONDS);
+            json(exchange,200,Map.of("revision",committed.character().revision()));
           }
           case "/equip", "/unequip" -> {
             if (persistent == null) throw new PreviewWorld.Rejected(404, "route");
