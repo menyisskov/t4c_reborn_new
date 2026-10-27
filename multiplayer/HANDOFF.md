@@ -11,6 +11,37 @@ Last reviewed: 2026-10-27, Asia/Jerusalem. This file is the restart point for a 
 
 The owner is PM/QA and has authorized autonomous implementation, focused tests, PRs, CI, self-review and merges. Use parallel sub-agents for independent tasks with explicit file ownership. Continue assigning the next crucial release item; optional polish does not outrank required gameplay. Never claim Beta complete from service unit tests alone.
 
+## T4C-0219 live account-key rotation checkpoint
+
+`tools/NativeKeyRotationProbe.java` tested two actual native adapters on an isolated
+build of committed `130bc3c0389aa08f801c8c69f8f11abdc32c724d`, protocol 5/schema 10.
+The final source SHA-256 is `3FB42EA1628B924B6039318E6B54DF1D4E56C27FEDC914458214BB2C9DA37448`;
+server/client JAR SHA-256 values are `D5BBD75EAAC7E19AF976B316BA6FCFBD5321FC0803E604BB29760CB18A9F950C`
+and `EEF5FDD51199487D6F14F4B16686154A82C9168A22E81049AD1E87CE4E8D808B`.
+The immutable source/build/runtime is in
+`%TEMP%/t4c-0216-final-130bc3c0-ef9e7e43828444d9833675f04e654ba9/rotation-runtime`.
+An isolated client/server package and `javac -proc:none` passed. With newly created
+`t4c_rotation_0218_312c3ec2435a` on existing PG55432 and owned loopback 18775,
+the probe exited 0: rotating A fenced its active writer, old-key roster/join/native
+rejoin were refused (401/409/no view), replacement credentials rejoined the same
+committed character, and B kept its session, progress and movement. The owned
+server reported the expected persistence conflict, drained and exited 0; read-only
+queries found schema 10, two accounts, two characters, zero held leases and port
+18775 free. Sanitized report SHA-256 `2F83E9DE19FB6473339FFC11627568FB14CB6F5FC7BA11E2AA7AC3D630A68569`:
+`%TEMP%/t4c-0218-evidence-07fecbb11bff4844a72c1711703fc745/report.txt`.
+
+Preserve the first failed probe/database: `t4c_rotation_0218_91def691bf71` and
+`%TEMP%/t4c-0218-evidence-71076f38fd124617862a1ed4e4c8ab37/report.txt`
+(SHA-256 `B8625B3C08B61E4D5D17F7FFB5BC5DCBC67EA50BA947ABDC7ADD3515F6299D12`).
+That probe expected HTTP 401 from direct join rather than the actual Store-conflict
+409; its early-abort shutdown exited nonzero while revoked A was still draining.
+The corrected full run waited for disconnection and stopped cleanly. T4C-0219 was
+renumbered from its original 0218 reservation after the separate native UI PR used
+0218; immutable DB and report labels remain historical. Keep private control and
+database credentials out of Git. This is a local adapter case, not rendered,
+foreign-ownership, remote or complete M1/M5/Beta evidence; see
+[NATIVE_KEY_ROTATION_PROBE.md](tools/NATIVE_KEY_ROTATION_PROBE.md) for the replay command.
+
 ## Preserve single-player and personal state
 
 The normal `launch.bat` and offline game entry point must keep working. Online launch is `com.perso.T4C.online.OnlineClient` through `start-client.ps1`; it never initializes offline saves/screens. Online account/character state belongs in PostgreSQL, not desktop character files.
