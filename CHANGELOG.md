@@ -74,6 +74,9 @@ commit links, and finer-grained notes.
 ### Fixed
 - A stalled diagnostic response can no longer keep the load checker waiting beyond its bounded response deadline.
 
+### Measured
+- A two-hour native network load run completed without a server or adapter crash. Reconnects left all 20 players connected for about 58 minutes of the two hours; the final mixed-gameplay Beta check remains open.
+
 ## 2026-10-27 — Shared quest and spell rules (T4C-0206)
 
 ### Added
