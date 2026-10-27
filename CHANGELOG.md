@@ -6,6 +6,16 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Online character lobby and spell controls (T4C-0233, T4C-0234, T4C-0236, T4C-0237)
+
+### Added
+- The online game can now open on a character select screen that looks like the single-player one. It lists your online characters with their class and level, and you pick one to play. Start the online client with the lobby option to use it; the normal launch is unchanged.
+- Leaving a game with Esc returns you to the lobby, which makes you wait a few seconds before you can enter again while your character is released.
+- Online spell and potion controls: press C for your castable spells or U for your usable potions, then press a number to choose. The result, such as how much health or mana you gained, appears on screen, and a refusal such as not enough mana is explained in plain words.
+
+### Changed
+- Only Light Heal can be cast online so far.
+
 ## 2026-10-27 — Online skeleton hunting ground (T4C-0231)
 
 ### Added
