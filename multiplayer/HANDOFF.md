@@ -237,3 +237,11 @@ PID52688 runs the matching persistent build; verify current metadata before acti
 ## Loot groundwork checkpoint (T4C-0201/0202, Claude lane)
 
 Delivered: SCOPE_PROPOSAL.md (all PROPOSED, awaiting owner approval) and LOOT_DESIGN.md; loot tasks L1–L5 (shared MonsterLootTables, CarryCapacityRules, ItemKeys, GroundLootView/LootDropDraft, server OnlineLootDrafts and OnlinePickupRules). Verified by unit tests only (root targeted + multiplayer reactor; PostgreSQL tests skipped); no server wiring, no rendered or native evidence. Remaining: L6 schema, L7 server loot handling, L8 melee wiring, L9 pickup endpoint, L10 native client, L11 corpse weight (needs owner decision), L12 acceptance — L6/L7/L9/L11 wait for the Codex lane's pending OnlineStore/PersistentSessions/PreviewServer changes to merge. OnlinePickupRules.effectiveStrength throws on active buffs; L7 must map to a refusal.
+
+Peer task-ID correction: remotePR125 had already reserved0204 for Claude loot wiring. Keep that
+claim; independent Codex distribution packaging is0205 and nextID0206. Root missed the fresh
+remote claim when allocating locally; both agents paused and preserved all work. AGENTS8 now
+requires remote-main claim refresh plus the canonical shared ledger. Claude's requested
+OnlineStore/PersistentSessions/HostedWorlds handoff is granted explicitly in PEER_WORK; keep
+PreviewServer/SimulationLoop reserved until0198 merge. Packaging remains static-only pending
+0198's validation/delivery window release.

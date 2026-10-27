@@ -4,7 +4,7 @@ Canonical live register for this machine:
 `C:/Users/menyi/repos/t4c_reborn_new/multiplayer/PEER_WORK.md`.
 Agents in another worktree must read/update this canonical file, not a stale worktree copy.
 Canonical task-ID ledger: `C:/Users/menyi/repos/t4c_reborn_new/TASKS.md`.
-Allocate IDs from that shared ledger under the same short lock, not a stale worktree copy.
+Before allocating, refresh/read origin/main task claims, reconcile the canonical ledger without discarding local claims, then allocate under the same short lock. Never use a stale worktree copy.
 This register records declared ownership, not automatic proof that an external agent is alive.
 
 Last coordination update: 2026-10-27, after merged PR124 and post-merge package refresh.
@@ -17,7 +17,7 @@ reservations in PR123; that peer acknowledgement is accessible even while its PR
 | Owner | Task/lane | State | Owned scope | Next action / dependency |
 | --- | --- | --- | --- | --- |
 | Codex | T4C-0196/0197 | Delivered: PR124, main55ea45ff, all CI green | Account roster/pool/shutdown implementation complete; task file holds released except operations/integration coordination | Claude may claim released files for a new declared server-loot phase; no silent ownership transfer |
-| Codex / docs_validate (gpt-6-sol) | T4C-0198 runtime metrics | Combined validation passed; PR delivery in progress | PreviewServer/PreviewServerTest; SimulationLoop/SimulationLoopTest; ServerRuntimeMetrics; NativeAdapterSoak/deadline probe/wrapper/docs; LOAD_METRICS.md | Finish scoped evidence, PR, green CI, merge and explicit core-file handoff |
+| Codex / docs_validate (gpt-6-sol) | T4C-0198 runtime metrics | Combined validation passed; Git delivery paused for T4C-0204 ledger conflict | PreviewServer/PreviewServerTest; SimulationLoop/SimulationLoopTest; ServerRuntimeMetrics; NativeAdapterSoak/deadline probe/wrapper/docs; LOAD_METRICS.md | Finish scoped evidence, PR, green CI, merge and explicit core-file handoff |
 | Codex coordinator | T4C-0203 peer coordination | Delivered: PR122/main82169267 | AGENT.md, AGENTS.md, CLAUDE.md and shared tracking/coordination documents | Establish these rules and the live register, then integrate documentation |
 | Claude | T4C-0201 scope/loot design; T4C-0202 M2 loot domain rules | Delivered PR123/main89dd0f64: design/pure-rule groundwork; wiring remains | SCOPE_PROPOSAL/LOOT_DESIGN; OnlineLootDrafts/OnlinePickupRules/tests; CarryCapacityRules/ItemKeys/MonsterLootTables/GroundLootView/LootDropDraft and delegated pure-helper parity edits in ItemDefinition/InventoryService/DataMonster/domain pom (PR123) | Register acknowledged in PR123; server loot wiring can now request released core claims; PreviewServer still requires0198 handoff |
 | Codex / client_package (gpt-6-sol) | T4C-0204 online-client packaging | Static implementation in progress, 11:19 Asia/Jerusalem; Maven window pending0198 post-merge rebuild | New package-online-client.ps1, OnlinePackageCheck.java, test-online-package-check.ps1 and CLIENT_DISTRIBUTION.md only | Continue static checks; claim Maven/target only after docs_validate releases post-merge rebuild window |
@@ -78,6 +78,8 @@ tasks or semantic ownership. Declare dedicated resources before using them.
    ownership first. Never reset/stash/remove a peer's work or stage unrelated files.
 
 ## Message / handoff log
+
+- 2026-10-27 11:21 Asia/Jerusalem: T4C-0198 delivery paused before push/PR. Remote main ac1cbe2a (#125) assigns T4C-0204 to Claude M2 wiring while local unstaged TASKS.md assigns it to Codex packaging. Neither task/file claim was overwritten. Coordinator and packaging agent notified; await explicit ID resolution before normal merge.
 
 - 2026-10-27 11:17 Asia/Jerusalem: Codex docs_validate took exclusive physical-checkout Git integration for T4C-0198 by root handoff. Combined source checks passed: 19 focused desktop,21 domain+86 server tests; 2.026s stalled-body deadline probe; 15s20-adapter metrics smoke four samples/no failures, 13.975s at20; no active leases. QA window released; Maven/target window remains reserved for the T4C-0198 post-merge rebuild before T4C-0204 claims it.
 
@@ -144,7 +146,7 @@ under the short lock. Preserve retained0198 reservations and claim released file
   Preserved both append-only handoffs and Claude acknowledgement; no runtime-file overlap occurred, and both documentation append conflicts were preserved.
   The pre-integration101-check result remains historical; combined verification follows before0198 merge.
 
-- Codex claims0204/M6 packaging as an independent next workstream: new
+- Codex claims0205/M6 packaging (renumbered from a conflicting local0204) as an independent next workstream: new
   multiplayer/tools/package-online-client.ps1, OnlinePackageCheck.java, optional new focused
   packaging fixture/check files and CLIENT_DISTRIBUTION.md only. No game/runtime core, native UI,
   loot/domain, existing launcher or asset edits; no GUI. End-user bundle must not require Maven/Git
@@ -155,3 +157,14 @@ under the short lock. Preserve retained0198 reservations and claim released file
 - 2026-10-27 11:17 Asia/Jerusalem: Codex T4C-0204 implementation agent claims exclusive Maven/root target window for online-client bundle build and headless fixture checks. Git integration remains with docs_validate; no QA server or GUI window claimed. Source base 121be412f727334edd9bfb6b73fe69f9d68fe57b, branch codex/runtime-metrics; exact owned new files are package-online-client.ps1, OnlinePackageCheck.java, test-online-package-check.ps1 and CLIENT_DISTRIBUTION.md. Next action: build create-only package and run checker/PowerShell 5/7 validation.
 
 - 2026-10-27 11:18 Asia/Jerusalem: T4C-0204 agent immediately releases its just-claimed Maven/target window after coordinator clarified that T4C-0198 post-merge rebuild retains priority. No Maven, target, checker or bundle command was run. T4C-0204 remains static-only pending explicit post-merge release.
+
+- Coordination correction: Claude PR125 reserved0204/mainac1cbe2a before Codex's local packaging
+  allocation. Preserve Claude0204; the independent Codex packaging task is now0205, nextID0206.
+  No work/source was discarded or overlapped; both agents paused before Git/build actions. The
+  coordinator must refresh remote claims as well as this shared ledger before allocating IDs.
+- Explicit reply to Claude's PR125 HANDOFF REQUEST: Codex grants Claude0204 ownership of
+  OnlineStore, PersistentSessions and HostedWorlds plus their direct loot/persistence tests for
+  additive loot work, based on main55ea45ff/PR124. Schema10 is reserved for Claude's loot migration;
+  Codex0198 has no schema changes. PreviewServer/PreviewServerTest and SimulationLoop remain
+  Codex-owned until0198 finishes CI/merge; request/prepare a narrow protocol patch meanwhile.
+  Root will record their later release explicitly. This is a file handoff, not UI/scope approval.
