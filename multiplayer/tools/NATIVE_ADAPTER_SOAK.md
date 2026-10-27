@@ -5,6 +5,18 @@ authentication, polling, commands, committed character refresh, corpse refresh, 
 It opens **no windows**. Its evidence is twenty native network adapters, **not twenty rendered clients**.
 It never reads or writes single-player saves or preferences.
 
+The current source targets protocol 4. It loads the server's exact `HostedRegionPlan.startingSlice`
+allowlist (starting world and Lighthaven interior, portal routes 16/17), caches both collision crops,
+and acknowledges each location epoch only after the matching map/snapshot metadata is validated.
+Corpse recovery considers only corpses in the current world and crop. Tick/movement baselines reset
+across committed location epochs; character revisions remain monotonic. Local map paths come from
+the trusted hosted plan, never from network strings. Keep the world and dungeon collision files in
+their normal sibling layout. It does not deliberately navigate a portal tour; use the dedicated
+door probe to establish transitions, and inspect `worldTransfers` before claiming soak transfer coverage.
+
+Already-running protocol 3 baselines use immutable copies of their original harness and runtime.
+Do not replace those copies with this source or combine their results with protocol 4 evidence.
+
 Build the matching desktop and multiplayer packages first, then generate `target/classpath.txt`
 using `mvn dependency:build-classpath -Dmdep.outputFile=target/classpath.txt`. Start an isolated
 persistent QA server with no other connected players. Use a disposable QA database; provisioning

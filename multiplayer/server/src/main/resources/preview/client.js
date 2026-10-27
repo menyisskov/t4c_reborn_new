@@ -1,5 +1,5 @@
 'use strict';
-const protocolVersion = 3;
+const protocolVersion = 4;
 const canvas = document.querySelector('#map');
 const ctx = canvas.getContext('2d');
 const status = document.querySelector('#status');
@@ -59,7 +59,7 @@ setInterval(async () => {
   const current = generation; inputPending = true;
   const dx = Number(keys.has('ArrowRight') || keys.has('KeyD')) - Number(keys.has('ArrowLeft') || keys.has('KeyA'));
   const dy = Number(keys.has('ArrowDown') || keys.has('KeyS')) - Number(keys.has('ArrowUp') || keys.has('KeyW'));
-  try { await api('/input', `${sequence++} ${dx} ${dy}`); }
+  try { await api('/input', `${session.region.locationEpoch} ${sequence++} ${dx} ${dy}`); }
   catch (error) { if (current === generation) failed(error); }
   finally { inputPending = false; }
 }, 66);

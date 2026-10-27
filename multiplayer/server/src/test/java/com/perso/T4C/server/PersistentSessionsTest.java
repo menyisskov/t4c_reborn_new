@@ -21,6 +21,49 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 /** Consequential join between the tick-owned state and the real PostgreSQL transaction queue. */
 @EnabledIfEnvironmentVariable(named="T4C_DB_URL", matches=".+")
 class PersistentSessionsTest {
+  @Test void blockedCorpseLookupsCannotStarveTwentyCharacterWrites() throws Exception {
+    var pause=new AtomicBoolean();var entered=new CountDownLatch(2);var release=new CountDownLatch(1);
+    var store=new OnlineStore(() -> {
+      if(pause.get()) {
+        entered.countDown();
+        try { if(!release.await(5,TimeUnit.SECONDS)) throw new SQLException("Test lookup gate timed out"); }
+        catch(InterruptedException interrupted) { Thread.currentThread().interrupt();throw new SQLException(interrupted); }
+      }
+      return connection();
+    });
+    store.migrate();var key=store.provisionAccount();
+    var progress=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(1)).progress();
+    var world=new PreviewWorld(new PreviewMap(new boolean[8][8],0,0,3,3));
+    var sessions=new PersistentSessions(store,new PreviewMap(new boolean[8][8],0,0,3,3),world);
+    var tokens=new java.util.ArrayList<String>();
+    try {
+      for(int i=0;i<PreviewWorld.MAX_PLAYERS;i++) {
+        var character=store.create(key.accountId(),"Lookup contention "+i,0,3.5,3.5,progress,0);
+        long started=System.nanoTime();var lease=store.acquire(key.secret(),character.id());
+        tokens.add(sessions.join(lease,started).token());
+      }
+      pause.set(true);
+      var lookups=new java.util.ArrayList<CompletableFuture<?>>();
+      for(var token:tokens) lookups.add(sessions.corpses(token).toCompletableFuture());
+      assertTrue(entered.await(2,TimeUnit.SECONDS));
+      var writes=new java.util.ArrayList<CompletableFuture<OnlineStore.RewardResult>>();
+      for(var token:tokens) writes.add(sessions.commitGameplayEvent(token,0,UUID.randomUUID(),1,0,progress).toCompletableFuture());
+      sessions.step();
+      for(var token:tokens) assertNotNull(world.position(token),"Lookup backpressure cannot disconnect an authoritative writer");
+      // Repeated polls share the same pending lookup, rather than filling another bounded queue.
+      for(var token:tokens) lookups.add(sessions.corpses(token).toCompletableFuture());
+      pause.set(false);release.countDown();
+      var all=CompletableFuture.allOf(java.util.stream.Stream.concat(writes.stream(),lookups.stream()).toArray(CompletableFuture[]::new));
+      await(sessions,all);all.get();
+      for(var token:tokens) assertEquals(1,sessions.character(token).gold());
+      for(var write:writes) assertTrue(write.get().applied());
+      var retiringRead=sessions.corpses(tokens.getFirst()).toCompletableFuture();
+      var closed=sessions.leave(tokens.getFirst());
+      assertTrue(retiringRead.isCompletedExceptionally(),"Logout completes pending reads even before their worker returns");
+      await(sessions,closed);closed.get();
+    } finally { pause.set(false);release.countDown();sessions.shutdown(); }
+  }
+
   @Test void gameplayWritesDoNotPostponeTheMovementCheckpointDeadline() throws Exception {
     var store=OnlineStore.fromEnvironment(); store.migrate(); var key=store.provisionAccount();
     var prepared=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(3));

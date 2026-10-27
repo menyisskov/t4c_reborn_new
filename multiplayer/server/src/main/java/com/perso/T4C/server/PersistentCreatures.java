@@ -56,7 +56,10 @@ final class PersistentCreatures implements AutoCloseable {
 
   void characterDied(java.util.UUID character) {
     for (var entry:entries.values())
-      if (character.equals(entry.saved.targetCharacter())) reload(entry.spawn.id(),false);
+      // An in-flight read/provocation can already contain this target while the published cache
+      // still names somebody else. Fence that result before it can resurrect cleared aggro.
+      if (character.equals(entry.saved.targetCharacter()) || entry.pending || entry.recovering || entry.reserved)
+        reload(entry.spawn.id(),false);
   }
 
   private void reload(long id, boolean hide) {

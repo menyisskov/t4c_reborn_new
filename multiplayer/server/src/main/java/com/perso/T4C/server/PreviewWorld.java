@@ -36,6 +36,7 @@ public final class PreviewWorld {
     double requestCredits = REQUEST_BURST;
     long budgetTick;
   }
+  final int worldId;
   private final PreviewMap map;
   private final List<CreatureView> creatures;
   record CreatureSpawn(long id, MonsterContent.Spawn spawn, com.perso.T4C.monster.core.MonsterDef definition) {}
@@ -48,13 +49,15 @@ public final class PreviewWorld {
 
   public PreviewWorld(PreviewMap map) { this(map,null); }
 
-  public PreviewWorld(PreviewMap map, MonsterContent content) {
-    this.map = map;
+  public PreviewWorld(PreviewMap map, MonsterContent content) { this(map,content,0); }
+
+  PreviewWorld(PreviewMap map,MonsterContent content,int worldId) {
+    this.map = map; this.worldId=worldId;
     var residents=new ArrayList<CreatureView>();
     var authored=new ArrayList<CreatureSpawn>();
     var keys=new java.util.HashSet<String>();
     if (content!=null) {
-      var spawns=content.region(0,map.originX,map.originY,map.width,map.height);
+      var spawns=content.region(worldId,map.originX,map.originY,map.width,map.height);
       if (spawns.size()>256) throw new IllegalArgumentException("Creature preview capacity exceeded");
       for (var spawn:spawns) {
         if (!keys.add(spawn.persistenceKey())) throw new IllegalArgumentException("Duplicate authored spawn identity");
@@ -95,14 +98,16 @@ public final class PreviewWorld {
     return joinAt(x,y,nextId);
   }
 
-  Joined joinAt(double x, double y, long appearance) {
+  Joined joinAt(double x, double y, long appearance) { return joinAt(x,y,appearance,nextId); }
+
+  Joined joinAt(double x,double y,long appearance,long globalId) {
     if (players.size() >= MAX_PLAYERS) throw new Rejected(409, "full");
     if (!map.canStand(x,y)) throw new Rejected(409,"position");
     byte[] secret = new byte[32];
     random.nextBytes(secret);
     String token = HexFormat.of().formatHex(secret);
     var player = new Player();
-    player.id = nextId++;
+    player.id = globalId;nextId=Math.max(nextId,globalId+1);
     player.appearance=appearance;
     player.x = x;
     player.y = y;
@@ -172,6 +177,15 @@ public final class PreviewWorld {
     if (!map.canStand(x,y)) throw new IllegalArgumentException("Blocked relocation");
     var p=players.get(token);
     if (p!=null) { p.x=x; p.y=y; p.dx=0; p.dy=0; }
+  }
+
+  void transferTo(PreviewWorld destination,String token,double x,double y) {
+    if(!destination.map.canStand(x,y)) throw new IllegalArgumentException("Blocked transfer destination");
+    var player=players.get(token);if(player==null) return;
+    if(destination!=this && destination.players.containsKey(token)) throw new IllegalStateException("Duplicate actor owner");
+    players.remove(token);player.x=x;player.y=y;player.dx=0;player.dy=0;player.frozen=true;
+    player.lastSeen=destination.tick;player.lastInput=destination.tick;player.budgetTick=destination.tick;
+    destination.players.put(token,player);
   }
 
   void remove(String token) { players.remove(token); }

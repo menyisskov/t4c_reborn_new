@@ -10,8 +10,12 @@ $soakRoot = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
 $soakJar = Join-Path $soakRoot 'multiplayer/server/target/t4c-server.jar'
 $soakClasspathFile = Join-Path $soakRoot 'target/classpath.txt'
 $soakCollision = Join-Path $soakRoot 'assets/maps/worldmap/worldmap.colbin'
+$soakDungeonCollision = Join-Path $soakRoot 'assets/maps/dungeon/DungeonMap.colbin'
 if (!(Test-Path -LiteralPath $soakJar) -or !(Test-Path -LiteralPath $soakClasspathFile)) {
     throw 'Build desktop and multiplayer packages plus target/classpath.txt before running this harness.'
+}
+if (!(Test-Path -LiteralPath $soakCollision) -or !(Test-Path -LiteralPath $soakDungeonCollision)) {
+    throw 'Protocol 4 QA requires the starting-world and dungeon collision assets in their normal sibling layout.'
 }
 $soakRun = [guid]::NewGuid().ToString('N')
 if (!$Profiles) {

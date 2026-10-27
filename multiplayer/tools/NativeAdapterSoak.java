@@ -1,6 +1,7 @@
 import com.google.gson.*;
 import com.perso.T4C.online.OnlineConnection;
 import com.perso.T4C.server.PreviewMap;
+import com.perso.T4C.server.HostedRegionPlan;
 import java.net.*;
 import java.net.http.*;
 import java.nio.file.*;
@@ -18,6 +19,9 @@ class NativeAdapterSoak {
     CompletableFuture<OnlineConnection.CommandResult> command;
     long commandStarted,nextCommand,reconnectAt,reconnectStarted,lastTick=-1,lastRevision=-1,lastFresh;
     long attacks,recoveries,accepted,rejected,failures,reconnects,observations,moved,hpChanges;
+    long locationEpoch=-1,epochChanges,worldTransfers;
+    int world=-1;
+    String regionKey;
     double x=Double.NaN,y; int hp=-1;
     boolean expectedReconnect;
     final long[] latencyBuckets=new long[8];
@@ -31,7 +35,11 @@ class NativeAdapterSoak {
     URI endpoint=URI.create(args[0]); Path profiles=Path.of(args[1]),report=Path.of(args[4]);
     int duration=Integer.parseInt(args[2]); if(duration<10 || duration>86400) throw new IllegalArgumentException("Duration must be 10..86400 seconds");
     long serverPid=Long.parseLong(args[5]);
-    PreviewMap map=PreviewMap.load(Path.of(args[3]));
+    // Use the server's trusted hosted graph and exact portal-source collision exceptions.
+    // Never turn server-provided region keys into filesystem paths.
+    var hosted=HostedRegionPlan.startingSlice(Path.of(args[3]));
+    var maps=new HashMap<String,HostedRegionPlan.Region>();
+    for(var region:hosted.regions()) maps.put(region.spec().key(),region);
     List<Player> players=new ArrayList<>();
     try(var files=Files.list(profiles)) {
       for(var file:files.filter(p -> p.getFileName().toString().matches("player-[0-9]{2}\\.json")).sorted().toList()) {
@@ -84,11 +92,34 @@ class NativeAdapterSoak {
           }
           connected++; p.observations++;
           var snapshot=view.snapshot(); maxObserved=Math.max(maxObserved,snapshot.players().size());
+          var region=view.map().region();
+          var loaded=maps.get(region.key());
+          if(loaded==null || loaded.spec().world()!=region.world() || loaded.map().originX!=region.originX()
+              || loaded.map().originY!=region.originY() || loaded.map().width!=region.width() || loaded.map().height!=region.height()
+              || !region.equals(snapshot.region())) {
+            p.connection.stopInput(); error(p,"unknown_or_mismatched_region"); continue;
+          }
+          PreviewMap map=loaded.map();
+          if(p.locationEpoch==region.locationEpoch() && (p.world!=region.world() || !Objects.equals(p.regionKey,region.key()))) {
+            p.connection.stopInput(); error(p,"region_changed_without_epoch"); continue;
+          }
+          if(region.locationEpoch()!=p.locationEpoch) {
+            if(p.locationEpoch>=0) {
+              if(region.locationEpoch()<p.locationEpoch) error(p,"location_epoch_regressed");
+              p.epochChanges++;
+              if(p.world!=region.world()) p.worldTransfers++;
+            }
+            p.connection.stopInput(); p.lastTick=-1; p.lastFresh=now; p.x=Double.NaN;
+            p.locationEpoch=region.locationEpoch(); p.world=region.world(); p.regionKey=region.key();
+          }
+          // Headless equivalent of preparing the matching rendered map before acknowledgement.
+          p.connection.confirmRegionReady(region.locationEpoch());
           if(snapshot.tick()<p.lastTick) error(p,"tick_regressed");
           if(snapshot.tick()>p.lastTick) p.lastFresh=now;
           else if(now-p.lastFresh>5000) { error(p,"snapshot_stalled"); p.lastFresh=now; }
           p.lastTick=snapshot.tick();
           if(view.character()==null || !view.character().id().equals(p.credentials.characterId())) { error(p,"owner_identity"); continue; }
+          if(view.character().locationEpoch()!=region.locationEpoch()) { error(p,"owner_region_epoch_mismatch"); continue; }
           if(view.character().revision()<p.lastRevision) error(p,"character_revision_regressed");
           p.lastRevision=view.character().revision();
           var self=snapshot.players().stream().filter(a -> a.id()==view.ownId()).findFirst().orElseThrow();
@@ -101,7 +132,10 @@ class NativeAdapterSoak {
             p.connection.close(); p.expectedReconnect=true; p.reconnectStarted=now; continue;
           }
           if(p.command!=null) continue;
-          OnlineConnection.Corpse corpse=view.corpses().isEmpty()?null:view.corpses().get(0);
+          OnlineConnection.Corpse corpse=view.corpses().stream()
+              .filter(c -> c.world()==region.world() && c.x()>=region.originX() && c.y()>=region.originY()
+                  && c.x()<region.originX()+region.width() && c.y()<region.originY()+region.height())
+              .findFirst().orElse(null);
           var creatures=snapshot.creatures();
           var target=creatures.isEmpty()?null:creatures.get((i+(int)((now-start)/30_000))%creatures.size());
           double tx=corpse!=null?corpse.x()-map.originX:target!=null?target.x():map.spawnX;
@@ -190,6 +224,7 @@ class NativeAdapterSoak {
       Map<String,Object> dbBefore,Map<String,Object> dbAfter,boolean finished) throws Exception {
     var report=new LinkedHashMap<String,Object>();
     report.put("kind","20 actual native OnlineConnection adapters; no rendered clients");
+    report.put("protocolVersion",com.perso.T4C.online.model.OnlineProtocol.VERSION);
     report.put("startedAt",started.toString()); report.put("finished",finished); report.put("elapsedMillis",ms()-start);
     report.put("connectedMillisByCount",connected); report.put("maximumSnapshotPlayers",maxObserved);
     report.put("healthFailures",failures); report.put("healthMeanMillis",samples==0?0:nanos/1e6/samples);
@@ -203,6 +238,7 @@ class NativeAdapterSoak {
       var p=players.get(i); var row=new LinkedHashMap<String,Object>(); row.put("player",i+1);
       row.put("attacks",p.attacks); row.put("recoveries",p.recoveries); row.put("accepted",p.accepted); row.put("rejected",p.rejected);
       row.put("failures",p.failures); row.put("errors",p.errors); row.put("reconnects",p.reconnects);
+      row.put("locationEpochChanges",p.epochChanges); row.put("worldTransfers",p.worldTransfers);
       row.put("movementObservations",p.moved); row.put("hpChanges",p.hpChanges); row.put("latencyBuckets",p.latencyBuckets); results.add(row);
       row.put("commandPendingAtReport",p.command!=null);
     }

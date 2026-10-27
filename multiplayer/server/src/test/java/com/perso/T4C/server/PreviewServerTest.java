@@ -60,7 +60,7 @@ class PreviewServerTest {
         if (round == 0) startTick = endTick;
       }
       assertTrue(endTick > startTick);
-      var moved = client.send(request(url, "/input", tokens.getFirst(), "1 1 0"), HttpResponse.BodyHandlers.ofString());
+      var moved = client.send(request(url, "/input", tokens.getFirst(), "0 1 1 0"), HttpResponse.BodyHandlers.ofString());
       assertEquals(200, moved.statusCode());
       // Observe the same actor position from another authenticated client after a later server tick.
       JsonObject state;
@@ -128,14 +128,14 @@ class PreviewServerTest {
         assertFalse(privateResponse.body().contains(key.accountId().toString()));
         long revision = privateState.get("revision").getAsLong();
         var headItem = prepared.progress().equipment().get("HEAD");
-        assertEquals(401, client.send(request(url, "/unequip", null, revision + " HEAD"), HttpResponse.BodyHandlers.ofString()).statusCode());
-        var unequipped = client.send(request(url, "/unequip", token, revision + " HEAD"), HttpResponse.BodyHandlers.ofString());
+        assertEquals(401, client.send(request(url, "/unequip", null, revision + " 0 HEAD"), HttpResponse.BodyHandlers.ofString()).statusCode());
+        var unequipped = client.send(request(url, "/unequip", token, revision + " 0 HEAD"), HttpResponse.BodyHandlers.ofString());
         assertEquals(200, unequipped.statusCode());
-        assertEquals(409, client.send(request(url, "/equip", token, revision + " " + headItem + " HEAD"), HttpResponse.BodyHandlers.ofString()).statusCode(), "A stale command must not overwrite committed gear");
+        assertEquals(409, client.send(request(url, "/equip", token, revision + " 0 " + headItem + " HEAD"), HttpResponse.BodyHandlers.ofString()).statusCode(), "A stale command must not overwrite committed gear");
         long afterUnequip = object(unequipped).get("revision").getAsLong();
-        var equipped = client.send(request(url, "/equip", token, afterUnequip + " " + headItem + " HEAD"), HttpResponse.BodyHandlers.ofString());
+        var equipped = client.send(request(url, "/equip", token, afterUnequip + " 0 " + headItem + " HEAD"), HttpResponse.BodyHandlers.ofString());
         assertEquals(200, equipped.statusCode());
-        assertEquals(200, client.send(request(url, "/unequip", token, object(equipped).get("revision").getAsLong() + " HEAD"), HttpResponse.BodyHandlers.ofString()).statusCode());
+        assertEquals(200, client.send(request(url, "/unequip", token, object(equipped).get("revision").getAsLong() + " 0 HEAD"), HttpResponse.BodyHandlers.ofString()).statusCode());
         var committedGear = store.load(key.accountId(), character.id()).progress();
         assertFalse(committedGear.equipment().containsKey("HEAD"));
         assertEquals(prepared.progress().inventory(), committedGear.inventory(), "Equipment commands must never add or remove owned instances");
@@ -144,7 +144,7 @@ class PreviewServerTest {
         assertFalse(secondState.has("progress"),"Legacy profiles remain uninitialized");
         assertEquals(409,client.send(request(url,"/join",null,key.secret()+" "+character.id()),HttpResponse.BodyHandlers.ofString()).statusCode());
         assertEquals(403,client.send(request(url,"/admin/shutdown",token,""),HttpResponse.BodyHandlers.ofString()).statusCode());
-        assertEquals(200,client.send(request(url,"/input",token,"0 1 0"),HttpResponse.BodyHandlers.ofString()).statusCode());
+        assertEquals(200,client.send(request(url,"/input",token,"0 0 1 0"),HttpResponse.BodyHandlers.ofString()).statusCode());
         long deadline=System.nanoTime()+Duration.ofSeconds(3).toNanos();
         JsonObject snapshot;
         do {
@@ -155,7 +155,7 @@ class PreviewServerTest {
         assertFalse(snapshot.toString().contains(character.id().toString()));
         assertTrue(snapshot.has("characterRevision"));
         assertTrue(snapshot.getAsJsonArray("players").get(0).getAsJsonObject().get("x").getAsDouble()>character.x());
-        assertEquals(200,client.send(request(url,"/input",token,"1 0 0"),HttpResponse.BodyHandlers.ofString()).statusCode());
+        assertEquals(200,client.send(request(url,"/input",token,"0 1 0 0"),HttpResponse.BodyHandlers.ofString()).statusCode());
         var stopped=object(client.send(request(url,"/state",token,null),HttpResponse.BodyHandlers.ofString()));
         savedX=stopped.getAsJsonArray("players").get(0).getAsJsonObject().get("x").getAsDouble();
         savedAppearance=stopped.getAsJsonArray("players").get(0).getAsJsonObject().get("appearance").getAsLong();
@@ -248,25 +248,25 @@ class PreviewServerTest {
       assertFalse(summary.has("items")); assertFalse(listed.body().contains(character.id().toString()));
       assertFalse(listed.body().contains(ownedItem.id().toString()));
       assertTrue(JsonParser.parseString(client.send(request(url,"/corpses",foreign,null),HttpResponse.BodyHandlers.ofString()).body()).getAsJsonArray().isEmpty());
-      assertEquals(409,client.send(request(url,"/recover",foreign,"0 "+corpse),HttpResponse.BodyHandlers.ofString()).statusCode());
+      assertEquals(409,client.send(request(url,"/recover",foreign,"0 0 "+corpse),HttpResponse.BodyHandlers.ofString()).statusCode());
       long revision=object(client.send(request(url,"/character",token,null),HttpResponse.BodyHandlers.ofString())).get("revision").getAsLong();
-      assertEquals(409,client.send(request(url,"/recover",token,revision+" "+corpse),HttpResponse.BodyHandlers.ofString()).statusCode());
-      assertEquals(400,client.send(request(url,"/recover",token,"9223372036854775808 "+corpse),HttpResponse.BodyHandlers.ofString()).statusCode());
+      assertEquals(409,client.send(request(url,"/recover",token,revision+" 1 "+corpse),HttpResponse.BodyHandlers.ofString()).statusCode());
+      assertEquals(400,client.send(request(url,"/recover",token,"9223372036854775808 1 "+corpse),HttpResponse.BodyHandlers.ofString()).statusCode());
       assertEquals(200,client.send(request(url,"/leave",token,""),HttpResponse.BodyHandlers.ofString()).statusCode());
       var reposition=store.acquire(owner.secret(),character.id());
       store.checkpoint(reposition,reposition.character().revision(),0,30.5,30.5); store.release(reposition);
       token=login(client,url,owner,character.id());
       assertEquals(200,client.send(request(url,"/corpses",token,null),HttpResponse.BodyHandlers.ofString()).statusCode());
       revision=object(client.send(request(url,"/character",token,null),HttpResponse.BodyHandlers.ofString())).get("revision").getAsLong();
-      assertEquals(409,client.send(request(url,"/recover",token,"0 "+corpse),HttpResponse.BodyHandlers.ofString()).statusCode());
-      var recovered=client.send(request(url,"/recover",token,revision+" "+corpse),HttpResponse.BodyHandlers.ofString());
+      assertEquals(409,client.send(request(url,"/recover",token,"0 1 "+corpse),HttpResponse.BodyHandlers.ofString()).statusCode());
+      var recovered=client.send(request(url,"/recover",token,revision+" 1 "+corpse),HttpResponse.BodyHandlers.ofString());
       assertEquals(200,recovered.statusCode(),recovered.body());
       long acknowledged=object(recovered).get("revision").getAsLong(); assertTrue(acknowledged>revision);
       var committed=store.load(owner.accountId(),character.id());
       assertTrue(committed.revision()>=acknowledged);
       assertEquals(new java.util.HashSet<>(progress.inventory()),new java.util.HashSet<>(committed.progress().inventory()));
       assertEquals(1,committed.progress().inventory().stream().filter(i->i.id().equals(ownedItem.id())).count());
-      var retry=client.send(request(url,"/recover",token,acknowledged+" "+corpse),HttpResponse.BodyHandlers.ofString());
+      var retry=client.send(request(url,"/recover",token,acknowledged+" 1 "+corpse),HttpResponse.BodyHandlers.ofString());
       assertTrue(retry.statusCode()==200 || retry.statusCode()==409,"Retry may acknowledge or reject an already recovered corpse");
       assertEquals(committed.progress().inventory(),store.load(owner.accountId(),character.id()).progress().inventory());
       assertTrue(JsonParser.parseString(client.send(request(url,"/corpses",token,null),HttpResponse.BodyHandlers.ofString()).body()).getAsJsonArray().isEmpty());

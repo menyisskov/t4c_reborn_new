@@ -6,6 +6,18 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Hosted world travel (T4C-0194)
+
+### Added
+- Online characters can use the authored entrance into the first dungeon interior and its return portal. Saved location and character progress survive reconnecting there; players in different areas have separate views.
+- Travel and respawn wait for the client to load the matching map before movement resumes. Delayed actions from the previous area are refused.
+
+### Changed
+- The current online realm hosts the starting area and this interior with a shared twenty-player limit. Other routes and the interior's scripted encounters remain unavailable.
+
+### Fixed
+- Corpse lookup bursts no longer compete with character saves for the same work queue. A delayed monster update cannot restore aggression cleared by a committed death or area transfer.
+
 ## 2026-10-27 — Online portal validation (T4C-0193)
 
 ### Changed

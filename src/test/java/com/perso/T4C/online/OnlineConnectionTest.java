@@ -23,6 +23,8 @@ class OnlineConnectionTest {
     var login = new AtomicReference<String>();
     var protocol = new AtomicReference<String>();
     var revision = new java.util.concurrent.atomic.AtomicLong(1);
+    var regionEpoch = new java.util.concurrent.atomic.AtomicLong();
+    var moveOnCharacter = new java.util.concurrent.atomic.AtomicBoolean();
     var characterReads = new java.util.concurrent.atomic.AtomicInteger();
     var characterAuth = new AtomicReference<String>();
     var equipmentBody = new AtomicReference<String>();
@@ -65,23 +67,25 @@ class OnlineConnectionTest {
           if (path.equals("/character")) {
             characterReads.incrementAndGet();
             characterAuth.set(exchange.getRequestHeaders().getFirst("Authorization"));
+            if (moveOnCharacter.compareAndSet(true,false)) regionEpoch.set(1);
           }
+          String region="{\"world\":"+regionEpoch.get()+",\"key\":\"region-"+regionEpoch.get()
+              +"\",\"locationEpoch\":"+regionEpoch.get()+",\"originX\":"+(regionEpoch.get()==0 ? 2904 : 264)
+              +",\"originY\":"+(regionEpoch.get()==0 ? 1029 : 353)+",\"width\":80,\"height\":60}";
           String result =
               switch (path) {
                 case "/map" ->
                     "{\"protocolVersion\":" + com.perso.T4C.online.model.OnlineProtocol.VERSION
-                        + ",\"originX\":2904,\"originY\":1029,\"width\":80,\"height\":60,\"persistent\":"
-                        + persistent
-                        + "}";
-                case "/join" -> "{\"token\":\"" + token + "\",\"id\":7}";
+                        + ",\"persistent\":"+persistent+","+region.substring(1);
+                case "/join" -> "{\"token\":\"" + token + "\",\"id\":7,\"region\":"+region+"}";
                 case "/state" ->
-                    "{\"tick\":8,\"characterRevision\":" + revision.get()
+                    "{\"tick\":8,\"region\":"+region+",\"characterRevision\":" + revision.get()
                         + ",\"players\":[{\"id\":7,\"x\":40.5,\"y\":30.5,\"sequence\":0,\"hp\":27,\"maxHp\":40}],"
                         + "\"creatures\":[{\"id\":1,\"definition\":\"Guard\",\"x\":21,\"y\":37,"
                         + "\"health\":55,\"maxHealth\":55,\"walkPattern\":\"Warrio#l\"}]}";
                 case "/character" ->
                     "{\"id\":\"" + credentials.characterId() + "\",\"name\":\"Online tester\",\"gold\":"
-                        + (200 + revision.get()) + ",\"experience\":0,\"revision\":" + revision.get() + "}";
+                        + (200 + revision.get()) + ",\"experience\":0,\"revision\":" + revision.get() + ",\"locationEpoch\":"+regionEpoch.get()+"}";
                 case "/corpses" -> "[{\"id\":\""+corpseId+"\",\"world\":0,\"x\":2944,\"y\":1059,\"itemCount\":1,\"gold\":0}]";
                 case "/equip", "/unequip", "/attack", "/recover" -> "{\"revision\":" + revision.get() + "}";
                 default -> "{}";
@@ -99,9 +103,11 @@ class OnlineConnectionTest {
               persistent ? credentials : null)) {
         connection.direction(1, -1);
         long deadline = System.nanoTime() + Duration.ofSeconds(5).toNanos();
-        while ((connection.view() == null || input.get() == null || !input.get().endsWith(" 1 -1"))
+        while (connection.view() == null
             && System.nanoTime() < deadline) Thread.sleep(10);
         assertNotNull(connection.view());
+        connection.confirmRegionReady(connection.view().map().locationEpoch());
+        while ((input.get()==null || !input.get().endsWith(" 1 -1")) && System.nanoTime()<deadline) Thread.sleep(10);
         assertEquals(
             persistent ? credentials.secret() + " " + credentials.characterId() : "", login.get());
         assertEquals(7, connection.view().ownId());
@@ -113,7 +119,7 @@ class OnlineConnectionTest {
         assertEquals(21, connection.view().snapshot().creatures().getFirst().x());
         assertEquals("Warrio#l", connection.view().snapshot().creatures().getFirst().walkPattern());
         assertThrows(UnsupportedOperationException.class, () -> connection.view().snapshot().creatures().clear());
-        assertTrue(input.get().matches("[0-9]+ 1 -1"));
+        assertTrue(input.get().matches("0 [0-9]+ 1 -1"));
         assertThrows(
             UnsupportedOperationException.class,
             () -> connection.view().snapshot().players().clear());
@@ -142,27 +148,44 @@ class OnlineConnectionTest {
           assertTrue(result.accepted());
           assertEquals(3, result.character().revision());
           assertEquals(result.character(), connection.view().character(), "Publish committed private state before completion");
-          assertEquals("2 " + instance + " HEAD", equipmentBody.get());
+          assertEquals("2 0 " + instance + " HEAD", equipmentBody.get());
           assertEquals("Bearer " + token, equipmentAuth.get());
 
           equipmentCode.set(409);
           var rejected = connection.unequip(com.perso.T4C.player.BodyPart.HEAD).toCompletableFuture().get(3, TimeUnit.SECONDS);
           assertFalse(rejected.accepted());
-          assertEquals("3 HEAD", equipmentBody.get());
+          assertEquals("3 0 HEAD", equipmentBody.get());
           assertEquals("connected", connection.status(), "A stale or ineligible action is not a broken connection");
           assertEquals(4, characterReads.get(), "Conflicts must refresh private state before another action");
 
           equipmentCode.set(200);
           var attack=connection.attack(1).toCompletableFuture().get(3,TimeUnit.SECONDS);
           assertTrue(attack.accepted());
-          assertEquals("3 1",equipmentBody.get(),"Attack intent cannot contain damage, XP, gold or coordinates");
+          assertEquals("3 0 1",equipmentBody.get(),"Attack intent contains only revision, location epoch and target");
           assertEquals(4,attack.character().revision());
           assertEquals(attack.character(),connection.view().character());
           assertEquals(corpseId,connection.view().corpses().getFirst().id());
           var recovered=connection.recover(corpseId).toCompletableFuture().get(3,TimeUnit.SECONDS);
           assertTrue(recovered.accepted());
-          assertEquals("4 "+corpseId,equipmentBody.get(),"Recovery accepts only revision and owned corpse identity");
+          assertEquals("4 0 "+corpseId,equipmentBody.get(),"Recovery accepts only revision, location epoch and owned corpse identity");
           assertEquals(5,recovered.character().revision());
+
+          // Move after the state reply but before its private-state read. Refresh reads only.
+          moveOnCharacter.set(true); revision.set(6);
+          deadline=System.nanoTime()+Duration.ofSeconds(4).toNanos();
+          while ((connection.view()==null || connection.view().map().locationEpoch()!=1) && System.nanoTime()<deadline) Thread.sleep(10);
+          assertNotNull(connection.view());
+          assertEquals(1,connection.view().map().world());
+          assertEquals(connection.view().map().region(),connection.view().snapshot().region());
+          assertEquals(1,connection.view().character().locationEpoch());
+          assertEquals(4,equipmentCalls.get(),"A map/private-state race must not replay any mutation");
+          connection.direction(1,0);
+          while ((!input.get().startsWith("1 ") || !input.get().endsWith(" 0 0")) && System.nanoTime()<deadline) Thread.sleep(10);
+          assertTrue(input.get().endsWith(" 0 0"),"Movement waits for render-thread map acknowledgement");
+          connection.confirmRegionReady(1);
+          while (!input.get().endsWith(" 1 0") && System.nanoTime()<deadline) Thread.sleep(10);
+          assertTrue(input.get().startsWith("1 "));
+          assertTrue(input.get().endsWith(" 1 0"));
 
           equipmentCode.set(503);
           var uncertain = connection.equip(instance, com.perso.T4C.player.BodyPart.HEAD).toCompletableFuture();

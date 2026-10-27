@@ -7,6 +7,10 @@ import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.helper.CharacterClass;
 import com.perso.T4C.server.persistence.OnlineStore;
 import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.lang.reflect.Proxy;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -15,6 +19,63 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
 @EnabledIfEnvironmentVariable(named="T4C_DB_URL", matches=".+")
 class PersistentCreaturesTest {
+  @Test void deathFencesAnInFlightReadWhoseCachedTargetIsStillUnknown() throws Exception {
+    var pause=new AtomicBoolean(); var captured=new CountDownLatch(1); var release=new CountDownLatch(1);
+    var store=new OnlineStore(() -> {
+      var actual=DriverManager.getConnection(System.getenv("T4C_DB_URL"),System.getenv("T4C_DB_USER"),System.getenv("T4C_DB_PASSWORD"));
+      return (Connection)Proxy.newProxyInstance(Connection.class.getClassLoader(),new Class<?>[]{Connection.class},
+          (proxy,method,args) -> {
+            try {
+              Object result=method.invoke(actual,args);
+              // loadOrCreateSpawn has materialized its return value before closing the connection.
+              if(method.getName().equals("close") && Thread.currentThread().getName().startsWith("creature-persistence-")
+                  && pause.compareAndSet(true,false)) {
+                captured.countDown();
+                if(!release.await(5,TimeUnit.SECONDS)) throw new SQLException("Test read gate timed out");
+              }
+              return result;
+            } catch(InvocationTargetException failure) { throw failure.getCause(); }
+          });
+    });
+    store.migrate();
+    var definition=MonsterCatalog.loadBundled().monsters().get("Olin Haad Guard 3");
+    var watched=new MonsterContent.Spawn("stale-read-"+UUID.randomUUID(),definition.getName(),3,3,0,false,false);
+    var killer=new MonsterContent.Spawn("death-source-"+UUID.randomUUID(),definition.getName(),4,3,0,false,false);
+    var content=new MonsterContent(MonsterContent.VERSION,Map.of(definition.getName(),definition),List.of(watched,killer));
+    var world=new PreviewWorld(new PreviewMap(new boolean[8][8],0,0,3,3),content);
+    var key=store.provisionAccount();
+    var progress=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(1)).progress();
+    var character=store.create(key.accountId(),"Death read fence",0,3.5,3.5,progress,0);
+    var session=store.acquire(key.secret(),character.id());
+    try(var creatures=new PersistentCreatures(store,world)) {
+      try {
+        var watchedLife=creatures.life(1); var killerLife=creatures.life(2);
+        assertNull(watchedLife.targetCharacter());
+        var provoked=store.commitGameplayEvent(session,character.revision(),UUID.randomUUID(),0,0,progress,
+            new OnlineStore.CreatureProvocation(watchedLife.key(),watchedLife.eventId(),character.id(),0)).character();
+        provoked=store.commitGameplayEvent(session,provoked.revision(),UUID.randomUUID(),0,0,progress,
+            new OnlineStore.CreatureProvocation(killerLife.key(),killerLife.eventId(),character.id(),0)).character();
+        pause.set(true); creatures.damageCommitted(1);
+        assertTrue(captured.await(3,TimeUnit.SECONDS),"Worker captured new aggro while cached target remains null");
+        var position=new com.perso.T4C.online.model.CharacterProgress.Respawn(0,3.5,3.5);
+        var death=OnlineDeath.prepare(provoked,ItemCatalog.loadBundled(),position,position,new Random(1));
+        store.commitMonsterAttack(session,provoked.revision(),UUID.randomUUID(),death.progress(),
+            new OnlineStore.MonsterAttack(killerLife.key(),killerLife.eventId(),character.id(),0,System.currentTimeMillis()+1500),death.transition());
+        creatures.characterDied(character.id());
+        release.countDown();
+        long deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(4);
+        OnlineStore.SpawnState published=null;
+        while(published==null && System.nanoTime()<deadline) {
+          creatures.step();
+          try { published=creatures.life(1); } catch(PreviewWorld.Rejected loading) { Thread.sleep(5); }
+        }
+        assertNotNull(published);
+        assertNull(published.targetCharacter(),"A pre-death read must not restore aggro cleared by the committed death");
+        assertEquals(watchedLife.eventId(),published.eventId(),"Refreshing aggro cannot invent a new creature life");
+      } finally { pause.set(false); release.countDown(); }
+    } finally { store.release(session); }
+  }
+
   @Test void recoveryHidesClaimedLifeAndWorkerPublishesOnlyCommittedRespawn() throws Exception {
     var block=new AtomicBoolean(); var entered=new CountDownLatch(1); var release=new CountDownLatch(1);
     var store=new OnlineStore(() -> {

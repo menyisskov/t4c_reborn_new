@@ -1,10 +1,24 @@
 # Authoritative map transfer: implementation handoff
 
-Status: design for the next executable slice, October 27, 2026. Portal data and collision validation are implemented; hosted multi-region gameplay, transfer transactions and native map switching are not implemented. This document does not claim map transfer or Beta completion.
+Status updated October 27, 2026: the server and native protocol/map-loader integration are implemented. Two HTTP clients and two actual native networking adapters passed the authored round trip. Rendered map switching and Beta completion remain unverified.
 
-## Verified starting point
+## Implemented server handoff (0194)
 
-The server currently owns one `PreviewMap`, one `PreviewWorld`, one `PersistentSessions`, and one set of creature/combat services. `PreviewMap.load` selects an 80 by 60 crop of world 0 with origin (2904,1029). `PersistentSessions` rejects other saved worlds and checkpoints world 0. `PreviewWorld` selects world-0 authored spawns. `/map` is a global startup document. `OnlineConnection` fetches it once, before join. `OnlineClient.create` opens `Paths.MAP` and constructs `MapRenderer` with world 0. These are actual integration boundaries, not merely configuration changes.
+`HostedRegionPlan.startingSlice` hosts the two explicit regions and validates portals 16/17. `HostedWorlds` owns both region contexts under one simulation thread; `PersistentSessions` retains global capacity and stable token/player identity across transfers. `RegionMapLoader` applies the enabled portal-source player exception without changing terrain line of sight. `--online` selects this plan; compatibility constructors and `--preview` retain single-region behavior.
+
+Schema 9 adds character `location_epoch`, `portal_cooldown_until` and `online_transfer_events`. `OnlineStore.commitTransfer(Session, revision, eventId, PortalTransfer)` commits the authored destination, epoch, cooldown, receipt and aggro clear atomically. Fatal relocations also increment the epoch. Pending checkpoint/portal/logout sequencing has a blocked-database regression test. Unknown outcomes disconnect and reload relevant creature caches; no compensating source write occurs.
+
+The concrete wire region is `OnlineRegion(world,key,originX,originY,width,height,locationEpoch)`. Join and snapshots include `region`; `/map` preserves existing fields and adds `world`, `key`, `locationEpoch`. Unauthenticated `/map` remains a version gate; authenticated `/map` describes the caller. Private `OnlineCharacterView` also includes `locationEpoch` to prevent mixed-generation publication. Mutation bodies are `input: epoch sequence dx dy`, `attack: revision epoch target`, `equip: revision epoch instance slot`, `unequip: revision epoch slot`, `recover: revision epoch corpse`. `/region-ready` accepts only an epoch. Production actors remain frozen until acknowledgement after join and every relocation.
+
+Final PostgreSQL-enabled reactor `verify` and packaging passed with 71 server tests, zero failures/errors/skips (including concurrent NPC preparation tests). Two HTTP clients walked direction-only through portals 16/17 with reconnect and observer isolation. The final two-native-adapter probe also passed entrance, map/private epoch agreement, isolation, dungeon reconnect, return and unchanged inventory/stats/gold. Logs are under the operator's temporary directory as `t4c-0194-final-verify.log` and `t4c-0194-native-probe-final.log`; reproduce using tools/NATIVE_TRANSFER_PROBE.md. Desktop control remains paused, so these checks do not establish rendered asset loading.
+
+Reliability regressions reproduce a corpse-read burst exhausting shared write capacity and a pending pre-death creature read restoring cleared aggro. Separate/coalesced read workers and pending-read invalidation pass those regressions. They do not prove the precise cause of the failed historical protocol3 soak; a fresh matching runtime must pass sustained testing.
+
+Open limits: only these two regions/two portals are hosted; all 11 dungeon residents retain existing unsupported combat/script restrictions, diagnosed at startup. Other saved worlds/positions are rejected explicitly. Missing/invalid/unhosted respawns are not silently mapped to world 0. Broader portal enablement needs source-occupancy suppression for self-targeting graphs, content eligibility, region ownership and destination validation. The remaining sections retain the implementation rationale and expansion plan.
+
+## Verified starting point before 0194
+
+Before 0194, the server owned one `PreviewMap`, one `PreviewWorld`, one `PersistentSessions`, and one set of creature/combat services. `PreviewMap.load` selects an 80 by 60 crop of world 0 with origin (2904,1029). `PersistentSessions` rejects other saved worlds and checkpoints world 0. `PreviewWorld` selects world-0 authored spawns. `/map` is a global startup document. `OnlineConnection` fetches it once, before join. `OnlineClient.create` opens `Paths.MAP` and constructs `MapRenderer` with world 0. These are actual integration boundaries, not merely configuration changes.
 
 The new foundations are:
 
@@ -34,24 +48,15 @@ Portal 947 is also inside the crop, but it is not reachable in the current conne
 
 Acceptance for this slice: player A walks through portal 16 in the native client, loads dungeon art, moves there, logs out and reconnects there, then returns through portal 17. Player B remains in the starting area and continues moving/fighting. Neither can see, target, damage or recover corpses across regions/worlds. Then both enter the dungeon and can see one another. Restart preserves the destination. Single-player launch and its save files remain unchanged.
 
-## Runtime ownership and boundaries
+## Implemented ownership and retained design invariants
 
-Keep one simulation thread, one bounded DB executor and one global 20-player limit. No distributed zone services, message broker or second login endpoint are needed for this scale.
+Keep one simulation thread, bounded DB workers and one global 20-player limit. Writes and coalesced corpse reads use separate bounded pools to prevent read bursts from starving authority/lease writes. No distributed zone services, message broker or second login endpoint are needed for this scale.
 
 Add a simulation-owned `HostedWorlds` coordinator with an explicit validated region table. A region owns `PreviewMap`, `PreviewWorld`, `PersistentCreatures`, `OnlineMelee` and `OnlineRetaliation`. A global `PersistentSessions` owns session tokens, character leases, command serialization, player IDs and the current region binding. Do not instantiate a separate session/lease manager per region.
 
-Suggested records and methods (proposal, not existing API):
+The concrete API uses `OnlineRegion`, `HostedRegionPlan.Region` and `HostedWorlds.Region`; `HostedWorlds.require(world,x,y)` resolves ownership, and `PersistentSessions` owns transfer drafting/publication. See the current source rather than the superseded pre-implementation record sketches.
 
-```java
-record RegionId(int world, String key) {}
-record RegionDescriptor(RegionId id, int originX, int originY,
-                        int width, int height, String contentRevision) {}
-RegionContext HostedWorlds.requireRegionFor(int world, double x, double y);
-RegionContext HostedWorlds.regionForToken(String token);
-CompletionStage<RewardResult> PersistentSessions.transfer(String token, TransferDraft draft);
-```
-
-`requireRegionFor` must select exactly one configured region. Reject missing or ambiguous ownership at startup or join. Never fall back to world 0. Initial regions have explicit IDs and fixed non-overlapping rectangles. Regions of the same world cannot overlap actor ownership; adjacent-region seam walking is a later extension, not implicitly implemented by this portal slice.
+Region resolution must select exactly one configured region. Reject missing or ambiguous ownership at startup or join. Never fall back to world 0. Initial regions have explicit IDs and fixed non-overlapping rectangles. Regions of the same world cannot overlap actor ownership; adjacent-region seam walking is a later extension, not implicitly implemented by this portal slice.
 
 Refactor `PreviewMap.load` into an explicit bounded region loader receiving origin, dimensions and world identity. Keep the existing start-area wrapper for compatibility. Separate player portal-source passability from ordinary creature collision and line of sight. `PortalDestinations.canStand` proves physical placement only; it does not prove a region is hosted or game content is supported.
 
@@ -78,24 +83,26 @@ When a transfer is accepted:
 5. Publish the new region descriptor and epoch. Keep the actor frozen for map-load acknowledgement; other actors and lease maintenance continue.
 6. An authenticated `region-ready` acknowledgement names only the epoch. After matching it to the binding, unfreeze. Timeout/disconnect uses normal durable logout handling.
 
-Proposed store entry point:
+Implemented store entry point:
 
 ```java
 RewardResult commitTransfer(Session session, long expectedRevision,
-                            UUID eventId, TransferDraft draft);
+                            UUID eventId, PortalTransfer draft);
 ```
 
-The draft is server-only. Bind its receipt hash to character ID, portal ID, exact source sample, source world/epoch, authored destination, target region/content revision and cooldown. Use a dedicated `online_transfer_events` table and a migration adding `location_epoch` and portal cooldown state to characters. Receipt lookup precedes stale-revision rejection, but follows active lease validation. Matching retries return current committed state without replaying movement; mismatched payloads fail. Target changes in a later content export do not alter an already accepted draft.
+The draft is server-only. Bind its receipt hash to character ID, portal ID, exact source sample, source world/epoch, authored destination, target region key and cooldown. Use a dedicated `online_transfer_events` table and a migration adding `location_epoch` and portal cooldown state to characters. Receipt lookup precedes stale-revision rejection, but follows active lease validation. Matching retries return current committed state without replaying movement; mismatched payloads fail. Target changes in a later content export do not alter an already accepted draft.
 
 Do not compare source XY against an old movement checkpoint: the authoritative source sample may legitimately be newer. The session-owned queued command and source world/epoch/revision fence authorize the sampled location. Verify source occupation in the simulation before drafting. Never accept draft coordinates from an HTTP request.
 
 Unknown transaction outcome disconnects the actor and reloads all affected creature caches. Rejoin reads the database: if committed, join the destination and new epoch; otherwise join the prior persisted state. Do not automatically restore the source with a compensating write. Logout accepted during a pending transfer must drain it, then checkpoint the committed destination, mirroring the death/logout rule already tested.
 
-Death reuses destination validation and region preparation. The fatal transaction must still atomically persist HP, XP penalty, inventory/corpse and destination. Its location epoch increments on relocation, including same-world respawn. Corpse location stays in the world where death occurred. Remove the current outside-crop/world-zero fallback only after saved respawn resolution is implemented. Invalid or unhosted saved respawns require an explicit surfaced recovery policy; silently spawning in another world is not acceptable.
+Death reuses destination validation and region preparation. The fatal transaction must still atomically persist HP, XP penalty, inventory/corpse and destination. Its location epoch increments on relocation, including same-world respawn. Corpse location stays in the world where death occurred. Production admission rejects invalid or unhosted saved respawns before joining. Hosted cross-map relocation is integrated; no outside-crop/world-zero fallback remains. Broader respawn support requires hosting and validating the destination first.
+
+Native integration follow-up: the actual OnlineConnection probe now passed entrance16, matching region/private epochs, observer isolation, reconnect inside and return17 with unchanged character progress/gold. The render-thread map loader and readiness callback are implemented and compile-tested; rendered two-client world-switch validation remains pending after desktop control stopped. See tools/NATIVE_TRANSFER_PROBE.md.
 
 ## Protocol and native rendering
 
-Increment `OnlineProtocol.VERSION` for this incompatible contract. Include `RegionDescriptor` and durable `locationEpoch` with join and every snapshot. `/map` must be authenticated and return the caller's current region, or descriptor/blocked cells may be embedded in a bounded initial-region response. A global pre-join map response cannot describe where a returning character is located.
+Protocol 4 is the incompatible contract. `OnlineRegion` and durable `locationEpoch` accompany join and every snapshot. `/map` must be authenticated and return the caller's current region, or descriptor/blocked cells may be embedded in a bounded initial-region response. A global pre-join map response cannot describe where a returning character is located.
 
 Carry `locationEpoch` on movement, melee, equipment and corpse-recovery requests. Reject stale-epoch requests before resolving region-local actor IDs. Preserve a monotonically increasing movement sequence through transfer; reset accepted direction to zero. A delayed attack from the starting region must not hit a dungeon monster with the same local numeric ID.
 
@@ -112,15 +119,15 @@ Use the existing explicit native asset mapping:
 
 `MapDefinition.fromZ` currently returns worldmap for unknown IDs. Do not use that fallback for network data. Select an exact enum entry by `getZ()` and reject absent IDs. A server-advertised world does not authorize an arbitrary local file path; paths come only from this client allowlist.
 
-`OnlineClient` currently stores sprites only in `create`; retain the shared sprite loader for subsequent region installs. Create the new `MapReader` and `MapRenderer(..., worldId)` before replacing the old pair, then dispose the old renderer and close the old reader. Open/close and renderer lifecycle must respect the LibGDX render thread; do not let the network thread mutate native assets. Clear avatars, creature animation instances, selected target, corpse target and `lastTick`; reposition the camera from the first matching-epoch authoritative actor. Region change within the same world may reuse the map reader, but still resets origin-dependent view state. The first implementation may reopen it for clarity if measured loading remains acceptable.
+`OnlineClient` retains the shared sprite loader for subsequent region installs. Create the new `MapReader` and `MapRenderer(..., worldId)` before replacing the old pair, then dispose the old renderer and close the old reader. Open/close and renderer lifecycle must respect the LibGDX render thread; do not let the network thread mutate native assets. Clear avatars, creature animation instances, selected target, corpse target and `lastTick`; reposition the camera from the first matching-epoch authoritative actor. Region change within the same world may reuse the map reader, but still resets origin-dependent view state. The first implementation may reopen it for clarity if measured loading remains acceptable.
 
-## Implementation order and verification
+## Remaining verification and expansion
 
-1. Implement explicit region loading and enabled portal-source movement exception; validate both slice regions at startup. Add one movement regression proving the authored door is enterable while neighboring wall tiles and combat LOS stay blocked.
-2. Introduce coordinator/global bindings and stable actor migration without exposing a teleport command. Keep existing single-region tests running through the compatibility constructor.
-3. Implement transfer transaction and epoch persistence. Test rollback, identical replay, altered replay rejection, lease/revision fencing, commit-response loss/rejoin, and logout while transfer is pending. Extend existing persistence test setup.
-4. Add protocol epoch/descriptor handling and native asset switch, then wire automatic source-tile activation. Test stale attack isolation and global capacity across both regions.
-5. Run two real clients through portal 16, reconnect in dungeon, return via 17, then both in one dungeon. Capture client/server logs and screenshots without credentials or personal offline saves. Verify ordinary offline launch separately.
-6. Integrate cross-map death/respawn with the same transition publication and recovery machinery. Then expand hosted coverage and supported portal graph deliberately; blocked/unhosted diagnostics remain visible in operator startup output.
+The region loader, narrow portal exception, global coordinator, transaction receipts, epoch protocol, native asset-switch code and hosted cross-map death publication are implemented. Focused tests cover the consequential persistence and isolation joins; do not reimplement them from the older imperative rationale above.
+
+1. Resume desktop QA only when authorized after the owner's physical stop. Run two rendered clients through 16/17, reconnect inside, then join both in the interior; verify actual map art and offline launch separately.
+2. Complete a fresh clean two-hour mixed 20-adapter run on the fixed binaries, followed by final integrated-release load and rendered/network checks. Preserve failures instead of counting elapsed time as acceptance.
+3. Verify crash/restart and restored gameplay through transfers and fatal relocation.
+4. Expand hosted routes/content deliberately, including self-target source suppression, supported encounters and valid saved respawns. Keep unknown/unhosted destinations explicit.
 
 Full Beta still requires broader hosted-map coverage, supported content/NPC/quest behavior, progression and economy joins, secure remote transport/accounts, restart/restore evidence and sustained mixed 20-client operation. Passing this two-region slice proves a transfer vertical slice, not those remaining acceptance criteria.
