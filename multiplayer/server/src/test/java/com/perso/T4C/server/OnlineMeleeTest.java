@@ -112,6 +112,32 @@ class OnlineMeleeTest {
     } finally { sessions.shutdown(); }
   }
 
+  @Test void paladinStarterMaceAndShieldCanLandAnAuthoritativePhysicalHit() throws Exception {
+    var store=OnlineStore.fromEnvironment();store.migrate();
+    var json=new Gson().toJsonTree(MonsterCatalog.loadBundled().monsters().get("Olin Haad Guard 3")).getAsJsonObject();
+    json.addProperty("health",1);json.addProperty("acMin",0);json.addProperty("acMax",0);
+    json.addProperty("dodge",1);json.addProperty("agi",1);json.addProperty("respawnTime",300_000);
+    var definition=new Gson().fromJson(json,MonsterDef.class);
+    var spawn=new MonsterContent.Spawn("paladin-hit-"+UUID.randomUUID(),definition.getName(),3,3,0,false,false);
+    var world=new PreviewWorld(new PreviewMap(new boolean[8][8],0,0,3,3),
+        new MonsterContent(MonsterContent.VERSION,Map.of(definition.getName(),definition),List.of(spawn)));
+    var sessions=new PersistentSessions(store,world.map(),world);
+    var prepared=OnlineCharacterCreator.prepare(CharacterClass.PALADIN,"male",false,new Random(2));
+    assertTrue(prepared.progress().inventory().stream().anyMatch(i->i.key().equals("item.recruits_mace")));
+    assertTrue(prepared.progress().inventory().stream().anyMatch(i->i.key().equals("item.newbi_set_shield")));
+    var key=store.provisionAccount();
+    var player=store.create(key.accountId(),"Paladin starter hit",0,3.5,3.5,prepared.progress(),prepared.gold());
+    var token=sessions.join(store.acquire(key.secret(),player.id()),System.nanoTime()).token();
+    try(var creatures=new PersistentCreatures(store,world)) {
+      var rolls=new Random(1) { @Override public int nextInt(int bound) { return bound-1; } };
+      var melee=new OnlineMelee(world.map(),world,sessions,creatures,ItemCatalog.loadBundled(),rolls,System::currentTimeMillis);
+      var result=melee.attack(token,player.revision(),1).toCompletableFuture();
+      await(sessions,creatures,result);
+      assertTrue(result.get().character().experience()>player.experience());
+      assertEquals("PLAYER",store.loadOrCreateSpawn(spawn.persistenceKey()).deathKind());
+    } finally { sessions.shutdown(); }
+  }
+
   private static void await(PersistentSessions sessions,PersistentCreatures creatures,CompletableFuture<?> result) throws Exception {
     long deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(5);
     while(!result.isDone() && System.nanoTime()<deadline) { sessions.step(); creatures.step(); Thread.sleep(5); }

@@ -41,7 +41,7 @@ final class OnlineRetaliation {
       OnlineStore.SpawnState life;
       try { life=creatures.life(spawn.id()); }
       catch (PreviewWorld.Rejected busy) { continue; }
-      if (life.recipient()!=null || life.targetCharacter()==null || life.nextAttackAt()>now) continue;
+      if (life.diedAt()!=null || life.targetCharacter()==null || life.nextAttackAt()>now) continue;
       String token=sessions.tokenForCharacter(life.targetCharacter());
       if (token==null || !sessions.belongs(token,world)) continue; // Persisted target survives reconnect; no attacks against absent actors.
       if (life.targetEpoch()==null || life.targetEpoch()!=sessions.character(token).locationEpoch()) continue;

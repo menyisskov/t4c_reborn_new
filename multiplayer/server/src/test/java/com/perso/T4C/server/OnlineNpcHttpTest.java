@@ -13,6 +13,7 @@ import java.net.http.*;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Random;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
@@ -41,7 +42,10 @@ class OnlineNpcHttpTest {
       assertEquals(409,send(client,url,"/interact",token,"0 0 Kilhiam").statusCode(),"Assets must be ready before interaction");
       assertEquals(200,send(client,url,"/region-ready",token,"0").statusCode());
       var state=object(send(client,url,"/state",token,null));
-      var actor=state.getAsJsonArray("npcs").get(0).getAsJsonObject();
+      var actor=java.util.stream.StreamSupport.stream(state.getAsJsonArray("npcs").spliterator(),false)
+          .map(view->view.getAsJsonObject())
+          .filter(view->npc.id().equals(view.get("id").getAsString()))
+          .findFirst().orElseThrow();
       assertEquals(npc.id(),actor.get("id").getAsString());
       assertEquals(npc.x()-map.originX,actor.get("x").getAsDouble());
       assertFalse(actor.has("questFlags"));assertFalse(actor.has("inventory"));
@@ -153,16 +157,24 @@ class OnlineNpcHttpTest {
       String token=login(client,url,near,nearCharacter.id());
       send(client,url,"/region-ready",token,"0");
       var listed=object(send(client,url,"/state",token,null)).getAsJsonArray("loot");
-      assertEquals(2,listed.size(),"Loot from the other region never appears");
-      assertEquals(nearDrop.toString(),listed.get(0).getAsJsonObject().get("id").getAsString(),"Nearest drop first");
-      assertEquals(farDrop.toString(),listed.get(1).getAsJsonObject().get("id").getAsString());
-      assertEquals(homeX+1-firstMap.originX,listed.get(0).getAsJsonObject().get("x").getAsDouble(),"Coordinates are region-local");
+       var ownIds=Set.of(nearDrop.toString(),farDrop.toString(),otherDrop.toString());
+       var ownListed=java.util.stream.StreamSupport.stream(listed.spliterator(),false)
+           .map(loot->loot.getAsJsonObject())
+           .filter(loot->ownIds.contains(loot.get("id").getAsString())).toList();
+       assertEquals(2,ownListed.size(),"This test's loot from the other region never appears");
+       assertEquals(nearDrop.toString(),ownListed.get(0).get("id").getAsString(),"Nearest drop first");
+       assertEquals(farDrop.toString(),ownListed.get(1).get("id").getAsString());
+       assertEquals(homeX+1-firstMap.originX,ownListed.get(0).get("x").getAsDouble(),"Coordinates are region-local");
       String otherToken=login(client,url,far,farCharacter.id());
       send(client,url,"/region-ready",otherToken,"0");
       var seen=object(send(client,url,"/state",otherToken,null)).getAsJsonArray("loot");
-      assertEquals(1,seen.size());
-      assertEquals(otherDrop.toString(),seen.get(0).getAsJsonObject().get("id").getAsString());
-      assertFalse(seen.toString().contains(nearDrop.toString()));
+       var ownSeen=java.util.stream.StreamSupport.stream(seen.spliterator(),false)
+           .map(loot->loot.getAsJsonObject())
+           .filter(loot->ownIds.contains(loot.get("id").getAsString())).toList();
+       assertEquals(1,ownSeen.size());
+       assertEquals(otherDrop.toString(),ownSeen.get(0).get("id").getAsString());
+       assertFalse(seen.toString().contains(nearDrop.toString()));
+       assertFalse(seen.toString().contains(farDrop.toString()));
     }
   }
 

@@ -92,6 +92,53 @@ class OnlineStoreTest {
     assertEquals(1234,migrated.nextAttackAt());assertEquals("RETALIATION",migrated.mode());
     assertNull(migrated.currentX());assertNull(migrated.currentY());assertNull(migrated.targetEpoch());
     assertEquals(0,migrated.stateRevision());
+    assertNull(migrated.diedAt());assertNull(migrated.deathKind());
+    try(var c=testConnection();var s=c.createStatement()) {
+      assertThrows(SQLException.class,()->s.execute("UPDATE "+schema+".online_spawns SET health=0"),
+          "Zero health without terminal metadata must never be stored as a living life");
+      assertThrows(SQLException.class,()->s.execute("UPDATE "+schema+".online_spawns SET health=0,died_at=clock_timestamp()"),
+          "A nullable death kind cannot pass PostgreSQL CHECK's three-valued logic");
+    }
+  }
+
+  @Test void schemaElevenClaimedLifeKeepsItsDamagePoseAndRewardWhileClearingOldAggro() throws Exception {
+    String schema="clanlegacy_"+UUID.randomUUID().toString().replace("-","");
+    UUID event=UUID.randomUUID(),target=UUID.randomUUID(),recipient=UUID.randomUUID();
+    try(var c=testConnection();var s=c.createStatement()) {
+      s.execute("CREATE SCHEMA "+schema);
+      s.execute("CREATE TABLE "+schema+".online_schema(version integer PRIMARY KEY)");
+      s.execute("INSERT INTO "+schema+".online_schema(version) SELECT generate_series(1,11)");
+      s.execute("""
+          CREATE TABLE %s.online_spawns (
+            spawn_key varchar(256) PRIMARY KEY,generation bigint NOT NULL DEFAULT 0,event_id uuid NOT NULL,
+            health integer,target_character uuid,next_attack_at bigint NOT NULL DEFAULT 0,
+            current_x double precision,current_y double precision,mode varchar(16) NOT NULL DEFAULT 'IDLE',
+            target_epoch bigint,state_revision bigint NOT NULL DEFAULT 0,
+            CONSTRAINT online_spawn_mode CHECK (mode IN ('IDLE','PATROL','NATURAL','RETALIATION','RETURN')))
+          """.formatted(schema));
+      s.execute("CREATE TABLE "+schema+".online_world_rewards(event_id uuid,character_id uuid,claimed_at timestamptz)");
+      try(var insert=c.prepareStatement("INSERT INTO "+schema+".online_spawns VALUES (?,?,?,?,?,?,?,?,?,?,?)")) {
+        insert.setString(1,"legacy-dead:"+event);insert.setLong(2,3);insert.setObject(3,event);
+        insert.setNull(4,java.sql.Types.INTEGER);insert.setObject(5,target);insert.setLong(6,2345);
+        insert.setDouble(7,10.25);insert.setDouble(8,20.75);insert.setString(9,"RETALIATION");
+        insert.setLong(10,8);insert.setLong(11,9);insert.executeUpdate();
+      }
+      try(var insert=c.prepareStatement("INSERT INTO "+schema+".online_world_rewards VALUES (?,?,clock_timestamp()-interval '10 minutes')")) {
+        insert.setObject(1,event);insert.setObject(2,recipient);insert.executeUpdate();
+      }
+    }
+    String url=System.getenv("T4C_DB_URL")+(System.getenv("T4C_DB_URL").contains("?") ? "&" : "?")+"currentSchema="+schema;
+    var legacy=new OnlineStore(()->DriverManager.getConnection(url,System.getenv("T4C_DB_USER"),System.getenv("T4C_DB_PASSWORD")));
+    legacy.migrate();
+    var migrated=legacy.loadOrCreateSpawn("legacy-dead:"+event);
+    assertEquals(event,migrated.eventId());assertEquals(3,migrated.generation());
+    assertEquals(0,migrated.health());assertEquals(recipient,migrated.recipient());
+    assertEquals(migrated.claimedAt(),migrated.diedAt());assertEquals("PLAYER",migrated.deathKind());
+    assertEquals(10.25,migrated.currentX());assertEquals(20.75,migrated.currentY());
+    assertEquals(9,migrated.stateRevision());
+    assertEquals("IDLE",migrated.mode());assertNull(migrated.targetCharacter());
+    assertNull(migrated.targetEpoch());assertEquals(0,migrated.nextAttackAt());
+    assertThrows(OnlineStore.Conflict.class,()->legacy.respawn(migrated.key(),event,migrated.stateRevision(),86_400_000));
   }
 
   @Test void durableSpawnLifeSurvivesRecoveryAndRespawnsOnceOnlyAfterItsReward() throws Exception {
@@ -135,6 +182,53 @@ class OnlineStoreTest {
     assertFalse(restarted.commitCreatureStrike(session,0,life.eventId(),7,11,progress,strike).applied(),
         "Respawning must retain the old life's receipt for delayed retries");
     assertEquals(next,restarted.loadOrCreateSpawn(spawn));
+  }
+
+  @Test void playerAndClanLethalRaceClaimsOneLifeWithOnlyPlayerRewards() throws Exception {
+    var source=store.loadOrCreateSpawn("clan-source:"+UUID.randomUUID());
+    var target=store.loadOrCreateSpawn("clan-target:"+UUID.randomUUID());
+    var sourceReady=store.checkpointSpawn(new OnlineStore.SpawnMotion(source.key(),source.eventId(),
+        source.stateRevision(),3.5,3.5,"CLAN",null,null,target.key(),target.eventId()),null);
+    var targetReady=store.checkpointSpawn(new OnlineStore.SpawnMotion(target.key(),target.eventId(),
+        target.stateRevision(),4.5,3.5,"PATROL",null,null),null);
+    var sourceMotion=new OnlineStore.SpawnMotion(source.key(),source.eventId(),sourceReady.stateRevision(),
+        3.5,3.5,"CLAN",null,null,target.key(),target.eventId());
+    var targetMotion=new OnlineStore.SpawnMotion(target.key(),target.eventId(),targetReady.stateRevision(),
+        4.5,3.5,"IDLE",null,null);
+    var clan=new OnlineStore.ClanAttack(sourceMotion,targetMotion,20,20,0,0,System.currentTimeMillis()+1500);
+    var key=store.provisionAccount();
+    var progress=CharacterProgressTest.sample();
+    var player=store.create(key.accountId(),"Clan race",0,4.5,3.5,progress,0);
+    var session=store.acquire(key.secret(),player.id());
+    var strike=new OnlineStore.CreatureStrike(target.key(),target.eventId(),20,20,0,targetMotion);
+    var start=new java.util.concurrent.CountDownLatch(1);
+    boolean clanWon,playerWon;
+    try(var executor=Executors.newFixedThreadPool(2)) {
+      var clanResult=executor.submit(() -> {start.await();try {store.commitClanAttack(clan);return true;}
+        catch(SQLException lost) {return false;}});
+      var playerResult=executor.submit(() -> {start.await();try {return store.commitCreatureStrike(session,player.revision(),
+          target.eventId(),0,7,progress,strike).applied();}catch(SQLException lost) {return false;}});
+      start.countDown();clanWon=clanResult.get();playerWon=playerResult.get();
+    }
+    assertNotEquals(clanWon,playerWon,"The two terminal transactions cannot both claim one life");
+    var dead=store.loadOrCreateSpawn(target.key());
+    assertEquals(0,dead.health());assertNotNull(dead.diedAt());
+    assertEquals(clanWon ? "CLAN" : "PLAYER",dead.deathKind());
+    assertEquals(playerWon ? player.id() : null,dead.recipient());
+    assertEquals(playerWon ? 7 : 0,store.load(key.accountId(),player.id()).experience());
+    var sourceAfter=store.loadOrCreateSpawn(source.key());
+    assertEquals(clanWon ? sourceReady.stateRevision()+1 : sourceReady.stateRevision(),sourceAfter.stateRevision(),
+        "A failed pair transaction cannot consume its attack cooldown");
+    if(clanWon) assertThrows(OnlineStore.Conflict.class,()->store.commitWorldReward(session,player.revision(),
+        target.eventId(),0,7,progress),"A clan terminal life cannot receive a later player reward");
+    assertThrows(OnlineStore.Conflict.class,()->store.checkpointSpawn(sourceMotion,null),
+        "A queued stale checkpoint cannot restore an old target life");
+    var next=store.respawn(target.key(),target.eventId(),dead.stateRevision(),0);
+    assertNotEquals(target.eventId(),next.eventId());assertNull(next.health());
+    assertNull(next.deathKind());assertNull(next.diedAt());
+    assertThrows(OnlineStore.Conflict.class,()->store.commitClanAttack(clan),
+        "The old target life cannot be struck after respawn");
+    store.release(session);
   }
 
   @Test void damageAndRewardCommitTogetherAndCompetingStaleDamageCannotGrantXp() throws Exception {
