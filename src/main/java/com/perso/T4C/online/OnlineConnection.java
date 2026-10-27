@@ -60,7 +60,8 @@ public final class OnlineConnection implements AutoCloseable {
   }
   private record GameplayCommand(String path, String body, long revision,
       java.util.concurrent.CompletableFuture<CommandResult> result) {}
-  private record Committed(Long revision) {}
+  /** Cast and use replies also say what the server changed; absent fields read as zero. */
+  private record Committed(Long revision, int healthGained, int manaSpent, int manaGained) {}
   private static final class Rejected extends IllegalStateException {
     private final int code;
     private final String reason;
@@ -259,6 +260,11 @@ public final class OnlineConnection implements AutoCloseable {
                 if (committed == null || committed.revision() == null || committed.revision() <= command.revision())
                   throw new IllegalStateException("Invalid gameplay acknowledgement");
                 requiredRevision = committed.revision();
+                if (command.path().equals("/cast") || command.path().equals("/use")) {
+                  // Net mana: a potion restores it, a spell spends it; both are the server's numbers.
+                  messageKey = "online.ability.result";
+                  messageArgs = List.of(committed.healthGained(), committed.manaGained() - committed.manaSpent());
+                }
               }
               accepted = true;
             } catch (Rejected rejected) {

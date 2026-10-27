@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0237`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0238`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0237 | Native online client controls for spell casting and potion use: C opens a spell list, U a potion list (plain HUD text, no new art), digits 1-9 choose, results and refusals show as messages; spell allowlist shipped as a checked client copy | Multiplayer / M4 abilities | In Progress | draft PR stacked on T4C-0234 (Preview); OnlineAbilityMenuTest, OnlineSpellAllowlistFreshnessTest, rendered preview in multiplayer/design | none (opt-in online client stack, unmerged base) |
 | T4C-0236 | Native client adapter for online spell casting and potion use: cast and use calls with readable refusals, plus a pure list of castable spells and usable potions for a later selection control (no key bindings yet) | Multiplayer / M4 abilities | In Progress (adapter and pure logic only; controls follow) | this PR; focused OnlineConnection, OnlineCommandRefusals and OnlineAbilityChoices tests | none (groundwork, no player-visible change until controls exist) |
 | T4C-0235 | Process/Tooling: loot probe starts inside the hosted starter region beside a real authored Skeleton (derived, with a fail-fast precondition) and documents run prerequisites; not run | Multiplayer / M2 loot QA tooling | Done (tool + doc only; probe not run) | this PR; compile-checked | none (tooling, no player-visible change) |
 | T4C-0233 | Native online lobby screen in the single-player character-selection look (shared art/fonts/layout; roster rows, Play/Refresh/Back, return-from-game hold text, off-render-thread loading, English errors); preview launcher and screenshots; not yet wired into the online launcher | Multiplayer / Beta native client | In Progress | draft PR (Preview); OnlineLobbyLayoutTest, OnlineLobbyScreenTextTest | none (unwired) |
