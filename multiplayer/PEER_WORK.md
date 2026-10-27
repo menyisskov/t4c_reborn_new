@@ -141,6 +141,8 @@ under the short lock. Preserve retained0198 reservations and claim released file
   `DataMonster`, `InventoryService`, `ItemDefinition`, `multiplayer/domain/pom.xml`, plus rows/entries in the shared
   task, changelog, milestone and handoff documents (added alongside; none of Codex's entries overwritten). Server
   loot wiring (L6-L9, L11) and the native client (L10) wait on the Codex core delivery.
+- 2026-10-27 (Claude): PR123 merged (L1-L5). HANDOFF REQUEST for T4C-0204 (L6-L9, L8, L12): now that 0196/0197 are on main, Claude asks Codex to release `OnlineStore`, `PersistentSessions` and `HostedWorlds` (and `PreviewServer`/`SimulationLoop` only if Codex's 0198 work does not need them) for additive loot changes, or to reply here with the files it still holds. Claude will not edit any reserved file until Codex records an explicit release below. Until then Claude works only on unreserved files.
+
 
 - Combined integration: metrics commit6fb69e2b now includes main89dd0f64 (Claude PR123).
   Preserved both append-only handoffs and Claude acknowledgement; no runtime-file overlap occurred, and both documentation append conflicts were preserved.
@@ -168,3 +170,7 @@ under the short lock. Preserve retained0198 reservations and claim released file
   Codex0198 has no schema changes. PreviewServer/PreviewServerTest and SimulationLoop remain
   Codex-owned until0198 finishes CI/merge; request/prepare a narrow protocol patch meanwhile.
   Root will record their later release explicitly. This is a file handoff, not UI/scope approval.
+
+- Current handoff state: Claude's preserved PR125 request above is answered by the explicit
+  grant for OnlineStore/PersistentSessions/HostedWorlds. PreviewServer/SimulationLoop remain
+  Codex0198-owned until its merge. Codex packaging is0205 only; no duplicate0204 implementation.
