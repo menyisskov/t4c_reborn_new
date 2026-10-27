@@ -1,1 +1,1 @@
-{"version":1,"npcs":[{"id":"Kilhiam","displayName":"${npc.kilhiam}","world":0,"x":2961,"y":1058,"parts":{"BODY":"WoWhiteRobe","BOOT":"WoLeatherBoots","WEAPON":"PupGemStaff"}}]}
+{"version":1,"npcs":[{"id":"Kilhiam","displayName":"${npc.kilhiam}","world":0,"x":2961,"y":1058,"parts":{"BODY":"WoWhiteRobe","BOOT":"WoLeatherBoots","WEAPON":"PupGemStaff"}},{"id":"WardenAelric","displayName":"${npc.wardenaelric}","world":0,"x":2948,"y":1044,"parts":{"BODY":"PupWhiteRobe","BOOT":"PupLeatherBoots","SHIELD":"PupRomanShield","WEAPON":"PupBattleSword"}}]}

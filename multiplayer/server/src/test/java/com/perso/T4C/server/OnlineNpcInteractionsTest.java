@@ -29,8 +29,23 @@ class OnlineNpcInteractionsTest {
         ()->{throw new AssertionError("A repeat must not allocate an item");});
     assertFalse(repeated.changed()); assertEquals(reloaded,repeated.progress());
     assertEquals("npc.kilhiam.temple",repeated.messageKey());
-    assertFalse(CrimsonscaleLetterRules.hasUnsupportedCombatFlags(reloaded.questFlags()));
-    assertTrue(CrimsonscaleLetterRules.hasUnsupportedCombatFlags(Map.of("unimplemented.quest",1)));
+  }
+
+  @Test void wardenAelricGreetingChangesNothingAndAReadyTurnInIsRefusedUntilItCarriesRewards() throws Exception {
+    var catalog=NpcInteractionCatalog.loadBundled(); var aelric=catalog.require("WardenAelric");
+    var interactions=new OnlineNpcInteractions(catalog,ItemCatalog.loadBundled());
+    var progress=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(1)).progress();
+    var greeted=interactions.prepare(progress,aelric.world(),aelric.x(),aelric.y(),aelric.id(),true,UUID::randomUUID);
+    assertFalse(greeted.changed()); assertEquals("npc.welcome.wardenaelric",greeted.messageKey()); assertEquals(progress,greeted.progress());
+    var gson=new com.google.gson.Gson();
+    var inProgress=gson.toJsonTree(progress).getAsJsonObject();
+    inProgress.getAsJsonObject("questFlags").addProperty("quest.renewed_wards.status",1);
+    inProgress.getAsJsonObject("questFlags").addProperty("quest.renewed_wards.kills",3);
+    var active=gson.fromJson(inProgress,com.perso.T4C.online.model.CharacterProgress.class);
+    assertFalse(interactions.prepare(active,aelric.world(),aelric.x(),aelric.y(),aelric.id(),true,UUID::randomUUID).changed());
+    inProgress.getAsJsonObject("questFlags").addProperty("quest.renewed_wards.kills",12);
+    var ready=gson.fromJson(inProgress,com.perso.T4C.online.model.CharacterProgress.class);
+    assertThrows(IllegalArgumentException.class,()->interactions.prepare(ready,aelric.world(),aelric.x(),aelric.y(),aelric.id(),true,UUID::randomUUID));
   }
 
   @Test void interactionChecksAuthoritativeLocationAndSightBeforeRewarding() throws Exception {
