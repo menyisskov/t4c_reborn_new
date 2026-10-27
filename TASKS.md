@@ -11,6 +11,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
 **Next free ID: `T4C-0208`.** When starting new work, claim the next ID,
+
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
@@ -20,6 +21,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0207 | Two-native-adapter graceful and forced server restart recovery probe | Multiplayer / Beta | In Progress | pending | pending |
 | T4C-0206 | M3/M4 shared quest, spell-cast and heal rules plus quest/ability design (Claude lane) | Multiplayer / Beta | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--shared-quest-and-spell-rules-t4c-0206) |
 | T4C-0205 | Package the online client without developer checkout dependencies | Multiplayer / Beta | Done | `cd9e2a44` | [2026-10-27](CHANGELOG.md#2026-10-27--online-client-test-package-t4c-0205) |
+
 | T4C-0204 | M2 server loot wiring L6-L9, L8, L12: schema v10, region loot cache, melee drops, pickup protocol (Claude lane; blocked on Codex file handoff) | Multiplayer / Beta | Planned | pending | pending |
 | T4C-0203 | Coordinate Codex and Claude task/file/resource ownership | Process/Tooling | Done | `0e258e40` | [2026-10-27](CHANGELOG.md#2026-10-27--peer-agent-coordination-t4c-0203) |
 | T4C-0202 | M2 general monster loot and claim rules: domain rules first (Claude lane) | Multiplayer / Beta | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--online-loot-rules-t4c-0201-t4c-0202) |

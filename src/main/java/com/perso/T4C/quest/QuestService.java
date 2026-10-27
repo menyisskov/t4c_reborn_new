@@ -22,9 +22,9 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public final class QuestService {
-  public static final int STATUS_NOT_STARTED = 0;
-  public static final int STATUS_ACTIVE = 1;
-  public static final int STATUS_COMPLETED = 2;
+  public static final int STATUS_NOT_STARTED = QuestRules.STATUS_NOT_STARTED;
+  public static final int STATUS_ACTIVE = QuestRules.STATUS_ACTIVE;
+  public static final int STATUS_COMPLETED = QuestRules.STATUS_COMPLETED;
   private final XpCurve xpCurve;
   private final Runnable persist;
   private final Consumer<String> systemMessage;
@@ -61,8 +61,7 @@ public final class QuestService {
     }
     int status = statusFor(player, definition);
     if (status == STATUS_NOT_STARTED) {
-      player.setQuestFlag(statusFlag(definition), STATUS_ACTIVE);
-      player.setQuestFlag(killsFlag(definition), 0);
+      apply(player, QuestRules.accept(player::getQuestFlag, definition));
       persist.run();
       systemMessage.accept(
           I18n.message("message.quest_accepted", I18n.resolve(definition.getTitle())));
@@ -153,22 +152,23 @@ public final class QuestService {
     // Monster Kill Log screen (see killLog()/killLogFlag()). Reuses the existing questFlags
     // free-form map rather than a new save-file field (see quest-creator skill: "questFlags is a
     // free-form String -> int map").
-    String logFlag = killLogFlag(monsterName);
-    player.setQuestFlag(logFlag, player.getQuestFlag(logFlag) + 1);
+    apply(player, QuestRules.recordKillLog(player::getQuestFlag, killLogFlag(monsterName)));
     boolean changed = true;
     List<String> notifications = new ArrayList<>();
     for (QuestDef definition : loadDefinitions()) {
-      if (statusFor(player, definition) != STATUS_ACTIVE
-          || !matchesTargetMonster(definition, monsterName)
-          || !insideObjectiveArea(definition, worldZ, tileX, tileY)) {
+      Map<String, Integer> credit =
+          QuestRules.creditObjective(
+              player::getQuestFlag,
+              definition,
+              matchesTargetMonster(definition, monsterName),
+              worldZ,
+              tileX,
+              tileY);
+      if (credit.isEmpty()) {
         continue;
       }
-      int current = kills(player, definition);
-      if (current >= definition.getRequiredKills()) {
-        continue;
-      }
-      int next = Math.min(definition.getRequiredKills(), current + 1);
-      player.setQuestFlag(killsFlag(definition), next);
+      apply(player, credit);
+      int next = credit.get(killsFlag(definition));
       changed = true;
       String title = I18n.resolve(definition.getTitle());
       boolean killsComplete = next >= definition.getRequiredKills();
@@ -217,8 +217,7 @@ public final class QuestService {
       return I18n.message("message.quest_reward_item_blocked", itemDisplayName(rewardItemKey));
     }
     consumeRequiredItem(player, definition);
-    player.setQuestFlag(statusFlag(definition), STATUS_COMPLETED);
-    player.setQuestFlag(killsFlag(definition), definition.getRequiredKills());
+    apply(player, QuestRules.completionFlags(definition));
     player.addGold(definition.getRewardGold());
     player.addXpExact(definition.getRewardXp(), xpCurve);
     String zoneId = definition.getUnlockZoneId();
@@ -306,8 +305,7 @@ public final class QuestService {
       return null;
     }
     consumeRequiredItem(player, definition);
-    player.setQuestFlag(statusFlag(definition), STATUS_COMPLETED);
-    player.setQuestFlag(killsFlag(definition), definition.getRequiredKills());
+    apply(player, QuestRules.completionFlags(definition));
     String zoneId = definition.getUnlockZoneId();
     if (zoneId != null && !zoneId.isBlank()) {
       player.setQuestFlag(zoneUnlockFlag(zoneId), 1);
@@ -389,7 +387,9 @@ public final class QuestService {
     return "unlock.zone." + zoneId;
   }
 
-  private static final String KILL_LOG_PREFIX = "killlog.";
+  private static void apply(Player player, Map<String, Integer> writes) {
+    writes.forEach(player::setQuestFlag);
+  }
 
   /**
    * The durable per-monster-type kill tally flag, keyed by the monster's canonical registry name
@@ -400,7 +400,7 @@ public final class QuestService {
   public static String killLogFlag(String monsterName) {
     MonsterDef canonical = MonsterRegistry.findByName(monsterName);
     String key = canonical != null ? canonical.getName() : monsterName;
-    return KILL_LOG_PREFIX + key.trim();
+    return QuestRules.killLogFlag(key);
   }
 
   /**
@@ -412,8 +412,8 @@ public final class QuestService {
     if (player == null) return result;
     for (Map.Entry<String, Integer> entry : player.getQuestFlags().entrySet()) {
       String flag = entry.getKey();
-      if (flag != null && flag.startsWith(KILL_LOG_PREFIX) && entry.getValue() != null) {
-        result.put(flag.substring(KILL_LOG_PREFIX.length()), entry.getValue());
+      if (flag != null && flag.startsWith(QuestRules.KILL_LOG_PREFIX) && entry.getValue() != null) {
+        result.put(flag.substring(QuestRules.KILL_LOG_PREFIX.length()), entry.getValue());
       }
     }
     return result;
@@ -441,31 +441,11 @@ public final class QuestService {
 
   public static int statusFor(Player player, QuestDef definition) {
     if (player == null || definition == null) return STATUS_NOT_STARTED;
-    int status = player.getQuestFlag(statusFlag(definition));
-    if (status != STATUS_NOT_STARTED) return status;
-    String activationFlag = definition.getActivationFlag();
-    if (activationFlag != null
-        && !activationFlag.isBlank()
-        && player.getQuestFlag(activationFlag) != 0) {
-      return STATUS_ACTIVE;
-    }
-    return STATUS_NOT_STARTED;
+    return QuestRules.status(player::getQuestFlag, definition);
   }
 
   private static int kills(Player player, QuestDef definition) {
-    return Math.max(
-        0, Math.min(definition.getRequiredKills(), player.getQuestFlag(killsFlag(definition))));
-  }
-
-  private static boolean insideObjectiveArea(
-      QuestDef definition, int worldZ, int tileX, int tileY) {
-    if (worldZ != definition.getTargetWorldZ()) {
-      return false;
-    }
-    long dx = (long) tileX - definition.getAreaCenterX();
-    long dy = (long) tileY - definition.getAreaCenterY();
-    long radius = Math.max(0, definition.getAreaRadiusTiles());
-    return dx * dx + dy * dy <= radius * radius;
+    return QuestRules.kills(player::getQuestFlag, definition);
   }
 
   private static boolean same(String left, String right) {
@@ -507,14 +487,10 @@ public final class QuestService {
   }
 
   public static String statusFlag(QuestDef definition) {
-    return "quest." + definition.getId() + ".status";
+    return QuestRules.statusFlag(definition);
   }
 
   public static String killsFlag(QuestDef definition) {
-    String progressKey = definition.getActivationFlag();
-    if (progressKey == null || progressKey.isBlank()) {
-      progressKey = definition.getId();
-    }
-    return "quest." + progressKey + ".kills";
+    return QuestRules.killsFlag(definition);
   }
 }

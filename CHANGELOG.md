@@ -19,6 +19,14 @@ commit links, and finer-grained notes.
 ### Fixed
 - A stalled diagnostic response can no longer keep the load checker waiting beyond its bounded response deadline.
 
+## 2026-10-27 — Shared quest and spell rules (T4C-0206)
+
+### Added
+- A written plan for how quests, kill credit and spell casting will work in the online game, ready for the owner to review.
+
+### Changed
+- Quest and spell rules were reorganized so the online game can follow exactly the same rules as the single-player game. Single-player quests and spells play as before.
+
 ## 2026-10-27 — Online database reliability (T4C-0197)
 
 ### Fixed
