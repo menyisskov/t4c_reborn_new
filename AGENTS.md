@@ -1,7 +1,8 @@
-# AGENTS.md — PR Review Protocol
+# AGENTS.md — Agent Policy and PR Review Protocol
 
 Sections 1–4 govern automated agents that review or babysit a pull request.
-Section 5 governs agents that author or modify tests. This file does **not**
+Section 5 governs agents that author or modify tests. Section 6 is the canonical
+model-routing policy for every agent working in this repository. This file does **not**
 relax or replace `AGENT.md` (the general engineering charter).
 
 The two failure modes this file exists to prevent: a reviewer that wanders
@@ -125,3 +126,42 @@ the first place.
 - When removing tests, identify the surviving coverage for each removed
   behavior. Fewer tests is useful only if the suite still catches meaningful
   regressions.
+
+## 6. Model routing for all agent work
+
+Owner policy, added 2026-10-27. Choose the model by the work being performed,
+including delegated work. These tier labels express the owner's routing preference;
+they are not claims about current provider pricing or model availability.
+
+| Work | Tier | Owner's preferred model names | Exact IDs where exposed by the current Codex agent tools |
+|---|---|---|---|
+| Coding and implementation, including implementing agreed fixes and tests | Cheap | `gpt-6-sol`, `haiku-5.5` | `gpt-6-sol`; resolve Haiku against the actual installed provider catalog |
+| Bug investigation and root-cause analysis (RCA) | Mid-tier | `gpt-terra-6.1`, `gpt-sol-6`, `sonnet 5.5` | `gpt-6.1-terra`, `gpt-6-sol`; resolve Sonnet against the actual installed provider catalog |
+| Deep architecture investigation, milestone planning and design | Top tier | `gpt-sol-6.1`, `opus 5-5` | `gpt-6.1-sol`; resolve Opus against the actual installed provider catalog |
+
+Application rules:
+
+- Read this section before selecting a model or delegating work. `AGENT.md` and
+  `CLAUDE.md` refer here; do not maintain conflicting copies of the routing table.
+- Split mixed requests into phases: a top-tier model may establish architecture or
+  milestones, a cheap model implements the agreed plan, and a mid-tier model investigates
+  a failing behavior. An architecture phase does not justify keeping every coding task
+  on the top-tier model.
+- The owner deliberately lists the Sol 6 model in both cheap coding and mid-tier RCA.
+  Preserve that overlap rather than silently assigning a different preference.
+- Use an available listed model from the requested tier. Preferred names are not always
+  executable IDs: inspect the host's advertised model catalog, use its exact ID, and
+  never invent a Claude/provider identifier or assume that a named model is installed.
+- If one preferred model is unavailable, use another available model listed for that
+  tier. If none is available, report that limitation rather than silently upgrading to
+  a more expensive tier. Continue independent work that has an available authorized model.
+- Where the current primary session cannot switch its own model, delegate the relevant
+  phase to the correctly routed model through available agent tools. Do not claim that
+  changing this document changed the running session or installed provider configuration.
+- In Codex collaboration, an explicit model override requires `fork_turns="none"`.
+  Give the agent a concise brief with repository path, required instruction files,
+  scope/file ownership, constraints and validation expectations. Do not inherit an
+  entire top-tier conversation just to perform a bounded coding task.
+- Apply routing when starting or handing off a phase. Do not interrupt an already running
+  test/build merely to change models; route the next implementation/investigation phase
+  correctly. All tiers still follow the same engineering, security, review and test rules.

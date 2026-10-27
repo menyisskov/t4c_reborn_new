@@ -2,6 +2,10 @@
 
 For model/session continuation, start with [HANDOFF.md](HANDOFF.md).
 
+For the owner-facing roadmap and exact completion criteria for each of the six two-player
+milestones, start with [MILESTONES.md](MILESTONES.md). Implementation task IDs and delivery
+status are in [TASKS.md](../TASKS.md); release evidence is in [ACCEPTANCE.md](ACCEPTANCE.md).
+
 For optional saved native characters, follow [persistent-mode setup](PERSISTENCE.md#running-persistent-native-clients).
 
 Encrypted remote configuration is documented in [TLS.md](TLS.md); the local preview launcher continues to manage loopback HTTP.

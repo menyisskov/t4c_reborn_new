@@ -6,6 +6,16 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Agent model routing (T4C-0200)
+
+### Changed
+- Agents now follow the owner's model choices by task: cheaper models for coding, mid-tier models for bug investigations, and top-tier models for architecture, planning and design. Both agent instruction sets refer to one shared policy.
+
+## 2026-10-27 — Multiplayer milestone checklist (T4C-0199)
+
+### Added
+- A detailed two-player roadmap now explains the requirements, completion checks, current gaps and final playthrough for each milestone. The full twenty-player Beta and essential GA requirements remain separate and visible.
+
 ## 2026-10-27 — Online opening story service (T4C-0195)
 
 ### Added

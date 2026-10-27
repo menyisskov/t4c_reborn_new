@@ -2,17 +2,26 @@
 
 A lightweight, in-repo task tracker. This project doesn't use an external
 issue tracker, so every unit of content/feature work gets a sequential ID
-here (`T4C-XXXX`) purely for visibility and cross-referencing — from a
+here (`T4C-XXXX`) for visibility and cross-referencing — from a
 commit message, a `CHANGELOG.md` entry, or a PR description back to "what
 was this work and why."
 
-**Next free ID: `T4C-0196`.** When starting new work, claim the next ID,
+The multiplayer roadmap and milestone acceptance criteria are in
+[MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
+not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
+
+**Next free ID: `T4C-0201`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0200 | Centralize owner model routing and instruction references | Process/Tooling | Done | pending | [2026-10-27](CHANGELOG.md#2026-10-27--agent-model-routing-t4c-0200) |
+| T4C-0199 | Define exact two-player milestone completion criteria | Process/Tooling | Done | pending | [2026-10-27](CHANGELOG.md#2026-10-27--multiplayer-milestone-checklist-t4c-0199) |
+| T4C-0198 | Measure server scheduler debt and runtime resources | Multiplayer / Beta | In Progress | pending | pending |
+| T4C-0197 | Bound and reuse online database connections | Multiplayer / Beta | In Progress | pending | pending |
+| T4C-0196 | Authenticated online character roster | Multiplayer / Alpha | In Progress | pending | pending |
 | T4C-0195 | Authoritative Kilhiam opening story interaction | Multiplayer / Alpha | Done | `2eb37078` | [2026-10-27](CHANGELOG.md#2026-10-27--online-opening-story-service-t4c-0195) |
 | T4C-0194 | Transfer native players between hosted worlds safely | Multiplayer / Alpha | Done | `62d80d48` | [2026-10-27](CHANGELOG.md#2026-10-27--hosted-world-travel-t4c-0194) |
 | T4C-0193 | Export and validate authored portal destinations | Multiplayer / Alpha | Done | `b7551ab8` | [2026-10-27](CHANGELOG.md#2026-10-27--online-portal-validation-t4c-0193) |
