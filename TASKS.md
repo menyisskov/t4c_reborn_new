@@ -13,7 +13,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0188 | Preserve authored protection for online targets | Multiplayer / Alpha | Done | pending | [2026-10-27](CHANGELOG.md#2026-10-27--protected-online-targets-t4c-0188) |
+| T4C-0188 | Preserve authored protection for online targets | Multiplayer / Alpha | Done | `9848eaf1` | [2026-10-27](CHANGELOG.md#2026-10-27--protected-online-targets-t4c-0188) |
 | T4C-0187 | Connect native melee attacks to persistent damage and rewards | Multiplayer / Alpha | Done | `b565ad8a` | [2026-10-27](CHANGELOG.md#2026-10-27--native-online-melee-t4c-0187) |
 | T4C-0186 | Use shared progression for durable online level gains | Multiplayer / Alpha | Done | `0c96e55a` | [2026-10-27](CHANGELOG.md#2026-10-27--online-progression-rules-t4c-0186) |
 | T4C-0185 | Keep creature damage and its rewards together across recovery | Multiplayer / Alpha | Done | `5dd94255` | [2026-10-27](CHANGELOG.md#2026-10-27--persistent-creature-damage-t4c-0185) |
