@@ -474,6 +474,8 @@ public final class ShopCatalog {
                   // verbatim - an "item."-prefixed key would never match the website's own
                   // item records, leaving those pages with no shop listed.
                   "recruits_greatsword",
+                  "recruits_mace",
+                  "recruits_quiver",
                   "acolytes_earthen_mace",
                   "acolytes_dawnlit_staff")),
           Map.entry(

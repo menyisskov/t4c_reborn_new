@@ -1,0 +1,27 @@
+{
+  "key": "recruits_quiver",
+  "name": "Recruit's Quiver",
+  "bodyPart": "WEAPON2",
+  "appearanceInventory": "64kIconQuiver",
+  "price": 300,
+  "weight": 2,
+  "requirements": {
+    "strength": 0,
+    "agility": 20
+  },
+  "isBow": true,
+  "unlimitedUse": true,
+  "numId": 0,
+  "structure": 8,
+  "appearanceId": 454,
+  "dmgFormula": "1d3",
+  "boosts": [
+    { "boostId": 36802, "statId": 6, "expression": "2" },
+    { "boostId": 36803, "statId": 10035, "expression": "4" },
+    { "boostId": 36804, "statId": 12, "expression": "1" },
+    { "boostId": 36805, "statId": 13, "expression": "1" },
+    { "boostId": 36806, "statId": 14, "expression": "1" },
+    { "boostId": 36807, "statId": 15, "expression": "1" },
+    { "boostId": 36808, "statId": 22, "expression": "1" }
+  ]
+}

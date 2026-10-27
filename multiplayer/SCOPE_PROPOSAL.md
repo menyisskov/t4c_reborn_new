@@ -1,9 +1,24 @@
 # Two-player checkpoint scope: proposal
 
-Status: **PROPOSED, pending owner approval.** Drafted 2026-10-27, Asia/Jerusalem. Nothing in this
-file is frozen. [MILESTONES.md](MILESTONES.md) "Scope must be explicit before completion" remains
-the authority. When the owner approves an item, record it there and note the approval date here.
-Each item below is labelled **PROPOSED**. Rejecting any item does not authorize weakening the
+Status: **APPROVED by the owner on 2026-10-27 with the amendments below.** Drafted the same day,
+Asia/Jerusalem. [MILESTONES.md](MILESTONES.md) "Scope must be explicit before completion" remains
+the authority and records the approval. Sections still say PROPOSED in their headings; read them
+as approved unless this block amends them.
+
+Owner amendments (2026-10-27):
+
+- **Paladin starts with a mace and shield** (the Recruit's Mace, not a sword). Section 1's
+  "sword and shield" reads "mace and shield". Melee online must therefore support the mace.
+- **Every mage starts with a new entry-level spell** (Arcane Spark): slightly weaker than Fire Dart
+  and with no school or magic-power orientation, unlike Mana Burst's air-resistance-gated bolt.
+  Mage and Battle Mage get it now; Cleric and Healer keep their current starting spells. Online
+  casting scope is unchanged: only Light Heal is in the checkpoint.
+- **Archer starts with a basic bow and quiver** (the Ashwood Reflex Bow and the new Recruit's
+  Quiver, plus arrows). Online archery stays out of the checkpoint (section 1), so this changes
+  offline play and the creation kit only.
+- The rest of the proposal is approved as written.
+
+Each item below was labelled **PROPOSED**. Rejecting any item did not authorize weakening the
 authored content to fit a smaller hosted area. This proposal does not replace the agreed
 20-player Beta.
 
@@ -22,7 +37,7 @@ stun blow, active buffs and spell casting.
 | Class | Proposed | Required abilities for the checkpoint | Reason |
 | --- | --- | --- | --- |
 | Warrior | **Yes** | Melee attack with the starting greatsword; drink potions (`light_healing_potion` from the common kit; `healing_potion`/`light_healing_potion` loot); equip/unequip, including looted Leather gloves. | Has no spells and is closest to the existing melee slice. |
-| Paladin | **Yes** | Melee with sword and shield; cast **Light Heal** (`spell.heal_light`, its only starting spell) on self; drink potions; equip/unequip. | Adds one real cast (mana cost, cooldown and effect) with minimal surface, which satisfies M4's "functional caster" rule for one class. |
+| Paladin | **Yes** | Melee with mace and shield (owner amendment: starts with the Recruit's Mace); cast **Light Heal** (`spell.heal_light`, its only starting spell) on self; drink potions; equip/unequip. | Adds one real cast (mana cost, cooldown and effect) with minimal surface, which satisfies M4's "functional caster" rule for one class. |
 | Archer | No | — | Bows/quivers/ammunition are unsupported online. |
 | Cleric, Healer, Mage, Battle Mage | No | — | Their offensive starting spells (`stone_shard`, `fire_dart`) need projectile/spell-damage support. |
 
@@ -155,11 +170,11 @@ None of these exclusions removes the feature from full Beta, and none is silentl
 - Scripted monsters (`sourceEvents`), special-encounter loot and `oneOf` choice tables. The
   Skeleton/Goblin/Wandering Orc tables use plain item entries.
 
-## Approval checklist for the owner
+## Approval checklist (owner approved all items on 2026-10-27, with the amendments at the top)
 
-- [ ] Classes: Warrior + Paladin (with Light Heal), or Warrior only.
-- [ ] Quest `renewed_wards` unchanged, with the larger world-0 region it needs.
-- [ ] Lethal-claimant-only kill credit.
-- [ ] Loot owner window of 60 s, expiry of 15 min, first-commit-wins, refusal on full inventory.
-- [ ] Windows only; acceptance on two machines.
-- [ ] Exclusion list above.
+- [x] Classes: Warrior + Paladin (with Light Heal), Paladin on mace and shield.
+- [x] Quest `renewed_wards` unchanged, with the larger world-0 region it needs.
+- [x] Lethal-claimant-only kill credit.
+- [x] Loot owner window of 60 s, expiry of 15 min, first-commit-wins, refusal on full inventory.
+- [x] Windows only; acceptance on two machines.
+- [x] Exclusion list above.

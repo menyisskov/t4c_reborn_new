@@ -21,6 +21,11 @@ The owner's question about two players did not cancel the original release requi
 
 ### Scope must be explicit before completion
 
+**Owner approved [SCOPE_PROPOSAL.md](SCOPE_PROPOSAL.md) on 2026-10-27** with three amendments
+recorded at its top: Paladin starts with a mace and shield, every mage starts with the new
+Arcane Spark, and Archer starts with a basic bow and quiver. The frozen checkpoint scope is that
+document; the list below is what it had to answer.
+
 Record the following here before claiming the two-player checkpoint complete. These are
 product choices still to freeze, not permission to quietly remove existing game behavior:
 
