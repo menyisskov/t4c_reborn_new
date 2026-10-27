@@ -187,25 +187,20 @@ public final class OnlineClient extends ApplicationAdapter {
     URI endpoint = URI.create(args.length == 0 ? "http://127.0.0.1:18765" : args[0]);
     var client = new OnlineClient(endpoint);
     String profile = System.getenv("T4C_ONLINE_PROFILE");
+    OnlineAccountProfile loadedProfile = null;
     if (profile != null && !profile.isBlank()) {
       try {
-        var path = java.nio.file.Path.of(profile);
-        if (java.nio.file.Files.size(path) > 4096) throw new IllegalArgumentException();
-        try (var reader = java.nio.file.Files.newBufferedReader(path)) {
-          client.credentials =
-              new com.google.gson.Gson().fromJson(reader, OnlineConnection.Credentials.class);
-          if (client.credentials == null) throw new IllegalArgumentException();
-        }
+        loadedProfile = OnlineAccountProfile.load(java.nio.file.Path.of(profile));
       } catch (Exception failure) {
         throw new IllegalArgumentException("Could not read valid online profile");
       }
     }
-    if (OnlineLobbyLaunch.select(lobbyRequested, client.credentials != null) == OnlineLobbyLaunch.Mode.LOBBY) {
-      // The profile deserialises directly to Credentials, so Credentials.secret IS the account key;
-      // the profile's character UUID becomes only the lobby's preferred selection.
-      client.lobbyAccountKey = client.credentials.secret();
-      client.lobbyModel = new OnlineLobbyModel(client.lobbyAccountKey, client.credentials.characterId());
-      client.credentials = null; // Nothing connects until the player confirms a character.
+    if (OnlineLobbyLaunch.select(lobbyRequested, loadedProfile != null) == OnlineLobbyLaunch.Mode.LOBBY) {
+      client.lobbyAccountKey = loadedProfile.secret();
+      client.lobbyModel = loadedProfile.lobbyModel();
+      // Nothing connects until the player confirms a character.
+    } else if (loadedProfile != null) {
+      client.credentials = loadedProfile.directCredentials();
     }
     var config = new Lwjgl3ApplicationConfiguration();
     config.setTitle(I18n.key("online.client.title"));
