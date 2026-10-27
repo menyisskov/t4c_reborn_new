@@ -16,7 +16,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | T4C-0193 | Export and validate authored portal destinations | Multiplayer / Alpha | In Progress | pending | pending |
 | T4C-0192 | Configure verified encrypted remote transport | Multiplayer / Alpha | In Progress | pending | pending |
 | T4C-0191 | Verify consistent PostgreSQL backup and fresh restore | Multiplayer / Beta | In Progress | pending | pending |
-| T4C-0190 | Persist monster retaliation, death and owned corpse recovery | Multiplayer / Alpha | Done | pending | [2026-10-27](CHANGELOG.md#2026-10-27--online-retaliation-and-recovery-t4c-0190) |
+| T4C-0190 | Persist monster retaliation, death and owned corpse recovery | Multiplayer / Alpha | Done | `bb002ff2` | [2026-10-27](CHANGELOG.md#2026-10-27--online-retaliation-and-recovery-t4c-0190) |
 | T4C-0189 | Isolate online Windows focus crash correction | Multiplayer / Alpha | Done | `93800f69` | [2026-10-27](CHANGELOG.md#2026-10-27--online-window-stability-t4c-0189) |
 | T4C-0188 | Preserve authored protection for online targets | Multiplayer / Alpha | Done | `9848eaf1` | [2026-10-27](CHANGELOG.md#2026-10-27--protected-online-targets-t4c-0188) |
 | T4C-0187 | Connect native melee attacks to persistent damage and rewards | Multiplayer / Alpha | Done | `b565ad8a` | [2026-10-27](CHANGELOG.md#2026-10-27--native-online-melee-t4c-0187) |
