@@ -42,6 +42,13 @@ or the report. To resume those same isolated characters, pass `-Profiles <that-d
 The default JSON report is under ignored `target/`, updated every five seconds and at exit.
 Existing report files are rejected. Run this wrapper in a hidden background PowerShell process
 with redirected logs when unattended work is required; preserve its PID and report path.
+Each update writes a sibling `.tmp` file and replaces the prior complete JSON. On Windows,
+another process can briefly hold the report without delete sharing. The writer retries only
+that replacement access denial for up to two seconds; the prior report stays valid while it
+waits. A persistent denial or interruption still fails the run. An earlier partial report,
+even one with healthy metrics, is not evidence that the requested duration completed.
+`NativeAdapterSoakReportProbe` exercises both a released and a persistent real Windows
+`FileStream` lock against this replacement without starting a server or database.
 For graceful operator cancellation, set `T4C_SOAK_STOP_FILE` to an initially absent private local
 path before launch, then create that file to stop. All adapters close through their normal logout
 path and the report remains `finished: false` when the requested duration did not complete.

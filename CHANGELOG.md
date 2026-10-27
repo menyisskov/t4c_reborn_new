@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Safe stability report replacement (T4C-0221)
+
+### Fixed
+- On Windows, a brief file lock while replacing a native-adapter soak report now retries for up to two seconds. The previous complete JSON remains available during the retry; a persistent lock still fails the run. A focused real Windows file-lock check passed under normal machine policy. The earlier 66-second pursuit soak remains failed; no new full soak or Beta pass is claimed.
+
 ## 2026-10-27 — Two-player Beta acceptance target (T4C-0220)
 
 ### Changed

@@ -2,6 +2,7 @@ import com.google.gson.*;
 import com.perso.T4C.online.OnlineConnection;
 import com.perso.T4C.server.PreviewMap;
 import com.perso.T4C.server.HostedRegionPlan;
+import java.io.IOException;
 import java.net.*;
 import java.net.http.*;
 import java.nio.file.*;
@@ -320,7 +321,34 @@ class NativeAdapterSoak {
     report.put("players",results);
     Path temporary=file.resolveSibling(file.getFileName()+".tmp");
     Files.writeString(temporary,JSON.toJson(report),StandardOpenOption.CREATE,StandardOpenOption.TRUNCATE_EXISTING);
-    try { Files.move(temporary,file,StandardCopyOption.ATOMIC_MOVE,StandardCopyOption.REPLACE_EXISTING); }
-    catch(AtomicMoveNotSupportedException unsupported) { Files.move(temporary,file,StandardCopyOption.REPLACE_EXISTING); }
+    replaceReport(temporary,file);
+  }
+
+  /** Windows can briefly deny replacing a report that another process has open without delete sharing. */
+  static void replaceReport(Path temporary,Path file) throws IOException {
+    long deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(2);
+    while(true) {
+      try {
+        try { Files.move(temporary,file,StandardCopyOption.ATOMIC_MOVE,StandardCopyOption.REPLACE_EXISTING); }
+        catch(AtomicMoveNotSupportedException unsupported) {
+          Files.move(temporary,file,StandardCopyOption.REPLACE_EXISTING);
+        }
+        return;
+      } catch(AccessDeniedException denied) {
+        // Other access failures (including the temporary file or its directory) are not report-reader locks.
+        boolean targetMove=(temporary.toString().equals(denied.getFile())
+            && file.toString().equals(denied.getOtherFile()))
+            || (file.toString().equals(denied.getFile()) && denied.getOtherFile()==null);
+        long remaining=deadline-System.nanoTime();
+        if(!targetMove || remaining<=0) throw denied;
+        try { TimeUnit.NANOSECONDS.sleep(Math.min(remaining,TimeUnit.MILLISECONDS.toNanos(25))); }
+        catch(InterruptedException interrupted) {
+          Thread.currentThread().interrupt();
+          var failure=new IOException("Interrupted while replacing soak report",interrupted);
+          failure.addSuppressed(denied);
+          throw failure;
+        }
+      }
+    }
   }
 }
