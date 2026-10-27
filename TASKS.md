@@ -13,7 +13,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0177 | Gate online login on explicit wire compatibility | Multiplayer / Alpha | In Progress | pending | [2026-10-27](CHANGELOG.md#2026-10-27--online-compatibility-checks-t4c-0177) |
+| T4C-0177 | Gate online login on explicit wire compatibility | Multiplayer / Alpha | Done | cb758124 | [2026-10-27](CHANGELOG.md#2026-10-27--online-compatibility-checks-t4c-0177) |
 | T4C-0176 | Send native equipment commands and refresh committed state | Multiplayer / Alpha | Done | 3a5e86ef | [2026-10-27](CHANGELOG.md#2026-10-27--native-equipment-commands-t4c-0176) |
 | T4C-0175 | Commit authenticated equipment changes without item duplication | Multiplayer / Alpha | Done | 265804dd | [2026-10-27](CHANGELOG.md#2026-10-27--authoritative-equipment-changes-t4c-0175) |
 | T4C-0174 | Share equipment boost evaluation with headless gameplay | Multiplayer / Alpha | Done | `0bacdab7` | [2026-10-27](CHANGELOG.md#2026-10-27--shared-equipment-bonuses-t4c-0174) |
