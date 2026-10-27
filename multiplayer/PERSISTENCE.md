@@ -1,5 +1,7 @@
 # Online persistence
 
+Backup and fresh-restore verification is documented in [BACKUP.md](BACKUP.md). Matching stored data alone does not complete the restored-gameplay release gate.
+
 Current schema: **8**. See [HANDOFF.md](HANDOFF.md) for model/session continuation and [ACCEPTANCE.md](ACCEPTANCE.md) for verified release gates. Persistent native play currently supports authoritative movement, equipment commands, restricted melee, physical retaliation, death and owned corpse recovery. Native account selection, quests, general loot, spells and map transfer remain unfinished.
 
 Schema 8 adds durable creature aggro/attack deadlines, `online_combat_events` receipts and `online_corpses`. A monster strike commits health, deadline and any fatal XP/item/location change together. Fatal drafts use shared death rules; dropped instance identity/quantity/charges are preserved and recoverable once by the owner within range. Async simulation publication follows commit; logout while a fatal transaction is pending must retain the committed respawn destination. Current cross-map respawns use a validated local fallback pending transfer support.

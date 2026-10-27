@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Realm backup verification (T4C-0191)
+
+### Added
+- Operators can back up a consistent online realm, restore into a fresh test database and verify saved state matches while the source realm keeps running. The recovery guide separates data verification from the remaining gameplay checks.
+
 ## 2026-10-27 — Online retaliation and recovery (T4C-0190)
 
 ### Added
