@@ -22,7 +22,7 @@ import java.util.UUID;
 
 /** One simulation-thread-owned physical creature. Coordinates are local fractional tiles. */
 final class OnlineMonsterPursuit {
-  enum Mode { IDLE, PATROL, NATURAL, RETALIATION, RETURN }
+  enum Mode { IDLE, PATROL, NATURAL, RETALIATION, CLAN, RETURN }
 
   record TargetView(UUID character, long epoch, int world, String region, double x, double y,
                     boolean alive, boolean ready, boolean leaseValid) {
@@ -34,17 +34,33 @@ final class OnlineMonsterPursuit {
     }
   }
 
+  record ClanView(String key, UUID life, int world, String region, double x, double y,
+                  boolean alive, MonsterContent.Clan clan) {
+    ClanView {
+      Objects.requireNonNull(key);Objects.requireNonNull(life);Objects.requireNonNull(region);
+      Objects.requireNonNull(clan);
+      if(!Double.isFinite(x) || !Double.isFinite(y)) throw new IllegalArgumentException("Invalid clan view");
+    }
+  }
+
   record Decision(double x, double y, UUID life, Mode mode, UUID target, long targetEpoch,
+                  String targetSpawnKey, UUID targetLife,
                   boolean suspended, boolean attackReady, boolean needsReplan) {}
 
   /** Validated committed state is supplied by the persistence owner after restart or reload. */
-  record Seed(UUID life, double x, double y, Mode mode, UUID target, long targetEpoch) {
+  record Seed(UUID life, double x, double y, Mode mode, UUID target, long targetEpoch,
+              String targetSpawnKey, UUID targetLife) {
+    Seed(UUID life,double x,double y,Mode mode,UUID target,long targetEpoch) {
+      this(life,x,y,mode,target,targetEpoch,null,null);
+    }
     Seed {
       Objects.requireNonNull(life);
       Objects.requireNonNull(mode);
       if (!Double.isFinite(x) || !Double.isFinite(y)
           || (target == null && targetEpoch >= 0)
-          || ((mode == Mode.NATURAL || mode == Mode.RETALIATION) != (target != null)))
+          || ((mode == Mode.NATURAL || mode == Mode.RETALIATION) != (target != null))
+          || (mode == Mode.CLAN) != (targetSpawnKey!=null)
+          || (targetSpawnKey==null)!=(targetLife==null) || target!=null && targetSpawnKey!=null)
         throw new IllegalArgumentException("Invalid committed pursuit state");
     }
   }
@@ -64,8 +80,13 @@ final class OnlineMonsterPursuit {
   private final boolean aggressive;
   private final int world;
   private final String region;
+  private final MonsterContent.Clan clan;
+  private final java.util.Set<MonsterContent.Clan> enemyClans;
+  private final boolean canClanAttack;
   private final double homeX, homeY;
   private UUID life, target;
+  private String targetSpawnKey;
+  private UUID targetLife;
   private long targetEpoch = -1;
   private double x, y, unreachable;
   private Mode mode = Mode.IDLE;
@@ -85,8 +106,15 @@ final class OnlineMonsterPursuit {
 
   OnlineMonsterPursuit(PreviewMap map, MonsterContent.Spawn spawn, MonsterDef definition,
                        String region, Seed seed) {
+    this(map,spawn,definition,region,seed,MonsterContent.Clan.NEUTRAL,java.util.Set.of(),false);
+  }
+
+  OnlineMonsterPursuit(PreviewMap map, MonsterContent.Spawn spawn, MonsterDef definition,
+                       String region, Seed seed, MonsterContent.Clan clan,
+                       java.util.Set<MonsterContent.Clan> enemyClans, boolean attackFramePresent) {
     this.map = Objects.requireNonNull(map);
     this.definition = Objects.requireNonNull(definition);
+    this.clan=Objects.requireNonNull(clan);this.enemyClans=java.util.Set.copyOf(enemyClans);
     this.life = seed.life();
     patrolRandom = new Random(seed.life().getMostSignificantBits() ^ seed.life().getLeastSignificantBits());
     this.region = Objects.requireNonNull(region);
@@ -101,7 +129,9 @@ final class OnlineMonsterPursuit {
     mode = seed.mode();
     target = seed.target();
     targetEpoch = seed.targetEpoch();
+    targetSpawnKey=seed.targetSpawnKey();targetLife=seed.targetLife();
     aggressive = !spawn.stationary() && spawn.aggressive();
+    canClanAttack=aggressive && definition.isCanAttack() && attackFramePresent;
     if (spawn.stationary() && (Math.abs(x - homeX) > EPSILON || Math.abs(y - homeY) > EPSILON))
       throw new IllegalArgumentException("Stationary creature moved from anchor");
     stationary = spawn.stationary();
@@ -120,6 +150,7 @@ final class OnlineMonsterPursuit {
     if (stationary || !definition.isCanAttack() || !eligible(attacker)) return;
     target = attacker.character();
     targetEpoch = attacker.epoch();
+    targetSpawnKey=null;targetLife=null;
     mode = Mode.RETALIATION;
     patrolX=null;patrolY=null;patrolPause=0;
     clearNavigation();
@@ -132,6 +163,7 @@ final class OnlineMonsterPursuit {
     y = homeY;
     target = null;
     targetEpoch = -1;
+    targetSpawnKey=null;targetLife=null;
     mode = Mode.IDLE;
     patrolX=null;patrolY=null;patrolPause=0;
     clearNavigation();
@@ -140,13 +172,30 @@ final class OnlineMonsterPursuit {
   /** Simulation grants at most one replan permit globally per fixed step. */
   Decision step(List<TargetView> targets, double seconds,
                 boolean allowReplan, boolean frozen) {
+    return step(targets,List.of(),seconds,allowReplan,frozen);
+  }
+
+  Decision step(List<TargetView> targets, List<ClanView> creatures, double seconds,
+                boolean allowReplan, boolean frozen) {
     Objects.requireNonNull(targets);
+    Objects.requireNonNull(creatures);
     if (!Double.isFinite(seconds) || seconds <= 0 || seconds > MAX_STEP_SECONDS + EPSILON)
       throw new IllegalArgumentException("Expected one fixed simulation step");
     if (stationary || frozen) return decision(false, false, false);
 
     TargetView followed = null;
+    ClanView clanFollowed = null;
     boolean resetThisStep = false;
+    if (targetSpawnKey != null) {
+      for (ClanView candidate:creatures) if(candidate.key().equals(targetSpawnKey)) {
+        clanFollowed=candidate;break;
+      }
+      if (clanFollowed==null || !targetLife.equals(clanFollowed.life())
+          || !eligibleClan(clanFollowed)
+          || !MonsterPursuitRules.withinNaturalLeash((float)distance(clanFollowed.x(),clanFollowed.y()))) {
+        resetToReturn();clanFollowed=null;resetThisStep=true;
+      }
+    }
     if (target != null) {
       for (TargetView candidate : targets) if (candidate.character().equals(target)) {
         followed = candidate;
@@ -172,43 +221,43 @@ final class OnlineMonsterPursuit {
       }
     }
 
-    if (followed == null && target == null && mode != Mode.RETURN) {
-      followed = acquire(targets);
-      if (followed != null) {
-        target = followed.character();
-        targetEpoch = followed.epoch();
-        mode = Mode.NATURAL;
-        patrolX=null;patrolY=null;patrolPause=0;
-        clearNavigation();
-      }
-    } else if (mode == Mode.RETURN && !resetThisStep) {
+    if (followed == null && clanFollowed==null && target == null && targetSpawnKey==null
+        && (mode != Mode.RETURN || !resetThisStep)) {
       // A reset walks home; a later fixed step may interrupt it with fresh natural aggro.
-      followed = acquire(targets);
-      if (followed != null) {
+      clanFollowed=acquireClan(creatures);
+      if(clanFollowed!=null) {
+        targetSpawnKey=clanFollowed.key();targetLife=clanFollowed.life();mode=Mode.CLAN;
+      } else {
+        followed = acquire(targets);
+      }
+      if (clanFollowed!=null || followed != null) {
+        if(followed!=null) {
         target = followed.character();
         targetEpoch = followed.epoch();
         mode = Mode.NATURAL;
+        }
         patrolX=null;patrolY=null;patrolPause=0;
         clearNavigation();
       }
     }
 
-    boolean attacking = followed != null && attackAllowed(followed);
+    boolean attacking = followed != null && attackAllowed(followed)
+        || clanFollowed!=null && attackAllowed(clanFollowed);
     if (attacking) return decision(false, true, false);
-    if (followed == null && mode == Mode.IDLE) { mode=Mode.PATROL;pickPatrolTarget(); }
-    if (followed == null && mode == Mode.PATROL && patrolPause > 0) {
+    if (followed == null && clanFollowed==null && mode == Mode.IDLE) { mode=Mode.PATROL;pickPatrolTarget(); }
+    if (followed == null && clanFollowed==null && mode == Mode.PATROL && patrolPause > 0) {
       patrolPause=Math.max(0,patrolPause-seconds);
       return decision(false, false, false);
     }
-    if (followed == null && mode == Mode.PATROL && patrolX == null) pickPatrolTarget();
-    if (followed == null && mode == Mode.PATROL && patrolX == null) return decision(false,false,false);
-    double goalX = followed != null ? followed.x() : mode == Mode.RETURN ? homeX : patrolX;
-    double goalY = followed != null ? followed.y() : mode == Mode.RETURN ? homeY : patrolY;
-    if (followed == null && mode == Mode.RETURN && distance(goalX, goalY) <= EPSILON) {
+    if (followed == null && clanFollowed==null && mode == Mode.PATROL && patrolX == null) pickPatrolTarget();
+    if (followed == null && clanFollowed==null && mode == Mode.PATROL && patrolX == null) return decision(false,false,false);
+    double goalX = clanFollowed!=null ? clanFollowed.x() : followed != null ? followed.x() : mode == Mode.RETURN ? homeX : patrolX;
+    double goalY = clanFollowed!=null ? clanFollowed.y() : followed != null ? followed.y() : mode == Mode.RETURN ? homeY : patrolY;
+    if (followed == null && clanFollowed==null && mode == Mode.RETURN && distance(goalX, goalY) <= EPSILON) {
       x = homeX; y = homeY; mode = Mode.PATROL;pickPatrolTarget();clearNavigation();
       return decision(false, false, false);
     }
-    if (followed == null && mode == Mode.PATROL && distance(goalX,goalY)<2.0) {
+    if (followed == null && clanFollowed==null && mode == Mode.PATROL && distance(goalX,goalY)<2.0) {
       patrolX=null;patrolY=null;
       patrolPause=MONSTER_PATROL_PAUSE_MIN+patrolRandom.nextDouble()*(MONSTER_PATROL_PAUSE_MAX-MONSTER_PATROL_PAUSE_MIN);
       clearNavigation();return decision(false,false,false);
@@ -216,6 +265,8 @@ final class OnlineMonsterPursuit {
     // An in-range physical actor waits for cooldown; the old two-tile preview guard is not used.
     if (followed != null && inPhysicalReach(followed) && map.allowsCombat(x, y, goalX, goalY, false))
       return decision(false, false, false);
+    if (clanFollowed!=null && inPhysicalReach(clanFollowed)
+        && map.hasLineOfSight(x,y,goalX,goalY)) return decision(false,false,false);
     if(retryDelay>0) retryDelay=Math.max(0,retryDelay-seconds);
     boolean needsReplan = navigationGoalChanged(goalX, goalY) || pathFailed;
     if(pathFailed && retryDelay>0) needsReplan=false;
@@ -257,6 +308,22 @@ final class OnlineMonsterPursuit {
             .thenComparing(TargetView::character)).orElse(null);
   }
 
+  private ClanView acquireClan(List<ClanView> creatures) {
+    if(!canClanAttack) return null;
+    return creatures.stream().filter(this::eligibleClan)
+        .filter(view -> MonsterPursuitRules.withinNaturalLeash((float)distance(view.x(),view.y())))
+        .filter(view -> MonsterPursuitRules.inNaturalAcquisitionRange(true,
+            (float)distance(view.x(),view.y()),false))
+        .filter(view -> map.hasLineOfSight(x,y,view.x(),view.y()))
+        .min(Comparator.comparingDouble((ClanView view)->distance(view.x(),view.y()))
+            .thenComparing(ClanView::key)).orElse(null);
+  }
+
+  private boolean eligibleClan(ClanView view) {
+    return view.alive() && view.world()==world && region.equals(view.region())
+        && enemyClans.contains(view.clan()) && map.canStand(view.x(),view.y());
+  }
+
   private boolean eligible(TargetView view) {
     return view.alive() && view.ready() && view.leaseValid() && view.world() == world
         && region.equals(view.region()) && map.canStand(view.x(), view.y());
@@ -268,9 +335,20 @@ final class OnlineMonsterPursuit {
         && MonsterPursuitRules.tileRange(pixels) < 2;
   }
 
+  private boolean inPhysicalReach(ClanView view) {
+    float pixels=(float)distance(view.x(),view.y());
+    return MonsterPursuitRules.withinAttackReach(pixels,definition.getAttacks())
+        && MonsterPursuitRules.tileRange(pixels)<2;
+  }
+
   private boolean attackAllowed(TargetView view) {
     return definition.isCanAttack() && inPhysicalReach(view)
         && map.allowsCombat(x, y, view.x(), view.y(), false);
+  }
+
+  private boolean attackAllowed(ClanView view) {
+    return canClanAttack && inPhysicalReach(view)
+        && map.hasLineOfSight(x,y,view.x(),view.y());
   }
 
   private double distance(double otherX, double otherY) {
@@ -355,7 +433,7 @@ final class OnlineMonsterPursuit {
   }
 
   private void resetToReturn() {
-    target = null; targetEpoch = -1; mode = Mode.RETURN;
+    target = null; targetEpoch = -1; targetSpawnKey=null;targetLife=null;mode = Mode.RETURN;
     patrolX=null;patrolY=null;patrolPause=0;
     clearNavigation();
   }
@@ -377,6 +455,7 @@ final class OnlineMonsterPursuit {
   }
 
   private Decision decision(boolean suspended, boolean attack, boolean replan) {
-    return new Decision(x, y, life, mode, target, targetEpoch, suspended, attack, replan);
+    return new Decision(x, y, life, mode, target, targetEpoch,targetSpawnKey,targetLife,
+        suspended, attack, replan);
   }
 }
