@@ -6,13 +6,17 @@ import com.perso.T4C.quest.CrimsonscaleLetterRules;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /** Strict catalog for implemented interactions, not a claim that arbitrary NPC scripts are supported. */
 public final class NpcInteractionCatalog {
+  /** Kilhiam's letter conversation and Warden Aelric's renewed_wards quest giver; nothing else. */
+  static final Set<String> SUPPORTED = Set.of(CrimsonscaleLetterRules.NPC, "WardenAelric");
   private final NpcInteractionContent content;
   public NpcInteractionCatalog(NpcInteractionContent content) {
-    if (content.npcs().size()!=1 || !CrimsonscaleLetterRules.NPC.equals(content.npcs().getFirst().id()))
-      throw new IllegalArgumentException("Unsupported NPC interaction");
+    var ids = content.npcs().stream().map(NpcInteractionContent.Npc::id).collect(Collectors.toSet());
+    if (!ids.equals(SUPPORTED)) throw new IllegalArgumentException("Unsupported NPC interaction");
     this.content=content;
   }
   public List<NpcInteractionContent.Npc> npcs() { return content.npcs(); }

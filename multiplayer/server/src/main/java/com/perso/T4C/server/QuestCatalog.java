@@ -65,6 +65,23 @@ public final class QuestCatalog {
     return java.util.Collections.unmodifiableCollection(definitions.values());
   }
 
+  /** Shared immutable bundled catalog, loaded once; the packaged content is validated on first use. */
+  public static QuestCatalog bundled() {
+    return Bundled.INSTANCE;
+  }
+
+  private static final class Bundled {
+    static final QuestCatalog INSTANCE = load();
+
+    private static QuestCatalog load() {
+      try {
+        return loadBundled();
+      } catch (IOException unavailable) {
+        throw new IllegalStateException("Bundled quest content is unavailable", unavailable);
+      }
+    }
+  }
+
   public static QuestCatalog loadBundled() throws IOException {
     try (var input = QuestCatalog.class.getResourceAsStream("/content/quests-v1.json")) {
       if (input == null) throw new IOException("Missing bundled quest content");

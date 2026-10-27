@@ -23,4 +23,12 @@ class RegionNpcsTest {
     assertTrue(other.views().isEmpty());
     assertThrows(IllegalArgumentException.class,()->other.prepare(progress,map,3.5,5.5,authored.id()));
   }
+
+  @Test void wardenAelricIsListedOnlyInTheRegionThatContainsHisSpawn() throws Exception {
+    var catalog=NpcInteractionCatalog.loadBundled(); var items=ItemCatalog.loadBundled();
+    var temple=new RegionNpcs(catalog,items,new RegionMapLoader.Spec(0,"temple",2904,1029,80,60,2948,1044));
+    assertTrue(temple.views().stream().anyMatch(n->n.id().equals("WardenAelric")));
+    var elsewhere=new RegionNpcs(catalog,items,new RegionMapLoader.Spec(0,"elsewhere",0,0,10,10,5,5));
+    assertTrue(elsewhere.views().isEmpty());
+  }
 }
