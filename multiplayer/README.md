@@ -1,6 +1,7 @@
 # Multiplayer Alpha work
 
 For model/session continuation, start with [HANDOFF.md](HANDOFF.md).
+For current Codex/Claude task, file and resource ownership, read [PEER_WORK.md](PEER_WORK.md) before editing.
 
 For the owner-facing roadmap and exact completion criteria for each of the six two-player
 milestones, start with [MILESTONES.md](MILESTONES.md). Implementation task IDs and delivery
