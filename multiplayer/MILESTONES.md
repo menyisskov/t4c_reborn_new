@@ -48,9 +48,9 @@ playthrough and recovery criteria pass. Never infer Done from a task count or te
 | M1 — Enter and interact | Roster/NPC backend and actual adapter probes pass; visible controls/creation incomplete | T4C-0192, 0195, 0196 | Native selection/creation and NPC controls; account lifecycle integration |
 | M2 — Inventory and loot | Partial equipment/corpse services | Existing inventory/equipment work; T4C-0201, 0202 (design and pickup/drop rules only) | Visible inventory, general monster loot, claim/quantity integrity |
 | M3 — Complete authored adventure | Opening letter only; full loop incomplete | T4C-0193, 0194, 0195 | Full quest service, kill credit, rewards and required hosted routes |
-| M4 — Supported combat and abilities | Restricted melee/physical retaliation | T4C-0189, 0190 | Pursuit/AI and the declared classes' required abilities and state |
-| M5 — Reliability and anti-cheat | Pool/shutdown/fault probes, short operator-metrics adapter checks and an isolated two-adapter schema-9 graceful/forced server restart probe pass; sustained recovery/load/abuse gates open | T4C-0191, 0197, 0198, 0207 | Database recovery, rendered restart, failure drills, sustained measured stability and abuse checks |
-| M6 — Package and native acceptance | Create-only package and headless integrity checks pass; clean-machine, remote and full rendered playthrough open | T4C-0205 and cross-cutting work | Clean-machine delivery and complete two-rendered-client playthrough |
+| M4 — Supported combat and abilities | Restricted melee/physical retaliation, including a brief rendered two-client attack/death check | T4C-0189, 0190 | Pursuit/AI and the declared classes' required abilities and state |
+| M5 — Reliability and anti-cheat | Pool/shutdown/fault probes, short operator-metrics checks, isolated two-adapter restart probe and brief rendered reconnect pass; sustained recovery/load/abuse gates open | T4C-0191, 0197, 0198, 0207 | Database recovery, broader rendered restart, failure drills, sustained measured stability and abuse checks |
+| M6 — Package and native acceptance | Create-only package, headless integrity checks and brief two-window local bundle smoke pass; clean-machine, remote and full rendered playthrough open | T4C-0205 and cross-cutting work | Clean-machine delivery and complete two-rendered-client playthrough |
 
 Task IDs not yet claimed are deliberately not represented as completed or assigned work.
 Independent implementation can proceed in parallel; acceptance must use an integrated build.

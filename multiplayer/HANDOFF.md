@@ -281,6 +281,19 @@ remote clean machine, offline regression or owner QA was run. M6 remains incompl
 
 ## T4C-0207 isolated restart probe checkpoint
 
+Owner-resumed rendered QA subsequently exercised the final T4C-0205 bundle from source
+`8da43482` against unchanged schema-9 QA port 18765 with two separate native windows.
+One player attacked a guard (55→28 HP), took retaliation (13/35 HP), died and rendered at
+the temple with 17/35 HP, XP 439 and gold 238. The other player stayed at 35/35 HP,
+XP 804 and gold 252. Closing and relaunching the attacked window with its same external
+profile restored the rendered respawn and those balances while the observer stayed connected.
+Several focus switches survived; seven protected account/character/preference file hashes
+were unchanged. Both clients remain open for the owner, who controls the desktop/QA window.
+This brief run adds partial M4/M5/M6 evidence only. It did not exercise full quests, loot,
+corpse pickup, remote deployment, offline save/load, sustained focus behavior or the schema-10
+server. Earlier failed focus/soak runs remain recorded; the owner explicitly resumed this
+desktop session after the prior automation pause.
+
 `tools/NativeRestartProbe.java` and `tools/NATIVE_RESTART_PROBE.md` provide a bounded two-adapter
 server-process restart drill. The exact final-source SHA-256
 `9F324B943D982B5D14F0FB20A60A5E3650DCE23020DF3E2D3894C091ECBA6AEA` passed on an
