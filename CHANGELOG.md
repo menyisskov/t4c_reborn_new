@@ -6,6 +6,15 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Online spells and potions (T4C-0230)
+
+### Added
+- In online play the server now accepts self-cast spells such as Light Heal and drinkable potions. Casting spends mana, heals you, and starts the same recovery delays as single-player. Reconnecting does not shorten a delay that is still running.
+- A cast or potion is refused, and nothing is spent, when you do not know the spell, are still recovering, or lack the mana. You stay connected after a refusal.
+
+### Changed
+- Health and mana now recover over time while you are online and are saved with your regular position saves. Right after a cast or a potion you cannot walk until the recovery delay ends, as in single-player.
+
 ## 2026-10-27 — Online natural regeneration (T4C-0229)
 
 ### Added
