@@ -1,5 +1,14 @@
-param([ValidateRange(1024,65535)][int]$Port = 18765, [string]$Profile)
+param([ValidateRange(1024,65535)][int]$Port = 18765, [string]$Profile, [string]$Endpoint)
 $ErrorActionPreference = 'Stop'
+if (!$Endpoint) { $Endpoint = "http://127.0.0.1:$Port" }
+$clientEndpoint = $null
+if (![uri]::TryCreate($Endpoint, [UriKind]::Absolute, [ref]$clientEndpoint) -or
+    $clientEndpoint.UserInfo -or $clientEndpoint.Query -or $clientEndpoint.Fragment -or
+    $clientEndpoint.AbsolutePath -ne '/' -or $clientEndpoint.Port -lt 1 -or
+    ($clientEndpoint.Scheme -ne 'https' -and !($clientEndpoint.Scheme -eq 'http' -and $clientEndpoint.Host -eq '127.0.0.1'))) {
+    throw 'Endpoint must be an HTTPS origin, or http://127.0.0.1:PORT for local development.'
+}
+$Endpoint = if ($clientEndpoint.Scheme -eq 'http') { "http://127.0.0.1:$($clientEndpoint.Port)" } else { $clientEndpoint.GetLeftPart([UriPartial]::Authority) }
 $clientRoot = Split-Path $PSScriptRoot -Parent
 $clientClasses = Join-Path $clientRoot 'target/classes'
 $clientClasspathFile = Join-Path $clientRoot 'target/classpath.txt'
@@ -16,6 +25,6 @@ $clientLog = Join-Path $clientRoot ('target/online-client-' + [guid]::NewGuid().
 $clientEnvironment = @{ T4C_ONLINE_PROFILE = '' }
 if ($Profile) { $clientEnvironment.T4C_ONLINE_PROFILE = (Resolve-Path -LiteralPath $Profile -ErrorAction Stop).Path }
 $clientProcess = Start-Process -FilePath $clientJava -WorkingDirectory $clientRoot -WindowStyle Hidden -Environment $clientEnvironment -PassThru -ArgumentList @(
-    '-cp', ('"' + $clientClasspath + '"'), 'com.perso.T4C.online.OnlineClient', "http://127.0.0.1:$Port"
+    '-cp', ('"' + $clientClasspath + '"'), 'com.perso.T4C.online.OnlineClient', $Endpoint
 ) -RedirectStandardOutput ($clientLog + '.log') -RedirectStandardError ($clientLog + '-error.log')
 Write-Host "Started native online client $($clientProcess.Id). Run this script again for a second player. Logs: $clientLog.log"

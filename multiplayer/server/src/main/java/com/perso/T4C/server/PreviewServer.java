@@ -23,6 +23,7 @@ public final class PreviewServer implements AutoCloseable {
   private static final Gson JSON = new Gson();
   private final com.perso.T4C.online.model.ItemContent items;
   private final HttpServer http;
+  private final ServerTransport transport;
   private final ThreadPoolExecutor requests = new ThreadPoolExecutor(
       8, 8, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<>(128),
       Thread.ofPlatform().name("preview-http-", 0).factory(), new ThreadPoolExecutor.AbortPolicy());
@@ -50,6 +51,11 @@ public final class PreviewServer implements AutoCloseable {
   }
 
   public PreviewServer(PreviewMap map, int port, OnlineStore store, String controlToken) throws IOException {
+    this(map,port,store,controlToken,ServerTransport.local());
+  }
+
+  public PreviewServer(PreviewMap map, int port, OnlineStore store, String controlToken, ServerTransport transport) throws IOException {
+    this.transport=java.util.Objects.requireNonNull(transport);
     if (controlToken!=null && !controlToken.matches("[0-9a-f]{64}")) throw new IllegalArgumentException("Invalid control token");
     this.controlToken=controlToken;
     this.store=store;
@@ -69,7 +75,7 @@ public final class PreviewServer implements AutoCloseable {
     mapJson = JSON.toJson(Map.of("width", map.width, "height", map.height,
         "originX", map.originX, "originY", map.originY, "blocked", map.cells(),
         "maxPlayers", PreviewWorld.MAX_PLAYERS,"persistent",store!=null,"protocolVersion",OnlineProtocol.VERSION));
-    http = HttpServer.create(new InetSocketAddress("127.0.0.1", port), 32);
+    http = transport.create(port);
     loop = new SimulationLoop(PreviewWorld.TICK_RATE, tick -> {
       for (int i = 0; i < 128; i++) {
         Runnable command = commands.poll();
@@ -94,7 +100,7 @@ public final class PreviewServer implements AutoCloseable {
     http.createContext("/", this::handle);
   }
 
-  public String url() { return "http://127.0.0.1:" + http.getAddress().getPort(); }
+  public String url() { return transport.origin(http.getAddress().getPort()); }
 
   public void start() { http.start(); simulation.start(); }
 
@@ -135,14 +141,14 @@ public final class PreviewServer implements AutoCloseable {
   private void handle(HttpExchange exchange) throws IOException {
     try {
       String host = exchange.getRequestHeaders().getFirst("Host");
-      if (!("127.0.0.1:" + http.getAddress().getPort()).equals(host))
+      if (!transport.acceptsHost(host,http.getAddress().getPort()))
         throw new PreviewWorld.Rejected(403, "origin");
       String method = exchange.getRequestMethod();
       String path = exchange.getRequestURI().getRawPath();
       if (exchange.getRequestURI().getRawQuery() != null)
         throw new PreviewWorld.Rejected(400, "input");
       if ("POST".equals(method)) {
-        if (!url().equals(exchange.getRequestHeaders().getFirst("Origin")))
+        if (!transport.acceptsOrigin(exchange.getRequestHeaders().getFirst("Origin"),http.getAddress().getPort()))
           throw new PreviewWorld.Rejected(403, "origin");
         String type = exchange.getRequestHeaders().getFirst("Content-Type");
         if (type == null || !type.toLowerCase(java.util.Locale.ROOT).startsWith("text/plain"))
@@ -160,7 +166,8 @@ public final class PreviewServer implements AutoCloseable {
         String body = new String(bytes, StandardCharsets.US_ASCII);
         switch (path) {
           case "/admin/shutdown" -> {
-            if (controlToken==null || !java.security.MessageDigest.isEqual(
+            if (!exchange.getRemoteAddress().getAddress().isLoopbackAddress()
+                || controlToken==null || !java.security.MessageDigest.isEqual(
                 controlToken.getBytes(StandardCharsets.US_ASCII),token(exchange).getBytes(StandardCharsets.US_ASCII)))
               throw new PreviewWorld.Rejected(403,"admin");
             if (!body.isEmpty()) throw new PreviewWorld.Rejected(400,"input");

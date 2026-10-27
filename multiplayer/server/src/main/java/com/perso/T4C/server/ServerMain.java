@@ -41,25 +41,27 @@ public final class ServerMain {
     }
     if (args.length > 0 && ("--preview".equals(args[0]) || "--online".equals(args[0]))) {
       if (args.length != 3) throw new IllegalArgumentException("Expected --preview COLLISION_FILE PORT");
-      // JDK HTTP implementation limits are set before its first use. This listener is loopback-only.
+      // JDK HTTP implementation limits are set before its first use. Remote listeners require TLS.
       System.setProperty("jdk.httpserver.maxConnections", "128");
       System.setProperty("sun.net.httpserver.maxReqHeaders", "32");
       System.setProperty("sun.net.httpserver.maxReqHeaderSize", "8192");
-      System.setProperty("sun.net.httpserver.maxReqTime", "5000");
-      System.setProperty("sun.net.httpserver.maxRspTime", "5000");
+      // JDK ServerImpl converts these settings from seconds to milliseconds.
+      System.setProperty("sun.net.httpserver.maxReqTime", "5");
+      System.setProperty("sun.net.httpserver.maxRspTime", "5");
+      var transport=ServerTransport.fromEnvironment(System.getenv());
       var store="--online".equals(args[0]) ? com.perso.T4C.server.persistence.OnlineStore.fromEnvironment() : null;
       if (store!=null) store.migrate();
       String controlFile=System.getenv("T4C_CONTROL_FILE");
       String controlToken=store!=null && controlFile!=null && !controlFile.isBlank()
           ? OnlineProvisioner.controlToken(java.nio.file.Path.of(controlFile)) : null;
-      try (var server = new PreviewServer(PreviewMap.load(java.nio.file.Path.of(args[1])), Integer.parseInt(args[2]),store,controlToken)) {
+      try (var server = new PreviewServer(PreviewMap.load(java.nio.file.Path.of(args[1])), Integer.parseInt(args[2]),store,controlToken,transport)) {
         Thread shutdown = new Thread(server::close, "preview-shutdown");
         Runtime.getRuntime().addShutdownHook(shutdown);
         try {
           server.start();
-          System.out.println("Local multiplayer movement preview: " + server.url());
+          System.out.println("Online multiplayer listener: " + server.url());
           System.out.println(store==null ? "Temporary characters only. Stop with Ctrl+C. No saves are read or written."
-              : "Persistent movement only. PostgreSQL checkpoints enabled; offline saves remain separate.");
+              : "Persistent movement, melee combat and corpse recovery enabled; offline saves remain separate.");
           server.await();
         } finally {
           try { Runtime.getRuntime().removeShutdownHook(shutdown); }
