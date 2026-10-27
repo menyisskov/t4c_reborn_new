@@ -13,7 +13,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0184 | Restore and respawn persistent creatures in the running world | Multiplayer / Alpha | In Progress | pending | [2026-10-27](CHANGELOG.md#2026-10-27--live-creature-recovery-t4c-0184) |
+| T4C-0184 | Restore and respawn persistent creatures in the running world | Multiplayer / Alpha | Done | `f6ca92d0` | [2026-10-27](CHANGELOG.md#2026-10-27--live-creature-recovery-t4c-0184) |
 | T4C-0183 | Persist creature spawn generations across recovery | Multiplayer / Alpha | Done | 116a1ea5 | [2026-10-27](CHANGELOG.md#2026-10-27--persistent-creature-life-tracking-t4c-0183) |
 | T4C-0182 | Commit one recipient for shared-world rewards | Multiplayer / Alpha | Done | fef7b707 | [2026-10-27](CHANGELOG.md#2026-10-27--shared-world-reward-protection-t4c-0182) |
 | T4C-0181 | Bound authenticated client command processing per session | Multiplayer / Alpha | Done | 4f9ca8d9 | [2026-10-27](CHANGELOG.md#2026-10-27--online-command-flood-limits-t4c-0181) |
