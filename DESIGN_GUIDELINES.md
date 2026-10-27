@@ -2,6 +2,8 @@
 
 ## Multiplayer delivery and single-player compatibility (T4C-0156)
 
+- Codex and Claude peer work follows AGENTS.md section 8 and the canonical multiplayer/PEER_WORK.md register. Claim exact task/file/resource ownership with a short serialized update, use one Git integrator per physical checkout, and require explicit handoff before overlap or takeover. Claude has not started yet; M2 inventory/loot is reserved as its separate lane while Codex finishes0196–0198. A reservation is not acknowledgement, and no agent can infer peer liveness or permission from silence.
+
 - Owner-facing milestones and exact acceptance scenarios live in multiplayer/MILESTONES.md; TASKS.md tracks implementation deliveries, ACCEPTANCE.md tracks release evidence, and HANDOFF.md tracks model/session continuation. A proposed two-player starter checkpoint does not silently replace the agreed full 20-player Beta or freeze an unapproved smaller content scope. Mark milestones complete only from integrated native gameplay and recovery evidence, not from merged task counts.
 - Model routing is defined once in AGENTS.md section 6 and referenced by AGENT.md and CLAUDE.md. Apply it to new implementation, investigation and planning phases; document unavailable provider models rather than silently changing tiers.
 

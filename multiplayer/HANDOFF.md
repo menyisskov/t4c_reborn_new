@@ -97,6 +97,23 @@ Use ship-pr/steward. Self-review the actual scoped diff. Commit task/changelog/d
 
 Map-transfer delivery is merged and reliability regressions pass; diagnose the new SQL08001 load failure without mutating its captured runtime, then rerun after a verified fix. The opening NPC service is merged; complete its rendered interaction and native character selection/account lifecycle, quests/general ground loot, required spells/abilities/inventory controls, broader hosted world routes and encounters, full creation-to-progression playthrough, crash/reconnect/database/restore playthroughs, and attack/replay/duplication abuse checks. Repeat sustained two-hour 20-client mixed gameplay on the final integrated release with tick/DB/latency/resource measurements. HTTPS configuration exists, while external deployment and native remote QA remain open. Follow ACCEPTANCE.md rather than declaring Beta from this list alone. Deployment credentials or external hosting choices may need the owner; exhaust local work before asking.
 
+## Peer coordination and latest verification
+
+The owner is adding an external Claude session and confirmed it has not started yet. Follow
+AGENTS.md section8 and the canonical PEER_WORK.md register before any new work. Codex retains
+0196–0198 account/pool/metrics integration and shared Git/build/server/database operations.
+Claude has0202/M2 inventory and ground-loot reserved, but acknowledgement/file claim is pending.
+Do not claim Claude agreed or began; it must read/claim under the short common-Git lock.
+All Codex sub-agent work remains under Codex ownership; use section6 model routing for new phases.
+
+Latest integrated verification after the shutdown correction: cheap-model gpt-6-sol validation
+passed18domain+82server=100PostgreSQL tests, none failed/skipped. The corrected pooled server
+was gracefully stopped/rebuilt/restarted on18765/t4c_online; actual native roster and network-fault
+probes passed again. Logs: `$env:TEMP/t4c-0200-integrated-reverify.log`,
+`t4c-0200-roster-probe.log`, `t4c-0200-network-fault-probe.log`. stop-preview.ps1 is aligned to90s
+and parsed successfully. Root Maven/build window is idle; the next measured smoke still remains.
+This supersedes the earlier99-test/older-running-package checkpoint below. No GUI was opened.
+
 ## Current work and model routing checkpoint
 
 Read AGENTS.md section 6 before selecting or delegating a model. The owner explicitly requests

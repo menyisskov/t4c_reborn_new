@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Peer-agent coordination (T4C-0201)
+
+### Changed
+- Codex and Claude now share a work register, claim separate tasks and files, and arrange handoffs before overlapping work. Shared builds, servers, databases and Git operations have explicit owners.
+
 ## 2026-10-27 — Agent model routing (T4C-0200)
 
 ### Changed

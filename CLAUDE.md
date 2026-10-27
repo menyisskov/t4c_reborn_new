@@ -11,6 +11,26 @@ invent a model ID, silently upgrade tiers or copy a competing routing table here
 For multiplayer roadmap/checklist locations and required updates, follow AGENTS.md
 section 7. Detailed milestone criteria live in `multiplayer/MILESTONES.md`.
 
+## Peer-agent coordination — read before taking a task
+
+Codex and Claude may be working concurrently. Follow [AGENTS.md section 8](AGENTS.md#8-working-with-peer-agents-codex-claude-and-sub-agents)
+and the canonical [peer work register](multiplayer/PEER_WORK.md) before editing or running shared operations.
+Do not assume this session knows the other agent's task or sees its messages.
+
+- Declare/acknowledge your task, concrete files, branch/base and resource needs under the short
+  coordination lock; reread existing claims first. The current register reserves Codex's0196–0198
+  integration and offers Claude a distinct M2 lane, pending Claude's acknowledgement.
+- Do not change another agent's claimed files without an explicit recorded handoff. New scope
+  requires updating the claim first; a different task name does not make shared-file edits safe.
+- In a shared checkout, obey the named Git integrator. Do not switch branches, stage, commit,
+  pull, stash, reset or clean peer work. Arrange an independent worktree when separate Git work is needed.
+- Reserve Maven outputs, servers, ports, databases and migrations before using them. Publish
+  start/blocker/handoff/test/completion updates and refresh active status at least every ten minutes.
+- Treat missing replies or stale status as unknown, not permission to take over. End each handoff
+  with exact changes, test results, remaining risks and released files/resources in the register.
+
+The register is authoritative for current assignments; do not copy a competing task table here.
+
 ## Changelog & task tracking — do this on every content/feature change
 
 This project has no external issue tracker. `CHANGELOG.md` and `TASKS.md`
