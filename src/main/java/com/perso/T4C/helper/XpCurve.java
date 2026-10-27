@@ -2,7 +2,6 @@ package com.perso.T4C.helper;
 
 import com.perso.T4C.config.GameConstants;
 import com.perso.T4C.mapping.definition.XpCurveDefinitions;
-import com.perso.T4C.player.Player;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,6 +12,13 @@ import java.util.Map;
 import lombok.Getter;
 
 public final class XpCurve {
+  public interface Progress {
+    int getLevel();
+    void setLevel(int value);
+    long getXpToNextLevel();
+    void setXpToNextLevel(long value);
+    void setCurrentXp(long value);
+  }
   private final Map<Integer, Entry> byLevel;
 
   private XpCurve(Map<Integer, Entry> byLevel) {
@@ -47,7 +53,7 @@ public final class XpCurve {
     return entry != null ? entry.totalXp : 0;
   }
 
-  public void applyToPlayer(Player player) {
+  public void applyToPlayer(Progress player) {
     if (player == null) {
       return;
     }
@@ -67,7 +73,7 @@ public final class XpCurve {
   }
 
   /** Preserve level progress when a save's threshold belongs to an older XP curve. */
-  public void applySavedProgress(Player player, long savedXp, long savedThreshold) {
+  public void applySavedProgress(Progress player, long savedXp, long savedThreshold) {
     applyToPlayer(player);
     long threshold = player.getXpToNextLevel();
     if (threshold <= 0) {
