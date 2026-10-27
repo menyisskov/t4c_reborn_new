@@ -2,6 +2,7 @@ package com.perso.T4C.server;
 
 import com.perso.T4C.online.model.*;
 import com.perso.T4C.server.persistence.OnlineStore;
+import com.perso.T4C.helper.CharacterClass;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.LongSupplier;
@@ -26,20 +27,63 @@ final class AccountRosterService implements AutoCloseable {
   }
   static final int CLOSE_TIMEOUT_SECONDS=12;
   private boolean closed;
-  private final Set<CompletableFuture<OnlineRoster>> pending=ConcurrentHashMap.newKeySet();
+  private final Set<CompletableFuture<?>> pending=ConcurrentHashMap.newKeySet();
   private final OnlineStore store;
   private final HostedRegionPlan plan;
   private final PeerLimiter limiter=new PeerLimiter(System::nanoTime);
   private final ThreadPoolExecutor workers=new ThreadPoolExecutor(2,2,0,TimeUnit.SECONDS,new ArrayBlockingQueue<>(20),
       Thread.ofPlatform().name("account-roster-",0).factory(),new ThreadPoolExecutor.AbortPolicy());
   AccountRosterService(OnlineStore store,HostedRegionPlan plan) { this.store=store;this.plan=plan; }
-  synchronized CompletableFuture<OnlineRoster> request(String peer,String secret,UUID after) {
+  private synchronized <T> CompletableFuture<T> submit(String peer,Callable<T> action) {
     if(closed) throw new PreviewWorld.Rejected(503,"account_closed");
-    limiter.admit(peer);var result=new CompletableFuture<OnlineRoster>();
+    limiter.admit(peer);var result=new CompletableFuture<T>();
     pending.add(result);result.whenComplete((value,error)->pending.remove(result));
     try { workers.execute(()-> {
       if(result.isDone()) return;
-      try {
+      try { result.complete(action.call()); }
+      catch(OnlineStore.CreationConflict rejected) { result.completeExceptionally(new PreviewWorld.Rejected(409,rejected.code())); }
+      catch(OnlineStore.Conflict rejected) { result.completeExceptionally(new PreviewWorld.Rejected(401,"account")); }
+      catch(PreviewWorld.Rejected rejected) { result.completeExceptionally(rejected); }
+      catch(Exception failure) { result.completeExceptionally(new PreviewWorld.Rejected(503,"account_unavailable")); }
+    }); } catch(RejectedExecutionException busy) { pending.remove(result);throw new PreviewWorld.Rejected(503,"account_busy"); }
+    return result;
+  }
+
+  CompletableFuture<Void> authenticate(String peer,String secret) {
+    return submit(peer,()-> { store.authenticateAccount(secret);return null; });
+  }
+
+  CompletableFuture<OnlineCharacterCreation.Result> create(String peer,String secret,
+      OnlineCharacterCreation.Request request) {
+    return submit(peer,()-> {
+      CharacterClass type=switch(request.characterClass()) {
+        case "warrior" -> CharacterClass.WARRIOR;
+        case "paladin" -> CharacterClass.PALADIN;
+        default -> throw new PreviewWorld.Rejected(400,"unsupported_class");
+      };
+      var hostedStart=plan.regions().getFirst();
+      var spec=hostedStart.spec();
+      var map=hostedStart.map();
+      var position=new CharacterProgress.Respawn(spec.world(),map.originX+map.spawnX,map.originY+map.spawnY);
+      var respawn=new CharacterProgress.Respawn(com.perso.T4C.config.GameConstants.PLAYER_RESPAWN_TILE_Z,
+          com.perso.T4C.config.GameConstants.PLAYER_RESPAWN_TILE_X,
+          com.perso.T4C.config.GameConstants.PLAYER_RESPAWN_TILE_Y);
+      if(!plan.canStand(position) || !plan.canStand(respawn))
+        throw new PreviewWorld.Rejected(503,"account_unavailable");
+      var created=store.createAuthenticated(secret,request,position.world(),position.x(),position.y(),()-> {
+        var initial=OnlineCharacterCreator.prepare(type,request.gender(),request.evil(),new java.security.SecureRandom());
+        return new OnlineStore.InitialState(initial.progress(),initial.gold());
+      });
+      var row=created.character();
+      var progress=row.progress();
+      var summary=new OnlineRoster.CharacterSummary(row.id(),row.name(),progress.characterClass(),
+          progress.gender(),progress.advancement().level(),row.world(),created.inUse() ? "in_use" : "ready");
+      return new OnlineCharacterCreation.Result(request.requestId(),summary);
+    });
+  }
+
+  CompletableFuture<OnlineRoster> request(String peer,String secret,UUID after) {
+    return submit(peer,()-> {
         var rows=store.roster(secret,after);var summaries=new ArrayList<OnlineRoster.CharacterSummary>();
         for(var row:rows.subList(0,Math.min(rows.size(),OnlineRoster.PAGE_SIZE))) {
           var c=row.character();var p=c.progress();String availability;
@@ -50,11 +94,8 @@ final class AccountRosterService implements AutoCloseable {
           summaries.add(new OnlineRoster.CharacterSummary(c.id(),c.name(),p==null ? null : p.characterClass(),
               p==null ? null : p.gender(),p==null ? null : p.advancement().level(),c.world(),availability));
         }
-        result.complete(new OnlineRoster(summaries,rows.size()>OnlineRoster.PAGE_SIZE ? summaries.getLast().id() : null));
-      } catch(OnlineStore.Conflict rejected) { result.completeExceptionally(new PreviewWorld.Rejected(401,"account")); }
-      catch(Exception failure) { result.completeExceptionally(new PreviewWorld.Rejected(503,"account_unavailable")); }
-    }); } catch(RejectedExecutionException busy) { pending.remove(result);throw new PreviewWorld.Rejected(503,"account_busy"); }
-    return result;
+        return new OnlineRoster(summaries,rows.size()>OnlineRoster.PAGE_SIZE ? summaries.getLast().id() : null);
+    });
   }
   @Override public synchronized void close() {
     closed=true;

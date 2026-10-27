@@ -1,6 +1,7 @@
 package com.perso.T4C.server.persistence;
 
 import com.perso.T4C.online.model.CharacterProgress;
+import com.perso.T4C.online.model.OnlineCharacterCreation;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,6 +18,74 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 /** Runs against PostgreSQL, including in CI; no in-memory substitute for transaction semantics. */
 @EnabledIfEnvironmentVariable(named="T4C_DB_URL", matches=".+")
 class OnlineStoreTest {
+  @Test void creationReceiptSerializesDuplicatesAndNeverRunsSecondStarter() throws Exception {
+    var key=store.provisionAccount();
+    var request=new OnlineCharacterCreation.Request(UUID.randomUUID(),"Created","warrior","male",false);
+    var starters=new java.util.concurrent.atomic.AtomicInteger();
+    java.util.function.Supplier<OnlineStore.InitialState> seed=()-> {
+      starters.incrementAndGet();return new OnlineStore.InitialState(CharacterProgressTest.sample(),7);
+    };
+    try(var pool=Executors.newFixedThreadPool(2)) {
+      var begin=new java.util.concurrent.CountDownLatch(1);
+      Callable<OnlineStore.CharacterState> call=()-> { begin.await();
+        return store.createAuthenticated(key.secret(),request,0,10,20,seed).character(); };
+      var a=pool.submit(call);var b=pool.submit(call);begin.countDown();
+      var first=a.get();var replay=b.get();
+      assertEquals(first.id(),replay.id());assertEquals(first,store.load(key.accountId(),first.id()));
+      assertEquals(1,starters.get());
+      var changed=new OnlineCharacterCreation.Request(request.requestId(),"Changed","warrior","male",false);
+      assertEquals("creation_conflict",assertThrows(OnlineStore.CreationConflict.class,
+          ()->store.createAuthenticated(key.secret(),changed,0,10,20,seed)).code());
+      var recased=new OnlineCharacterCreation.Request(request.requestId(),"CREATED","warrior","male",false);
+      assertEquals("creation_conflict",assertThrows(OnlineStore.CreationConflict.class,
+          ()->store.createAuthenticated(key.secret(),recased,0,10,20,seed)).code());
+      assertEquals(1,starters.get());
+      var foreign=store.provisionAccount();
+      var foreignRow=store.createAuthenticated(foreign.secret(),request,0,10,20,seed).character();
+      assertNotEquals(first.id(),foreignRow.id());
+      assertThrows(OnlineStore.Conflict.class,()->store.load(foreign.accountId(),first.id()));
+      try(var c=testConnection();var q=c.prepareStatement(
+          "INSERT INTO online_character_creations(account_id,request_id,payload_hash,character_id) VALUES (?,?,?,?)")) {
+        q.setObject(1,foreign.accountId());q.setObject(2,UUID.randomUUID());
+        q.setString(3,"0".repeat(64));q.setObject(4,first.id());
+        assertThrows(SQLException.class,q::executeUpdate,"A receipt cannot point at another account's character");
+      }
+      var replacement=store.rotateAccountKey(key.accountId());
+      assertThrows(OnlineStore.Conflict.class,
+          ()->store.createAuthenticated(key.secret(),request,0,10,20,seed));
+      assertEquals(first.id(),store.createAuthenticated(replacement.secret(),request,0,10,20,seed).character().id());
+    }
+  }
+
+  @Test void creationChecksAccountLocalCaseInsensitiveNameAndLegacySlotCapacity() throws Exception {
+    var key=store.provisionAccount();
+    store.create(key.accountId(),"Existing",0,10,20);
+    var seed=(java.util.function.Supplier<OnlineStore.InitialState>)
+        ()->new OnlineStore.InitialState(CharacterProgressTest.sample(),0);
+    var sameName=new OnlineCharacterCreation.Request(UUID.randomUUID(),"eXISTING","warrior","male",false);
+    assertEquals("name_taken",assertThrows(OnlineStore.CreationConflict.class,
+        ()->store.createAuthenticated(key.secret(),sameName,0,10,20,seed)).code());
+    var created=store.createAuthenticated(key.secret(),
+        new OnlineCharacterCreation.Request(UUID.randomUUID(),"Second","warrior","male",false),
+        0,10,20,seed).character();
+    assertNotNull(created.progress());
+    // One trusted legacy row and one newly created row leave exactly one slot for two racing requests.
+    try(var pool=Executors.newFixedThreadPool(2)) {
+      var begin=new java.util.concurrent.CountDownLatch(1);
+      java.util.function.Function<String,Callable<String>> attempt=name->()-> {
+        begin.await();
+        try { return store.createAuthenticated(key.secret(),
+            new OnlineCharacterCreation.Request(UUID.randomUUID(),name,"warrior","male",false),
+            0,10,20,seed).character().name(); }
+        catch(OnlineStore.CreationConflict full) { return full.code(); }
+      };
+      var a=pool.submit(attempt.apply("Third"));var b=pool.submit(attempt.apply("Fourth"));begin.countDown();
+      var outcomes=java.util.Set.of(a.get(),b.get());
+      assertEquals(2,outcomes.size());assertTrue(outcomes.contains("roster_full"));
+      assertTrue(outcomes.contains("Third") || outcomes.contains("Fourth"));
+    }
+  }
+
   @Test void movingCreatureCheckpointCannotRewindCommittedDamageOrTargetEpoch() throws Exception {
     var life=store.loadOrCreateSpawn("motion:"+UUID.randomUUID());
     assertNull(life.currentX());assertNull(life.currentY());
@@ -76,6 +145,8 @@ class OnlineStoreTest {
       s.execute("CREATE SCHEMA "+schema);
       s.execute("CREATE TABLE "+schema+".online_schema(version integer PRIMARY KEY)");
       s.execute("INSERT INTO "+schema+".online_schema(version) SELECT generate_series(1,10)");
+      s.execute("CREATE TABLE "+schema+".online_accounts(id uuid PRIMARY KEY)");
+      s.execute("CREATE TABLE "+schema+".online_characters(id uuid PRIMARY KEY,account_id uuid NOT NULL REFERENCES "+schema+".online_accounts(id))");
       s.execute("CREATE TABLE "+schema+".online_spawns(spawn_key varchar(256) PRIMARY KEY,generation bigint NOT NULL DEFAULT 0,event_id uuid NOT NULL,health integer,target_character uuid,next_attack_at bigint NOT NULL DEFAULT 0)");
       s.execute("CREATE TABLE "+schema+".online_world_rewards(event_id uuid,character_id uuid,claimed_at timestamptz)");
       try(var insert=c.prepareStatement("INSERT INTO "+schema+".online_spawns VALUES (?,?,?,?,?,?)")) {
@@ -108,6 +179,8 @@ class OnlineStoreTest {
       s.execute("CREATE SCHEMA "+schema);
       s.execute("CREATE TABLE "+schema+".online_schema(version integer PRIMARY KEY)");
       s.execute("INSERT INTO "+schema+".online_schema(version) SELECT generate_series(1,11)");
+      s.execute("CREATE TABLE "+schema+".online_accounts(id uuid PRIMARY KEY)");
+      s.execute("CREATE TABLE "+schema+".online_characters(id uuid PRIMARY KEY,account_id uuid NOT NULL REFERENCES "+schema+".online_accounts(id))");
       s.execute("""
           CREATE TABLE %s.online_spawns (
             spawn_key varchar(256) PRIMARY KEY,generation bigint NOT NULL DEFAULT 0,event_id uuid NOT NULL,
