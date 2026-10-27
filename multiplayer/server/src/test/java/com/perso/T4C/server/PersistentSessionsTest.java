@@ -9,6 +9,7 @@ import com.perso.T4C.online.model.MonsterContent;
 import com.perso.T4C.server.persistence.OnlineStore;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Proxy;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -359,6 +360,109 @@ class PersistentSessionsTest {
       assertEquals(1,store.load(key.accountId(),looter.id()).progress().inventory().stream()
           .filter(item -> item.id().equals(drop.id())).count());
     }
+  }
+
+  @Test void wardenTurnInCommitsGoldExperienceSpellAndFlagsOnceAcrossRepeatAndReconnect() throws Exception {
+    var store=OnlineStore.fromEnvironment(); store.migrate(); var key=store.provisionAccount();
+    var aelric=NpcInteractionCatalog.loadBundled().require("WardenAelric");
+    var prepared=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(8));
+    var created=store.create(key.accountId(),"Warden turn-in",aelric.world(),aelric.x()+0.5,aelric.y()+0.5,
+        wardenReady(prepared.progress()),prepared.gold());
+    try(var hosted=startingSlice(store)) {
+      var sessions=hosted.sessions;
+      var lease=store.acquire(key.secret(),created.id());
+      String token=sessions.join(lease,System.nanoTime()).token();
+      sessions.regionReady(token,lease.character().locationEpoch());
+      var reply=sessions.interact(token,created.revision(),"WardenAelric").toCompletableFuture();
+      // Single flight: a second request while the first draft is uncommitted is refused, not queued.
+      assertEquals("busy",assertThrows(PreviewWorld.Rejected.class,()->sessions.interact(token,created.revision(),"WardenAelric")).getMessage());
+      await(sessions,reply);
+      var first=reply.get();
+      assertTrue(first.changed());
+      assertEquals("quest.renewed_wards.completion",first.messageKey());
+      var saved=store.load(key.accountId(),created.id());
+      assertEquals(created.gold()+500,saved.gold());
+      assertEquals(created.experience()+400,saved.experience());
+      assertEquals(2,saved.progress().questFlags().get("quest.renewed_wards.status"));
+      assertTrue(saved.progress().spells().contains("spell.renew_armor"));
+      assertEquals(first.revision(),saved.revision());
+
+      // A repeat in the same session is a no-op: no second reward and no new revision.
+      var repeat=sessions.interact(token,first.revision(),"WardenAelric").toCompletableFuture().get();
+      assertFalse(repeat.changed());
+      assertEquals(first.revision(),repeat.revision());
+      assertEquals(saved.progress(),store.load(key.accountId(),created.id()).progress());
+
+      // Reconnect: the committed completion is what the rejoined actor sees, and a repeat still pays nothing.
+      var closed=sessions.leave(token); await(sessions,closed); closed.get();
+      String rejoined=sessions.join(store.acquire(key.secret(),created.id()),System.nanoTime()).token();
+      sessions.regionReady(rejoined,sessions.character(rejoined).locationEpoch());
+      var afterReconnect=sessions.interact(rejoined,sessions.character(rejoined).revision(),"WardenAelric").toCompletableFuture().get();
+      assertFalse(afterReconnect.changed());
+      var finalState=store.load(key.accountId(),created.id());
+      assertEquals(created.gold()+500,finalState.gold(),"The reward is added exactly once across repeat and reconnect");
+      assertEquals(created.experience()+400,finalState.experience());
+    }
+  }
+
+  @Test void ambiguousWardenTurnInDisconnectsWithoutReplayAndRejoinSeesTheOneReward() throws Exception {
+    var loseAck=new AtomicBoolean();
+    var store=new OnlineStore(() -> {
+      var actual=connection();
+      return (Connection)Proxy.newProxyInstance(Connection.class.getClassLoader(),new Class<?>[]{Connection.class},
+          (proxy,method,args) -> {
+            try {
+              Object value=method.invoke(actual,args);
+              if (method.getName().equals("commit") && loseAck.compareAndSet(true,false))
+                throw new SQLException("Injected lost commit acknowledgement");
+              return value;
+            } catch (InvocationTargetException e) { throw e.getCause(); }
+          });
+    });
+    store.migrate(); var key=store.provisionAccount();
+    var aelric=NpcInteractionCatalog.loadBundled().require("WardenAelric");
+    var prepared=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(9));
+    var created=store.create(key.accountId(),"Warden ambiguous",aelric.world(),aelric.x()+0.5,aelric.y()+0.5,
+        wardenReady(prepared.progress()),prepared.gold());
+    try(var hosted=startingSlice(store)) {
+      var sessions=hosted.sessions; var region=hosted.regions.getFirst();
+      var lease=store.acquire(key.secret(),created.id());
+      String token=sessions.join(lease,System.nanoTime()).token();
+      sessions.regionReady(token,lease.character().locationEpoch());
+      loseAck.set(true);
+      var reply=sessions.interact(token,created.revision(),"WardenAelric").toCompletableFuture();
+      await(sessions,reply);
+      assertThrows(ExecutionException.class,reply::get);
+      assertNull(region.world.position(token),"An uncertain turn-in disconnects the actor");
+      assertThrows(PreviewWorld.Rejected.class,() -> sessions.character(token));
+
+      // The lost acknowledgement hid a commit that did land: exactly one reward, never a replayed second one.
+      var committed=store.load(key.accountId(),created.id());
+      assertEquals(created.gold()+500,committed.gold());
+      assertEquals(2,committed.progress().questFlags().get("quest.renewed_wards.status"));
+
+      expireLease(created.id()); // Only the failed writer's lease is advanced; real lease timing is covered separately.
+      String rejoined=sessions.join(store.acquire(key.secret(),created.id()),System.nanoTime()).token();
+      sessions.regionReady(rejoined,sessions.character(rejoined).locationEpoch());
+      var retry=sessions.interact(rejoined,committed.revision(),"WardenAelric").toCompletableFuture();
+      await(sessions,retry);
+      assertFalse(retry.get().changed(),"The completed quest is a no-op, so nothing is replayed");
+      assertEquals(created.gold()+500,store.load(key.accountId(),created.id()).gold());
+    }
+  }
+
+  /** Ready Warden Aelric quest flags (status active, twelve kills) on top of a valid warrior. */
+  private static CharacterProgress wardenReady(CharacterProgress p) {
+    return new CharacterProgress(p.version(),p.characterClass(),p.gender(),p.attributes(),p.vitals(),p.advancement(),
+        p.inventory(),p.equipment(),p.skills(),p.spells(),Map.of("quest.renewed_wards.status",1,"quest.renewed_wards.kills",12),
+        p.storage(),p.storageGold(),p.respawn(),p.buffs(),p.cooldowns(),p.hiddenUntil(),p.companion());
+  }
+
+  /** The bundled starting slice, so Warden Aelric's authored temple region is hosted with its NPC catalog. */
+  private static HostedWorlds startingSlice(OnlineStore store) throws Exception {
+    var guard=MonsterCatalog.loadBundled().monsters().get("Olin Haad Guard 3");
+    return new HostedWorlds(HostedRegionPlan.startingSlice(Path.of("../../assets/maps/worldmap/worldmap.colbin")),
+        store,ItemCatalog.loadBundled(),new MonsterContent(MonsterContent.VERSION,Map.of(guard.getName(),guard),List.of()));
   }
 
   /** The 60-second owner window is production policy; these tests close it directly in the database. */

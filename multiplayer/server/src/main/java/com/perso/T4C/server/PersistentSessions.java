@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.OptionalInt;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.*;
@@ -158,6 +159,16 @@ final class PersistentSessions {
   }
 
   CompletionStage<com.perso.T4C.online.model.NpcInteractionReply> interact(String token,long revision,String npcId) {
+    return interact(token,revision,npcId,OptionalInt.empty());
+  }
+
+  /**
+   * Greeting (empty topic) or an authored topic of an NPC. A draft that changes state commits once with its
+   * own gold and experience; a no-op returns the committed revision. An uncertain commit disconnects the actor
+   * through the shared persistence path, and nothing here replays it.
+   */
+  CompletionStage<com.perso.T4C.online.model.NpcInteractionReply> interact(String token,long revision,String npcId,
+      OptionalInt topic) {
     var binding=active(token);
     if(binding.event!=null || binding.awaitingRegionReady) throw new PreviewWorld.Rejected(409,"busy");
     if(binding.saved.revision()!=revision) throw new PreviewWorld.Rejected(409,"revision");
@@ -166,13 +177,14 @@ final class PersistentSessions {
     OnlineNpcInteractions.Result draft;
     try {
       if(binding.region.npcs==null) throw new IllegalArgumentException("No NPC catalog");
-      draft=binding.region.npcs.prepare(binding.saved.progress(),binding.region.map,position.x(),position.y(),npcId);
+      draft=binding.region.npcs.prepare(binding.saved,binding.region.map,position.x(),position.y(),npcId,topic,
+          System.currentTimeMillis(),ThreadLocalRandom.current());
     } catch(IllegalArgumentException unavailable) { throw new PreviewWorld.Rejected(409,"npc_unavailable"); }
     if(!draft.changed()) return CompletableFuture.completedFuture(
-        new com.perso.T4C.online.model.NpcInteractionReply(binding.saved.revision(),draft.messageKey(),false));
-    return commitGameplayEvent(token,revision,UUID.randomUUID(),0,0,draft.progress())
+        new com.perso.T4C.online.model.NpcInteractionReply(binding.saved.revision(),draft.messageKey(),false,draft.args()));
+    return commitGameplayEvent(token,revision,UUID.randomUUID(),draft.gold(),draft.experience(),draft.progress())
         .thenApply(committed->new com.perso.T4C.online.model.NpcInteractionReply(
-            committed.character().revision(),draft.messageKey(),true));
+            committed.character().revision(),draft.messageKey(),true,draft.args()));
   }
 
   CompletionStage<OnlineStore.RewardResult> recoverCorpse(String token,long revision,UUID corpse) {
