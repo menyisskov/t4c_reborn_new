@@ -5,8 +5,8 @@ Status: architecture only, 2026-10-27 Asia/Jerusalem. Audited against main
 PR157/main `d4dc908abe1c8082dac08d9da20deb1e825e6d59` (protocol5/schema11).
 No implementation, export, build, database or native acceptance was performed here.
 
-This closes the two specific design gaps blocking the unchanged authored starter
-region: NPC-owned MONSTER records, and Goblin→Horse combat. Reuse
+This addresses two specific design gaps blocking the unchanged authored starter
+region: records shared by monster and NPC discovery, and Goblin→Horse combat. Reuse
 [HOSTED_STARTER_ROUTE_DESIGN.md](HOSTED_STARTER_ROUTE_DESIGN.md)'s audited
 world0 `(2735,1029,249,117)` crop, its 13 Skeleton anchors, connectivity and
 portal16/17 interior. Do not repeat the geometry project or expand to full-world hosting.
@@ -25,7 +25,7 @@ This design neither completes the checkpoint nor changes the full Beta scope.
 
 | Current source | Consequence |
 | --- | --- |
-| `monster/core/MonsterManager.isNpcOwnedSpawn` excludes case-insensitive SUNDIAL or `NpcFactoryRegistry.find(type) != null`; `NPCManager.isNpcType` uses the same decision. | Ownership is independent of a MONSTER annotation and must be resolved before MonsterDef lookup. |
+| Offline `MonsterManager` resolves `MonsterDef` first and excludes an NPC alias only when that definition is null; `NPCManager` independently recognizes NPC factory aliases. The v1/v2 source join found 1,935 NPC-alias spawn records with nonnull legacy monster definitions, including Skraug Grubbringah. | Preserve both offline discovery paths. A factory alias does not override a nonnull monster definition or make the record exclusively NPC-owned. Early NPC skipping would remove existing single-player monsters. |
 | `NpcFactoryRegistry` resolves ID/class/Spawn aliases; `Sundial` carries MONSTER annotations, `SPRITE_BASE = "@static:Horloge Solaire"`; NPCManager forces SUNDIAL stationary. | Preserve the record at (2881,1070) as an NPC; its hostile-looking annotation does not authorize combat. |
 | `OnlineMonsterContentExporter.snapshot` presently maps every `SpawnRegistry.monsters()` record through MonsterRegistry; MonsterContent v1 allows null definitions, and PreviewWorld rejects unsupported membership. | Classify explicitly at export, retain unresolved ordinary monsters as errors at hosted membership. An ignore-null startup catch is incorrect. |
 | `HostedWorlds` explicitly throws `Unsupported clan combat in hosted region` when both Goblin and Horse are present. | Fixing Sundial alone still cannot enable this crop. Remove this guard only after the complete durable clan path is integrated and tested. |
@@ -46,29 +46,36 @@ candidate; a missing/unclassified record is an error, not an allowed count diffe
 
 ## Export and NPC ownership contract
 
-Extract the duplicated offline ownership decision into one build-time registry helper
+Extract the shared NPC-alias recognition into one build-time registry helper
 (e.g. `npc/core/NpcSpawnOwnership`), used by MonsterManager, NPCManager and the
 exporter. Keep desktop reflection/factory creation out of the headless server. Preserve
 case/alias normalization, explicit SUNDIAL compatibility and offline spawn behavior.
-Do not resolve an NPC-owned identity as a MonsterDef merely because one also exists.
+For monster discovery, resolve `MonsterDef` first: a nonnull legacy definition stays
+MONSTER even when the NPC factory also recognizes its alias. Only a null definition
+plus a recognized NPC alias is NPC-only in the monster inventory. NPCManager's
+independent inventory may still include the same source spawn as an NPC.
 Detect conflicting NPC aliases used by an exported spawn: NpcFactoryRegistry's
 `putIfAbsent` currently hides alias collisions, so export must reject ambiguity rather
 than choose classpath scan order. Do not broaden scope to unrelated registry refactors.
 
-Bump monster content to v2 with explicit spawn ownership (`MONSTER | NPC`) and,
-for NPC records, canonical NPC identity. Retain every original type/world/anchor/flags
-and persistenceKey. NPC ownership has no combat definition; MONSTER ownership must
-resolve its definition before a region becomes playable. Export canonical clan identity,
+Bump monster content to v2 with explicit classification of its own spawn records
+(`MONSTER | NPC`) and, for NPC-only records, canonical NPC identity. Retain every
+original type/world/anchor/flags and persistenceKey. A nonnull legacy MonsterDef
+remains MONSTER; NPC-only has no combat definition. MONSTER records must resolve
+their definition before a region becomes playable. Export canonical clan identity,
 attack-animation capability and sorted directional relations from the offline registry
 for ordinary definitions; validate referenced clans and capable physical attacks. Do not
 infer factions from runtime display-name substrings or load desktop assets on the server.
 A global unsupported custom MONSTER may remain diagnostic, but hosting it is fatal.
 
-Keep one generated ownership/appearance manifest for all authored NPC spawn records,
+Keep a separate generated appearance manifest for all NPCManager-discovered spawn records,
 with canonical NPC ID, spawn identity, location, sprite/parts and online interaction
-support status. Deduplicate the Sundial MONSTER/NPC discovery paths by stable spawn
-identity; retain multiple genuine spawns of the same NPC ID. Make completeness and
-export freshness tests compare the source registry to this manifest. An unavailable
+support status. Do not deduplicate monster and NPC inventories by anchor or source
+type: dual registrations can represent both offline actors and must be preserved
+or explicitly refused at hosted membership if their online semantics are unresolved.
+Sundial still has null MonsterDef and is NPC-only in the monster inventory; retain
+multiple genuine spawns of the same NPC ID. Make completeness and export freshness
+tests compare each source registry to its respective manifest. An unavailable
 appearance must have an explicit diagnostic and must block claiming that actor rendered;
 it cannot disappear from the exported inventory.
 
@@ -190,9 +197,9 @@ phase; this design grants no ownership of Claude's core/native files or T4C-0222
 
 | Phase | Cohesive delivery and exact likely ownership | Gate before enabling |
 | --- | --- | --- |
-| A: classified content | New shared offline ownership helper; MonsterManager/NPCManager delegation; MonsterContent/exporter and generated content; NPC ownership/appearance manifest; exporter/catalog/registry tests. Include necessary domain pom includes only with a separate grant. | Every source record accounted for, known NPC-owned and unknown ordinary paths distinguished, aliases deterministic, export fresh. Keep old hosted region default. |
+| A: classified content | New shared offline NPC-alias helper; MonsterManager definition-first precedence and NPCManager's independent inventory; MonsterContent/exporter and generated content; separate NPC appearance manifest; exporter/catalog/registry tests. Include necessary domain pom includes only with a separate grant. | Every source record accounted for in both inventories, nonnull legacy MonsterDef aliases retained as monsters, null-definition NPC-only paths distinguished from unknown ordinary spawns, aliases deterministic, export fresh. Keep old hosted region default. |
 | B: durable clan encounter | OnlineStore migration/records/transaction tests, PersistentCreatures and OnlineMonsterPursuit/tests, OnlineRetaliation or one new OnlineClanCombat driver, HostedWorlds wiring/test. Coordinate OnlineMelee/player lethal hooks and session death/transfer lock sets. | Two-life CAS, independent terminal state, reward separation, restart/respawn and checkpoint publication tests pass together. Do not remove the Goblin+Horse guard in a helper-only groundwork PR. |
-| C: integrated starter hosting | HostedRegionPlan, PreviewWorld membership, RegionNpcs appearance/unsupported feedback, focused real-map route test; portal metadata/refusal handling in PersistentSessions/native/HTTP only after their owners release scope. | A+B and actual snapshot limits/appearance readiness, approved quest/reward/Light Heal integration, explicit unavailable sources12/13/14/947. Then enable the audited crop, keeping16/17 return. |
+| C: integrated starter hosting | HostedRegionPlan, PreviewWorld membership, RegionNpcs appearance/unsupported feedback, focused real-map route test; portal metadata/refusal handling in PersistentSessions/native/HTTP only after their owners release scope. | A+B, explicit treatment of dual monster/NPC registrations without silent anchor deduplication, actual snapshot limits/appearance readiness, approved quest/reward/Light Heal integration, explicit unavailable sources12/13/14/947. Then enable the audited crop, keeping16/17 return. |
 | D: candidate verification | Corrected existing NativeLootProbe/quest route tooling and documentation under Claude handoff, exact packaged client/server/content/protocol/schema manifest. Root updates TASKS/MILESTONES/ACCEPTANCE/HANDOFF together. | Two rendered clients and remaining milestone criteria; service/native-adapter passes are labeled as such. |
 
 No map-size protocol change is needed. CLAN targets need not be public; current CreatureView
@@ -210,9 +217,13 @@ PersistentCreaturesTest, OnlineStoreTest, OnlineMeleeTest, OnlineRetaliationTest
 HostedTransferTest and MonsterManagerPlayerKillNotificationTest. Avoid enumerating every
 spawn or clan when one representative path proves the contract.
 
-1. Real exported Sundial is NPC-owned with correct canonical/static appearance and retained
-   metadata; an unknown ordinary MONSTER in the same crop fails startup. Check registry alias
-   conflict and export freshness, plus full source-record reconciliation.
+1. Real exported Sundial is NPC-only with correct canonical/static appearance and retained
+   metadata; an unknown ordinary MONSTER in the same crop fails startup. A real
+   Skraug Grubbringah alias with nonnull MonsterDef remains a single-player monster,
+   while the NPC inventory retains its independent registration. Check registry alias
+   conflict and export freshness, plus full source-record reconciliation of both
+   inventories. Any dual actor at a hosted anchor needs explicit supported semantics
+   or a refusal, never silent removal.
 2. Goblin acquires Horse before an idle natural player candidate; Horse does not attack;
    a player hit changes Goblin to player retaliation. Existing valid target retention, directed
    hostility and target-life invalidation survive checkpoint/restart. Verify physical resolver
@@ -226,6 +237,8 @@ spawn or clan when one representative path proves the contract.
    life; stale drafts/checkpoints cannot harm the new life. Verify terminal creature filters and
    graceful pair-drain failure as consequential joins, not every scalar field in separate tests.
 5. Construct the actual249×117 candidate with all classified records and active clan authority;
+   compare independent monster and NPC inventories, preserving supported dual actors
+   or refusing unsupported dual membership explicitly;
    reuse T4C-0214 real-map route test. Confirm world/local-origin conversion and saved global
    position, actual serialized body/actor caps, unavailable routes and16/17 round trip.
 

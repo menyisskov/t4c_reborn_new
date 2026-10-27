@@ -23,6 +23,7 @@ public final class MonsterRegistry {
   }
 
   private static final Map<String, MonsterFactory> SPECIALIZED_FACTORIES = new LinkedHashMap<>();
+  private static final Map<String, String> SOURCE_CLASSES = new LinkedHashMap<>();
   private static final java.util.Set<String> NO_RECOVERY_LOOT_NAMES = new java.util.HashSet<>();
   private static final Map<String, MonsterDef> SPAWN_TYPE_ALIASES = new LinkedHashMap<>();
   private static List<MonsterDef> cache;
@@ -82,6 +83,7 @@ public final class MonsterRegistry {
   }
 
   private static void registerGeneratedFactories() {
+    SOURCE_CLASSES.clear();
     String packageName = MonsterRegistry.class.getPackageName().replace(".core", "");
     String packagePath = packageName.replace('.', '/');
     List<MonsterDef> definitions = new java.util.ArrayList<>();
@@ -130,6 +132,7 @@ public final class MonsterRegistry {
         NO_RECOVERY_LOOT_NAMES.add(definition.getName());
       }
       definitions.add(definition);
+      SOURCE_CLASSES.put(definition.getName(), type.getSimpleName());
       indexIdentity(type.getSimpleName(), definition);
       indexSpawnTypes(type, definition);
       var constructor = type.getConstructor(MonsterDef.class, float.class, float.class);
@@ -188,6 +191,11 @@ public final class MonsterRegistry {
     load();
     if (name == null) return null;
     return lookup(name);
+  }
+
+  /** Build-time source identity for the same specialized class used by offline spawning. */
+  public static synchronized String sourceClassName(String definitionName) {
+    return SOURCE_CLASSES.getOrDefault(definitionName, "NamedEventMonster");
   }
 
   private static MonsterDef lookup(String name) {

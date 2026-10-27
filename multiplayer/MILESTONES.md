@@ -125,8 +125,10 @@ Required behavior:
   unknown/unhosted destinations produce an explicit refusal rather than a silent substitute.
   [HOSTED_STARTER_ROUTE_DESIGN.md](HOSTED_STARTER_ROUTE_DESIGN.md) records T4C-0214's
   read-only candidate 249×117 contiguous starting region and its real collision paths;
-  the region has not been enabled. Sundial needs explicit NPC-owned-spawn classification,
-  and unhosted authored routes still need player-visible refusal.
+  the region has not been enabled. T4C-0224 prepared separate staged monster-v2
+  and NPC appearance inventories, including NPC-only Sundial and preserved
+  monster/NPC alias overlap; the runtime does not load them yet. Unhosted authored
+  routes still need player-visible refusal.
   [STARTER_ENCOUNTER_AUTHORITY_DESIGN.md](STARTER_ENCOUNTER_AUTHORITY_DESIGN.md)
   records T4C-0223's read-only NPC-ownership and directional Goblin-to-Horse
   authority plan. It does not enable the region, clan combat or quest completion.

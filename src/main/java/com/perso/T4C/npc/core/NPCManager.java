@@ -661,7 +661,7 @@ public class NPCManager {
     }
     for (NpcSpawnEntry entry : readJavaSpawns(SpawnRegistry.monsters())) {
 
-      if (entry.z == z && isNpcOwnedMonsterSpawn(entry.type)) {
+      if (entry.z == z && NpcSpawnOwnership.owns(entry.type)) {
 
         filtered.add(entry);
       }
@@ -683,16 +683,6 @@ public class NPCManager {
     }
 
     return 0;
-  }
-
-  private static boolean isNpcOwnedMonsterSpawn(String type) {
-
-    if (type == null || type.isBlank()) {
-
-      return false;
-    }
-
-    return "SUNDIAL".equalsIgnoreCase(type) || NpcFactoryRegistry.find(type) != null;
   }
 
   private List<NpcSpawnEntry> readJavaSpawns(
