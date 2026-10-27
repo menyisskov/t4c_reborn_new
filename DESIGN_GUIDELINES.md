@@ -285,6 +285,11 @@ quiz is gone; its i18n strings were deleted with it.
   Spark, a non-elemental bolt with no requirements, kept slightly weaker than Fire Dart at equal
   intelligence. Cleric and Healer keep their own starting spells; extending Arcane
   Spark to them is a one-line kit change if the owner wants it.
+- **Online starter hunting ground keeps its Goblins and Wild Horse (owner, 2026-10-27).** The
+  online Goblins do not attack the Wild Horse until durable clan combat exists; the owner accepted
+  this difference from single-player for the Beta. It is a narrow exception for the starter plan
+  only, and the clan-combat guard still refuses every other area that would need it. Remove the
+  exception when clan combat lands.
 - **Kits are worn, not carried.** `LocalCharacterStore` writes them straight into the save's
   equipment map. Only shared supplies (torches, potions) and stacked ammunition go in the bag.
 - **Starting spells are referenced by key and resolved through the registry**, because saves store
