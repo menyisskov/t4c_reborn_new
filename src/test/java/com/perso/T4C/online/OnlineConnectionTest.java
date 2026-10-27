@@ -402,6 +402,115 @@ class OnlineConnectionTest {
   }
 
   @Test
+  void castAndUseSendCommittedRevisionAndEpochMapRefusalsAndAcceptTheCommitReply() throws Exception {
+    var credentials = new OnlineConnection.Credentials("b".repeat(64), UUID.randomUUID());
+    var revision = new AtomicLong(1);
+    var bodies = new CopyOnWriteArrayList<String>();
+    var potion = UUID.randomUUID();
+    var server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+    server.createContext("/", exchange -> {
+      String path = exchange.getRequestURI().getPath();
+      String request = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+      int status = 200;
+      String reply = "{}";
+      switch (path) {
+        case "/map" -> reply = "{\"protocolVersion\":" + com.perso.T4C.online.model.OnlineProtocol.VERSION
+            + ",\"persistent\":true," + regionJson(0).substring(1);
+        case "/join" -> reply = "{\"token\":\"" + LOOT_TOKEN + "\",\"id\":7,\"region\":" + regionJson(0) + "}";
+        case "/state" -> reply = "{\"tick\":8,\"region\":" + regionJson(0) + ",\"characterRevision\":" + revision.get()
+            + ",\"players\":[{\"id\":7,\"x\":40.5,\"y\":30.5,\"sequence\":0,\"hp\":27,\"maxHp\":40}],\"loot\":[]}";
+        case "/character" -> reply = "{\"id\":\"" + credentials.characterId() + "\",\"name\":\"Caster\",\"gold\":0,"
+            + "\"experience\":0,\"revision\":" + revision.get() + ",\"locationEpoch\":0}";
+        case "/corpses" -> reply = "[]";
+        case "/cast" -> {
+          bodies.add("cast " + request);
+          status = 409;
+          reply = "{\"error\":\"not_enough_mana\"}";
+        }
+        case "/use" -> {
+          bodies.add("use " + request);
+          reply = "{\"revision\":" + revision.incrementAndGet()
+              + ",\"healthGained\":9,\"manaSpent\":0,\"manaGained\":0}";
+        }
+        default -> { }
+      }
+      byte[] bytes = reply.getBytes(StandardCharsets.UTF_8);
+      exchange.sendResponseHeaders(status, bytes.length);
+      exchange.getResponseBody().write(bytes);
+      exchange.close();
+    });
+    server.start();
+    try (var connection = new OnlineConnection(
+        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials)) {
+      awaitTrue(() -> connection.view() != null && connection.view().character() != null);
+      assertThrows(IllegalArgumentException.class, () -> connection.cast("heal_light"));
+      assertThrows(IllegalArgumentException.class, () -> connection.cast("spell.Bad Key"));
+
+      var refused = connection.cast("spell.heal_light").toCompletableFuture().get(3, TimeUnit.SECONDS);
+      assertFalse(refused.accepted());
+      assertEquals("online.ability.not_enough_mana", refused.messageKey());
+      assertEquals("connected", connection.status(), "A refused cast is a normal conflict");
+      assertEquals("cast 1 0 spell.heal_light", bodies.getFirst());
+
+      var used = connection.useItem(potion).toCompletableFuture().get(3, TimeUnit.SECONDS);
+      assertTrue(used.accepted());
+      assertNull(used.messageKey());
+      assertEquals(2, used.character().revision());
+      assertEquals("use 1 0 " + potion, bodies.getLast());
+      assertEquals(2, bodies.size());
+    } finally {
+      server.stop(0);
+    }
+  }
+
+  @Test
+  void ambiguousCastDisconnectsWithoutReplay() throws Exception {
+    var credentials = new OnlineConnection.Credentials("b".repeat(64), UUID.randomUUID());
+    var castCalls = new AtomicInteger();
+    var release = new CountDownLatch(1);
+    var server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+    server.createContext("/", exchange -> {
+      String path = exchange.getRequestURI().getPath();
+      exchange.getRequestBody().readAllBytes();
+      if (path.equals("/cast")) {
+        castCalls.incrementAndGet();
+        try { release.await(5, TimeUnit.SECONDS); }
+        catch (InterruptedException interrupted) { Thread.currentThread().interrupt(); }
+        exchange.close();
+        return;
+      }
+      String reply = switch (path) {
+        case "/map" -> "{\"protocolVersion\":" + com.perso.T4C.online.model.OnlineProtocol.VERSION
+            + ",\"persistent\":true," + regionJson(0).substring(1);
+        case "/join" -> "{\"token\":\"" + LOOT_TOKEN + "\",\"id\":7,\"region\":" + regionJson(0) + "}";
+        case "/state" -> "{\"tick\":8,\"region\":" + regionJson(0) + ",\"characterRevision\":1,"
+            + "\"players\":[{\"id\":7,\"x\":40.5,\"y\":30.5,\"sequence\":0,\"hp\":27,\"maxHp\":40}],\"loot\":[]}";
+        case "/character" -> "{\"id\":\"" + credentials.characterId() + "\",\"name\":\"Caster\",\"gold\":0,"
+            + "\"experience\":0,\"revision\":1,\"locationEpoch\":0}";
+        case "/corpses" -> "[]";
+        default -> "{}";
+      };
+      byte[] bytes = reply.getBytes(StandardCharsets.UTF_8);
+      exchange.sendResponseHeaders(200, bytes.length);
+      exchange.getResponseBody().write(bytes);
+      exchange.close();
+    });
+    server.start();
+    try (var connection = new OnlineConnection(
+        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials)) {
+      awaitTrue(() -> connection.view() != null && connection.view().character() != null);
+      var uncertain = connection.cast("spell.heal_light").toCompletableFuture();
+      assertThrows(java.util.concurrent.ExecutionException.class, () -> uncertain.get(6, TimeUnit.SECONDS));
+      awaitTrue(() -> "disconnected".equals(connection.status()));
+      assertEquals(1, castCalls.get(), "An ambiguous cast must never be automatically replayed");
+      assertThrows(IllegalStateException.class, () -> connection.cast("spell.heal_light"));
+    } finally {
+      release.countDown();
+      server.stop(0);
+    }
+  }
+
+  @Test
   void refusesRemoteAndCredentialBearingEndpoints() {
     assertThrows(
         IllegalArgumentException.class,
