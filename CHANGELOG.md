@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Protected online targets (T4C-0188)
+
+### Fixed
+- Online melee respects the same protection as single-player for creatures authored as stationary. Passive creatures that can normally be attacked remain valid targets.
+
 ## 2026-10-27 — Native online melee (T4C-0187)
 
 ### Added
