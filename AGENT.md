@@ -3,7 +3,7 @@
 ## Instruction references
 
 Read [AGENTS.md](AGENTS.md) before starting work. It is the canonical reference for
-model routing (section 6), PR review and test scope. Use its cheap/mid/top-tier policy
+model routing (section 6), multiplayer milestone tracking (section 7), PR review and test scope. Use its cheap/mid/top-tier policy
 for implementation, RCA, and architecture/planning respectively; do not duplicate or
 override that table here. This file remains the general engineering charter, and
 [CLAUDE.md](CLAUDE.md) defines repository delivery/bookkeeping procedures.

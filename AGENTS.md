@@ -2,7 +2,8 @@
 
 Sections 1–4 govern automated agents that review or babysit a pull request.
 Section 5 governs agents that author or modify tests. Section 6 is the canonical
-model-routing policy for every agent working in this repository. This file does **not**
+model-routing policy for every agent working in this repository. Section 7 governs
+milestone, task and evidence tracking for all multiplayer work. This file does **not**
 relax or replace `AGENT.md` (the general engineering charter).
 
 The two failure modes this file exists to prevent: a reviewer that wanders
@@ -165,3 +166,34 @@ Application rules:
 - Apply routing when starting or handing off a phase. Do not interrupt an already running
   test/build merely to change models; route the next implementation/investigation phase
   correctly. All tiers still follow the same engineering, security, review and test rules.
+
+## 7. Multiplayer milestone checklists and task tracking
+
+Read these documents before choosing the next multiplayer task or reporting completion:
+
+| Document | Purpose |
+|---|---|
+| [multiplayer/MILESTONES.md](multiplayer/MILESTONES.md) | Canonical roadmap: Alpha, the intermediate two-player checkpoint, full 20-player Beta, essential GA and Post-GA; exact requirements, completion evidence and final two-player QA script. |
+| [TASKS.md](TASKS.md) | Individual implementation task IDs, status, commits and changelog links. A completed task does not mean its parent milestone is complete. |
+| [multiplayer/ACCEPTANCE.md](multiplayer/ACCEPTANCE.md) | Verified release evidence and unchecked Alpha/Beta/GA gates. |
+| [multiplayer/HANDOFF.md](multiplayer/HANDOFF.md) | Model/session continuation: architecture, current working state, commands, ownership, failures, limitations and next work. |
+
+The six two-player milestones are:
+
+1. **M1 — Enter and interact:** online accounts, native character creation/selection and authored NPC interaction.
+2. **M2 — Inventory and loot:** usable authoritative inventory/equipment, drops, pickup and ownership/quantity integrity.
+3. **M3 — Complete authored adventure:** a full quest/reward loop and all required hosted routes, with durable progress.
+4. **M4 — Supported combat and abilities:** required monster behavior and the declared starter roles' usable abilities.
+5. **M5 — Reliability and anti-cheat:** safe shutdown/recovery, abuse/duplication protection, restored gameplay and measured stability.
+6. **M6 — Package and native acceptance:** reproducible distribution/operations and the complete two-rendered-client playthrough with offline regression checks.
+
+Use MILESTONES.md for the detailed criteria; do not create a competing checklist here.
+Every relevant delivery must update its TASKS row, milestone status, ACCEPTANCE evidence
+and HANDOFF continuation notes together. Record exact build/content/schema versions,
+reproduction commands, observed results and limitations; keep credentials/personal state out.
+
+Never mark a milestone complete from merged PR counts, unit/service tests or native network
+adapters alone. Distinguish implemented, verified, merged, rendered-client and remote evidence.
+Preserve failed runs and unchecked gates. The two-player checkpoint does not replace the
+agreed 20-player Beta, and its exact content/class scope must be explicit before completion.
+Single-player launch, gameplay, existing saves and preferences remain protected throughout.
