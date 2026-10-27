@@ -25,7 +25,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import lombok.Getter;
 import lombok.Setter;
 
-public class Player extends Stats {
+public class Player extends Stats implements ProgressionState {
   private boolean meditating;
 
   public boolean isMeditating() {
@@ -606,14 +606,14 @@ public class Player extends Stats {
     setGold(Math.max(0, getGold() + amount));
   }
 
-  void showLevelUpMessage(int newLevel, int hpGain, int manaGain) {
+  public void showLevelUpMessage(int newLevel, int hpGain, int manaGain) {
     if (messageCallback != null) {
       messageCallback.showMessage(I18n.message("message.level_up", newLevel));
       messageCallback.showMessage(I18n.message("message.level_up_gains", hpGain, manaGain));
     }
   }
 
-  void notifyLevelUp(int newLevel) {
+  public void notifyLevelUp(int newLevel) {
     if (levelUpCallback != null) {
       levelUpCallback.onLevelUp(newLevel);
     }

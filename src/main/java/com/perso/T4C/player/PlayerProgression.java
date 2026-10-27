@@ -10,18 +10,28 @@ public final class PlayerProgression {
     this(RandomGenerator.getDefault());
   }
 
-  PlayerProgression(RandomGenerator random) {
+  public PlayerProgression(RandomGenerator random) {
     this.random = random;
   }
 
-  void addXp(Player player, long amount, XpCurve xpCurve, boolean applyMultiplier) {
+  public void addXp(ProgressionState player, long amount, XpCurve xpCurve, boolean applyMultiplier) {
     if (player == null || amount <= 0) {
       return;
     }
+    amount = scaledAward(amount, player.getBuffXpMultiplier(), applyMultiplier);
+    addScaledXp(player, amount, xpCurve);
+  }
+
+  public static long scaledAward(long amount, float multiplier, boolean applyMultiplier) {
     amount = Math.round(amount * (double) com.perso.T4C.config.GameConstants.SERVER_XP_RATE);
     if (applyMultiplier) {
-      amount = Math.round(amount * (1d + player.getBuffXpMultiplier()));
+      amount = Math.round(amount * (1d + multiplier));
     }
+    return amount;
+  }
+
+  /** Caller has already applied rates and bonuses; used by bounded server reward drafts. */
+  public void addScaledXp(ProgressionState player, long amount, XpCurve xpCurve) {
     player.setCurrentXp(player.getCurrentXp() + amount);
     if (xpCurve == null) {
       return;
@@ -53,7 +63,7 @@ public final class PlayerProgression {
     }
   }
 
-  private int[] applyOriginalT4cResourceGains(Player player) {
+  private int[] applyOriginalT4cResourceGains(ProgressionState player) {
     int hpGain = hitPointGainBase(player.getEndurance()) + random.nextInt(3);
     int manaGain = manaGainBase(player.getIntelligence(), player.getWisdom()) + random.nextInt(3);
     player.setMaxHp(player.getMaxHp() + hpGain);

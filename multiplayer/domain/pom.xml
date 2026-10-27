@@ -50,6 +50,11 @@
                         <include>com/perso/T4C/helper/CharacterClass.java</include>
                         <include>com/perso/T4C/helper/CharacterStartingKit.java</include>
                         <include>com/perso/T4C/player/BodyPart.java</include>
+                        <include>com/perso/T4C/player/ProgressionState.java</include>
+                        <include>com/perso/T4C/player/PlayerProgression.java</include>
+                        <include>com/perso/T4C/helper/XpCurve.java</include>
+                        <include>com/perso/T4C/mapping/definition/XpCurveDefinitions.java</include>
+                        <include>com/perso/T4C/monster/core/MonsterExperience.java</include>
                         <include>com/perso/T4C/online/model/*.java</include>
                         <include>com/perso/T4C/monster/core/MonsterDef.java</include>
                     </includes>

@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Online progression rules (T4C-0186)
+
+### Added
+- Online combat preparation now uses the existing experience curve, level rewards and health/mana restoration rules. Level gains can be saved together with creature damage and recovered without granting the rewards twice. Playable online attacks remain in development.
+
 ## 2026-10-27 — Persistent creature damage (T4C-0185)
 
 ### Added
