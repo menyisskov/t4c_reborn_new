@@ -14,7 +14,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
 | T4C-0193 | Export and validate authored portal destinations | Multiplayer / Alpha | In Progress | pending | pending |
-| T4C-0192 | Configure verified encrypted remote transport | Multiplayer / Alpha | Done | pending | [2026-10-27](CHANGELOG.md#2026-10-27--encrypted-online-transport-t4c-0192) |
+| T4C-0192 | Configure verified encrypted remote transport | Multiplayer / Alpha | Done | `9a2f70d4` | [2026-10-27](CHANGELOG.md#2026-10-27--encrypted-online-transport-t4c-0192) |
 | T4C-0191 | Verify consistent PostgreSQL backup and fresh restore | Multiplayer / Beta | Done | `d9b44536` | [2026-10-27](CHANGELOG.md#2026-10-27--realm-backup-verification-t4c-0191) |
 | T4C-0190 | Persist monster retaliation, death and owned corpse recovery | Multiplayer / Alpha | Done | `bb002ff2` | [2026-10-27](CHANGELOG.md#2026-10-27--online-retaliation-and-recovery-t4c-0190) |
 | T4C-0189 | Isolate online Windows focus crash correction | Multiplayer / Alpha | Done | `93800f69` | [2026-10-27](CHANGELOG.md#2026-10-27--online-window-stability-t4c-0189) |
