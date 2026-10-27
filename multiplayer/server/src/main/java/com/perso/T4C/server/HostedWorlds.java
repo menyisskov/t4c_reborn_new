@@ -15,18 +15,21 @@ final class HostedWorlds implements AutoCloseable {
     OnlineMelee melee;
     OnlineRetaliation retaliation;
     RegionNpcs npcs;
-    Region(RegionMapLoader.Spec spec,PreviewMap map,PreviewWorld world) { this.spec=spec;this.map=map;this.world=world; }
+    final RegionGroundLoot loot;
+    Region(RegionMapLoader.Spec spec,PreviewMap map,PreviewWorld world) { this.spec=spec;this.map=map;this.world=world;this.loot=new RegionGroundLoot(spec); }
     OnlineRegion descriptor(long epoch) { return new OnlineRegion(spec.world(),spec.key(),map.originX,map.originY,map.width,map.height,epoch); }
   }
   final HostedRegionPlan plan;
   final List<Region> regions;
   final PersistentSessions sessions;
+  /** Null only for the in-memory single-map seam; pickups need the bundled item content. */
+  final ItemContent items;
   HostedWorlds(PreviewMap map,PreviewWorld world) {
-    plan=HostedRegionPlan.single(map);regions=List.of(new Region(plan.regions.getFirst().spec(),map,world));sessions=null;
+    plan=HostedRegionPlan.single(map);regions=List.of(new Region(plan.regions.getFirst().spec(),map,world));sessions=null;items=null;
   }
   HostedWorlds(HostedRegionPlan plan,OnlineStore store,ItemContent items,MonsterContent monsters) throws SQLException,java.io.IOException {
     var catalog=NpcInteractionCatalog.loadBundled();
-    this.plan=plan;
+    this.plan=plan;this.items=items;
     regions=plan.regions.stream().map(r->new Region(r.spec(),r.map(),new PreviewWorld(r.map(),monsters,r.spec().world()))).toList();
     for(var region:regions) region.npcs=new RegionNpcs(catalog,items,region.spec);
     sessions=store==null ? null : new PersistentSessions(store,this);
@@ -36,7 +39,7 @@ final class HostedWorlds implements AutoCloseable {
         region.melee=new OnlineMelee(region.map,region.world,sessions,region.creatures,items,new java.security.SecureRandom(),System::currentTimeMillis);
         region.retaliation=new OnlineRetaliation(region.map,region.world,sessions,region.creatures,items,new java.security.SecureRandom(),System::currentTimeMillis);
         long unsupported=region.world.creatureSpawns().stream().filter(s->s.definition().getSourceEvents()!=null && !s.definition().getSourceEvents().isEmpty()
-            || s.definition().getLoot()!=null && !s.definition().getLoot().isEmpty() || !OnlineRetaliation.supported(s.definition())).count();
+            || !OnlineLootDrafts.supports(s.definition(),items) || !OnlineRetaliation.supported(s.definition())).count();
         if(unsupported>0) System.out.println("Region "+region.spec.key()+": "+unsupported+" creatures retain unsupported combat/script restrictions.");
       }
     } catch(SQLException|RuntimeException failure) { close();throw failure; }

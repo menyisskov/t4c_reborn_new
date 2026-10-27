@@ -3,6 +3,7 @@ package com.perso.T4C.server;
 import static org.junit.jupiter.api.Assertions.*;
 import com.google.gson.Gson;
 import com.perso.T4C.helper.CharacterClass;
+import com.perso.T4C.item.ItemKeys;
 import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.MonsterExperience;
 import com.perso.T4C.online.model.MonsterContent;
@@ -66,6 +67,48 @@ class OnlineMeleeTest {
       assertEquals("cooldown",assertThrows(PreviewWorld.Rejected.class,
           () -> melee.attack(rejoined,rejoinedLease.character().revision(),2)).getMessage());
       assertEquals(saved.experience(),rejoinedLease.character().experience());
+    } finally { sessions.shutdown(); }
+  }
+
+  @Test void lootableSkeletonIsAttackableItsKillCreatesTheRolledDropAndScriptedDefinitionsStayRejected() throws Exception {
+    var store=OnlineStore.fromEnvironment(); store.migrate();
+    var gson=new Gson();
+    var skeleton=MonsterCatalog.loadBundled().monsters().get("Skeleton");
+    var json=gson.toJsonTree(skeleton).getAsJsonObject();
+    json.addProperty("health",1); json.addProperty("acMin",0); json.addProperty("acMax",0);
+    json.addProperty("dodge",1); json.addProperty("agi",1); json.addProperty("respawnTime",300_000);
+    // A certain drop keeps the kill deterministic; the authored skeleton table is otherwise unchanged.
+    json.add("loot",gson.toJsonTree(List.of(new MonsterDef.LootDrop("Leather gloves",1f))));
+    var definition=gson.fromJson(json,MonsterDef.class);
+    var scripted=gson.toJsonTree(definition).getAsJsonObject();
+    scripted.addProperty("name","Scripted skeleton");
+    scripted.add("sourceEvents",gson.toJsonTree(Map.of("kill","quest")));
+    var scriptedDefinition=gson.fromJson(scripted,MonsterDef.class);
+    var lootable=new MonsterContent.Spawn("skeleton-"+UUID.randomUUID(),definition.getName(),3,3,0,false,false);
+    var authored=new MonsterContent.Spawn("scripted-"+UUID.randomUUID(),scriptedDefinition.getName(),3,4,0,false,false);
+    var content=new MonsterContent(MonsterContent.VERSION,
+        Map.of(definition.getName(),definition,scriptedDefinition.getName(),scriptedDefinition),List.of(lootable,authored));
+    var map=new PreviewMap(new boolean[10][10],0,0,3,3); var world=new PreviewWorld(map,content);
+    var sessions=new PersistentSessions(store,map,world);
+    var key=store.provisionAccount(); var prepared=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(3));
+    var killer=store.create(key.accountId(),"Skeleton killer",0,3.5,3.5,prepared.progress(),prepared.gold());
+    String token=sessions.join(store.acquire(key.secret(),killer.id()),System.nanoTime()).token();
+    long now=System.currentTimeMillis();
+    try(var creatures=new PersistentCreatures(store,world)) {
+      var rolls=new Random(1) { @Override public int nextInt(int bound) { return bound-1; } };
+      var melee=new OnlineMelee(map,world,sessions,creatures,ItemCatalog.loadBundled(),rolls,() -> now);
+      // Scripted definitions are still refused before any damage is dealt, even with an ordinary loot table.
+      assertEquals("unsupported_combat",assertThrows(PreviewWorld.Rejected.class,() -> melee.attack(token,0,2)).getMessage());
+      var attack=melee.attack(token,0,1).toCompletableFuture();
+      await(sessions,creatures,attack);
+      var saved=attack.get().character();
+      assertTrue(saved.gold()-killer.gold()>=definition.getGoldMin() && saved.gold()-killer.gold()<=definition.getGoldMax(),
+          "The single roll still supplies the authored gold");
+      var drops=store.listGroundLoot(0,new OnlineStore.TileRect(0,0,10,10)).stream()
+          .filter(loot -> killer.id().equals(loot.ownerCharacter())).toList();
+      assertEquals(1,drops.size(),"A lethal strike commits its rolled drop with the kill");
+      assertEquals(ItemKeys.normalize("Leather gloves"),drops.getFirst().key());
+      assertEquals(3.0,drops.getFirst().x()); assertEquals(3.0,drops.getFirst().y());
     } finally { sessions.shutdown(); }
   }
 

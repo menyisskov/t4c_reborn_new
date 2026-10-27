@@ -1,11 +1,15 @@
 package com.perso.T4C.server;
 
+import com.perso.T4C.online.model.LootDropDraft;
 import com.perso.T4C.server.persistence.OnlineStore;
 import com.perso.T4C.online.model.CharacterProgress;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.*;
 
@@ -14,12 +18,16 @@ final class PersistentSessions {
   private static final long CHECKPOINT_TICKS = PreviewWorld.TICK_RATE * 5L;
   // Stop simulation well before the database's 30-second lease can expire or be taken over.
   private static final long AUTHORITY_NANOS = TimeUnit.SECONDS.toNanos(20);
+  /** Definite refusals from the claim transaction: nothing was written, so the actor stays connected. */
+  private static final Set<String> PICKUP_REFUSALS=Set.of("revision","loot_unavailable","loot_reserved",
+      "out_of_range","too_heavy","unsupported_item","unsupported_pickup");
   private final OnlineStore store;
   private final HostedWorlds hosted;
   private long nextPlayerId=1;
   private final Map<String, Binding> bindings = new HashMap<>();
   private final ConcurrentLinkedQueue<Completion> completions = new ConcurrentLinkedQueue<>();
   private final ConcurrentLinkedQueue<Runnable> reads = new ConcurrentLinkedQueue<>();
+  private boolean sweepPending;
   private final ThreadPoolExecutor writes = new ThreadPoolExecutor(4,4,0,TimeUnit.SECONDS,
       new ArrayBlockingQueue<>(PreviewWorld.MAX_PLAYERS),Thread.ofPlatform().name("online-store-",0).factory(),
       new ThreadPoolExecutor.AbortPolicy());
@@ -45,20 +53,28 @@ final class PersistentSessions {
       this.token=token; this.session=session; this.saved=session.character(); this.position=position;
     }
   }
+  /**
+   * One gameplay write. A pickup carries {@code loot}; a lethal strike carries its committed {@code drops}.
+   * Both are published to the region loot cache only after their transaction commits.
+   */
   private record GameplayEvent(UUID id, long gold, long experience, CharacterProgress progress, boolean worldReward,
       OnlineStore.CreatureStrike strike, OnlineStore.CreatureProvocation provocation,
       OnlineStore.MonsterAttack monsterAttack, OnlineStore.DeathTransition death, UUID corpse,
-      com.perso.T4C.server.persistence.PortalTransfer transfer,
-      CompletableFuture<OnlineStore.RewardResult> result) {}
+      com.perso.T4C.server.persistence.PortalTransfer transfer, UUID loot, List<LootDropDraft> drops,
+      CompletableFuture<OnlineStore.RewardResult> result) {
+    GameplayEvent { drops=List.copyOf(drops); }
+  }
   private record Completion(Binding binding, OnlineStore.CharacterState saved, boolean finalSave,
-      long allowedUntil, OnlineStore.RewardResult reward, Exception error) {}
+      long allowedUntil, OnlineStore.RewardResult reward, String refusal, Exception error) {}
 
-  PersistentSessions(OnlineStore store, PreviewMap map, PreviewWorld world) {
+  PersistentSessions(OnlineStore store, PreviewMap map, PreviewWorld world) throws SQLException {
     this(store,new HostedWorlds(map,world));
   }
 
-  PersistentSessions(OnlineStore store,HostedWorlds hosted) {
+  /** Loads every hosted region's live ground loot before any session can be admitted. */
+  PersistentSessions(OnlineStore store,HostedWorlds hosted) throws SQLException {
     this.store=store;this.hosted=hosted;
+    for (var region:hosted.regions) region.loot.replace(store.listGroundLoot(region.loot.world(),region.loot.area()));
   }
 
   PreviewWorld.Joined join(OnlineStore.Session session, long acquisitionStarted) {
@@ -69,6 +85,7 @@ final class PersistentSessions {
         && (saved.progress().respawn()==null || !hosted.canStand(saved.progress().respawn())))
       throw new PreviewWorld.Rejected(409,"unavailable_respawn");
     var region=hosted.require(saved.world(),saved.x(),saved.y());var map=region.map;var world=region.world;
+    if (!region.loot.loaded()) throw new PreviewWorld.Rejected(503,"busy");
     long appearance=saved.progress()==null ? session.characterId().getLeastSignificantBits() & 1L
         : "female".equals(saved.progress().gender()) ? 0 : 1;
     var joined=world.joinAt(saved.x()-map.originX,saved.y()-map.originY,appearance,nextPlayerId++);
@@ -202,10 +219,46 @@ final class PersistentSessions {
   CompletionStage<OnlineStore.RewardResult> commitCreatureStrike(String token,long expectedRevision,
       UUID eventId,long gold,long experience,CharacterProgress progress,OnlineStore.CreatureStrike strike,
       OnlineStore.CreatureProvocation provocation) {
+    return commitCreatureStrike(token,expectedRevision,eventId,gold,experience,progress,strike,provocation,List.of());
+  }
+
+  /** A lethal strike may carry its rolled drops, which commit and publish together with the kill. */
+  CompletionStage<OnlineStore.RewardResult> commitCreatureStrike(String token,long expectedRevision,
+      UUID eventId,long gold,long experience,CharacterProgress progress,OnlineStore.CreatureStrike strike,
+      OnlineStore.CreatureProvocation provocation,List<LootDropDraft> drops) {
     Objects.requireNonNull(strike);
     if ((strike.after()==0)!=Objects.requireNonNull(eventId).equals(strike.life()))
       throw new IllegalArgumentException("Invalid strike event identity");
-    return commitEvent(token,expectedRevision,eventId,gold,experience,progress,false,strike,provocation,null,null,null);
+    if (!Objects.requireNonNull(drops).isEmpty() && strike.after()!=0) throw new IllegalArgumentException("Loot requires a lethal strike");
+    return commitEvent(token,expectedRevision,eventId,gold,experience,progress,false,strike,provocation,null,null,null,drops);
+  }
+
+  /**
+   * Single-flight pickup of one committed drop. The database claim is authoritative; the simulation
+   * only fences the epoch and rejects what its cache already knows is impossible.
+   */
+  CompletionStage<OnlineStore.RewardResult> pickup(String token,long revision,long epoch,UUID loot) {
+    var binding=active(token);
+    requireEpoch(token,epoch);
+    if (binding.event!=null || binding.awaitingRegionReady) throw new PreviewWorld.Rejected(409,"busy");
+    if (binding.saved.revision()!=revision) throw new PreviewWorld.Rejected(409,"revision");
+    var progress=binding.saved.progress();
+    if (progress==null) throw new PreviewWorld.Rejected(409,"uninitialized_character");
+    if (progress.vitals().hp()<=0) throw new PreviewWorld.Rejected(409,"dead");
+    if (hosted.items==null) throw new PreviewWorld.Rejected(409,"unsupported_pickup");
+    var region=binding.region;
+    if (!region.loot.loaded()) throw new PreviewWorld.Rejected(503,"busy");
+    var found=region.loot.get(Objects.requireNonNull(loot));
+    if (found==null) throw new PreviewWorld.Rejected(409,"loot_unavailable");
+    var position=region.world.position(token);
+    binding.position=position;
+    double x=region.map.originX+position.x(),y=region.map.originY+position.y();
+    if (Math.max(Math.abs(x-found.x()),Math.abs(y-found.y()))>com.perso.T4C.server.OnlinePickupRules.MAX_TILE_DISTANCE)
+      throw new PreviewWorld.Rejected(409,"out_of_range");
+    var result=new CompletableFuture<OnlineStore.RewardResult>();
+    binding.event=new GameplayEvent(UUID.randomUUID(),0,0,progress,false,null,null,null,null,null,null,loot,List.of(),result);
+    if (!binding.pending) submit(binding);
+    return result.minimalCompletionStage();
   }
 
   CompletionStage<OnlineStore.RewardResult> commitMonsterAttack(String token,long revision,UUID event,
@@ -216,13 +269,20 @@ final class PersistentSessions {
   private CompletionStage<OnlineStore.RewardResult> commitEvent(String token, long expectedRevision,
       UUID eventId, long gold, long experience, CharacterProgress progress, boolean worldReward, OnlineStore.CreatureStrike strike,
       OnlineStore.CreatureProvocation provocation,OnlineStore.MonsterAttack attack,OnlineStore.DeathTransition death,UUID corpse) {
+    return commitEvent(token,expectedRevision,eventId,gold,experience,progress,worldReward,strike,provocation,attack,death,corpse,List.of());
+  }
+
+  private CompletionStage<OnlineStore.RewardResult> commitEvent(String token, long expectedRevision,
+      UUID eventId, long gold, long experience, CharacterProgress progress, boolean worldReward, OnlineStore.CreatureStrike strike,
+      OnlineStore.CreatureProvocation provocation,OnlineStore.MonsterAttack attack,OnlineStore.DeathTransition death,UUID corpse,
+      List<LootDropDraft> drops) {
     var binding=active(token);
     if (binding.event!=null || binding.awaitingRegionReady) throw new PreviewWorld.Rejected(409,"busy");
     if (binding.saved.revision()!=expectedRevision) throw new PreviewWorld.Rejected(409,"revision");
     if (gold<0 || experience<0) throw new IllegalArgumentException("Negative reward");
     var result=new CompletableFuture<OnlineStore.RewardResult>();
     binding.event=new GameplayEvent(Objects.requireNonNull(eventId),gold,experience,
-        Objects.requireNonNull(progress),worldReward,strike,provocation,attack,death,corpse,null,result);
+        Objects.requireNonNull(progress),worldReward,strike,provocation,attack,death,corpse,null,null,drops,result);
     if (death!=null || corpse!=null) binding.region.world.freeze(token,true);
     if (!binding.pending) submit(binding);
     return result.minimalCompletionStage();
@@ -257,7 +317,7 @@ final class PersistentSessions {
     var draft=new com.perso.T4C.server.persistence.PortalTransfer(portal.portalId(),binding.region.spec.key(),target.spec.key(),
         portal.source(),portal.destination(),binding.saved.locationEpoch(),Math.addExact(System.currentTimeMillis(),350));
     binding.position=position;binding.region.world.freeze(binding.token,true);
-    binding.event=new GameplayEvent(UUID.randomUUID(),0,0,binding.saved.progress(),false,null,null,null,null,null,draft,new CompletableFuture<>());
+    binding.event=new GameplayEvent(UUID.randomUUID(),0,0,binding.saved.progress(),false,null,null,null,null,null,draft,null,List.of(),new CompletableFuture<>());
   }
 
   private Binding active(String token) {
@@ -270,6 +330,11 @@ final class PersistentSessions {
   void step() {
     tick++;
     drain();
+    // Once per second: pending database loot reads and the expiry sweep, both off the tick thread.
+    if (tick % PreviewWorld.TICK_RATE == 0) {
+      for (var region:hosted.regions) if (region.loot.needsRead()) startLootRead(region);
+      if (!sweepPending) startSweep();
+    }
     for (var binding:new ArrayList<>(bindings.values())) {
       var world=binding.region.world;
       var position=world.position(binding.token);
@@ -291,15 +356,26 @@ final class PersistentSessions {
     var event=!binding.closing && tick-binding.checkpointSubmitted>=CHECKPOINT_TICKS ? null : binding.event;
     if (event==null) binding.checkpointSubmitted=tick;
     boolean finalSave=binding.closing && event==null;
+    var content=hosted.items;
     try {
       writes.execute(() -> {
         OnlineStore.CharacterState saved=null; Exception failure=null;
-        OnlineStore.RewardResult reward=null;
+        OnlineStore.RewardResult reward=null; String refusal=null;
         long allowedUntil=System.nanoTime()+AUTHORITY_NANOS;
         try {
           store.renew(binding.session);
           if (event==null) {
             saved=store.checkpoint(binding.session,revision,region.spec.world(),map.originX+position.x(),map.originY+position.y());
+          } else if (event.loot()!=null) {
+            try {
+              reward=store.claimGroundLoot(binding.session,revision,event.id(),event.loot(),region.spec.world(),
+                  map.originX+position.x(),map.originY+position.y(),content);
+              saved=reward.character();
+            } catch (OnlineStore.Conflict conflict) {
+              // Only the claim's own refusals are definite. Lease loss or a payload mismatch fails closed.
+              if (!PICKUP_REFUSALS.contains(conflict.getMessage())) throw conflict;
+              refusal=conflict.getMessage();
+            }
           } else {
             reward=event.transfer()!=null
                 ? store.commitTransfer(binding.session,revision,event.id(),event.transfer())
@@ -308,7 +384,7 @@ final class PersistentSessions {
                 : event.monsterAttack()!=null
                 ? store.commitMonsterAttack(binding.session,revision,event.id(),event.progress(),event.monsterAttack(),event.death())
                 : event.strike()!=null
-                ? store.commitCreatureStrike(binding.session,revision,event.id(),event.gold(),event.experience(),event.progress(),event.strike(),event.provocation())
+                ? store.commitCreatureStrike(binding.session,revision,event.id(),event.gold(),event.experience(),event.progress(),event.strike(),event.provocation(),event.drops())
                 : event.worldReward()
                 ? store.commitWorldReward(binding.session,revision,event.id(),event.gold(),event.experience(),event.progress())
                 : store.commitGameplayEvent(binding.session,revision,event.id(),event.gold(),event.experience(),event.progress(),event.provocation());
@@ -316,10 +392,10 @@ final class PersistentSessions {
           }
           if (finalSave) store.release(binding.session);
         } catch (Exception error) { failure=error; }
-        completions.add(new Completion(binding,saved,finalSave,allowedUntil,reward,failure));
+        completions.add(new Completion(binding,saved,finalSave,allowedUntil,reward,refusal,failure));
       });
     } catch (RejectedExecutionException error) {
-      completions.add(new Completion(binding,null,finalSave,0,null,error));
+      completions.add(new Completion(binding,null,finalSave,0,null,null,error));
     }
   }
 
@@ -336,15 +412,29 @@ final class PersistentSessions {
         binding.region.world.remove(binding.token); bindings.remove(binding.token);
         invalidateRead(binding);
         if(binding.event!=null && (binding.event.death()!=null || binding.event.transfer()!=null)) hosted.reloadTargets(binding.saved.id());
+        // An uncertain pickup or drop may or may not have committed: rebuild the region from the database. Never replay.
+        if(binding.event!=null && (binding.event.loot()!=null || !binding.event.drops().isEmpty())) refreshLoot(binding.region);
         if (binding.event!=null) binding.event.result().completeExceptionally(new IllegalStateException("Persistence unavailable"));
         binding.closed.completeExceptionally(new IllegalStateException("Persistence unavailable"));
         System.err.println("Online persistence failed ("+com.perso.T4C.server.persistence.PersistenceFailure.describe(completed.error())+"); character disconnected. Recover after lease expiry.");
+      } else if (completed.refusal()!=null) {
+        // A definite refusal rolled back before any write, so the character stays connected.
+        binding.allowedUntil=completed.allowedUntil();
+        var refused=binding.event;
+        binding.event=null;
+        // The database says this drop is no longer on the ground, so the cache was stale: drop it and re-sync.
+        if ("loot_unavailable".equals(completed.refusal())) {
+          binding.region.loot.remove(refused.loot());
+          refreshLoot(binding.region);
+        }
+        refused.result().completeExceptionally(new PreviewWorld.Rejected(409,completed.refusal()));
       } else {
         binding.saved=completed.saved();
         publishHealth(binding);
         binding.allowedUntil=completed.allowedUntil();
         if (completed.reward()!=null) {
           var event=binding.event;
+          var lootRegion=binding.region;
           binding.event=null;
           if (event.death()!=null || event.transfer()!=null) {
             var destination=hosted.require(binding.saved.world(),binding.saved.x(),binding.saved.y());
@@ -360,11 +450,75 @@ final class PersistentSessions {
                 binding.saved.progress().vitals().hp(),binding.saved.progress().vitals().maxHp());
           }
           if (event.death()!=null || event.corpse()!=null || event.transfer()!=null) binding.region.world.freeze(binding.token,binding.awaitingRegionReady);
+          publishLoot(binding,lootRegion,event,completed.reward());
           event.result().complete(completed.reward());
         }
         if (completed.finalSave()) { bindings.remove(binding.token);invalidateRead(binding);binding.closed.complete(null); }
       }
     }
+  }
+
+  /** Runs only after a commit. A claimed drop leaves the cache; committed kill drops join it. */
+  private void publishLoot(Binding binding,HostedWorlds.Region region,GameplayEvent event,OnlineStore.RewardResult reward) {
+    if (event.loot()!=null) region.loot.remove(event.loot());
+    if (event.drops().isEmpty()) return;
+    // A replayed kill's drops may already be claimed, so the database decides what this region holds.
+    if (!reward.applied()) { refreshLoot(region); return; }
+    boolean published=true;
+    for (var drop:event.drops()) {
+      var loot=new OnlineStore.GroundLoot(drop.id(),drop.world(),drop.x(),drop.y(),drop.key(),drop.quantity(),
+          drop.charges(),binding.saved.id(),OnlineStore.LOOT_OWNER_WINDOW_MILLIS);
+      if (region.loot.owns(loot)) region.loot.publish(loot); else published=false;
+    }
+    if (!published) refreshLoot(region);
+  }
+
+  /** Uncertain or unexplained loot state: the next database read replaces this region's cache. */
+  private void refreshLoot(HostedWorlds.Region region) {
+    region.loot.invalidate();
+    if (!region.loot.reading()) startLootRead(region);
+  }
+
+  private void startLootRead(HostedWorlds.Region region) {
+    var loot=region.loot;
+    loot.beginRead();
+    try { lookups.execute(() -> {
+      java.util.List<OnlineStore.GroundLoot> found;
+      try { found=store.listGroundLoot(loot.world(),loot.area()); }
+      catch (SQLException | RuntimeException failure) { found=null; }
+      var result=found;
+      reads.add(() -> finishLootRead(region,result));
+    }); } catch (RejectedExecutionException busy) { loot.abortRead(); }
+  }
+
+  private void finishLootRead(HostedWorlds.Region region,java.util.List<OnlineStore.GroundLoot> found) {
+    region.loot.endRead(found);
+    // A commit that landed while this read was running is not in it; read once more. Failures retry on cadence.
+    if (found!=null && region.loot.needsRead()) startLootRead(region);
+  }
+
+  /** Bounded expiry sweep on the write queue, single-flight: one sweep at a time. */
+  private void startSweep() {
+    sweepPending=true;
+    try { writes.execute(() -> {
+      java.util.List<OnlineStore.ExpiredLoot> expired;
+      try { expired=store.expireGroundLoot(OnlineStore.GROUND_LOOT_LIST_LIMIT); }
+      catch (SQLException | RuntimeException failure) { expired=null; }
+      var result=expired;
+      reads.add(() -> finishSweep(result));
+    }); } catch (RejectedExecutionException busy) { sweepPending=false; }
+  }
+
+  private void finishSweep(java.util.List<OnlineStore.ExpiredLoot> expired) {
+    sweepPending=false;
+    if (expired==null) { for (var region:hosted.regions) refreshLoot(region); return; }
+    for (var loot:expired)
+      for (var region:hosted.regions) if (region.loot.world()==loot.world()) region.loot.remove(loot.id());
+  }
+
+  /** Test and diagnostic seam: whether this actor's region currently publishes the drop. */
+  boolean groundLootPublished(String token,UUID loot) {
+    return active(token).region.loot.contains(loot);
   }
 
   private void publishHealth(Binding binding) {
