@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Live account-key rotation check (T4C-0219)
+
+### Verified
+- In a local two-player session, replacing one player's account key denied their old key and ended its active session without changing saved progress after rotation. The new key reopened the same character, while the other player stayed connected and could move. Rendered-client and broader security checks remain open.
+
 ## 2026-10-27 — Talk to nearby people and manage equipment in the online client (T4C-0218)
 
 ### Added

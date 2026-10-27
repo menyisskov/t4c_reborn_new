@@ -50,11 +50,11 @@ playthrough and recovery criteria pass. Never infer Done from a task count or te
 
 | Milestone | Current status | Existing related tasks | Main outstanding work |
 | --- | --- | --- | --- |
-| M1 — Enter and interact | Roster/NPC backend and actual adapter probes pass, including two local HTTPS adapters with trust/hostname refusal; visible controls/creation incomplete | T4C-0192, 0195, 0196, 0216 | Native selection/creation and NPC controls; account lifecycle integration and remote deployment |
+| M1 — Enter and interact | Roster/NPC backend and actual adapter probes pass, including two local HTTPS adapters with trust/hostname refusal and a separate live account-key rotation check; visible creation/selection incomplete | T4C-0192, 0195, 0196, 0216, 0219 | Native selection/creation and full account lifecycle; remote deployment |
 | M2 — Inventory and loot | Partial equipment/corpse services | Existing inventory/equipment work; T4C-0201, 0202 (design and pickup/drop rules only) | Visible inventory, general monster loot, claim/quantity integrity |
 | M3 — Complete authored adventure | Opening letter only; full loop incomplete | T4C-0193, 0194, 0195 | Full quest service, kill credit, rewards and required hosted routes |
 | M4 — Supported combat and abilities | Restricted melee/physical retaliation and brief rendered attack/death check; pure pursuit decisions and snapshot-driven native creature animation prepared, with no server pursuit | T4C-0189, 0190, 0209, 0210, 0211 | Server pursuit/AI and the declared classes' required abilities and state |
-| M5 — Reliability and anti-cheat | Pool/shutdown/fault probes, local HTTPS trust/hostname refusal and two-adapter reconnect, final two-hour native-adapter baseline with partial 20-player occupancy, isolated restart and database-crash probes, and brief rendered reconnect pass; full mixed recovery/load/abuse gates open | T4C-0191, 0197, 0198, 0207, 0208, 0216 | Broader gameplay recovery, rendered restart, full-capacity mixed soak, bandwidth/DB latency and abuse checks |
+| M5 — Reliability and anti-cheat | Pool/shutdown/fault probes, local HTTPS trust/hostname refusal and two-adapter reconnect, live two-account key-rotation fencing, final two-hour native-adapter baseline with partial 20-player occupancy, isolated restart and database-crash probes, and brief rendered reconnect pass; full mixed recovery/load/abuse gates open | T4C-0191, 0197, 0198, 0207, 0208, 0216, 0219 | Broader gameplay recovery, rendered restart, full-capacity mixed soak, bandwidth/DB latency and abuse checks |
 | M6 — Package and native acceptance | Create-only client and local-loopback server QA packages, headless integrity checks, isolated persistent server stop and brief two-window local client smoke pass; clean-machine, remote and full rendered playthrough open | T4C-0205, 0215 and cross-cutting work | Clean-machine delivery and complete two-rendered-client playthrough |
 
 Task IDs not yet claimed are deliberately not represented as completed or assigned work.
@@ -183,6 +183,10 @@ Required behavior:
   no duplicated value or lost acknowledged progress. An unacknowledged commit is discoverable on rejoin.
 - [ ] Account-key rotation/foreign ownership, stale/reordered/duplicate commands, speed/stat/item
   edits, oversized requests and forged targets/rewards are rejected without corrupting valid play.
+  T4C-0219 checked one local two-native-session rotation: the old account key was denied,
+  its active writer disconnected without a post-rotation commit, the replacement key
+  reopened the same character, and the other player stayed active. Foreign ownership,
+  other tampering cases, rendered clients and the integrated release build remain open.
 - [ ] Restore a backup into a separate database and finish a native gameplay/reconnect check there;
   matching table hashes alone do not satisfy restored gameplay acceptance. T4C-0213 verified
   a live schema-10 exported-snapshot restore across all eleven online tables, including

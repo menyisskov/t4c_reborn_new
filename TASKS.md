@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0219`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0220`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,7 +18,8 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0218 | Native online client: talk to nearby NPCs with topic choices and an inventory panel to equip and unequip | Multiplayer / Beta client | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--talk-to-nearby-people-and-manage-equipment-in-the-online-client-t4c-0218) |
+| T4C-0219 | Verify live account-key rotation through two native sessions | Multiplayer / Beta security | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--live-account-key-rotation-check-t4c-0219) |
+| T4C-0218 | Native online client: talk to nearby NPCs with topic choices and an inventory panel to equip and unequip | Multiplayer / Beta client | Done | PR155/main`0b350b42` | [2026-10-27](CHANGELOG.md#2026-10-27--talk-to-nearby-people-and-manage-equipment-in-the-online-client-t4c-0218) |
 | T4C-0217 | Owner-approved starter kits: Paladin mace, Arcane Spark for mages, Archer quiver; checkpoint scope approval recorded | Content / Multiplayer | Done | PR152/main`91296e12` | [2026-10-27](CHANGELOG.md#2026-10-27--new-starting-gear-and-first-spell-t4c-0217) |
 | T4C-0216 | Verify two native adapters over trusted TLS | Multiplayer / Beta | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--local-native-tls-acceptance-t4c-0216) |
 | T4C-0215 | Package a clean local QA server runtime and safe lifecycle tools | Multiplayer / Beta operations | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--local-online-server-qa-package-t4c-0215) |
