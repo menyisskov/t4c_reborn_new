@@ -1,6 +1,7 @@
 package com.perso.T4C.server;
 
 import com.google.gson.GsonBuilder;
+import com.perso.T4C.config.GameConstants;
 import com.perso.T4C.helper.CharacterClass;
 import com.perso.T4C.online.OnlineConnection;
 import com.perso.T4C.online.model.CharacterProgress;
@@ -44,9 +45,9 @@ import java.util.concurrent.TimeUnit;
  * It never uses a pre-existing server, never clears a lease and never replays a pickup.
  */
 public final class NativeLootProbe {
-  /** Authored Witness Skeleton spawn tile on the worldmap (hunting-grounds.json). Assumed walkable; confirm on first run. */
+  /** The hosted starter region lives on world 0; the start tile is derived, never hard-coded (see {@link #resolveStart}). */
   private static final int WORLD=0;
-  private static final double SPAWN_X=3700.5, SPAWN_Y=1450.5;
+  private static final String QUEST_ID="renewed_wards";
   private static final int MIN_DROPS=3, MAX_KILLS=30, START_SECONDS=30, STOP_SECONDS=100;
   private static final long TOTAL_MS=TimeUnit.MINUTES.toMillis(20);
   private static final String[] REQUIRED_DB={"T4C_DB_URL","T4C_DB_USER","T4C_DB_PASSWORD"};
@@ -55,6 +56,51 @@ public final class NativeLootProbe {
   private record Player(String label,OnlineStore.AccountKey key,OnlineStore.CharacterState created,
       OnlineConnection.Credentials credentials) {}
   private record Outcome(boolean accepted,String messageKey,String error) {}
+  /** Start tile (tile centre) beside an authored Skeleton anchor, both in world-0 tile coordinates. */
+  private record Start(double x,double y,int anchorX,int anchorY,int circleSkeletons) {}
+
+  /**
+   * Derives the characters' start from the same sources {@code HostedKillRegionTest} uses: the real
+   * {@code ServerMain --online} region plan ({@link HostedRegionPlan#startingSlice}), the
+   * {@code renewed_wards} quest circle and the authored Skeleton spawns inside it. Picks the first
+   * anchor (by x, then y) that has a standable, non-portal tile within melee reach with combat line of
+   * sight, and re-checks that the tile is hosted. Fails with a clear message otherwise. It only reads
+   * authored data and the collision map; it never weakens a server guard.
+   */
+  private static Start resolveStart(Path worldCollision) throws Exception {
+    HostedRegionPlan plan=HostedRegionPlan.startingSlice(worldCollision);
+    var region=plan.regions().stream().filter(r->r.spec().world()==WORLD).findFirst()
+        .orElseThrow(()->new IllegalArgumentException("Precondition failed: the starting slice hosts no world-"+WORLD+" region"));
+    PreviewMap map=region.map();
+    var quest=QuestCatalog.bundled().definition(QUEST_ID);
+    var skeletons=MonsterCatalog.loadBundled().spawns().stream()
+        .filter(s->"Skeleton".equals(s.definition()) && s.world()==WORLD
+            && Math.abs(s.x()-quest.getAreaCenterX())<=quest.getAreaRadiusTiles()
+            && Math.abs(s.y()-quest.getAreaCenterY())<=quest.getAreaRadiusTiles())
+        .sorted(java.util.Comparator.comparingInt((com.perso.T4C.online.model.MonsterContent.Spawn s)->s.x()).thenComparingInt(s->s.y()))
+        .toList();
+    if(skeletons.isEmpty()) throw new IllegalArgumentException(
+        "Precondition failed: no authored Skeleton spawn inside the "+QUEST_ID+" circle");
+    for(var anchor:skeletons) {
+      Start best=null; double bestDistance=Double.MAX_VALUE;
+      for(int dy=-2;dy<=2;dy++) for(int dx=-2;dx<=2;dx++) {
+        if(dx==0 && dy==0) continue;
+        int tileX=anchor.x()+dx,tileY=anchor.y()+dy;
+        double wx=tileX+.5,wy=tileY+.5;
+        if(!plan.canStand(new CharacterProgress.Respawn(WORLD,wx,wy))) continue;       // hosted AND standable
+        if(plan.isRefusedPortalSource(WORLD,wx,wy)
+            || plan.portals.resolve(WORLD,wx,wy,plan::canStand).isPresent()) continue;  // never start on a portal source
+        double rx=wx-map.originX,ry=wy-map.originY;
+        double distance=Math.hypot(dx*(double)GameConstants.GRID_W,dy*(double)GameConstants.GRID_H);
+        if(distance>GameConstants.PLAYER_MELEE_ATTACK_RANGE) continue;
+        if(!map.allowsCombat(rx,ry,anchor.x()-map.originX+.5,anchor.y()-map.originY+.5,false)) continue;
+        if(distance<bestDistance) { bestDistance=distance; best=new Start(wx,wy,anchor.x(),anchor.y(),skeletons.size()); }
+      }
+      if(best!=null) return best;
+    }
+    throw new IllegalArgumentException("Precondition failed: none of the "+skeletons.size()
+        +" authored Skeleton anchors has a standable, hosted, melee-reachable adjacent tile");
+  }
 
   /** Sanitized evidence: no account IDs, secrets, tokens, database credentials or paths beyond the output dir. */
   private static final class Report {
@@ -108,12 +154,17 @@ public final class NativeLootProbe {
       if(!Path.of(literal).toAbsolutePath().normalize().startsWith(runtime))
         throw new IllegalArgumentException("Probe classpath must be entirely inside the runtime snapshot");
     }
+    // Offline precondition: the start must be hosted, standable and beside a real Skeleton anchor.
+    final Start start=resolveStart(map);
     try(var socket=new ServerSocket()) {
       socket.bind(new InetSocketAddress(InetAddress.getByName("127.0.0.1"),port));
     } catch(Exception occupied) { throw new IllegalArgumentException("Dedicated port is already in use",occupied); }
     Files.createDirectory(output);
     Report report=new Report(output.resolve("report.json"));
     report.put("port",port);
+    report.put("startTile",List.of(start.x(),start.y()));
+    report.put("skeletonAnchorTile",List.of(start.anchorX(),start.anchorY()));
+    report.put("circleSkeletonAnchors",start.circleSkeletons());
     URI endpoint=URI.create("http://127.0.0.1:"+port);
     Process child=null;
     String stage="startup";
@@ -136,9 +187,9 @@ public final class NativeLootProbe {
       // A stack of one million units makes carried weight exceed any strength-based capacity.
       CharacterProgress heavy=withInventory(weightKit.progress(),
           List.of(new CharacterProgress.Item(UUID.randomUUID(),heavyKey,1_000_000,0)));
-      var killer=provision(store,"Loot probe killer","killer",SPAWN_X,SPAWN_Y,killerKit.progress(),killerKit.gold());
-      var racer=provision(store,"Loot probe racer","racer",SPAWN_X,SPAWN_Y,racerKit.progress(),racerKit.gold());
-      var weighted=provision(store,"Loot probe weighted","weighted",SPAWN_X,SPAWN_Y,heavy,weightKit.gold());
+      var killer=provision(store,"Loot probe killer","killer",start.x(),start.y(),killerKit.progress(),killerKit.gold());
+      var racer=provision(store,"Loot probe racer","racer",start.x(),start.y(),racerKit.progress(),racerKit.gold());
+      var weighted=provision(store,"Loot probe weighted","weighted",start.x(),start.y(),heavy,weightKit.gold());
 
       try(var a=new OnlineConnection(endpoint,killer.credentials());
           var b=new OnlineConnection(endpoint,racer.credentials());

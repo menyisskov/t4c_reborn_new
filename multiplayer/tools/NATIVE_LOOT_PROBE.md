@@ -9,8 +9,8 @@ It is not rendered-client evidence and does not complete M2.
 ## What the probe does
 
 1. Starts its own server on a caller-selected loopback port and waits for `local-persistent` health.
-2. Provisions three characters at the authored Witness Skeleton tile on the worldmap (world 0):
-   a killer, a racer/observer and a weighted character. Each gets a warrior kit. The weighted
+2. Provisions three characters on world 0 at a start tile that the probe derives itself (see
+   "Start position" below): a killer, a racer/observer and a weighted character. Each gets a warrior kit. The weighted
    character's inventory holds one stack of 1,000,000 of the first positive-weight authored item,
    so its carried weight exceeds any strength-based capacity.
 3. Checks that the protocol is 5 and that the adapters joined.
@@ -35,6 +35,28 @@ It contains no account or character IDs, secrets, tokens, database credentials o
 outside the output directory. Failure exits with status 1 and records the stage and exception
 class. Child server logs and the private `control-1.token` file stay in the output directory.
 
+## Start position (hosted starter region)
+
+`ServerMain --online` always hosts `HostedRegionPlan.startingSlice`: world 0 region
+`[2735,2984) x [1029,1146)` (the temple crop plus the whole `renewed_wards` kill circle) and the
+Lighthaven interior. There is no override flag or environment variable; the operator sets
+nothing for the slice. Any join outside it is refused `409 unhosted_region`, so the old fixed
+world-0 `(3700.5, 1450.5)` start could never reach a loot assertion. The server guards are unchanged.
+
+Before it touches the port, the database or the server, the probe now runs `resolveStart`, which
+uses the same sources as `HostedKillRegionTest`: the real `startingSlice` plan built from the
+runtime's `worldmap.colbin`, the `renewed_wards` circle and the authored `Skeleton` spawns inside it.
+It takes the first anchor (ordered by x, then y) that has a tile within one to two tiles which is
+hosted, standable (`HostedRegionPlan.canStand`), not a portal source (enabled or refused), within
+`PLAYER_MELEE_ATTACK_RANGE` and with combat line of sight (`PreviewMap.allowsCombat`). All three
+characters start on that tile. If no anchor qualifies, the probe stops with an
+`IllegalArgumentException` beginning `Precondition failed:` and does nothing else. The chosen start
+tile, the anchor and the number of circle anchors are written to `report.json`.
+
+On the content in this checkout (offline dry check of `resolveStart` only; no server, port or
+database used) it resolves to start `(2767.5, 1086.5)` beside the anchor `(2767, 1087)`, one of 13
+circle anchors. That is informative, not a hard-coded input: the probe recomputes it each run.
+
 ## Isolation requirements
 
 - Use a runtime snapshot outside this checkout: one matching server JAR with its `lib` directory,
@@ -49,6 +71,33 @@ class. Child server logs and the private `control-1.token` file stay in the outp
   for inspection after a failure. The probe performs no drops or deletes.
 - Coordinate the build and runtime windows in `multiplayer/PEER_WORK.md` before running.
 
+### Run prerequisites (operator checklist)
+
+1. A claimed PEER_WORK window for the dedicated database and port (request text below).
+2. A fresh database `t4c_loot_<id>` (lowercase letters, digits, underscore; the probe's URL check is
+   `jdbc:postgresql://host:port/t4c_loot_[a-z0-9_]+`). Never `t4c_online`, `t4c_test`, or a database
+   another task owns. The probe's child server migrates the schema itself.
+3. `T4C_DB_URL`, `T4C_DB_USER`, `T4C_DB_PASSWORD` set privately. `T4C_TLS_*`, `T4C_PUBLIC_ORIGIN` unset
+   and `T4C_BIND_ADDRESS` unset or `127.0.0.1`. `T4C_CONTROL_FILE` is set by the probe, not the operator.
+4. A dedicated loopback port taken from the register, never 18765, 18766, 18770 or 18771 (the probe
+   refuses 18765 and 18766 itself; the others belong to retained QA/soak/pursuit work).
+5. No server slice setting is needed. Confirm the runtime snapshot's `assets/maps/dungeon/DungeonMap.colbin`
+   is copied beside the world map, because `startingSlice` reads it for the Lighthaven region.
+6. Run from a repository root whose current directory is not inside the runtime or output paths.
+
+### Ready-to-paste PEER_WORK request
+
+```text
+- <date time zone>: <agent> requests a database/port run window for NativeLootProbe (T4C-0204 L12,
+  two-adapter ground-loot QA; probe start now derived inside the hosted starter region by T4C-0235).
+  Needs: NEW PostgreSQL database t4c_loot_<id> on the shared PG service (create-only, no existing
+  database touched), dedicated loopback port <port> from the register (not 18765/18766/18770/18771),
+  one throwaway runtime snapshot and output directory under TEMP, one ServerMain --online child owned
+  by the probe, up to 20 minutes. No owner QA, t4c_online, t4c_test, root Maven outputs or lease clearing.
+  Evidence: sanitized report.json kept; database and output preserved after any failure. Releases the
+  port and window on completion; will record the result and exact probe/JAR hashes in the register.
+```
+
 ## Commands
 
 From the repository root, after the matching artifacts exist:
@@ -59,11 +108,13 @@ $output = Join-Path $env:TEMP ('t4c-loot-evidence-' + [guid]::NewGuid().ToString
 New-Item -ItemType Directory -Path $runtime -ErrorAction Stop | Out-Null
 @('lib','assets/maps/worldmap','assets/maps/dungeon') |
   ForEach-Object { New-Item -ItemType Directory -Path (Join-Path $runtime $_) -ErrorAction Stop | Out-Null }
+New-Item -ItemType Directory -Path (Join-Path $runtime 'client') -ErrorAction Stop | Out-Null
+Copy-Item -LiteralPath 'target/T4C-1.0-SNAPSHOT.jar' -Destination (Join-Path $runtime 'client/T4C.jar')
 Copy-Item -LiteralPath 'multiplayer/server/target/t4c-server.jar' -Destination (Join-Path $runtime 't4c-server.jar')
 Copy-Item -Path 'multiplayer/server/target/lib/*' -Destination (Join-Path $runtime 'lib')
 Copy-Item -LiteralPath 'assets/maps/worldmap/worldmap.colbin' -Destination (Join-Path $runtime 'assets/maps/worldmap/worldmap.colbin')
 Copy-Item -LiteralPath 'assets/maps/dungeon/DungeonMap.colbin' -Destination (Join-Path $runtime 'assets/maps/dungeon/DungeonMap.colbin')
-$dependencies = (Join-Path $runtime 't4c-server.jar') + ';' + (Join-Path $runtime 'lib/*')
+$dependencies = (Join-Path $runtime 'client/T4C.jar') + ';' + (Join-Path $runtime 't4c-server.jar') + ';' + (Join-Path $runtime 'lib/*')
 javac -proc:none -cp $dependencies -d (Join-Path $runtime 'probe') multiplayer/tools/NativeLootProbe.java
 if ($LASTEXITCODE -ne 0) { throw 'Probe compilation failed' }
 $probeClasspath = (Join-Path $runtime 'probe') + ';' + $dependencies
@@ -75,14 +126,18 @@ Get-Content -LiteralPath (Join-Path $output 'report.json')
 ```
 
 The probe is compiled against the copied runtime, not the live build. The `assets/...` copies
-are the two hosted maps. The `client` copy from the restart probe is not needed here. The
-probe's classpath check accepts only entries under the runtime snapshot.
+are the two hosted maps. `client/T4C.jar` supplies `OnlineConnection`; the server JAR alone does
+not contain it. The probe's classpath check accepts only entries under the runtime snapshot.
+The probe's compile check was done against these three artifacts; the probe itself was not run.
 
 ## Assumptions to confirm on the first real run
 
-- The Witness Skeleton tile `(3700.5, 1450.5)` on world 0 is walkable and within melee reach
-  of a character placed there. The probe does not walk. If melee reports out of range, move the
-  spawn constants (or add walking) and record the change. This is not yet verified.
+- The derived start tile is within melee reach of its anchor Skeleton, but the Skeleton is a live
+  creature: it may have patrolled or may aggro and fight the characters. The probe does not walk, so
+  after the anchored Skeleton dies, later targets must be respawns or Skeletons that wander into
+  reach. If the run stops at the kill cap or never finds a target, add walking or per-anchor starts
+  (a follow-up) instead of relaxing any server guard. Not yet verified.
+- All three characters start on the same tile; whether the server accepts stacked joins is untested.
 - Skeleton drops are random. The probe kills up to 30 Skeletons until three drops appear. A run
   that stops at the kill cap fails with an explicit stage.
 - The lost-response case is client-side: the adapter closes right after the request is sent.
