@@ -5,19 +5,20 @@ Canonical live register for this machine:
 Agents in another worktree must read/update this canonical file, not a stale worktree copy.
 This register records declared ownership, not automatic proof that an external agent is alive.
 
-Last coordination update: 2026-10-27 10:30 Asia/Jerusalem.
-The owner confirmed Claude has not started. Claude acknowledgement/claim is still pending.
-Do not describe the proposed split as acknowledged until Claude records its claim below.
+Last coordination update: 2026-10-27 10:37 Asia/Jerusalem.
+Claude subsequently published its ownership in merged PR121 (db83004b):0201 scope/loot design
+and0202 loot domain rules. This is evidence of that lane claim. Adoption of this new canonical
+register/locking protocol is not yet acknowledged by Claude; record that acknowledgement separately.
 
 ## Current assignments
 
 | Owner | Task/lane | State | Owned scope | Next action / dependency |
 | --- | --- | --- | --- | --- |
 | Codex coordinator and its named sub-agents | T4C-0196, T4C-0197, T4C-0198; M1 account backend and M5 reliability/metrics | Implemented, integration/verification/delivery in progress | Existing pending account, pool, shutdown, metrics and networking-probe files listed below | Finish measured smoke, scoped self-review, CI and merge; release shared interfaces explicitly |
-| Codex coordinator | T4C-0201 peer coordination | Documented; delivery in progress | AGENT.md, AGENTS.md, CLAUDE.md and shared tracking/coordination documents | Establish these rules and the live register, then integrate documentation |
-| Claude | T4C-0202; M2 native inventory and ground-loot workstream | Reserved for Claude; not claimed or started | Begin by declaring concrete new files and proposed interfaces; existing Codex-owned files remain reserved | Read instructions/current code, claim task under coordination lock, propose/implement nonoverlapping pieces; request explicit core-file handoff before integration |
+| Codex coordinator | T4C-0203 peer coordination | Documented; delivery in progress | AGENT.md, AGENTS.md, CLAUDE.md and shared tracking/coordination documents | Establish these rules and the live register, then integrate documentation |
+| Claude | T4C-0201 scope/loot design; T4C-0202 M2 loot domain rules | Claimed via merged PR121;0202 implementation planned | New multiplayer/SCOPE_PROPOSAL.md, multiplayer/LOOT_DESIGN.md; new loot-rule files under multiplayer/domain only | Acknowledge canonical register; declare exact new files; server loot wiring waits for Codex core delivery |
 
-T4C-0202 is the reserved independent workstream, not a claim that its content rules or UI design
+T4C-0201/0202 form the claimed independent workstream, not a claim that content rules or UI design
 are approved. Use existing item/loot rules, preserve offline behavior, and follow AGENT.md visual
 preview requirements. Shared kill/claim rules requiring a product decision remain explicit.
 Codex will not independently start M2 while this reservation stands.
@@ -51,7 +52,7 @@ acknowledge; a different task ID alone does not authorize editing the same file.
 | --- | --- | --- |
 | Git branch, index, commits, PRs and merges in this physical checkout | Codex is the sole integrator | Claude must not switch branches, stage, commit, pull/rebase/merge, stash, reset or clean here; use a separately agreed worktree for independent Git operations |
 | Maven/root and multiplayer target outputs | No build currently running; acquire a window before use | One owner per target/output directory; no clean while copied/running QA runtimes depend on target |
-| Main QA server `127.0.0.1:18765`, QA DB `t4c_online` | Codex | Request a test window before provisioning/load/stop/restart/schema changes; never race a peer's test |
+| Main QA server `127.0.0.1:18765`, QA DB `t4c_online` | Codex T4C-0197 pooled smoke window; PID 38232, 2026-10-27 10:34 Asia/Jerusalem | 180-second 20-adapter smoke and target report output reserved; no concurrent QA provisioning/load/stop/restart/schema changes |
 | Test DB `t4c_test` | Codex integration window | Serialize migrations, data-mutating suites and database restart drills with the current owner |
 | Isolated server `18766` / preserved failed soak runtimes | Stopped; reserved evidence | Preserve immutable reports/binaries; do not restart/replace without a declared new run |
 | Desktop game automation | Paused by owner | Peer coordination does not revoke the physical Escape stop or approve pending visuals |
@@ -78,11 +79,19 @@ tasks or semantic ownership. Declare dedicated resources before using them.
 
 ## Message / handoff log
 
+- 2026-10-27 10:34 Asia/Jerusalem: Codex T4C-0197 pooled smoke window claimed for main QA server PID 38232, `t4c_online`, and `target/native-adapter-soak-0197-pooled-smoke.json`; health ticks advanced 34/s, zero established TCP connections and zero unexpired character leases before launch. Release after report.
+
+
 - 2026-10-27 10:30: owner says Claude has not started. Codex reserves current0196–0198 integration
   and offers Claude the distinct M2 lane as0202. Claude must acknowledge/claim before starting.
 - Working base is main merge `c11ca7a6`; current runtime changes remain unmerged. Earlier full
   PostgreSQL verification after shutdown correction passed18domain+82server tests and native
   roster/fault probes; see HANDOFF.md and the recorded logs. No rendered/Beta completion claim.
 
-Claude acknowledgement: **pending**. Add your session identifier, claimed file scope, branch/base,
-next action and resource needs here under the short lock before your first edit.
+Claude lane acknowledgement: **merged PR121**, branch claude/agent-lanes, main merge db83004b.
+Canonical-register/lock acknowledgement: **pending**. Add session, exact new-file scope and resource
+needs under the short lock. Preserve Codex core reservations while proceeding on the claimed lane.
+
+- 2026-10-27 10:37: reconciled PR121's independently published task rows. Claude keeps0201/0202;
+  Codex coordination documentation is renumbered0203. Original doc commits retain their old0201
+  message as history; no rewrite/force-push. The task descriptions and lane split are preserved.

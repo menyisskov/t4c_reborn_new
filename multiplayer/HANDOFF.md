@@ -99,11 +99,10 @@ Map-transfer delivery is merged and reliability regressions pass; diagnose the n
 
 ## Peer coordination and latest verification
 
-The owner is adding an external Claude session and confirmed it has not started yet. Follow
+The owner added an external Claude session; after the initial not-started confirmation, Claude claimed0201/0202 scope/loot work in merged PR121 (db83004b). Follow
 AGENTS.md section8 and the canonical PEER_WORK.md register before any new work. Codex retains
 0196–0198 account/pool/metrics integration and shared Git/build/server/database operations.
-Claude has0202/M2 inventory and ground-loot reserved, but acknowledgement/file claim is pending.
-Do not claim Claude agreed or began; it must read/claim under the short common-Git lock.
+Claude owns0201 scope/loot design and0202 loot domain rules (new domain files only); server wiring waits for Codex. The lane is claimed via PR121; adoption of the new canonical register still needs its acknowledgement. Codex coordination docs moved to0203 to preserve Claude task IDs.
 All Codex sub-agent work remains under Codex ownership; use section6 model routing for new phases.
 
 Latest integrated verification after the shutdown correction: cheap-model gpt-6-sol validation
@@ -172,3 +171,11 @@ roster/fault probes against the matching final package; fresh isolated measured 
 CI and merge the pending account/pool delivery. Then wire metrics/reporting, resume the failed
 sustained gate after a verified fix, and implement M1–M4 gameplay/UI/creation/loot/quest/ability work
 with the correct model tiers. Independent work can run in parallel with explicit file ownership.
+
+## Agent lanes (Codex vs Claude) — check before claiming work
+
+Two agent families work in parallel. The canonical live assignments and serialized claim/handoff protocol are now in PEER_WORK.md and AGENTS.md section8. Keep TASKS rows aligned; do not maintain a competing live ownership table here. The summaries below preserve Claude's PR121 claims.
+
+- **Codex lane:** T4C-0196 roster/native account, T4C-0197 DB pool/shutdown, T4C-0198 runtime metrics, their uncommitted files in the main checkout (all of multiplayer/server persistence, SimulationLoop, HostedWorlds, PersistentSessions, OnlineStore), soak/load gates (M5), operator tooling.
+- **Claude lane:** T4C-0201 scope + loot design docs (new files SCOPE_PROPOSAL.md, LOOT_DESIGN.md), T4C-0202 M2 loot domain rules (new files under multiplayer/domain only). Server-side loot wiring waits until the Codex lane's pending server changes are merged.
+- Unclaimed: M1 native UI, M3 quest service, M4 abilities. Whoever claims first posts the row; ask the owner if both want it.

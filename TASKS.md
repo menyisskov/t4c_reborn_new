@@ -10,15 +10,16 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0203`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0204`.** When starting new work, claim the next ID,
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
 `CLAUDE.md` for the full policy this file is part of.
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0202 | Native inventory and ground-loot slice; reserved for Claude | Multiplayer / Alpha | Planned | pending | pending |
-| T4C-0201 | Coordinate Codex and Claude task/file/resource ownership | Process/Tooling | Done | `0e258e40` | [2026-10-27](CHANGELOG.md#2026-10-27--peer-agent-coordination-t4c-0201) |
+| T4C-0203 | Coordinate Codex and Claude task/file/resource ownership | Process/Tooling | Done | `0e258e40` | [2026-10-27](CHANGELOG.md#2026-10-27--peer-agent-coordination-t4c-0203) |
+| T4C-0202 | M2 general monster loot and claim rules: domain rules first (Claude lane) | Multiplayer / Beta | Planned | pending | pending |
+| T4C-0201 | Two-player scope proposal and M2 loot design docs (Claude lane) | Multiplayer / Beta | In Progress | pending | pending |
 | T4C-0200 | Centralize owner model routing and instruction references | Process/Tooling | Done | `b88ac040` | [2026-10-27](CHANGELOG.md#2026-10-27--agent-model-routing-t4c-0200) |
 | T4C-0199 | Define exact two-player milestone completion criteria | Process/Tooling | Done | `b88ac040` | [2026-10-27](CHANGELOG.md#2026-10-27--multiplayer-milestone-checklist-t4c-0199) |
 | T4C-0198 | Measure server scheduler debt and runtime resources | Multiplayer / Beta | In Progress | pending | pending |
