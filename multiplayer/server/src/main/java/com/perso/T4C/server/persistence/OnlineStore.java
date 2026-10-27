@@ -3,6 +3,7 @@ package com.perso.T4C.server.persistence;
 import com.perso.T4C.online.model.CharacterProgress;
 import com.perso.T4C.online.model.ItemContent;
 import com.perso.T4C.online.model.LootDropDraft;
+import com.perso.T4C.online.model.OnlineCharacterCreation;
 import com.perso.T4C.server.OnlinePickupRules;
 
 import java.sql.*;
@@ -12,10 +13,13 @@ import java.security.SecureRandom;
 import java.util.HexFormat;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 /** Server-only PostgreSQL persistence. Call from a bounded persistence worker, never the tick thread. */
 public final class OnlineStore implements AutoCloseable {
   private static final com.google.gson.Gson JSON = new com.google.gson.Gson();
+  /** Matches the offline three-character account rule without importing desktop save code. */
+  private static final int MAX_ACCOUNT_CHARACTERS = 3;
   @FunctionalInterface public interface Connections { Connection open() throws SQLException; }
   public record CharacterState(UUID id, UUID accountId, String name, int world, double x, double y,
       long gold, long experience, long revision, CharacterProgress progress,long locationEpoch,long portalCooldownUntil) {
@@ -135,6 +139,12 @@ public final class OnlineStore implements AutoCloseable {
   public static final class Conflict extends SQLException {
     public Conflict(String message) { super(message); }
   }
+  public static final class CreationConflict extends SQLException {
+    private final String code;
+    public CreationConflict(String code) { super(code);this.code=code; }
+    public String code() { return code; }
+  }
+  public record InitialState(CharacterProgress progress,long gold) {}
   private final Connections connections;
   private final OnlineDatabasePool ownedPool;
 
@@ -176,7 +186,7 @@ public final class OnlineStore implements AutoCloseable {
         int version = 0;
         try (var rows = s.executeQuery("SELECT version FROM online_schema ORDER BY version")) {
           while (rows.next()) {
-            if (rows.getInt(1) != ++version || version > 12) throw new SQLException("Unsupported online schema version");
+            if (rows.getInt(1) != ++version || version > 13) throw new SQLException("Unsupported online schema version");
           }
         }
         if (version == 0) {
@@ -366,6 +376,20 @@ public final class OnlineStore implements AutoCloseable {
                     AND target_spawn_key IS NULL AND target_life IS NULL AND next_attack_at=0))
               """);
           s.execute("INSERT INTO online_schema(version) VALUES (12)");
+        }
+        if (version < 13) {
+          s.execute("ALTER TABLE online_characters ADD CONSTRAINT online_character_owner_id UNIQUE(account_id,id)");
+          s.execute("""
+              CREATE TABLE online_character_creations (
+                account_id uuid NOT NULL REFERENCES online_accounts(id),
+                request_id uuid NOT NULL,
+                payload_hash varchar(64) NOT NULL CHECK (payload_hash ~ '^[0-9a-f]{64}$'),
+                character_id uuid NOT NULL,
+                created_at timestamptz NOT NULL DEFAULT now(),
+                PRIMARY KEY(account_id,request_id),
+                FOREIGN KEY(account_id,character_id) REFERENCES online_characters(account_id,id))
+              """);
+          s.execute("INSERT INTO online_schema(version) VALUES (13)");
         }
         c.commit();
       } catch (SQLException | RuntimeException error) { c.rollback(); throw error; }
@@ -573,6 +597,99 @@ public final class OnlineStore implements AutoCloseable {
         c.commit();return java.util.List.copyOf(result);
       } catch(SQLException|RuntimeException failure) { c.rollback();throw failure; }
     }
+  }
+
+  /** Cheap owner check before a potentially slow HTTP body read; creation rechecks under lock. */
+  public void authenticateAccount(String secret) throws SQLException {
+    String verifier=hash(secret);
+    try(var c=connections.open();var q=c.prepareStatement("SELECT 1 FROM online_accounts WHERE access_hash=?")) {
+      q.setQueryTimeout(2);q.setString(1,verifier);
+      try(var rows=q.executeQuery()) { if(!rows.next()) throw new Conflict("Account unavailable"); }
+    }
+  }
+
+  /** Account-serialized, idempotent creation; the starter factory runs only after receipt and capacity checks. */
+  public RosterEntry createAuthenticated(String secret,OnlineCharacterCreation.Request request,
+      int world,double x,double y,Supplier<InitialState> starter) throws SQLException {
+    Objects.requireNonNull(request);Objects.requireNonNull(starter);position(world,x,y);
+    String verifier=hash(secret);
+    String payload=hashCreationPayload(request);
+    try(var c=connections.open()) {
+      c.setAutoCommit(false);
+      try {
+        try(var timeout=c.createStatement()) { timeout.execute("SET LOCAL lock_timeout = '2s'"); }
+        UUID account;
+        try(var q=c.prepareStatement("SELECT id FROM online_accounts WHERE access_hash=? FOR UPDATE")) {
+          q.setQueryTimeout(3);q.setString(1,verifier);
+          try(var rows=q.executeQuery()) {
+            if(!rows.next()) throw new Conflict("Account unavailable");
+            account=rows.getObject(1,UUID.class);
+          }
+        }
+        try(var q=c.prepareStatement("""
+            SELECT c.payload_hash,c.character_id FROM online_character_creations c
+            WHERE c.account_id=? AND c.request_id=?
+            """)) {
+          q.setQueryTimeout(2);q.setObject(1,account);q.setObject(2,request.requestId());
+          try(var rows=q.executeQuery()) {
+            if(rows.next()) {
+              if(!payload.equals(rows.getString(1))) throw new CreationConflict("creation_conflict");
+              RosterEntry existing;
+              try(var owned=c.prepareStatement("""
+                  SELECT *,session_id IS NOT NULL AND session_until>clock_timestamp() AS in_use
+                  FROM online_characters WHERE id=? AND account_id=?
+                  """)) {
+                owned.setQueryTimeout(2);owned.setObject(1,rows.getObject(2,UUID.class));owned.setObject(2,account);
+                try(var state=owned.executeQuery()) {
+                  if(!state.next()) throw new SQLException("Creation receipt has no owned character");
+                  existing=new RosterEntry(read(state),state.getBoolean("in_use"));
+                }
+              }
+              c.commit();return existing;
+            }
+          }
+        }
+        var names=new java.util.ArrayList<String>();
+        try(var q=c.prepareStatement("SELECT name FROM online_characters WHERE account_id=? LIMIT ?")) {
+          q.setQueryTimeout(2);q.setObject(1,account);
+          q.setInt(2,MAX_ACCOUNT_CHARACTERS+1);
+          try(var rows=q.executeQuery()) { while(rows.next()) names.add(rows.getString(1)); }
+        }
+        if(names.size()>=MAX_ACCOUNT_CHARACTERS)
+          throw new CreationConflict("roster_full");
+        if(names.stream().anyMatch(name->name.equalsIgnoreCase(request.name())))
+          throw new CreationConflict("name_taken");
+        InitialState initial=Objects.requireNonNull(starter.get());
+        if(initial.progress()==null || initial.gold()<0) throw new IllegalArgumentException("Invalid initial state");
+        CharacterState created;
+        try(var q=c.prepareStatement("""
+            INSERT INTO online_characters(id,account_id,name,world,x,y,progress,gold)
+            VALUES (?,?,?,?,?,?,?::jsonb,?) RETURNING *
+            """)) {
+          q.setQueryTimeout(2);q.setObject(1,UUID.randomUUID());q.setObject(2,account);
+          q.setString(3,request.name());q.setInt(4,world);q.setDouble(5,x);q.setDouble(6,y);
+          q.setString(7,encodeProgress(initial.progress()));q.setLong(8,initial.gold());
+          try(var rows=q.executeQuery()) { if(!rows.next()) throw new SQLException("Creation insert failed");created=read(rows); }
+        }
+        try(var q=c.prepareStatement("""
+            INSERT INTO online_character_creations(account_id,request_id,payload_hash,character_id)
+            VALUES (?,?,?,?)
+            """)) {
+          q.setQueryTimeout(2);q.setObject(1,account);q.setObject(2,request.requestId());
+          q.setString(3,payload);q.setObject(4,created.id());q.executeUpdate();
+        }
+        c.commit();return new RosterEntry(created,false);
+      } catch(SQLException|RuntimeException failure) { c.rollback();throw failure; }
+    }
+  }
+
+  private static String hashCreationPayload(OnlineCharacterCreation.Request request) {
+    String canonical=request.name()+"\u0000"+request.characterClass()+"\u0000"
+        +request.gender()+"\u0000"+request.evil();
+    try {
+      return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256")
+          .digest(canonical.getBytes(StandardCharsets.UTF_8)));
+    } catch(java.security.NoSuchAlgorithmException impossible) { throw new AssertionError(impossible); }
   }
 
   /** Operator-only rotation also fences all existing sessions before returning the new key. */
