@@ -11,6 +11,10 @@ commit links, and finer-grained notes.
 ### Added
 - The online game now has the rules for monster drops: what a kill can drop, who may pick it up and how soon, how far away pickup works and when a full inventory refuses an item. Dropped items on the ground in the online game are not yet playable; this is the groundwork.
 - A proposed plan for the first two-player adventure and for online loot is written down for the owner to review. Nothing in it is decided yet.
+## 2026-10-27 — Peer-agent coordination (T4C-0203)
+
+### Changed
+- Codex and Claude now share a work register, claim separate tasks and files, and arrange handoffs before overlapping work. Shared builds, servers, databases and Git operations have explicit owners.
 
 ## 2026-10-27 — Agent model routing (T4C-0200)
 

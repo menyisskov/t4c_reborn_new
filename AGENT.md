@@ -7,6 +7,8 @@ model routing (section 6), multiplayer milestone tracking (section 7), PR review
 for implementation, RCA, and architecture/planning respectively; do not duplicate or
 override that table here. This file remains the general engineering charter, and
 [CLAUDE.md](CLAUDE.md) defines repository delivery/bookkeeping procedures.
+Before concurrent work, follow AGENTS.md section 8 and the canonical
+[peer work register](multiplayer/PEER_WORK.md); claim tasks/files/resources and respect the named Git integrator.
 
 ## 🎯 Purpose
 

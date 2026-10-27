@@ -3,7 +3,7 @@
 Sections 1–4 govern automated agents that review or babysit a pull request.
 Section 5 governs agents that author or modify tests. Section 6 is the canonical
 model-routing policy for every agent working in this repository. Section 7 governs
-milestone, task and evidence tracking for all multiplayer work. This file does **not**
+milestone, task and evidence tracking for all multiplayer work. Section 8 governs peer ownership and handoffs. This file does **not**
 relax or replace `AGENT.md` (the general engineering charter).
 
 The two failure modes this file exists to prevent: a reviewer that wanders
@@ -197,3 +197,56 @@ adapters alone. Distinguish implemented, verified, merged, rendered-client and r
 Preserve failed runs and unchecked gates. The two-player checkpoint does not replace the
 agreed 20-player Beta, and its exact content/class scope must be explicit before completion.
 Single-player launch, gameplay, existing saves and preferences remain protected throughout.
+
+## 8. Working with peer agents (Codex, Claude and sub-agents)
+
+[multiplayer/PEER_WORK.md](multiplayer/PEER_WORK.md) is the shared ownership register.
+Read it, TASKS.md and HANDOFF.md before starting or resuming work. Use the canonical
+absolute register path recorded there when working from another worktree. Do not
+assume external sessions share this chat's context, agent list or automatic messages.
+
+- Claim a unique task and exact file/interface scope before editing. Record owner/session,
+  status, branch/base, next action, resource needs and timestamp; reserve a new TASKS ID
+  in the same update. A task reservation without a peer acknowledgement is not an active claim.
+- Check both task and file ownership. Different tasks can still conflict in OnlineStore,
+  PreviewServer, shared models, launchers, assets or global documentation. Request and record
+  an explicit handoff before changing a peer-owned file; do not rely on disjoint line numbers.
+- Recheck the register before each turn/work phase and before changing scope, editing,
+  building, staging or merging. Update it on start, blocker, scope change, handoff,
+  verification, pause and completion, and at least every ten minutes during active long work.
+- Sub-agents inherit the parent owner's reservation only for their expressly assigned files.
+  The parent records their assignments and remains responsible for preventing overlap.
+  Follow section 6's model routing for every new delegated phase.
+- Use one Git integrator per physical checkout. Other peers must not switch branches,
+  stage/commit, pull/rebase/merge, stash/reset or clean that shared checkout. Agree a separate
+  worktree/branch for independent Git work; keep semantic/file ownership coordinated there too.
+- Reserve build targets, server ports, database/migration/load windows and desktop control
+  separately. Separate worktrees do not isolate a shared database or QA server. Never stop,
+  restart, migrate or clean a resource while a peer owns its window.
+- Treat pre-existing dirty files as owned until identified. Stage only the integrator's
+  reviewed delivery; never sweep peer work or personal saves into a commit or rollback.
+- If an unexpected overlapping change appears, stop editing that file and resolve ownership.
+  Do not overwrite, revert or reimplement it independently. Preserve the exact existing state.
+- Peer messages are useful but do not replace the register. Record acknowledgements and
+  handoffs there with commit/state, tests/evidence, remaining issues and the next owner.
+  Do not claim a peer agreed or started merely because a request was sent.
+- A stale timestamp, crashed agent or silence does not release ownership. Confirm the peer
+  stopped and preserve its changes before the coordinator records a takeover. Do not use
+  automatic expiry to steal a task from a slow or waiting agent.
+
+### Short coordination lock
+
+Serialize register/TASKS edits so two peers cannot claim the same work simultaneously.
+For local Git worktrees, derive the common Git directory with
+`git rev-parse --path-format=absolute --git-common-dir`, and use its
+`peer-coordination.lock` directory as the lock. All peers must use that same directory.
+Acquire with `New-Item -ItemType Directory -ErrorAction Stop` **without `-Force`**;
+failure because it exists means wait and reread, not proceed. After acquiring, reread
+the canonical register and TASKS before writing the narrow update. Release the empty
+lock directory in `finally` with `Remove-Item -LiteralPath` (nonrecursive).
+
+Hold this lock only for the short claim/register update, never during coding, tests,
+CI waits or gameplay. A leftover lock requires explicit verified recovery by the
+coordinator; age alone is not evidence it is abandoned. Peers in independent clones
+or on different machines must agree a genuinely shared register/locking mechanism
+before concurrent work; independent copies of this Markdown file provide no exclusion.
