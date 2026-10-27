@@ -4,12 +4,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.perso.T4C.helper.CharacterClass;
 import com.perso.T4C.online.model.CharacterProgress;
+import com.perso.T4C.online.model.LootDropDraft;
+import com.perso.T4C.online.model.MonsterContent;
 import com.perso.T4C.server.persistence.OnlineStore;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
@@ -222,6 +225,162 @@ class PersistentSessionsTest {
       assertFalse(retry.get().applied());
       assertEquals(recovered,sessions.character(rejoined));
     } finally { sessions.shutdown(); }
+  }
+
+  @Test void dropsPublishOnlyAfterTheirCommitAndAClaimTheCacheMissesIsRefusedWithoutDisconnecting() throws Exception {
+    var store=OnlineStore.fromEnvironment(); store.migrate(); var key=store.provisionAccount();
+    var map=new PreviewMap(new boolean[8][8],0,0,3,3);
+    try(var hosted=hostedFor(store,map)) {
+      var sessions=hosted.sessions; var region=hosted.regions.getFirst();
+      var prepared=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(5));
+      var killer=store.create(key.accountId(),"Loot killer",0,3.5,3.5,prepared.progress(),0);
+      var looter=store.create(key.accountId(),"Loot picker",0,3.5,3.5,prepared.progress(),0);
+      var thief=store.create(key.accountId(),"Loot thief",0,3.5,3.5,prepared.progress(),0);
+      String killerToken=sessions.join(store.acquire(key.secret(),killer.id()),System.nanoTime()).token();
+      String looterToken=sessions.join(store.acquire(key.secret(),looter.id()),System.nanoTime()).token();
+      var life=store.loadOrCreateSpawn("loot-kill:"+UUID.randomUUID());
+      var strike=new OnlineStore.CreatureStrike(life.key(),life.eventId(),10,10,0);
+      var first=new LootDropDraft(UUID.randomUUID(),0,"item.leather_gloves",1,0,0,3.5,3.5);
+      var second=new LootDropDraft(UUID.randomUUID(),1,"item.leather_gloves",1,0,0,3.5,3.5);
+      var kill=sessions.commitCreatureStrike(killerToken,killer.revision(),life.eventId(),0,0,prepared.progress(),
+          strike,null,List.of(first,second)).toCompletableFuture();
+      assertFalse(sessions.groundLootPublished(killerToken,first.id()),"A drop is not published before its kill commits");
+      await(sessions,kill);
+      assertTrue(kill.get().applied());
+      assertTrue(sessions.groundLootPublished(killerToken,first.id()));
+      assertTrue(sessions.groundLootPublished(killerToken,second.id()));
+      closeOwnerWindow(first.id(),second.id()); // The 60-second owner window is closed in the database for this test.
+
+      // A claim that happens outside this cache is refused by the database, and the actor stays connected.
+      var thiefSession=store.acquire(key.secret(),thief.id());
+      store.claimGroundLoot(thiefSession,0,UUID.randomUUID(),second.id(),0,3.5,3.5,ItemCatalog.loadBundled());
+      store.release(thiefSession);
+      var refused=sessions.pickup(looterToken,sessions.character(looterToken).revision(),
+          sessions.character(looterToken).locationEpoch(),second.id()).toCompletableFuture();
+      assertTrue(sessions.groundLootPublished(looterToken,second.id()),"The stale cache entry is still there until the database answers");
+      await(sessions,refused);
+      var failure=assertThrows(ExecutionException.class,refused::get);
+      assertEquals("loot_unavailable",((PreviewWorld.Rejected)failure.getCause()).getMessage());
+      assertNotNull(region.world.position(looterToken),"A definite refusal never disconnects the actor");
+      assertFalse(sessions.groundLootPublished(looterToken,second.id()),"A refusal that proves the cache stale removes the drop");
+
+      var claimed=sessions.pickup(looterToken,sessions.character(looterToken).revision(),
+          sessions.character(looterToken).locationEpoch(),first.id()).toCompletableFuture();
+      assertTrue(sessions.groundLootPublished(looterToken,first.id()),"A claim leaves the cache only after its commit");
+      await(sessions,claimed);
+      assertTrue(claimed.get().applied());
+      assertFalse(sessions.groundLootPublished(looterToken,first.id()));
+      assertTrue(claimed.get().character().progress().inventory().stream().anyMatch(item -> item.id().equals(first.id())));
+      assertTrue(store.load(key.accountId(),looter.id()).progress().inventory().stream().anyMatch(item -> item.id().equals(first.id())));
+    }
+  }
+
+  @Test void ambiguousPickupDisconnectsAndReloadsTheRegionWithoutReplay() throws Exception {
+    var loseAck=new AtomicBoolean();
+    var store=new OnlineStore(() -> {
+      var actual=connection();
+      return (Connection)Proxy.newProxyInstance(Connection.class.getClassLoader(),new Class<?>[]{Connection.class},
+          (proxy,method,args) -> {
+            try {
+              Object value=method.invoke(actual,args);
+              if (method.getName().equals("commit") && loseAck.compareAndSet(true,false))
+                throw new SQLException("Injected lost commit acknowledgement");
+              return value;
+            } catch (InvocationTargetException e) { throw e.getCause(); }
+          });
+    });
+    store.migrate(); var key=store.provisionAccount();
+    var map=new PreviewMap(new boolean[8][8],0,0,3,3);
+    try(var hosted=hostedFor(store,map)) {
+      var sessions=hosted.sessions; var region=hosted.regions.getFirst();
+      var prepared=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(6));
+      var killer=store.create(key.accountId(),"Ambiguous killer",0,3.5,3.5,prepared.progress(),0);
+      var looter=store.create(key.accountId(),"Ambiguous picker",0,3.5,3.5,prepared.progress(),0);
+      String killerToken=sessions.join(store.acquire(key.secret(),killer.id()),System.nanoTime()).token();
+      var life=store.loadOrCreateSpawn("ambiguous-kill:"+UUID.randomUUID());
+      var drop=new LootDropDraft(UUID.randomUUID(),0,"item.leather_gloves",1,0,0,3.5,3.5);
+      var kill=sessions.commitCreatureStrike(killerToken,killer.revision(),life.eventId(),0,0,prepared.progress(),
+          new OnlineStore.CreatureStrike(life.key(),life.eventId(),10,10,0),null,List.of(drop)).toCompletableFuture();
+      await(sessions,kill);
+      kill.get();
+      closeOwnerWindow(drop.id());
+      String looterToken=sessions.join(store.acquire(key.secret(),looter.id()),System.nanoTime()).token();
+
+      loseAck.set(true);
+      var pick=sessions.pickup(looterToken,looter.revision(),0,drop.id()).toCompletableFuture();
+      await(sessions,pick);
+      assertThrows(ExecutionException.class,pick::get);
+      assertNull(region.world.position(looterToken),"An uncertain pickup disconnects the actor");
+      assertThrows(PreviewWorld.Rejected.class,() -> sessions.character(looterToken));
+
+      // The database holds exactly one committed claim; the disconnected actor did not replay it.
+      var committed=store.load(key.accountId(),looter.id());
+      assertEquals(1,committed.progress().inventory().stream().filter(item -> item.id().equals(drop.id())).count());
+      long deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(8);
+      while((region.loot.reading() || region.loot.needsRead()) && System.nanoTime()<deadline) { sessions.step(); Thread.sleep(5); }
+      assertFalse(region.loot.contains(drop.id()),"The region reloads from the database, so the claimed drop is gone");
+
+      // Rejoining shows the one committed claim; a retry is refused by the database, never applied twice.
+      expireLease(looter.id()); // Only the failed writer's lease is advanced; real lease timing is covered separately.
+      String rejoined=sessions.join(store.acquire(key.secret(),looter.id()),System.nanoTime()).token();
+      assertEquals(1,store.load(key.accountId(),looter.id()).progress().inventory().stream()
+          .filter(item -> item.id().equals(drop.id())).count());
+      assertThrows(PreviewWorld.Rejected.class,() -> sessions.pickup(rejoined,sessions.character(rejoined).revision(),0,drop.id()));
+    }
+  }
+
+  @Test void restartLoadsLiveLootBeforeAdmissionAndClaimsItOnce() throws Exception {
+    var store=OnlineStore.fromEnvironment(); store.migrate(); var key=store.provisionAccount();
+    var map=new PreviewMap(new boolean[8][8],0,0,3,3);
+    var drop=new LootDropDraft(UUID.randomUUID(),0,"item.leather_gloves",1,0,0,3.5,3.5);
+    var prepared=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(7));
+    var killer=store.create(key.accountId(),"Restart killer",0,3.5,3.5,prepared.progress(),0);
+    var looter=store.create(key.accountId(),"Restart picker",0,3.5,3.5,prepared.progress(),0);
+    try(var before=hostedFor(store,map)) {
+      String killerToken=before.sessions.join(store.acquire(key.secret(),killer.id()),System.nanoTime()).token();
+      var life=store.loadOrCreateSpawn("restart-kill:"+UUID.randomUUID());
+      var kill=before.sessions.commitCreatureStrike(killerToken,killer.revision(),life.eventId(),0,0,prepared.progress(),
+          new OnlineStore.CreatureStrike(life.key(),life.eventId(),10,10,0),null,List.of(drop)).toCompletableFuture();
+      await(before.sessions,kill);
+      kill.get();
+    }
+    try(var restarted=hostedFor(store,map)) {
+      // The region cache is filled in the constructor, before any session can be admitted.
+      assertTrue(restarted.regions.getFirst().loot.loaded());
+      assertTrue(restarted.regions.getFirst().loot.contains(drop.id()),"Committed live loot survives a restart");
+      closeOwnerWindow(drop.id());
+      String token=restarted.sessions.join(store.acquire(key.secret(),looter.id()),System.nanoTime()).token();
+      var pick=restarted.sessions.pickup(token,looter.revision(),0,drop.id()).toCompletableFuture();
+      await(restarted.sessions,pick);
+      assertTrue(pick.get().applied());
+    }
+    try(var again=hostedFor(store,map)) {
+      assertFalse(again.regions.getFirst().loot.contains(drop.id()),"A claimed drop never returns after restart");
+      assertEquals(1,store.load(key.accountId(),looter.id()).progress().inventory().stream()
+          .filter(item -> item.id().equals(drop.id())).count());
+    }
+  }
+
+  /** The 60-second owner window is production policy; these tests close it directly in the database. */
+  private static void closeOwnerWindow(UUID... loot) throws SQLException {
+    try (var c=connection(); var s=c.prepareStatement(
+        "UPDATE online_ground_loot SET owner_until=clock_timestamp()-interval '1 second' WHERE id=?")) {
+      for (var id:loot) { s.setObject(1,id); s.executeUpdate(); }
+    }
+  }
+
+  private static void expireLease(UUID character) throws SQLException {
+    try (var c=connection(); var s=c.prepareStatement(
+        "UPDATE online_characters SET session_until=clock_timestamp()-interval '1 second' WHERE id=?")) {
+      s.setObject(1,character); s.executeUpdate();
+    }
+  }
+
+  private static HostedWorlds hostedFor(OnlineStore store,PreviewMap map) throws Exception {
+    var source=MonsterCatalog.loadBundled().monsters();
+    var guard=source.get("Olin Haad Guard 3");
+    return new HostedWorlds(HostedRegionPlan.single(map),store,ItemCatalog.loadBundled(),
+        new MonsterContent(MonsterContent.VERSION,Map.of(guard.getName(),guard),List.of()));
   }
 
   private static void await(PersistentSessions sessions,CompletableFuture<?> result) throws Exception {

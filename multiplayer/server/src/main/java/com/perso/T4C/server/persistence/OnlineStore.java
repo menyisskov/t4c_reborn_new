@@ -788,7 +788,7 @@ public final class OnlineStore implements AutoCloseable {
             c.commit(); return new RewardResult(false,state);
           } }
         }
-        if (state.revision()!=revision) throw new Conflict("Stale pickup");
+        if (state.revision()!=revision) throw new Conflict("revision");
         var progress=state.progress();
         if (progress==null) throw new Conflict(OnlinePickupRules.Refusal.LOOT_UNAVAILABLE.code());
         // Character lock precedes loot lock. Times are read in the same statement as the locked row.

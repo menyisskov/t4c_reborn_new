@@ -24,6 +24,20 @@ final class OnlineLootDrafts {
     }
   }
 
+  /**
+   * True when every authored drop resolves to a non-unique item, so the whole table can be rolled
+   * online. Checked before any damage, so a creature is never hit and then refused at its death.
+   */
+  static boolean supports(MonsterDef definition, ItemContent items) {
+    if (definition.getLoot() == null) return true;
+    for (MonsterDef.LootDrop drop : definition.getLoot()) {
+      if (drop == null || drop.getItem() == null) continue;
+      ItemContent.Definition item = items.items().get(ItemKeys.normalize(drop.getItem()));
+      if (item == null || item.unique()) return false;
+    }
+    return true;
+  }
+
   static Roll roll(MonsterDef definition, ItemContent items, Random random, int world, double x, double y) {
     LootResult result = MonsterLootTables.of(definition).roll(random);
     var drops = new ArrayList<LootDropDraft>();

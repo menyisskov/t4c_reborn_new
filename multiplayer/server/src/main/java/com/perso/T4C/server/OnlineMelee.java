@@ -3,9 +3,9 @@ package com.perso.T4C.server;
 import static com.perso.T4C.config.GameConstants.*;
 import com.perso.T4C.combat.*;
 import com.perso.T4C.monster.core.MonsterExperience;
-import com.perso.T4C.monster.loot.LootTable;
 import com.perso.T4C.online.model.CharacterProgress;
 import com.perso.T4C.online.model.ItemContent;
+import com.perso.T4C.online.model.LootDropDraft;
 import com.perso.T4C.server.persistence.OnlineStore;
 import java.util.*;
 import java.util.concurrent.CompletionStage;
@@ -46,9 +46,9 @@ final class OnlineMelee {
     var life=creatures.life(target);
     if (life.recipient()!=null) throw rejected("creature_unavailable");
     var definition=spawn.definition();
-    // Never silently omit authored script/quest/item-drop behavior from this first combat slice.
+    // Never silently omit authored script/quest behavior. Loot is accepted only for tables the online roll can grant.
     if ((definition.getSourceEvents()!=null && !definition.getSourceEvents().isEmpty())
-        || (definition.getLoot()!=null && !definition.getLoot().isEmpty())
+        || !OnlineLootDrafts.supports(definition,items)
         || com.perso.T4C.quest.CrimsonscaleLetterRules.hasUnsupportedCombatFlags(p.questFlags()) || p.companion()!=null || p.skills().getOrDefault("stun_blow",0)>0
         || !OnlineRetaliation.supported(definition))
       throw rejected("unsupported_combat");
@@ -71,12 +71,18 @@ final class OnlineMelee {
     int damage=Math.min(before,resolved.damage()),after=before-damage;
     var progression=OnlineProgression.award(saved,MonsterExperience.damageReward(definition.getXpPerHit(),damage),now,random);
     long experience=progression.experience(),gold=0;
+    List<LootDropDraft> drops=List.of();
     if (after==0) {
       var intermediate=new OnlineStore.CharacterState(saved.id(),saved.accountId(),saved.name(),saved.world(),saved.x(),saved.y(),
           saved.gold(),saved.experience()+experience,saved.revision(),progression.progress());
       progression=OnlineProgression.award(intermediate,MonsterExperience.reward(definition.getXpOnDeath()),now,random);
       experience=Math.addExact(experience,progression.experience());
-      gold=LootTable.builder().gold(definition.getGoldMin(),definition.getGoldMax()).build().roll(random).gold();
+      // One roll supplies both gold and drops, exactly as the offline kill does. Drops sit on the creature's tile.
+      try {
+        var roll=OnlineLootDrafts.roll(definition,items,random,sessions.region(token).world(),spawn.spawn().x(),spawn.spawn().y());
+        gold=roll.gold();
+        drops=roll.drops();
+      } catch (IllegalArgumentException unsupported) { throw rejected("unsupported_combat"); }
     }
     var cooldowns=new HashMap<>(progression.progress().cooldowns());
     cooldowns.put("attack",Math.addExact(now,Math.max(1,loadout.attackCooldownMillis())));
@@ -90,7 +96,7 @@ final class OnlineMelee {
       CompletionStage<OnlineStore.RewardResult> pending=damage==0
           ? sessions.commitGameplayEvent(token,revision,UUID.randomUUID(),0,0,draft,provocation)
           : sessions.commitCreatureStrike(token,revision,after==0 ? life.eventId() : UUID.randomUUID(),gold,experience,draft,
-              new OnlineStore.CreatureStrike(life.key(),life.eventId(),definition.getHealth(),before,after),provocation);
+              new OnlineStore.CreatureStrike(life.key(),life.eventId(),definition.getHealth(),before,after),provocation,drops);
       return pending.whenComplete((result,error) -> {
         // Session completions run on the simulation owner, including its shutdown drain.
         pendingTargets.remove(target);
