@@ -632,7 +632,7 @@ class PreviewServerTest {
     var stale=new java.util.HashMap<String,Long>(); stale.put(OnlineRegeneration.ANCHOR,System.currentTimeMillis()-86_400_000L);
     var hurt=ProgressEdits.withInventory(ProgressEdits.withCooldowns(ProgressEdits.withSpells(
         ProgressEdits.withVitals(base,new com.perso.T4C.online.model.CharacterProgress.Vitals(10,500,30,30)),
-        java.util.Set.of("spell.heal_light")),stale),java.util.List.of(potion));
+        java.util.Set.of("spell.heal_light")),stale),java.util.stream.Stream.concat(base.inventory().stream(),java.util.stream.Stream.of(potion)).toList());
     var broke=ProgressEdits.withSpells(ProgressEdits.withVitals(base,
         new com.perso.T4C.online.model.CharacterProgress.Vitals(10,500,0,0)),java.util.Set.of("spell.heal_light"));
     var caster=store.create(owner.accountId(),"HTTP caster",0,30.5,30.5,hurt,0);
