@@ -14,6 +14,27 @@ not automatically a completed milestone.
 
 ## Verified foundation (updated 2026-10-27)
 
+T4C-0227 adds `httpTraffic` to the existing loopback/private-token
+`GET /admin/metrics` snapshot, using fixed route/method/status labels and
+bounded lifetime buckets. The source counts bytes actually returned by
+application body reads and full response writes, selected response status,
+read/write failures and completed handler lifetime. It omits raw paths,
+identifiers, tokens and payloads; its counters are not TCP/TLS/header wire
+bandwidth, client delivery acknowledgement or isolated database latency.
+The exact six source/test/doc bytes match private
+`%TEMP%/t4c-0227-httptraffic-3ee1-6c5b/final-six-file-hashes.tsv`
+(SHA-256 `834B0FE49AB137FB16B770DFAB95AFCF7C450D185367CC54449E7CB466A12067`)
+against immutable `3ee10fcb` (protocol 5/schema 11). Isolated focused checks
+passed two traffic metrics, two admission and five enabled PreviewServer tests
+with five expected PostgreSQL skips. The full no-DB multiplayer verify passed
+44 domain and 144 server tests, with 57 expected PostgreSQL skips and zero
+failures/errors; log SHA-256
+`A9672CF2B777C17A66641F0CD63885CD5A27B51ACF245435DA8E1BABFBB9C5F5`.
+The early shared HTTP context-attribute design was rejected before the frozen
+test run; a real overlapping slow-POST regression verifies request-local
+attribution through explicit observation arguments. No live load, renderer,
+database latency, wire bandwidth or mixed two-hour M5/Beta result is claimed.
+
 T4C-0226's [native HTTP resilience probe](tools/NATIVE_HTTP_RESILIENCE_PROBE.md)
 passed with two actual `OnlineConnection` adapters on a private archive of
 immutable `f6175cc78a6738f73700cfdaf014a6f44ab3219d` (protocol 5/schema 11),

@@ -28,6 +28,14 @@ class PreviewServerTest {
     return builder.build();
   }
   private JsonObject object(HttpResponse<String> response) { return JsonParser.parseString(response.body()).getAsJsonObject(); }
+  private static JsonObject trafficRow(JsonObject metrics,String route,String method,String status) {
+    for(var value:metrics.getAsJsonObject("httpTraffic").getAsJsonArray("rows")) {
+      var row=value.getAsJsonObject();
+      if(route.equals(row.get("route").getAsString()) && method.equals(row.get("method").getAsString())
+          && status.equals(row.get("selectedStatus").getAsString())) return row;
+    }
+    return null;
+  }
 
   @Test void slowPublicAndForgedSessionBodiesDoNotStallTwoJoinedPlayers() throws Exception {
     var map=new PreviewMap(new boolean[8][8],0,0,3,3);
@@ -120,7 +128,77 @@ class PreviewServerTest {
       assertEquals(1_000_000_000L/PreviewWorld.TICK_RATE,simulation.get("stepNanos").getAsLong());
       assertTrue(simulation.get("completedTicks").getAsLong()>=0);
       assertFalse(response.body().contains(admin));
-      assertEquals(200,client.send(request(url,"/health",null,null),HttpResponse.BodyHandlers.ofString()).statusCode());
+      var health=client.send(request(url,"/health",null,null),HttpResponse.BodyHandlers.ofString());
+      assertEquals(200,health.statusCode());
+      var joined=client.send(request(url,"/join",null,""),HttpResponse.BodyHandlers.ofString());
+      String token=object(joined).get("token").getAsString();
+      String input="0 1 1 0";
+      var moved=client.send(request(url,"/input",token,input),HttpResponse.BodyHandlers.ofString());
+      assertEquals(200,moved.statusCode());
+      String marker="private-route-marker";
+      int port=URI.create(url).getPort();
+      try(var unknown=slowBody(port,url,"/"+marker,null);
+          var forged=slowBody(port,url,"/input","f".repeat(64));
+          var oversized=slowBody(port,url,"/join",null,1000)) {
+        assertTrue(responseLine(unknown).contains(" 404 "));
+        assertTrue(responseLine(forged).contains(" 401 "));
+        assertTrue(responseLine(oversized).contains(" 413 "));
+      }
+      JsonObject traffic=null;
+      long deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(5);
+      do {
+        traffic=object(client.send(request(url,"/admin/metrics",admin,null),HttpResponse.BodyHandlers.ofString()));
+        if(trafficRow(traffic,"other","POST","404")!=null
+            && trafficRow(traffic,"/input","POST","401")!=null
+            && trafficRow(traffic,"/join","POST","413")!=null) break;
+        Thread.sleep(25);
+      } while(System.nanoTime()<deadline);
+      assertNotNull(trafficRow(traffic,"other","POST","404"));
+      assertNotNull(trafficRow(traffic,"/input","POST","401"));
+      assertNotNull(trafficRow(traffic,"/join","POST","413"));
+      var inputRow=trafficRow(traffic,"/input","POST","200");
+      assertNotNull(inputRow);
+      assertEquals(input.getBytes(StandardCharsets.US_ASCII).length,inputRow.get("requestBodyBytesRead").getAsLong());
+      assertEquals(moved.body().getBytes(StandardCharsets.UTF_8).length,
+          inputRow.get("responseBodyBytesFullyWritten").getAsLong());
+      assertEquals(health.body().getBytes(StandardCharsets.UTF_8).length,
+          trafficRow(traffic,"/health","GET","200").get("responseBodyBytesFullyWritten").getAsLong());
+      for(var row:new JsonObject[] {trafficRow(traffic,"other","POST","404"),
+          trafficRow(traffic,"/input","POST","401"),trafficRow(traffic,"/join","POST","413")})
+        assertEquals(0,row.get("requestBodyBytesRead").getAsLong(),"Early refusal must precede body reads");
+      String report=traffic.toString();
+      assertFalse(report.contains(marker));
+      assertFalse(report.contains(admin));
+      assertFalse(report.contains(token));
+      // Both handlers are inside a body read at once. Their completions must keep their own
+      // route, status, and byte counts even when the HTTP context is shared.
+      try(var heldInput=slowBody(port,url,"/input",token,7);
+          var heldJoin=slowBody(port,url,"/join",null,1)) {
+        long activeDeadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(3);
+        do {
+          traffic=object(client.send(request(url,"/admin/metrics",admin,null),HttpResponse.BodyHandlers.ofString()));
+          if(traffic.getAsJsonObject("httpTraffic").get("inflight").getAsLong()>=3) break;
+          Thread.sleep(25);
+        } while(System.nanoTime()<activeDeadline);
+        assertTrue(traffic.getAsJsonObject("httpTraffic").get("inflight").getAsLong()>=3);
+        heldInput.getOutputStream().write("0 2 0 0".getBytes(StandardCharsets.US_ASCII));
+        heldInput.getOutputStream().flush();
+        heldJoin.getOutputStream().write('x');
+        heldJoin.getOutputStream().flush();
+        assertTrue(responseLine(heldInput).contains(" 200 "));
+        assertTrue(responseLine(heldJoin).contains(" 400 "));
+      }
+      long completedDeadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(3);
+      do {
+        traffic=object(client.send(request(url,"/admin/metrics",admin,null),HttpResponse.BodyHandlers.ofString()));
+        var joinedBad=trafficRow(traffic,"/join","POST","400");
+        var acceptedInput=trafficRow(traffic,"/input","POST","200");
+        if(joinedBad!=null && acceptedInput!=null && acceptedInput.get("completed").getAsLong()==2) break;
+        Thread.sleep(25);
+      } while(System.nanoTime()<completedDeadline);
+      assertEquals(1,trafficRow(traffic,"/join","POST","400").get("requestBodyBytesRead").getAsLong());
+      assertEquals(14,trafficRow(traffic,"/input","POST","200").get("requestBodyBytesRead").getAsLong());
+      assertEquals(2,trafficRow(traffic,"/input","POST","200").get("completed").getAsLong());
     }
   }
 

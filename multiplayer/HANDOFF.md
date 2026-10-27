@@ -549,6 +549,27 @@ hosted crop, protocol, schema, client renderer and single-player behavior stay
 unchanged. The staged inventories are not live actors or an M3/Beta pass.
 Dependent clan/hosted implementation still requires exact Claude handoff.
 
+## T4C-0227 private HTTP application traffic counters
+
+Six released files (`PreviewServer.java`/test, `ServerRuntimeMetrics.java`,
+new `HttpTrafficMetrics.java`/test and [LOAD_METRICS.md](LOAD_METRICS.md))
+match private `%TEMP%/t4c-0227-httptraffic-3ee1-6c5b/final-six-file-hashes.tsv`
+SHA-256 `834B0FE49AB137FB16B770DFAB95AFCF7C450D185367CC54449E7CB466A12067`.
+Immutable base `3ee10fcb` (protocol 5/schema 11) plus those six files passed
+focused traffic metrics 2/2, admission 2/2 and PreviewServer 5 enabled tests
+(five expected PG skips); full isolated no-DB multiplayer verify passed
+domain 44 and server 144 total, 57 expected PG skips, zero failures/errors,
+log SHA-256 `A9672CF2B777C17A66641F0CD63885CD5A27B51ACF245435DA8E1BABFBB9C5F5`.
+The first shared-context-attribute approach was caught and replaced before
+the frozen test run; explicit request observation arguments pass a real
+overlapping slow-POST attribution regression. Private loopback operator
+samples now include bounded fixed-label application bytes actually read,
+fully written response-body bytes, selected statuses and handler-lifetime
+buckets. These are not wire bandwidth, database latency, live load,
+rendered play or the two-hour M5/Beta gate. No DB/server/GUI/owner QA
+resource was used for the isolated checks. T4C-0225 remains Planned pending
+Claude handoff; next free ID T4C-0228.
+
 ## T4C-0226 two native sessions under hostile HTTP
 
 The two released new files are [NativeHttpResilienceProbe.java](tools/NativeHttpResilienceProbe.java)

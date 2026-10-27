@@ -12,15 +12,21 @@ public final class ServerRuntimeMetrics {
       long sampledAtNanos, long processUptimeMillis, Long processCpuTimeNanos,
       int availableProcessors, long heapUsedBytes, long heapCommittedBytes, long heapMaxBytes,
       long nonHeapUsedBytes, long nonHeapCommittedBytes, long nonHeapMaxBytes,
-      SimulationLoop.MetricsSnapshot simulation) {}
+      SimulationLoop.MetricsSnapshot simulation, HttpTrafficMetrics.Snapshot httpTraffic) {}
 
   private final SimulationLoop simulation;
+  private final HttpTrafficMetrics httpTraffic;
   private final MemoryMXBean memory = ManagementFactory.getMemoryMXBean();
   private final RuntimeMXBean runtime = ManagementFactory.getRuntimeMXBean();
   private final OperatingSystemMXBean operatingSystem = ManagementFactory.getOperatingSystemMXBean();
 
   public ServerRuntimeMetrics(SimulationLoop simulation) {
+    this(simulation, new HttpTrafficMetrics());
+  }
+
+  ServerRuntimeMetrics(SimulationLoop simulation, HttpTrafficMetrics httpTraffic) {
     this.simulation = Objects.requireNonNull(simulation);
+    this.httpTraffic = Objects.requireNonNull(httpTraffic);
   }
 
   public Snapshot snapshot() {
@@ -33,6 +39,7 @@ public final class ServerRuntimeMetrics {
     }
     return new Snapshot(System.nanoTime(), runtime.getUptime(), cpu,
         operatingSystem.getAvailableProcessors(), heap.getUsed(), heap.getCommitted(), heap.getMax(),
-        nonHeap.getUsed(), nonHeap.getCommitted(), nonHeap.getMax(), simulation.metrics());
+        nonHeap.getUsed(), nonHeap.getCommitted(), nonHeap.getMax(), simulation.metrics(),
+        httpTraffic.snapshot());
   }
 }

@@ -92,10 +92,49 @@ not calculate an exact interval from it.
 
 ## Integration and remaining acceptance evidence
 
+### Bounded HTTP application traffic (T4C-0227)
+
+`GET /admin/metrics` also returns `httpTraffic` from the same private, loopback-only
+operator route. Sampling is read-only and creates no polling thread or reset. Each
+request that reaches `PreviewServer.handle` increments `inflight`, then contributes
+one completed observation after its exchange closes and its admission permit is
+released. Requests rejected by the HTTP executor before handler dispatch are outside
+this measurement. The metrics request being sampled is still inflight in its own
+snapshot and appears among completed requests in a later sample.
+
+`requestBodyBytesRead` counts bytes successfully returned by the application's
+bounded body reads, including bytes read before an I/O exception. It excludes
+headers and any JDK request-body drain after the handler. `responseBodyBytesFullyWritten`
+adds a response body's byte length only when its entire application output-stream
+write returns successfully. A partial or failed write increases `responseFailures`
+but contributes no guessed partial byte count. These byte counters describe completed
+handlers and are lower bounds on application work; they are **not** TCP, TLS, header,
+wire bandwidth, client receipt, or delivery acknowledgements. `readFailures` counts
+body-read I/O exceptions. `headersSent` counts successful returns from
+`sendResponseHeaders`, not proof of client receipt. `selectedStatus` is the last
+status the application selected for a response attempt; a failed send or a later
+error-response attempt can make it differ from the status a client saw.
+
+`handlerLifetimeBuckets` count time from handler dispatch through the exchange
+close and permit release, using monotonic time. Upper bounds are 1, 5, 20, 100,
+500, 2,000 and 10,000 milliseconds; the final bucket is over 10,000 ms. This
+includes body waits, world/database work and close-time draining, but excludes
+socket acceptance, executor admission wait, client command preparation and network
+delivery after the application write. `completed` and the histogram count each
+finished handler once. Snapshots are synchronized observations of these counters;
+the JVM and simulation fields are sampled separately.
+
+Rows use only fixed known route, GET/POST/OTHER method, and selected status labels;
+unknown routes and codes collapse to `other`. No raw path, query, IP address,
+account, token, header or payload enters a label. Fixed-size arrays and bounded
+histograms retain no request history. These numbers support local interval deltas
+between snapshots of one server process, not a bandwidth or latency percentile
+claim across restarts.
+
 Keep all player, account, session, host, and credential identifiers out of this
 snapshot. This is operator data, not public gameplay state.
 
-Still required: network request/response byte counts and throughput, database
+Still required: measured wire bandwidth and throughput, database
 operation latency/error and pool-wait observations, process resident/native memory
 if required by the capacity budget, and sustained native-client load evidence with
 latency/deadline observations and reconnect/restart checks. A wall-clock ticks-per-
