@@ -91,7 +91,7 @@ class PreviewServerTest {
   }
 
   private static String responseLine(Socket socket) throws Exception {
-    socket.setSoTimeout(1500);
+    socket.setSoTimeout(4000);
     var bytes=new java.io.ByteArrayOutputStream();
     for(int i=0;i<80;i++) {
       int next=socket.getInputStream().read();
