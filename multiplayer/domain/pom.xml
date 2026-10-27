@@ -66,6 +66,7 @@
                         <include>com/perso/T4C/monster/core/MonsterExperience.java</include>
                         <include>com/perso/T4C/online/model/*.java</include>
                         <include>com/perso/T4C/monster/core/MonsterDef.java</include>
+                        <include>com/perso/T4C/monster/core/MonsterPursuitRules.java</include>
                         <include>com/perso/T4C/quest/QuestDef.java</include>
                         <include>com/perso/T4C/quest/QuestRules.java</include>
                         <include>com/perso/T4C/spell/SpellKeys.java</include>
@@ -73,6 +74,7 @@
                         <include>com/perso/T4C/spell/SpellHealRules.java</include>
                     </includes>
                     <testIncludes>
+                        <testInclude>com/perso/T4C/monster/core/MonsterPursuitRulesTest.java</testInclude>
                         <testInclude>com/perso/T4C/quest/QuestRulesTest.java</testInclude>
                         <testInclude>com/perso/T4C/spell/SpellKeysTest.java</testInclude>
                         <testInclude>com/perso/T4C/spell/SpellCastRulesTest.java</testInclude>

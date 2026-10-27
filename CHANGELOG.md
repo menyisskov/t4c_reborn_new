@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Shared monster pursuit decisions (T4C-0210)
+
+### Changed
+- The offline monster caller now uses a small pure rule for its existing target acquisition, leash and reach decisions, with focused parity checks. Claude acknowledged its additive inclusion in the multiplayer domain module. Online pursuit remains unimplemented.
+
 ## 2026-10-27 — Isolated PostgreSQL recovery probe (T4C-0208)
 
 ### Added

@@ -325,6 +325,23 @@ handoffs for `OnlineStore`, `PersistentCreatures`, `PreviewWorld`, `HostedWorlds
 after Claude's T4C-0204 loot and T4C-0206 quest hooks are ready. Do not start that core
 phase from this design alone.
 
+## T4C-0210 shared pursuit-rule checkpoint
+
+The offline `BaseMonster` now calls pure `MonsterPursuitRules` for existing acquisition,
+leash and reach decisions. The exact three-file delivery includes a focused new rules test;
+a fresh isolated source snapshot passed 16 focused offline tests with zero failures/errors/skips
+and targeted Spotless on those three files. The global formatting check has pre-existing
+unrelated failures and was not used as the gate. See the retained private logs under
+`%TEMP%/t4c-0210-final-source-b3a4fe4d2ece429e8306f6631d84b0f5/`.
+
+This is offline behavior-preserving groundwork only. Claude explicitly acknowledged the
+additive `multiplayer/domain/pom.xml` rule/test includes; this delivery adds only those two
+entries and must retain Claude's other POM entries during integration. A create-only isolated snapshot of main0fb90aeb plus the four scoped files passed focused domain `MonsterPursuitRulesTest` 2/2; log `%TEMP%/t4c-0210-domain-ack-test.log`. No online creature pursuit
+is running. T4C-0211 separately reserves snapshot-driven native facing/walk rendering in
+`OnlineClient` plus a new motion helper/test; it does not claim server movement. Future P2
+server motion still needs coordinated latest-commit file handoffs after Claude's loot,
+quest and protocol hooks. The live source-`8da43482`/schema-9 QA clients are untouched.
+
 ## T4C-0208 isolated PostgreSQL recovery checkpoint
 
 The four new tools in `tools/NATIVE_DATABASE_RECOVERY.md` create an owned PostgreSQL 16
