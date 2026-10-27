@@ -10,9 +10,10 @@ It is not rendered-client evidence and does not complete M2.
 
 1. Starts its own server on a caller-selected loopback port and waits for `local-persistent` health.
 2. Provisions three characters on world 0 at a start tile that the probe derives itself (see
-   "Start position" below): a killer, a racer/observer and a weighted character. Each gets a warrior kit. The weighted
-   character's inventory holds one stack of 1,000,000 of the first positive-weight authored item,
-   so its carried weight exceeds any strength-based capacity.
+   "Start position" below): a killer, a racer/observer and a weighted character. Each gets the full
+   warrior starter kit and keeps it equipped, so all three can fight and their equipment strength
+   bonuses apply. The weighted character gets one extra inventory stack, the over-weight fixture
+   (see "Over-weight fixture" below), appended to the kit and never replacing it.
 3. Checks that the protocol is 5 and that the adapters joined.
 4. Kills Skeletons with the killer's `attack` until at least three loot drops appear. The observer's
    snapshot must show every drop.
@@ -34,6 +35,35 @@ It contains stages, counts, refusal keys, loot item IDs, item keys, states and h
 It contains no account or character IDs, secrets, tokens, database credentials or paths
 outside the output directory. Failure exits with status 1 and records the stage and exception
 class. Child server logs and the private `control-1.token` file stay in the output directory.
+
+## Over-weight fixture
+
+An earlier version replaced the weighted character's whole inventory with a 1,000,000-unit stack.
+Equipped gear is an inventory instance in saved progress, so that unequipped the starter kit
+(no worn weapon or armor, no equipment strength bonus). The probe now calls
+`OnlineOverweightFixture` (server module, unit-tested by `OnlineOverweightFixtureTest`):
+
+- The fixture item is the heaviest authored item that is droppable, not unique and has positive
+  weight (ties broken by key), so the stack stays small. It is a real item from the bundled content.
+- The quantity is the smallest stack that leaves carried weight strictly above the carry maximum:
+  `maximum = CarryCapacityRules.maximumWeight(effective strength)` where effective strength is
+  base strength plus equipment bonuses, and carried weight is every inventory instance times its
+  quantity, exactly as `OnlinePickupRules` computes them. Nothing is retyped. Strictly above the
+  maximum means any later pickup, even a zero-weight item, is refused as `too_heavy`.
+- The stack is appended to the unchanged starter inventory. The equipment slots still point at
+  the same instances. It goes in through the same character-provisioning path as every other probe
+  character (`OnlineStore.create`); no server guard is weakened.
+- `report.json` records `overweightFixtureItemKey`, `overweightFixtureQuantity`, `carryMaximum`,
+  `carriedBeforeFixture` and `carriedWithFixture`. The probe fails before starting anything
+  if the fixture does not exceed the maximum.
+
+Expected result lines in `report.json` for this assertion: stage "over-weight refusal leaves the
+loot", `overweightRefusal` equal to `too_heavy`, and in the database check the over-weight drop
+`ON_GROUND`, held by no character, with no claim receipt.
+
+The pure sizing was checked offline for every starter class. Finding: some other classes'
+starter kits (for example the Archer's arrows) already weigh more than their own carry maximum;
+the probe uses warriors, whose kit fits.
 
 ## Start position (hosted starter region)
 
@@ -155,6 +185,8 @@ The probe's compile check was done against these three artifacts; the probe itse
 
 ## Recorded run
 
-None yet. This document is written before a recorded run. Record the run here with the
+None yet. The probe is still unrun: it needs a fresh `t4c_loot_*` database and a dedicated port,
+which were not available when the over-weight fixture (T4C-0245) was implemented. Only the fixture
+sizing unit test and the compile check were done. This document is written before a recorded run. Record the run here with the
 probe SHA-256, the server and client JAR hashes, the protocol and the report path only after an
 actual exit-0 run.
