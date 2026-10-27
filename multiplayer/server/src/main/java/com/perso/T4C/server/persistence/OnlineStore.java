@@ -40,11 +40,37 @@ public final class OnlineStore implements AutoCloseable {
   }
   public record ExpiredLoot(UUID id, int world) {}
   public record SpawnState(String key, long generation, UUID eventId, UUID recipient, java.time.Instant claimedAt,
-      Integer health, UUID targetCharacter, long nextAttackAt) {}
-  public record CreatureProvocation(String key, UUID life, UUID targetCharacter, long nextAttackAt) {
+      Integer health, UUID targetCharacter, long nextAttackAt, Double currentX, Double currentY,
+      String mode, Long targetEpoch, long stateRevision) {
+    public SpawnState(String key,long generation,UUID eventId,UUID recipient,java.time.Instant claimedAt,
+        Integer health,UUID targetCharacter,long nextAttackAt) {
+      this(key,generation,eventId,recipient,claimedAt,health,targetCharacter,nextAttackAt,null,null,
+          targetCharacter==null ? "IDLE" : "RETALIATION",null,0);
+    }
+  }
+  /** One captured authoritative pose. Coordinates are absolute tiles, never client input. */
+  public record SpawnMotion(String key, UUID life, long revision, double x, double y, String mode,
+      UUID targetCharacter, Long targetEpoch) {
+    public SpawnMotion {
+      spawnKey(key); Objects.requireNonNull(life); Objects.requireNonNull(mode);
+      if (revision<0 || !Double.isFinite(x) || !Double.isFinite(y) || x<0 || y<0
+          || !java.util.Set.of("IDLE","PATROL","NATURAL","RETALIATION","RETURN").contains(mode)
+          || ((mode.equals("NATURAL") || mode.equals("RETALIATION")) != (targetCharacter!=null))
+          || (targetCharacter==null && targetEpoch!=null)
+          || (targetCharacter!=null && targetEpoch==null && !mode.equals("RETALIATION"))
+          || (targetEpoch!=null && targetEpoch<0)) throw new IllegalArgumentException("Invalid creature motion");
+    }
+  }
+  public record CreatureProvocation(String key, UUID life, UUID targetCharacter, long nextAttackAt, SpawnMotion motion) {
+    public CreatureProvocation(String key,UUID life,UUID targetCharacter,long nextAttackAt) {
+      this(key,life,targetCharacter,nextAttackAt,null);
+    }
     public CreatureProvocation { spawnKey(key); Objects.requireNonNull(life); Objects.requireNonNull(targetCharacter); if(nextAttackAt<0) throw new IllegalArgumentException("Invalid attack deadline"); }
   }
-  public record MonsterAttack(String key, UUID life, UUID targetCharacter, long expectedNext, long nextNext) {
+  public record MonsterAttack(String key, UUID life, UUID targetCharacter, long expectedNext, long nextNext, SpawnMotion motion) {
+    public MonsterAttack(String key,UUID life,UUID targetCharacter,long expectedNext,long nextNext) {
+      this(key,life,targetCharacter,expectedNext,nextNext,null);
+    }
     public MonsterAttack { spawnKey(key); Objects.requireNonNull(life); Objects.requireNonNull(targetCharacter); if(expectedNext<0 || nextNext<=expectedNext) throw new IllegalArgumentException("Invalid attack deadline"); }
   }
   public record DeathTransition(long experienceLost, CharacterProgress.Respawn destination,
@@ -59,7 +85,10 @@ public final class OnlineStore implements AutoCloseable {
     public CorpseState { items=java.util.List.copyOf(items); }
   }
   /** Trusted resolved damage, never a network payload. Null stored health means untouched authored health. */
-  public record CreatureStrike(String key, UUID life, int maximumHealth, int before, int after) {
+  public record CreatureStrike(String key, UUID life, int maximumHealth, int before, int after, SpawnMotion motion) {
+    public CreatureStrike(String key,UUID life,int maximumHealth,int before,int after) {
+      this(key,life,maximumHealth,before,after,null);
+    }
     public CreatureStrike {
       spawnKey(key); Objects.requireNonNull(life);
       if (maximumHealth<=0 || before<=0 || before>maximumHealth || after<0 || after>=before)
@@ -119,7 +148,7 @@ public final class OnlineStore implements AutoCloseable {
         int version = 0;
         try (var rows = s.executeQuery("SELECT version FROM online_schema ORDER BY version")) {
           while (rows.next()) {
-            if (rows.getInt(1) != ++version || version > 10) throw new SQLException("Unsupported online schema version");
+            if (rows.getInt(1) != ++version || version > 11) throw new SQLException("Unsupported online schema version");
           }
         }
         if (version == 0) {
@@ -240,6 +269,26 @@ public final class OnlineStore implements AutoCloseable {
               """);
           s.execute("INSERT INTO online_schema(version) VALUES (10)");
         }
+        if (version < 11) {
+          s.execute("""
+              ALTER TABLE online_spawns
+                ADD COLUMN current_x double precision,
+                ADD COLUMN current_y double precision,
+                ADD COLUMN mode varchar(16) NOT NULL DEFAULT 'IDLE',
+                ADD COLUMN target_epoch bigint,
+                ADD COLUMN state_revision bigint NOT NULL DEFAULT 0,
+                ADD CONSTRAINT online_spawn_position_pair CHECK ((current_x IS NULL) = (current_y IS NULL)),
+                ADD CONSTRAINT online_spawn_position_finite CHECK (current_x IS NULL OR
+                  (current_x >= 0 AND current_x < 'Infinity'::float8 AND current_y >= 0 AND current_y < 'Infinity'::float8)),
+                ADD CONSTRAINT online_spawn_mode CHECK (mode IN ('IDLE','PATROL','NATURAL','RETALIATION','RETURN')),
+                ADD CONSTRAINT online_spawn_target_epoch CHECK (target_epoch IS NULL OR target_epoch >= 0),
+                ADD CONSTRAINT online_spawn_revision CHECK (state_revision >= 0)
+              """);
+          // Every pre-v11 target arose from a committed player provocation. Its epoch is resolved
+          // against a live lease before the creature is allowed to attack again.
+          s.execute("UPDATE online_spawns SET mode='RETALIATION' WHERE target_character IS NOT NULL");
+          s.execute("INSERT INTO online_schema(version) VALUES (11)");
+        }
         c.commit();
       } catch (SQLException | RuntimeException error) { c.rollback(); throw error; }
     }
@@ -253,7 +302,8 @@ public final class OnlineStore implements AutoCloseable {
         s.setString(1,key); s.setObject(2,UUID.randomUUID()); s.executeUpdate();
       }
       try (var s=c.prepareStatement("""
-          SELECT s.generation,s.event_id,r.character_id,r.claimed_at,s.health,s.target_character,s.next_attack_at
+          SELECT s.generation,s.event_id,r.character_id,r.claimed_at,s.health,s.target_character,s.next_attack_at,
+                 s.current_x,s.current_y,s.mode,s.target_epoch,s.state_revision
           FROM online_spawns s LEFT JOIN online_world_rewards r ON r.event_id=s.event_id
           WHERE s.spawn_key=?
           """)) {
@@ -262,7 +312,8 @@ public final class OnlineStore implements AutoCloseable {
           if (!rows.next()) throw new Conflict("Spawn unavailable");
           var claimedAt=rows.getTimestamp(4);
           return new SpawnState(key,rows.getLong(1),rows.getObject(2,UUID.class),rows.getObject(3,UUID.class),
-              claimedAt==null ? null : claimedAt.toInstant(),rows.getObject(5,Integer.class),rows.getObject(6,UUID.class),rows.getLong(7));
+              claimedAt==null ? null : claimedAt.toInstant(),rows.getObject(5,Integer.class),rows.getObject(6,UUID.class),rows.getLong(7),
+              rows.getObject(8,Double.class),rows.getObject(9,Double.class),rows.getString(10),rows.getObject(11,Long.class),rows.getLong(12));
         }
       }
     }
@@ -273,18 +324,53 @@ public final class OnlineStore implements AutoCloseable {
     spawnKey(key); Objects.requireNonNull(expectedEvent);
     if (delayMillis<0) throw new IllegalArgumentException("Negative respawn delay");
     try (var c=connections.open(); var s=c.prepareStatement("""
-        UPDATE online_spawns s SET generation=s.generation+1,event_id=?,health=NULL,target_character=NULL,next_attack_at=0
+        UPDATE online_spawns s SET generation=s.generation+1,event_id=?,health=NULL,target_character=NULL,next_attack_at=0,
+          current_x=NULL,current_y=NULL,mode='IDLE',target_epoch=NULL,state_revision=state_revision+1
         FROM online_world_rewards r
         WHERE s.spawn_key=? AND s.event_id=? AND r.event_id=s.event_id
           AND r.claimed_at<=clock_timestamp()-(? * interval '1 millisecond')
-        RETURNING s.generation,s.event_id
+        RETURNING s.generation,s.event_id,s.state_revision
         """)) {
       s.setObject(1,UUID.randomUUID()); s.setString(2,key); s.setObject(3,expectedEvent); s.setLong(4,delayMillis);
       try (var rows=s.executeQuery()) {
         if (!rows.next()) throw new Conflict("Spawn life changed or respawn not ready");
-        return new SpawnState(key,rows.getLong(1),rows.getObject(2,UUID.class),null,null,null,null,0);
+        return new SpawnState(key,rows.getLong(1),rows.getObject(2,UUID.class),null,null,null,null,0,
+            null,null,"IDLE",null,rows.getLong(3));
       }
     }
+  }
+
+  /** Coalesced motion checkpoint. A mismatch is ambiguous to its owner and must trigger reload. */
+  public SpawnState checkpointSpawn(SpawnMotion motion, Session targetSession) throws SQLException {
+    Objects.requireNonNull(motion);
+    if (targetSession!=null && !targetSession.characterId().equals(motion.targetCharacter()))
+      throw new IllegalArgumentException("Wrong target session");
+    try (var c=connections.open()) {
+      c.setAutoCommit(false);
+      try {
+        if (targetSession!=null) {
+          var target=lockSession(c,targetSession);
+          if (motion.targetEpoch()==null || target.locationEpoch()!=motion.targetEpoch() || target.progress()==null
+              || target.progress().vitals().hp()<=0) throw new Conflict("Creature target changed");
+        }
+        try (var s=c.prepareStatement("""
+            UPDATE online_spawns SET current_x=?,current_y=?,mode=?,target_character=?,target_epoch=?,
+              state_revision=state_revision+1
+            WHERE spawn_key=? AND event_id=? AND state_revision=? AND COALESCE(health,1)>0
+              AND (? OR (target_character IS NOT DISTINCT FROM ? AND target_epoch IS NOT DISTINCT FROM ?))
+              AND NOT EXISTS (SELECT 1 FROM online_world_rewards WHERE event_id=online_spawns.event_id)
+            """)) {
+          s.setDouble(1,motion.x());s.setDouble(2,motion.y());s.setString(3,motion.mode());
+          s.setObject(4,motion.targetCharacter());s.setObject(5,motion.targetEpoch());
+          s.setString(6,motion.key());s.setObject(7,motion.life());s.setLong(8,motion.revision());
+          s.setBoolean(9,motion.targetCharacter()==null || targetSession!=null);
+          s.setObject(10,motion.targetCharacter());s.setObject(11,motion.targetEpoch());
+          if (s.executeUpdate()!=1) throw new Conflict("Creature motion changed");
+        }
+        c.commit();
+      } catch (SQLException | RuntimeException error) { c.rollback(); throw error; }
+    }
+    return loadOrCreateSpawn(motion.key());
   }
 
   private static void spawnKey(String key) {
@@ -536,6 +622,18 @@ public final class OnlineStore implements AutoCloseable {
     if (base!=null && !drops.isEmpty()) base=base+"\nloot-drops-v1\n"+JSON.toJson(canonical(JSON.toJsonTree(drops)));
     String fingerprint=base==null ? null : fingerprint(base);
     if(provocation!=null) fingerprint=fingerprint(fingerprint+"\nprovocation-v1\n"+JSON.toJson(provocation));
+    SpawnMotion motion=strike!=null && strike.motion()!=null ? strike.motion()
+        : provocation==null ? null : provocation.motion();
+    if (strike!=null && strike.motion()!=null && provocation!=null && provocation.motion()!=null
+        && !strike.motion().equals(provocation.motion())) throw new IllegalArgumentException("Different creature poses");
+    if (motion!=null && (strike!=null && (!motion.key().equals(strike.key()) || !motion.life().equals(strike.life()))
+        || provocation!=null && (!motion.key().equals(provocation.key()) || !motion.life().equals(provocation.life()))))
+      throw new IllegalArgumentException("Different creature motion life");
+    if (motion!=null && motion.targetCharacter()!=null && !motion.targetCharacter().equals(session.characterId()))
+      throw new IllegalArgumentException("Invalid creature target epoch");
+    if (motion!=null && strike!=null && strike.after()==0)
+      for (var drop:drops) if (Math.abs(drop.x()-motion.x())>1e-7 || Math.abs(drop.y()-motion.y())>1e-7)
+        throw new IllegalArgumentException("Drop is not at creature death position");
     UUID account = session.accountId(), character = session.characterId();
     try (var c = connections.open()) {
       c.setAutoCommit(false);
@@ -575,21 +673,39 @@ public final class OnlineStore implements AutoCloseable {
           }
         }
         if (revision!=null && state.revision()!=revision) throw new Conflict("Stale gameplay event");
-        if(provocation!=null) {
-          try(var s=c.prepareStatement("UPDATE online_spawns SET target_character=?,next_attack_at=CASE WHEN target_character IS NULL THEN ? ELSE next_attack_at END WHERE spawn_key=? AND event_id=? AND COALESCE(health,1)>0 AND NOT EXISTS (SELECT 1 FROM online_world_rewards WHERE event_id=online_spawns.event_id)")) {
-            s.setObject(1,provocation.targetCharacter()); s.setLong(2,provocation.nextAttackAt()); s.setString(3,provocation.key()); s.setObject(4,provocation.life());
+        if (motion!=null) {
+          if (motion.targetCharacter()!=null && (motion.targetEpoch()==null
+              || state.locationEpoch()!=motion.targetEpoch())) throw new Conflict("Creature target epoch changed");
+          try(var s=c.prepareStatement("""
+              UPDATE online_spawns SET current_x=?,current_y=?,mode=?,target_character=?,target_epoch=?,
+                next_attack_at=CASE WHEN ? AND target_character IS NULL THEN ? ELSE next_attack_at END,
+                state_revision=state_revision+1
+              WHERE spawn_key=? AND event_id=? AND state_revision=? AND COALESCE(health,1)>0
+                AND NOT EXISTS (SELECT 1 FROM online_world_rewards WHERE event_id=online_spawns.event_id)
+              """)) {
+            s.setDouble(1,motion.x());s.setDouble(2,motion.y());
+            s.setString(3,strike!=null && strike.after()==0 ? "IDLE" : motion.mode());
+            s.setObject(4,strike!=null && strike.after()==0 ? null : motion.targetCharacter());
+            s.setObject(5,strike!=null && strike.after()==0 ? null : motion.targetEpoch());
+            s.setBoolean(6,provocation!=null);s.setLong(7,provocation==null ? 0 : provocation.nextAttackAt());
+            s.setString(8,motion.key());s.setObject(9,motion.life());s.setLong(10,motion.revision());
+            if(s.executeUpdate()!=1) throw new Conflict("Creature life unavailable");
+          }
+        } else if(provocation!=null) {
+          try(var s=c.prepareStatement("UPDATE online_spawns SET target_character=?,target_epoch=?,mode='RETALIATION',state_revision=state_revision+1,next_attack_at=CASE WHEN target_character IS NULL THEN ? ELSE next_attack_at END WHERE spawn_key=? AND event_id=? AND current_x IS NULL AND COALESCE(health,1)>0 AND NOT EXISTS (SELECT 1 FROM online_world_rewards WHERE event_id=online_spawns.event_id)")) {
+            s.setObject(1,provocation.targetCharacter()); s.setLong(2,state.locationEpoch()); s.setLong(3,provocation.nextAttackAt()); s.setString(4,provocation.key()); s.setObject(5,provocation.life());
             if(s.executeUpdate()!=1) throw new Conflict("Creature life unavailable");
           }
         }
         if (strike!=null) {
           // Character lock precedes spawn lock. CAS prevents two attackers rewarding the same damage.
           try (var s=c.prepareStatement("""
-              UPDATE online_spawns SET health=?
-              WHERE spawn_key=? AND event_id=? AND COALESCE(health,?)=?
+              UPDATE online_spawns SET health=?,state_revision=state_revision+CASE WHEN ? THEN 0 ELSE 1 END
+              WHERE spawn_key=? AND event_id=? AND COALESCE(health,?)=? AND (? OR current_x IS NULL)
                 AND NOT EXISTS (SELECT 1 FROM online_world_rewards WHERE event_id=online_spawns.event_id)
               """)) {
-            s.setInt(1,strike.after()); s.setString(2,strike.key()); s.setObject(3,strike.life());
-            s.setInt(4,strike.maximumHealth()); s.setInt(5,strike.before());
+            s.setInt(1,strike.after());s.setBoolean(2,motion!=null);s.setString(3,strike.key()); s.setObject(4,strike.life());
+            s.setInt(5,strike.maximumHealth()); s.setInt(6,strike.before());s.setBoolean(7,motion!=null);
             if (s.executeUpdate()!=1) throw new Conflict("Creature life or health changed");
           }
         }
@@ -646,9 +762,32 @@ public final class OnlineStore implements AutoCloseable {
           } }
         }
         if(state.revision()!=revision) throw new Conflict("Stale combat event");
-        try(var q=c.prepareStatement("UPDATE online_spawns SET next_attack_at=? WHERE spawn_key=? AND event_id=? AND target_character=? AND next_attack_at=? AND next_attack_at<=floor(extract(epoch FROM clock_timestamp())*1000) AND COALESCE(health,1)>0 AND NOT EXISTS(SELECT 1 FROM online_world_rewards WHERE event_id=online_spawns.event_id)")) {
-          q.setLong(1,attack.nextNext());q.setString(2,attack.key());q.setObject(3,attack.life());q.setObject(4,attack.targetCharacter());q.setLong(5,attack.expectedNext());
-          if(q.executeUpdate()!=1) throw new Conflict("Creature attack changed or not due");
+        if(death!=null) lockTargetSpawns(c,session.characterId(),attack.key());
+        if (attack.motion()!=null) {
+          var motion=attack.motion();
+          if (!motion.key().equals(attack.key()) || !motion.life().equals(attack.life())
+              || !attack.targetCharacter().equals(motion.targetCharacter())
+              || !Objects.equals(motion.targetEpoch(),state.locationEpoch()))
+            throw new Conflict("Creature attack target epoch changed");
+          try(var q=c.prepareStatement("""
+              UPDATE online_spawns SET current_x=?,current_y=?,mode=?,target_epoch=?,next_attack_at=?,
+                state_revision=state_revision+1
+              WHERE spawn_key=? AND event_id=? AND state_revision=? AND target_character=?
+                AND next_attack_at=? AND next_attack_at<=floor(extract(epoch FROM clock_timestamp())*1000)
+                AND COALESCE(health,1)>0 AND NOT EXISTS(SELECT 1 FROM online_world_rewards WHERE event_id=online_spawns.event_id)
+              """)) {
+            q.setDouble(1,motion.x());q.setDouble(2,motion.y());q.setString(3,motion.mode());
+            q.setLong(4,motion.targetEpoch());q.setLong(5,attack.nextNext());
+            q.setString(6,attack.key());q.setObject(7,attack.life());q.setLong(8,motion.revision());
+            q.setObject(9,attack.targetCharacter());q.setLong(10,attack.expectedNext());
+            if(q.executeUpdate()!=1) throw new Conflict("Creature attack changed or not due");
+          }
+        } else {
+          try(var q=c.prepareStatement("UPDATE online_spawns SET next_attack_at=?,state_revision=state_revision+1 WHERE spawn_key=? AND event_id=? AND current_x IS NULL AND target_character=? AND next_attack_at=? AND next_attack_at<=floor(extract(epoch FROM clock_timestamp())*1000) AND COALESCE(health,1)>0 AND NOT EXISTS(SELECT 1 FROM online_world_rewards WHERE event_id=online_spawns.event_id)")) {
+            q.setLong(1,attack.nextNext());q.setString(2,attack.key());q.setObject(3,attack.life());
+            q.setObject(4,attack.targetCharacter());q.setLong(5,attack.expectedNext());
+            if(q.executeUpdate()!=1) throw new Conflict("Creature attack changed or not due");
+          }
         }
         long goldLost=death==null ? 0 : death.goldLost(),xpLost=death==null ? 0 : death.experienceLost();
         if(goldLost>state.gold() || xpLost>state.experience()) throw new Conflict("Invalid death balances");
@@ -666,7 +805,7 @@ public final class OnlineStore implements AutoCloseable {
               q.setObject(1,event);q.setObject(2,session.characterId());q.setInt(3,death.corpsePosition().world());q.setDouble(4,death.corpsePosition().x());q.setDouble(5,death.corpsePosition().y());q.setString(6,JSON.toJson(death.droppedItems()));q.setLong(7,death.goldDropped());q.executeUpdate();
             }
           }
-          try(var q=c.prepareStatement("UPDATE online_spawns SET target_character=NULL WHERE target_character=?")) { q.setObject(1,session.characterId());q.executeUpdate(); }
+          try(var q=c.prepareStatement("UPDATE online_spawns SET target_character=NULL,target_epoch=NULL,mode='RETURN',next_attack_at=0,state_revision=state_revision+1 WHERE target_character=?")) { q.setObject(1,session.characterId());q.executeUpdate(); }
         }
         state=load(c,session.accountId(),session.characterId(),false);c.commit();return new RewardResult(true,state);
       } catch(SQLException|RuntimeException failure) { c.rollback();throw failure; }
@@ -701,7 +840,8 @@ public final class OnlineStore implements AutoCloseable {
         try(var q=c.prepareStatement("UPDATE online_characters SET world=?,x=?,y=?,location_epoch=location_epoch+1,portal_cooldown_until=?,revision=revision+1,updated_at=now() WHERE id=?")) {
           q.setInt(1,destination.world());q.setDouble(2,destination.x());q.setDouble(3,destination.y());q.setLong(4,transfer.cooldownUntil());q.setObject(5,state.id());q.executeUpdate();
         }
-        try(var q=c.prepareStatement("UPDATE online_spawns SET target_character=NULL WHERE target_character=?")) { q.setObject(1,state.id());q.executeUpdate(); }
+        lockTargetSpawns(c,state.id(),null);
+        try(var q=c.prepareStatement("UPDATE online_spawns SET target_character=NULL,target_epoch=NULL,mode='RETURN',next_attack_at=0,state_revision=state_revision+1 WHERE target_character=?")) { q.setObject(1,state.id());q.executeUpdate(); }
         state=load(c,session.accountId(),session.characterId(),false);c.commit();return new RewardResult(true,state);
       } catch(SQLException|RuntimeException failure) { c.rollback();throw failure; }
     }
@@ -710,6 +850,14 @@ public final class OnlineStore implements AutoCloseable {
   private static CharacterState lockSession(Connection c,Session session) throws SQLException {
     try(var q=c.prepareStatement("SELECT * FROM online_characters WHERE id=? AND account_id=? AND session_id=? AND session_until>clock_timestamp() FOR UPDATE")) {
       bindSession(q,session,1);try(var rows=q.executeQuery()) { if(!rows.next()) throw new Conflict("Session expired or replaced");return read(rows); }
+    }
+  }
+
+  /** Character row is already locked; acquire all affected spawn rows in stable key order. */
+  private static void lockTargetSpawns(Connection c,UUID character,String extraKey) throws SQLException {
+    try(var q=c.prepareStatement("SELECT spawn_key FROM online_spawns WHERE target_character=? OR spawn_key=? ORDER BY spawn_key FOR UPDATE")) {
+      q.setObject(1,character);q.setString(2,extraKey);
+      try(var rows=q.executeQuery()) { while(rows.next()) rows.getString(1); }
     }
   }
 

@@ -11,6 +11,16 @@ Last reviewed: 2026-10-27, Asia/Jerusalem. This file is the restart point for a 
 
 The owner is PM/QA and has authorized autonomous implementation, focused tests, PRs, CI, self-review and merges. Use parallel sub-agents for independent tasks with explicit file ownership. Continue assigning the next crucial release item; optional polish does not outrank required gameplay. Never claim Beta complete from service unit tests alone.
 
+**Current owner decision (2026-10-27, T4C-0220):** Beta and GA concurrency acceptance is now two **real rendered clients**, including the final two-hour mixed gameplay/stability run on the integrated release. This supersedes older 20-client gate wording below; do not rewrite historical 20-adapter measurements or their failures. The existing server capacity remains 20. All other intended launch content/gameplay, anti-cheat, security, recovery, operations, distribution and owner QA gates remain open until verified. The starter checkpoint alone does not complete Beta; 20-player qualification is follow-up scale evidence.
+
+## T4C-0212 moving pursuit integration checkpoint
+
+The reviewed schema-11 candidate activates server-authoritative patrol, natural and hit-provoked pursuit, bounded collision-aware pathing, safe-area/leash return and guarded moving-creature persistence. It preserves the existing protocol-5 snapshot path for native creature motion. Immutable committed base `3ac9c0aadc7463043436f67ef9e5623364962ed1` plus 16 exact owned files matches `%TEMP%/t4c-0212-integrated-check-df7eb51c02004a039fe3413c041438c2/candidate-hashes.tsv` (SHA-256 `251D90B63649936738F4E84872E5760A1A30D21BA508051FA9007658EA9EA2C5`); clean isolated PostgreSQL multiplayer suite passed 182/182. The frozen server JAR hash is `4DB9A06E71F3B82080B07B78E7934EE1B97514A03BCE667E14B4ED376BB2D737`.
+
+The final [native pursuit probe](tools/NATIVE_PURSUIT_PROBE.md) exited 0 on fresh `t4c_pursuit_0212_e827fc99a23e`, protocol 5/schema 11: accepted guard hit, HP 55→28, 28.455 px pursuit closure on stopped A over six advancing settled snapshots/530 ms, B state unchanged, durable RETALIATION checkpoint revision 5/epoch 0, exact A private rejoin after real lease release, then same guard life/HP/pose and both committed private states after owned graceful restart. Both owned server shutdowns exited 0 and 18771 was free. The copied client JAR SHA-256 is `754F14BAF1552A841C099DDABBA39479CCD71D1418642A0A66C0504896C0CB09`; runtime 16-source manifest SHA-256 is `B90609CFE404CE93C8322D3479707A2463343ED0383913461164F7CBAB039B6F`; sanitized report `%TEMP%/t4c-0212-native-runtime-1bdb4b74/output-08/report.txt` SHA-256 is `F7288489F3CE18A8EED3BFE9F7D7FEF740C631BF11843FE2E5E9B9942383FC32`. Preserve seven earlier failed fixture/probe runs and their distinct databases/reports. The separate optional 20-adapter smoke stopped after ~66 seconds on a Windows harness report `AccessDeniedException`; its 180-second/reconnect stages did not pass and its partial occupancy/performance numbers are in ACCEPTANCE. T4C-0220 makes 20-player scale a follow-up, while the two-real-rendered-client mixed run and other Beta gates remain.
+
+After delivery, return the four temporarily loaned `OnlineStore.java`, `PersistentSessions.java`, `HostedWorlds.java` and `OnlineMelee.java` to Claude with the exact merged main commit, schema-11 moving-state API and this test evidence; do not assume return from a passing candidate alone. The native PASS predates merged native UI task 0218, so current-head CI and later rendered pursuit QA remain separate. Owner QA18765 and the existing desktop windows were not replaced or driven for this probe. No full M4, M5, Beta or remote-completion claim is made.
+
 ## T4C-0219 live account-key rotation checkpoint
 
 `tools/NativeKeyRotationProbe.java` tested two actual native adapters on an isolated
@@ -126,7 +136,7 @@ Use ship-pr/steward. Self-review the actual scoped diff. Commit task/changelog/d
 
 ## Remaining release sequence
 
-Map-transfer delivery is merged and reliability regressions pass; diagnose the new SQL08001 load failure without mutating its captured runtime, then rerun after a verified fix. The opening NPC service is merged; complete its rendered interaction and native character selection/account lifecycle, quests/general ground loot, required spells/abilities/inventory controls, broader hosted world routes and encounters, full creation-to-progression playthrough, crash/reconnect/database/restore playthroughs, and attack/replay/duplication abuse checks. Repeat sustained two-hour 20-client mixed gameplay on the final integrated release with tick/DB/latency/resource measurements. HTTPS configuration exists, while external deployment and native remote QA remain open. Follow ACCEPTANCE.md rather than declaring Beta from this list alone. Deployment credentials or external hosting choices may need the owner; exhaust local work before asking.
+Map-transfer delivery is merged and reliability regressions pass; diagnose the new SQL08001 load failure without mutating its captured runtime, then rerun after a verified fix. The opening NPC service is merged; complete its rendered interaction and native character selection/account lifecycle, quests/general ground loot, required spells/abilities/inventory controls, broader hosted world routes and encounters, full creation-to-progression playthrough, crash/reconnect/database/restore playthroughs, and attack/replay/duplication abuse checks. Run sustained two-hour mixed gameplay with two real rendered clients on the final integrated release, with tick/DB/latency/resource measurements; qualify 20-player scale separately as follow-up evidence. HTTPS configuration exists, while external deployment and native remote QA remain open. Follow ACCEPTANCE.md rather than declaring Beta from this list alone. Deployment credentials or external hosting choices may need the owner; exhaust local work before asking.
 
 ## Peer coordination and latest verification
 
@@ -155,8 +165,9 @@ agent validated milestone/policy links and consistency without touching runtime 
 
 Owner-facing requirements: start with MILESTONES.md. TASKS.md tracks child deliveries; ACCEPTANCE.md
 records release evidence. None of the six two-player milestones is complete, and the two-player
-checkpoint is not an approved replacement for the agreed twenty-player Beta. Scope choices and
-unverified checks are explicit. Do not infer a release date or completion percentage from task counts.
+checkpoint alone does not complete Beta under the owner's later two-rendered-client concurrency
+decision. Scope choices and unverified checks are explicit. Do not infer a release date or
+completion percentage from task counts.
 
 Current base: main merge397d9ace (PR119, opening NPC service); all CI passed on541fd5b3. The current
 pending integration includes0196 roster service/native account adapter,0197 bounded database pool

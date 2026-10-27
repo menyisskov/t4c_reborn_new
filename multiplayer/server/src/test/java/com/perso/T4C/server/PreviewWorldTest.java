@@ -2,6 +2,9 @@ package com.perso.T4C.server;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.perso.T4C.online.model.MonsterContent;
+import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 class PreviewWorldTest {
@@ -41,6 +44,39 @@ class PreviewWorldTest {
     assertEquals(creatures, world.snapshot(two.token()).creatures());
     var replacement = new PreviewWorld(map, MonsterCatalog.loadBundled());
     assertEquals(creatures, replacement.snapshot(replacement.join().token()).creatures());
+  }
+
+  @Test void currentCreaturePositionIsSharedBySnapshotsAndPhysicalRetaliation() throws Exception {
+    boolean[][] cells = new boolean[8][8];
+    cells[3][4] = true;
+    var map = new PreviewMap(cells, 0, 0, 1, 1);
+    var definition = MonsterCatalog.loadBundled().monsters().get("Skeleton");
+    var spawn = new MonsterContent.Spawn("test", definition.getName(), 2, 3, 0, false, true);
+    var content = new MonsterContent(MonsterContent.VERSION,
+        Map.of(definition.getName(), definition), List.of(spawn));
+    var world = new PreviewWorld(map, content);
+    var one = world.join();
+    var two = world.join();
+    var creature = world.creatureSpawns().getFirst();
+    assertEquals(2, world.creaturePosition(creature.id()).x());
+    assertEquals(3, world.creaturePosition(creature.id()).y());
+    assertEquals(2, world.snapshot(one.token()).creatures().getFirst().x());
+    var player = new PreviewWorld.PlayerView(1, 3.5, 3, 0, 0, 1, 1);
+    assertFalse(OnlineRetaliation.canStrike(map, world, creature, player),
+        "the authored anchor is beyond the one-tile physical reach");
+
+    world.creaturePosition(creature.id(), 3, 3);
+    assertEquals(world.snapshot(one.token()).creatures(), world.snapshot(two.token()).creatures());
+    assertEquals(3, world.snapshot(one.token()).creatures().getFirst().x());
+    assertTrue(OnlineRetaliation.canStrike(map, world, creature, player),
+        "retaliation must use the published current position");
+    world.step();
+    assertEquals(3, world.creaturePosition(creature.id()).x(),
+        "movement remains disabled until the cohesive pursuit integration");
+    assertThrows(IllegalArgumentException.class, () -> world.creaturePosition(creature.id(), Double.NaN, 3));
+    assertThrows(IllegalArgumentException.class, () -> world.creaturePosition(creature.id(), 8, 3));
+    assertThrows(IllegalArgumentException.class, () -> world.creaturePosition(creature.id(), 4.5, 3.5));
+    assertEquals(3, world.creaturePosition(creature.id()).x());
   }
 
   private PreviewWorld openWorld() { return new PreviewWorld(new PreviewMap(new boolean[60][80], 0, 0, 30, 30)); }

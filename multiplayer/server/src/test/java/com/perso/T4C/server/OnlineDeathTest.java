@@ -41,6 +41,7 @@ class OnlineDeathTest {
         new OnlineStore.CreatureProvocation(life.key(),life.eventId(),created.id(),0)).character();
     var death=OnlineDeath.prepare(saved,ItemCatalog.loadBundled(),new CharacterProgress.Respawn(0,10,20),new CharacterProgress.Respawn(0,3,4),DROP);
     var attack=new OnlineStore.MonsterAttack(life.key(),life.eventId(),created.id(),0,System.currentTimeMillis()+1500);
+    long targetedRevision=store.loadOrCreateSpawn(life.key()).stateRevision();
     var bad=new OnlineStore.DeathTransition(101,death.transition().destination(),death.transition().corpsePosition(),death.transition().droppedItems(),0,0);
     final long revision=saved.revision();var event=UUID.randomUUID();
     assertThrows(OnlineStore.Conflict.class,()->store.commitMonsterAttack(session,revision,event,death.progress(),attack,bad));
@@ -48,7 +49,10 @@ class OnlineDeathTest {
     assertEquals(0,store.loadOrCreateSpawn(life.key()).nextAttackAt(),"Failed death must roll back attack clock too");
     var committed=store.commitMonsterAttack(session,revision,event,death.progress(),attack,death.transition());
     assertEquals(95,committed.character().experience());assertEquals(3,committed.character().x());
-    assertEquals(4,committed.character().y());assertNull(store.loadOrCreateSpawn(life.key()).targetCharacter());
+    assertEquals(4,committed.character().y());
+    var cleared=store.loadOrCreateSpawn(life.key());
+    assertNull(cleared.targetCharacter());assertNull(cleared.targetEpoch());
+    assertEquals("RETURN",cleared.mode());assertTrue(cleared.stateRevision()>targetedRevision);
     store.release(session);
     var restarted=OnlineStore.fromEnvironment();var rejoined=restarted.acquire(account.secret(),created.id());
     assertFalse(restarted.commitMonsterAttack(rejoined,revision,event,death.progress(),attack,death.transition()).applied());

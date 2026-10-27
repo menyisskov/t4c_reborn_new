@@ -24,6 +24,7 @@ final class HostedWorlds implements AutoCloseable {
   final PersistentSessions sessions;
   /** Null only for the in-memory single-map seam; pickups need the bundled item content. */
   final ItemContent items;
+  private long lastPathPermit=-1;
   HostedWorlds(PreviewMap map,PreviewWorld world) {
     plan=HostedRegionPlan.single(map);regions=List.of(new Region(plan.regions.getFirst().spec(),map,world));sessions=null;items=null;
   }
@@ -35,7 +36,12 @@ final class HostedWorlds implements AutoCloseable {
     sessions=store==null ? null : new PersistentSessions(store,this);
     try {
       for(var region:regions) if(store!=null) {
-        region.creatures=new PersistentCreatures(store,region.world);
+        // The authored Goblin -> Horse hostility needs a separate monster-vs-monster authority.
+        // Refuse a hosted crop containing both until that transaction path exists.
+        boolean goblins=region.world.creatureSpawns().stream().anyMatch(s->s.definition().getName().toLowerCase(Locale.ROOT).contains("goblin"));
+        boolean horses=region.world.creatureSpawns().stream().anyMatch(s->s.definition().getName().toLowerCase(Locale.ROOT).contains("horse"));
+        if(goblins && horses) throw new IllegalArgumentException("Unsupported clan combat in hosted region");
+        region.creatures=new PersistentCreatures(store,region.world,region.map,region.spec.key(),sessions,items);
         region.melee=new OnlineMelee(region.map,region.world,sessions,region.creatures,items,new java.security.SecureRandom(),System::currentTimeMillis);
         region.retaliation=new OnlineRetaliation(region.map,region.world,sessions,region.creatures,items,new java.security.SecureRandom(),System::currentTimeMillis);
         long unsupported=region.world.creatureSpawns().stream().filter(s->s.definition().getSourceEvents()!=null && !s.definition().getSourceEvents().isEmpty()
@@ -55,7 +61,25 @@ final class HostedWorlds implements AutoCloseable {
   void step() {
     for(var region:regions) region.world.step();
     if(sessions!=null) sessions.step();
-    for(var region:regions) { if(region.creatures!=null) region.creatures.step();if(region.retaliation!=null) region.retaliation.step(); }
+    record Pending(Region region,long id,long ordinal) {}
+    var queue=new ArrayList<Pending>();
+    for(int regionIndex=0;regionIndex<regions.size();regionIndex++) {
+      var region=regions.get(regionIndex);
+      if(region.creatures!=null) for(long id:region.creatures.pendingReplans())
+        queue.add(new Pending(region,id,regionIndex*256L+id));
+    }
+    Pending permit=null;
+    if(!queue.isEmpty()) {
+      permit=queue.getFirst();
+      for(var waiting:queue) if(waiting.ordinal()>lastPathPermit) { permit=waiting;break; }
+      lastPathPermit=permit.ordinal();
+    }
+    var targets=sessions==null ? List.<OnlineMonsterPursuit.TargetView>of() : sessions.targetViews();
+    for(var region:regions) {
+      if(region.creatures!=null) region.creatures.step(targets,
+          permit!=null && permit.region()==region ? permit.id() : null);
+      if(region.retaliation!=null) region.retaliation.step();
+    }
   }
   @Override public void close() {
     RuntimeException failure=null;

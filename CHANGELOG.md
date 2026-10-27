@@ -6,6 +6,17 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Two-player Beta acceptance target (T4C-0220)
+
+### Changed
+- Beta and general release acceptance now require two people playing in real game clients, including a two-hour mixed session. The full adventure, security, recovery and other release checks still apply; larger group testing remains a separate scale check.
+
+## 2026-10-27 — Monsters patrol and pursue in online regions (T4C-0212)
+
+### Added
+- Supported online monsters now move through their hosted areas. Aggressive monsters can notice nearby players, and a passive monster that is hit can pursue its attacker. They respect blocked ground, safe areas and their home range, and their living position and combat state survive a graceful server restart.
+- A two-player network check verified a monster chasing a stopped attacker while the other player's state stayed separate. The full rendered adventure and Beta checks remain open.
+
 ## 2026-10-27 — Live account-key rotation check (T4C-0219)
 
 ### Verified

@@ -7,15 +7,18 @@ This is the starting point for “what remains?”; implementation tasks live in
 ## Scope and release stages
 
 The next proposed playable checkpoint is a complete starter adventure with two players in
-the native game client. It is an intermediate checkpoint, not a replacement for the agreed
-20-player Beta or a promise to port the entire single-player game within these six milestones.
-The owner's question about two players did not cancel the original release requirements.
+the native game client. It is an intermediate checkpoint; passing it alone does not complete
+Beta or promise to port the entire single-player game within these six milestones. On
+2026-10-27 the owner changed the Beta/GA concurrency gate from 20 players to two
+**real rendered clients**. All other intended launch content, gameplay, security, anti-cheat,
+recovery and two-hour mixed-stability requirements remain. The existing 20-player server
+capacity is unchanged; further 20-player qualification is follow-up scale evidence.
 
 | Stage | Required outcome | Completion rule |
 | --- | --- | --- |
 | Alpha | Authoritative, persistent gameplay through the native client: accounts, required character state, combat, NPC/quest/reward loop, travel, recovery and essential operations. | Every Alpha gate in ACCEPTANCE.md has passing evidence; service tests alone are insufficient. |
 | Two-player playable checkpoint | Two people can enter, play the selected starter adventure, progress and return to their saved characters. | M1–M6 below all pass on the same integrated build and declared content scope. |
-| Beta | Complete intended launch gameplay and reliable concurrent operation for 20 players. | Two-player checkpoint plus the full Beta gates, broader launch content and final two-hour mixed 20-client evidence. |
+| Beta | Complete intended launch gameplay and reliable concurrent operation for two real rendered clients. | Two-player checkpoint plus the full Beta gates, broader launch content and final two-hour mixed gameplay/stability evidence with two real rendered clients. |
 | GA | Essential end-to-end game, secure deployed connection, reproducible client/server delivery and proven operations/recovery. | Beta gates plus deployed release checks and owner QA acceptance in ACCEPTANCE.md. |
 | Post-GA | Optional content, addons, convenience utilities, dashboards, polish and scaling improvements. | Prioritize separately; essential gameplay, anti-cheat and data integrity cannot be deferred here. |
 
@@ -53,8 +56,8 @@ playthrough and recovery criteria pass. Never infer Done from a task count or te
 | M1 — Enter and interact | Roster/NPC backend and actual adapter probes pass, including two local HTTPS adapters with trust/hostname refusal and a separate live account-key rotation check; visible creation/selection incomplete | T4C-0192, 0195, 0196, 0216, 0219 | Native selection/creation and full account lifecycle; remote deployment |
 | M2 — Inventory and loot | Partial equipment/corpse services | Existing inventory/equipment work; T4C-0201, 0202 (design and pickup/drop rules only) | Visible inventory, general monster loot, claim/quantity integrity |
 | M3 — Complete authored adventure | Opening letter only; full loop incomplete | T4C-0193, 0194, 0195 | Full quest service, kill credit, rewards and required hosted routes |
-| M4 — Supported combat and abilities | Restricted melee/physical retaliation and brief rendered attack/death check; pure pursuit decisions and snapshot-driven native creature animation prepared, with no server pursuit | T4C-0189, 0190, 0209, 0210, 0211 | Server pursuit/AI and the declared classes' required abilities and state |
-| M5 — Reliability and anti-cheat | Pool/shutdown/fault probes, local HTTPS trust/hostname refusal and two-adapter reconnect, live two-account key-rotation fencing, final two-hour native-adapter baseline with partial 20-player occupancy, isolated restart and database-crash probes, and brief rendered reconnect pass; full mixed recovery/load/abuse gates open | T4C-0191, 0197, 0198, 0207, 0208, 0216, 0219 | Broader gameplay recovery, rendered restart, full-capacity mixed soak, bandwidth/DB latency and abuse checks |
+| M4 — Supported combat and abilities | Restricted melee/physical retaliation, server-authoritative patrol/pursuit with guarded persistence, two-native-adapter pursuit/restart proof and brief rendered attack/death check; rendered pursuit remains unchecked | T4C-0189, 0190, 0209, 0210, 0211, 0212 | Rendered pursuit and declared classes' required abilities/state, reset/death and integrated gameplay acceptance |
+| M5 — Reliability and anti-cheat | Pool/shutdown/fault probes, local HTTPS trust/hostname refusal and two-adapter reconnect, live two-account key-rotation fencing, historical two-hour native-adapter baseline with partial 20-player occupancy, isolated restart and database-crash probes, and brief rendered reconnect pass; full mixed recovery/load/abuse gates open | T4C-0191, 0197, 0198, 0207, 0208, 0216, 0219 | Broader gameplay recovery, rendered restart, two-real-client mixed soak, bandwidth/DB latency and abuse checks |
 | M6 — Package and native acceptance | Create-only client and local-loopback server QA packages, headless integrity checks, isolated persistent server stop and brief two-window local client smoke pass; clean-machine, remote and full rendered playthrough open | T4C-0205, 0215 and cross-cutting work | Clean-machine delivery and complete two-rendered-client playthrough |
 
 Task IDs not yet claimed are deliberately not represented as completed or assigned work.
@@ -195,14 +198,17 @@ Required behavior:
   committed progress, balances and positions after real lease expiry, then left normally.
   This was a network read check without rendered gameplay, new loot, combat or travel on the
   restore, so the full playthrough gate remains open.
-- [ ] Run a two-hour mixed two-player session on the integrated candidate, with zero unexplained
-  disconnects, crashes, invariant violations, duplicate value or lost acknowledged progress.
+- [ ] Run a two-hour mixed session with two real rendered clients on the integrated candidate,
+  with zero unexplained disconnects, crashes, invariant violations, duplicate value or lost
+  acknowledged progress.
   Include combat, loot, quests, travel and intentional reconnects rather than idle connections.
 - [ ] Record actual tick duration/debt, CPU/memory, bandwidth, database/command latency, occupancy
   and every error/recovery. Investigate stalls and growing queues/resources; do not count a failed
   run as passed because its timer ended. T4C-0198 recorded a two-hour native-adapter baseline,
   but 20-player occupancy lasted only 58.213 minutes and the run lacked quest/loot/travel,
-  bandwidth and database-latency measures. Final 20-player acceptance is still a separate requirement.
+  bandwidth and database-latency measures. That historical 20-adapter run does not satisfy the
+  current two-rendered-client mixed Beta/GA gate; further 20-player scale qualification is
+  follow-up evidence, not a release gate.
 
 Done evidence: reproducible fault/abuse scripts, separate restored-database playthrough, and the
 completed two-player report tied to exact client/server/content/schema versions. HTTP reply faults
