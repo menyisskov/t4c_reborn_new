@@ -17,6 +17,46 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 /** Runs against PostgreSQL, including in CI; no in-memory substitute for transaction semantics. */
 @EnabledIfEnvironmentVariable(named="T4C_DB_URL", matches=".+")
 class OnlineStoreTest {
+  @Test void durableSpawnLifeSurvivesRecoveryAndRespawnsOnceOnlyAfterItsReward() throws Exception {
+    String spawn="test:"+UUID.randomUUID();
+    OnlineStore.SpawnState life;
+    try (var executor=Executors.newFixedThreadPool(2)) {
+      var a=executor.submit(() -> store.loadOrCreateSpawn(spawn));
+      var b=executor.submit(() -> store.loadOrCreateSpawn(spawn));
+      life=a.get(); assertEquals(life,b.get(),"Concurrent startup must recover one life identity");
+    }
+    assertNull(life.recipient());
+    assertThrows(OnlineStore.Conflict.class,() -> store.respawn(spawn,life.eventId(),0));
+    var key=store.provisionAccount();
+    var character=store.create(key.accountId(),"Spawn reward",0,10,20);
+    var session=store.acquire(key.secret(),character.id());
+    var progress=CharacterProgressTest.sample();
+    store.commitWorldReward(session,0,life.eventId(),7,11,progress);
+    var restarted=OnlineStore.fromEnvironment(); restarted.migrate();
+    var dead=restarted.loadOrCreateSpawn(spawn);
+    assertEquals(life.eventId(),dead.eventId());
+    assertEquals(character.id(),dead.recipient());
+    assertNotNull(dead.claimedAt());
+    assertThrows(OnlineStore.Conflict.class,() -> restarted.respawn(spawn,life.eventId(),60_000));
+    try (var executor=Executors.newFixedThreadPool(2)) {
+      var results=new ArrayList<java.util.concurrent.Future<Boolean>>();
+      for(int i=0;i<2;i++) results.add(executor.submit(() -> {
+        try { restarted.respawn(spawn,life.eventId(),0); return true; }
+        catch(OnlineStore.Conflict stale) { return false; }
+      }));
+      assertNotEquals(results.get(0).get(),results.get(1).get());
+    }
+    var next=restarted.loadOrCreateSpawn(spawn);
+    assertEquals(life.generation()+1,next.generation());
+    assertNotEquals(life.eventId(),next.eventId());
+    assertNull(next.recipient());
+    assertNull(next.claimedAt());
+    assertThrows(OnlineStore.Conflict.class,() -> restarted.respawn(spawn,life.eventId(),0));
+    assertFalse(restarted.commitWorldReward(session,0,life.eventId(),7,11,progress).applied(),
+        "Respawning must retain the old life's receipt for delayed retries");
+    assertEquals(next,restarted.loadOrCreateSpawn(spawn));
+  }
+
   @Test void sharedWorldEventHasOneRecipientAndSurvivesReconnectWithoutAnotherAward() throws Exception {
     var key=store.provisionAccount();
     var first=store.create(key.accountId(),"World contender one",0,10,20);
