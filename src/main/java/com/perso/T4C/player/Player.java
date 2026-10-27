@@ -653,8 +653,8 @@ public class Player extends Stats {
   }
 
   public void triggerAttackCooldown(double attacksPerSecond) {
-    double aps = attacksPerSecond <= 0 ? 1.0 : attacksPerSecond;
-    nextAttackReadyAtMs = System.currentTimeMillis() + (long) (1000.0 / aps);
+    nextAttackReadyAtMs = System.currentTimeMillis()
+        + com.perso.T4C.combat.WeaponTimingRules.cooldownMillis(attacksPerSecond);
   }
 
   public boolean isSkillReady(String skillId) {

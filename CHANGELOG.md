@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Shared online weapon timing (T4C-0180)
+
+### Changed
+- Online combat preparation now uses the same weapon delay and fallback attack-speed rules as single-player. Existing offline attack timing remains unchanged; online attacks are still being connected.
+
 ## 2026-10-27 — Shield combat correction (T4C-0179)
 
 ### Fixed

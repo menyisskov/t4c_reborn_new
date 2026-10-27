@@ -2646,17 +2646,11 @@ public class MainGameScreen implements Screen {
       return 1.0;
     }
     String attackDelay = weapon.getAtkDelay();
-    if (attackDelay != null && !attackDelay.isBlank()) {
-      int delayMillis = DiceFormula.of(attackDelay).roll();
-      if (delayMillis > 0) {
-        return 1000d / delayMillis;
-      }
+    var speed = com.perso.T4C.combat.WeaponTimingRules.resolve(attackDelay, weapon.getAttackSpeed());
+    if (speed.invalidDelay()) {
       log.warn("Invalid attack delay '{}' for weapon {}", attackDelay, weapon.getKey());
     }
-    if (weapon.getAttackSpeed() <= 0) {
-      return 1.0;
-    }
-    return weapon.getAttackSpeed();
+    return speed.attacksPerSecond();
   }
 
   private void performAttackTick() {
