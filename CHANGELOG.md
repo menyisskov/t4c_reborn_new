@@ -6,7 +6,7 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
-## 2026-10-27 — New starting gear and first spell (T4C-0216)
+## 2026-10-27 — New starting gear and first spell (T4C-0217)
 
 ### Added
 - Arcane Spark, a small non-elemental bolt of magic. Mages and Battle Mages now start knowing it, and Iraltok teaches it from level 1. It hits a little softer and recovers a little slower than Fire Dart, and no creature is weak or resistant to it.
@@ -83,6 +83,9 @@ commit links, and finer-grained notes.
 
 ### Fixed
 - A stalled diagnostic response can no longer keep the load checker waiting beyond its bounded response deadline.
+
+### Measured
+- A two-hour native network load run completed without a server or adapter crash. Reconnects left all 20 players connected for about 58 minutes of the two hours; the final mixed-gameplay Beta check remains open.
 
 ## 2026-10-27 — Shared quest and spell rules (T4C-0206)
 
