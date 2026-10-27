@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Two-adapter server restart probe (T4C-0207)
+
+### Added
+- A repeatable isolated check follows two real native network adapters through a graceful server stop, a forced server-process kill and actual database lease expiry, then compares each player's committed opening-letter and progress state after reconnect. Its recorded pass covers the schema-9 test slice; rendered clients and database outage recovery remain separate checks.
+
 ## 2026-10-27 — Online client test package (T4C-0205)
 
 ### Added

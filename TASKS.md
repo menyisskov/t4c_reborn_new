@@ -18,7 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0207 | Two-native-adapter graceful and forced server restart recovery probe | Multiplayer / Beta | In Progress | pending | pending |
+| T4C-0207 | Two-native-adapter graceful and forced server restart recovery probe | Multiplayer / Beta | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--two-adapter-server-restart-probe-t4c-0207) |
 | T4C-0206 | M3/M4 shared quest, spell-cast and heal rules plus quest/ability design (Claude lane) | Multiplayer / Beta | Done | this PR | [2026-10-27](CHANGELOG.md#2026-10-27--shared-quest-and-spell-rules-t4c-0206) |
 | T4C-0205 | Package the online client without developer checkout dependencies | Multiplayer / Beta | Done | `cd9e2a44` | [2026-10-27](CHANGELOG.md#2026-10-27--online-client-test-package-t4c-0205) |
 
