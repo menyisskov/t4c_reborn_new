@@ -32,6 +32,7 @@ import com.perso.T4C.player.PlayerAnimations;
 import com.perso.T4C.player.PlayerMovement;
 import com.perso.T4C.render.ObjectRenderer;
 import com.perso.T4C.screens.MapRenderer;
+import com.perso.T4C.screens.OnlineLobbyScreen;
 import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
@@ -81,6 +82,13 @@ public final class OnlineClient extends ApplicationAdapter {
   private int renderedWorld;
   private String renderedRegion;
   private long renderedEpoch=-1;
+  /** Opt-in lobby (see {@link OnlineLobbyLaunch}); all null in the default launch. */
+  private OnlineLobbyModel lobbyModel;
+  /** The account key; never logged or drawn. Only handed to the account client and the model. */
+  private String lobbyAccountKey;
+  private OnlineLobbyScreen lobby;
+  private Runnable deferred;
+  private com.badlogic.gdx.InputProcessor gameInput;
 
   private static final class CreatureAvatar {
     final OnlineCreatureMotion motion = new OnlineCreatureMotion();
@@ -124,6 +132,10 @@ public final class OnlineClient extends ApplicationAdapter {
 
   public static void main(String[] args) {
     OnlineNativeLibrary.configure();
+    boolean lobbyRequested =
+        OnlineLobbyLaunch.requested(
+            System.getProperty(OnlineLobbyLaunch.PROPERTY), System.getenv(OnlineLobbyLaunch.ENVIRONMENT), args);
+    args = OnlineLobbyLaunch.positional(args);
     URI endpoint = URI.create(args.length == 0 ? "http://127.0.0.1:18765" : args[0]);
     var client = new OnlineClient(endpoint);
     String profile = System.getenv("T4C_ONLINE_PROFILE");
@@ -139,6 +151,13 @@ public final class OnlineClient extends ApplicationAdapter {
       } catch (Exception failure) {
         throw new IllegalArgumentException("Could not read valid online profile");
       }
+    }
+    if (OnlineLobbyLaunch.select(lobbyRequested, client.credentials != null) == OnlineLobbyLaunch.Mode.LOBBY) {
+      // The profile deserialises directly to Credentials, so Credentials.secret IS the account key;
+      // the profile's character UUID becomes only the lobby's preferred selection.
+      client.lobbyAccountKey = client.credentials.secret();
+      client.lobbyModel = new OnlineLobbyModel(client.lobbyAccountKey, client.credentials.characterId());
+      client.credentials = null; // Nothing connects until the player confirms a character.
     }
     var config = new Lwjgl3ApplicationConfiguration();
     config.setTitle(I18n.key("online.client.title"));
@@ -178,8 +197,8 @@ public final class OnlineClient extends ApplicationAdapter {
       camera.position.set(
           NEW_CHARACTER_START_TILE_X * GRID_W, NEW_CHARACTER_START_TILE_Y * GRID_H, 0);
       camera.update();
-      reconnect();
-      Gdx.input.setInputProcessor(
+      if (lobbyModel == null) reconnect();
+      gameInput =
           new com.badlogic.gdx.InputAdapter() {
             @Override
             public boolean keyDown(int code) {
@@ -223,11 +242,78 @@ public final class OnlineClient extends ApplicationAdapter {
             public boolean keyUp(int code) {
               return inputKeys.remove(code);
             }
-          });
+          };
+      Gdx.input.setInputProcessor(gameInput);
+      if (lobbyModel != null) openLobby();
     } catch (Exception failure) {
       error = I18n.key("online.client.load_error");
       Gdx.app.error("online", "Could not load online client", failure);
     }
+  }
+
+  /** Shows the lobby with a fresh account client (the screen closes it on dispose). */
+  private void openLobby() {
+    try {
+      lobby =
+          OnlineLobbyScreen.forAccountClient(
+              hud,
+              lobbyModel,
+              new OnlineAccountClient(endpoint, lobbyAccountKey),
+              new OnlineLobbyScreen.Listener() {
+                @Override
+                public void play(OnlineConnection.Credentials chosen) {
+                  deferred = () -> startPlaying(chosen);
+                }
+
+                @Override
+                public void back() {
+                  deferred = Gdx.app::exit;
+                }
+              });
+      lobby.show();
+      lobby.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    } catch (Exception failure) {
+      error = I18n.key("online.client.load_error");
+      Gdx.app.error("online", "Could not open online lobby", failure); // Never includes the key.
+    }
+  }
+
+  private void closeLobby() {
+    if (lobby == null) return;
+    lobby.hide();
+    lobby.dispose();
+    lobby = null;
+  }
+
+  private void startPlaying(OnlineConnection.Credentials chosen) {
+    closeLobby();
+    credentials = chosen;
+    Gdx.input.setInputProcessor(gameInput);
+    reconnect();
+  }
+
+  /**
+   * Lobby mode only: end the session and show the lobby, which refuses an immediate rejoin until the
+   * conservative client-side lease hold has passed.
+   */
+  private void returnToLobby() {
+    lobbyModel.beginReturnFromGame();
+    if (connection != null) connection.close();
+    connection = null;
+    credentials = null;
+    avatars.values().forEach(a -> a.animation.dispose());
+    avatars.clear();
+    creatures.clear();
+    groundLoot.clear();
+    inputKeys.clear();
+    closePanels();
+    hudMessage = null;
+    staged.clear();
+    lastTick = -1;
+    targetCreature = 0;
+    error = null;
+    lobbyModel.finishReturnFromGame(OnlineLobbyLaunch.leaseDeadline(System.currentTimeMillis()));
+    openLobby();
   }
 
   private void reconnect() {
@@ -520,11 +606,22 @@ public final class OnlineClient extends ApplicationAdapter {
 
   @Override
   public void render() {
+    if (deferred != null) {
+      var action = deferred;
+      deferred = null;
+      action.run();
+    }
+    if (lobby != null) {
+      lobby.render(Gdx.graphics.getDeltaTime());
+      return;
+    }
     Gdx.gl.glClearColor(0.05f, 0.05f, 0.05f, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-    // Esc closes an open panel first and exits the game only when no panel is open.
+    // Esc closes an open panel first; with no panel open it exits, or returns to the lobby in lobby mode.
     if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-      if (talkOpen || inventoryOpen) closePanels(); else Gdx.app.exit();
+      if (talkOpen || inventoryOpen) closePanels();
+      else if (lobbyModel != null) { returnToLobby(); return; }
+      else Gdx.app.exit();
     }
     applyStaged();
     if (connection != null
@@ -683,6 +780,7 @@ public final class OnlineClient extends ApplicationAdapter {
 
   @Override
   public void dispose() {
+    closeLobby();
     if (connection != null) connection.close();
     avatars.values().forEach(a -> a.animation.dispose());
     if (renderer != null) renderer.dispose();
