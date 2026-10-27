@@ -270,3 +270,32 @@ clients must walk temple→Aelric→authored Skeleton area→turn-in, see pursui
 return through16/17, die/recover and reconnect with exact committed global positions. Preserve the
 offline save/preferences regression and remote/two-machine/full20-player gates. No tests/builds or
 those acceptance scenarios were executed by T4C-0214, and no core ownership or QA window is claimed.
+
+## Implemented — T4C-0231 (Q10), 2026-10-27
+
+`HostedRegionPlan.startingSlice` now hosts the world-0 `start` region at
+**[2735,2984) x [1029,1146), 249 x 117** plus the unchanged world-1 interior. Character,
+respawn, corpse and loot coordinates remain absolute; only the descriptor origin moved (-169 x).
+
+- **Smallest region.** The SCOPE_PROPOSAL illustration (origin 2720,1020, 264 x 136) was not used:
+  this rectangle already holds the temple crop and every objective tile of the quest circle
+  (read from the quest definition, not retyped), and stays under the 256-per-axis region bound.
+- **Portals.** Enabled graph is still 16/17. Sources 12, 13, 14 and 947 sit inside the region and
+  target unhosted world 1; they are kept in `HostedRegionPlan.refusedPortals`, never transfer,
+  and the destination stays unhosted. Walking onto a refused source leaves the actor, position
+  and epoch unchanged and the session connected. There is still no player-visible refusal
+  message: that needs protocol/native work owned elsewhere.
+- **SUNDIAL (2881,1070).** The classified monster export (`monsters-v2.json`, from the offline
+  NPC-ownership decision) marks it NPC-owned. `HostedWorlds` drops only NPC-owned records with
+  no monster definition before building the creature world; it is not rendered online and has no
+  interaction. Any other record without a definition is still fatal.
+- **Goblin and Wild Horse.** The region contains both, so the old "Unsupported clan combat"
+  guard would refuse startup. The starter plan sets an explicit accepted exclusion
+  (`clanHostilityNotSimulated`): Goblins do not attack the Horse and nobody gains credit from
+  that fight. The guard still fires for any other plan. **This needs the owner's acceptance**
+  until durable clan combat (T4C-0225) lands.
+- **Tests.** `HostedKillRegionTest` (no database) proves region minimality, Skeleton anchors,
+  Sundial exclusion, unknown-monster failure, refused portals, and a footprint-aware BFS that
+  shows the temple spawn, Aelric's talking range, all Skeleton melee approaches and portal 16
+  are mutually reachable. `HostedTransferTest` gained a PostgreSQL walk-onto-refused-portal case
+  (runs in CI) and its two local-coordinate door cases now derive the origin.

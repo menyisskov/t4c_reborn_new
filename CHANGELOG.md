@@ -6,6 +6,16 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-27 — Online skeleton hunting ground (T4C-0231)
+
+### Added
+- The online starting area now reaches the whole skeleton hunting ground that Warden Aelric's Renewed Wards quest sends you to, in the same continuous map as the temple, so you can walk there from the temple without a loading step.
+
+### Changed
+- The online starting map is larger. Your saved position is unchanged; only the map you see grows to the west and south.
+- The caves around the hunting ground, and one shrine door near the temple, are still closed online: walking onto them does nothing and you stay where you are and connected.
+- The clock-tower statue near the temple is not shown online yet, and the goblins in the hunting ground do not yet fight the wild horse there.
+
 ## 2026-10-27 — Online spells and potions (T4C-0230)
 
 ### Added
