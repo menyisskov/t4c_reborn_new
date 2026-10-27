@@ -179,14 +179,19 @@ public final class NativeLootProbe {
       report.put("serverHealth","local-persistent");
       report.stage(stage="provision three disposable characters");
       ItemContent content=ItemCatalog.loadBundled();
-      String heavyKey=heaviestCarriable(content);
-      report.put("overweightStackItemKey",heavyKey);
       var killerKit=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"female",false,new Random(212));
       var racerKit=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"female",false,new Random(213));
       var weightKit=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"female",false,new Random(214));
-      // A stack of one million units makes carried weight exceed any strength-based capacity.
-      CharacterProgress heavy=withInventory(weightKit.progress(),
-          List.of(new CharacterProgress.Item(UUID.randomUUID(),heavyKey,1_000_000,0)));
+      // All three keep the full starter kit equipped. The weighted character only gets an extra stack,
+      // sized from the shared carry rules and its effective strength, so it is strictly over the limit.
+      var fixture=OnlineOverweightFixture.size(weightKit.progress(),content);
+      CharacterProgress heavy=OnlineOverweightFixture.apply(weightKit.progress(),fixture);
+      report.put("overweightFixtureItemKey",fixture.itemKey());
+      report.put("overweightFixtureQuantity",fixture.quantity());
+      report.put("carryMaximum",fixture.maximum());
+      report.put("carriedBeforeFixture",fixture.carriedBefore());
+      report.put("carriedWithFixture",fixture.carriedAfter());
+      require(fixture.carriedAfter()>fixture.maximum(),"Overweight fixture does not exceed the carry maximum");
       var killer=provision(store,"Loot probe killer","killer",start.x(),start.y(),killerKit.progress(),killerKit.gold());
       var racer=provision(store,"Loot probe racer","racer",start.x(),start.y(),racerKit.progress(),racerKit.gold());
       var weighted=provision(store,"Loot probe weighted","weighted",start.x(),start.y(),heavy,weightKit.gold());
@@ -286,18 +291,6 @@ public final class NativeLootProbe {
 
   private static void stopAll(OnlineConnection... connections) {
     for(var c:connections) if(c!=null) c.close();
-  }
-
-  private static CharacterProgress withInventory(CharacterProgress p,List<CharacterProgress.Item> inventory) {
-    return new CharacterProgress(p.version(),p.characterClass(),p.gender(),p.attributes(),p.vitals(),p.advancement(),
-        inventory,p.equipment(),p.skills(),p.spells(),p.questFlags(),p.storage(),p.storageGold(),
-        p.respawn(),p.buffs(),p.cooldowns(),p.hiddenUntil(),p.companion());
-  }
-
-  private static String heaviestCarriable(ItemContent content) {
-    // Any positive-weight, non-unique authored item works; sorted for a reproducible choice.
-    return content.items().values().stream().filter(d->d.weight()>0 && !d.unique())
-        .map(d->d.key()).sorted().findFirst().orElseThrow(()->new AssertionError("No weighted item in content"));
   }
 
   private static Player provision(OnlineStore store,String name,String label,double x,double y,

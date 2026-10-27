@@ -18,7 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0245 | Keep the native loot probe starter kit equipped while adding its overweight fixture, then run one isolated local probe | Multiplayer / M2 native acceptance tooling | In Progress (taken over by Claude 2026-10-28 on the owner's instruction while Codex is out of tokens; implementation and run pending) | pending | deferred |
+| T4C-0245 | Keep the native loot probe starter kit equipped while adding its overweight fixture, then run one isolated local probe | Multiplayer / M2 native acceptance tooling | Implementation done, probe NOT yet run (needs database access) | pending | deferred |
 | T4C-0244 | Stage native online character-creation form in the existing lobby for owner visual review | Multiplayer / M1 native UI | In Progress (taken over by Claude 2026-10-28 on the owner's instruction while Codex is out of tokens; draft design staging only; owner approval pending) | pending | deferred |
 | T4C-0243 | Authoritative online character creation from a fresh account through bounded server validation and durable roster insertion | Multiplayer / M1 backend | Done (merged; schema 13; PostgreSQL contracts passed in CI) | PR187; private PG domain55/server175 | deferred |
 | T4C-0242 | Allow an account-only private online profile to bootstrap the existing opt-in lobby without a character ID | Multiplayer / M1 native bootstrap | Done (merged) | PR186; OnlineAccountProfileTest 3/3 and OnlineLobbyLaunchTest 5/5 | deferred |
