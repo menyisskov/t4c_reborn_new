@@ -306,6 +306,84 @@ class PreviewServerTest {
     }
   }
 
+  private static HttpRequest pickupRequest(String url, String token, String version, String body) {
+    var builder = HttpRequest.newBuilder(URI.create(url + "/pickup")).timeout(Duration.ofSeconds(5))
+        .header("Origin", url).header("Content-Type", "text/plain");
+    if (version != null) builder.header(com.perso.T4C.online.model.OnlineProtocol.VERSION_HEADER, version);
+    if (token != null) builder.header("Authorization", "Bearer " + token);
+    return builder.POST(HttpRequest.BodyPublishers.ofString(body)).build();
+  }
+
+  @Test void pickupRejectsOldProtocolAndOversizedBodiesAndLootListIsEmptyWithoutStorage() throws Exception {
+    var map = new PreviewMap(new boolean[8][8], 0, 0, 3, 3);
+    String current = Integer.toString(com.perso.T4C.online.model.OnlineProtocol.VERSION);
+    String loot = "1 0 " + java.util.UUID.randomUUID();
+    try (var server = new PreviewServer(map, 0); var client = HttpClient.newHttpClient()) {
+      server.start(); String url = server.url();
+      // The version gate runs before the storage and route checks, so an old client never reaches a command.
+      assertEquals(426, client.send(pickupRequest(url, "a".repeat(64), null, loot), HttpResponse.BodyHandlers.ofString()).statusCode());
+      assertEquals(426, client.send(pickupRequest(url, "a".repeat(64), "4", loot), HttpResponse.BodyHandlers.ofString()).statusCode());
+      // Without a database there is no pickup route; with the current protocol the request still parses first.
+      assertEquals(404, client.send(pickupRequest(url, "a".repeat(64), current, loot), HttpResponse.BodyHandlers.ofString()).statusCode());
+      assertEquals(413, client.send(pickupRequest(url, "a".repeat(64), current, "x".repeat(97)), HttpResponse.BodyHandlers.ofString()).statusCode());
+      String token = object(client.send(request(url, "/join", null, ""), HttpResponse.BodyHandlers.ofString())).get("token").getAsString();
+      var state = object(client.send(request(url, "/state", token, null), HttpResponse.BodyHandlers.ofString()));
+      assertTrue(state.getAsJsonArray("loot").isEmpty(), "Ground loot needs persistent sessions");
+    }
+  }
+
+  @Test @EnabledIfEnvironmentVariable(named="T4C_DB_URL",matches=".+")
+  void pickupHttpClaimsOwnedDropOnceAndShowsOnlyPublicOwnership() throws Exception {
+    var store=OnlineStore.fromEnvironment(); store.migrate();
+    var owner=store.provisionAccount(); var stranger=store.provisionAccount();
+    var prepared=OnlineCharacterCreator.prepare(com.perso.T4C.helper.CharacterClass.WARRIOR,"male",false,new java.util.Random(7));
+    var character=store.create(owner.accountId(),"HTTP pickup owner",0,30.5,30.5,prepared.progress(),prepared.gold());
+    var other=store.create(stranger.accountId(),"HTTP pickup stranger",0,30.5,30.5,prepared.progress(),0);
+    var fixture=store.acquire(owner.secret(),character.id());
+    var life=store.loadOrCreateSpawn("http-pickup:"+java.util.UUID.randomUUID());
+    var drop=new com.perso.T4C.online.model.LootDropDraft(java.util.UUID.randomUUID(),0,"item.leather_gloves",1,0,0,30.5,30.5);
+    var strike=new OnlineStore.CreatureStrike(life.key(),life.eventId(),10,10,0);
+    assertTrue(store.commitCreatureStrike(fixture,character.revision(),life.eventId(),0,0,prepared.progress(),strike,null,java.util.List.of(drop)).applied());
+    store.release(fixture);
+    String current=Integer.toString(com.perso.T4C.online.model.OnlineProtocol.VERSION);
+    try (var server=new PreviewServer(new PreviewMap(new boolean[60][80],0,0,30,30),0,store); var client=HttpClient.newHttpClient()) {
+      server.start(); String url=server.url();
+      String token=login(client,url,owner,character.id()); String foreign=login(client,url,stranger,other.id());
+      var state=object(client.send(request(url,"/state",token,null),HttpResponse.BodyHandlers.ofString()));
+      var listed=state.getAsJsonArray("loot"); assertEquals(1,listed.size());
+      var entry=listed.get(0).getAsJsonObject();
+      assertEquals(drop.id().toString(),entry.get("id").getAsString());
+      assertEquals(30.5,entry.get("x").getAsDouble()); assertEquals("item.leather_gloves",entry.get("key").getAsString());
+      assertTrue(entry.get("ownerPlayerId").isJsonPrimitive(),"The owner's own view names their public player ID");
+      assertFalse(state.toString().contains(character.id().toString()));
+      assertFalse(state.toString().contains(owner.accountId().toString()));
+      var seenByStranger=object(client.send(request(url,"/state",foreign,null),HttpResponse.BodyHandlers.ofString()))
+          .getAsJsonArray("loot").get(0).getAsJsonObject();
+      assertTrue(seenByStranger.get("ownerPlayerId").isJsonNull(),"Other owners are never named");
+      assertTrue(seenByStranger.get("ownerRemainingMs").getAsLong()>0);
+      long revision=object(client.send(request(url,"/character",token,null),HttpResponse.BodyHandlers.ofString())).get("revision").getAsLong();
+      var uuid=drop.id();
+      assertEquals(400,client.send(pickupRequest(url,token,current,"abc"),HttpResponse.BodyHandlers.ofString()).statusCode());
+      assertEquals(400,client.send(pickupRequest(url,token,current,revision+" 0 not-a-uuid"),HttpResponse.BodyHandlers.ofString()).statusCode());
+      assertEquals(400,client.send(pickupRequest(url,token,current,"9223372036854775808 0 "+uuid),HttpResponse.BodyHandlers.ofString()).statusCode());
+      assertEquals(413,client.send(pickupRequest(url,token,current,"x".repeat(97)),HttpResponse.BodyHandlers.ofString()).statusCode());
+      assertEquals(426,client.send(pickupRequest(url,token,"4",revision+" 0 "+uuid),HttpResponse.BodyHandlers.ofString()).statusCode());
+      assertEquals(401,client.send(pickupRequest(url,null,current,revision+" 0 "+uuid),HttpResponse.BodyHandlers.ofString()).statusCode());
+      assertEquals(409,client.send(pickupRequest(url,token,current,(revision+1)+" 0 "+uuid),HttpResponse.BodyHandlers.ofString()).statusCode(),"A stale revision is refused before any claim");
+      var refused=client.send(pickupRequest(url,foreign,current,revision+" 0 "+uuid),HttpResponse.BodyHandlers.ofString());
+      assertEquals(409,refused.statusCode(),"Only the owner may claim during the owner window");
+      assertTrue(refused.body().contains("loot_reserved"));
+      var claimed=client.send(pickupRequest(url,token,current,revision+" 0 "+uuid),HttpResponse.BodyHandlers.ofString());
+      assertEquals(200,claimed.statusCode(),claimed.body());
+      assertTrue(object(claimed).get("revision").getAsLong()>revision);
+      assertTrue(object(client.send(request(url,"/state",token,null),HttpResponse.BodyHandlers.ofString())).getAsJsonArray("loot").isEmpty());
+      assertEquals(409,client.send(pickupRequest(url,token,current,revision+" 0 "+uuid),HttpResponse.BodyHandlers.ofString()).statusCode(),"A replay never claims twice");
+      var saved=store.load(owner.accountId(),character.id());
+      assertEquals(1,saved.progress().inventory().stream().filter(item->item.id().equals(uuid)).count());
+      assertTrue(store.listGroundLoot(0,new OnlineStore.TileRect(0,0,1000,1000)).stream().noneMatch(loot->loot.id().equals(uuid)));
+    }
+  }
+
   private String login(HttpClient client,String url,OnlineStore.AccountKey key,java.util.UUID character) throws Exception {
     var response=client.send(request(url,"/join",null,key.secret()+" "+character),HttpResponse.BodyHandlers.ofString());
     assertEquals(200,response.statusCode());
