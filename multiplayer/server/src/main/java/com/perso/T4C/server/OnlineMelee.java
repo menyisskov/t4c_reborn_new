@@ -6,6 +6,7 @@ import com.perso.T4C.monster.core.MonsterExperience;
 import com.perso.T4C.online.model.CharacterProgress;
 import com.perso.T4C.online.model.ItemContent;
 import com.perso.T4C.online.model.LootDropDraft;
+import com.perso.T4C.quest.QuestRules;
 import com.perso.T4C.server.persistence.OnlineStore;
 import java.util.*;
 import java.util.concurrent.CompletionStage;
@@ -87,7 +88,10 @@ final class OnlineMelee {
     }
     var cooldowns=new HashMap<>(progression.progress().cooldowns());
     cooldowns.put("attack",Math.addExact(now,Math.max(1,loadout.attackCooldownMillis())));
-    var draft=withAttackState(progression.progress(),cooldowns);
+    var credited=after==0
+        ? withLethalQuestCredit(progression.progress(),definition.getName(),sessions.region(token).world(),captured.x(),captured.y())
+        : progression.progress();
+    var draft=withAttackState(credited,cooldowns);
     var motion=after==0
         ? new OnlineStore.SpawnMotion(captured.key(),captured.life(),captured.revision(),captured.x(),captured.y(),
             "IDLE",null,null)
@@ -120,6 +124,19 @@ final class OnlineMelee {
     return new CharacterProgress(p.version(),p.characterClass(),p.gender(),p.attributes(),p.vitals(),p.advancement(),
         p.inventory(),p.equipment(),p.skills(),p.spells(),p.questFlags(),p.storage(),p.storageGold(),p.respawn(),
         p.buffs(),cooldowns,0,p.companion());
+  }
+  /** Count only the authoritative lethal claimant; these flags share the strike's receipt and transaction. */
+  private static CharacterProgress withLethalQuestCredit(CharacterProgress progress,String monster,int world,double x,double y) {
+    var flags=new HashMap<>(progress.questFlags());
+    String log=QuestRules.killLogFlag(monster);
+    // A lifetime kill log cannot wrap negative and make later online combat unsupported.
+    if(flags.getOrDefault(log,0)<Integer.MAX_VALUE)
+      flags.putAll(QuestRules.recordKillLog(key->flags.getOrDefault(key,0),log));
+    int tileX=(int)Math.floor(x),tileY=(int)Math.floor(y);
+    for(var quest:QuestCatalog.bundled().definitions())
+      flags.putAll(QuestRules.creditObjective(key->flags.getOrDefault(key,0),quest,
+          quest.getTargetMonster().equalsIgnoreCase(monster),world,tileX,tileY));
+    return ProgressEdits.withFlags(progress,flags);
   }
   private static PreviewWorld.Rejected rejected(String code) { return new PreviewWorld.Rejected(409,code); }
 }
