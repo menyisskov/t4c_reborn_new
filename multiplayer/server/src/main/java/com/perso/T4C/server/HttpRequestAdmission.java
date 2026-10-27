@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.AbstractExecutorService;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadFactory;
@@ -56,8 +55,11 @@ final class HttpRequestAdmission {
     private final ExecutorService tasks;
 
     ExchangeExecutor() {
-      ThreadFactory factory=Thread.ofVirtual().name("preview-http-",0).factory();
-      tasks=Executors.newThreadPerTaskExecutor(factory);
+      // JDK HttpServer reads request bodies under a synchronized input stream; platform workers
+      // prevent slow bodies from pinning all virtual-thread carriers on small hosts.
+      ThreadFactory factory=Thread.ofPlatform().name("preview-http-",0).factory();
+      tasks=new java.util.concurrent.ThreadPoolExecutor(0,MAX_EXCHANGES,30,TimeUnit.SECONDS,
+          new java.util.concurrent.SynchronousQueue<>(),factory,new java.util.concurrent.ThreadPoolExecutor.AbortPolicy());
     }
 
     @Override public void execute(Runnable task) {
