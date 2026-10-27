@@ -31,12 +31,14 @@ class OnlineStoreTest {
     var character=store.create(key.accountId(),"Spawn reward",0,10,20);
     var session=store.acquire(key.secret(),character.id());
     var progress=CharacterProgressTest.sample();
-    store.commitWorldReward(session,0,life.eventId(),7,11,progress);
+    var strike=new OnlineStore.CreatureStrike(spawn,life.eventId(),10,10,0);
+    store.commitCreatureStrike(session,0,life.eventId(),7,11,progress,strike);
     var restarted=OnlineStore.fromEnvironment(); restarted.migrate();
     var dead=restarted.loadOrCreateSpawn(spawn);
     assertEquals(life.eventId(),dead.eventId());
     assertEquals(character.id(),dead.recipient());
     assertNotNull(dead.claimedAt());
+    assertEquals(0,dead.health());
     assertThrows(OnlineStore.Conflict.class,() -> restarted.respawn(spawn,life.eventId(),60_000));
     try (var executor=Executors.newFixedThreadPool(2)) {
       var results=new ArrayList<java.util.concurrent.Future<Boolean>>();
@@ -51,10 +53,53 @@ class OnlineStoreTest {
     assertNotEquals(life.eventId(),next.eventId());
     assertNull(next.recipient());
     assertNull(next.claimedAt());
+    assertNull(next.health(),"Only a new generation restores authored health");
     assertThrows(OnlineStore.Conflict.class,() -> restarted.respawn(spawn,life.eventId(),0));
-    assertFalse(restarted.commitWorldReward(session,0,life.eventId(),7,11,progress).applied(),
+    assertFalse(restarted.commitCreatureStrike(session,0,life.eventId(),7,11,progress,strike).applied(),
         "Respawning must retain the old life's receipt for delayed retries");
     assertEquals(next,restarted.loadOrCreateSpawn(spawn));
+  }
+
+  @Test void damageAndRewardCommitTogetherAndCompetingStaleDamageCannotGrantXp() throws Exception {
+    var life=store.loadOrCreateSpawn("damage:"+UUID.randomUUID());
+    var key=store.provisionAccount();
+    var one=store.acquire(key.secret(),store.create(key.accountId(),"Damage one",0,10,20).id());
+    var two=store.acquire(key.secret(),store.create(key.accountId(),"Damage two",0,10,20).id());
+    var progress=CharacterProgressTest.sample();
+    var strike=new OnlineStore.CreatureStrike(life.key(),life.eventId(),20,20,12);
+    UUID event=UUID.randomUUID();
+    var start=new java.util.concurrent.CountDownLatch(1);
+    boolean firstWon;
+    try (var executor=Executors.newFixedThreadPool(2)) {
+      var actions=new ArrayList<java.util.concurrent.Future<Boolean>>();
+      for (var session:java.util.List.of(one,two)) actions.add(executor.submit(() -> {
+        start.await();
+        try { return store.commitCreatureStrike(session,0,event,0,8,progress,strike).applied(); }
+        catch (OnlineStore.Conflict stale) { return false; }
+      }));
+      start.countDown(); firstWon=actions.get(0).get();
+      assertNotEquals(firstWon,actions.get(1).get());
+    }
+    var winner=firstWon ? one : two; var loser=firstWon ? two : one;
+    var restarted=OnlineStore.fromEnvironment();
+    assertEquals(12,restarted.loadOrCreateSpawn(life.key()).health());
+    assertEquals(loser.character(),restarted.load(key.accountId(),loser.characterId()));
+    assertEquals(8,restarted.load(key.accountId(),winner.characterId()).experience());
+    assertFalse(restarted.commitCreatureStrike(winner,0,event,0,8,progress,strike).applied());
+    assertThrows(OnlineStore.Conflict.class,() -> restarted.commitCreatureStrike(winner,0,event,0,8,progress,
+        new OnlineStore.CreatureStrike(life.key(),life.eventId(),20,20,11)));
+    assertThrows(OnlineStore.Conflict.class,() -> restarted.commitGameplayEvent(winner,0,event,0,8,progress));
+    assertThrows(OnlineStore.Conflict.class,() -> restarted.respawn(life.key(),life.eventId(),0));
+
+    var before=restarted.reward(winner,UUID.randomUUID(),Long.MAX_VALUE,0).character();
+    var lethal=new OnlineStore.CreatureStrike(life.key(),life.eventId(),20,12,0);
+    assertThrows(SQLException.class,() -> restarted.commitCreatureStrike(winner,before.revision(),life.eventId(),1,12,progress,lethal));
+    assertEquals(before,restarted.load(key.accountId(),winner.characterId()));
+    assertEquals(12,restarted.loadOrCreateSpawn(life.key()).health(),"A failed reward must roll back damage too");
+    assertNull(restarted.loadOrCreateSpawn(life.key()).recipient());
+    assertTrue(restarted.commitCreatureStrike(winner,before.revision(),life.eventId(),0,12,progress,lethal).applied());
+    assertEquals(0,restarted.loadOrCreateSpawn(life.key()).health());
+    assertEquals(winner.characterId(),restarted.loadOrCreateSpawn(life.key()).recipient());
   }
 
   @Test void sharedWorldEventHasOneRecipientAndSurvivesReconnectWithoutAnotherAward() throws Exception {

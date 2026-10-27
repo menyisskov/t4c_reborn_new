@@ -115,19 +115,22 @@ class PersistentSessionsTest {
     var world=new PreviewWorld(map); var sessions=new PersistentSessions(store,map,world);
     long started=System.nanoTime(); var lease=store.acquire(key.secret(),created.id());
     String token=sessions.join(lease,started).token(); UUID event=UUID.randomUUID();
+    var life=store.loadOrCreateSpawn("uncertain-strike:"+UUID.randomUUID());
+    var strike=new OnlineStore.CreatureStrike(life.key(),life.eventId(),20,20,12);
     var progress=questProgress(prepared.progress());
     try {
       var stale=assertThrows(PreviewWorld.Rejected.class,() ->
           sessions.commitGameplayEvent(token,created.revision()+1,event,7,11,progress));
       assertEquals("revision",stale.getMessage());
       loseAck.set(true);
-      var result=sessions.commitGameplayEvent(token,created.revision(),event,7,11,progress).toCompletableFuture();
+      var result=sessions.commitCreatureStrike(token,created.revision(),event,7,11,progress,strike).toCompletableFuture();
       await(sessions,result);
       assertThrows(ExecutionException.class,result::get);
       assertNull(world.position(token));
       assertThrows(PreviewWorld.Rejected.class,() -> sessions.character(token));
       var recovered=store.load(key.accountId(),created.id());
       assertEquals(progress,recovered.progress()); assertEquals(created.gold()+7,recovered.gold());
+      assertEquals(12,store.loadOrCreateSpawn(life.key()).health(),"Lost acknowledgement must not undo the rewarded damage");
       // Advance only this failed writer's lease; real lease timing is covered separately.
       try (var c=connection(); var s=c.prepareStatement(
           "UPDATE online_characters SET session_until=clock_timestamp()-interval '1 second' WHERE id=?")) {
@@ -135,7 +138,7 @@ class PersistentSessionsTest {
       }
       started=System.nanoTime(); var replacement=store.acquire(key.secret(),created.id());
       String rejoined=sessions.join(replacement,started).token();
-      var retry=sessions.commitGameplayEvent(rejoined,recovered.revision(),event,7,11,progress).toCompletableFuture();
+      var retry=sessions.commitCreatureStrike(rejoined,recovered.revision(),event,7,11,progress,strike).toCompletableFuture();
       await(sessions,retry);
       assertFalse(retry.get().applied());
       assertEquals(recovered,sessions.character(rejoined));

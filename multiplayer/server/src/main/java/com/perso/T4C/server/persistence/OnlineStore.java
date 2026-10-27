@@ -17,7 +17,16 @@ public final class OnlineStore {
   public record CharacterState(UUID id, UUID accountId, String name, int world, double x, double y,
       long gold, long experience, long revision, CharacterProgress progress) {}
   public record RewardResult(boolean applied, CharacterState character) {}
-  public record SpawnState(String key, long generation, UUID eventId, UUID recipient, java.time.Instant claimedAt) {}
+  public record SpawnState(String key, long generation, UUID eventId, UUID recipient, java.time.Instant claimedAt,
+      Integer health) {}
+  /** Trusted resolved damage, never a network payload. Null stored health means untouched authored health. */
+  public record CreatureStrike(String key, UUID life, int maximumHealth, int before, int after) {
+    public CreatureStrike {
+      spawnKey(key); Objects.requireNonNull(life);
+      if (maximumHealth<=0 || before<=0 || before>maximumHealth || after<0 || after>=before)
+        throw new IllegalArgumentException("Invalid creature damage");
+    }
+  }
   /** One-time delivery to an operator; never log or serialize this record into world snapshots. */
   public record AccountKey(UUID accountId, String secret) {
     @Override public String toString() { return "AccountKey[accountId=" + accountId + ", secret=REDACTED]"; }
@@ -60,7 +69,7 @@ public final class OnlineStore {
         int version = 0;
         try (var rows = s.executeQuery("SELECT version FROM online_schema ORDER BY version")) {
           while (rows.next()) {
-            if (rows.getInt(1) != ++version || version > 6) throw new SQLException("Unsupported online schema version");
+            if (rows.getInt(1) != ++version || version > 7) throw new SQLException("Unsupported online schema version");
           }
         }
         if (version == 0) {
@@ -129,6 +138,10 @@ public final class OnlineStore {
               """);
           s.execute("INSERT INTO online_schema(version) VALUES (6)");
         }
+        if (version < 7) {
+          s.execute("ALTER TABLE online_spawns ADD COLUMN health integer CHECK (health>=0)");
+          s.execute("INSERT INTO online_schema(version) VALUES (7)");
+        }
         c.commit();
       } catch (SQLException | RuntimeException error) { c.rollback(); throw error; }
     }
@@ -142,7 +155,7 @@ public final class OnlineStore {
         s.setString(1,key); s.setObject(2,UUID.randomUUID()); s.executeUpdate();
       }
       try (var s=c.prepareStatement("""
-          SELECT s.generation,s.event_id,r.character_id,r.claimed_at
+          SELECT s.generation,s.event_id,r.character_id,r.claimed_at,s.health
           FROM online_spawns s LEFT JOIN online_world_rewards r ON r.event_id=s.event_id
           WHERE s.spawn_key=?
           """)) {
@@ -151,7 +164,7 @@ public final class OnlineStore {
           if (!rows.next()) throw new Conflict("Spawn unavailable");
           var claimedAt=rows.getTimestamp(4);
           return new SpawnState(key,rows.getLong(1),rows.getObject(2,UUID.class),rows.getObject(3,UUID.class),
-              claimedAt==null ? null : claimedAt.toInstant());
+              claimedAt==null ? null : claimedAt.toInstant(),rows.getObject(5,Integer.class));
         }
       }
     }
@@ -162,7 +175,7 @@ public final class OnlineStore {
     spawnKey(key); Objects.requireNonNull(expectedEvent);
     if (delayMillis<0) throw new IllegalArgumentException("Negative respawn delay");
     try (var c=connections.open(); var s=c.prepareStatement("""
-        UPDATE online_spawns s SET generation=s.generation+1,event_id=?
+        UPDATE online_spawns s SET generation=s.generation+1,event_id=?,health=NULL
         FROM online_world_rewards r
         WHERE s.spawn_key=? AND s.event_id=? AND r.event_id=s.event_id
           AND r.claimed_at<=clock_timestamp()-(? * interval '1 millisecond')
@@ -171,7 +184,7 @@ public final class OnlineStore {
       s.setObject(1,UUID.randomUUID()); s.setString(2,key); s.setObject(3,expectedEvent); s.setLong(4,delayMillis);
       try (var rows=s.executeQuery()) {
         if (!rows.next()) throw new Conflict("Spawn life changed or respawn not ready");
-        return new SpawnState(key,rows.getLong(1),rows.getObject(2,UUID.class),null,null);
+        return new SpawnState(key,rows.getLong(1),rows.getObject(2,UUID.class),null,null,null);
       }
     }
   }
@@ -319,29 +332,40 @@ public final class OnlineStore {
 
   /** Event IDs and amounts must originate from authoritative gameplay, never a client request. */
   public RewardResult reward(Session session, UUID event, long gold, long experience) throws SQLException {
-    return applyReward(session,event,gold,experience,null,null,false);
+    return applyReward(session,event,gold,experience,null,null,false,null);
   }
 
   /** Server-owned quest/loot/progression result; receipt, balances and gameplay state commit once. */
   public RewardResult commitGameplayEvent(Session session, long revision, UUID event, long gold,
       long experience, CharacterProgress progress) throws SQLException {
     if (revision<0) throw new IllegalArgumentException("Invalid revision");
-    return applyReward(session,event,gold,experience,revision,Objects.requireNonNull(progress),false);
+    return applyReward(session,event,gold,experience,revision,Objects.requireNonNull(progress),false,null);
   }
 
   /** One recipient across the realm for a durable server-generated world event identity. */
   public RewardResult commitWorldReward(Session session, long revision, UUID event, long gold,
       long experience, CharacterProgress progress) throws SQLException {
     if (revision < 0) throw new IllegalArgumentException("Invalid revision");
-    return applyReward(session,event,gold,experience,revision,Objects.requireNonNull(progress),true);
+    return applyReward(session,event,gold,experience,revision,Objects.requireNonNull(progress),true,null);
+  }
+
+  /** Damage, XP/items/cooldowns and (for lethal hits) the life claim share one transaction. */
+  public RewardResult commitCreatureStrike(Session session, long revision, UUID event, long gold,
+      long experience, CharacterProgress progress, CreatureStrike strike) throws SQLException {
+    if (revision<0) throw new IllegalArgumentException("Invalid revision");
+    Objects.requireNonNull(strike); Objects.requireNonNull(event);
+    boolean lethal=strike.after()==0;
+    if (lethal!=event.equals(strike.life())) throw new IllegalArgumentException("Invalid strike event identity");
+    return applyReward(session,event,gold,experience,revision,Objects.requireNonNull(progress),lethal,strike);
   }
 
   private RewardResult applyReward(Session session, UUID event, long gold, long experience,
-      Long revision, CharacterProgress progress, boolean worldReward) throws SQLException {
+      Long revision, CharacterProgress progress, boolean worldReward, CreatureStrike strike) throws SQLException {
     Objects.requireNonNull(event);
     if (gold < 0 || experience < 0) throw new IllegalArgumentException("Negative reward");
     String encoded=progress==null ? null : encodeProgress(progress);
-    String fingerprint=encoded==null ? null : fingerprint(encoded);
+    String fingerprint=encoded==null ? null : fingerprint(strike==null ? encoded
+        : encoded+"\ncreature-strike-v1\n"+JSON.toJson(canonical(JSON.toJsonTree(strike))));
     UUID account = session.accountId(), character = session.characterId();
     try (var c = connections.open()) {
       c.setAutoCommit(false);
@@ -381,6 +405,18 @@ public final class OnlineStore {
           }
         }
         if (revision!=null && state.revision()!=revision) throw new Conflict("Stale gameplay event");
+        if (strike!=null) {
+          // Character lock precedes spawn lock. CAS prevents two attackers rewarding the same damage.
+          try (var s=c.prepareStatement("""
+              UPDATE online_spawns SET health=?
+              WHERE spawn_key=? AND event_id=? AND COALESCE(health,?)=?
+                AND NOT EXISTS (SELECT 1 FROM online_world_rewards WHERE event_id=online_spawns.event_id)
+              """)) {
+            s.setInt(1,strike.after()); s.setString(2,strike.key()); s.setObject(3,strike.life());
+            s.setInt(4,strike.maximumHealth()); s.setInt(5,strike.before());
+            if (s.executeUpdate()!=1) throw new Conflict("Creature life or health changed");
+          }
+        }
         try (var s = c.prepareStatement("INSERT INTO online_rewards(character_id,event_id,gold,experience,payload_hash) VALUES (?,?,?,?,?)")) {
           s.setObject(1, character); s.setObject(2, event); s.setLong(3, gold); s.setLong(4, experience);
           s.setString(5,fingerprint); s.executeUpdate();

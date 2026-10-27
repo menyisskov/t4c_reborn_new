@@ -66,7 +66,25 @@ class PersistentCreaturesTest {
       try(var recovered=new PersistentCreatures(store,recoveredWorld)) { assertEquals(next,recovered.life(1)); }
       assertFalse(store.commitWorldReward(session,character.revision(),life.eventId(),1,1,prepared.progress()).applied());
       var current=store.load(key.accountId(),character.id());
-      store.commitWorldReward(session,current.revision(),next.eventId(),1,1,prepared.progress());
+      int maximum=definition.getHealth();
+      assertTrue(maximum>1);
+      var damaged=store.commitCreatureStrike(session,current.revision(),UUID.randomUUID(),0,1,prepared.progress(),
+          new OnlineStore.CreatureStrike(next.key(),next.eventId(),maximum,maximum,maximum-1)).character();
+      creatures.damageCommitted(1);
+      assertEquals(1,world.snapshot(one.token()).creatures().size(),"Partial damage cannot make the actor disappear");
+      deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(4);
+      while(world.snapshot(one.token()).creatures().getFirst().health()==maximum && System.nanoTime()<deadline) {
+        creatures.step(); Thread.sleep(10);
+      }
+      assertEquals(maximum-1,world.snapshot(one.token()).creatures().getFirst().health());
+      assertEquals(world.snapshot(one.token()).creatures(),world.snapshot(two.token()).creatures());
+      var damagedWorld=new PreviewWorld(map,content);
+      try(var recovered=new PersistentCreatures(store,damagedWorld)) {
+        assertEquals(maximum-1,recovered.life(1).health());
+        assertEquals(maximum-1,damagedWorld.snapshot(damagedWorld.join().token()).creatures().getFirst().health());
+      }
+      store.commitCreatureStrike(session,damaged.revision(),next.eventId(),1,1,prepared.progress(),
+          new OnlineStore.CreatureStrike(next.key(),next.eventId(),maximum,maximum-1,0));
       creatures.rewardCommitted(1);
       assertTrue(world.snapshot(one.token()).creatures().isEmpty(),"A live committed kill hides before another command can target it");
       assertThrows(PreviewWorld.Rejected.class,() -> creatures.life(1));

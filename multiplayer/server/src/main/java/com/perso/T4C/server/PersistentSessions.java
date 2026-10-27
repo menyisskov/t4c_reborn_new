@@ -37,7 +37,7 @@ final class PersistentSessions {
     }
   }
   private record GameplayEvent(UUID id, long gold, long experience, CharacterProgress progress, boolean worldReward,
-      CompletableFuture<OnlineStore.RewardResult> result) {}
+      OnlineStore.CreatureStrike strike, CompletableFuture<OnlineStore.RewardResult> result) {}
   private record Completion(Binding binding, OnlineStore.CharacterState saved, boolean finalSave,
       long allowedUntil, OnlineStore.RewardResult reward, Exception error) {}
 
@@ -82,23 +82,31 @@ final class PersistentSessions {
    */
   CompletionStage<OnlineStore.RewardResult> commitGameplayEvent(String token, long expectedRevision,
       UUID eventId, long gold, long experience, CharacterProgress progress) {
-    return commitEvent(token,expectedRevision,eventId,gold,experience,progress,false);
+    return commitEvent(token,expectedRevision,eventId,gold,experience,progress,false,null);
   }
 
   CompletionStage<OnlineStore.RewardResult> commitWorldReward(String token, long expectedRevision,
       UUID eventId, long gold, long experience, CharacterProgress progress) {
-    return commitEvent(token,expectedRevision,eventId,gold,experience,progress,true);
+    return commitEvent(token,expectedRevision,eventId,gold,experience,progress,true,null);
+  }
+
+  CompletionStage<OnlineStore.RewardResult> commitCreatureStrike(String token, long expectedRevision,
+      UUID eventId, long gold, long experience, CharacterProgress progress, OnlineStore.CreatureStrike strike) {
+    Objects.requireNonNull(strike);
+    if ((strike.after()==0)!=Objects.requireNonNull(eventId).equals(strike.life()))
+      throw new IllegalArgumentException("Invalid strike event identity");
+    return commitEvent(token,expectedRevision,eventId,gold,experience,progress,false,strike);
   }
 
   private CompletionStage<OnlineStore.RewardResult> commitEvent(String token, long expectedRevision,
-      UUID eventId, long gold, long experience, CharacterProgress progress, boolean worldReward) {
+      UUID eventId, long gold, long experience, CharacterProgress progress, boolean worldReward, OnlineStore.CreatureStrike strike) {
     var binding=active(token);
     if (binding.event!=null) throw new PreviewWorld.Rejected(409,"busy");
     if (binding.saved.revision()!=expectedRevision) throw new PreviewWorld.Rejected(409,"revision");
     if (gold<0 || experience<0) throw new IllegalArgumentException("Negative reward");
     var result=new CompletableFuture<OnlineStore.RewardResult>();
     binding.event=new GameplayEvent(Objects.requireNonNull(eventId),gold,experience,
-        Objects.requireNonNull(progress),worldReward,result);
+        Objects.requireNonNull(progress),worldReward,strike,result);
     if (!binding.pending) submit(binding);
     return result.minimalCompletionStage();
   }
@@ -141,7 +149,9 @@ final class PersistentSessions {
           if (event==null) {
             saved=store.checkpoint(binding.session,revision,0,map.originX+position.x(),map.originY+position.y());
           } else {
-            reward=event.worldReward()
+            reward=event.strike()!=null
+                ? store.commitCreatureStrike(binding.session,revision,event.id(),event.gold(),event.experience(),event.progress(),event.strike())
+                : event.worldReward()
                 ? store.commitWorldReward(binding.session,revision,event.id(),event.gold(),event.experience(),event.progress())
                 : store.commitGameplayEvent(binding.session,revision,event.id(),event.gold(),event.experience(),event.progress());
             saved=reward.character();

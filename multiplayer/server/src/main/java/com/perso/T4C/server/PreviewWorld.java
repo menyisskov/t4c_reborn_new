@@ -39,6 +39,7 @@ public final class PreviewWorld {
   record CreatureSpawn(long id, MonsterContent.Spawn spawn, com.perso.T4C.monster.core.MonsterDef definition) {}
   private final List<CreatureSpawn> creatureSpawns;
   private final java.util.Set<Long> inactiveCreatures = new java.util.HashSet<>();
+  private final Map<Long,Integer> creatureHealth = new java.util.HashMap<>();
   private final Map<String, Player> players = new LinkedHashMap<>();
   private final SecureRandom random = new SecureRandom();
   private long tick, nextId = 1;
@@ -73,6 +74,14 @@ public final class PreviewWorld {
   List<CreatureSpawn> creatureSpawns() { return creatureSpawns; }
   void creatureActive(long id, boolean active) {
     if (active) inactiveCreatures.remove(id); else inactiveCreatures.add(id);
+  }
+  void creatureHealth(long id, Integer health) {
+    var initial=creatures.get(Math.toIntExact(id-1));
+    if (health==null) creatureHealth.remove(id);
+    else {
+      if (health<0 || health>initial.maxHealth()) throw new IllegalArgumentException("Saved creature health exceeds authored health");
+      creatureHealth.put(id,health);
+    }
   }
 
   public Joined join() {
@@ -134,7 +143,9 @@ public final class PreviewWorld {
     authenticate(token);
     List<PlayerView> result = new ArrayList<>(players.size());
     for (Player p : players.values()) result.add(new PlayerView(p.id, p.x, p.y, p.sequence,p.appearance));
-    return new Snapshot(tick, List.copyOf(result),creatures.stream().filter(c -> !inactiveCreatures.contains(c.id())).toList());
+    return new Snapshot(tick, List.copyOf(result),creatures.stream().filter(c -> !inactiveCreatures.contains(c.id()))
+        .map(c -> new CreatureView(c.id(),c.definition(),c.x(),c.y(),creatureHealth.getOrDefault(c.id(),c.health()),
+            c.maxHealth(),c.walkPattern(),c.attackPattern(),c.deathPattern())).toList());
   }
 
   public void leave(String token) { authenticate(token); players.remove(token); }
