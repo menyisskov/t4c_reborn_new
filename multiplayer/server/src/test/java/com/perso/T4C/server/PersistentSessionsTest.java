@@ -397,7 +397,7 @@ class PersistentSessionsTest {
       var closed=sessions.leave(token); await(sessions,closed); closed.get();
       String rejoined=sessions.join(store.acquire(key.secret(),created.id()),System.nanoTime()).token();
       sessions.regionReady(rejoined,sessions.character(rejoined).locationEpoch());
-      var afterReconnect=sessions.interact(rejoined,first.revision(),"WardenAelric").toCompletableFuture().get();
+      var afterReconnect=sessions.interact(rejoined,sessions.character(rejoined).revision(),"WardenAelric").toCompletableFuture().get();
       assertFalse(afterReconnect.changed());
       var finalState=store.load(key.accountId(),created.id());
       assertEquals(created.gold()+500,finalState.gold(),"The reward is added exactly once across repeat and reconnect");
