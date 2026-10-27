@@ -9,6 +9,8 @@ status are in [TASKS.md](../TASKS.md); release evidence is in [ACCEPTANCE.md](AC
 
 For optional saved native characters, follow [persistent-mode setup](PERSISTENCE.md#running-persistent-native-clients).
 
+Database connection reuse, safe shutdown and failure diagnostics are documented in [DATABASE_RUNTIME.md](DATABASE_RUNTIME.md).
+
 Encrypted remote configuration is documented in [TLS.md](TLS.md); the local preview launcher continues to manage loopback HTTP.
 
 The authored travel graph and implemented two-region runtime are documented in [MAP_TRANSFER_DESIGN.md](MAP_TRANSFER_DESIGN.md).

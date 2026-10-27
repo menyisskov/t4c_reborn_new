@@ -1,9 +1,8 @@
 # Online account roster
 
-Delivery status (2026-10-27): this document describes pending implementation in the
-working tree based on `397d9ace`. That runtime/tooling is not yet merged. Recorded
-checks apply only to the stated build; this documentation does not mark a milestone
-complete or make the corresponding code available in an earlier release.
+Delivery status (2026-10-27): the account service/native adapter is implemented and verified,
+being delivered with T4C-0197. Visible selection/creation controls remain unfinished. Recorded
+working-tree checks do not establish rendered or full-Beta acceptance.
 
 T4C-0196 adds authenticated account discovery without changing the existing operator-issued key model. This is a roster service and network adapter; a native selection menu, public registration, character creation/deletion and credential recovery UI are not implemented.
 
@@ -71,3 +70,9 @@ mvn -B '-Dtest=OnlineAccountClientTest' test
 Tests cover bounded peer memory/refill, saturated independent worker queues, 21-row pagination including legacy entries, account isolation, active-lease summaries, protocol-before-credential rejection, rotation invalidation and absence of lease acquisition/private payloads. Adapter tests cover its discovery, authentication, pagination and bounded-response contract. Record actual outcomes in the release ledger; merely adding these tests is not evidence they passed.
 
 Next slice: native online-only selection UI, followed by authenticated idempotent creation using `CharacterCreationRules`, shared class kits and server-generated stats/items/gold. Creation needs a receipt, account-level serialization and the existing roster/name rules; it must not trust client progress or silently modify older operator-created rows. Public registration/key delivery/recovery and operator rotation UX remain explicit later account-lifecycle work. No OAuth, password scheme or external account service is introduced here.
+
+Final integrated validation before delivery passed 18 domain +82 server PostgreSQL tests,
+zero failures/errors/skips (including separate pending metrics groundwork). Twenty focused
+desktop checks passed. The actual NativeRosterProbe passed owner-only discovery, active-lease
+availability and two selected-character joins with unchanged progress; reproduce using
+[tools/NATIVE_ROSTER_PROBE.md](tools/NATIVE_ROSTER_PROBE.md). Native selection UI is not verified.

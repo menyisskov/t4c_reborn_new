@@ -64,6 +64,42 @@ class PersistentSessionsTest {
     } finally { pause.set(false);release.countDown();sessions.shutdown(); }
   }
 
+  @Test void incompleteFlushWaitsForAcceptedWorkerExitAndReportsFailure() throws Exception {
+    var pause=new AtomicBoolean();var entered=new CountDownLatch(1);
+    var interrupted=new CountDownLatch(1);var release=new CountDownLatch(1);
+    var store=new OnlineStore(() -> {
+      if(pause.get()) {
+        entered.countDown();
+        for(;;) {
+          try { if(release.await(5,TimeUnit.SECONDS)) break;throw new SQLException("Test gate timeout"); }
+          catch(InterruptedException signal) { interrupted.countDown(); } // JDBC may not stop on thread interruption.
+        }
+      }
+      return connection();
+    });
+    store.migrate();var key=store.provisionAccount();
+    var progress=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(4)).progress();
+    var saved=store.create(key.accountId(),"Shutdown gate",0,3.5,3.5,progress,0);
+    var map=new PreviewMap(new boolean[8][8],0,0,3,3);
+    var sessions=new PersistentSessions(store,map,new PreviewWorld(map));
+    long started=System.nanoTime();var lease=store.acquire(key.secret(),saved.id());
+    var token=sessions.join(lease,started).token();
+    try(var executor=Executors.newSingleThreadExecutor()) {
+      pause.set(true);
+      var accepted=sessions.commitGameplayEvent(token,0,UUID.randomUUID(),1,0,progress).toCompletableFuture();
+      assertTrue(entered.await(2,TimeUnit.SECONDS));
+      var stopped=executor.submit(()->sessions.shutdown(TimeUnit.MILLISECONDS.toNanos(1),TimeUnit.SECONDS.toNanos(3)));
+      try {
+        assertTrue(interrupted.await(2,TimeUnit.SECONDS));
+        assertFalse(stopped.isDone(),"Interrupting a JDBC worker is not proof that it stopped");
+      } finally { pause.set(false);release.countDown(); }
+      var failure=assertThrows(ExecutionException.class,()->stopped.get(4,TimeUnit.SECONDS));
+      assertTrue(failure.getCause().getMessage().contains("flush incomplete"));
+      assertTrue(accepted.isCompletedExceptionally());
+      assertEquals(1,store.load(key.accountId(),saved.id()).gold(),"Unacknowledged commit must be recovered from storage, never guessed or replayed");
+    } finally { pause.set(false);release.countDown();sessions.shutdown(); }
+  }
+
   @Test void gameplayWritesDoNotPostponeTheMovementCheckpointDeadline() throws Exception {
     var store=OnlineStore.fromEnvironment(); store.migrate(); var key=store.provisionAccount();
     var prepared=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(3));

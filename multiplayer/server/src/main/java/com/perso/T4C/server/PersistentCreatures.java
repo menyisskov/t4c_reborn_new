@@ -110,8 +110,15 @@ final class PersistentCreatures implements AutoCloseable {
   }
 
   @Override public void close() {
-    worker.shutdown();
-    try { if (!worker.awaitTermination(12,TimeUnit.SECONDS)) worker.shutdownNow(); }
-    catch (InterruptedException interrupted) { worker.shutdownNow(); Thread.currentThread().interrupt(); }
+    worker.shutdownNow();
+    boolean interrupted=Thread.interrupted();
+    long deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(12);
+    try {
+      while(!worker.isTerminated() && System.nanoTime()<deadline) {
+        try { worker.awaitTermination(Math.max(1,deadline-System.nanoTime()),TimeUnit.NANOSECONDS); }
+        catch(InterruptedException signal) { interrupted=true; }
+      }
+      if(!worker.isTerminated()) throw new IllegalStateException("Creature persistence workers did not terminate; shutdown requires forced database abort");
+    } finally { if(interrupted) Thread.currentThread().interrupt(); }
   }
 }

@@ -181,6 +181,19 @@ Two agent families work in parallel. Claim a TASKS.md ID on main (merge the row 
 - **Claude lane:** T4C-0201 scope + loot design docs (new files SCOPE_PROPOSAL.md, LOOT_DESIGN.md), T4C-0202 M2 loot domain rules (new files under multiplayer/domain only). Server-side loot wiring waits until the Codex lane's pending server changes are merged.
 - Unclaimed: M1 native UI, M3 quest service, M4 abilities. Whoever claims first posts the row; ask the owner if both want it.
 
+## T4C-0196/0197 delivery checkpoint
+
+User selected a fully implemented task; Codex finished0197 bounded database reuse and safe shutdown,
+including readable-zero-exit enforcement in the operator script. Final local checks passed:
+100PGtests including pending separate metrics prep;20focuseddesktoptests; real native roster and
+lost-committed-reply recovery probes;180-second20-adapter smoke with120acceptedattacks,35HPchanges,
+10reconnects and zero adapter/invariant/health failures; real operator graceful stop/restart.
+The smoke report is target/native-adapter-soak-0197-pooled-smoke.json; operational settings and
+failure/recovery contracts are in DATABASE_RUNTIME.md. Scope includes the coordinated0196 account
+roster/service/adapter but not rendered account UI.0198metrics source remains unstaged/separate.
+Self-review handled the slow-worker teardown and operator exit-status findings. CI/merge is next;
+claims on shared core files remain held until the corresponding explicit release in PEER_WORK.md.
+Claude's0201/0202 scope/loot lane remains distinct; the coordinator documentation is0203, not0201.
 ## Loot groundwork checkpoint (T4C-0201/0202, Claude lane)
 
 Delivered: SCOPE_PROPOSAL.md (all PROPOSED, awaiting owner approval) and LOOT_DESIGN.md; loot tasks L1–L5 (shared MonsterLootTables, CarryCapacityRules, ItemKeys, GroundLootView/LootDropDraft, server OnlineLootDrafts and OnlinePickupRules). Verified by unit tests only (root targeted + multiplayer reactor; PostgreSQL tests skipped); no server wiring, no rendered or native evidence. Remaining: L6 schema, L7 server loot handling, L8 melee wiring, L9 pickup endpoint, L10 native client, L11 corpse weight (needs owner decision), L12 acceptance — L6/L7/L9/L11 wait for the Codex lane's pending OnlineStore/PersistentSessions/PreviewServer changes to merge. OnlinePickupRules.effectiveStrength throws on active buffs; L7 must map to a refusal.

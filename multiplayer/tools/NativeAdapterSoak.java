@@ -35,6 +35,8 @@ class NativeAdapterSoak {
     URI endpoint=URI.create(args[0]); Path profiles=Path.of(args[1]),report=Path.of(args[4]);
     int duration=Integer.parseInt(args[2]); if(duration<10 || duration>86400) throw new IllegalArgumentException("Duration must be 10..86400 seconds");
     long serverPid=Long.parseLong(args[5]);
+    String stopFileSetting=System.getenv("T4C_SOAK_STOP_FILE");
+    Path stopFile=stopFileSetting==null || stopFileSetting.isBlank()?null:Path.of(stopFileSetting);
     // Use the server's trusted hosted graph and exact portal-source collision exceptions.
     // Never turn server-provided region keys into filesystem paths.
     var hosted=HostedRegionPlan.startingSlice(Path.of(args[3]));
@@ -64,7 +66,7 @@ class NativeAdapterSoak {
       p.reconnectAt=start+120_000+i*6_000L; p.lastFresh=start;
     }
     try(var http=HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build()) {
-      while(ms()<end) {
+      while(ms()<end && (stopFile==null || !Files.exists(stopFile))) {
         long now=ms(); int connected=0;
         for(int i=0;i<players.size();i++) {
           Player p=players.get(i);
@@ -174,7 +176,7 @@ class NativeAdapterSoak {
         }
         Thread.sleep(100);
       }
-      completed=true;
+      completed=ms()>=end;
     } finally {
       for(var p:players) p.connection.close();
       write(report,players,startedAt,start,connectedMillis,maxObserved,firstTick,lastTick,firstTickTime,lastTickTime,

@@ -1,5 +1,8 @@
 # Online persistence
 
+Long-lived connection ownership, pool limits, shutdown/failure behavior and verification are
+specified in [DATABASE_RUNTIME.md](DATABASE_RUNTIME.md).
+
 Backup and fresh-restore verification is documented in [BACKUP.md](BACKUP.md). Matching stored data alone does not complete the restored-gameplay release gate.
 
 Current schema: **9**. Protocol **4** requires a matching rebuilt client and server. Earlier server binaries reject schema 9; rollback requires a compatible binary or a separately restored matching backup, never removal of receipts or downgrading schema rows. See [HANDOFF.md](HANDOFF.md) for model/session continuation and [ACCEPTANCE.md](ACCEPTANCE.md) for verified release gates. Persistent native play currently supports authoritative movement, equipment commands, restricted melee, physical retaliation, death and owned corpse recovery. Authored two-region travel is integrated; native account selection, quests, general loot, spells and broader travel remain unfinished.
