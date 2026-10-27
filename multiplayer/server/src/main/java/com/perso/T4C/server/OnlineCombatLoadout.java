@@ -35,7 +35,7 @@ record OnlineCombatLoadout(CombatProfile profile, WeaponDamageRules.Stats stats,
         equipment.containsKey(BodyPart.WEAPON), progress.skills());
     var main = equipment.get(BodyPart.WEAPON);
     var off = equipment.get(BodyPart.WEAPON2);
-    if (off == null) off = equipment.get(BodyPart.SHIELD);
+    // SHIELD shares occupancy constraints, not the offline WEAPON2 damage input.
     // Secondary visual layers of a two-handed item are not a second owned weapon.
     return new OnlineCombatLoadout(profile, stats, main == null ? null : main.weapon(),
         off == null ? null : off.weapon(), bonuses.getOrDefault(10, 0));

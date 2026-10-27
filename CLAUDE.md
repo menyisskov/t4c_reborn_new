@@ -103,6 +103,7 @@ Its step 1 is the full checklist; at minimum:
 
 ## Mistakes past reviews caught (don't repeat them)
 
+- Shared equipment occupancy does not imply shared damage inputs: falling back from WEAPON2 to SHIELD granted dual-weapon damage from a shield. The online loadout regression checks zero shield off-hand damage while preserving shield armor.
 Add a line here whenever a review finds a new *class* of mistake, along with the test or rule
 that now guards against it.
 

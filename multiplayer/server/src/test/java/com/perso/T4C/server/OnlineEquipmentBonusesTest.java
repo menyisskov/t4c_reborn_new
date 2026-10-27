@@ -9,6 +9,28 @@ import com.perso.T4C.online.model.ItemContent;
 import org.junit.jupiter.api.Test;
 
 class OnlineEquipmentBonusesTest {
+  @Test void shieldDoesNotSupplyOffHandDamageEvenWithDualWeaponTraining() throws Exception {
+    var catalog = ItemCatalog.loadBundled();
+    var initial = OnlineCharacterCreator.prepare(CharacterClass.WARRIOR, "male", false, new java.util.Random(7)).progress();
+    var gson = new Gson();
+    var saved = gson.toJsonTree(initial).getAsJsonObject();
+    var shield = java.util.UUID.randomUUID();
+    saved.getAsJsonArray("inventory").add(gson.toJsonTree(new CharacterProgress.Item(shield, "item.newbi_set_shield", 1, 0)));
+    saved.getAsJsonObject("equipment").remove("WEAPON2");
+    saved.getAsJsonObject("equipment").addProperty("SHIELD", shield.toString());
+    saved.getAsJsonObject("skills").addProperty("two_weapons", 100);
+    var progress = gson.fromJson(saved, CharacterProgress.class);
+    var withShield = OnlineCombatLoadout.resolve(progress, catalog, 0, false);
+    assertEquals(100, withShield.profile().skill("two_weapons"));
+    assertNull(withShield.secondary());
+    assertEquals(0, com.perso.T4C.combat.WeaponDamageRules.offHand(withShield.stats(),
+        withShield.primary(), withShield.secondary(), withShield.damageBonus()));
+    var withoutShield = OnlineCombatLoadout.resolve(OnlineEquipmentCommands.unequip(progress,
+        com.perso.T4C.player.BodyPart.SHIELD), catalog, 0, false);
+    assertTrue(withShield.profile().armorClass() > withoutShield.profile().armorClass(),
+        "A shield must still contribute its defensive stats");
+  }
+
   @Test void combatLoadoutCombinesOwnedGearAndSkillsWithoutCountingSecondaryLayers() throws Exception {
     var gson = new Gson();
     var content = gson.toJsonTree(ItemCatalog.loadBundled()).getAsJsonObject();
