@@ -1,11 +1,15 @@
 package com.perso.T4C.server;
 
+import static com.perso.T4C.config.GameConstants.PLAYER_MELEE_ATTACK_RANGE;
+
 import com.google.gson.JsonObject;
 import com.perso.T4C.helper.CharacterClass;
 import com.perso.T4C.online.OnlineConnection;
 import com.perso.T4C.online.OnlineEndpoint;
 import com.perso.T4C.online.model.CreatureView;
+import com.perso.T4C.online.model.CharacterProgress;
 import com.perso.T4C.online.model.OnlineProtocol;
+import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.server.persistence.OnlineStore;
 import java.net.URI;
 import java.net.InetAddress;
@@ -31,6 +35,7 @@ import java.util.concurrent.TimeUnit;
 /** Two real native adapters observe one server-authoritative, provoked guard pursuit. */
 public final class NativePursuitProbe {
   private static final int PORT = 18771;
+  private static final int HANDOFF_PORT = 18778;
   private static final int START_SECONDS = 30, STOP_SECONDS = 100, LEASE_SECONDS = 45;
   private static final String GUARD = "Olin Haad Guard 3";
   private static final int GUARD_X = 2935, GUARD_Y = 1041;
@@ -41,11 +46,13 @@ public final class NativePursuitProbe {
       long settledMillis, boolean towardAttacker) {}
 
   public static void main(String[] args) throws Exception {
-    if (args.length != 4) throw new IllegalArgumentException(
-        "Usage: NativePursuitProbe RUNTIME_DIR http://127.0.0.1:18771 NEW_OUTPUT_DIR BASE_COMMIT");
+    boolean handoff = args.length == 5 && "--target-handoff".equals(args[4]);
+    if (args.length != 4 && !handoff) throw new IllegalArgumentException(
+        "Usage: NativePursuitProbe RUNTIME_DIR http://127.0.0.1:18771 NEW_OUTPUT_DIR BASE_COMMIT [--target-handoff uses 18778]");
     Path runtime = Path.of(args[0]).toRealPath();
     URI endpoint = OnlineEndpoint.validate(URI.create(args[1]));
-    if (!endpoint.toString().equals("http://127.0.0.1:" + PORT))
+    int port = handoff ? HANDOFF_PORT : PORT;
+    if (!endpoint.toString().equals("http://127.0.0.1:" + port))
       throw new IllegalArgumentException("Use only the reserved isolated loopback endpoint");
     Path output = Path.of(args[2]).toAbsolutePath().normalize();
     if (!args[3].matches("[0-9a-f]{40}") || !Files.isDirectory(output.getParent()) || Files.exists(output))
@@ -77,10 +84,12 @@ public final class NativePursuitProbe {
     }
     String url = System.getenv("T4C_DB_URL"), user = System.getenv("T4C_DB_USER");
     String password = System.getenv("T4C_DB_PASSWORD");
-    if (url == null || !url.matches(
-            "jdbc:postgresql://127\\.0\\.0\\.1:55432/t4c_pursuit_0212_[a-z0-9_]+(?:\\?.*)?")
+    String dbPattern = handoff
+        ? "jdbc:postgresql://127\\.0\\.0\\.1:55432/t4c_target_0229_[a-z0-9_]+"
+        : "jdbc:postgresql://127\\.0\\.0\\.1:55432/t4c_pursuit_0212_[a-z0-9_]+(?:\\?.*)?";
+    if (url == null || !url.matches(dbPattern)
         || !"t4c_online".equals(user) || password == null || password.isBlank())
-      throw new IllegalArgumentException("Use a fresh dedicated t4c_pursuit_0212_* database on 55432");
+      throw new IllegalArgumentException("Use a fresh dedicated database for this probe mode on 55432");
     for (String setting : List.of("T4C_TLS_KEYSTORE", "T4C_TLS_PASSWORD_FILE", "T4C_PUBLIC_ORIGIN"))
       if (System.getenv(setting) != null && !System.getenv(setting).isBlank())
         throw new IllegalArgumentException("This isolated probe requires local HTTP transport");
@@ -88,7 +97,7 @@ public final class NativePursuitProbe {
         && !"127.0.0.1".equals(System.getenv("T4C_BIND_ADDRESS")))
       throw new IllegalArgumentException("Server bind must be loopback");
     try (var socket = new ServerSocket()) {
-      socket.bind(new InetSocketAddress(InetAddress.getByName("127.0.0.1"), PORT));
+      socket.bind(new InetSocketAddress(InetAddress.getByName("127.0.0.1"), port));
     } catch (Exception occupied) {
       throw new IllegalArgumentException("Dedicated pursuit port is already in use", occupied);
     }
@@ -112,6 +121,10 @@ public final class NativePursuitProbe {
     if (guardIndex < 0) throw new IllegalArgumentException("Authored guard is outside hosted region");
     final long guardId = guardIndex + 1L; // PreviewWorld assigns region-order IDs starting at one.
     double ax = GUARD_X - 0.5, ay = GUARD_Y + 0.5;
+    if (handoff) {
+      targetHandoff(runtime, endpoint, output, args[3], spawn, guardId, map, ax, ay);
+      return;
+    }
     double bx = 2978.5, by = 1035.5;
     if (!map.canStand(ax - map.originX, ay - map.originY)
         || !map.canStand(bx - map.originX, by - map.originY)
@@ -303,6 +316,184 @@ public final class NativePursuitProbe {
     }
   }
 
+  /** A separate two-adapter target handoff fixture; the original pursuit probe remains unchanged. */
+  private static void targetHandoff(Path runtime, URI endpoint, Path output, String baseCommit,
+      com.perso.T4C.online.model.MonsterContent.Spawn spawn, long guardId, PreviewMap map,
+      double ax, double ay) throws Exception {
+    require(map.canStand(ax - map.originX, ay - map.originY),
+        "Disposable near-guard attacker fixture is blocked");
+    Files.createDirectory(output);
+    Path report = output.resolve("report.txt");
+    Path java = Path.of(System.getProperty("java.home"), "bin", "java.exe").toRealPath();
+    Path jar = runtime.resolve("t4c-server.jar");
+    Path collision = runtime.resolve("assets/maps/worldmap/worldmap.colbin");
+    Files.writeString(report, "T4C-0229 native target handoff; started=" + Instant.now()
+        + "; baseCommit=" + baseCommit + "; endpoint=" + endpoint
+        + "; protocol=" + OnlineProtocol.VERSION + "; serverJarSha256=" + sha(jar)
+        + "; clientJarSha256=" + sha(runtime.resolve("client/T4C.jar"))
+        + "; candidateManifestSha256=" + sha(runtime.resolve("candidate-manifest.tsv"))
+        + "\nTwo native OnlineConnection adapters; disposable near-guard initial characters; no renderer.\n",
+        StandardOpenOption.CREATE_NEW);
+    Process child = null;
+    String stage = "start owned server";
+    try (var http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build();
+        var store = OnlineStore.fromEnvironment()) {
+      child = start(java, jar, collision, output, 1, HANDOFF_PORT);
+      healthy(http, endpoint, child);
+      require(schema(System.getenv("T4C_DB_URL"), System.getenv("T4C_DB_USER"),
+          System.getenv("T4C_DB_PASSWORD")) == 11, "Target handoff requires schema 11");
+      var kitA = OnlineCharacterCreator.prepare(CharacterClass.WARRIOR, "female", false,
+          new Random(2281));
+      var kitB = OnlineCharacterCreator.prepare(CharacterClass.WARRIOR, "female", false,
+          new Random(2282));
+      var a = provision(store, "Handoff attacker", ax, ay, kitA);
+      privateProfile(output.resolve("player-a.json"), a.credentials());
+      var beforeLife = store.loadOrCreateSpawn(spawn.persistenceKey());
+      stage = "A provokes and leaves";
+      long aEpoch;
+      try (var attacker = new OnlineConnection(endpoint, a.credentials())) {
+        var joined = connected(attacker, a);
+        aEpoch = joined.map().locationEpoch();
+        require(attacker.unequip(BodyPart.WEAPON).toCompletableFuture()
+            .get(8, TimeUnit.SECONDS).accepted(), "A could not unequip the starter greatsword");
+        var guard = awaitWestFlank(attacker, map, guardId);
+        require(guard.health() > 0 && Math.abs(own(attacker.view()).x() - 30.5) < .25,
+            "Attacker was not at the legal west-flank melee point");
+        require(attacker.attack(guardId).toCompletableFuture().get(8, TimeUnit.SECONDS).accepted(),
+            "A's real native attack was rejected");
+        var provoked = store.loadOrCreateSpawn(spawn.persistenceKey());
+        require(provoked.eventId().equals(beforeLife.eventId())
+            && (provoked.health() == null || provoked.health() > 0)
+            && a.created().id().equals(provoked.targetCharacter())
+            && Long.valueOf(aEpoch).equals(provoked.targetEpoch()),
+            "A's accepted hit did not durably target the same living guard");
+        attacker.stopInput();
+      }
+      available(store, a, LEASE_SECONDS);
+      var savedA = store.load(a.key().accountId(), a.created().id());
+      require(savedA.progress().vitals().hp() > 0, "A died before handoff");
+      stage = "B commits target handoff and takes a strike";
+      var b = provision(store, "Handoff second player", ax, ay, kitB);
+      privateProfile(output.resolve("player-b.json"), b.credentials());
+      int bInitialHp;
+      long bEpoch;
+      OnlineStore.SpawnState switched;
+      try (var second = new OnlineConnection(endpoint, b.credentials())) {
+        var joined = connected(second, b);
+        bInitialHp = own(joined).hp();
+        bEpoch = joined.map().locationEpoch();
+        require(second.unequip(BodyPart.WEAPON).toCompletableFuture()
+            .get(8, TimeUnit.SECONDS).accepted(), "B could not unequip the starter greatsword");
+        awaitHandoffMelee(second, map, guardId);
+        require(a.created().id().equals(store.loadOrCreateSpawn(spawn.persistenceKey()).targetCharacter()),
+            "Absent A's committed target changed before B's hit");
+        require(second.attack(guardId).toCompletableFuture().get(8, TimeUnit.SECONDS).accepted(),
+            "B's real native handoff hit was rejected");
+        switched = store.loadOrCreateSpawn(spawn.persistenceKey());
+        require(switched.eventId().equals(beforeLife.eventId())
+            && (switched.health() == null || switched.health() > 0)
+            && b.created().id().equals(switched.targetCharacter())
+            && Long.valueOf(bEpoch).equals(switched.targetEpoch()),
+            "B's accepted hit did not durably replace A's target/epoch");
+        long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(20);
+        boolean struck = false;
+        while (System.nanoTime() < deadline) {
+          var committed = store.load(b.key().accountId(), b.created().id());
+          if (committed.progress().vitals().hp() < bInitialHp
+              && committed.progress().vitals().hp() > 0) { struck = true; break; }
+          Thread.sleep(100);
+        }
+        require(struck, "No committed guard strike damaged only the new target B");
+        second.stopInput();
+      }
+      available(store, b, LEASE_SECONDS);
+      var savedB = store.load(b.key().accountId(), b.created().id());
+      require(savedB.progress().vitals().hp() < bInitialHp
+          && store.load(a.key().accountId(), a.created().id()).equals(savedA),
+          "B's strike changed absent A or did not persist B's HP");
+      append(report, "acceptedAHop=true; acceptedBHop=true; sameLife=true; targetEpoch="
+          + bEpoch + "; aHp=" + savedA.progress().vitals().hp() + "; bHp="
+          + bInitialHp + "->" + savedB.progress().vitals().hp() + "\n");
+      stage = "A reconnect does not steal B's target";
+      try (var rejoined = new OnlineConnection(endpoint, a.credentials())) {
+        connected(rejoined, a);
+        Thread.sleep(2200);
+        require(privateMatches(rejoined.view(), savedA)
+            && store.load(a.key().accountId(), a.created().id()).equals(savedA)
+            && b.created().id().equals(store.loadOrCreateSpawn(spawn.persistenceKey()).targetCharacter()),
+            "A rejoin changed private state or stole B's durable target");
+      }
+      available(store, a, LEASE_SECONDS);
+      var savedAAfterSecondLeave = store.load(a.key().accountId(), a.created().id());
+      require(samePrivateApartFromRevision(savedA, savedAAfterSecondLeave, false),
+          "A's second normal leave changed private state beyond checkpoint revision");
+      stage = "graceful stop and restart";
+      graceful(http, endpoint, child, output.resolve("control-1.token"));
+      append(report, "ownedServer1Exit=" + child.exitValue() + "\n");
+      child = null;
+      var stopped = store.loadOrCreateSpawn(spawn.persistenceKey());
+      require(b.created().id().equals(stopped.targetCharacter())
+          && Long.valueOf(bEpoch).equals(stopped.targetEpoch())
+          && stopped.currentX() != null && stopped.currentY() != null
+          && "RETALIATION".equals(stopped.mode())
+          && store.load(a.key().accountId(), a.created().id()).equals(savedAAfterSecondLeave)
+          && store.load(b.key().accountId(), b.created().id()).equals(savedB),
+          "Graceful stop lost B's target or changed an absent player's private state");
+      child = start(java, jar, collision, output, 2, HANDOFF_PORT);
+      healthy(http, endpoint, child);
+      var restored = store.loadOrCreateSpawn(spawn.persistenceKey());
+      samePose(stopped, restored, "Restart changed committed guard life, target or pose");
+      require(store.load(a.key().accountId(), a.created().id()).equals(savedAAfterSecondLeave)
+          && store.load(b.key().accountId(), b.created().id()).equals(savedB),
+          "Restart changed an absent player's committed private baseline");
+      try (var first = new OnlineConnection(endpoint, a.credentials());
+          var second = new OnlineConnection(endpoint, b.credentials())) {
+        connected(first, a);
+        connected(second, b);
+        long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(8);
+        boolean matching = false;
+        while (System.nanoTime() < deadline) {
+          var currentB = store.load(b.key().accountId(), b.created().id());
+          if (privateMatches(first.view(), savedAAfterSecondLeave)
+              && store.load(a.key().accountId(), a.created().id()).equals(savedAAfterSecondLeave)
+              && samePrivateApartFromRevision(savedB, currentB, true)
+              && privateMatches(second.view(), currentB)) {
+            matching = true; break;
+          }
+          Thread.sleep(50);
+        }
+        require(matching, "Restarted native private views did not converge to committed records");
+        require(b.created().id().equals(store.loadOrCreateSpawn(spawn.persistenceKey()).targetCharacter()),
+            "Restarted A rejoin stole B's target");
+      }
+      available(store, a, LEASE_SECONDS);
+      available(store, b, LEASE_SECONDS);
+      graceful(http, endpoint, child, output.resolve("control-2.token"));
+      append(report, "ownedServer2Exit=" + child.exitValue() + "\n");
+      child = null;
+      append(report, "PASS: native A logout, B accepted hit/epoch handoff and committed strike,"
+          + " absent A unchanged, A reconnect isolation, owned graceful restart preserves life/target/pose/private state.\n"
+          + "No renderer, remote deployment, reset/home or full Beta claim.\n");
+      System.out.println("PASS T4C-0229 native target handoff; sanitized report: " + report);
+    } catch (Exception | Error failure) {
+      append(report, "FAIL stage=" + stage + "; type=" + failure.getClass().getSimpleName() + "\n");
+      throw failure;
+    } finally {
+      if (child != null && child.isAlive()) {
+        try (var cleanup = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build()) {
+          Path control = output.resolve(Files.exists(output.resolve("control-2.token"))
+              ? "control-2.token" : "control-1.token");
+          graceful(cleanup, endpoint, child, control);
+          append(report, "ownedCleanupExit=" + child.exitValue() + "\n");
+        } catch (Exception | Error cleanupFailure) {
+          append(report, "Owned child cleanup failed; inspect private logs.\n");
+          child.destroyForcibly();
+          child.waitFor(10, TimeUnit.SECONDS);
+        }
+      }
+    }
+  }
+
   private static Player provision(OnlineStore store, String name, double x, double y,
       OnlineCharacterCreator.Prepared kit) throws Exception {
     var key = store.provisionAccount();
@@ -366,6 +557,25 @@ public final class NativePursuitProbe {
       Thread.sleep(100);
     }
     throw new AssertionError("Authored guard never entered the verified west-flank melee window");
+  }
+
+  private static CreatureView awaitHandoffMelee(OnlineConnection second, PreviewMap map,
+      long guardId) throws Exception {
+    long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(20);
+    while (System.nanoTime() < deadline) {
+      var view = second.view();
+      if (view != null) {
+        var actor = own(view);
+        var creature = guard(view, guardId);
+        if (creature.health() > 0
+            && pixelDistance(actor.x(), actor.y(), creature.x(), creature.y())
+                <= PLAYER_MELEE_ATTACK_RANGE
+            && map.allowsCombat(actor.x(), actor.y(), creature.x(), creature.y(), false))
+          return creature;
+      }
+      Thread.sleep(100);
+    }
+    throw new AssertionError("Living guard did not enter B's actual legal native melee range");
   }
 
   private static OnlineConnection.View awaitMeleeWindow(OnlineConnection attacker,
@@ -519,8 +729,11 @@ public final class NativePursuitProbe {
 
   private static void samePose(OnlineStore.SpawnState expected, OnlineStore.SpawnState actual,
       String message) {
-    require(expected.eventId().equals(actual.eventId())
-        && expected.health().equals(actual.health())
+    require(expected.currentX() != null && expected.currentY() != null
+        && actual.currentX() != null && actual.currentY() != null
+        && expected.mode() != null && actual.mode() != null
+        && expected.eventId().equals(actual.eventId())
+        && java.util.Objects.equals(expected.health(), actual.health())
         && expected.currentX().equals(actual.currentX())
         && expected.currentY().equals(actual.currentY())
         && expected.mode().equals(actual.mode())
@@ -544,6 +757,31 @@ public final class NativePursuitProbe {
         && actor.hp() == saved.progress().vitals().hp()
         && Math.abs(actor.x() + view.map().originX() - saved.x()) < .25
         && Math.abs(actor.y() + view.map().originY() - saved.y()) < .25;
+  }
+
+  /** A normal final checkpoint advances revision; a later B strike may also lower B's HP. */
+  private static boolean samePrivateApartFromRevision(OnlineStore.CharacterState expected,
+      OnlineStore.CharacterState actual, boolean allowHpLoss) {
+    if (!expected.id().equals(actual.id()) || !expected.accountId().equals(actual.accountId())
+        || !expected.name().equals(actual.name()) || expected.world() != actual.world()
+        || Double.compare(expected.x(), actual.x()) != 0 || Double.compare(expected.y(), actual.y()) != 0
+        || expected.gold() != actual.gold() || expected.experience() != actual.experience()
+        || expected.locationEpoch() != actual.locationEpoch()
+        || expected.portalCooldownUntil() != actual.portalCooldownUntil()
+        || actual.revision() < expected.revision()) return false;
+    var progress = actual.progress();
+    if (allowHpLoss) {
+      var prior = expected.progress().vitals();
+      var current = progress.vitals();
+      if (current.hp() <= 0 || current.hp() > prior.hp()) return false;
+      progress = new CharacterProgress(progress.version(), progress.characterClass(), progress.gender(),
+          progress.attributes(), new CharacterProgress.Vitals(prior.hp(), current.maxHp(),
+              current.mana(), current.maxMana()), progress.advancement(), progress.inventory(),
+          progress.equipment(), progress.skills(), progress.spells(), progress.questFlags(),
+          progress.storage(), progress.storageGold(), progress.respawn(), progress.buffs(),
+          progress.cooldowns(), progress.hiddenUntil(), progress.companion());
+    }
+    return expected.progress().equals(progress);
   }
 
   /** Conservative static version of the creature's radius-one intermediate-cell A* clearance. */
@@ -611,9 +849,14 @@ public final class NativePursuitProbe {
 
   private static Process start(Path java, Path jar, Path map, Path output, int number)
       throws Exception {
+    return start(java, jar, map, output, number, PORT);
+  }
+
+  private static Process start(Path java, Path jar, Path map, Path output, int number, int port)
+      throws Exception {
     Path control = output.resolve("control-" + number + ".token");
     var builder = new ProcessBuilder(java.toString(), "-Djava.awt.headless=true", "-jar",
-        jar.toString(), "--online", map.toString(), Integer.toString(PORT));
+        jar.toString(), "--online", map.toString(), Integer.toString(port));
     builder.directory(jar.getParent().toFile());
     builder.environment().put("T4C_CONTROL_FILE", control.toString());
     builder.environment().put("T4C_BIND_ADDRESS", "127.0.0.1");
