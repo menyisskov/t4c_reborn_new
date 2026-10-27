@@ -13,7 +13,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0180 | Share authoritative weapon timing with offline combat | Multiplayer / Alpha | In Progress | pending | [2026-10-27](CHANGELOG.md#2026-10-27--shared-online-weapon-timing-t4c-0180) |
+| T4C-0180 | Share authoritative weapon timing with offline combat | Multiplayer / Alpha | Done | 1264f841 | [2026-10-27](CHANGELOG.md#2026-10-27--shared-online-weapon-timing-t4c-0180) |
 | T4C-0179 | Keep shields out of online off-hand damage | Multiplayer / Alpha | Done | 24062be6 | [2026-10-27](CHANGELOG.md#2026-10-27--shield-combat-correction-t4c-0179) |
 | T4C-0178 | Derive combat loadouts from authoritative equipment | Multiplayer / Alpha | Done | a5b5d457 | [2026-10-27](CHANGELOG.md#2026-10-27--online-combat-equipment-stats-t4c-0178) |
 | T4C-0177 | Gate online login on explicit wire compatibility | Multiplayer / Alpha | Done | cb758124 | [2026-10-27](CHANGELOG.md#2026-10-27--online-compatibility-checks-t4c-0177) |
