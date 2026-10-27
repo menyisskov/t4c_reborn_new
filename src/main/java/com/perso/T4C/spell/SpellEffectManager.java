@@ -74,44 +74,45 @@ public final class SpellEffectManager {
 
   public int resolvePlayerHealthDelta(SpellData spell, Player caster) {
     if (spell == null || caster == null) return 0;
+    List<String> healFormulas = new ArrayList<>();
     for (SpellData.T4cEffect effect : spell.getT4cEffects()) {
       if (effect != null && effect.getEffectType() == 1) {
         String formula = parameter(effect, 1);
-        if (formula != null) {
-          DiceFormula.Context base = SpellCastingService.context(caster);
-          DiceFormula.Context context =
-              new DiceFormula.Context(
-                      base.str,
-                      base.end,
-                      base.agi,
-                      base.intel,
-                      base.wil,
-                      base.wis,
-                      base.luck,
-                      base.level,
-                      0,
-                      100,
-                      100,
-                      100,
-                      100,
-                      100,
-                      100,
-                      elementalPower(caster, "fire"),
-                      elementalPower(caster, "earth"),
-                      elementalPower(caster, "air"),
-                      elementalPower(caster, "water"),
-                      elementalPower(caster, "light"),
-                      elementalPower(caster, "dark"))
-                  .withSelfTrue(base.selfTrue)
-                  .withEquippedItems(base.equippedItems);
-          int delta = DiceFormula.of(formula).evaluate(context);
-          if (delta != 0) return delta;
-        }
+        if (formula != null) healFormulas.add(formula);
       }
     }
-    int low = Math.min(spell.getMinDamage(), spell.getMaxDamage());
-    int high = Math.max(spell.getMinDamage(), spell.getMaxDamage());
-    return low == high ? low : ThreadLocalRandom.current().nextInt(low, high + 1);
+    DiceFormula.Context base = SpellCastingService.context(caster);
+    DiceFormula.Context context =
+        new DiceFormula.Context(
+                base.str,
+                base.end,
+                base.agi,
+                base.intel,
+                base.wil,
+                base.wis,
+                base.luck,
+                base.level,
+                0,
+                100,
+                100,
+                100,
+                100,
+                100,
+                100,
+                elementalPower(caster, "fire"),
+                elementalPower(caster, "earth"),
+                elementalPower(caster, "air"),
+                elementalPower(caster, "water"),
+                elementalPower(caster, "light"),
+                elementalPower(caster, "dark"))
+            .withSelfTrue(base.selfTrue)
+            .withEquippedItems(base.equippedItems);
+    return SpellHealRules.healthDelta(
+        healFormulas,
+        spell.getMinDamage(),
+        spell.getMaxDamage(),
+        context,
+        ThreadLocalRandom.current());
   }
 
   private static boolean hasDrainLifeEffect(SpellData spell) {

@@ -46,12 +46,7 @@ public class SpellData {
   private final List<T4cEffect> t4cEffects;
 
   public String getKey() {
-    String key = I18n.keyOf(name);
-    if (key == null) return name;
-    while (key.startsWith("spell.spell_")) {
-      key = "spell." + key.substring("spell.spell_".length());
-    }
-    return key;
+    return SpellKeys.normalize(name);
   }
 
   public SpellData withPrice(int newPrice) {
