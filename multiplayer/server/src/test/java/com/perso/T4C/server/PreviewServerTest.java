@@ -44,6 +44,8 @@ class PreviewServerTest {
         sockets.add(slowBody(port,url,"/unknown",null));
         sockets.add(slowBody(port,url,"/join",null,1000));
         Thread.sleep(150);
+        assertEquals(200,client.send(request(url,"/health",null,null),HttpResponse.BodyHandlers.ofString()).statusCode(),
+            "Slow public bodies must not block the read-only health diagnostic");
         for(int i=8;i<16;i++) assertTrue(responseLine(sockets.get(i)).contains(" 401 "),
             "A forged Bearer token must be refused before its body arrives");
         assertTrue(responseLine(sockets.get(16)).contains(" 404 "),"Unknown routes must fail before body reads");

@@ -9,7 +9,7 @@ commit links, and finer-grained notes.
 ## 2026-10-27 — Bound slow online requests (T4C-0222)
 
 ### Fixed
-- Slow or excessive public and account-list requests have bounded admission so they cannot consume every local request slot needed by players already in the game. Invalid and oversized requests are refused early. Local checks kept two active players responsive while slow or blocked requests accumulated; wider abuse and deployment protection remain to be verified.
+- Slow or excessive public and account-list requests have bounded admission so they cannot consume every local request slot needed by players already in the game. Invalid and oversized requests are refused early, while the lightweight health check remains available during slow public bodies. Local checks kept two active players responsive while slow or blocked requests accumulated; wider abuse and deployment protection remain to be verified.
 
 ## 2026-10-27 — Safe stability report replacement (T4C-0221)
 

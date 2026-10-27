@@ -206,6 +206,7 @@ public final class PreviewServer implements AutoCloseable {
 
   private HttpRequestAdmission.Permit admitGet(HttpExchange exchange,String path) throws Exception {
     return switch(path) {
+      case "/health" -> null; // Cheap local diagnostic must remain available while public bodies wait.
       case "/state" -> knownSession(exchange);
       case "/character","/corpses" -> {
         if(persistent==null) throw new PreviewWorld.Rejected(404,"route");
