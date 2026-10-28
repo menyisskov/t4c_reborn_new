@@ -695,6 +695,119 @@ class PreviewServerTest {
     }
   }
 
+  /** A character that died at the map centre: its droppable items wait on a corpse right beside it. */
+  private record Corpse(OnlineStore.CharacterState dead,java.util.UUID id,java.util.List<com.perso.T4C.online.model.CharacterProgress.Item> items) {}
+
+  private static Corpse dieBesideStart(OnlineStore store,OnlineStore.AccountKey account,String name,boolean overweight) throws Exception {
+    var base=OnlineCharacterCreator.prepare(com.perso.T4C.helper.CharacterClass.WARRIOR,"male",false,new java.util.Random(3)).progress();
+    var catalog=ItemCatalog.loadBundled();
+    String ordinary=catalog.items().values().stream().filter(i->!i.undroppable()).map(i->i.key()).sorted().findFirst().orElseThrow();
+    var inventory=new java.util.ArrayList<>(base.inventory());
+    inventory.add(new com.perso.T4C.online.model.CharacterProgress.Item(java.util.UUID.randomUUID(),ordinary,1,7));
+    var progress=new com.perso.T4C.online.model.CharacterProgress(base.version(),base.characterClass(),base.gender(),base.attributes(),
+        base.vitals(),base.advancement(),inventory,base.equipment(),base.skills(),base.spells(),base.questFlags(),base.storage(),
+        base.storageGold(),base.respawn(),base.buffs(),base.cooldowns(),base.hiddenUntil(),base.companion());
+    var created=store.create(account.accountId(),name,0,30.5,30.5,progress,0);
+    var session=store.acquire(account.secret(),created.id());
+    try {
+      var life=store.loadOrCreateSpawn("http-recover:"+java.util.UUID.randomUUID());
+      var provoked=store.commitGameplayEvent(session,created.revision(),java.util.UUID.randomUUID(),0,0,created.progress(),
+          new OnlineStore.CreatureProvocation(life.key(),life.eventId(),created.id(),0)).character();
+      var here=new com.perso.T4C.online.model.CharacterProgress.Respawn(0,30.5,30.5);
+      var death=OnlineDeath.prepare(provoked,catalog,here,here,new java.util.Random() { @Override public double nextDouble() { return 0; } });
+      var attack=new OnlineStore.MonsterAttack(life.key(),life.eventId(),created.id(),0,System.currentTimeMillis()+1500);
+      var corpseId=java.util.UUID.randomUUID();
+      var dead=store.commitMonsterAttack(session,provoked.revision(),corpseId,death.progress(),attack,death.transition()).character();
+      assertFalse(death.transition().droppedItems().isEmpty(),"the fixture must leave something on the corpse");
+      if(overweight) {
+        var fixture=OnlineOverweightFixture.size(dead.progress(),catalog);
+        dead=store.commitGameplayEvent(session,dead.revision(),java.util.UUID.randomUUID(),0,0,
+            OnlineOverweightFixture.apply(dead.progress(),fixture)).character();
+      }
+      return new Corpse(dead,corpseId,death.transition().droppedItems());
+    } finally { store.release(session); }
+  }
+
+  /** A death moves the character, so its location epoch is no longer zero. */
+  private long epochOf(HttpClient client,String url,String token) throws Exception {
+    return object(client.send(request(url,"/character",token,null),HttpResponse.BodyHandlers.ofString())).get("locationEpoch").getAsLong();
+  }
+
+  /** The corpse list is read right after joining; retry only while the session has not seen it yet. */
+  private HttpResponse<String> recoverWhenKnown(HttpClient client,String url,String token,String current,String body) throws Exception {
+    HttpResponse<String> response=null;
+    // Listing the corpses is what makes the session aware of them, as the client does.
+    assertEquals(200,client.send(request(url,"/corpses",token,null),HttpResponse.BodyHandlers.ofString()).statusCode());
+    for(int attempt=0;attempt<40;attempt++) {
+      response=client.send(abilityRequest(url,"/recover",token,current,body),HttpResponse.BodyHandlers.ofString());
+      if(response.statusCode()!=409 || !response.body().contains("corpse_unavailable")) return response;
+      Thread.sleep(100);
+    }
+    return response;
+  }
+
+  @Test @EnabledIfEnvironmentVariable(named="T4C_DB_URL",matches=".+")
+  void recoverHttpReportsTheRealCorpseRefusalInsteadOfBusy() throws Exception {
+    var store=OnlineStore.fromEnvironment(); store.migrate();
+    var owner=store.provisionAccount(); var stranger=store.provisionAccount(); var heavyAccount=store.provisionAccount();
+    var corpse=dieBesideStart(store,owner,"HTTP recover owner",false);
+    var other=store.create(stranger.accountId(),"HTTP recover stranger",0,30.5,30.5,
+        OnlineCharacterCreator.prepare(com.perso.T4C.helper.CharacterClass.WARRIOR,"male",false,new java.util.Random(7)).progress(),0);
+    var heavyCorpse=dieBesideStart(store,heavyAccount,"HTTP recover heavy",true);
+    String current=Integer.toString(com.perso.T4C.online.model.OnlineProtocol.VERSION);
+    try (var server=new PreviewServer(new PreviewMap(new boolean[60][80],0,0,30,30),0,store); var client=HttpClient.newHttpClient()) {
+      server.start(); String url=server.url();
+      String token=login(client,url,owner,corpse.dead().id());
+      long revision=object(client.send(request(url,"/character",token,null),HttpResponse.BodyHandlers.ofString())).get("revision").getAsLong();
+      // Another player's corpse is not visible to this session.
+      String foreign=login(client,url,stranger,other.id());
+      long foreignRevision=object(client.send(request(url,"/character",foreign,null),HttpResponse.BodyHandlers.ofString())).get("revision").getAsLong();
+      var notYours=client.send(abilityRequest(url,"/recover",foreign,current,foreignRevision+" "+epochOf(client,url,foreign)+" "+corpse.id()),HttpResponse.BodyHandlers.ofString());
+      assertEquals(409,notYours.statusCode(),notYours.body()); assertTrue(notYours.body().contains("corpse_unavailable"),notYours.body());
+      // An item that is not on the corpse is a definite refusal, not a busy server.
+      var missing=recoverWhenKnown(client,url,token,current,revision+" "+epochOf(client,url,token)+" "+corpse.id()+" "+java.util.UUID.randomUUID());
+      assertEquals(409,missing.statusCode(),missing.body()); assertTrue(missing.body().contains("item_unavailable"),missing.body());
+      assertEquals(200,client.send(request(url,"/character",token,null),HttpResponse.BodyHandlers.ofString()).statusCode(),"A refusal keeps the player connected");
+      assertEquals(corpse.dead(),store.load(owner.accountId(),corpse.dead().id()),"The refusal changed nothing");
+      // A character already over its carry limit cannot take a stack.
+      String heavyToken=login(client,url,heavyAccount,heavyCorpse.dead().id());
+      long heavyRevision=object(client.send(request(url,"/character",heavyToken,null),HttpResponse.BodyHandlers.ofString())).get("revision").getAsLong();
+      var heavyBefore=store.load(heavyAccount.accountId(),heavyCorpse.dead().id());
+      var tooHeavy=recoverWhenKnown(client,url,heavyToken,current,heavyRevision+" "+epochOf(client,url,heavyToken)+" "+heavyCorpse.id()+" "+heavyCorpse.items().getFirst().id());
+      assertEquals(409,tooHeavy.statusCode(),tooHeavy.body()); assertTrue(tooHeavy.body().contains("too_heavy"),tooHeavy.body());
+      assertEquals(heavyBefore,store.load(heavyAccount.accountId(),heavyCorpse.dead().id()),"The refusal changed nothing");
+    }
+  }
+
+  @Test @EnabledIfEnvironmentVariable(named="T4C_DB_URL",matches=".+")
+  void recoverHttpStillAnswersBusyWhenTheCommitGenuinelyTimesOut() throws Exception {
+    var admin=OnlineStore.fromEnvironment(); admin.migrate();
+    var owner=admin.provisionAccount();
+    var corpse=dieBesideStart(admin,owner,"HTTP recover slow",false);
+    var slow=new java.util.concurrent.atomic.AtomicBoolean();
+    var properties=new java.util.Properties();
+    properties.setProperty("user",System.getenv("T4C_DB_USER")); properties.setProperty("password",System.getenv("T4C_DB_PASSWORD"));
+    var store=new OnlineStore(() -> {
+      if(slow.get()) { try { Thread.sleep(2600); } catch(InterruptedException e) { Thread.currentThread().interrupt(); } }
+      return java.sql.DriverManager.getConnection(System.getenv("T4C_DB_URL"),properties);
+    });
+    String current=Integer.toString(com.perso.T4C.online.model.OnlineProtocol.VERSION);
+    try (var server=new PreviewServer(new PreviewMap(new boolean[60][80],0,0,30,30),0,store); var client=HttpClient.newHttpClient()) {
+      server.start(); String url=server.url();
+      String token=login(client,url,owner,corpse.dead().id());
+      long revision=object(client.send(request(url,"/character",token,null),HttpResponse.BodyHandlers.ofString())).get("revision").getAsLong();
+      assertEquals(200,client.send(request(url,"/corpses",token,null),HttpResponse.BodyHandlers.ofString()).statusCode());
+      long epoch=epochOf(client,url,token);
+      slow.set(true);
+      var response=client.send(HttpRequest.newBuilder(URI.create(url+"/recover")).timeout(Duration.ofSeconds(8))
+          .header("Origin",url).header("Content-Type","text/plain")
+          .header(com.perso.T4C.online.model.OnlineProtocol.VERSION_HEADER,current).header("Authorization","Bearer "+token)
+          .POST(HttpRequest.BodyPublishers.ofString(revision+" "+epoch+" "+corpse.id())).build(),HttpResponse.BodyHandlers.ofString());
+      slow.set(false);
+      assertEquals(503,response.statusCode(),response.body()); assertTrue(response.body().contains("busy"),response.body());
+    }
+  }
+
   private String login(HttpClient client,String url,OnlineStore.AccountKey key,java.util.UUID character) throws Exception {
     var response=client.send(request(url,"/join",null,key.secret()+" "+character),HttpResponse.BodyHandlers.ofString());
     assertEquals(200,response.statusCode());

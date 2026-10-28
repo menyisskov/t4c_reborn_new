@@ -1,13 +1,13 @@
 package com.perso.T4C.spell;
 
 import com.perso.T4C.helper.DiceFormula;
+import com.perso.T4C.helper.RandomSource;
 import com.perso.T4C.helper.SanctuaryCombatRules;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.player.Player;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
 
 public final class SpellCastingService {
   public static final int MAXIMUM_CAST_RANGE_TILES = SpellCastRules.MAXIMUM_CAST_RANGE_TILES;
@@ -98,7 +98,7 @@ public final class SpellCastingService {
             caster.hasUnlimitedResources(),
             caster.getMana(),
             context(caster),
-            ThreadLocalRandom.current()::nextInt);
+            RandomSource.current()::nextInt);
     var outcome = SpellCastRules.evaluate(input);
     if (outcome.verdict() == SpellCastRules.Verdict.ACTIVATION_FAILED) {
       if (interruptActions) caster.interruptActions();

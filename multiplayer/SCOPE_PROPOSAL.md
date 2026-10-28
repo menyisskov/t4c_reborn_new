@@ -1,5 +1,11 @@
 # Two-player checkpoint scope: proposal
 
+> **Superseded in part (2026-10-28).** The owner ruled that the online game must match
+> single-player in everything except having a client and a server. The exclusions and the
+> "Warrior only" fallback in this proposal are now temporary divergences to close, not a scope
+> limit. See [PARITY.md](PARITY.md) for the rule, the checklist and the build order. The
+> two-player starter route below remains a useful intermediate checkpoint.
+
 Status: **APPROVED by the owner on 2026-10-27 with the amendments below.** Drafted the same day,
 Asia/Jerusalem. [MILESTONES.md](MILESTONES.md) "Scope must be explicit before completion" remains
 the authority and records the approval. Sections still say PROPOSED in their headings; read them

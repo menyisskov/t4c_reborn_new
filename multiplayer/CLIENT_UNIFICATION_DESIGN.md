@@ -1,0 +1,328 @@
+# Client unification: the online client runs the single-player screens (T4C-0254)
+
+Design draft, 2026-10-28. **Documentation only; no production code changed, no server, database
+or port used.** Source baseline: `origin/main` `68861bef` (PR206, protocol 5; rechecked against `25a4b2ca`). Re-measure the
+counts below before relying on them. Owner rule: [PARITY.md](PARITY.md) (online looks and plays
+exactly like single-player; the only difference is a client and a server). Engineering rules:
+[AGENT.md](../AGENT.md) (camera, rendering, English only). Paths starting `screens/`, `gui/`,
+`ui/`, `player/`, ... are under `src/main/java/com/perso/T4C/`; `server/` and `domain/` are under
+`multiplayer/`.
+
+**Decision: Option A, a session seam.** `MainGameScreen` and every GUI class stay the only game
+screen. They talk to a `GameSession` with two implementations: `LocalGameSession` (today's code,
+moved, not rewritten) and `RemoteGameSession` (intents to the server, snapshots back). The view
+model is the *real* `Player`, `BaseMonster`, `BaseNPC` and `GroundItem` objects, driven as
+puppets from snapshots online. Prediction is limited to the player's own movement.
+
+## 1. How the game screen reads and mutates state today
+
+### 1.1 Who holds authoritative state (single-player)
+
+Everything is in-process and mutable; there is no read-only view layer.
+
+| State | Holder | Evidence |
+|---|---|---|
+| Character (stats, vitals, gold, XP, inventory `List<String>`, equipment, spells, skills, quest flags, buffs, cooldown timestamps, quickbar, macros) | `player/Player` (1,322 lines, extends `model/Stats`, 140 public methods, 7 callback interfaces) | `MainGameScreen` holds one `@Getter Player player`; 180 `player.` references in the screen |
+| Monsters (AI, pursuit, HP, loot, respawn) | `monster/core/MonsterManager` (669) + `BaseMonster` (1,354) and ~480 subclasses | 62 `monsterManager` references in the screen; `updateVisible` runs AI every frame |
+| NPCs (dialogue scripts, shops, trainers, portals, chests) | `npc/core/NPCManager` (730) + `BaseNPC` (1,245) and ~600 classes | 48 `npcManager` references; NPC classes open GUI themselves (`ScriptedNpc`, `SpellMerchant`, `StorageChest`) |
+| Ground items | `objects/GroundItemManager` (field of the screen) | 10 references |
+| Quests | `quest/QuestService` (constructed in loading step 2 with `savePlayerState` as a callback) | 6 references |
+| Spell effects, DoTs, buffs ticking | `spell/SpellEffectManager` (screen field) | 19 references |
+| Companions, tame/harvest channels, world events, day/night, teleports, music zones | screen fields | `CompanionManager`, `TameChannel`, `HarvestChannel`, `WorldEventRuntime`, `DayNightCycle` |
+| Persistence | `helper/PlayerStateStore.save(Player)` (static, file-backed, active-file static) | 20 `savePlayerState` calls in the screen plus a 15 s autosave |
+
+### 1.2 The frame loop
+
+`MainGameScreen.render` (line 1510) is: input → autosave → teleport check → `updateEntities`
+→ world events → camera/music/zone banner → day/night → render bounds → ground → entities
+with decor occlusion → spells, names, floating damage → overlays → HUD (`GameChat`,
+`PlayerHUD`, coords, `RadarHud`, zone banner, cursor, `GuiManager.render`). Only
+`updateEntities` (line 4108: `player.update`, `npcManager.updateVisible`,
+`monsterManager.updateVisible`, `performAttackTick`, `spellEffectManager.update`, tame and
+harvest) and the input/teleport/autosave sections *simulate*. Everything after them only
+*reads* `player`, the managers and the effect/render objects. This split is the seam.
+
+### 1.3 How the GUI reaches game logic
+
+There is no event bus or command layer. Each GUI screen receives the `Player` and mutates it:
+
+| Pattern | Count | Examples |
+|---|---|---|
+| GUI screens whose constructor takes `Player` | 16 | `Inventory(player, hud)`, `SpellBook(player, hud)`, `Statistics`, `QuestScreen`, `MacrosScreen`, `ShopScreen`, `StorageScreen`, `LearnScreen`, `TrainScreen` |
+| Direct static rule calls that mutate the player | ~45 sites | `Inventory`: 17 `InventoryService`/`ItemUseService` calls (`equip`, `unequip`, `remove`, `useOnSelf`) plus `player.dropInventoryItem`; `ShopScreen`: `ItemSaleService.sell`, `player.setGold`, `player.setInventory`; `StorageScreen`: 20 service calls |
+| GUI classes that write the save file themselves | 10 GUI + 2 input classes, 21 calls | `PlayerStateStore.save` in `Inventory` (5), `MacrosScreen` (4), `ShopScreen` (2), `SpellBook` (2), `ClickToMoveHandler` (2), `ObjectClickHandler` (2), ... |
+| Screen-owned callbacks wired into the model | 21 `set*Callback` calls | monster damage/death/loot, NPC damage, player death, level-up, teleport, messages |
+| Read-only GUI | most of `PlayerHUD` (17 `player.` reads), `RadarHud` (0), `JournalWindow`, `GuiInventory` (1), `CharacterPanel`, `OptionsScreen`, `ControlsScreen` | |
+| Global singletons used by the screen | `CollisionManager` (11), `SpriteLoader`, `GuiManager` (static), `SystemMessage` (shared sink), `SoundManager` | |
+
+Combat and casting live inside the screen itself (`performAttackTick`, `tryCastAttackSpell`,
+`castDefensiveSpell`, `applyBowImpact`, `applySpellImpact`, about 1,500 of the 4,964 lines).
+Movement is 8-direction input: `GameInputHandler.handleInput` → `player.move(dx, dy, delta)`;
+mouse drag is projected to the same 8 directions (`MouseMovementHandler.projectDirection`).
+
+### 1.4 The current online client
+
+`online/OnlineClient` (949 lines) is its own `ApplicationAdapter`. It shares `MapRenderer`,
+`PlayerAnimations`, `MonsterAnimations` and `NPCAnimations` but none of the screen, HUD or GUI.
+State arrives through `online/OnlineConnection` (498 lines, one network thread): each loop
+sends `/input` (`epoch sequence dx dy`), polls `/state` (`Snapshot`: players, creatures, NPCs,
+loot, region, character revision) and, when the revision changes, `/character`
+(`OnlineCharacterView` with the full `CharacterProgress`). Gameplay commands (`/attack`, `/cast`,
+`/use`, `/equip`, `/unequip`, `/pickup`, `/recover`, `/interact`) go one at a time, carry the
+character revision as a fence, and are never replayed after a conflict. The server
+(`server/PreviewWorld`, 34 Hz) owns movement with its own swept-substep rule, which is **not**
+`PlayerMovement`. 13 tools under `multiplayer/tools` and 4 tests drive `OnlineConnection`
+directly; its public API is a contract.
+
+## 2. Options
+
+| Criterion | A. Session seam, puppets | B. Headless local simulation as mirror | C. Fork `MainGameScreen` | D. Ship single-player logic to the server and stream frames/state wholesale |
+|---|---|---|---|---|
+| Fidelity to single-player | Same screen, HUD, GUI classes, renderer, input | Same, but the mirror's simulation diverges from the server's | Diverges from the day of the fork | Same look, but needs a pixel/state streaming client |
+| Effort | L–XL total, staged; first slice M | XL (every subsystem needs reconciliation) | M to start, unbounded upkeep | XL |
+| Risk to single-player | Mechanical extraction behind characterization tests | Same extraction plus a second running simulation | None at first; parity drift guaranteed | High |
+| Latency feel | Own movement predicted with the shared rule; everything else at server pace plus interpolation | Best in theory, rollback artefacts in practice (a predicted kill that the server refuses) | Same as A | Worst |
+| Reuse of shared rules (`domain/`) | Server keeps using `domain/`; client uses the same rule only for movement prediction | Client runs all rules, server runs them again; two truths | Same as A | n/a |
+| Cheating resistance | Unchanged: client only sends intents; the server never accepts state | Unchanged if the server stays authoritative, but the client holds a full simulation to tamper with | Unchanged | Strong |
+| Fit with protocol 5, receipts, fencing | Uses them as they are; refusals become messages | Needs reconciliation for every committed receipt | As A | Discards them |
+| Parity rule "no second GUI" | Met | Met | **Violated** | Met |
+
+**Choice: A.** It is the only option that meets the owner rule (one game screen, one GUI), keeps
+the server the only source of truth and reuses the merged protocol, fencing and receipts without
+change. B is rejected because client-side monster AI, loot and spell resolution would have to be
+reconciled against server receipts subsystem by subsystem, which is more work than A and gives
+visible rollbacks; its one useful idea, local prediction, is kept for movement only. C is
+rejected because a 5,000-line fork drifts and is exactly the "second GUI" the rule forbids. D is
+out of proportion for a 2D tile game.
+
+## 3. Target architecture
+
+### 3.1 Interfaces to extract
+
+New package `com.perso.T4C.session` (client-only; nothing here goes into `domain/`).
+
+```java
+/** One per played character; chosen at screen construction, never switched while playing. */
+public interface GameSession extends AutoCloseable {
+  SessionKind kind();                          // LOCAL or REMOTE
+  CharacterSource character();                 // where the Player comes from
+  WorldDriver world();                         // what updateEntities does
+  PlayerCommands commands();                   // every state-changing player intent
+  CharacterPersistence persistence();          // save, or deliberately nothing
+  SessionEvents events();                      // presentation events (damage, death, messages, VFX, sound)
+  Capabilities capabilities();                 // which screens/actions are wired in this session
+  ConnectionState connection();                // LOCAL is always CONNECTED
+}
+
+public interface CharacterSource {
+  MapDefinition initialMap();                  // replaces loadInitialPlayerState() + MapDefinition.fromZ
+  void populate(Player player) throws GameException;   // replaces initializePlayer()'s state load
+}
+
+public interface WorldDriver {
+  void loadEntities(MapDefinition map, MonsterManager monsters, NPCManager npcs,
+      GroundItemManager ground);               // replaces initializeWorldEntities()
+  void step(float delta, Player player, FrameBounds visible); // replaces updateEntities' simulation
+  Iterable<Player> otherPlayers();             // empty offline
+  void onMapSwitch(int z);                     // replaces switchMapForZ's entity reload
+}
+
+public interface PlayerCommands {
+  void move(int dx, int dy);                   // per frame, 8-direction (already the input model)
+  CommandTicket attack(TargetRef target);      // melee swing or bow shot
+  CommandTicket cast(String spellKey, TargetRef target);   // unit, self or position target
+  CommandTicket useItem(int inventoryIndex, String itemKey);
+  CommandTicket equip(BodyPart part, int inventoryIndex, String itemKey);
+  CommandTicket unequip(BodyPart part);
+  CommandTicket dropItem(int inventoryIndex, String itemKey, int quantity);
+  CommandTicket pickUp(GroundRef item);
+  CommandTicket recoverCorpse(UUID corpse);
+  CommandTicket talk(String npcId, OptionalInt topic, String typedText);
+  CommandTicket buy(String npcId, List<BasketLine> basket);
+  CommandTicket sell(String npcId, List<BasketLine> basket);
+  CommandTicket storage(StorageMove move);     // deposit/withdraw item or gold
+  CommandTicket learn(String npcId, String spellOrSkillKey);
+  CommandTicket allocate(StatOrSkill target, int points);
+}
+
+/** Resolves once; the GUI shows pending/accepted/refused. Local tickets complete immediately. */
+public interface CommandTicket {
+  CompletionStage<CommandOutcome> outcome();
+}
+public record CommandOutcome(boolean accepted, String messageKey, List<Integer> args) {}
+
+public interface CharacterPersistence { void save(Player player); }   // LOCAL: PlayerStateStore
+public interface SessionEvents { void drainInto(EventSink sink); }      // called once per frame
+```
+
+`TargetRef` is a sealed type (`Monster(long id)`, `Npc(String id)`, `OtherPlayer(long id)`,
+`Self`, `Position(float x, float y)`); locally it wraps the object reference, remotely the
+server id. `Capabilities` is a set of enum flags (`INVENTORY`, `SPELLBOOK`, `SHOP`, ...) so a
+not-yet-wired screen says "not available online yet" instead of half-working.
+
+### 3.2 What each interface replaces
+
+| Interface | Replaces in `MainGameScreen` / GUI | Local implementation |
+|---|---|---|
+| `CharacterSource` | `initializeCharacterAndWorld`, `loadInitialPlayerState`, the state part of `initializePlayer` | the same code moved verbatim |
+| `WorldDriver` | `initializeWorldEntities`, the simulation half of `updateEntities`, the entity reload in `switchMapForZ`, `worldEvents.tick` | moved verbatim (`npcManager.updateVisible`, `monsterManager.updateVisible`, `performAttackTick`, `spellEffectManager.update`, tame, harvest) |
+| `PlayerCommands` | the ~45 GUI mutation sites, `MonsterInputHandler` attack start, `tryCastAttackSpell`/`castDefensiveSpell`/`tryCastPositionSpell` entry points, `GroundItemClickHandler`, NPC talk/shop/storage entry points | a thin class that calls the same static services in the same order, completing the ticket at once |
+| `CharacterPersistence` | all 41 `PlayerStateStore.save` and `savePlayerState` calls (screen, 10 GUI classes, 2 input handlers), autosave | `PlayerStateStore.save` unchanged |
+| `SessionEvents` | nothing locally: the 21 existing callbacks keep firing; online they are fed from server events | pass-through (empty) |
+
+The GUI screens keep their constructors and gain one argument, the session (or they read it from
+the `PlayerHUD` they already receive). A screen calls `session.commands().equip(...)` where it
+called `InventoryService.equip(player, ...)` and redraws when the ticket resolves. For the local
+session the ticket is already complete, so the frame looks exactly as today.
+
+### 3.3 Snapshots to view-model objects (remote)
+
+The GUI never sees protocol records. `RemoteGameSession` owns an `OnlineConnection` and a
+`SnapshotApplier` that writes into the same objects the single-player code reads:
+
+| Server data | Local object | Rule |
+|---|---|---|
+| `CharacterProgress` (on revision change) | the screen's `Player` | `ProgressMirror.toStateDto(progress)` builds a `PlayerStateDto`; the existing `PlayerStateMapper.applyToPlayer` fills the `Player`. Inventory index → item instance UUID is kept in an `ItemInstanceIndex` owned by the session, so GUI intents by index are sent by UUID. Revision is kept and must only increase |
+| Own `Actor` (x, y, hp, sequence) | `Player` position and HP | reconciled by the movement predictor (3.4); HP from the actor between character revisions |
+| Other `Actor`s | `RemotePlayer` puppets (a `Player` with `PlayerAnimations`, no simulation, no persistence) | added to the render list next to the own player; needs appearance parts in the snapshot (new) |
+| `CreatureView` | a `BaseMonster` built by `MonsterRegistry` from `definition` and added to `MonsterManager` with a `remoteControlled` flag that skips AI, pursuit, loot and respawn | position, facing and health set from the snapshot through `OnlineCreatureMotion`-style interpolation; death plays the normal death animation |
+| `NpcView` | the real NPC class from `NpcFactoryRegistry` by id, with scripts and dialogue execution disabled (`remoteControlled`) | rendered exactly as single-player; talking sends `talk` |
+| `GroundLootView` | `GroundItem` in `GroundItemManager` keyed by loot UUID | owner window shown as a tooltip line |
+| `Corpse` | a ground object rendered with the single-player corpse/bag sprite | `recoverCorpse` on click |
+| `region` / `locationEpoch` | `switchMapForZ` path with the hosted crop's origin as an offset | the session acknowledges `/region-ready` only after the map, collision and puppets are rebuilt (existing fence) |
+
+All protocol coordinates are region-local; the applier adds the region origin once, so the
+screen keeps working in absolute world pixels as today.
+
+### 3.4 Latency and prediction
+
+- **Own movement:** predicted. The client keeps calling `player.move(dx, dy, delta)` at the
+  native fps and sends each frame's direction with a sequence number. Each snapshot carries the
+  last applied sequence (`Actor.sequence` already exists). The predictor resets to the server
+  position and replays unacknowledged inputs; an error under one tile is smoothed over 100 ms,
+  more than one tile snaps. **Prerequisite:** server and client must use the same step rule.
+  Today they do not (`PreviewWorld.step` sweeps 0.2-tile substeps, `PlayerMovement.move` has its
+  own slide and timing rules). The movement step moves into `domain/` as a pure
+  `MovementRules.step(position, dx, dy, dt, collision)` used by both; until then (slice 1)
+  movement is unpredicted, as today.
+- **Other players, monsters, NPCs:** rendered 100 ms behind the newest snapshot and interpolated
+  between two snapshots, facing from the delta.
+- **Melee:** no outcome prediction. Clicking a monster starts the same auto-attack loop
+  (`performAttackTick`), but each swing becomes an `attack` ticket paced by
+  `WeaponTimingRules` (already in `domain/`); the swing animation starts at once, damage numbers
+  and the hit sound play when the server reports the result. A refused early swing stays silent,
+  as T4C-0249 already does.
+- **Spells:** the cast cursor and casting animation start at once; mana, cooldown and effects
+  come from the server. Cooldown display reads `CharacterProgress.cooldowns` (absolute UTC).
+- **Inventory, shop, storage, training:** not optimistic. The affected slot or button shows a
+  pending state until the ticket resolves (loopback is a few ms; remote is one round trip).
+- **Transport:** HTTP polling (`/input` then `/state` per loop) is kept for slices 1–3. If
+  remote play feels slow, a streamed snapshot channel replaces the poll inside
+  `OnlineConnection` only; nothing above the session changes.
+
+### 3.5 Events, refusals and messages
+
+The server adds an `events` list to `/state` (bounded, per viewer, ordered by tick): damage
+dealt or taken (amount, miss, element), death, level-up, XP gain, item gained, spell cast and
+impact (for VFX), sound cue, chat. `SessionEvents` turns them into the calls the existing
+callbacks already make (`floatingDamage.add`, `SoundManager`, `spellRenderer`,
+`SystemMessage.showShared`), so presentation code is shared. A refused ticket shows its
+`messageKey` through `SystemMessage` and the chat log, exactly where single-player shows its own
+failure text (for example `ItemUseService.failureMessage`). `OnlineCommandRefusals` maps server
+codes to the same `lang.json` keys single-player uses wherever one exists.
+
+### 3.6 Reconnect and lease
+
+- Connection loss: the screen keeps the last frame, blocks input, shows a "Reconnecting"
+  banner and lets `OnlineConnection` reconnect with its existing busy backoff. Pending tickets
+  fail with "connection lost" and are never replayed (current rule).
+- On rejoin the session rebuilds puppets from the first snapshot, resets the movement predictor
+  and re-acknowledges the region epoch.
+- Lease lost to another login of the same character, or revoked key: back to
+  `OnlineLobbyScreen` with the server's message. Escape and the options "switch character"
+  return to the lobby online and to character selection offline.
+
+### 3.7 Single-player stays unchanged (non-negotiable)
+
+- `new MainGameScreen(game)` keeps its signature and builds `LocalGameSession`. The online
+  launcher calls a new `MainGameScreen(game, session)`.
+- `LocalGameSession` is the old code moved, in the same order, with no rule changes. Each move
+  is a separate commit with characterization tests written first.
+- Save files are untouched: `LocalPersistence` is `PlayerStateStore.save`. `RemotePersistence`
+  writes nothing, and `PlayerStateStore.save` refuses a `Player` marked remote (defense in
+  depth: a forgotten call cannot overwrite the active single-player save).
+- Quickbar, macros and window layout are client preferences. Online they are stored in a
+  separate local file per online character id, never in the single-player save.
+- Offline start never loads network classes and opens no socket (asserted by a test).
+
+## 4. Staged plan
+
+Sizes: S under a day, M a few days, L about a week, XL more. Every stage ends with the full
+`mvn -q package` test suite green, the single-player golden screenshots unchanged and a
+self-reviewed PR.
+
+| Stage | Content | Exit criteria | Tests | Size |
+|---|---|---|---|---|
+| 0. Harness | `MainGameScreenPreview` (like `OnlineLobbyPreview`): opens the real screen with a fixture save, no network, saves PNGs of map+HUD, inventory, spell book, statistics. Characterization tests around the code to be moved: autosave, equip/unequip, shop buy/sell, melee tick | Golden PNGs committed; tests pass on `main` unchanged | headless unit tests + preview PNGs | S |
+| **1. First slice: real screen, movement and melee online** | `GameSession`, `CharacterSource`, `WorldDriver`, `CharacterPersistence`, `Capabilities`; `LocalGameSession` (moved code); `RemoteGameSession` over the unchanged `OnlineConnection`; `ProgressMirror`; remote creatures and other players as puppets; `MonsterInputHandler` attack → `attack` ticket; `PlayerHUD` bars, radar, chat (messages only), zone banner. Unwired buttons say "not available online yet". Online launcher opens the real screen after the lobby | Two clients on the acceptance cluster: both see the same map, HUD and each other; move; kill a Skeleton; HP, XP and gold update on the HUD; a refusal shows as a message; reconnect after server restart. Single-player golden PNGs identical; no write to the save directory during an online run | unit: `ProgressMirror` round trip, puppet applier, `PlayerStateStore` refuses remote players; preview PNGs of the online screen from a recorded snapshot fixture; live: `multiplayer/tools/acceptance-cluster.ps1` disposable WSL PostgreSQL + `NativePursuitProbe`-style two-adapter run | M |
+| 2. Predicted movement | `domain/` `MovementRules` used by `PreviewWorld` and `PlayerMovement`; predictor with sequence replay; server snapshot keeps last applied sequence | No visible rubber-banding at loopback; under 150 ms injected delay the own character moves at once and settles within one tile; server speed and collision unchanged (tamper battery still passes) | unit: predictor replay, shared-rule parity test (same inputs, same path in both callers); live: tamper probe speed cases + two clients | M |
+| 3. Items | `Inventory`, equipment, `Statistics` (read-only), ground pickup and player drop, item use, corpse recovery, weight; `ItemInstanceIndex`; server `/drop` | Every inventory action works through the single-player GUI; no text panels used | unit: index mapping, ticket pending/refused rendering; preview PNG of the online inventory equals single-player layout; live two-client loot run | M |
+| 4. Spells | `SpellBook`, quickbar, macros (client-local store), targeted/self/area casting, buff bar, cooldowns; depends on the spell engine | All spells the server supports cast through the normal UI; casting VFX from events | unit + live; grows with the spell engine | L |
+| 5. NPCs and economy | talk, shops, storage, trainers, spell merchants through the real screens; depends on the NPC engine decision | Shop buy/sell and storage over the server with the single-player screens | unit + live | L |
+| 6. World flow | portals and map switch via `onMapSwitch`, death and respawn screens, quest journal, kill log, map screen, options, switch character | A full session from lobby to logout without the text client | live long run | M |
+| 7. Events and audio | `events` feed for damage numbers, misses, VFX, sounds | Online combat looks and sounds like single-player | preview PNGs + live | M |
+| 8. Retire the text client | see section 6 | text panels deleted | build + probes | S |
+
+Stage 1 is deliberately small: it reuses `OnlineConnection` as is, needs no protocol bump and no
+server change (other players keep default appearances until appearance parts are added), and
+proves the whole seam end to end.
+
+## 5. Risks, open questions and parallel work
+
+**Biggest risk: extracting the session seam out of a 4,964-line screen without changing
+single-player.** Simulation, combat and casting are interleaved with rendering (about 1,500
+lines of combat/cast code and 21 callbacks). Mitigation: stage 0 golden PNGs and
+characterization tests first; move code in small mechanical commits; no rule edits in the same
+commit as a move; review each move against the diff of the moved block.
+
+Other risks:
+
+- **Mirror save corruption.** A GUI path that still calls `PlayerStateStore.save` would write an
+  online character over the local save. Guarded by the remote-player refusal and a test that runs
+  an online fixture session and asserts no file write.
+- **Puppet side effects.** `BaseMonster`/`BaseNPC` subclasses run scripts, sounds and loot in
+  update and death paths. The `remoteControlled` flag must short-circuit every one; a test sweeps
+  all registered monster and NPC classes, applies a death snapshot and asserts no loot, XP, quest
+  or sound callback fires.
+- **Movement rule divergence** (server substep rule versus `PlayerMovement`). Until stage 2,
+  online movement can differ slightly from offline; recorded as parity debt.
+- **Static singletons** (`GuiManager`, `SystemMessage`, `CollisionManager`) assume one game per
+  process. Acceptable: one session per client process.
+- **Polling transport** latency on a real network; replaceable inside `OnlineConnection`.
+- **Probe contract.** 13 tools use `OnlineConnection`; its API stays, the session wraps it.
+
+Open questions for the owner or reviewers:
+
+1. Chat: single-player chat is local talk text plus GM commands. Online needs a server chat
+   route; GM commands must stay offline-only. Confirm.
+2. Where online quickbar/macros live: client-local file (proposed) or server-side per character.
+3. NPC dialogue: run NPC classes on the server or extract dialogue to data (PARITY step 6).
+   Stage 5 depends on it; stages 1–4 do not.
+4. Whether the ground-loot owner window tooltip text is wanted.
+
+Parallel work: the spell engine (server and `domain/`, PARITY step 3) and the NPC engine (step 6)
+can proceed during stages 0–3 because the session only forwards intents and mirrors results.
+Small server tasks that can be done by a peer at any time: `events` in `/state`, appearance parts
+in `Actor`, `/drop`, last-applied sequence (already present), shared `MovementRules`. Stage 1 must
+not run concurrently with any other edit to `MainGameScreen`, `Inventory`, `PlayerStateStore` or
+`MonsterManager`; claim those files in [PEER_WORK.md](PEER_WORK.md) first.
+
+## 6. The current text-panel client
+
+| Files | Fate |
+|---|---|
+| `OnlineConnection`, `OnlineEndpoint`, `OnlineBusyBackoff`, `OnlineAccountClient`, `OnlineAccountProfile`, `OnlineNativeLibrary`, `model/*` | **Kept.** Transport and wire model under `RemoteGameSession`; probes keep using them |
+| `OnlineLobbyModel`, `OnlineLobbyLaunch`, `OnlineCreateForm`, `screens/OnlineLobbyScreen`, `OnlineLobbyLayout`, `OnlineCreateLayout` | **Kept** until character creation moves to the single-player creation screen (PARITY characters item); then the create form is replaced |
+| `OnlineCommandRefusals`, `OnlineCreatureMotion` | **Kept and reused** (refusal messages, puppet interpolation) |
+| `OnlineClient` | Kept as a fallback behind a `--text-client` flag from stage 1 to stage 6, then reduced to a launcher that opens the lobby and the real screen |
+| `OnlineHudText`, `OnlineInventoryRows`, `OnlineAbilityMenu`, `OnlineAbilityChoices`, `OnlineNpcTopics`, `OnlineSpellAllowlist` | **Deleted in stage 8**, with their tests, once the matching single-player screens are wired (allowlist goes when the spell engine serves all spells) |

@@ -6,6 +6,31 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-28 — Recovering from a corpse explains why it failed (T4C-0256)
+
+### Fixed
+- In online play, recovering items from a corpse now tells you the real reason when it fails (the item is gone, the corpse is gone, you are too far away, or you cannot carry that much) instead of just saying the server is busy.
+
+## 2026-10-28 — Plan for casting every spell in online play (T4C-0255)
+
+### Changed
+- The project now has a plan for making every spell work online exactly as it does in single-player: attack spells, heals, drains, buffs that last through logging out, poisons and other effects over time, area spells, portals and recall, and later the spells monsters cast at you. It starts with the direct attack, drain and healing spells, then adds buffs, then area and over-time spells, then the rest. Nothing changes in the game yet.
+
+## 2026-10-28 — Plan for the online game to use the single-player screens (T4C-0254)
+
+### Changed
+- The project now has a plan for making the online game use exactly the same screens as single-player: the same map view, health bars, inventory, spell book, minimap, macros, shops and journal, with the server deciding what happens. It starts with moving and fighting, then adds items, spells, NPCs and the rest step by step. Single-player and its saves stay as they are.
+
+## 2026-10-28 — Merge after local tests pass (T4C-0253)
+
+### Changed
+- Pull requests can merge after their relevant local tests pass, without waiting for GitHub Actions to finish.
+
+## 2026-10-28 — Online cheating attempts are now tested against a live server (T4C-0251)
+
+### Changed
+- The project can now run a large set of cheating attempts against a running online server and check that none of them works: using another player's character, replaying or reordering requests, sending oversized or malformed requests, targeting things that do not exist or belong to someone else, trying to edit stats, gold, items or quest progress, and moving faster than allowed. In the first full run, no attempt changed any character and a second player kept playing normally throughout. One refusal when taking items from a corpse is reported to the player as "busy" instead of the real reason; that has been noted for a later fix.
+
 ## 2026-10-28 — Online play waits and retries when the server is busy (T4C-0250)
 
 ### Changed
@@ -21,6 +46,12 @@ commit links, and finer-grained notes.
 ### Changed
 - Arrows no longer weigh anything, and your quiver never runs out of them. Quivers keep a small, equal weight.
 - Archers can now carry loot from the start; before, their starting arrows left them too heavy to pick anything up. Characters who already own arrows keep them.
+
+## 2026-10-28 — Online game now targets single-player parity (T4C-0252)
+
+### Changed
+- The goal for the online game is now that it plays and looks exactly like the single-player game, with the only difference being a client and a server. The earlier plan for a smaller starter-area-only online release no longer applies. A checklist of what is still missing is tracked in the project's multiplayer notes.
+- The skeleton hunting ground near the temple stays exactly as hard as it is in single-player.
 
 ## 2026-10-28 — Create a character from the online lobby (T4C-0244)
 
