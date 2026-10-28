@@ -31,24 +31,16 @@ class SavePathAuditTest {
   /** Allowed call counts by file path relative to src/main/java/com/perso/T4C. */
   private static Map<String, Integer> expected() {
     Map<String, Integer> m = new TreeMap<>();
-    // Session seam and DTO writers.
-    m.put("session/LocalCharacterPersistence.java", 1);
+    // Session seam (save(Player, float) and save(Player)) and the DTO writers.
+    m.put("session/LocalCharacterPersistence.java", 2);
     m.put("helper/LocalCharacterStore.java", 1);
     m.put("helper/LocalCharacterDirectory.java", 1);
-    // Player saves still made directly by GUI, input and lifecycle classes (all guarded).
-    m.put("gui/screen/AdventureScreen.java", 1);
-    m.put("gui/screen/MacrosScreen.java", 4);
+    // Player saves still made directly (all guarded): these classes get no HUD or session.
     m.put("gui/screen/LearnScreen.java", 1);
-    m.put("gui/screen/Inventory.java", 5);
     m.put("gui/screen/TrainScreen.java", 1);
     m.put("gui/screen/StorageScreen.java", 1);
-    m.put("gui/screen/Statistics.java", 1);
-    m.put("gui/screen/SpellBook.java", 2);
     m.put("gui/screen/ShopScreen.java", 2);
-    m.put("gui/screen/RobeWardrobeScreen.java", 1);
     m.put("MyGame.java", 1);
-    m.put("input/ClickToMoveHandler.java", 2);
-    m.put("input/ObjectClickHandler.java", 2);
     return m;
   }
 

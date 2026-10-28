@@ -4236,6 +4236,7 @@ public class MainGameScreen implements Screen {
 
   private void initializeHud() {
     hud = new PlayerHUD(player, spriteLoader);
+    hud.setPersistence(session.persistence());
     hud.setBackpackAction(
         () -> {
           if (GuiManager.isCurrent(Inventory.class)) {
@@ -4524,7 +4525,8 @@ public class MainGameScreen implements Screen {
             player,
             systemMessage,
             groundItemManager,
-            this::playTempleBlessingVfx);
+            this::playTempleBlessingVfx,
+            session.persistence());
     NPCInputHandler npcInputHandler =
         new NPCInputHandler(npcManager, camera, player, this::tryCastAttackSpell, systemMessage);
     MonsterInputHandler monsterInputHandler =

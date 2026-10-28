@@ -2,11 +2,16 @@ package com.perso.T4C.session;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import com.perso.T4C.helper.PlayerStateStore;
+import com.perso.T4C.item.AccountStorage;
+import com.perso.T4C.item.AccountStorageService;
 import com.perso.T4C.model.QuickSlotEntry;
 import com.perso.T4C.player.Player;
+import com.perso.T4C.ui.PlayerHUD;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -104,8 +109,47 @@ class RemoteSessionWritesNothingTest {
     PlayerStateStore.save(p);
     PlayerStateStore.save(p);
     session.persistence().save(p, 3f);
+    // Windows and handlers reached through a HUD (or without one) save through the persistence.
+    session.persistence().save(p);
+    PlayerHUD.persistenceOf(null).save(p);
+    CharacterPersistence.local().save(p);
 
     assertUntouched(before);
+  }
+
+  @Test
+  void aLocalCharacterStillSavesThroughTheHudRoute() throws IOException {
+    Player p = remote();
+    p.setRemote(false);
+    PlayerHUD.persistenceOf(null).save(p);
+    org.junit.jupiter.api.Assertions.assertTrue(
+        Files.readString(dir.resolve("characters/slot-1.json")).contains("Remote"));
+  }
+
+  @Test
+  void aRemoteCharacterCannotUseTheLocalAccountVault() throws Exception {
+    Method reset = AccountStorage.class.getDeclaredMethod("reset");
+    reset.setAccessible(true);
+    reset.invoke(null);
+    try {
+      Map<String, byte[]> before = snapshot();
+      Player p = remote();
+      p.setStrength(400);
+      p.setInventory(new ArrayList<>(List.of("item.dagger")));
+      p.setGold(500);
+
+      assertFalse(AccountStorageService.deposit(p, 0, "item.dagger").success());
+      assertFalse(AccountStorageService.withdraw(p, 0, "item.dagger").success());
+      assertEquals(0, AccountStorageService.depositAll(p, null));
+      AccountStorageService.depositGold(p, 100);
+      AccountStorageService.withdrawGold(p, 100);
+
+      assertEquals(List.of("item.dagger"), p.getInventory());
+      assertEquals(500, p.getGold());
+      assertUntouched(before);
+    } finally {
+      reset.invoke(null);
+    }
   }
 
   @Test

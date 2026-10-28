@@ -9,4 +9,9 @@ final class LocalCharacterPersistence implements CharacterPersistence {
   public void save(Player player, float dayNightHour) {
     PlayerStateStore.save(player, dayNightHour);
   }
+
+  @Override
+  public void save(Player player) {
+    PlayerStateStore.save(player);
+  }
 }
