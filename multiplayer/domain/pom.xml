@@ -72,6 +72,7 @@
                         <include>com/perso/T4C/quest/QuestDef.java</include>
                         <include>com/perso/T4C/quest/QuestRules.java</include>
                         <include>com/perso/T4C/spell/SpellKeys.java</include>
+                        <include>com/perso/T4C/spell/BuffAttributes.java</include>
                         <include>com/perso/T4C/spell/SpellCastRules.java</include>
                         <include>com/perso/T4C/spell/SpellHealRules.java</include>
                         <include>com/perso/T4C/spell/ElementRules.java</include>

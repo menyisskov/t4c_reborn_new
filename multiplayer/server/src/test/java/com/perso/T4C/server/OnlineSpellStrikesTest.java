@@ -69,4 +69,75 @@ class OnlineSpellStrikesTest {
           "a repeat of the same revision is fenced and never replayed");
     } finally { sessions.shutdown(); }
   }
+
+  /** A self buff commits with its rolled amounts, survives logout and a server restart, and logged-out time never runs it down. */
+  @Test void aBuffCommitsOnceSurvivesLogoutAndRestartAndLoggedOutTimeDoesNotRunItDown() throws Exception {
+    var store = OnlineStore.fromEnvironment(); store.migrate();
+    var map = new PreviewMap(new boolean[20][20], 0, 0, 3, 5);
+    var content = new MonsterContent(MonsterContent.VERSION, Map.of(), List.of());
+    var key = store.provisionAccount();
+    var prepared = OnlineCharacterCreator.prepare(CharacterClass.WARRIOR, "male", false, new Random(3));
+    var base = prepared.progress();
+    var caster = new CharacterProgress(base.version(), base.characterClass(), base.gender(), base.attributes(),
+        new CharacterProgress.Vitals(base.vitals().hp(), base.vitals().maxHp(), 500, 500), base.advancement(), base.inventory(),
+        base.equipment(), base.skills(), Set.of("spell.stone_skin", "spell.bless"), base.questFlags(), base.storage(),
+        base.storageGold(), base.respawn(), base.buffs(), base.cooldowns(), 0, base.companion());
+    var created = store.create(key.accountId(), "Buff caster", 0, 3.5, 5.5, caster, prepared.gold());
+    var clock = new java.util.concurrent.atomic.AtomicLong(1_900_000_000_000L);
+    long start = clock.get();
+    var items = ItemCatalog.loadBundled();
+    var plain = OnlineCombatLoadout.resolve(created.progress(), items, start, false);
+    var world = new PreviewWorld(map, content);
+    var sessions = new PersistentSessions(store, map, world);
+    sessions.wallClock = clock::get;
+    String token = sessions.join(store.acquire(key.secret(), created.id()), System.nanoTime()).token();
+    long expiresAt;
+    try (var creatures = new PersistentCreatures(store, world)) {
+      var spells = new OnlineSpellStrikes(map, world, sessions, creatures, items, SpellCatalogV2.bundled(), new Random(4), clock::get);
+      assertEquals("unsupported_spell", assertThrows(PreviewWorld.Rejected.class,
+          () -> spells.cast(token, 0, "spell.poison", new SpellEngine.Target.Self())).getMessage());
+      var pending = spells.cast(token, 0, "spell.stone_skin", new SpellEngine.Target.Self()).toCompletableFuture();
+      long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(5);
+      while (!pending.isDone() && System.nanoTime() < deadline) { sessions.step(); creatures.step(); Thread.sleep(5); }
+      var reply = pending.get();
+      assertEquals(1, reply.buffs().size());
+      expiresAt = reply.buffs().get(0).expiresAt();
+      assertEquals(start + 1_200_000, expiresAt);
+      var saved = store.load(key.accountId(), created.id());
+      assertEquals(reply.revision(), saved.revision());
+      assertEquals(491, saved.progress().vitals().mana(), "stone skin costs 9");
+      var buff = saved.progress().buffs().get(0);
+      assertEquals("spell.stone_skin", buff.spell());
+      assertTrue(buff.modifiers().get("armorClass") > 0, "the rolled amount is stored");
+      assertEquals(start, buff.appliedAt());
+      var buffed = OnlineCombatLoadout.resolve(saved.progress(), items, start, false);
+      assertEquals(plain.profile().armorClass() + buff.modifiers().get("armorClass"), buffed.profile().armorClass(), 1e-9,
+          "melee and retaliation read the same armor class");
+      assertEquals("revision", assertThrows(PreviewWorld.Rejected.class,
+          () -> spells.cast(token, 0, "spell.stone_skin", new SpellEngine.Target.Self())).getMessage());
+      // Online for a minute, then log out.
+      clock.set(start + 60_000);
+      var left = sessions.leave(token);
+      long leaveBy = System.nanoTime() + TimeUnit.SECONDS.toNanos(5);
+      while (!left.isDone() && System.nanoTime() < leaveBy) { sessions.step(); creatures.step(); Thread.sleep(5); }
+      left.get();
+    } finally { sessions.shutdown(); }
+    var afterLogout = store.load(key.accountId(), created.id()).progress();
+    assertEquals(start + 60_000, afterLogout.cooldowns().get(OnlineBuffs.ANCHOR), "the final checkpoint records when it left");
+    assertEquals(expiresAt, afterLogout.buffs().get(0).expiresAt());
+    // A different server process an hour later: the buff has exactly the time it had when the player left.
+    long rejoin = start + 60_000 + 3_600_000;
+    clock.set(rejoin);
+    var restartedWorld = new PreviewWorld(map, content);
+    var restarted = new PersistentSessions(store, map, restartedWorld);
+    restarted.wallClock = clock::get;
+    try {
+      String again = restarted.join(store.acquire(key.secret(), created.id()), System.nanoTime()).token();
+      var joined = restarted.character(again).progress();
+      assertEquals(expiresAt + 3_600_000, joined.buffs().get(0).expiresAt());
+      assertEquals(1_200_000 - 60_000, joined.buffs().get(0).expiresAt() - rejoin, "remaining time unchanged by the hour away");
+      assertEquals(1, OnlineBuffs.active(joined, rejoin).size());
+      assertDoesNotThrow(() -> OnlineCombatLoadout.resolve(joined, items, rejoin, false));
+    } finally { restarted.shutdown(); }
+  }
 }

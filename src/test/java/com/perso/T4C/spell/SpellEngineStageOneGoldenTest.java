@@ -70,6 +70,10 @@ class SpellEngineStageOneGoldenTest {
     }
   }
 
+  static BaseMonster monster(int[] resistanceInElementOrder) throws Exception {
+    return new FixtureMonster(resistanceInElementOrder);
+  }
+
   static List<String> stageOneKeys() throws Exception {
     var content = new Gson().fromJson(Files.readString(CONTENT), SpellContentV2.class);
     var keys = new ArrayList<String>();

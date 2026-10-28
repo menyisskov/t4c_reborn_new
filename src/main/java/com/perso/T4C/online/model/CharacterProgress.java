@@ -9,10 +9,12 @@ public record CharacterProgress(
     Map<String, Integer> skills, Set<String> spells, Map<String, Integer> questFlags,
     List<Item> storage, long storageGold, Respawn respawn, List<Buff> buffs,
     Map<String, Long> cooldowns, long hiddenUntil, Companion companion) {
-  public static final int CURRENT_VERSION = 1;
+  /** Version 2 adds the resolved amounts and start time of each buff; version 1 records still load unchanged. */
+  public static final int CURRENT_VERSION = 2;
+  public static final int OLDEST_VERSION = 1;
 
   public CharacterProgress {
-    if (version != CURRENT_VERSION) throw new IllegalArgumentException("Unsupported character state version");
+    if (version < OLDEST_VERSION || version > CURRENT_VERSION) throw new IllegalArgumentException("Unsupported character state version");
     key(characterClass);
     if (!Set.of("male","female").contains(Objects.requireNonNull(gender))) throw new IllegalArgumentException("Invalid gender");
     Objects.requireNonNull(attributes); Objects.requireNonNull(vitals); Objects.requireNonNull(advancement);
@@ -56,9 +58,22 @@ public record CharacterProgress(
       if (!Double.isFinite(x) || !Double.isFinite(y) || x<0 || y<0) throw new IllegalArgumentException("Invalid respawn position");
     }
   }
-  /** Absolute UTC expiry prevents reconnecting from extending buffs or cooldowns. */
-  public record Buff(String spell, long expiresAt, int casterIntelligence, int casterWisdom) {
-    public Buff { contentKey(spell,"spell."); nonnegative(expiresAt); nonnegative(casterIntelligence); nonnegative(casterWisdom); }
+  /**
+   * Absolute UTC expiry prevents reconnecting from extending buffs or cooldowns. {@code modifiers} are the amounts
+   * rolled when the spell was cast, keyed by normalised attribute; they are kept as rolled and never re-rolled.
+   * {@code expiresAt} of {@link Long#MAX_VALUE} never expires. A version 1 buff has no amounts and no start time.
+   */
+  public record Buff(String spell, long expiresAt, int casterIntelligence, int casterWisdom,
+      Map<String,Integer> modifiers, long appliedAt) {
+    public Buff {
+      contentKey(spell,"spell."); nonnegative(expiresAt); nonnegative(casterIntelligence); nonnegative(casterWisdom);
+      nonnegative(appliedAt);
+      modifiers=modifiers==null ? Map.of() : Map.copyOf(modifiers);
+      modifiers.keySet().forEach(CharacterProgress::key);
+    }
+    public Buff(String spell, long expiresAt, int casterIntelligence, int casterWisdom) {
+      this(spell,expiresAt,casterIntelligence,casterWisdom,Map.of(),0);
+    }
   }
   public record Companion(String species, boolean tamed, int level, int hp, String mode) {
     public Companion { key(species); positive(level); nonnegative(hp); key(mode); }

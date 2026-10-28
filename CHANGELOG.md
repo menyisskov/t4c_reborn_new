@@ -6,6 +6,16 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-28 — Buff spells work in online play (T4C-0269)
+
+### Added
+- In online play, the protective and strengthening spells can now be cast on yourself: Barrier, Protection, Stone Skin, Mana Shield, Mana Surge, Bless, Nimbleness, Light, Sanctuary and the rest of the buff spells, as well as Invisibility, Detect Invisible, Detect Hidden, True Sight, Dispel, Cure Poison, Renew Armor and Curse. They cost the same mana, tire you out the same way and give the same bonuses as in single-player, and casting one again refreshes it instead of adding to it.
+- Buffs keep running while you are logged out, with exactly the time they had left when you left, and they survive a server restart.
+
+### Changed
+- While a buff is running, your fights online use your boosted armor, strength, dexterity and skills, and your boosted carrying strength; when it ends, everything goes back and any extra maximum health it gave is taken off.
+- A buff keeps the strength it was cast with. (Single-player re-rolls a buff's strength every time the game is loaded; online it stays as cast.)
+
 ## 2026-10-28 — Attack and drain spells work in online play (T4C-0267)
 
 ### Added

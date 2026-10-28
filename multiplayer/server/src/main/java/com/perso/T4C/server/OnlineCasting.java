@@ -42,19 +42,21 @@ final class OnlineCasting {
     var progress = aliveProgress(saved, now);
     if (!progress.spells().contains(spellKey)) throw rejected("not_learned");
     var spell = castable(spells, spellKey);
-    var effects = effects(spell, progress, items, random);
+    var effects = effects(spell, progress, items, now, random);
     var outcome = outcome(progress, spell, false, now, random, items);
     return apply(progress, spell, effects, outcome, now);
   }
 
-  /** The committed progress of a living character with no active buff; anything else is refused. */
+  /**
+   * The committed progress of a living character with expired buffs taken off. Running buffs are folded
+   * into every number that reads them; a buff the server cannot interpret is refused.
+   */
   static CharacterProgress aliveProgress(OnlineStore.CharacterState saved, long now) {
     var progress = saved.progress();
     if (progress == null) throw rejected("uninitialized_character");
     if (progress.vitals().hp() == 0) throw rejected("dead");
-    // Buff effects are not integrated online yet, so they fail closed as they do for combat.
-    if (progress.buffs().stream().anyMatch(buff -> buff.expiresAt() > now)) throw rejected("unsupported_effects");
-    return progress;
+    OnlineBuffs.requireModelledOrReject(progress, now);
+    return OnlineBuffs.expire(progress, now);
   }
 
   static SpellContent.Spell castable(SpellCatalog spells, String spellKey) {
@@ -66,8 +68,9 @@ final class OnlineCasting {
   }
 
   /** Health and mana the spell would restore against committed stats; a missing formula restores nothing. */
-  static Effects effects(SpellContent.Spell spell, CharacterProgress progress, ItemContent items, RandomGenerator random) {
-    var context = OnlineSpellContexts.forSelf(progress, items);
+  static Effects effects(SpellContent.Spell spell, CharacterProgress progress, ItemContent items, long now,
+      RandomGenerator random) {
+    var context = OnlineSpellContexts.forSelf(progress, items, now);
     var healFormulas = new ArrayList<String>();
     int manaDelta = 0;
     boolean manaSeen = false;
@@ -112,7 +115,7 @@ final class OnlineCasting {
             || SpellCastRules.isActive(cooldowns.getOrDefault(STUN, 0L), now),
         false,
         progress.vitals().mana(),
-        OnlineSpellContexts.forCastRules(progress, items),
+        OnlineSpellContexts.forCastRules(progress, items, now),
         random::nextInt);
     var outcome = SpellCastRules.evaluate(input);
     if (outcome.success()) return outcome;
