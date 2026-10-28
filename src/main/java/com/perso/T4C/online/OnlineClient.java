@@ -79,6 +79,9 @@ public final class OnlineClient extends ApplicationAdapter {
   private final ConcurrentLinkedQueue<Staged> staged = new ConcurrentLinkedQueue<>();
   private boolean talkOpen;
   private boolean inventoryOpen;
+  private int inventoryPage;
+  private int displayedInventoryPage = -1;
+  private java.util.List<OnlineInventoryRows.Row> displayedInventoryRows = java.util.List.of();
   /** Spell and potion lists (C / U); plain HUD text, closed with the other panels. */
   private final OnlineAbilityMenu abilityMenu = new OnlineAbilityMenu();
   private String talkNpc;
@@ -260,6 +263,14 @@ public final class OnlineClient extends ApplicationAdapter {
               if (code == Input.Keys.I) { toggleInventory(); return true; }
               if (code == Input.Keys.C) { toggleAbilityMenu(OnlineAbilityMenu.Kind.SPELLS); return true; }
               if (code == Input.Keys.U) { toggleAbilityMenu(OnlineAbilityMenu.Kind.POTIONS); return true; }
+              if (inventoryOpen && (code == Input.Keys.LEFT || code == Input.Keys.RIGHT)) {
+                var progress = ownProgress();
+                if (progress != null) {
+                  int count = OnlineInventoryRows.of(progress.inventory(), progress.equipment()).size();
+                  inventoryPage = OnlineInventoryRows.clampPage(inventoryPage + (code == Input.Keys.RIGHT ? 1 : -1), count);
+                }
+                return true;
+              }
               // Digits belong to an open panel only; with no panel open they fall through untouched.
               int digit = digitFor(code);
               if (digit > 0 && talkOpen) { chooseTopic(digit); return true; }
@@ -535,6 +546,9 @@ public final class OnlineClient extends ApplicationAdapter {
     boolean open = !inventoryOpen;
     closePanels();
     inventoryOpen = open;
+    inventoryPage = 0;
+    displayedInventoryRows = java.util.List.of();
+    displayedInventoryPage = -1;
   }
 
   private CharacterProgress ownProgress() {
@@ -577,7 +591,7 @@ public final class OnlineClient extends ApplicationAdapter {
       return;
     }
     var row =
-        OnlineInventoryRows.choose(OnlineInventoryRows.of(progress.inventory(), progress.equipment()), digit)
+        OnlineInventoryRows.choose(OnlineInventoryRows.of(progress.inventory(), progress.equipment()), displayedInventoryRows, inventoryPage, displayedInventoryPage, digit)
             .orElse(null);
     if (row == null) return;
     try {
@@ -641,12 +655,16 @@ public final class OnlineClient extends ApplicationAdapter {
         y -= line;
       } else {
         var rows = OnlineInventoryRows.of(progress.inventory(), progress.equipment());
+        displayedInventoryRows = rows;
         if (rows.isEmpty()) {
           font.draw(hud, I18n.key("online.inventory.empty"), x, y);
           y -= line;
         }
-        for (int i = 0; i < rows.size() && i < OnlineInventoryRows.MAX_CHOICES; i++) {
-          var row = rows.get(i);
+        inventoryPage = OnlineInventoryRows.clampPage(inventoryPage, rows.size());
+        displayedInventoryPage = inventoryPage;
+        var visible = OnlineInventoryRows.page(rows, inventoryPage);
+        for (int i = 0; i < visible.size(); i++) {
+          var row = visible.get(i);
           String name = I18n.key(row.itemKey(), row.itemKey());
           String text = row.kind() == OnlineInventoryRows.Kind.EQUIPPED
               ? I18n.message("online.inventory.unequip_row", i + 1, name, row.slot())
@@ -655,7 +673,7 @@ public final class OnlineClient extends ApplicationAdapter {
           y -= line;
         }
         if (rows.size() > OnlineInventoryRows.MAX_CHOICES) {
-          font.draw(hud, I18n.message("online.inventory.more", rows.size() - OnlineInventoryRows.MAX_CHOICES), x, y);
+          font.draw(hud, I18n.message("online.inventory.page", inventoryPage + 1, (rows.size() - 1) / OnlineInventoryRows.MAX_CHOICES + 1), x, y);
           y -= line;
         }
       }
