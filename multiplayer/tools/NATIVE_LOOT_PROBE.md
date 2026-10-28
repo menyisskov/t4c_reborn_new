@@ -185,8 +185,38 @@ The probe's compile check was done against these three artifacts; the probe itse
 
 ## Recorded run
 
-None yet. The probe is still unrun: it needs a fresh `t4c_loot_*` database and a dedicated port,
-which were not available when the over-weight fixture (T4C-0245) was implemented. Only the fixture
-sizing unit test and the compile check were done. This document is written before a recorded run. Record the run here with the
-probe SHA-256, the server and client JAR hashes, the protocol and the report path only after an
-actual exit-0 run.
+First live use, 2026-10-28, against a disposable PostgreSQL 16 cluster from the acceptance cluster
+tooling ([ACCEPTANCE_CLUSTER.md](ACCEPTANCE_CLUSTER.md), T4C-0247) on loopback 56871, database
+`t4c_loot_<hex>` created inside the cluster (the cluster's own `t4c_acc_` database is refused by the
+probe name check), probe server on 18791. Local PG16 evidence only. Both runs FAILED; no loot
+assertion group was reached. The cluster was destroyed afterwards; the sanitized `report.json` files
+and server logs stayed under a TEMP evidence directory (not committed).
+
+Environment: probe SHA-256 before the join fix `21DEBD9CDA2A5A60D593CB428F0C2E1F901A8797C11A0865FB2F939C27123DB0`;
+`client/T4C.jar` `CDD79B455CB8CC0EB5BB6308852BF3656F6ED1D5EBC604E6ECD2EE325D76C518`; `t4c-server.jar`
+`9ACBF52366FBF6ACCE69BF245DA6B34105ABC24F3B83844B4F76E9ACDECF7F71`; protocol 5; start tile (2767.5, 1086.5),
+anchor (2767, 1087), 13 circle anchors; overweight fixture `item.asile_chest` x1, carry maximum 145,
+carried 55 before and 10055 with the fixture.
+
+- **Run 1: failed at "join native adapters and check protocol"** ("Server rejected request: 503").
+  Root cause (probe-only): the probe opened all three `OnlineConnection` adapters at once, but the
+  server admits at most two concurrent `/join` requests (`HttpRequestAdmission.MAX_PUBLIC` = 2) and
+  answers the third `503 busy`. Fixed in the probe: adapters now join one at a time. No server guard changed.
+- **Run 2 (the single allowed rerun): failed at "kill skeletons until drops appear and observer sees them"**
+  ("Skeleton was not killed before the deadline", after the full 20 minutes). Joins and the protocol-5 check
+  passed. Read-only inspection of the database afterwards: no skeleton was killed (all three characters
+  have 0 XP, no ground loot, no corpses). 49 combat events were recorded in three consecutive
+  ~12 second windows, one per character, all within about 35 seconds of the join, and all three characters
+  ended at their saved respawn point (2951, 1038), not the start tile. Reading: the three level-1 warriors
+  (33 to 38 HP) stacked on the anchor tile were defeated one after another by the patrolling Skeletons and
+  respawned about 200 tiles away; from then on `kill` targets the first live Skeleton in the snapshot
+  regardless of distance, swallows every attack refusal, and never walks, so it spun until the deadline.
+  This was inferred from persisted state, not from a logged refusal reason.
+- Assertion groups: join and protocol passed on run 2 (failed on run 1); kill and loot drop, owner window,
+  first-claim race, over-weight refusal, expiry and lost response were NOT reached. The database
+  check and the exit-0 shutdown assertion were not reached either.
+
+Follow-up needed before another run (not done here): make the probe diagnosable (record attack refusal
+reasons instead of ignoring them), stop stacking weak characters on one tile (start the killer alone, or give
+it enough health or a safer approach), and walk or re-target by distance. Whether level-1 warriors can beat
+a Skeleton at all is a balance question for the owner, not for this tool.

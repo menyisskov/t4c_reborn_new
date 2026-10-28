@@ -1,7 +1,7 @@
 # Disposable acceptance PostgreSQL cluster (T4C-0247)
 
-Status: **tooling prepared, NOT yet run.** Nothing here has been executed against a live
-cluster; the owner has not yet confirmed the first run.
+Status: **first live use done 2026-10-28** (create, extra `t4c_loot_<id>` database, RunEnv, destroy all worked;
+see the recorded loot probe run in [NATIVE_LOOT_PROBE.md](NATIVE_LOOT_PROBE.md)).
 
 ## Purpose
 
@@ -60,7 +60,8 @@ hosted `.colbin` maps, and a dedicated probe server port (not a protected one, a
 database port). **Caveat:** the probe refuses any database not named `t4c_loot_<id>`, but this cluster's
 database is `t4c_acc_<id>`. Before the first run, either add `t4c_acc_` as an accepted prefix in
 `NativeLootProbe.java` (separate, claimed change) or create a `t4c_loot_<id>` database inside the
-cluster and use a hand-built URL. Do not weaken any other guard. With that sorted:
+cluster (createdb from the same WSL runtime with the cluster password file read inside WSL) and use a wrapper
+child that rewrites the database name in `T4C_DB_URL` (done on the first run). Do not weaken any other guard. With that sorted:
 
 ```powershell
 # After building the runtime snapshot exactly as in NATIVE_LOOT_PROBE.md ($runtime, $output, $probeClasspath, $javaExe):

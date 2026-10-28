@@ -196,11 +196,11 @@ public final class NativeLootProbe {
       var racer=provision(store,"Loot probe racer","racer",start.x(),start.y(),racerKit.progress(),racerKit.gold());
       var weighted=provision(store,"Loot probe weighted","weighted",start.x(),start.y(),heavy,weightKit.gold());
 
-      try(var a=new OnlineConnection(endpoint,killer.credentials());
-          var b=new OnlineConnection(endpoint,racer.credentials());
-          var w=new OnlineConnection(endpoint,weighted.credentials())) {
-        report.stage(stage="join native adapters and check protocol");
-        connected(a,killer);connected(b,racer);connected(w,weighted);
+      report.stage(stage="join native adapters and check protocol");
+      // /join admits at most two concurrent public requests (HttpRequestAdmission.MAX_PUBLIC); join one adapter at a time.
+      try(var a=joined(endpoint,killer);
+          var b=joined(endpoint,racer);
+          var w=joined(endpoint,weighted)) {
         int protocol=a.view().map().protocolVersion();
         require(protocol==OnlineProtocol.VERSION && protocol==5,"Server protocol is not version 5");
         report.put("protocolVersion",protocol);
@@ -385,6 +385,12 @@ public final class NativeLootProbe {
       Thread.sleep(1000);
     }
     throw new AssertionError("Lost-response character did not rejoin before the deadline");
+  }
+
+  private static OnlineConnection joined(URI endpoint,Player player) throws Exception {
+    var connection=new OnlineConnection(endpoint,player.credentials());
+    try { connected(connection,player);return connection; }
+    catch(Throwable failure) { connection.close();throw failure; }
   }
 
   private static void connected(OnlineConnection connection,Player player) throws Exception {
