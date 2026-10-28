@@ -2733,28 +2733,54 @@ public class MainGameScreen implements Screen {
   }
 
   private void beginAttackTarget(BaseMonster monster) {
-    if (monster == null || player == null) {
-      return;
+    session.commands().attack(monster);
+  }
+
+  /** Connects the single-player commands to this screen's attack state (see LocalAttackHost). */
+  void bindLocalCommands() {
+    if (session.commands() instanceof com.perso.T4C.session.LocalPlayerCommands local) {
+      local.bind(new ScreenAttackHost());
     }
-    if (PlayerAppearanceDefaults.hasBowEquipped(player) && !canFireBowAt(monster, true)) {
-      clearCurrentAttackTarget();
-      return;
+  }
+
+  private final class ScreenAttackHost implements com.perso.T4C.session.LocalAttackHost {
+    @Override
+    public Player player() {
+      return player;
     }
-    currentAttackTarget = monster;
-    if (player.isCombatMode()) setSelectedMonster(monster);
-    currentAttackNpcTarget = null;
-    currentAttackSpell = null;
-    nextAutoSpellAttemptAtMs = 0L;
-    if (player.isAttackReady()) {
-      boolean attacked;
-      if (PlayerAppearanceDefaults.hasBowEquipped(player)) {
-        attacked = fireBow(monster, false);
-      } else {
-        attacked = monsterManager != null && monsterManager.attackMonster(monster, player);
-      }
-      if (attacked) {
-        player.triggerAttackCooldown(resolveEquippedWeaponAttackSpeed());
-      }
+
+    @Override
+    public MonsterManager monsters() {
+      return monsterManager;
+    }
+
+    @Override
+    public boolean canFireBowAt(BaseMonster monster, boolean announce) {
+      return MainGameScreen.this.canFireBowAt(monster, announce);
+    }
+
+    @Override
+    public boolean fireBow(BaseMonster monster, boolean announce) {
+      return MainGameScreen.this.fireBow(monster, announce);
+    }
+
+    @Override
+    public double weaponAttackSpeed() {
+      return resolveEquippedWeaponAttackSpeed();
+    }
+
+    @Override
+    public void clearCurrentAttackTarget() {
+      MainGameScreen.this.clearCurrentAttackTarget();
+    }
+
+    @Override
+    public void recordAttackTarget(BaseMonster monster) {
+      currentAttackTarget = monster;
+      if (player.isCombatMode()) setSelectedMonster(monster);
+      currentAttackNpcTarget = null;
+      currentAttackSpell = null;
+      nextAutoSpellAttemptAtMs = 0L;
     }
   }
 
@@ -4535,6 +4561,7 @@ public class MainGameScreen implements Screen {
             this::tryCastTargetedSpell,
             this::tryBowAttack,
             systemMessage);
+    bindLocalCommands();
     monsterInputHandler.setOnAttackTargetSelected(this::beginAttackTarget);
     monsterInputHandler.setOnClickedElsewhere(
         () -> {

@@ -103,6 +103,10 @@ class AttackIntentCharacterizationTest {
     set(screen, "player", player);
     set(screen, "monsterManager", new FakeMonsters());
     currentScreen = screen;
+    // The constructor, which a real screen runs, connects the session's commands to the screen.
+    var bind = MainGameScreen.class.getDeclaredMethod("bindLocalCommands");
+    bind.setAccessible(true);
+    bind.invoke(screen);
     return screen;
   }
 
