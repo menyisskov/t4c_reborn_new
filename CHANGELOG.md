@@ -6,10 +6,15 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
-## 2026-10-28 — Recovering from a corpse explains why it failed (T4C-0255)
+## 2026-10-28 — Recovering from a corpse explains why it failed (T4C-0256)
 
 ### Fixed
 - In online play, recovering items from a corpse now tells you the real reason when it fails (the item is gone, the corpse is gone, you are too far away, or you cannot carry that much) instead of just saying the server is busy.
+
+## 2026-10-28 — Plan for casting every spell in online play (T4C-0255)
+
+### Changed
+- The project now has a plan for making every spell work online exactly as it does in single-player: attack spells, heals, drains, buffs that last through logging out, poisons and other effects over time, area spells, portals and recall, and later the spells monsters cast at you. It starts with the direct attack, drain and healing spells, then adds buffs, then area and over-time spells, then the rest. Nothing changes in the game yet.
 
 ## 2026-10-28 — Plan for the online game to use the single-player screens (T4C-0254)
 
