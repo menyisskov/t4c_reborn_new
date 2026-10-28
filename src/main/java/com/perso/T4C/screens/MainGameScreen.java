@@ -310,7 +310,7 @@ public class MainGameScreen implements Screen {
   }
 
   private void initializeCharacterAndWorld() {
-    initialPlayerState = loadInitialPlayerState();
+    initialPlayerState = session.characters().loadInitialState();
     currentMap = MapDefinition.fromZ(initialPlayerState != null ? initialPlayerState.z : 0);
     groundItemManager.setActiveWorld(currentMap.getZ());
     herbManager.setActiveWorld(currentMap.getZ());
@@ -411,26 +411,6 @@ public class MainGameScreen implements Screen {
 
   private void loadXpCurve() {
     xpCurve = XpCurve.loadDefault();
-  }
-
-  private com.perso.T4C.helper.PlayerStateDto loadInitialPlayerState() {
-    try {
-      com.perso.T4C.helper.LocalCharacterStore.CharacterSlot active =
-          com.perso.T4C.helper.LocalCharacterStore.getActiveCharacter();
-      com.perso.T4C.helper.PlayerStateDto state =
-          active == null
-              ? PlayerStateStore.load()
-              : com.perso.T4C.helper.LocalCharacterStore.loadState(active);
-      if (state != null && active != null) {
-        if (state.name == null || state.name.isBlank()) state.name = active.name();
-        if (state.gender == null || state.gender.isBlank()) state.gender = active.gender();
-      }
-      return state;
-    } catch (IllegalStateException migrationFailure) {
-      throw migrationFailure;
-    } catch (Throwable ignored) {
-      return null;
-    }
   }
 
   private void savePlayerState() {
@@ -735,7 +715,7 @@ public class MainGameScreen implements Screen {
     }
     player.setWorldPosition(startX, startY, startZ);
     try {
-      PlayerStateStore.applyToPlayer(initialPlayerState, player);
+      session.characters().applyTo(initialPlayerState, player);
     } catch (Throwable ignored) {
     }
     applyXpCurve();
