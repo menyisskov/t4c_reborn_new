@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-28 — Merge after local tests pass (T4C-0253)
+
+### Changed
+- Pull requests can merge after their relevant local tests pass, without waiting for GitHub Actions to finish.
+
 ## 2026-10-28 — Online cheating attempts are now tested against a live server (T4C-0251)
 
 ### Changed
