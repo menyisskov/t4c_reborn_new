@@ -18,9 +18,9 @@ re-measure before relying on a number.
 | NPCs | about 2,574 placed spawns | 2 (Kilhiam, Warden Aelric) |
 | Shops | 21 | 0 |
 | Quests | 35 | 1 (renewed_wards) |
-| Player spells | 132 | 49 castable server-side (Light Heal self-cast plus the 48 stage-1 spells: 40 attack, 4 drain, 4 heal; classes that learn them arrive later) |
-| Classes | 7 | 2 (Warrior, Paladin) |
-| Combat | melee, bows, two weapons, stun blow, stealth, spells | melee only |
+| Player spells | 132 | Stage 1 and 2 (81 spells) plus Light Heal; starting spell kits are now offered to six online classes |
+| Classes | 7 | 6 (Warrior, Paladin, Cleric, Healer, Mage, Battle Mage); Archer awaits online ranged combat |
+| Combat | melee, bows, two weapons, stun blow, stealth, spells | melee and supported stage-1/2 spells; bows, dual wield, stun and stealth still unavailable |
 | Interface | full GUI (inventory, spell book, minimap, macros, options, journal) | plain text panels |
 | Audio and effects | on | audio off, no spell effects |
 
@@ -50,7 +50,7 @@ re-measure before relying on a number.
 
 Each is a gap to close, never a decision to keep:
 
-- Warrior and Paladin only in character creation (`OnlineCharacterCreation.CLASSES`).
+- Archer remains excluded from online character creation until authoritative ranged combat is implemented; the other six classes now have online starter kits and the server-supported spell set.
 - Stage-1 and stage-2 spells (40 attack with splash, 4 drain, 4 heal; 25 timed buffs, the curse, invisibility and detection, 2 dispels, Renew Armor: 81 in all) are castable server-side (`spells-v2` stage gate, protocol 6); everything else stays refused. Casters cannot be created online yet, so only a character that already knows them can cast. Buffs are laid on the caster only; laying one on another player is resolved by the engine but not yet reachable (needs a two-character atomic commit).
 - Melee only; bows, stun blow and companions refuse as unsupported combat.
 - Combat fails closed while a world-event flag is active, or while a buff the server does not model (an older record without stored amounts, or an attribute outside `BuffAttributes.MODELLED`) is running. The 25 stage-2 buffs are modelled and fold into melee, retaliation, carry weight and spell numbers.
