@@ -41,8 +41,16 @@ class OnlineMonsterSpellContentExporterTest {
   @Test
   void generatedResourceMatchesThePackagedMonsterSpellInventory() throws Exception {
     String expected = OnlineMonsterSpellContentExporter.render(OnlineMonsterSpellContentExporter.snapshot());
-    assertEquals(expected, Files.readString(Path.of("src/main/resources/online/monster-spells-v1.json"), StandardCharsets.UTF_8));
-    assertEquals(expected, Files.readString(Path.of("multiplayer/server/src/main/resources/content/monster-spells-v1.json"), StandardCharsets.UTF_8));
+    assertEquals(
+        expected,
+        Files.readString(Path.of("src/main/resources/online/monster-spells-v1.json"), StandardCharsets.UTF_8)
+            .replace("\r\n", "\n"));
+    assertEquals(
+        expected,
+        Files.readString(
+                Path.of("multiplayer/server/src/main/resources/content/monster-spells-v1.json"),
+                StandardCharsets.UTF_8)
+            .replace("\r\n", "\n"));
   }
 
   @Test
