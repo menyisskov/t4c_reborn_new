@@ -255,6 +255,27 @@ codes to the same `lang.json` keys single-player uses wherever one exists.
   separate local file per online character id, never in the single-player save.
 - Offline start never loads network classes and opens no socket (asserted by a test).
 
+### 3.8 Persistence audit: every write path to the save directory (T4C-0265)
+
+Rule: a remote character (`Player.isRemote()`) must never cause a byte to be written to the
+single-player save directory. Pinned by `SavePathAuditTest` (the list of direct
+`PlayerStateStore.save` callers cannot change unreviewed) and `RemoteSessionWritesNothingTest`
+(a remote character through the GUI mutate-and-save sequences leaves the directory byte-identical).
+
+| Write path | Reachable by a remote session? | Protection |
+|---|---|---|
+| `PlayerStateStore.save(Player)` / `save(Player, float)` (about 26 GUI, input and lifecycle call sites, autosave, dispose) | Yes, by a forgotten call: every one takes the session's `Player` | Refused inside `save(Player, float)` when `player.isRemote()`; nothing is written, not even a temp file |
+| `CharacterPersistence.save` (`LocalCharacterPersistence`) | Yes (MainGameScreen autosave and the routed GUI saves) | Delegates to the guarded `PlayerStateStore.save(Player, float)`; a remote session installs a persistence that writes nothing |
+| `PlayerStateStore.save(String, PlayerStateDto)` / `saveOrThrow` | No, by construction. The only DTO sources are `LocalCharacterDirectory.setStoredRank` (a DTO read back from a local slot file, only the GM rank changed) and `LocalCharacterStore.create` (a brand-new DTO from the creation screen). `PlayerStateMapper.fromPlayer`, the only `Player` to DTO conversion, is called solely inside the guarded `save(Player, float)` | No guard needed and none added: a remote `Player` cannot become a DTO for a local slot. `SavePathAuditTest` fails if a new caller of either overload appears |
+| `LocalCharacterStore.create / delete / saveRoster` (roster file, per-slot state files) | No. Only `CharacterSelectionScreen` (offline start flow) calls them; the online flow uses `OnlineLobbyScreen` | Not reachable: a remote session never opens the offline selection screen. Add `RemoteCharacterSource` (stage 2) with no roster writes |
+| `LocalCharacterStore.activate` (sets the static active state file) | Only from `CharacterSelectionScreen` and `CharacterLoadingScreen` | Does not write; and a stale active file cannot be written by a remote `Player` anyway (guard) |
+| `LocalCharacterDirectory.setStoredRank` (GM `/rank` of a named local slot) | Yes if a remote `MainGameScreen` kept the local directory: it would edit the rank of a local slot with the same name | `GmCommandProcessor` takes a `CharacterDirectory` interface; the remote session must supply its own (server-side or none). Listed for stage 2/3; not a write of the remote character |
+| `AccountStorage.save` (`account_storage.json`, the shared account vault, via `AccountStorageService` deposit/withdraw/gold) | Yes: the StorageScreen account tab takes any `Player` and moves its items and gold into the local vault | `AccountStorageService` refuses a remote player (see routing below); online storage is a server concern |
+| `GamePreferencesStore.save` (client preferences file) | Yes, and intended: audio and display options are per client, not per character | Not a character write; unchanged |
+| `GameChat.appendLog` (chat log file) | Yes, and intended: optional client-side log | Not a character write; unchanged |
+| `I18n` catalogue writer, `BuildPreferences`, `MapStamp`, `MapDraftService`, `MapEditorScreen`, `ItemJavaExporter`, `SpawnJavaExporter`, `SpellJavaExporter`, `BinaryIOUtils`, `SpriteBin*`, `CollisionMapIO`, `DdaExtractor`, `T4CContentStudio`, `OnlineNativeLibrary` | No: editor, content-tool and installer writers; none touch a character or take a `Player` | Out of scope; they write content or cache files, not saves |
+| Character switch, dispose, autosave | Autosave: `MainGameScreen.savePlayerState` (already via the session). Dispose: `MyGame.dispose` saves the current screen's player | Both end in the guarded `save(Player, float)` |
+
 ## 4. Staged plan
 
 Sizes: S under a day, M a few days, L about a week, XL more. Every stage ends with the full
