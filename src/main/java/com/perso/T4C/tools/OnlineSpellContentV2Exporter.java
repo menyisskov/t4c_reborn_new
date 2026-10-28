@@ -76,10 +76,29 @@ public final class OnlineSpellContentV2Exporter {
     return switch (kind) {
       case NUKE, DRAIN, HEAL -> 1;
       case BUFF, DEBUFF, DETECTION, DISPEL -> 2;
-      case DOT, AREA_DAMAGE, AREA_HEAL, SHIELD, GATEWAY -> 3;
+      case AREA_DAMAGE, AREA_HEAL, SHIELD, GATEWAY -> 3;
+      // A damage-over-time spell is only as simple as its tick. Poison, Poison Arrow and Plague link tick
+      // spells that do not exist (single-player installs no timer for them), so they are one hit. Entangle
+      // links real ones that slow and weaken the creature, which needs creature movement and defence state
+      // the server does not model yet: it stays at stage 4.
+      case DOT -> linksExistingSpell(spell) ? 4 : 3;
       case PORTAL, RECALL -> 4;
       case SPECIAL -> spell.getKey().equals("spell.renew_armor") ? 2 : 4;
     };
+  }
+
+  private static boolean linksExistingSpell(SpellData spell) {
+    for (var effect : spell.getT4cEffects()) {
+      if (effect == null || effect.getEffectType() != 9) continue;
+      String expression = param(effect, 1);
+      if (expression == null) continue;
+      try {
+        if (SpellRegistry.findById(Integer.parseInt(expression.trim())) != null) return true;
+      } catch (NumberFormatException computed) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /** Classifies a player spell by what its effects and target actually do. */

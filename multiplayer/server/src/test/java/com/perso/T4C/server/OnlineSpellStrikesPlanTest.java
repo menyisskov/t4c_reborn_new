@@ -30,7 +30,7 @@ class OnlineSpellStrikesPlanTest {
   }
 
   /** Creatures at given tiles; each has its own life. */
-  private static final class Source implements OnlineSpellStrikes.CreatureSource {
+  private static class Source implements OnlineSpellStrikes.CreatureSource {
     final List<PreviewWorld.CreatureSpawn> spawns = new ArrayList<>();
     final Map<Long, double[]> where = new java.util.HashMap<>();
     final Map<Long, UUID> lives = new java.util.HashMap<>();
@@ -119,11 +119,102 @@ class OnlineSpellStrikesPlanTest {
     assertEquals("creature_unavailable", refusal(() -> unchecked(progress(20, known, Map.of()), "spell.fire_dart", 77L, source)));
     assertEquals("out_of_range", refusal(() -> unchecked(progress(20, known, Map.of()), "spell.fire_dart", 2L, source)));
     assertEquals("wrong_target", refusal(() -> unchecked(progress(20, known, Map.of()), "spell.fire_dart", null, source)));
-    // Stage 3 and later spells (areas, damage over time) stay refused exactly like an unknown key.
-    assertEquals("unsupported_spell", refusal(() -> unchecked(progress(20, Set.of("spell.fireball"), Map.of()), "spell.fireball", 1L, source)));
-    assertEquals("unsupported_spell", refusal(() -> unchecked(progress(20, Set.of("spell.poison"), Map.of()), "spell.poison", 1L, source)));
+    // Later stages stay refused exactly like an unknown key: Entangle needs creature movement state,
+    // the portals and recall are stage 4.
+    assertEquals("unsupported_spell", refusal(() -> unchecked(progress(20, Set.of("spell.entangle"), Map.of()), "spell.entangle", 1L, source)));
+    assertEquals("unsupported_spell", refusal(() -> unchecked(progress(20, Set.of("spell.word_of_recall"), Map.of()), "spell.word_of_recall", null, source)));
     source.busy = true;
     assertEquals("creature_unavailable", refusal(() -> unchecked(progress(20, known, Map.of()), "spell.fire_dart", 1L, source)));
+  }
+
+  private static OnlineSpellStrikes.Plan aimed(CharacterProgress p, String spell, com.perso.T4C.spell.engine.SpellEngine.Target target,
+      Source source) throws Exception {
+    var map = new PreviewMap(new boolean[30][60], 0, 0, 3, 3);
+    return OnlineSpellStrikes.plan(state(p), spell, target, NOW, new Random(11), ItemCatalog.loadBundled(),
+        SpellCatalogV2.bundled(), map, 5.5, 5.5, 0, source);
+  }
+
+  /** A fireball takes the aimed creature and the others inside its radius in one draft; the far and the stationary are left. */
+  @Test void anAreaSpellStrikesEveryCreatureInItsRadiusInOneDraftWithEachKillRewarded() throws Exception {
+    var source = new Source();
+    source.add(1, skeleton(1), 9.5, 5.5);
+    source.add(2, skeleton(1_000_000), 10.5, 5.5);
+    source.add(3, skeleton(1), 9.5, 6.5);
+    source.add(4, skeleton(1_000_000), 20.5, 5.5);
+    source.add(5, skeleton(1_000_000), 8.5, 5.5);
+    source.spawns.set(4, new PreviewWorld.CreatureSpawn(5, new MonsterContent.Spawn("t-5", "Skeleton", 5, 5, 0, true, false), skeleton(1_000_000)));
+    var plan = aimed(progress(100, Set.of("spell.fireball"), Map.of()), "spell.fireball",
+        new com.perso.T4C.spell.engine.SpellEngine.Target.Unit(1), source);
+    assertEquals(3, plan.struck().size(), "aimed creature plus two inside the radius: " + plan.struck());
+    assertTrue(plan.struck().containsAll(List.of(1L, 2L, 3L)));
+    assertFalse(plan.struck().contains(4L), "out of the radius");
+    assertFalse(plan.struck().contains(5L), "stationary creatures cannot be attacked");
+    assertEquals(2, plan.hits().stream().filter(OnlineSpellStrikes.Hit::killed).count());
+    assertEquals(2, plan.strikes().stream().filter(s -> s.strike().after() == 0).mapToInt(s -> s.drops().size()).sum(),
+        "each kill commits its own rolled drop");
+    assertEquals(plan.struck().size(), plan.strikes().size());
+    assertTrue(plan.experience() > 0);
+  }
+
+  @Test void aGroundAimedAreaAndASelfCentredAreaNeedNoAimedCreature() throws Exception {
+    var source = new Source();
+    source.add(1, skeleton(1), 10.5, 5.5);
+    source.add(2, skeleton(1_000_000), 11.5, 5.5);
+    var ground = aimed(progress(150, Set.of("spell.hurricane"), Map.of()), "spell.hurricane",
+        new com.perso.T4C.spell.engine.SpellEngine.Target.Position(10, 5), source);
+    assertEquals(2, ground.struck().size());
+    var quake = aimed(progress(150, Set.of("spell.earthquake"), Map.of()), "spell.earthquake",
+        new com.perso.T4C.spell.engine.SpellEngine.Target.Self(), source);
+    assertEquals(2, quake.struck().size(), "self-centred, 5 and 6 tiles away, radius 7");
+    // Nothing to hit is still a cast: mana is spent and the draft carries no strike.
+    var empty = aimed(progress(150, Set.of("spell.earthquake"), Map.of()), "spell.earthquake",
+        new com.perso.T4C.spell.engine.SpellEngine.Target.Self(), new Source());
+    assertTrue(empty.strikes().isEmpty());
+    assertTrue(empty.manaSpent() > 0);
+  }
+
+  @Test void anAreaHealHealsOnlyTheCasterAndAShieldOrGatewayOnlyCosts() throws Exception {
+    var source = new Source();
+    source.add(1, skeleton(1_000_000), 6.5, 5.5);
+    var p = progress(150, Set.of("spell.mass_healing", "spell.fire_shield", "spell.lighthaven_gateway"), Map.of());
+    var heal = plan(p, "spell.mass_healing", null, source);
+    assertTrue(heal.healthGained() > 0 && heal.strikes().isEmpty());
+    for (String key : List.of("spell.fire_shield", "spell.lighthaven_gateway")) {
+      var inert = plan(p, key, null, source);
+      assertTrue(inert.strikes().isEmpty() && inert.hits().isEmpty() && inert.buffs().isEmpty(), key);
+      assertEquals(0, inert.healthGained());
+      assertTrue(inert.manaSpent() >= 0 && inert.progress().vitals().mana() == 150 - inert.manaSpent());
+    }
+  }
+
+  /** Poison is one hit offline (its tick spell does not exist), so it is one hit here, with no splash. */
+  @Test void poisonIsASingleHitWithoutSplash() throws Exception {
+    var source = new Source();
+    source.add(1, skeleton(1_000_000), 8.5, 5.5);
+    source.add(2, skeleton(1_000_000), 9.5, 5.5);
+    var plan = plan(progress(100, Set.of("spell.poison"), Map.of()), "spell.poison", 1L, source);
+    assertFalse(plan.struck().contains(2L), "poison is not an attack: no splash on the neighbour");
+    assertTrue(plan.struck().size() <= 1);
+  }
+
+  /** A creature mid-commit near the blast is left alone; one that would be hit is not skipped silently when aimed at. */
+  @Test void aBusyBystanderDoesNotRefuseAnAreaButABusyAimedTargetDoes() throws Exception {
+    var source = new Source() {
+      @Override public OnlineStore.SpawnState life(long id) {
+        if (id == 2) throw new PreviewWorld.Rejected(409, "creature_unavailable");
+        return super.life(id);
+      }
+    };
+    source.add(1, skeleton(1_000_000), 9.5, 5.5);
+    source.add(2, skeleton(1_000_000), 10.5, 5.5);
+    var plan = aimed(progress(100, Set.of("spell.fireball"), Map.of()), "spell.fireball",
+        new com.perso.T4C.spell.engine.SpellEngine.Target.Unit(1), source);
+    assertEquals(List.of(1L), plan.struck());
+    assertEquals("creature_unavailable", refusal(() -> {
+      try { aimed(progress(100, Set.of("spell.fireball"), Map.of()), "spell.fireball",
+          new com.perso.T4C.spell.engine.SpellEngine.Target.Unit(2), source); }
+      catch (PreviewWorld.Rejected e) { throw e; } catch (Exception e) { throw new RuntimeException(e); }
+    }));
   }
 
   private static void unchecked(CharacterProgress p, String spell, Long target, Source source) {

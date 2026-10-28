@@ -39,7 +39,7 @@ import java.util.random.RandomGenerator;
  */
 public final class SpellEngine {
   /** The highest engine stage this class can resolve. */
-  public static final int MAX_STAGE = 2;
+  public static final int MAX_STAGE = 3;
 
   /** Renew Armor re-lays these, in this order, when the caster knows them (single-player's list). */
   public static final List<String> RENEW_ARMOR_COMPONENTS =
@@ -96,6 +96,15 @@ public final class SpellEngine {
     /** Every candidate for splash, in a stable order (ascending id); ties then resolve by id. */
     List<UnitView> units();
 
+    /**
+     * Every candidate that can lie within the box around a tile centre ({@code tilesX} tiles either
+     * side in x, {@code tilesY} in y), in ascending id. The default is every unit; a server returns
+     * just the creatures it needs to read, so an area spell never loads the whole region.
+     */
+    default List<UnitView> unitsNear(double centerX, double centerY, double tilesX, double tilesY) {
+      return units();
+    }
+
     /** True when neither tile lies in a safe haven (no combat there). */
     boolean combatSafe(double fromX, double fromY, double toX, double toY);
 
@@ -151,7 +160,9 @@ public final class SpellEngine {
   /** How an event damages: the cast's own hit or a quarter-strength splash hit. */
   public enum DamageKind {
     DIRECT,
-    RESIDUAL
+    RESIDUAL,
+    /** A hit of an area spell on a creature other than the one aimed at. */
+    AREA
   }
 
   /** One resolved buff amount, keyed by the normalised attribute ({@link BuffAttributes}). */
@@ -222,9 +233,13 @@ public final class SpellEngine {
     UnitView primary = null;
     FriendView friend = null;
     SpellCastRules.TargetKind kind;
+    Target.Position position = null;
     switch (request.target()) {
       case Target.Self ignored -> kind = SpellCastRules.TargetKind.SELF;
-      case Target.Position ignored -> kind = SpellCastRules.TargetKind.POSITION;
+      case Target.Position aimed -> {
+        kind = SpellCastRules.TargetKind.POSITION;
+        position = aimed;
+      }
       case Target.Unit unit -> {
         kind = SpellCastRules.TargetKind.HOSTILE_UNIT;
         primary = world.unit(unit.id());
@@ -251,6 +266,19 @@ public final class SpellEngine {
               || world.lineOfSight(request.casterX(), request.casterY(), primary.x(), primary.y());
       safeFromCombat =
           !world.combatSafe(request.casterX(), request.casterY(), primary.x(), primary.y());
+    } else if (position != null) {
+      distance = distance(position.x(), position.y(), request);
+      sightClear =
+          !spell.lineOfSight()
+              || world.lineOfSight(request.casterX(), request.casterY(), position.x(), position.y());
+      // Single-player refuses an aimed attack at a protected tile before it rolls anything.
+      safeFromCombat =
+          spell.attack()
+              && !world.combatSafe(request.casterX(), request.casterY(), position.x(), position.y());
+    } else if (kind == SpellCastRules.TargetKind.SELF && spell.selfCenteredAttack()) {
+      safeFromCombat =
+          !world.combatSafe(
+              request.casterX(), request.casterY(), request.casterX(), request.casterY());
     } else if (friend != null) {
       distance = distance(friend.x(), friend.y(), request);
       sightClear =
@@ -261,7 +289,7 @@ public final class SpellEngine {
         new SpellCastRules.Spell(
             spell.targetType(),
             spell.attack(),
-            false,
+            spell.selfCenteredAttack(),
             spell.pvp(),
             spell.lineOfSight(),
             spell.manaCost(),
@@ -292,11 +320,18 @@ public final class SpellEngine {
       if (!outcome.success()) return CastResolution.refused(outcome.verdict());
       var events = new ArrayList<Event>();
       switch (spell.kind()) {
-        case HEAL -> {
+        // An area heal heals the caster only: single-player routes it through the self-cast path.
+        case HEAL, AREA_HEAL -> {
           int heal = healAmount(spell, request.caster(), random);
           if (heal > 0) events.add(new Event.SelfHeal(heal));
         }
-        case NUKE, DRAIN, DEBUFF -> impact(request, spell, primary, world, events);
+        case NUKE, DRAIN, DEBUFF, DOT -> impact(request, spell, primary, world, events);
+        case AREA_DAMAGE -> area(request, spell, primary, position, world, events);
+        case SHIELD, GATEWAY -> {
+          // Single-player installs no hook for a self cast: only the cost, the exhaustion and the visual.
+          int heal = healAmount(spell, request.caster(), random);
+          if (heal > 0) events.add(new Event.SelfHeal(heal));
+        }
         case BUFF -> buff(request, spell, friend, random, events);
         case DETECTION -> detection(spell, request.caster(), random, events);
         case DISPEL -> dispel(spell, request.caster(), random, events);
@@ -318,7 +353,10 @@ public final class SpellEngine {
   /** True for the spell shapes this engine resolves; anything else must be refused by the caller. */
   public static boolean supported(SpellContentV2.Spell spell) {
     return switch (spell.kind()) {
-      case NUKE, HEAL -> onlyEffects(spell, 1);
+      case NUKE, HEAL, AREA_HEAL, AREA_DAMAGE -> onlyEffects(spell, 1);
+      // Tick-less damage over time: one hit, plus hooks single-player never installs (see the exporter).
+      case DOT -> allEffects(spell, 1, 2, 9);
+      case SHIELD, GATEWAY -> onlyEffects(spell, 9);
       case DRAIN -> onlyEffects(spell, 10);
       case DEBUFF, BUFF -> onlyEffects(spell, 2);
       case DETECTION -> allEffects(spell, 15, 16, 17);
@@ -366,8 +404,12 @@ public final class SpellEngine {
     // Splash targets are chosen before any damage: nearest first, the primary holding one slot.
     float cx = (float) (primary.x() * GameConstants.GRID_W);
     float cy = (float) (primary.y() * GameConstants.GRID_H);
+    // Residual splash is for single-target attacks only (single-player: attack with no radius).
+    boolean residual = spell.attack() && spell.radius() <= 0;
     List<UnitView> secondary =
-        SpellSplash.nearest(
+        !residual
+            ? List.of()
+            : SpellSplash.nearest(
             world.units(),
             candidate ->
                 candidate.id() != primary.id()
@@ -386,7 +428,7 @@ public final class SpellEngine {
               return dx * dx + dy * dy;
             },
             1);
-    int delta = healthDelta(spell, request.caster(), primary);
+    int delta = healthDelta(spell, request.caster(), primary, 0d);
     boolean drain = spell.effects().stream().anyMatch(effect -> effect.type() == 10);
     if (delta < 0) events.add(new Event.Damage(primary.id(), -delta, DamageKind.DIRECT));
     // Formulas are damage-only. A positive roll would heal the monster offline; refuse to guess
@@ -395,17 +437,23 @@ public final class SpellEngine {
     int drained = drain ? Math.max(0, -delta) : 0;
     if (drained > 0) events.add(new Event.DrainHeal(drained));
     for (UnitView target : secondary) {
-      int splash = SpellSplash.residualDamage(healthDelta(spell, request.caster(), target));
+      int splash = SpellSplash.residualDamage(healthDelta(spell, request.caster(), target, 0d));
       if (splash > 0) events.add(new Event.Damage(target.id(), splash, DamageKind.RESIDUAL));
     }
   }
 
-  /** Mirror of {@code SpellEffectManager.resolveHealthDelta} at range 0 (the cast's centre). */
+  /**
+   * Mirror of {@code SpellEffectManager.resolveHealthDelta}: the centre formula at range 0, the ranged
+   * formula (with {@code r} the distance in tiles) when the target is away from the centre.
+   */
   private static int healthDelta(
-      SpellContentV2.Spell spell, SpellFormulaContexts.Caster caster, UnitView target) {
+      SpellContentV2.Spell spell, SpellFormulaContexts.Caster caster, UnitView target, double range) {
     for (var effect : spell.effects()) {
       if (effect.type() == 1 || effect.type() == 10) {
-        int evaluated = evaluate(parameter(effect, 1), caster, target);
+        String center = parameter(effect, 1);
+        String ranged = parameter(effect, 2);
+        String formula = range > 0d && ranged != null && !ranged.isBlank() ? ranged : center;
+        int evaluated = evaluate(formula, caster, target, range);
         if (evaluated != 0) return evaluated;
       }
     }
@@ -414,11 +462,112 @@ public final class SpellEngine {
     return low == high ? low : RandomSource.current().nextInt(low, high + 1);
   }
 
-  private static int evaluate(String formula, SpellFormulaContexts.Caster caster, UnitView target) {
+  private static int evaluate(
+      String formula, SpellFormulaContexts.Caster caster, UnitView target, double range) {
     if (formula == null || formula.isBlank()) return 0;
     DiceFormula.Context context = SpellFormulaContexts.against(caster, target.resistance());
-    String withRange = formula.replaceAll("(?<![A-Za-z_.])r(?![A-Za-z_])", Double.toString(0d));
+    String withRange =
+        formula.replaceAll(
+            "(?<![A-Za-z_.])r(?![A-Za-z_])", Double.toString(Math.max(0d, range)));
     return DiceFormula.of(withRange).evaluate(context);
+  }
+
+  // ---- stage 3: area damage ----------------------------------------------------------------
+
+  /**
+   * Mirror of single-player's three area routes. Self-centred (target type 18): the caster is the
+   * centre, a creature is hit when its tile distance is at most the radius, nearest eight. Aimed at a
+   * creature (17, 19): that creature is hit first at range 0 and holds one of the eight slots, the rest
+   * lie strictly inside the radius measured in pixels over the larger tile side. Aimed at a position
+   * (19): the same radius rule around the tile, no primary. Targets are all chosen before any damage;
+   * each is rolled in turn, nearest first (ties by id), with {@code r} the distance from the centre.
+   * Pixel arithmetic is done in floats, as {@code Vector2} does, so the boundaries agree exactly.
+   */
+  private static void area(
+      CastRequest request,
+      SpellContentV2.Spell spell,
+      UnitView primary,
+      Target.Position position,
+      WorldView world,
+      List<Event> events) {
+    boolean selfCentred = request.target() instanceof Target.Self;
+    if (!selfCentred && primary == null && position == null)
+      throw new IllegalArgumentException("wrong_target");
+    float cx;
+    float cy;
+    if (selfCentred) {
+      cx = (float) (request.casterX() * GameConstants.GRID_W);
+      cy = (float) (request.casterY() * GameConstants.GRID_H);
+    } else if (primary != null) {
+      cx = (float) (primary.x() * GameConstants.GRID_W);
+      cy = (float) (primary.y() * GameConstants.GRID_H);
+    } else {
+      cx = (float) (position.x() * GameConstants.GRID_W);
+      cy = (float) (position.y() * GameConstants.GRID_H);
+    }
+    float gridMax = Math.max(GameConstants.GRID_W, GameConstants.GRID_H);
+    int radius = spell.radius();
+    var near =
+        world.unitsNear(
+            cx / (double) GameConstants.GRID_W,
+            cy / (double) GameConstants.GRID_H,
+            radius + 1d,
+            2d * radius + 1d);
+    List<UnitView> secondary =
+        SpellSplash.nearest(
+            near,
+            candidate -> {
+              if (primary != null && candidate.id() == primary.id()) return false;
+              if (!candidate.alive() || !candidate.attackable()) return false;
+              if (!world.combatSafe(
+                  request.casterX(), request.casterY(), candidate.x(), candidate.y())) return false;
+              float tx = (float) (candidate.x() * GameConstants.GRID_W);
+              float ty = (float) (candidate.y() * GameConstants.GRID_H);
+              boolean inRange =
+                  selfCentred
+                      ? tileDistance(cx, cy, tx, ty) <= radius
+                      : pixelDistance(cx, cy, tx, ty) / gridMax < radius;
+              return inRange
+                  && (!spell.lineOfSight()
+                      || world.lineOfSight(
+                          cx / (double) GameConstants.GRID_W,
+                          cy / (double) GameConstants.GRID_H,
+                          candidate.x(),
+                          candidate.y()));
+            },
+            candidate -> {
+              float dx = (float) (candidate.x() * GameConstants.GRID_W) - cx;
+              float dy = (float) (candidate.y() * GameConstants.GRID_H) - cy;
+              return dx * dx + dy * dy;
+            },
+            primary == null ? 0 : 1);
+    if (primary != null) {
+      int delta = healthDelta(spell, request.caster(), primary, 0d);
+      if (delta > 0) throw new IllegalStateException("Attack spell rolled a heal: " + spell.key());
+      if (delta < 0) events.add(new Event.Damage(primary.id(), -delta, DamageKind.DIRECT));
+    }
+    for (UnitView target : secondary) {
+      float tx = (float) (target.x() * GameConstants.GRID_W);
+      float ty = (float) (target.y() * GameConstants.GRID_H);
+      double range = selfCentred ? tileDistance(cx, cy, tx, ty) : pixelDistance(cx, cy, tx, ty) / gridMax;
+      int delta = healthDelta(spell, request.caster(), target, range);
+      if (delta > 0) throw new IllegalStateException("Attack spell rolled a heal: " + spell.key());
+      if (delta < 0) events.add(new Event.Damage(target.id(), -delta, DamageKind.AREA));
+    }
+  }
+
+  /** {@code SpellAreaTargeting.distanceInTiles}: each axis in its own tile size. */
+  private static double tileDistance(float cx, float cy, float tx, float ty) {
+    double x = (tx - cx) / GameConstants.GRID_W;
+    double y = (ty - cy) / GameConstants.GRID_H;
+    return Math.hypot(x, y);
+  }
+
+  /** {@code Vector2.dst}, in float arithmetic. */
+  private static float pixelDistance(float cx, float cy, float tx, float ty) {
+    float dx = tx - cx;
+    float dy = ty - cy;
+    return (float) Math.sqrt(dx * dx + dy * dy);
   }
 
   // ---- stage 2: buffs ----------------------------------------------------------------------
@@ -595,10 +744,7 @@ public final class SpellEngine {
   }
 
   private static String parameter(SpellContent.Effect effect, int id) {
-    return effect.params().stream()
-        .filter(param -> param.id() == id)
-        .map(SpellContent.Param::expression)
-        .findFirst()
-        .orElse(null);
+    for (var param : effect.params()) if (param.id() == id) return param.expression();
+    return null;
   }
 }

@@ -6,6 +6,16 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-28 — Online character creation lists all seven classes (T4C-0280)
+
+### Fixed
+- The online character creation form now lists all seven classes (Warrior, Archer, Paladin, Cleric, Healer, Mage and Battle Mage); before, only the first three had a row to click, and the panel grows to fit them.
+
+## 2026-10-28 — Online movement now matches single-player (T4C-0277)
+
+### Changed
+- In online play your character now walks exactly as in single-player: it moves one tile at a time, finishes the tile it has started when you let go of the key instead of stopping halfway, cannot turn around in the middle of a tile, and slides along walls and around corners instead of stopping dead against them. Walking speed is unchanged.
+- Characters saved while standing between two tiles come back standing on the tile they were on.
 ## 2026-10-28 — Archer attacks are supported by the online server (T4C-0273)
 
 ### Added

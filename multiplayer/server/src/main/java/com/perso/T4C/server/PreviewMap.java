@@ -14,6 +14,10 @@ import java.nio.file.Path;
 public final class PreviewMap {
   private final boolean[][] blocked;
   private final byte[][] terrain;
+  /** Movement-blocking tiles without the tile-above fold: the shared grid rule asks per tile. */
+  private final boolean[][] footBlocked;
+  /** Authored portal source tiles players may stand on (offline "player passable"); may be null. */
+  private final boolean[][] portalPassable;
   public final int originX;
   public final int originY;
   public final int width;
@@ -26,6 +30,16 @@ public final class PreviewMap {
   }
 
   PreviewMap(boolean[][] blocked, byte[][] terrain, int originX, int originY, int spawnX, int spawnY) {
+    this(blocked, terrain, null, null, originX, originY, spawnX, spawnY);
+  }
+
+  /**
+   * {@code footBlocked} is the per-tile static movement blocking (no above-foot fold; null means
+   * "use blocked as given", which is exact for maps built by hand). {@code portalPassable} marks
+   * portal source tiles the movement rule treats as passable.
+   */
+  PreviewMap(boolean[][] blocked, byte[][] terrain, boolean[][] footBlocked, boolean[][] portalPassable,
+      int originX, int originY, int spawnX, int spawnY) {
     height = blocked.length;
     if (height == 0 || blocked[0].length == 0) throw new IllegalArgumentException("Empty map");
     width = blocked[0].length;
@@ -40,6 +54,21 @@ public final class PreviewMap {
         this.terrain[y] = terrain[y].clone();
       } else {
         for (int x = 0; x < width; x++) this.terrain[y][x] = (byte) (blocked[y][x] ? 1 : 0);
+      }
+    }
+    this.footBlocked = new boolean[height][];
+    for (int y = 0; y < height; y++) {
+      boolean[] row = footBlocked == null ? blocked[y] : footBlocked[y];
+      if (row.length != width) throw new IllegalArgumentException("Invalid foot grid");
+      this.footBlocked[y] = row.clone();
+    }
+    if (portalPassable == null) {
+      this.portalPassable = null;
+    } else {
+      this.portalPassable = new boolean[height][];
+      for (int y = 0; y < height; y++) {
+        if (portalPassable[y].length != width) throw new IllegalArgumentException("Invalid portal grid");
+        this.portalPassable[y] = portalPassable[y].clone();
       }
     }
     this.originX = originX;
@@ -67,9 +96,11 @@ public final class PreviewMap {
         throw new IOException("Map does not contain the game's starting area");
       boolean[][] cells = new boolean[60][80];
       byte[][] terrain = new byte[60][80];
+      boolean[][] foot = new boolean[60][80];
       for (int y = 0; y < cells.length; y++)
         for (int x = 0; x < cells[y].length; x++) {
           terrain[y][x] = data[(oy + y) * w + ox + x];
+          foot[y][x] = !world.contains(ox + x, oy + y) || world.blocksMovement(ox + x, oy + y);
           // Include the existing above-foot clearance. Portals and sliding are not in this preview.
           for (int above = 0; above <= PLAYER_COLLISION_FOOTPRINT_ABOVE_TILES; above++)
             cells[y][x] |= !world.contains(ox + x, oy + y - above)
@@ -80,9 +111,20 @@ public final class PreviewMap {
         for (int y = 30 - radius; y <= 30 + radius; y++)
           for (int x = 40 - radius; x <= 40 + radius; x++)
             if (Math.max(Math.abs(x - 40), Math.abs(y - 30)) == radius && !cells[y][x])
-              return new PreviewMap(cells, terrain, ox, oy, x, y);
+              return new PreviewMap(cells, terrain, foot, null, ox, oy, x, y);
       throw new IOException("No safe starting position in preview area");
     }
+  }
+
+  /** Local tile; tiles outside this map block. Static terrain only (no actors, no above-foot fold). */
+  boolean blocksFoot(int tileX, int tileY) {
+    return tileX < 0 || tileY < 0 || tileX >= width || tileY >= height || footBlocked[tileY][tileX];
+  }
+
+  /** Local tile; true for authored portal sources, which the offline rule lets players enter. */
+  boolean portalPassable(int tileX, int tileY) {
+    return portalPassable != null && tileX >= 0 && tileY >= 0 && tileX < width && tileY < height
+        && portalPassable[tileY][tileX];
   }
 
   public boolean canStand(double x, double y) {

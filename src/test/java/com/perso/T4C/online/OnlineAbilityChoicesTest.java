@@ -84,7 +84,7 @@ class OnlineAbilityChoicesTest {
   @Test
   void stageGateExcludesAnOtherwiseSupportedSpellAboveTheCurrentServerStage() {
     var spell = ENGINE_CATALOG.spells().get(supportedKey());
-    var tooNew = new SpellContentV2.Spell(spell.key() + "_stage3", spell.id(), spell.kind(), 3, "stage-3",
+    var tooNew = new SpellContentV2.Spell(spell.key() + "_stage4", spell.id(), spell.kind(), 4, "stage-4",
         spell.targetType(), spell.attack(), spell.selfCenteredAttack(), spell.pvp(), spell.lineOfSight(),
         spell.manaCost(), spell.successRate(), spell.mentalExhaustion(), spell.physicalExhaustion(),
         spell.attackExhaustion(), spell.cooldownSeconds(), spell.radius(), spell.element(), spell.attackType(),

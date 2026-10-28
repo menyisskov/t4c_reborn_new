@@ -70,6 +70,61 @@ class OnlineSpellStrikesTest {
     } finally { sessions.shutdown(); }
   }
 
+  /** An area spell kills two creatures and wounds a third in one transaction: receipts, kills, drops and experience together. */
+  @Test void aFireballKillsTwoCreaturesAndWoundsAThirdInOneAtomicCommit() throws Exception {
+    var store = OnlineStore.fromEnvironment(); store.migrate();
+    var gson = new Gson();
+    var json = gson.toJsonTree(MonsterCatalog.loadBundled().monsters().get("Skeleton")).getAsJsonObject();
+    json.addProperty("health", 1); json.addProperty("respawnTime", 300_000);
+    json.add("resists", gson.toJsonTree(new int[12]));
+    json.add("loot", gson.toJsonTree(List.of(new MonsterDef.LootDrop("Leather gloves", 1f))));
+    var small = gson.fromJson(json, MonsterDef.class);
+    json.addProperty("name", "Tough skeleton"); json.addProperty("health", 100_000);
+    var tough = gson.fromJson(json, MonsterDef.class);
+    var first = new MonsterContent.Spawn("area-" + UUID.randomUUID(), small.getName(), 6, 5, 0, false, false);
+    var second = new MonsterContent.Spawn("area-" + UUID.randomUUID(), small.getName(), 6, 6, 0, false, false);
+    var third = new MonsterContent.Spawn("area-" + UUID.randomUUID(), tough.getName(), 7, 5, 0, false, false);
+    var far = new MonsterContent.Spawn("area-" + UUID.randomUUID(), tough.getName(), 17, 17, 0, false, false);
+    var content = new MonsterContent(MonsterContent.VERSION, Map.of(small.getName(), small, tough.getName(), tough),
+        List.of(first, second, third, far));
+    var map = new PreviewMap(new boolean[20][20], 0, 0, 3, 5);
+    var world = new PreviewWorld(map, content);
+    var sessions = new PersistentSessions(store, map, world);
+    var key = store.provisionAccount();
+    var prepared = OnlineCharacterCreator.prepare(CharacterClass.WARRIOR, "male", false, new Random(3));
+    var base = prepared.progress();
+    var caster = new CharacterProgress(base.version(), base.characterClass(), base.gender(), base.attributes(),
+        new CharacterProgress.Vitals(base.vitals().hp(), base.vitals().maxHp(), 200, 200), base.advancement(), base.inventory(),
+        base.equipment(), base.skills(), Set.of("spell.fireball"), base.questFlags(), base.storage(), base.storageGold(),
+        base.respawn(), base.buffs(), base.cooldowns(), 0, base.companion());
+    var created = store.create(key.accountId(), "Area caster", 0, 3.5, 5.5, caster, prepared.gold());
+    String token = sessions.join(store.acquire(key.secret(), created.id()), System.nanoTime()).token();
+    long now = System.currentTimeMillis();
+    try (var creatures = new PersistentCreatures(store, world)) {
+      var spells = new OnlineSpellStrikes(map, world, sessions, creatures, ItemCatalog.loadBundled(), SpellCatalogV2.bundled(),
+          new Random(4), () -> now);
+      long aimed = world.creatureSpawns().stream().filter(s -> s.spawn().persistenceKey().equals(first.persistenceKey())).findFirst().orElseThrow().id();
+      var pending = spells.cast(token, 0, "spell.fireball", new SpellEngine.Target.Unit(aimed)).toCompletableFuture();
+      long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(5);
+      while (!pending.isDone() && System.nanoTime() < deadline) { sessions.step(); creatures.step(); Thread.sleep(5); }
+      var reply = pending.get();
+      assertEquals(3, reply.hits().size(), "the aimed creature and the two inside the radius; the far one is untouched");
+      assertEquals(2, reply.hits().stream().filter(OnlineSpellStrikes.Hit::killed).count());
+      var saved = store.load(key.accountId(), created.id());
+      assertTrue(saved.progress().vitals().mana() < 200);
+      assertTrue(saved.experience() > 0);
+      assertEquals(reply.revision(), saved.revision());
+      assertNotNull(store.loadOrCreateSpawn(first.persistenceKey()).diedAt(), "both kills are durable");
+      assertNotNull(store.loadOrCreateSpawn(second.persistenceKey()).diedAt());
+      assertNull(store.loadOrCreateSpawn(third.persistenceKey()).diedAt());
+      assertNotNull(store.loadOrCreateSpawn(third.persistenceKey()).health(), "the wounded one kept its reduced health");
+      assertNull(store.loadOrCreateSpawn(far.persistenceKey()).health(), "the distant creature was never touched");
+      assertEquals("revision", assertThrows(PreviewWorld.Rejected.class,
+          () -> spells.cast(token, 0, "spell.fireball", new SpellEngine.Target.Unit(aimed))).getMessage(),
+          "a repeat of the same revision is fenced and never replayed");
+    } finally { sessions.shutdown(); }
+  }
+
   /** A self buff commits with its rolled amounts, survives logout and a server restart, and logged-out time never runs it down. */
   @Test void aBuffCommitsOnceSurvivesLogoutAndRestartAndLoggedOutTimeDoesNotRunItDown() throws Exception {
     var store = OnlineStore.fromEnvironment(); store.migrate();
@@ -87,7 +142,7 @@ class OnlineSpellStrikesTest {
     var base = prepared.progress();
     var caster = new CharacterProgress(base.version(), base.characterClass(), base.gender(), base.attributes(),
         new CharacterProgress.Vitals(base.vitals().hp(), base.vitals().maxHp(), 500, 500), base.advancement(), base.inventory(),
-        base.equipment(), base.skills(), Set.of("spell.stone_skin", "spell.bless", "spell.poison"), base.questFlags(), base.storage(),
+        base.equipment(), base.skills(), Set.of("spell.stone_skin", "spell.bless", "spell.entangle"), base.questFlags(), base.storage(),
         base.storageGold(), base.respawn(), base.buffs(), base.cooldowns(), 0, base.companion());
     var created = store.create(key.accountId(), "Buff caster", 0, 3.5, 5.5, caster, prepared.gold());
     var clock = new java.util.concurrent.atomic.AtomicLong(1_900_000_000_000L);
@@ -102,7 +157,7 @@ class OnlineSpellStrikesTest {
     try (var creatures = new PersistentCreatures(store, world)) {
       var spells = new OnlineSpellStrikes(map, world, sessions, creatures, items, SpellCatalogV2.bundled(), new Random(4), clock::get);
       assertEquals("unsupported_spell", assertThrows(PreviewWorld.Rejected.class,
-          () -> spells.cast(token, 0, "spell.poison", new SpellEngine.Target.Self())).getMessage());
+          () -> spells.cast(token, 0, "spell.entangle", new SpellEngine.Target.Self())).getMessage());
       var pending = spells.cast(token, 0, "spell.stone_skin", new SpellEngine.Target.Self()).toCompletableFuture();
       long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(5);
       while (!pending.isDone() && System.nanoTime() < deadline) { sessions.step(); creatures.step(); Thread.sleep(5); }

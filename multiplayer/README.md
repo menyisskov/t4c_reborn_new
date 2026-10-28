@@ -127,8 +127,10 @@ Temporary-preview restrictions below apply to `--preview`. Persistent `--online`
 - One simulation thread owns every player. HTTP workers submit bounded commands and
   receive immutable snapshots; clients never supply authoritative positions or time deltas.
 - Fixed server time and the existing speed constant control movement. Extra input packets
-  replace intent, never add movement budget. Swept substeps, corner and bounds checks
-  prevent skipping blocked cells. The scheduler currently runs at 34 Hz.
+  replace intent, never add movement budget. Players move by single-player's grid-reservation
+  rule (a claimed tile is finished, blocked steps slide), so no step skips a blocked cell.
+  The scheduler currently runs at 34 Hz. `-Dt4c.server.movement=swept` selects the previous
+  swept-substep rule as a rollback (T4C-0277).
 - Random 256-bit bearer tokens identify temporary sessions. Snapshots expose public player
   IDs, never tokens. Input sequence numbers reject replay/reordering. These are local
   sessions, **not user accounts or production authentication**.
