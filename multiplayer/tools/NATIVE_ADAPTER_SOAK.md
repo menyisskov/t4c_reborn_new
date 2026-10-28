@@ -107,3 +107,54 @@ Require zero invariant/connection errors, useful accepted gameplay and HP change
 reconnects, and substantial time at twenty connected adapters; assess rejected counts and latency
 against workload. The driver has no release threshold baked in. It does not verify rendered animation,
 remote TLS, crash/restart recovery, quests, inventory UI, or map transfer. Those remain separate gates.
+
+## Recorded run
+
+### Smoke, PG16 WSL, 12 minutes, not the two-hour gate (T4C-0247, 2026-10-28): FAILED the tool's own zero-error criterion
+
+Local smoke on a disposable PostgreSQL 16 cluster (acceptance cluster tooling, loopback 56881, database
+`t4c_acc_<hex>` used directly because the soak has no database naming rule), a TEMP runtime snapshot of the
+server JAR plus both hosted maps, and one `ServerMain --online` child on 18793 started with
+`T4C_CONTROL_FILE`. Source: `origin/main` f7bb21c1, protocol 5. Scale: the tool's fixed twenty adapters
+(it accepts no smaller count) for 720 seconds, i.e. the documented 3-minute smoke stretched to 12 minutes.
+The wrapper exited 1 ("Adapter soak failed") because of connection failures; the report itself ran to
+completion (`finished: true`, 720.011 s). The cluster was destroyed and the TEMP runtime removed afterwards;
+the sanitized report stays in TEMP, not committed. Local PG16 evidence only.
+
+| Metric | Result |
+| --- | --- |
+| Time at N connected adapters | 20: 214.2 s (29.8%), 19: 12.6 s, 18: 124.4 s, 16: 60.4 s, 10: 65.1 s, 8: 72.6 s, 6: 51.2 s, 2: 47.3 s, remainder small; at least 19: 226.8 s |
+| Players seen in one snapshot (max) | 20 (reached late; 16 by about minute 5) |
+| Adapter failures | 80 in total; the only error text was `connection_or_reconnect_timeout` (18 players; players 8 and 14 had none); no invariant, stall, position or revision errors |
+| Reconnects | 156 |
+| Attacks / recoveries | 713 attacks, 9 corpse recoveries (so at least nine adapter deaths; the report has no death counter) |
+| Commands accepted / rejected | 438 / 284 (cooldown, contention, stale revision) |
+| HP changes / movement observations | 1,230 / 67,091 |
+| World transfers | 0 (not exercised) |
+| Command latency buckets | `<=100` ms 144, `<=250` ms 550, `<=500` ms 28; nothing slower (722 commands) |
+| `/health` | 0 failures, mean 0.664 ms, observed tick rate 33.989 Hz (`tickDeficitProxy` 8.238) |
+| Server ticks | 25,385 completed, 0 failed, mean 2.53 ms, max callback 182.9 ms, 1 over-budget callback, 1 deadline reset, max deadline debt 215.7 ms |
+| Memory | peak heap used 604.1 MiB (committed 1,024 MiB, 28 processors), non-heap peak 44.4 MiB |
+| CPU | about 20% of one core on average (143.9 s process CPU) |
+| Operator metrics samples | 144 successful, 0 failed |
+| Database (database-wide) | connections 3 at start, 6 at end; commits 1,175 to 46,649; rollbacks 0 to 0; deadlocks 0; size 8.37 to 9.80 MB |
+| HTTP | 179,932 requests completed, 1.363 GB response body written; non-2xx: `/map` 503 x61, `/join` 503 x19, `/attack` 409 x277, `/input` 409 x15, `/recover` 409 x5 |
+| Shutdown | private `/admin/shutdown` answered 200 and the server process exited (exit code not captured) |
+
+Failure analysis. The tool opens all twenty adapters at once, but the server admits at most two concurrent
+public requests (`HttpRequestAdmission.MAX_PUBLIC` = 2, added by T4C-0222 after this tool was written) and
+answers the rest `503 busy`. Eighteen adapters timed out on their first join, and the server counted 61 `/map`
+and 19 `/join` 503s, which matches. They recovered through the tool's staggered reconnect schedule (first
+reconnect at 120 s plus 6 s per player), so sustained twenty-adapter occupancy only began late and covers 29.8% of
+the run, not a stable plateau. This is read from counters and code, not from per-request logs. It is **not a
+server defect**: the admission cap is a deliberate guard and no server code was changed. It is a tool and scale
+mismatch (twenty simultaneous joins and reconnect bursts against a two-wide public admission). Follow-up, not
+done here: stagger the initial opens and reconnects, or retry on 503, before any two-hour run. Whether two
+concurrent public requests is enough for a real twenty-player realm is a separate question.
+
+Limits. The starter ground is lethal for new characters (DESIGN_GUIDELINES.md T4C-0248, an open owner decision):
+the nine recoveries show deaths happened, and the movement/attack/recovery/reconnect mix is partly shaped by
+survival there. Nothing was worked around. No bandwidth, wire-level, database-operation or pool-wait latency was
+measured. Quests, loot, travel, rendered clients and TLS were not exercised. This does **not** pass the two-hour
+soak, the M5 gate or Beta. Per ACCEPTANCE.md the Beta soak gate is two real rendered clients; twenty-adapter runs
+are follow-up scale evidence.
