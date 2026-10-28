@@ -39,14 +39,20 @@ class OnlineInventoryRowsTest {
   }
 
   @Test
-  void numberKeysAddressOnlyTheFirstNineRows() {
+  void pagingSelectsLaterItemsAndClampsAfterInventoryShrinks() {
     var inventory = new ArrayList<Item>();
     for (int i = 0; i < 10; i++) inventory.add(new Item(UUID.randomUUID(), "item.coin" + i, 1, 0));
     var rows = OnlineInventoryRows.of(inventory, Map.of());
 
-    assertEquals(inventory.get(0).id(), OnlineInventoryRows.choose(rows, 1).orElseThrow().instance());
-    assertEquals(inventory.get(8).id(), OnlineInventoryRows.choose(rows, 9).orElseThrow().instance());
-    assertTrue(OnlineInventoryRows.choose(rows, 10).isEmpty());
-    assertTrue(OnlineInventoryRows.choose(rows, 0).isEmpty());
+    assertEquals(inventory.get(0).id(), OnlineInventoryRows.choose(rows, rows, 0, 0, 1).orElseThrow().instance());
+    assertEquals(inventory.get(8).id(), OnlineInventoryRows.choose(rows, rows, 0, 0, 9).orElseThrow().instance());
+    assertEquals(inventory.get(9).id(), OnlineInventoryRows.choose(rows, rows, 1, 1, 1).orElseThrow().instance());
+    assertTrue(OnlineInventoryRows.choose(rows, rows, 1, 1, 2).isEmpty());
+    assertTrue(OnlineInventoryRows.choose(rows, rows, 1, 1, 0).isEmpty());
+    assertEquals(0, OnlineInventoryRows.clampPage(1, 9));
+    assertEquals(inventory.get(0).id(), OnlineInventoryRows.choose(rows.subList(0, 9), rows.subList(0, 9), 1, 1, 1).orElseThrow().instance());
+    assertTrue(OnlineInventoryRows.choose(rows.subList(0, 9), rows, 1, 1, 1).isEmpty());
+    assertTrue(OnlineInventoryRows.choose(rows, rows, 1, 0, 1).isEmpty());
+    assertTrue(OnlineInventoryRows.page(List.of(), 3).isEmpty());
   }
 }
