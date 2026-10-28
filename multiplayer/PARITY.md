@@ -61,6 +61,7 @@ Each is a gap to close, never a decision to keep:
 - Hosted crops only; every portal except 16/17 refused; NPC-owned spawns (Sundial) filtered out.
 - Ground-loot owner window (60 s) and expiry (15 min) have no single-player equivalent;
   they are a multiplayer rule, kept unless the owner removes them.
+- Movement: the server uses a swept 0.2-tile substep rule at 34 Hz with no sliding, no speed buffs, no dynamic blockers and tile-centre positions; single-player reserves whole tiles, slides along walls and scales by speed buffs. The shared `MovementRules` holds both (`Mode`); the server does not use it yet. Difference table: `CLIENT_UNIFICATION_DESIGN.md` 3.10 (T4C-0269).
 - Text HUD and panels; Space attacks the nearest target; audio disabled.
 - Characters are operator-provisioned accounts; no import of desktop saves.
 
