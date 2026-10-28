@@ -276,6 +276,29 @@ single-player save directory. Pinned by `SavePathAuditTest` (the list of direct
 | `I18n` catalogue writer, `BuildPreferences`, `MapStamp`, `MapDraftService`, `MapEditorScreen`, `ItemJavaExporter`, `SpawnJavaExporter`, `SpellJavaExporter`, `BinaryIOUtils`, `SpriteBin*`, `CollisionMapIO`, `DdaExtractor`, `T4CContentStudio`, `OnlineNativeLibrary` | No: editor, content-tool and installer writers; none touch a character or take a `Player` | Out of scope; they write content or cache files, not saves |
 | Character switch, dispose, autosave | Autosave: `MainGameScreen.savePlayerState` (already via the session). Dispose: `MyGame.dispose` saves the current screen's player | Both end in the guarded `save(Player, float)` |
 
+### 3.9 PlayerCommands, slice 1: attack the clicked monster (T4C-0267)
+
+`PlayerCommands.attack(BaseMonster)` is the first member. It was chosen because it is the one
+combat intent with a single entry point (`MonsterInputHandler` calls one callback after it has
+resolved the click to a live, attackable monster, and after an armed targeted spell has had its
+chance) and a closed rule set (record the target, then one melee or bow attempt). The other
+combat paths stay on the screen for now: the per-frame auto-attack (`performAttackTick`, which is
+simulation, not intent), target selection by Tab, the hotbar and spell casts.
+
+- **Local:** `LocalPlayerCommands.attack` is the old `beginAttackTarget` body moved unchanged.
+  The attack-target fields, the bow rules and the projectile renderer still live in
+  `MainGameScreen`, reached through the small `LocalAttackHost` it implements and binds at build
+  time. Range, line of sight, facing, cooldown and damage stay in `MonsterManager.attackMonster`
+  and the bow code. `AttackIntentCharacterizationTest` pins the behaviour: target recorded before
+  the swing, no player or no monster does nothing, a miss keeps the target without a cooldown, a
+  weapon on cooldown or a stunned player only becomes the attacker, bow refusals (range, no
+  quiver) drop the target and combat mode, and a launched shot starts the cooldown.
+- **Remote:** send the intent (target by server id) and apply nothing locally: no target flag, no
+  swing, no cooldown. Range, cooldown and damage are the server's; a refusal arrives as a session
+  event (see 3.5). The `LocalAttackHost` is not part of the remote path.
+- **Not yet moved:** the auto-attack tick keeps reading the same screen fields; when the remote
+  session lands, those fields become the view of the server-held target (follow-up slice).
+
 ## 4. Staged plan
 
 Sizes: S under a day, M a few days, L about a week, XL more. Every stage ends with the full
