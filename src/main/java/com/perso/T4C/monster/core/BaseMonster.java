@@ -915,14 +915,7 @@ public abstract class BaseMonster implements Nameable {
   }
 
   protected int rollMonsterSpellDamage(int spellId) {
-    int intelligence = Math.max(15, combatIntelligence);
-    int scale = Math.max(1, intelligence - 14);
-    int damage =
-        switch (spellId) {
-          case 10091 -> scale * 5 / 6 + 1 + random.nextInt(Math.max(1, scale * 5 / 6));
-          case 10120 -> scale * 15 / 32 + 1 + random.nextInt(Math.max(1, scale * 15 / 16));
-          default -> Math.max(1, combatLevel + random.nextInt(Math.max(1, combatLevel)));
-        };
+    int damage = MonsterSpellDamageRules.rollDamage(spellId, combatIntelligence, combatLevel, random);
     log.info("{} casts monster spell {} for {} damage!", name, spellId, damage);
     return damage;
   }
