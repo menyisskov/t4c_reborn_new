@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0253`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0254`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0253 | Merge pull requests after passing local validation without waiting for GitHub Actions | Process/Tooling | Done (PR207; locally validated) | `56b79952` | [2026-10-28](CHANGELOG.md#2026-10-28--merge-after-local-tests-pass-t4c-0253) |
 | T4C-0251 | Native tamper battery: a probe that drives one attacker session over raw HTTP and one victim on the native adapter against a live online server and records 322 tamper cases (foreign account-key/character joins, missing and garbled authorization, admin routes, stale revision and epoch, replays and reordered input, oversized and malformed bodies, forged targets and foreign items/corpses/loot, stat/gold/flag/item edit attempts, speed and collision); one live run on a disposable PG16 cluster | Process/Tooling (M5 cheating resistance) | Done (live run: 321 PASS, 1 FAIL; the FAIL is a server finding: `/recover` reports a definite corpse-item refusal as 503 busy, state unchanged, not fixed here) | PR open (claude/tamper-probe) | [2026-10-28](CHANGELOG.md#2026-10-28--online-cheating-attempts-are-now-tested-against-a-live-server-t4c-0251) |
 | T4C-0250 | Online client retries a busy server (bounded jittered backoff on a definite 503 busy for the anonymous map read, the join and the post-join map read only; never a gameplay command), plus the native adapter soak now paces adapter opens and records the rerun | Multiplayer / M5 soak tooling | Done (unit tests + live 12-minute paced soak on a disposable PG16 cluster: 0 failures, 56.5% at 20 adapters, up from 29.8%) | PR open (claude/soak-stagger) | [2026-10-28](CHANGELOG.md#2026-10-28--online-play-waits-and-retries-when-the-server-is-busy-t4c-0250) |
 | T4C-0249 | Native online client explains why a melee attack was refused (map the server's /attack refusal codes to English messages; the routine swing-cooldown refusal is readable by the probe but not shown on the HUD) | Multiplayer / M2 native client | Done (offline tests + package; not run against a live server) | this PR | [2026-10-28](CHANGELOG.md) |
