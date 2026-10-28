@@ -101,6 +101,7 @@ public final class OnlineLobbyScreen extends InputAdapter implements Screen {
   private final TextureRegion background;
   private final TextureRegion title;
   private final TextureRegion panelFrame;
+  private final TextureRegion createFrame;
   private final TextureRegion largeNormal;
   private final TextureRegion largeHover;
   private final TextureRegion largeDisabled;
@@ -201,6 +202,10 @@ public final class OnlineLobbyScreen extends InputAdapter implements Screen {
     downHover = styledSprite("PS_SBtnDNH", true);
     panelFrame =
         theme.plainFrame((int) OnlineLobbyLayout.PANEL_WIDTH, (int) OnlineLobbyLayout.PANEL_HEIGHT);
+    createFrame =
+        theme.plainFrame(
+            (int) OnlineLobbyLayout.PANEL_WIDTH,
+            (int) Math.ceil(OnlineCreateLayout.panelHeight(form.classes().size())));
     FontManager fonts = FontManager.getInstance();
     buttonFont = fonts.getTahomaFont(12, JournalTheme.TEXT, false);
     smallButtonFont = fonts.getTahomaFont(11, JournalTheme.TEXT, false);
@@ -680,7 +685,7 @@ public final class OnlineLobbyScreen extends InputAdapter implements Screen {
   private void drawCreatePanel() {
     float x = panelX();
     float y = panelY();
-    drawWithAlpha(panelFrame, x, y, PANEL_ALPHA);
+    drawWithAlpha(createFrame, x, y, PANEL_ALPHA);
     drawCentered(titleFont, I18n.key("online.create.title"), x, y + 12f, OnlineLobbyLayout.PANEL_WIDTH);
     goldFont.draw(batch, I18n.key("online.create.name"), x + OnlineCreateLayout.LEFT_X, y + OnlineCreateLayout.LABEL_Y);
     float fieldX = x + OnlineCreateLayout.LEFT_X;
@@ -691,7 +696,7 @@ public final class OnlineLobbyScreen extends InputAdapter implements Screen {
 
     goldFont.draw(batch, I18n.key("online.create.class"), fieldX, y + OnlineCreateLayout.CLASS_LABEL_Y);
     int hovered = creating != null ? -1 : OnlineCreateLayout.classAt(pointer.x, pointer.y, x, y, form.classes().size());
-    int rows = Math.min(form.classes().size(), OnlineCreateLayout.MAX_CLASS_ROWS);
+    int rows = form.classes().size();
     for (int row = 0; row < rows; row++) {
       float rowY = y + OnlineCreateLayout.CLASS_Y + row * OnlineCreateLayout.CLASS_PITCH;
       theme.well(batch, fieldX, rowY, OnlineCreateLayout.CLASS_WIDTH, OnlineCreateLayout.CLASS_HEIGHT + 3f);
@@ -718,11 +723,11 @@ public final class OnlineLobbyScreen extends InputAdapter implements Screen {
         I18n.key("online.create.back"), !busy, Target.BACK);
 
     if (busy) {
-      drawCentered(goldFont, I18n.key("online.create.working"), x, y + OnlineLobbyLayout.STATUS_LINE_Y,
+      drawCentered(goldFont, I18n.key("online.create.working"), x, y + OnlineCreateLayout.statusLineY(rows),
           OnlineLobbyLayout.PANEL_WIDTH);
     }
     if (createError != null) {
-      drawCentered(redFont, createError, x, y + OnlineLobbyLayout.ERROR_LINE_Y, OnlineLobbyLayout.PANEL_WIDTH);
+      drawCentered(redFont, createError, x, y + OnlineCreateLayout.errorLineY(rows), OnlineLobbyLayout.PANEL_WIDTH);
     }
   }
 

@@ -52,8 +52,9 @@ class ShopCatalogTest {
     try {
       assertEquals(
           OnlineNpcShopExporter.json(),
-          Files.readString(
-              Path.of("multiplayer/server/src/main/resources/content/npc-shops-v2.json")));
+          // A Windows checkout (core.autocrlf) turns the committed LF file into CRLF on disk.
+          Files.readString(Path.of("multiplayer/server/src/main/resources/content/npc-shops-v2.json"))
+              .replace("\r\n", "\n"));
     } catch (java.io.IOException error) {
       fail("Could not read generated NPC shop content", error);
     }
