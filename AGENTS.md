@@ -203,8 +203,8 @@ reproduction commands, observed results and limitations; keep credentials/person
 Never mark a milestone complete from merged PR counts, unit/service tests or native network
 adapters alone. Distinguish implemented, verified, merged, rendered-client and remote evidence.
 Preserve failed runs and unchecked gates. The two-player checkpoint does not by itself
-complete Beta: all intended gameplay, content, security, recovery and two-hour mixed-stability
-gates remain. The owner changed the Beta/GA concurrency threshold to two real rendered clients
+complete Beta: all intended gameplay, content, security, recovery and mixed-gameplay/stability
+gates remain, with no fixed session-duration minimum. The owner changed the Beta/GA concurrency threshold to two real rendered clients
 on 2026-10-27; qualifying 20-player scale is follow-up evidence, not a release gate or a
 runtime-cap change. The checkpoint's exact content/class scope must be explicit before completion.
 Single-player launch, gameplay, existing saves and preferences remain protected throughout.
