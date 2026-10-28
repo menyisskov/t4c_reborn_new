@@ -16,7 +16,6 @@ import com.perso.T4C.gui.core.GuiDraw;
 import com.perso.T4C.gui.core.GuiManager;
 import com.perso.T4C.gui.core.JournalTheme;
 import com.perso.T4C.gui.widget.GuiButton;
-import com.perso.T4C.helper.PlayerStateStore;
 import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.player.Player;
@@ -309,7 +308,7 @@ public class MacrosScreen extends CharacterPanel {
     }
     macros.get(index).setKeycode(keycode);
     macros.get(index).setModifiers(modifiers);
-    PlayerStateStore.save(player);
+    PlayerHUD.persistenceOf(hud).save(player);
   }
 
   private void clearKey(int index) {
@@ -317,14 +316,14 @@ public class MacrosScreen extends CharacterPanel {
     if (index < 0 || index >= macros.size()) return;
     macros.get(index).setKeycode(MacroBinding.UNBOUND);
     macros.get(index).setModifiers(0);
-    PlayerStateStore.save(player);
+    PlayerHUD.persistenceOf(hud).save(player);
   }
 
   private void removeEntry(int index) {
     List<MacroBinding> macros = macros();
     if (index < 0 || index >= macros.size()) return;
     macros.remove(index);
-    PlayerStateStore.save(player);
+    PlayerHUD.persistenceOf(hud).save(player);
     selected = Math.min(selected, macros.size() - 1);
     scroll(0);
   }
@@ -338,7 +337,7 @@ public class MacrosScreen extends CharacterPanel {
     selected = target;
     if (selected < firstVisible) firstVisible = selected;
     if (selected >= firstVisible + ROWS_VISIBLE) firstVisible = selected - ROWS_VISIBLE + 1;
-    PlayerStateStore.save(player);
+    PlayerHUD.persistenceOf(hud).save(player);
   }
 
   private void scroll(int rows) {

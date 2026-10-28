@@ -12,6 +12,14 @@ import java.util.Objects;
 public final class AccountStorageService {
   private AccountStorageService() {}
 
+  /**
+   * The vault is a local file shared by the single-player characters. A character a server owns
+   * must never move items or gold into it (nor out of it): every mutation refuses a remote player.
+   */
+  private static boolean isRemote(Player player) {
+    return player != null && player.isRemote();
+  }
+
   /** Pads/trims the vault's charge list so it lines up with its item list. */
   public static void synchronize() {
     AccountStorage account = AccountStorage.get();
@@ -22,6 +30,9 @@ public final class AccountStorageService {
   }
 
   public static InventoryService.Result deposit(Player player, int inventoryIndex, String itemKey) {
+    if (isRemote(player)) {
+      return InventoryService.Result.failure(InventoryService.Failure.ITEM_NOT_OWNED, itemKey);
+    }
     if (com.perso.T4C.divine.DivineReturnScrolls.isBoundReturnScroll(itemKey))
       return InventoryService.Result.failure(InventoryService.Failure.BOUND_ITEM, itemKey);
     if (player == null) {
@@ -49,6 +60,9 @@ public final class AccountStorageService {
 
   public static InventoryService.Result withdraw(Player player, int storageIndex, String itemKey) {
     AccountStorage account = AccountStorage.get();
+    if (isRemote(player)) {
+      return InventoryService.Result.failure(InventoryService.Failure.INVENTORY_EMPTY, itemKey);
+    }
     if (player == null || account.storage().isEmpty()) {
       return InventoryService.Result.failure(InventoryService.Failure.INVENTORY_EMPTY, itemKey);
     }
@@ -87,7 +101,7 @@ public final class AccountStorageService {
   }
 
   public static void depositGold(Player player, int amount) {
-    if (player == null || amount <= 0) return;
+    if (player == null || isRemote(player) || amount <= 0) return;
     int actual = Math.min(amount, player.getGold());
     if (actual <= 0) return;
     player.setGold(player.getGold() - actual);
@@ -97,7 +111,7 @@ public final class AccountStorageService {
   }
 
   public static void withdrawGold(Player player, int amount) {
-    if (player == null || amount <= 0) return;
+    if (player == null || isRemote(player) || amount <= 0) return;
     AccountStorage account = AccountStorage.get();
     int actual = Math.min(amount, account.storageGold());
     if (actual <= 0) return;

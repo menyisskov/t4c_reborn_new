@@ -29,6 +29,7 @@ import java.util.Map;
 
 public class Statistics extends CharacterPanel {
   private final Player player;
+  private final PlayerHUD hud;
   private final List<StatHoverInfo> statHoverInfos = new ArrayList<>();
   private final HudTooltip tooltip = new HudTooltip();
   private final Map<String, Integer> pendingAllocations = new LinkedHashMap<>();
@@ -43,6 +44,7 @@ public class Statistics extends CharacterPanel {
   public Statistics(Player player, PlayerHUD hud) {
     super(player, hud, "ui.journal.character", "character");
     this.player = player;
+    this.hud = hud;
     addStatLabels();
     addStatPointButtons();
   }
@@ -285,7 +287,7 @@ public class Statistics extends CharacterPanel {
     }
     player.setStatPoints(player.getStatPoints() - spentPendingPoints());
     pendingAllocations.clear();
-    com.perso.T4C.helper.PlayerStateStore.save(player);
+    PlayerHUD.persistenceOf(hud).save(player);
     refreshStatPointButtonsVisibility();
   }
 
