@@ -736,6 +736,8 @@ class PreviewServerTest {
   /** The corpse list is read right after joining; retry only while the session has not seen it yet. */
   private HttpResponse<String> recoverWhenKnown(HttpClient client,String url,String token,String current,String body) throws Exception {
     HttpResponse<String> response=null;
+    // Listing the corpses is what makes the session aware of them, as the client does.
+    assertEquals(200,client.send(request(url,"/corpses",token,null),HttpResponse.BodyHandlers.ofString()).statusCode());
     for(int attempt=0;attempt<40;attempt++) {
       response=client.send(abilityRequest(url,"/recover",token,current,body),HttpResponse.BodyHandlers.ofString());
       if(response.statusCode()!=409 || !response.body().contains("corpse_unavailable")) return response;
