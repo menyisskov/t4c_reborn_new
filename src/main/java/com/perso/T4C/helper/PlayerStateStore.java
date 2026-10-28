@@ -32,6 +32,14 @@ public final class PlayerStateStore {
   }
 
   public static void save(Player player, float dayNightHour) {
+    if (player.isRemote()) {
+      // A server owns this character; a forgotten save call must not overwrite the local save.
+      try {
+        Gdx.app.error("PlayerStateStore", "Refusing to save a remote character to the local file");
+      } catch (Throwable ignored) {
+      }
+      return;
+    }
     lastDayNightHour = dayNightHour;
     PlayerStateDto state = PlayerStateMapper.fromPlayer(player, dayNightHour);
     CompanionNPC companion = companionSupplier == null ? null : companionSupplier.get();
