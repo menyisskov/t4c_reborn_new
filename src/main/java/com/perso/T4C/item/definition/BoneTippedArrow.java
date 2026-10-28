@@ -17,7 +17,7 @@ public final class BoneTippedArrow {
         null,
         "64kInvQuiver",
         5000L,
-        3L,
+        0L,
         0.0d,
         0L,
         0L,

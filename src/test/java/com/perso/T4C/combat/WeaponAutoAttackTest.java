@@ -84,6 +84,46 @@ class WeaponAutoAttackTest {
     assertSame(target, WeaponAutoAttack.selectTarget(player, null, List.of(target)));
   }
 
+  /**
+   * Owner rule (2026-10-28, T4C-0246): arrows weigh nothing, quivers are light, and the quiver
+   * never runs out. The equipped quiver is the ammunition source and no shot ever decrements the
+   * bag, so the rule is: a bow fires while a quiver-type item is worn, and nothing is consumed.
+   */
+  @Test
+  void aQuiverNeverRunsOutAndArrowsWeighNothing() throws Exception {
+    com.perso.T4C.item.json.ItemJsonLoader.loadAndRegister("assets/items");
+    try {
+      Player player = fighter();
+      TestMonster target = new TestMonster((PLAYER_MELEE_ATTACK_RANGE + BOW_ATTACK_RANGE) / 2);
+      var bow =
+          ItemRegistry.load().stream()
+              .filter(i -> i.getBodyPart() == BodyPart.WEAPON && i.isBow())
+              .findFirst()
+              .orElseThrow();
+      player.getEquippedItems().put(BodyPart.WEAPON, bow.getKey());
+      player.getEquippedItems().put(BodyPart.WEAPON2, "item.recruits_quiver");
+      player.getInventory().addAll(java.util.Collections.nCopies(30, "item.wooden_arrow"));
+      var before = List.copyOf(player.getInventory());
+      for (int shot = 0; shot < 200; shot++) {
+        assertSame(target, WeaponAutoAttack.selectTarget(player, target, List.of(target)));
+      }
+      assertEquals(before, player.getInventory(), "firing must not consume arrows");
+      assertEquals("item.recruits_quiver", player.getEquippedItems().get(BodyPart.WEAPON2));
+
+      for (var item : ItemRegistry.load()) {
+        if (item.getStructure() != com.perso.T4C.config.GameConstants.QUIVER_STRUCTURE_ID) continue;
+        assertTrue(item.isUnlimitedUse(), item.getKey() + ": a quiver must never be depletable");
+        if (item.getKey().endsWith("_arrow")) {
+          assertEquals(0L, item.getWeight(), item.getKey() + ": arrows weigh nothing");
+        }
+      }
+      assertEquals(0L, ItemRegistry.findByKey("item.wooden_arrow").getWeight());
+      assertEquals(2L, ItemRegistry.findByKey("item.recruits_quiver").getWeight());
+    } finally {
+      ItemRegistry.resetAdditionalDefinitions();
+    }
+  }
+
   @Test
   void ignoresSafeHavensAndEnemiesBehindWalls() throws Exception {
     byte[] collision = new byte[16];

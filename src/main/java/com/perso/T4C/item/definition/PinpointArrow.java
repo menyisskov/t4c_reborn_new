@@ -17,7 +17,7 @@ public final class PinpointArrow {
         null,
         "64kInvQuiver",
         500L,
-        3L,
+        0L,
         0.0d,
         0L,
         0L,

@@ -17,7 +17,7 @@ public final class QuiverOfFrost {
         null,
         "64kIconQuiver",
         22000L,
-        3L,
+        2L,
         0.0d,
         0L,
         0L,

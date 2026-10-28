@@ -17,7 +17,7 @@ public final class ItemItemWoodenArrow {
         null,
         "64kInvQuiver",
         33L,
-        3L,
+        0L,
         0.0d,
         0L,
         0L,
