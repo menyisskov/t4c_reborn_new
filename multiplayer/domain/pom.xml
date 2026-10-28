@@ -79,6 +79,7 @@
                         <include>com/perso/T4C/spell/engine/*.java</include>
                         <include>com/perso/T4C/spell/SpellFormulaContexts.java</include>
                         <include>com/perso/T4C/world/LineOfSightRules.java</include>
+                        <include>com/perso/T4C/world/MovementRules.java</include>
                     </includes>
                     <testIncludes>
                         <testInclude>com/perso/T4C/monster/core/MonsterPursuitRulesTest.java</testInclude>
