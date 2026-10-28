@@ -17,7 +17,7 @@ public final class TrueshotQuiver {
         null,
         "64kIconQuiver",
         1L,
-        0L,
+        2L,
         0.0d,
         0L,
         0L,

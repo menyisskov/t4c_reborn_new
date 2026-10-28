@@ -17,7 +17,7 @@ public final class CarquoisVoltaique {
         null,
         "64kIconQuiver",
         52000L,
-        3L,
+        2L,
         0.0d,
         0L,
         0L,

@@ -6,6 +6,12 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-28 — Arrows weigh nothing and quivers never run out (T4C-0246)
+
+### Changed
+- Arrows no longer weigh anything, and your quiver never runs out of them. Quivers keep a small, equal weight.
+- Archers can now carry loot from the start; before, their starting arrows left them too heavy to pick anything up. Characters who already own arrows keep them.
+
 ## 2026-10-27 — Online HUD shows mana (T4C-0240)
 
 ### Changed
