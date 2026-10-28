@@ -74,13 +74,20 @@ class OnlineSpellStrikesTest {
   @Test void aBuffCommitsOnceSurvivesLogoutAndRestartAndLoggedOutTimeDoesNotRunItDown() throws Exception {
     var store = OnlineStore.fromEnvironment(); store.migrate();
     var map = new PreviewMap(new boolean[20][20], 0, 0, 3, 5);
-    var content = new MonsterContent(MonsterContent.VERSION, Map.of(), List.of());
+    var gson = new Gson();
+    var json = gson.toJsonTree(MonsterCatalog.loadBundled().monsters().get("Skeleton")).getAsJsonObject();
+    json.addProperty("health", 100_000);
+    json.add("resists", gson.toJsonTree(new int[12]));
+    var distant = gson.fromJson(json, MonsterDef.class);
+    // One far-away creature only so the region has content; the buff cast never touches it.
+    var spawn = new MonsterContent.Spawn("buff-" + UUID.randomUUID(), distant.getName(), 17, 17, 0, false, false);
+    var content = new MonsterContent(MonsterContent.VERSION, Map.of(distant.getName(), distant), List.of(spawn));
     var key = store.provisionAccount();
     var prepared = OnlineCharacterCreator.prepare(CharacterClass.WARRIOR, "male", false, new Random(3));
     var base = prepared.progress();
     var caster = new CharacterProgress(base.version(), base.characterClass(), base.gender(), base.attributes(),
         new CharacterProgress.Vitals(base.vitals().hp(), base.vitals().maxHp(), 500, 500), base.advancement(), base.inventory(),
-        base.equipment(), base.skills(), Set.of("spell.stone_skin", "spell.bless"), base.questFlags(), base.storage(),
+        base.equipment(), base.skills(), Set.of("spell.stone_skin", "spell.bless", "spell.poison"), base.questFlags(), base.storage(),
         base.storageGold(), base.respawn(), base.buffs(), base.cooldowns(), 0, base.companion());
     var created = store.create(key.accountId(), "Buff caster", 0, 3.5, 5.5, caster, prepared.gold());
     var clock = new java.util.concurrent.atomic.AtomicLong(1_900_000_000_000L);
@@ -105,7 +112,7 @@ class OnlineSpellStrikesTest {
       assertEquals(start + 1_200_000, expiresAt);
       var saved = store.load(key.accountId(), created.id());
       assertEquals(reply.revision(), saved.revision());
-      assertEquals(491, saved.progress().vitals().mana(), "stone skin costs 9");
+      assertEquals(455, saved.progress().vitals().mana(), "stone skin costs 45");
       var buff = saved.progress().buffs().get(0);
       assertEquals("spell.stone_skin", buff.spell());
       assertTrue(buff.modifiers().get("armorClass") > 0, "the rolled amount is stored");
