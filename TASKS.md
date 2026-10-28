@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0250`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0251`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0250 | Online client retries a busy server (bounded jittered backoff on a definite 503 busy for the anonymous map read, the join and the post-join map read only; never a gameplay command), plus the native adapter soak now paces adapter opens and records the rerun | Multiplayer / M5 soak tooling | Done (unit tests + live 12-minute paced soak on a disposable PG16 cluster: 0 failures, 56.5% at 20 adapters, up from 29.8%) | PR open (claude/soak-stagger) | [2026-10-28](CHANGELOG.md#2026-10-28--online-play-waits-and-retries-when-the-server-is-busy-t4c-0250) |
 | T4C-0249 | Native online client explains why a melee attack was refused (map the server's /attack refusal codes to English messages; the routine swing-cooldown refusal is readable by the probe but not shown on the HUD) | Multiplayer / M2 native client | Done (offline tests + package; not run against a live server) | this PR | [2026-10-28](CHANGELOG.md) |
 | T4C-0248 | The starter Skeleton hunting ground is very lethal for new characters (probe evidence: level-1 warriors die in about 35 s; a level-8 warrior kills two Skeletons and dies to the third); decision on quest minimum level or online aggro waits on the owner (options A-C in DESIGN_GUIDELINES.md) | Multiplayer / balance | Planned (owner decision needed) | none yet | deferred |
 | T4C-0247 | Private disposable PostgreSQL 16 cluster tooling (WSL Ubuntu) for live acceptance runs: create/status/crash/start/stop/destroy script, PowerShell wrapper with process-scoped DB environment and dry-run, and usage doc | Process/Tooling | Tooling prepared; live use 2026-10-28 (loot probe, then a 12-minute native soak smoke: both created and destroyed their clusters cleanly) | PR open (claude/acceptance-cluster) | n/a (tooling) |

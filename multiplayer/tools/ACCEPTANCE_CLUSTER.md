@@ -1,6 +1,6 @@
 # Disposable acceptance PostgreSQL cluster (T4C-0247)
 
-Status: **first live use done 2026-10-28** (create, extra `t4c_loot_<id>` database, RunEnv, destroy all worked;
+Status: **first live use done 2026-10-28** (third use: paced soak rerun, T4C-0250) (create, extra `t4c_loot_<id>` database, RunEnv, destroy all worked;
 see the recorded loot probe run in [NATIVE_LOOT_PROBE.md](NATIVE_LOOT_PROBE.md)). Second use 2026-10-28: a
 12-minute native adapter soak smoke, using the cluster's own `t4c_acc_<id>` database directly (the soak has no
 naming rule), see [NATIVE_ADAPTER_SOAK.md](NATIVE_ADAPTER_SOAK.md) "Recorded run".
