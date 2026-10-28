@@ -32,6 +32,7 @@ class OnlineMonsterSpellCatalogTest {
   void bundledInventoryParsesAndKeepsUnsafeSpecialsFailClosed() throws Exception {
     var catalog = OnlineMonsterSpellCatalog.loadBundled();
     assertNotNull(catalog.damageSpell(10091));
+    assertNotNull(catalog.damageSpell(10086), "Authored spell without a registry row uses its offline fallback element");
     assertNull(catalog.damageSpell(10596));
     assertNull(catalog.damageSpell(10616));
     assertNull(catalog.damageSpell(18100));

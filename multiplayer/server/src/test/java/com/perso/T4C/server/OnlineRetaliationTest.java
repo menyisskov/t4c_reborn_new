@@ -21,7 +21,7 @@ class OnlineRetaliationTest {
     var gson=new Gson();
     var json=gson.toJsonTree(MonsterCatalog.loadBundled().monsters().get("Olin Haad Guard 3")).getAsJsonObject();
     json.addProperty("health",100000);
-    json.add("attacks",JsonParser.parseString("[{\"name\":\"\",\"value1\":1000000,\"value2\":100,\"value3\":10091,\"value4\":0,\"value5\":1}]"));
+    json.add("attacks",JsonParser.parseString("[{\"name\":\"\",\"value1\":1000000,\"value2\":100,\"value3\":10086,\"value4\":0,\"value5\":1}]"));
     var definition=gson.fromJson(json,MonsterDef.class);
     assertTrue(OnlineRetaliation.supported(definition));
     var spawn=new MonsterContent.Spawn("spell-retaliation-"+UUID.randomUUID(),definition.getName(),3,3,0,false,false);
@@ -54,11 +54,11 @@ class OnlineRetaliationTest {
       assertEquals(1500,world.position(token).hp(),"Predicted health is not published before commit completion");
       await(sessions,creatures,() -> sessions.character(token).revision()>1);
 
-      int raw=OnlineMonsterSpellAttacks.rawDamage(definition,10091,new Random(1) {
+      int raw=OnlineMonsterSpellAttacks.rawDamage(definition,10086,new Random(1) {
         @Override public int nextInt(int bound) { return bound-1; }
       });
       int expected=OnlineMonsterSpellAttacks.elementalDamage(
-          OnlineMonsterSpellAttacks.supportedSpell(10091),definition,raw,
+          OnlineMonsterSpellAttacks.supportedSpell(10086),definition,raw,
           sessions.character(token).progress(),ItemCatalog.loadBundled(),System.currentTimeMillis());
       assertTrue(expected>0);
       assertEquals(1500-expected,world.position(token).hp());
