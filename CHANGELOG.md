@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-28 — Online cheating attempts are now tested against a live server (T4C-0251)
+
+### Changed
+- The project can now run a large set of cheating attempts against a running online server and check that none of them works: using another player's character, replaying or reordering requests, sending oversized or malformed requests, targeting things that do not exist or belong to someone else, trying to edit stats, gold, items or quest progress, and moving faster than allowed. In the first full run, no attempt changed any character and a second player kept playing normally throughout. One refusal when taking items from a corpse is reported to the player as "busy" instead of the real reason; that has been noted for a later fix.
+
 ## 2026-10-28 — Online play waits and retries when the server is busy (T4C-0250)
 
 ### Changed
