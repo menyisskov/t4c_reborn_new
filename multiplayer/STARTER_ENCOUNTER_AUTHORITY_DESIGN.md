@@ -17,8 +17,10 @@ The approved checkpoint is Warrior + Paladin, Paladin mace/shield, Light Heal an
 potions; Aelric's `renewed_wards` remains 12 qualifying Skeleton kills, 500 gold,
 400 XP and a durable Renew Armor grant (casting that reward excluded). Mage/Archer
 creation-kit amendments do not add those classes to checkpoint online combat.
-The owner subsequently changed Beta/GA concurrency to two real rendered clients;
-all other gameplay, content, recovery, security and two-hour mixed-stability gates remain.
+The owner subsequently changed Beta/GA concurrency to two real rendered clients and
+removed the fixed two-hour minimum for mixed-session evidence. Gameplay, content, recovery,
+security and mixed-stability criteria remain; record actual duration without a minimum-time
+release gate.
 This design neither completes the checkpoint nor changes the full Beta scope.
 
 ## Source findings and decisions
@@ -255,8 +257,8 @@ Then two real rendered clients must walk that complete route, see shared actor m
 unsupported NPC/route refusals, combat/death/loot and their own durable rewards; return16/17,
 die/recover, disconnect/rejoin and restart the matching server. Record exact hashes, observed
 results, failures and limitations. Offline launch/gameplay/existing saves/preferences remain
-required. Remote/deployed, clean-machine, abuse/recovery and two-hour mixed Beta gates remain
-open until separately proven. Historical20-client scale evidence remains historical/follow-up.
+required. Remote/deployed, clean-machine, abuse/recovery and mixed rendered-client Beta gates
+remain open until separately proven. Historical20-client scale evidence remains historical/follow-up.
 
 Unknowns to resolve during implementation: complete NPC appearance readiness on the enlarged
 crop; exact next schema/protocol after Claude's current work; the actual native route/combat

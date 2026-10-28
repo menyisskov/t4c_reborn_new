@@ -6,6 +6,12 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-28 — Remove fixed two-hour Beta/GA session minimum (T4C-0271)
+
+### Changed
+- Beta/GA mixed-session acceptance still requires two real rendered clients, required gameplay coverage, stability and telemetry evidence, but no longer has a fixed two-hour minimum. Record actual session duration; ending a session alone does not pass the gate.
+- Historical soak durations and results remain unchanged.
+
 ## 2026-10-28 — Buff spells work in online play (T4C-0270)
 
 ### Added
