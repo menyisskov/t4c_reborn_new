@@ -42,6 +42,13 @@ public final class ProgressEdits {
         p.hiddenUntil(), p.companion());
   }
 
+  public static CharacterProgress withHiddenUntil(CharacterProgress p, long hiddenUntil) {
+    return new CharacterProgress(p.version(), p.characterClass(), p.gender(), p.attributes(),
+        p.vitals(), p.advancement(), p.inventory(), p.equipment(), p.skills(), p.spells(),
+        p.questFlags(), p.storage(), p.storageGold(), p.respawn(), p.buffs(), p.cooldowns(),
+        hiddenUntil, p.companion());
+  }
+
   public static CharacterProgress withCooldowns(CharacterProgress p, Map<String, Long> cooldowns) {
     return new CharacterProgress(p.version(), p.characterClass(), p.gender(), p.attributes(),
         p.vitals(), p.advancement(), p.inventory(), p.equipment(), p.skills(), p.spells(),

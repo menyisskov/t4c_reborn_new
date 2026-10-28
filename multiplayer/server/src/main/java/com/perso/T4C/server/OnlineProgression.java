@@ -19,8 +19,7 @@ final class OnlineProgression {
     if (baseExperience<0 || now<0) throw new IllegalArgumentException("Invalid experience award");
     var p=character.progress();
     if (p==null) throw new PreviewWorld.Rejected(409,"uninitialized_character");
-    if (p.buffs().stream().anyMatch(buff -> buff.expiresAt()>now))
-      throw new PreviewWorld.Rejected(409,"unsupported_effects");
+    OnlineBuffs.requireModelledOrReject(p,now);
     int level=p.advancement().level();
     long cap=CURVE.getTotalXp(GameConstants.MAX_PLAYER_LEVEL);
     // Online experience is cumulative within this incarnation, not XP remaining in this level.

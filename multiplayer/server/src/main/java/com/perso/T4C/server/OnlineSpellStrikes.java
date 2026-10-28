@@ -59,10 +59,14 @@ final class OnlineSpellStrikes {
 
   /** The cast's strikes ready to commit, with what the reply says. */
   record Plan(CharacterProgress progress, long gold, long experience, List<OnlineStore.SpellStrike> strikes,
-      List<Long> struck, int healthGained, int manaSpent, List<Hit> hits) {}
+      List<Long> struck, int healthGained, int manaSpent, List<Hit> hits, List<Laid> buffs,
+      List<SpellEngine.Event> events) {}
+
+  /** A buff the cast laid on the caster and when it ends (absolute UTC millis; {@link Long#MAX_VALUE} = never). */
+  record Laid(String spell, long expiresAt) {}
 
   /** What the reply to the caster says. */
-  record Reply(long revision, int healthGained, int manaSpent, List<Hit> hits) {}
+  record Reply(long revision, int healthGained, int manaSpent, List<Hit> hits, List<Laid> buffs) {}
 
   private final PreviewMap map;
   private final PreviewWorld world;
@@ -125,7 +129,7 @@ final class OnlineSpellStrikes {
           else creatures.damageCommitted(id);
         }
       }).thenApply(committed -> new Reply(committed.character().revision(), plan.healthGained(),
-          plan.manaSpent(), plan.hits()));
+          plan.manaSpent(), plan.hits(), plan.buffs()));
     } catch (RuntimeException failure) {
       for (long id : reserved) creatures.release(id);
       throw failure;
@@ -144,13 +148,14 @@ final class OnlineSpellStrikes {
     } catch (IllegalArgumentException unsupported) {
       throw rejected("unsupported_spell");
     }
-    boolean attack = spell.kind() != SpellContentV2.Kind.HEAL;
+    boolean attack = spell.kind() == SpellContentV2.Kind.NUKE || spell.kind() == SpellContentV2.Kind.DRAIN
+        || spell.kind() == SpellContentV2.Kind.DEBUFF;
     if (target instanceof SpellEngine.Target.Unit && attack
         && (progress.companion() != null || !OnlineQuestFlags.supported(progress.questFlags(), QuestCatalog.bundled())))
       throw rejected("unsupported_combat");
     SpellFormulaContexts.Caster caster;
     try {
-      caster = OnlineSpellContexts.caster(progress, items);
+      caster = OnlineSpellContexts.caster(progress, items, now);
     } catch (IllegalArgumentException unknownEquipment) {
       throw rejected("unsupported_ability");
     }
@@ -161,7 +166,8 @@ final class OnlineSpellStrikes {
         true, progress.vitals().mana(), false,
         SpellCastRules.isActive(cooldowns.getOrDefault(spell.key(), 0L), now),
         SpellCastRules.isActive(cooldowns.getOrDefault(OnlineCasting.MENTAL_EXHAUSTION, 0L), now)
-            || SpellCastRules.isActive(cooldowns.getOrDefault(OnlineCasting.STUN, 0L), now));
+            || SpellCastRules.isActive(cooldowns.getOrDefault(OnlineCasting.STUN, 0L), now),
+        components(progress, spells), OnlineBuffs.activeBySpell(progress, now));
     SpellEngine.CastResolution resolved;
     try {
       resolved = SpellEngine.cast(request, view, random);
@@ -194,6 +200,7 @@ final class OnlineSpellStrikes {
         new CharacterProgress.Vitals(vitals.hp(), vitals.maxHp(), vitals.mana() - costs.manaCost(), vitals.maxMana())),
         cooldowns));
     long gold = 0, experience = 0;
+    var laid = new ArrayList<Laid>();
     var strikes = new ArrayList<OnlineStore.SpellStrike>();
     var struck = new ArrayList<Long>();
     var hits = new LinkedHashMap<Long, Hit>();
@@ -201,6 +208,18 @@ final class OnlineSpellStrikes {
       switch (event) {
         case SpellEngine.Event.SelfHeal heal -> working = healed(working, heal.amount());
         case SpellEngine.Event.DrainHeal drain -> working = healed(working, drain.amount());
+        case SpellEngine.Event.ApplyBuff buff -> {
+          // Only the caster's own buffs are laid here; a friend's is committed on the friend's own character.
+          if (buff.recipient() != null) throw new IllegalStateException("Friend buff reached the caster draft");
+          working = OnlineBuffs.apply(working, buff, now);
+          laid.add(new Laid(buff.spellKey(), working.buffs().stream()
+              .filter(b -> b.spell().equals(buff.spellKey())).findFirst().orElseThrow().expiresAt()));
+        }
+        case SpellEngine.Event.Hide hide ->
+            working = ProgressEdits.withHiddenUntil(working, Math.addExact(now, hide.durationMillis()));
+        case SpellEngine.Event.DetectInvisible detect -> working = detecting(working, DETECT_INVISIBLE, now, detect.durationMillis());
+        case SpellEngine.Event.DetectHidden detect -> working = detecting(working, DETECT_HIDDEN, now, detect.durationMillis());
+        case SpellEngine.Event.Dispel dispel -> working = OnlineBuffs.dispel(working, dispel.spellKey(), now);
         case SpellEngine.Event.Damage damage -> {
           var fact = view.fact(damage.target());
           var definition = fact.spawn.definition();
@@ -255,8 +274,30 @@ final class OnlineSpellStrikes {
       }
     }
     int healthGained = working.vitals().hp() - hpStart;
+    // A character holding buffs records when it was last settled online, so logged-out time is never counted.
+    working = OnlineBuffs.anchored(working, now);
     return new Plan(working, gold, experience, List.copyOf(strikes), List.copyOf(struck), healthGained,
-        costs.manaCost(), List.copyOf(hits.values()));
+        costs.manaCost(), List.copyOf(hits.values()), List.copyOf(laid), resolved.events());
+  }
+
+  /** The spell keys offered to Renew Armor: the components this character has learned. */
+  private static Map<String, SpellContentV2.Spell> components(CharacterProgress progress, SpellCatalogV2 spells) {
+    var related = new LinkedHashMap<String, SpellContentV2.Spell>();
+    for (String key : SpellEngine.RENEW_ARMOR_COMPONENTS) {
+      var component = spells.spells().get(key);
+      if (component != null && progress.spells().contains(key)) related.put(key, component);
+    }
+    return related;
+  }
+
+  private static final String DETECT_INVISIBLE = "detect_invisible_until";
+  private static final String DETECT_HIDDEN = "detect_hidden_until";
+
+  /** Detection flags keep the later of the running and the new end, as single-player's setters do. */
+  private static CharacterProgress detecting(CharacterProgress progress, String flag, long now, long durationMillis) {
+    var cooldowns = new HashMap<>(progress.cooldowns());
+    cooldowns.merge(flag, Math.addExact(now, Math.max(0L, durationMillis)), Math::max);
+    return ProgressEdits.withCooldowns(progress, cooldowns);
   }
 
   private static OnlineStore.CharacterState stateOf(OnlineStore.CharacterState saved, CharacterProgress progress,
