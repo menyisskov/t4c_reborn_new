@@ -7,7 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 import com.badlogic.gdx.utils.Align;
 import com.perso.T4C.adventure.*;
 import com.perso.T4C.gui.core.*;
-import com.perso.T4C.helper.PlayerStateStore;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.player.Player;
@@ -207,7 +206,7 @@ public final class AdventureScreen extends CharacterPanel {
                       ConcordCampaign.STYLES.get(style))
                   ? "event.claimed"
                   : "event.claim_failed");
-    PlayerStateStore.save(player);
+    PlayerHUD.persistenceOf(hud).save(player);
     refresh();
   }
 

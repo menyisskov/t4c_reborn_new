@@ -6,7 +6,6 @@ import static com.perso.T4C.config.GameConstants.GRID_W;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
-import com.perso.T4C.helper.PlayerStateStore;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.objects.ChestService;
 import com.perso.T4C.objects.GroundItemManager;
@@ -15,6 +14,7 @@ import com.perso.T4C.objects.TempleBlessingService;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.render.ObjectRenderer;
 import com.perso.T4C.screens.MapRenderer;
+import com.perso.T4C.session.CharacterPersistence;
 import com.perso.T4C.ui.SystemMessage;
 import java.util.List;
 import org.slf4j.Logger;
@@ -32,6 +32,7 @@ public class ObjectClickHandler extends InputAdapter {
   private final TempleBlessingService templeBlessingService = new TempleBlessingService();
   private final GroundItemManager groundItemManager;
   private final Runnable onTempleBlessing;
+  private final CharacterPersistence persistence;
 
   public ObjectClickHandler(
       ObjectRenderer objectRenderer,
@@ -41,7 +42,8 @@ public class ObjectClickHandler extends InputAdapter {
       Player player,
       SystemMessage systemMessage,
       GroundItemManager groundItemManager,
-      Runnable onTempleBlessing) {
+      Runnable onTempleBlessing,
+      CharacterPersistence persistence) {
     this.objectRenderer = objectRenderer;
     this.objectPositions = objectPositions;
     this.mapRenderer = mapRenderer;
@@ -50,6 +52,7 @@ public class ObjectClickHandler extends InputAdapter {
     this.systemMessage = systemMessage;
     this.groundItemManager = groundItemManager;
     this.onTempleBlessing = onTempleBlessing;
+    this.persistence = persistence == null ? CharacterPersistence.local() : persistence;
   }
 
   @Override
@@ -92,7 +95,7 @@ public class ObjectClickHandler extends InputAdapter {
           // ChestService - which would only report it as "not a chest" and say nothing.
           TempleBlessingService.Result blessing = templeBlessingService.bless(player, clicked);
           if (blessing.blessed()) {
-            PlayerStateStore.save(player);
+            persistence.save(player);
             systemMessage.show(templeBlessingService.message(blessing));
             if (onTempleBlessing != null) onTempleBlessing.run();
             log.info(
@@ -106,7 +109,7 @@ public class ObjectClickHandler extends InputAdapter {
           }
           ChestService.Result chest = chestService.open(player, clicked, groundItemManager);
           if (chest.opened()) {
-            PlayerStateStore.save(player);
+            persistence.save(player);
             systemMessage.show(chestService.message(chest));
           } else if (chest.failure() == ChestService.Failure.LOCKED) {
             systemMessage.show(I18n.message("message.chest_locked"));

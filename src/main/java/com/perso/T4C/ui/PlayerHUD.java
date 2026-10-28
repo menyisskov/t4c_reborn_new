@@ -25,6 +25,7 @@ import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.model.QuickSlotEntry;
 import com.perso.T4C.player.Player;
+import com.perso.T4C.session.CharacterPersistence;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellRegistry;
 import java.util.ArrayList;
@@ -120,6 +121,21 @@ public class PlayerHUD {
   private boolean xpGuiLayoutInitialized;
   private final GuiBoxedInteraction boxedInteraction = new GuiBoxedInteraction();
   private final List<GuiElement> hudBoxedElements = new ArrayList<>();
+
+  private CharacterPersistence persistence = CharacterPersistence.local();
+
+  /** Where the windows and handlers that already hold this HUD store the character. */
+  public void setPersistence(CharacterPersistence persistence) {
+    this.persistence = persistence == null ? CharacterPersistence.local() : persistence;
+  }
+
+  /**
+   * The persistence a window or handler saves through: the one its HUD was given by the session, or
+   * the local save file when it was opened without a HUD (unchanged single-player behaviour).
+   */
+  public static CharacterPersistence persistenceOf(PlayerHUD hud) {
+    return hud == null ? CharacterPersistence.local() : hud.persistence;
+  }
 
   public PlayerHUD(Player player, SpriteLoader spriteLoader) throws GameException {
     this.player = player;

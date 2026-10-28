@@ -5,7 +5,6 @@ import com.perso.T4C.gui.core.GuiManager;
 import com.perso.T4C.gui.core.JournalTheme;
 import com.perso.T4C.gui.widget.GuiPlayerPreview;
 import com.perso.T4C.helper.PlayerAppearanceDefaults;
-import com.perso.T4C.helper.PlayerStateStore;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.player.RobeWardrobe;
@@ -30,7 +29,7 @@ public final class RobeWardrobeScreen extends CharacterPanel {
                 RobeWardrobe.select(player, choice);
                 PlayerAppearanceDefaults.applyDefaults(player);
                 if (player.getAnimations() != null) player.getAnimations().refresh();
-                PlayerStateStore.save(player);
+                PlayerHUD.persistenceOf(hud).save(player);
                 GuiManager.open(new RobeWardrobeScreen(player, hud));
               },
               RobeWardrobe.selection(player) == i));

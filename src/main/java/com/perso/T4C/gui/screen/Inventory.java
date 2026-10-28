@@ -18,7 +18,6 @@ import com.perso.T4C.gui.widget.GuiPlayerPreview;
 import com.perso.T4C.gui.widget.GuiText;
 import com.perso.T4C.gui.widget.ItemTooltipText;
 import com.perso.T4C.helper.PlayerAppearanceDefaults;
-import com.perso.T4C.helper.PlayerStateStore;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.item.ItemDefinition;
@@ -178,7 +177,7 @@ public class Inventory extends CharacterPanel {
       ItemUseService.Result use =
           ItemUseService.useOnSelf(
               player, drag.itemName, java.util.concurrent.ThreadLocalRandom.current());
-      if (use.success()) PlayerStateStore.save(player);
+      if (use.success()) PlayerHUD.persistenceOf(hud).save(player);
       else SystemMessage.showShared(ItemUseService.failureMessage(use, drag.itemName));
       return;
     }
@@ -191,7 +190,7 @@ public class Inventory extends CharacterPanel {
     if (player.getAnimations() != null) {
       player.getAnimations().refresh();
     }
-    PlayerStateStore.save(player);
+    PlayerHUD.persistenceOf(hud).save(player);
   }
 
   /** Equipment dragged onto the preview uses its declared slot and the normal equip rules. */
@@ -291,7 +290,8 @@ public class Inventory extends CharacterPanel {
                         ? "ui.inventory.macro_remove"
                         : "ui.inventory.macro_add"),
             () -> {
-              if (toggleItemMacro(player, selectedItemName)) PlayerStateStore.save(player);
+              if (toggleItemMacro(player, selectedItemName))
+                PlayerHUD.persistenceOf(hud).save(player);
             });
     buttons.add(macroButton);
     buttons.add(
@@ -415,7 +415,7 @@ public class Inventory extends CharacterPanel {
             junked == 1
                 ? I18n.message("message.item_junked", label)
                 : I18n.message("message.items_junked", junked, label));
-        PlayerStateStore.save(player);
+        PlayerHUD.persistenceOf(hud).save(player);
       }
     }
     selectedInventoryIndex = -1;
@@ -603,7 +603,7 @@ public class Inventory extends CharacterPanel {
     int quickSlot = hud == null ? 0 : hud.getQuickSlotAt((int) screenX, (int) screenY);
     if (drag.source == DragSource.INVENTORY && quickSlot > 0 && isPotion(drag.itemName)) {
       hud.assignItemToQuickSlot(drag.itemName, quickSlot);
-      PlayerStateStore.save(player);
+      PlayerHUD.persistenceOf(hud).save(player);
       return;
     }
     if (CHARACTER_PREVIEW.contains(screenX - x, screenY - y)) {
