@@ -8,8 +8,8 @@ import java.nio.charset.StandardCharsets;
 /** Client copy of the server's spells-v2 engine catalog. */
 final class OnlineSpellAllowlistV2 {
   static final String RESOURCE = "/online/spells-v2.json";
-  /** Mirrors {@code SpellCatalogV2.ENABLED_STAGE}; the server currently enables stages 1 and 2. */
-  static final int ENABLED_STAGE = 2;
+  /** Mirrors {@code SpellCatalogV2.ENABLED_STAGE}; the server currently enables stages 1 to 3. */
+  static final int ENABLED_STAGE = 3;
   private static final int LIMIT = 1024 * 1024;
   private static SpellContentV2 cached;
 

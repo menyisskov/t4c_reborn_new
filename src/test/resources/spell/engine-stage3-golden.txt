@@ -1,0 +1,187 @@
+# Stage-3 spell outcomes from the single-player code path; the engine must equal them.
+spell.avalanche plain unit verdict=NONE mana=19 primary=122 a3=129 a8=175 a12=176 a2=151 a4=166 a7=109 a9=116
+spell.avalanche plain pos verdict=NONE mana=19 a4=152 a9=158 a1=109 a11=177 a3=157 a8=120 a12=159 a14=142
+spell.avalanche skilled unit verdict=NONE mana=19 primary=161 a3=106 a8=145 a12=117 a2=151 a4=123 a7=126 a9=158
+spell.avalanche skilled pos verdict=NONE mana=19 a4=160 a9=119 a1=152 a11=121 a3=116 a8=114 a12=99 a14=102
+spell.avalanche geared unit verdict=NONE mana=19 primary=131 a3=161 a8=153 a12=153 a2=170 a4=113 a7=157 a9=115
+spell.avalanche geared pos verdict=NONE mana=19 a4=194 a9=190 a1=183 a11=121 a3=112 a8=162 a12=112 a14=172
+spell.blizzard plain unit verdict=NONE mana=17 primary=91 a3=122 a8=88 a12=96 a2=71 a4=70 a7=85 a9=92
+spell.blizzard plain pos verdict=NONE mana=17 a4=98 a9=114 a1=73 a11=76 a3=104 a8=84 a12=84 a14=106
+spell.blizzard skilled unit verdict=NONE mana=17 primary=117 a3=108 a8=84 a12=96 a2=93 a4=110 a7=113 a9=82
+spell.blizzard skilled pos verdict=NONE mana=17 a4=95 a9=95 a1=118 a11=95 a3=108 a8=97 a12=120 a14=98
+spell.blizzard geared unit verdict=NONE mana=17 primary=87 a3=99 a8=122 a12=125 a2=81 a4=102 a7=83 a9=114
+spell.blizzard geared pos verdict=NONE mana=17 a4=116 a9=127 a1=109 a11=116 a3=77 a8=111 a12=94 a14=85
+spell.boulders plain unit verdict=NONE mana=16 primary=53 a3=118 a8=126 a12=116 a2=104 a4=125 a7=108 a9=136
+spell.boulders skilled unit verdict=NONE mana=16 primary=53 a3=112 a8=107 a12=143 a2=128 a4=143 a7=107 a9=130
+spell.boulders geared unit verdict=NONE mana=16 primary=48 a3=144 a8=133 a12=127 a2=124 a4=125 a7=115 a9=118
+spell.chain_lightning plain unit verdict=NONE mana=7 primary=370 a3=16 a8=41 a12=41 a2=24 a4=30 a7=44 a9=24
+spell.chain_lightning plain pos verdict=NONE mana=7 a4=33 a9=40 a1=610 a11=54 a3=16 a8=38 a12=54 a14=52
+spell.chain_lightning skilled unit verdict=NONE mana=7 primary=713 a3=13 a8=38 a12=37 a2=37 a4=37 a7=59 a9=59
+spell.chain_lightning skilled pos verdict=NONE mana=7 a4=61 a9=41 a1=881 a11=26 a3=9 a8=38 a12=39 a14=37
+spell.chain_lightning geared unit verdict=NONE mana=7 primary=909 a3=18 a8=47 a12=45 a2=40 a4=53 a7=39 a9=28
+spell.chain_lightning geared pos verdict=NONE mana=7 a4=62 a9=49 a1=782 a11=36 a3=11 a8=47 a12=57 a14=52
+spell.cinderburst plain unit verdict=NONE mana=16 primary=107 a3=340 a8=112 a12=277 a2=95 a4=168 a7=71 a9=184
+spell.cinderburst skilled unit verdict=NONE mana=16 primary=246 a3=523 a8=227 a12=330 a2=208 a4=201 a7=88 a9=169
+spell.cinderburst geared unit verdict=NONE mana=16 primary=152 a3=683 a8=246 a12=244 a2=167 a4=270 a7=98 a9=137
+spell.dawnflare plain unit verdict=NONE mana=60 primary=685 a3=1125 a8=665 a12=530 a2=545 a4=710 a7=540 a9=575
+spell.dawnflare plain pos verdict=NONE mana=60 a4=605 a9=595 a1=635 a11=600 a3=891 a8=565 a12=700 a14=520
+spell.dawnflare skilled unit verdict=NONE mana=60 primary=961 a3=1995 a8=1095 a12=1102 a2=1189 a4=1157 a7=914 a9=1071
+spell.dawnflare skilled pos verdict=NONE mana=60 a4=1024 a9=1032 a1=985 a11=1000 a3=1720 a8=1024 a12=890 a14=1157
+spell.dawnflare geared unit verdict=NONE mana=60 primary=977 a3=1785 a8=906 a12=969 a2=1118 a4=993 a7=1204 a9=930
+spell.dawnflare geared pos verdict=NONE mana=60 a4=1040 a9=1204 a1=1071 a11=993 a3=1785 a8=1173 a12=961 a14=1197
+spell.dawnwell_renewal plain self verdict=NONE mana=600 heal=320
+spell.dawnwell_renewal skilled self verdict=NONE mana=600 heal=593
+spell.dawnwell_renewal geared self verdict=NONE mana=600 heal=530
+spell.drowning_deep plain unit verdict=NONE mana=105 primary=1053 a3=1028 a8=938 a12=998 a2=1003 a4=1108 a7=903 a9=938
+spell.drowning_deep plain pos verdict=NONE mana=105 a4=923 a9=1203 a1=1173 a11=1108 a3=1213 a8=1173 a12=1203 a14=1003
+spell.drowning_deep skilled unit verdict=NONE mana=105 primary=1090 a3=1075 a8=1035 a12=1135 a2=1265 a4=1250 a7=1200 a9=955
+spell.drowning_deep skilled pos verdict=NONE mana=105 a4=1180 a9=1165 a1=1100 a11=1180 a3=1120 a8=1065 a12=1085 a14=1150
+spell.drowning_deep geared unit verdict=NONE mana=105 primary=1156 a3=1101 a8=1131 a12=1286 a2=1201 a4=1306 a7=1286 a9=1081
+spell.drowning_deep geared pos verdict=NONE mana=105 a4=1176 a9=1111 a1=1156 a11=1211 a3=996 a8=1166 a12=991 a14=1126
+spell.druid_s_point_gateway plain self verdict=NONE mana=0
+spell.druid_s_point_gateway skilled self verdict=NONE mana=0
+spell.druid_s_point_gateway geared self verdict=NONE mana=0
+spell.earthquake plain self verdict=NONE mana=11 a13=88 a2=83 a7=75 a1=30 a3=64 a8=75 a12=78 a4=69
+spell.earthquake skilled self verdict=NONE mana=11 a13=71 a2=80 a7=91 a1=27 a3=82 a8=82 a12=86 a4=77
+spell.earthquake geared self verdict=NONE mana=11 a13=75 a2=74 a7=93 a1=30 a3=82 a8=77 a12=76 a4=73
+spell.electric_shield plain self verdict=NONE mana=24
+spell.electric_shield skilled self verdict=NONE mana=24
+spell.electric_shield geared self verdict=NONE mana=24
+spell.fire_shield plain self verdict=NONE mana=22
+spell.fire_shield skilled self verdict=NONE mana=22
+spell.fire_shield geared self verdict=NONE mana=22
+spell.fireball plain unit verdict=NONE mana=7 primary=67 a3=178 a8=68 a12=77 a2=50 a4=59 a7=27 a9=42
+spell.fireball skilled unit verdict=NONE mana=7 primary=130 a3=234 a8=123 a12=122 a2=126 a4=108 a7=36 a9=109
+spell.fireball geared unit verdict=NONE mana=7 primary=120 a3=166 a8=70 a12=172 a2=81 a4=87 a7=36 a9=89
+spell.firestorm plain unit verdict=NONE mana=18 primary=151 a3=328 a8=202 a12=175 a2=157 a4=107 a7=79 a9=169
+spell.firestorm plain pos verdict=NONE mana=18 a4=196 a9=166 a1=136 a11=144 a3=297 a8=173 a12=173 a14=153
+spell.firestorm skilled unit verdict=NONE mana=18 primary=155 a3=793 a8=221 a12=460 a2=293 a4=236 a7=105 a9=275
+spell.firestorm skilled pos verdict=NONE mana=18 a4=242 a9=241 a1=245 a11=203 a3=504 a8=149 a12=414 a14=221
+spell.firestorm geared unit verdict=NONE mana=18 primary=239 a3=555 a8=193 a12=310 a2=220 a4=157 a7=110 a9=160
+spell.firestorm geared pos verdict=NONE mana=18 a4=174 a9=192 a1=168 a11=148 a3=654 a8=224 a12=366 a14=248
+spell.flame_wave plain self verdict=NONE mana=10 a13=56 a2=48 a7=42 a1=104 a3=246 a8=61 a12=124 a4=93
+spell.flame_wave skilled self verdict=NONE mana=10 a13=113 a2=114 a7=46 a1=97 a3=268 a8=92 a12=162 a4=120
+spell.flame_wave geared self verdict=NONE mana=10 a13=112 a2=103 a7=60 a1=149 a3=241 a8=75 a12=227 a4=125
+spell.frostgale plain unit verdict=NONE mana=60 primary=558 a3=613 a8=578 a12=578 a2=648 a4=608 a7=538 a9=638
+spell.frostgale plain pos verdict=NONE mana=60 a4=678 a9=638 a1=663 a11=538 a3=563 a8=618 a12=548 a14=653
+spell.frostgale skilled unit verdict=NONE mana=60 primary=695 a3=750 a8=620 a12=600 a2=670 a4=645 a7=590 a9=755
+spell.frostgale skilled pos verdict=NONE mana=60 a4=735 a9=600 a1=750 a11=700 a3=765 a8=760 a12=620 a14=610
+spell.frostgale geared unit verdict=NONE mana=60 primary=771 a3=606 a8=706 a12=706 a2=606 a4=711 a7=696 a9=686
+spell.frostgale geared pos verdict=NONE mana=60 a4=691 a9=766 a1=681 a11=781 a3=596 a8=771 a12=701 a14=631
+spell.hallowed_nova plain unit verdict=NONE mana=105 primary=1020 a3=1525 a8=1150 a12=1095 a2=1075 a4=1240 a7=1120 a9=910
+spell.hallowed_nova plain pos verdict=NONE mana=105 a4=1110 a9=1010 a1=1220 a11=1080 a3=1550 a8=1055 a12=945 a14=1110
+spell.hallowed_nova skilled unit verdict=NONE mana=105 primary=1989 a3=3198 a8=1675 a12=1723 a2=1989 a4=1762 a7=2013 a9=1644
+spell.hallowed_nova skilled pos verdict=NONE mana=105 a4=1785 a9=1550 a1=1495 a11=1895 a3=3107 a8=1864 a12=2021 a14=1746
+spell.hallowed_nova geared unit verdict=NONE mana=105 primary=1974 a3=3041 a8=1660 a12=1864 a2=1778 a4=2005 a7=1942 a9=1589
+spell.hallowed_nova geared pos verdict=NONE mana=105 a4=1566 a9=1966 a1=1864 a11=1840 a3=2597 a8=1621 a12=1668 a14=1997
+spell.healing_mist plain self verdict=NONE mana=17 heal=104
+spell.healing_mist skilled self verdict=NONE mana=17 heal=169
+spell.healing_mist geared self verdict=NONE mana=17 heal=166
+spell.hurricane plain unit verdict=NONE mana=20 primary=1556 a3=65 a8=106 a12=204 a2=207 a4=193 a7=86 a9=95
+spell.hurricane plain pos verdict=NONE mana=20 a4=79 a9=78 a1=2184 a11=181 a3=31 a8=133 a12=192 a14=198
+spell.hurricane skilled unit verdict=NONE mana=20 primary=1955 a3=75 a8=228 a12=111 a2=154 a4=151 a7=193 a9=106
+spell.hurricane skilled pos verdict=NONE mana=20 a4=150 a9=190 a1=3214 a11=189 a3=42 a8=180 a12=86 a14=155
+spell.hurricane geared unit verdict=NONE mana=20 primary=2919 a3=59 a8=142 a12=114 a2=184 a4=194 a7=81 a9=207
+spell.hurricane geared pos verdict=NONE mana=20 a4=90 a9=215 a1=2691 a11=91 a3=73 a8=135 a12=118 a14=92
+spell.ice_shield plain self verdict=NONE mana=100
+spell.ice_shield skilled self verdict=NONE mana=100
+spell.ice_shield geared self verdict=NONE mana=100
+spell.ice_storm plain unit verdict=NONE mana=15 primary=128 a3=93 a8=151 a12=96 a2=115 a4=116 a7=140 a9=95
+spell.ice_storm plain pos verdict=NONE mana=15 a4=81 a9=134 a1=147 a11=142 a3=93 a8=99 a12=140 a14=125
+spell.ice_storm skilled unit verdict=NONE mana=15 primary=95 a3=137 a8=154 a12=137 a2=146 a4=138 a7=140 a9=147
+spell.ice_storm skilled pos verdict=NONE mana=15 a4=116 a9=154 a1=150 a11=126 a3=113 a8=110 a12=114 a14=153
+spell.ice_storm geared unit verdict=NONE mana=15 primary=125 a3=154 a8=150 a12=118 a2=83 a4=145 a7=111 a9=94
+spell.ice_storm geared pos verdict=NONE mana=15 a4=159 a9=114 a1=149 a11=82 a3=137 a8=128 a12=114 a14=123
+spell.land_slide plain unit verdict=NONE mana=60 primary=244 a3=550 a8=685 a12=555 a2=550 a4=715 a7=530 a9=660
+spell.land_slide plain pos verdict=NONE mana=60 a4=530 a9=715 a1=280 a11=630 a3=545 a8=530 a12=530 a14=600
+spell.land_slide skilled unit verdict=NONE mana=60 primary=295 a3=677 a8=762 a12=572 a2=607 a4=747 a7=577 a9=762
+spell.land_slide skilled pos verdict=NONE mana=60 a4=577 a9=572 a1=275 a11=667 a3=662 a8=657 a12=602 a14=662
+spell.land_slide geared unit verdict=NONE mana=60 primary=283 a3=597 a8=642 a12=647 a2=722 a4=602 a7=597 a9=712
+spell.land_slide geared pos verdict=NONE mana=60 a4=747 a9=642 a1=287 a11=582 a3=732 a8=712 a12=697 a14=642
+spell.lighthaven_gateway plain self verdict=NONE mana=0
+spell.lighthaven_gateway skilled self verdict=NONE mana=0
+spell.lighthaven_gateway geared self verdict=NONE mana=0
+spell.mass_healing plain self verdict=NONE mana=15 heal=86
+spell.mass_healing skilled self verdict=NONE mana=15 heal=146
+spell.mass_healing geared self verdict=NONE mana=15 heal=141
+spell.meteor plain unit verdict=NONE mana=23 primary=250 a3=695 a8=233 a12=218 a2=142 a4=140 a7=61 a9=205
+spell.meteor plain pos verdict=NONE mana=23 a4=279 a9=263 a1=231 a11=270 a3=545 a8=165 a12=428 a14=187
+spell.meteor skilled unit verdict=NONE mana=23 primary=329 a3=513 a8=396 a12=678 a2=380 a4=222 a7=106 a9=380
+spell.meteor skilled pos verdict=NONE mana=23 a4=358 a9=374 a1=334 a11=416 a3=944 a8=357 a12=392 a14=337
+spell.meteor geared unit verdict=NONE mana=23 primary=231 a3=933 a8=342 a12=329 a2=209 a4=287 a7=140 a9=210
+spell.meteor geared pos verdict=NONE mana=23 a4=319 a9=352 a1=339 a11=399 a3=679 a8=323 a12=452 a14=366
+spell.plague plain unit verdict=NONE mana=40
+spell.plague skilled unit verdict=NONE mana=40
+spell.plague geared unit verdict=NONE mana=40
+spell.poison plain unit verdict=NONE mana=2
+spell.poison skilled unit verdict=NONE mana=2 primary=2
+spell.poison geared unit verdict=NONE mana=2 primary=3
+spell.poison_arrow plain unit verdict=NONE mana=5 primary=37 res3=8 res8=6 res2=8 res4=4 res7=9 res9=3
+spell.poison_arrow skilled unit verdict=NONE mana=5 primary=26 res3=8 res8=4 res2=4 res4=7 res7=7 res9=11
+spell.poison_arrow geared unit verdict=NONE mana=5 primary=37 res3=9 res8=6 res2=4 res4=9 res7=8 res9=4
+spell.pyreburst plain unit verdict=NONE mana=60 primary=588 a3=1796 a8=673 a12=906 a2=538 a4=598 a7=245 a9=568
+spell.pyreburst plain pos verdict=NONE mana=60 a4=628 a9=608 a1=643 a11=678 a3=1484 a8=713 a12=1064 a14=668
+spell.pyreburst skilled unit verdict=NONE mana=60 primary=935 a3=2465 a8=870 a12=1703 a2=1073 a4=1073 a7=397 a9=1109
+spell.pyreburst skilled pos verdict=NONE mana=60 a4=1109 a9=1022 a1=993 a11=957 a3=2374 a8=1087 a12=1679 a14=841
+spell.pyreburst geared unit verdict=NONE mana=60 primary=1074 a3=2813 a8=929 a12=1561 a2=1045 a4=1074 a7=403 a9=929
+spell.pyreburst geared pos verdict=NONE mana=60 a4=1132 a9=973 a1=1118 a11=1132 a3=2233 a8=951 a12=1743 a14=1009
+spell.rain_of_fire plain unit verdict=NONE mana=12 primary=122 a3=305 a8=115 a12=227 a2=92 a4=67 a7=52 a9=132
+spell.rain_of_fire plain pos verdict=NONE mana=12 a4=85 a9=70 a1=74 a11=149 a3=312 a8=111 a12=197 a14=136
+spell.rain_of_fire skilled unit verdict=NONE mana=12 primary=201 a3=569 a8=137 a12=309 a2=120 a4=161 a7=48 a9=158
+spell.rain_of_fire skilled pos verdict=NONE mana=12 a4=149 a9=200 a1=162 a11=118 a3=311 a8=109 a12=256 a14=173
+spell.rain_of_fire geared unit verdict=NONE mana=12 primary=154 a3=326 a8=109 a12=374 a2=209 a4=123 a7=71 a9=112
+spell.rain_of_fire geared pos verdict=NONE mana=12 a4=170 a9=150 a1=219 a11=223 a3=500 a8=197 a12=335 a14=136
+spell.shadowblight plain unit verdict=NONE mana=60 primary=23625 a3=668 a8=14075 a12=628 a2=658 a4=573 a7=593 a9=538
+spell.shadowblight plain pos verdict=NONE mana=60 a4=548 a9=558 a1=22291 a11=523 a3=713 a8=13775 a12=578 a14=638
+spell.shadowblight skilled unit verdict=NONE mana=60 primary=22958 a3=641 a8=13490 a12=655 a2=698 a4=584 a7=589 a9=660
+spell.shadowblight skilled pos verdict=NONE mana=60 a4=574 a9=603 a1=22958 a11=688 a3=688 a8=12730 a12=555 a14=608
+spell.shadowblight geared unit verdict=NONE mana=60 primary=19514 a3=732 a8=14368 a12=604 a2=718 a4=580 a7=604 a9=732
+spell.shadowblight geared pos verdict=NONE mana=60 a4=585 a9=628 a1=21731 a11=694 a3=580 a8=13798 a12=628 a14=594
+spell.silversky_gateway plain self verdict=NONE mana=0
+spell.silversky_gateway skilled self verdict=NONE mana=0
+spell.silversky_gateway geared self verdict=NONE mana=0
+spell.stonecrest_gateway plain self verdict=NONE mana=0
+spell.stonecrest_gateway skilled self verdict=NONE mana=0
+spell.stonecrest_gateway geared self verdict=NONE mana=0
+spell.stormcallers_judgment plain unit verdict=NONE mana=105 primary=16242 a3=387 a8=917 a12=1112 a2=1072 a4=1227 a7=1182 a9=1227
+spell.stormcallers_judgment plain pos verdict=NONE mana=105 a4=1157 a9=1172 a1=17528 a11=1037 a3=404 a8=1087 a12=1237 a14=922
+spell.stormcallers_judgment skilled unit verdict=NONE mana=105 primary=17142 a3=391 a8=1325 a12=1210 a2=1075 a4=1045 a7=1155 a9=1265
+spell.stormcallers_judgment skilled pos verdict=NONE mana=105 a4=1290 a9=1325 a1=15785 a11=1255 a3=406 a8=1210 a12=1040 a14=1115
+spell.stormcallers_judgment geared unit verdict=NONE mana=105 primary=16157 a3=367 a8=1216 a12=1246 a2=1236 a4=1251 a7=1346 a9=1031
+spell.stormcallers_judgment geared pos verdict=NONE mana=105 a4=1291 a9=1276 a1=15728 a11=1356 a3=385 a8=1316 a12=1356 a14=1096
+spell.sunken_woods_gateway plain self verdict=NONE mana=0
+spell.sunken_woods_gateway skilled self verdict=NONE mana=0
+spell.sunken_woods_gateway geared self verdict=NONE mana=0
+spell.thunderhead plain unit verdict=NONE mana=60 primary=9028 a3=229 a8=622 a12=572 a2=617 a4=582 a7=687 a9=622
+spell.thunderhead plain pos verdict=NONE mana=60 a4=612 a9=582 a1=9028 a11=667 a3=195 a8=602 a12=727 a14=582
+spell.thunderhead skilled unit verdict=NONE mana=60 primary=9428 a3=226 a8=620 a12=720 a2=755 a4=655 a7=795 a9=705
+spell.thunderhead skilled pos verdict=NONE mana=60 a4=695 a9=770 a1=11214 a11=615 a3=270 a8=770 a12=625 a14=805
+spell.thunderhead geared unit verdict=NONE mana=60 primary=9657 a3=236 a8=821 a12=731 a2=806 a4=716 a7=681 a9=701
+spell.thunderhead geared pos verdict=NONE mana=60 a4=796 a9=671 a1=11371 a11=806 a3=213 a8=776 a12=641 a14=646
+spell.tornado plain unit verdict=NONE mana=18 primary=1338 a3=51 a8=171 a12=127 a2=96 a4=96 a7=146 a9=118
+spell.tornado plain pos verdict=NONE mana=18 a4=122 a9=196 a1=1217 a11=85 a3=30 a8=178 a12=81 a14=127
+spell.tornado skilled unit verdict=NONE mana=18 primary=2783 a3=39 a8=119 a12=175 a2=91 a4=155 a7=93 a9=127
+spell.tornado skilled pos verdict=NONE mana=18 a4=81 a9=182 a1=1111 a11=140 a3=61 a8=70 a12=73 a14=81
+spell.tornado geared unit verdict=NONE mana=18 primary=2359 a3=33 a8=124 a12=105 a2=179 a4=194 a7=80 a9=77
+spell.tornado geared pos verdict=NONE mana=18 a4=192 a9=141 a1=2513 a11=184 a3=63 a8=125 a12=136 a14=86
+spell.umbral_tide plain unit verdict=NONE mana=105 primary=32791 a3=933 a8=18375 a12=948 a2=1178 a4=1178 a7=968 a9=1123
+spell.umbral_tide plain pos verdict=NONE mana=105 a4=1003 a9=948 a1=40958 a11=1218 a3=973 a8=21875 a12=1023 a14=1168
+spell.umbral_tide skilled unit verdict=NONE mana=105 primary=30400 a3=1206 a8=24700 a12=1026 a2=1040 a4=916 a7=926 a9=1083
+spell.umbral_tide skilled pos verdict=NONE mana=105 a4=1054 a9=1021 a1=34200 a11=1011 a3=1235 a8=21470 a12=1092 a14=997
+spell.umbral_tide geared unit verdict=NONE mana=105 primary=39147 a3=1136 a8=22538 a12=998 a2=1193 a4=1164 a7=1050 a9=1240
+spell.umbral_tide geared pos verdict=NONE mana=105 a4=1245 a9=1093 a1=31389 a11=1022 a3=1207 a8=23393 a12=1060 a14=1055
+spell.wellspring_mercy plain self verdict=NONE mana=1000 heal=253
+spell.wellspring_mercy skilled self verdict=NONE mana=1000 heal=399
+spell.wellspring_mercy geared self verdict=NONE mana=1000 heal=419
+spell.windhowl_gateway plain self verdict=NONE mana=0
+spell.windhowl_gateway skilled self verdict=NONE mana=0
+spell.windhowl_gateway geared self verdict=NONE mana=0
+spell.wizard_s_vale_gateway plain self verdict=NONE mana=0
+spell.wizard_s_vale_gateway skilled self verdict=NONE mana=0
+spell.wizard_s_vale_gateway geared self verdict=NONE mana=0
+spell.worldroot_upheaval plain unit verdict=NONE mana=105 primary=440 a3=1190 a8=935 a12=1215 a2=990 a4=955 a7=945 a9=1150
+spell.worldroot_upheaval plain pos verdict=NONE mana=105 a4=1120 a9=910 a1=358 a11=1140 a3=1130 a8=1160 a12=1060 a14=1190
+spell.worldroot_upheaval skilled unit verdict=NONE mana=105 primary=483 a3=1037 a8=1097 a12=1067 a2=1147 a4=1142 a7=942 a9=1122
+spell.worldroot_upheaval skilled pos verdict=NONE mana=105 a4=1007 a9=1132 a1=467 a11=1057 a3=1002 a8=957 a12=1117 a14=972
+spell.worldroot_upheaval geared unit verdict=NONE mana=105 primary=453 a3=957 a8=977 a12=1032 a2=952 a4=987 a7=1067 a9=1227
+spell.worldroot_upheaval geared pos verdict=NONE mana=105 a4=997 a9=1132 a1=487 a11=1142 a3=1222 a8=1052 a12=1077 a14=1292
