@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0258`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0260`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0259 | Stage 0 of client unification: a safety net before any refactor. Golden screenshots of the real single-player game screen (world with HUD, inventory, spell book, statistics) rendered from a fixed fixture character in a real window with no network and no write to the real save directory, plus headless tests pinning save/load, the autosave cadence, equip/unequip, selling and the screen's entry points. Tests only; no production code changed (multiplayer/CLIENT_UNIFICATION_DESIGN.md stage 0) | Process/Tooling (Multiplayer / parity safety net) | Done (golden images match byte for byte across two runs; GL tests skip when there is no display) | this PR | no player-visible change; no changelog entry |
 | T4C-0255 | Spell engine design: inventory of all 132 player spells and the monster spell attacks by effect kind, a deterministic server-authoritative spell engine in the shared domain module (effect model, persistence, `/cast` targets, snapshots), golden-test equivalence with single-player, and a five-stage plan (multiplayer/SPELL_ENGINE_DESIGN.md) | Process/Tooling (Multiplayer / parity design) | Design draft (awaiting review; no code) | PR open (claude/spell-engine-design) | [2026-10-28](CHANGELOG.md#2026-10-28--plan-for-casting-every-spell-in-online-play-t4c-0255) |
 | T4C-0257 | Spell engine stage 1a: one injectable random source behind spell dice, heal fallback, effect chances and the cast success roll (default is exactly the thread-local source; scoped override for seeded tests/server), with equivalence tests | Process/Tooling (Multiplayer / parity prerequisite) | Done | PR211 (claimed as T4C-0256 in the PR; renumbered because #209 took 0256 first) | no player-visible change (no changelog entry) |
 | T4C-0254 | Client unification design: the online client becomes the single-player game screen and GUI running against the server through a session seam (local session = existing code moved, remote session = intents out, snapshots in), with puppet monsters/NPCs/players, own-movement prediction, a staged plan and a small first slice (multiplayer/CLIENT_UNIFICATION_DESIGN.md) | Process/Tooling (Multiplayer / parity design) | Design draft (awaiting review; no code) | PR open (claude/client-unification-design) | [2026-10-28](CHANGELOG.md#2026-10-28--plan-for-the-online-game-to-use-the-single-player-screens-t4c-0254) |
