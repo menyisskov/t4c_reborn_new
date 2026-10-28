@@ -5,6 +5,9 @@ package com.perso.T4C.online;
  * back to one generic refusal per command so a new server reason never leaves the player silent.
  */
 final class OnlineCommandRefusals {
+  /** Routine refusal inside the swing cooldown; the client reads it but does not show it. */
+  static final String ATTACK_COOLDOWN = "online.attack.cooldown";
+
   private OnlineCommandRefusals() {}
 
   /** Returns null for commands whose refusals are not shown to the player. */
@@ -23,6 +26,7 @@ final class OnlineCommandRefusals {
       case "/interact" -> "npc_unavailable".equals(code) ? "online.npc.unavailable" : "online.npc.refused";
       case "/cast" -> ability(code, true);
       case "/use" -> ability(code, false);
+      case "/attack" -> attack(code);
       default -> null;
     };
   }
@@ -45,6 +49,24 @@ final class OnlineCommandRefusals {
       case "unsupported_spell", "unsupported_item", "unsupported_ability", "unsupported_effects", "no_effect" ->
           cast ? "online.cast.unsupported" : "online.use.unsupported";
       default -> cast ? "online.cast.refused" : "online.use.refused";
+    };
+  }
+
+  /**
+   * Melee refusals as the server's OnlineMelee and session guards report them. The routine
+   * {@link #ATTACK_COOLDOWN} refusal is mapped so callers can read it, but the HUD stays silent for it.
+   */
+  private static String attack(String code) {
+    return switch (code) {
+      case "cooldown" -> ATTACK_COOLDOWN;
+      case "dead" -> "online.attack.dead";
+      case "out_of_range_or_blocked" -> "online.attack.out_of_reach";
+      case "creature_unavailable" -> "online.attack.no_target";
+      case "creature_busy" -> "online.attack.target_busy";
+      case "protected_target" -> "online.attack.protected";
+      case "unsupported_combat" -> "online.attack.unsupported";
+      case "busy", "revision", "region", "uninitialized_character" -> "online.attack.busy";
+      default -> "online.attack.refused";
     };
   }
 
