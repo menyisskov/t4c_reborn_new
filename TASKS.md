@@ -1,4 +1,4 @@
-﻿# Task Ledger
+# Task Ledger
 
 A lightweight, in-repo task tracker. This project doesn't use an external
 issue tracker, so every unit of content/feature work gets a sequential ID
@@ -18,7 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0272 | Enable online character creation for the four spellcasting classes with their shared starting kits and server-supported spells | Multiplayer / parity | In Progress | branch codex/online-caster-classes | - |
+| T4C-0272 | Enable online character creation for the four spellcasting classes with their shared starting kits and server-supported spells | Multiplayer / parity | Done (PR #227; local tests passed) | PR #227 (eed302a5) | [CHANGELOG.md](CHANGELOG.md#2026-10-28--caster-classes-can-start-online-t4c-0272) |
 | T4C-0270 | Spell engine stage 2, buffs: the online server now resolves the 33 stage-2 spells (25 timed buffs, the curse, invisibility and the two detection spells, the two dispels, Renew Armor) through the shared engine, equal to the single-player code path value for value (seeded-random golden over four fixture casters, including a recast refreshing a running buff and formulas that read true values while buffed). Buffs are stored in the character record with the amounts rolled at cast time (never re-rolled; single-player re-rolls on load, deliberately not copied), an absolute expiry, and an anchor so logged-out time never runs a buff down; expiry is lazy at use and at settle, and takes back the maximum health a buff gave. Melee, retaliation, carry weight and spell numbers fold running buffs in; any buff the server does not model still fails closed. Records written before this load unchanged. The engine can also lay a buff on another player (rules decide which spells) but the server route for that is not yet open (needs a two-character atomic commit) | Systems/Online | In Progress | - | - |
 | T4C-0271 | Remove fixed two-hour duration from Beta/GA mixed-session release acceptance | Process/Tooling (Multiplayer acceptance) | Done | a1f2d1b1 | CHANGELOG.md |
 | T4C-0267 | Spell engine stage 1c, server casting: the online server now resolves the 48 stage-1 spells (40 single-target attack spells with their quarter-strength splash on up to 7 adjacent monsters, 4 drains, 4 single heals) for characters who know them, through the shared engine (pure SpellEngine, spells-v2 stage gate, shared sampled line of sight, seeded-random golden equal to the single-player code path); /cast takes an optional target token (protocol 6); one atomic revision-fenced commit covers mana, exhaustion, every struck creature, kills, XP, gold, loot and quest credit | Systems/Online | In Progress | - | - |
