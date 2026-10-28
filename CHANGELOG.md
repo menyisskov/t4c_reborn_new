@@ -6,7 +6,7 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
-## 2026-10-28 — Area spells work in online play (T4C-0277)
+## 2026-10-28 — Area spells work in online play (T4C-0278)
 
 ### Added
 - In online play, the area attack spells can now be cast: Fireball, Cinderburst, Boulders, Earthquake, Flame Wave, Meteor, Hurricane, Tornado, Avalanche, Blizzard, Chain Lightning, Firestorm, Rain of Fire, Ice Storm and the rest of the area attacks. They hit the same creatures as in single-player (the target and up to seven more nearby, the nearest first), weaker the farther they are from the centre, and every kill gives its experience, gold, loot and quest credit.
@@ -14,6 +14,11 @@ commit links, and finer-grained notes.
 - Poison, Poison Arrow and Plague can be cast online and do exactly what they do in single-player. The Fire, Ice and Electric Shields and the seven gateway spells can be cast and cost mana, with nothing else happening, as in single-player.
 - Entangle, the portal spells, Word of Recall and Tame Beast are still not available online.
 
+## 2026-10-28 — Online movement now matches single-player (T4C-0277)
+
+### Changed
+- In online play your character now walks exactly as in single-player: it moves one tile at a time, finishes the tile it has started when you let go of the key instead of stopping halfway, cannot turn around in the middle of a tile, and slides along walls and around corners instead of stopping dead against them. Walking speed is unchanged.
+- Characters saved while standing between two tiles come back standing on the tile they were on.
 ## 2026-10-28 — Archer attacks are supported by the online server (T4C-0273)
 
 ### Added

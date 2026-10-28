@@ -174,6 +174,7 @@ class HostedTransferTest {
   /** Exercise only network direction inputs; route uses the real server collision crop. */
   private static com.google.gson.JsonObject walkPortal(java.net.http.HttpClient client,String url,String token,long ownId,
       PreviewMap map,int goalX,int goalY,long epoch,int destinationWorld) throws Exception {
+    int lastX=0,lastY=0;
     long sequence=2,deadline=System.nanoTime()+java.util.concurrent.TimeUnit.SECONDS.toNanos(35);
     int goal=goalY*map.width+goalX;
     com.google.gson.JsonObject state=null;
@@ -181,7 +182,13 @@ class HostedTransferTest {
       state=http(client,url,"/state",token,null);
       if(state.getAsJsonObject("region").get("world").getAsInt()==destinationWorld) return state;
       var own=actor(state,ownId);
-      int start=(int)own.get("y").getAsDouble()*map.width+(int)own.get("x").getAsDouble();
+      double ox=own.get("x").getAsDouble(),oy=own.get("y").getAsDouble();
+      // The server finishes a claimed tile (single-player's rule). While the actor glides, plan from the
+      // tile it is arriving on (the last direction sent), so the next input is already queued at arrival.
+      int tileX=(int)Math.round(ox-.5),tileY=(int)Math.round(oy-.5);
+      if(Math.abs(ox-Math.floor(ox)-.5)>1e-6) tileX=lastX>0 ? (int)Math.ceil(ox-.5) : lastX<0 ? (int)Math.floor(ox-.5) : tileX;
+      if(Math.abs(oy-Math.floor(oy)-.5)>1e-6) tileY=lastY>0 ? (int)Math.ceil(oy-.5) : lastY<0 ? (int)Math.floor(oy-.5) : tileY;
+      int start=tileY*map.width+tileX;
       if(start==goal) { Thread.sleep(50);continue; }
       var previous=new int[map.width*map.height];Arrays.fill(previous,-1);previous[start]=start;
       var queue=new ArrayDeque<Integer>();queue.add(start);
@@ -195,6 +202,7 @@ class HostedTransferTest {
       assertTrue(previous[goal]>=0,"Authored portal must be reachable");
       int next=goal;while(previous[next]!=start) next=previous[next];
       int moveX=Integer.compare(next%map.width,start%map.width),moveY=Integer.compare(next/map.width,start/map.width);
+      lastX=moveX;lastY=moveY;
       var response=client.send(request(url,"/input",token,epoch+" "+sequence+++" "+moveX+" "+moveY),java.net.http.HttpResponse.BodyHandlers.ofString());
       if(response.statusCode()==409) assertEquals("region_epoch",com.google.gson.JsonParser.parseString(response.body()).getAsJsonObject().get("error").getAsString());
       else assertEquals(200,response.statusCode(),"Movement rejected");
