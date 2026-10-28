@@ -21,9 +21,10 @@ public final class ItemSalePricing {
   private ItemSalePricing() {}
 
   public static long sellPrice(ItemDefinition item) {
-    if (item == null || item.isUndroppable()) return 0;
+    if (item == null) return 0;
     // Shop stock retains the existing buy/sell spread, preventing buy-and-resell profit.
-    if (item.getPrice() > 0 || !item.isRarityPriced()) return Math.max(1L, item.getPrice() / 2L);
+    long base = ShopRules.baseSellPrice(item.getPrice(), item.isRarityPriced(), item.isUndroppable());
+    if (base != ShopRules.NEEDS_DROP_TABLE) return base;
     double chance = easiestDropChance(item.getKey());
     if (item.getKey().startsWith("item.ancient_celestial_")
         || item.getKey().startsWith("item.empyrean_")) {

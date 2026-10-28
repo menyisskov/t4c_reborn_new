@@ -8,6 +8,7 @@ import com.perso.T4C.online.model.OnlineProtocol;
 import com.perso.T4C.online.model.OnlineRegion;
 import com.perso.T4C.online.model.NpcView;
 import com.perso.T4C.online.model.NpcInteractionReply;
+import com.perso.T4C.online.model.ShopOffersReply;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -49,19 +50,25 @@ public final class OnlineConnection implements AutoCloseable {
   private record Joined(String token, long id, OnlineRegion region) {}
 
   /** {@code args} fill a dialogue message's authored placeholders; refusals carry a key and no args. */
-  public record CommandResult(boolean accepted, OnlineCharacterView character, String messageKey, List<Integer> args) {
+  public record CommandResult(boolean accepted, OnlineCharacterView character, String messageKey, List<Integer> args,
+      ShopOffersReply shop) {
     public CommandResult {
       args = args == null ? List.of() : List.copyOf(args);
     }
-    public CommandResult(boolean accepted, OnlineCharacterView character, String messageKey) {
-      this(accepted, character, messageKey, List.of());
+    public CommandResult(boolean accepted, OnlineCharacterView character, String messageKey, List<Integer> args) {
+      this(accepted, character, messageKey, args, null);
     }
-    public CommandResult(boolean accepted, OnlineCharacterView character) { this(accepted,character,null,List.of()); }
+    public CommandResult(boolean accepted, OnlineCharacterView character, String messageKey) {
+      this(accepted, character, messageKey, List.of(), null);
+    }
+    public CommandResult(boolean accepted, OnlineCharacterView character) { this(accepted,character,null,List.of(),null); }
   }
   private record GameplayCommand(String path, String body, long revision,
       java.util.concurrent.CompletableFuture<CommandResult> result) {}
   /** Cast and use replies also say what the server changed; absent fields read as zero. */
   private record Committed(Long revision, int healthGained, int manaSpent, int manaGained) {}
+  /** A committed vendor trade: units moved and the gold paid or received, both the server's numbers. */
+  private record ShopCommitted(Long revision, int quantity, long total) {}
   private static final class Rejected extends IllegalStateException {
     private final int code;
     private final String reason;
@@ -203,6 +210,35 @@ public final class OnlineConnection implements AutoCloseable {
     return gameplayCommand("/interact", topic.isEmpty() ? npc : npc+" "+topic.getAsInt());
   }
 
+  /**
+   * The shopkeeper's listing: stock with the server's buy prices and the character's sellable goods
+   * with the server's payouts. A read; the committed revision is unchanged. Never replayed.
+   */
+  public java.util.concurrent.CompletionStage<CommandResult> shopOffers(String npc) {
+    return gameplayCommand("/shop-offers", requireNpc(npc));
+  }
+
+  /** Buys {@code quantity} units by item identity only; the server prices and checks gold and weight. */
+  public java.util.concurrent.CompletionStage<CommandResult> shopBuy(String npc, String itemKey, int quantity) {
+    return gameplayCommand("/shop-buy", requireNpc(npc) + " " + requireTrade(itemKey, quantity));
+  }
+
+  /** Sells {@code quantity} unequipped units by item identity only; the server pays its own price. */
+  public java.util.concurrent.CompletionStage<CommandResult> shopSell(String npc, String itemKey, int quantity) {
+    return gameplayCommand("/shop-sell", requireNpc(npc) + " " + requireTrade(itemKey, quantity));
+  }
+
+  private static String requireNpc(String npc) {
+    if (npc == null || !npc.matches("[A-Za-z][A-Za-z0-9_]{0,63}")) throw new IllegalArgumentException("Invalid NPC identity");
+    return npc;
+  }
+
+  private static String requireTrade(String itemKey, int quantity) {
+    if (itemKey == null || !itemKey.matches("item\\.[a-z0-9_]{1,120}")) throw new IllegalArgumentException("Invalid item key");
+    if (quantity < 1 || quantity > 99) throw new IllegalArgumentException("Invalid quantity");
+    return itemKey + " " + quantity;
+  }
+
   private java.util.concurrent.CompletionStage<CommandResult> gameplayCommand(String path, String arguments) {
     View current = view;
     if (closed || current == null || current.character() == null || !status.equals("connected"))
@@ -256,6 +292,7 @@ public final class OnlineConnection implements AutoCloseable {
           boolean accepted = false;
           String messageKey=null;
           List<Integer> messageArgs=List.of();
+          ShopOffersReply shop=null;
           long requiredRevision = character == null ? 0 : character.revision();
           if (command != null) {
             try {
@@ -266,6 +303,19 @@ public final class OnlineConnection implements AutoCloseable {
                     || dialogue.changed() && dialogue.revision()==command.revision())
                   throw new IllegalStateException("Invalid dialogue acknowledgement");
                 requiredRevision=dialogue.revision();messageKey=dialogue.messageKey();messageArgs=dialogue.args();
+              } else if(command.path().equals("/shop-offers")) {
+                shop=JSON.fromJson(reply,ShopOffersReply.class);
+                if(shop==null || shop.revision()<command.revision() || shop.npc()==null)
+                  throw new IllegalStateException("Invalid shop listing");
+                requiredRevision=shop.revision();
+              } else if(command.path().equals("/shop-buy") || command.path().equals("/shop-sell")) {
+                var trade=JSON.fromJson(reply,ShopCommitted.class);
+                if(trade==null || trade.revision()==null || trade.revision()<=command.revision()
+                    || trade.quantity()<1 || trade.total()<0)
+                  throw new IllegalStateException("Invalid shop acknowledgement");
+                requiredRevision=trade.revision();
+                messageKey=command.path().equals("/shop-buy") ? "online.shop.bought" : "online.shop.sold";
+                messageArgs=List.of(trade.quantity(),(int)Math.min(Integer.MAX_VALUE,trade.total()));
               } else {
                 var committed = JSON.fromJson(reply, Committed.class);
                 if (committed == null || committed.revision() == null || committed.revision() <= command.revision())
@@ -385,7 +435,7 @@ public final class OnlineConnection implements AutoCloseable {
           break;
           }
           if (command != null && gameplay.compareAndSet(command, null))
-            command.result().complete(new CommandResult(accepted, character,messageKey,messageArgs));
+            command.result().complete(new CommandResult(accepted, character,messageKey,messageArgs,shop));
           Thread.sleep(75);
         }
       } finally {

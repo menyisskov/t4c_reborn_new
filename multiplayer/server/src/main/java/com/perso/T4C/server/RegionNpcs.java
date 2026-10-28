@@ -17,6 +17,7 @@ import java.util.random.RandomGenerator;
 final class RegionNpcs {
   private final int world;
   private final OnlineNpcInteractions interactions;
+
   private final List<NpcView> views;
   private final Map<String,String> supportedByView;
 
@@ -27,7 +28,8 @@ final class RegionNpcs {
   /** Publish the independent authored appearance inventory without granting its scripts. */
   RegionNpcs(NpcInteractionCatalog catalog, ItemContent items, RegionMapLoader.Spec region,
       NpcAppearanceCatalog appearances) {
-    world=region.world(); interactions=new OnlineNpcInteractions(catalog,items);
+    world=region.world();
+    interactions=new OnlineNpcInteractions(catalog,items,id->OnlineShops.vendor(id).isPresent());
     if(appearances==null) {
       views=catalog.npcs().stream().filter(n->region.contains(n.world(),n.x(),n.y()))
           .map(n->new NpcView(n.id(),n.displayName(),n.x()-region.originX(),n.y()-region.originY(),
@@ -60,6 +62,25 @@ final class RegionNpcs {
   }
 
   List<NpcView> views() { return views; }
+
+  /** Vendor stock shared by every region; read once from the bundled content. */
+  NpcShopCatalog shops() { return OnlineShops.catalog(); }
+
+  /**
+   * The canonical id of the shopkeeper this character can trade with right now, using the same
+   * range and sight rule as dialogue. Throws if the NPC is unknown or unreachable; an empty result
+   * means a reachable NPC that has no shop.
+   */
+  java.util.Optional<String> reachableShopkeeper(OnlineStore.CharacterState saved, PreviewMap map,
+      double x, double y, String npcId) {
+    var npc=views.stream().filter(n->n.id().equals(npcId)).findFirst()
+        .orElseThrow(()->new IllegalArgumentException("NPC is not in this region"));
+    String canonical=supportedByView.get(npcId);
+    if(canonical==null) throw new IllegalArgumentException("NPC interaction unavailable");
+    interactions.requireReachable(saved,world,map.originX+x,map.originY+y,canonical,
+        map.hasLineOfSight(x,y,npc.x(),npc.y()));
+    return OnlineShops.vendor(canonical).isPresent() ? java.util.Optional.of(canonical) : java.util.Optional.empty();
+  }
 
   OnlineNpcInteractions.Result prepare(OnlineStore.CharacterState saved, PreviewMap map,
       double x, double y, String npcId, OptionalInt topic, long now, RandomGenerator random) {

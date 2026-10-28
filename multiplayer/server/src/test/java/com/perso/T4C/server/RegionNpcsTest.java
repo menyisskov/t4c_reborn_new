@@ -36,6 +36,33 @@ class RegionNpcsTest {
     return npcs.prepare(saved,map,3.5,5.5,npcId,java.util.OptionalInt.empty(),100,new Random(1));
   }
 
+  @Test void sigfriedGreetsWithHisAuthoredWelcomeAndIsTheOnlyReachableShopkeeperInHisRegion() throws Exception {
+    var catalog=NpcInteractionCatalog.loadBundled();var sigfried=catalog.require("Sigfried");
+    var items=ItemCatalog.loadBundled();
+    var spec=new RegionMapLoader.Spec(sigfried.world(),"shop",sigfried.x()-5,sigfried.y()-5,40,12,sigfried.x(),sigfried.y());
+    var npcs=new RegionNpcs(catalog,items,spec);
+    var map=new PreviewMap(new boolean[12][40],spec.originX(),spec.originY(),5,5);
+    var progress=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(1)).progress();
+    var saved=new com.perso.T4C.server.persistence.OnlineStore.CharacterState(java.util.UUID.randomUUID(),
+        java.util.UUID.randomUUID(),"Tester",0,3,3,0,0,0,progress);
+    var greeting=npcs.prepare(saved,map,3.5,5.5,"Sigfried",java.util.OptionalInt.empty(),100,new Random(1));
+    assertEquals("npc.welcome.sigfried",greeting.messageKey());
+    assertFalse(greeting.changed());
+    assertThrows(IllegalArgumentException.class,()->npcs.prepare(saved,map,3.5,5.5,"Sigfried",
+        java.util.OptionalInt.of(0),100,new Random(1)),"shopkeepers have no online topics");
+    assertEquals(java.util.Optional.of("Sigfried"),npcs.reachableShopkeeper(saved,map,3.5,5.5,"Sigfried"));
+    assertThrows(IllegalArgumentException.class,()->npcs.reachableShopkeeper(saved,map,30.5,5.5,"Sigfried"),
+        "out of conversation range");
+    assertThrows(IllegalArgumentException.class,()->npcs.reachableShopkeeper(saved,map,3.5,5.5,"Nobody"));
+    var kilhiam=catalog.require("Kilhiam");
+    var temple=new RegionNpcs(catalog,items,new RegionMapLoader.Spec(kilhiam.world(),"temple",kilhiam.x()-5,kilhiam.y()-5,12,12,kilhiam.x(),kilhiam.y()));
+    var templeMap=new PreviewMap(new boolean[12][12],kilhiam.x()-5,kilhiam.y()-5,5,5);
+    assertTrue(temple.reachableShopkeeper(saved,templeMap,3.5,5.5,"Kilhiam").isEmpty(),"a reachable NPC without a shop");
+    var dead=new com.perso.T4C.server.persistence.OnlineStore.CharacterState(saved.id(),saved.accountId(),"Dead",0,3,3,0,0,0,
+        ProgressEdits.withVitals(progress,new com.perso.T4C.online.model.CharacterProgress.Vitals(0,progress.vitals().maxHp(),0,0)));
+    assertThrows(IllegalArgumentException.class,()->npcs.reachableShopkeeper(dead,map,3.5,5.5,"Sigfried"));
+  }
+
   @Test void wardenAelricIsListedOnlyInTheRegionThatContainsHisSpawn() throws Exception {
     var catalog=NpcInteractionCatalog.loadBundled(); var items=ItemCatalog.loadBundled();
     var temple=new RegionNpcs(catalog,items,new RegionMapLoader.Spec(0,"temple",2904,1029,80,60,2948,1044));

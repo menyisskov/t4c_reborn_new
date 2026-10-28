@@ -36,7 +36,7 @@ public final class PreviewServer implements AutoCloseable {
   static final int GROUND_LOOT_VIEW_LIMIT = 128;
   private static final Set<String> POST_ROUTES=Set.of("/join","/admin/shutdown","/input","/attack",
       "/recover","/equip","/unequip","/interact","/pickup","/cast","/use","/region-ready","/leave",
-      "/account/characters");
+      "/account/characters","/shop-offers","/shop-buy","/shop-sell");
   private static final Set<String> GET_ROUTES=Set.of("/","/client.js","/style.css","/strings",
       "/account/characters","/map","/state","/character","/corpses","/health","/admin/metrics");
   private record RegionJoined(String token,long id,com.perso.T4C.online.model.OnlineRegion region) {}
@@ -251,7 +251,8 @@ public final class PreviewServer implements AutoCloseable {
       requireLocalAdmin(exchange);
       return admission.session(controlToken);
     }
-    if(store==null && Set.of("/attack","/recover","/equip","/unequip","/interact","/pickup","/cast","/use").contains(path))
+    if(store==null && Set.of("/attack","/recover","/equip","/unequip","/interact","/pickup","/cast","/use",
+        "/shop-offers","/shop-buy","/shop-sell").contains(path))
       throw new PreviewWorld.Rejected(404,"route");
     return knownSession(exchange);
   }
@@ -302,7 +303,7 @@ public final class PreviewServer implements AutoCloseable {
             : !type.toLowerCase(java.util.Locale.ROOT).startsWith("text/plain")))
           throw new PreviewWorld.Rejected(415, "input");
         if ("/join".equals(path) || "/pickup".equals(path) || "/cast".equals(path) || "/use".equals(path)
-            || "/account/characters".equals(path)) {
+            || path.startsWith("/shop-") || "/account/characters".equals(path)) {
           var versions = exchange.getRequestHeaders().get(OnlineProtocol.VERSION_HEADER);
           if (versions == null || versions.size() != 1
               || !Integer.toString(OnlineProtocol.VERSION).equals(versions.getFirst()))
@@ -311,6 +312,7 @@ public final class PreviewServer implements AutoCloseable {
         int limit="/account/characters".equals(path) ? 512
             : store!=null && "/join".equals(path) ? 101
             : "/interact".equals(path) ? 128
+            : path.startsWith("/shop-") ? 256
             : "/recover".equals(path) || "/cast".equals(path) ? 128
             : ("/equip".equals(path) || "/unequip".equals(path) || "/pickup".equals(path) || "/use".equals(path)) ? 96 : 64;
         checkDeclaredBodyLength(exchange,limit);
@@ -473,6 +475,34 @@ public final class PreviewServer implements AutoCloseable {
             // Definite refusals arrive as the completion's cause; unwrap them into their 409 code.
             catch (ExecutionException error) { if(error.getCause() instanceof PreviewWorld.Rejected rejected) throw rejected; throw error; }
             json(exchange,observation,200,Map.of("revision",committed.character().revision()));
+          }
+          case "/shop-offers" -> {
+            if (persistent==null) throw new PreviewWorld.Rejected(404,"route");
+            String token=token(exchange);
+            // The revision slot is accepted for command-shape parity but a listing is a read: nothing is fenced on it.
+            if (!body.matches("[0-9]{1,19} [0-9]{1,19} [A-Za-z][A-Za-z0-9_]{0,63}")) throw new PreviewWorld.Rejected(400,"input");
+            String[] parts=body.split(" "); long epoch;
+            try { Long.parseLong(parts[0]);epoch=Long.parseLong(parts[1]); }
+            catch (NumberFormatException bad) { throw new PreviewWorld.Rejected(400,"input"); }
+            json(exchange,observation,200,onWorld(()->{ admit(token,epoch);return persistent.shopOffers(token,epoch,parts[2]); }));
+          }
+          case "/shop-buy", "/shop-sell" -> {
+            if (persistent==null) throw new PreviewWorld.Rejected(404,"route");
+            String token=token(exchange);
+            // Identity and a small count only: the server prices everything from its own catalog.
+            if (!body.matches("[0-9]{1,19} [0-9]{1,19} [A-Za-z][A-Za-z0-9_]{0,63} item\\.[a-z0-9_]{1,120} [0-9]{1,2}"))
+              throw new PreviewWorld.Rejected(400,"input");
+            String[] parts=body.split(" "); long revision,epoch;
+            try { revision=Long.parseLong(parts[0]);epoch=Long.parseLong(parts[1]); }
+            catch (NumberFormatException bad) { throw new PreviewWorld.Rejected(400,"input"); }
+            int quantity=Integer.parseInt(parts[4]);
+            var side="/shop-buy".equals(path) ? OnlineShopTrades.Side.BUY : OnlineShopTrades.Side.SELL;
+            var pending=onWorld(()->{ admit(token,epoch);return persistent.shopTrade(token,revision,epoch,parts[2],side,parts[3],quantity); });
+            PersistentSessions.ShopReceipt receipt;
+            try { receipt=pending.toCompletableFuture().get(2,TimeUnit.SECONDS); }
+            // Definite refusals (insufficient_gold, too_heavy, ...) arrive as the completion's cause; unwrap to their 409.
+            catch (ExecutionException error) { if(error.getCause() instanceof PreviewWorld.Rejected rejected) throw rejected; throw error; }
+            json(exchange,observation,200,Map.of("revision",receipt.revision(),"quantity",receipt.quantity(),"total",receipt.total()));
           }
           case "/cast", "/use" -> {
             if (persistent==null) throw new PreviewWorld.Rejected(404,"route");

@@ -622,6 +622,22 @@ class PreviewServerTest {
     }
   }
 
+  @Test void shopRoutesRequireCurrentProtocolAndStorageAndBoundTheirBodies() throws Exception {
+    var map = new PreviewMap(new boolean[8][8], 0, 0, 3, 3);
+    String current = Integer.toString(com.perso.T4C.online.model.OnlineProtocol.VERSION);
+    try (var server = new PreviewServer(map, 0); var client = HttpClient.newHttpClient()) {
+      server.start(); String url = server.url();
+      for (String path : new String[] {"/shop-offers", "/shop-buy", "/shop-sell"}) {
+        String body = "1 0 Sigfried" + ("/shop-offers".equals(path) ? "" : " item.torch 1");
+        assertEquals(426, client.send(abilityRequest(url, path, "a".repeat(64), null, body), HttpResponse.BodyHandlers.ofString()).statusCode());
+        assertEquals(426, client.send(abilityRequest(url, path, "a".repeat(64), "4", body), HttpResponse.BodyHandlers.ofString()).statusCode());
+        // Without a database there is no shop route.
+        assertEquals(404, client.send(abilityRequest(url, path, "a".repeat(64), current, body), HttpResponse.BodyHandlers.ofString()).statusCode());
+        assertEquals(413, client.send(abilityRequest(url, path, "a".repeat(64), current, "x".repeat(257)), HttpResponse.BodyHandlers.ofString()).statusCode());
+      }
+    }
+  }
+
   @Test @EnabledIfEnvironmentVariable(named="T4C_DB_URL",matches=".+")
   void castAndPotionHttpSpendResourcesRefuseDefinitelyAndKeepExpiriesAcrossReconnect() throws Exception {
     var store=OnlineStore.fromEnvironment(); store.migrate();

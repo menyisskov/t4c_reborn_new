@@ -15,8 +15,8 @@ re-measure before relying on a number.
 | Hosted map | all worlds | two crops (world 0 249x117, Lighthaven interior 80x60) |
 | Monster spawns | 14,393 across worlds 0/1/2 | about 50 |
 | Portals | 1,118 | 2 (16/17); all others refused |
-| NPCs | about 2,574 placed spawns | 2 (Kilhiam, Warden Aelric) |
-| Shops | 21 | 0 |
+| NPCs | about 2,574 placed spawns | 3 (Kilhiam, Warden Aelric, Sigfried) |
+| Shops | 21 | 1 hosted (Sigfried: buy, sell, server-priced, one atomic transaction; plain text panel) |
 | Quests | 35 | 1 (renewed_wards) |
 | Player spells | 132 | Stage 1 and 2 (81 spells) plus Light Heal; starting spell kits are now offered to six online classes |
 | Classes | 7 | 6 (Warrior, Paladin, Cleric, Healer, Mage, Battle Mage); Archer awaits online ranged combat |

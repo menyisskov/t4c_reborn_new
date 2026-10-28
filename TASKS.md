@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0276`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0279`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0278 | Online NPC shops end to end: shared buy/sell rules for single-player and server, one atomic server transaction, shop routes, native shop panel, Sigfried hosted as a shopkeeper | Multiplayer / parity | In Progress (PR open; PostgreSQL contract tests run in CI) | pending | pending |
 | T4C-0275 | Export online NPC shop offers with the existing offline buy and resale prices | Multiplayer / parity | PR #231 open (local checks passed; offer data only; transactions/native shop flow remain open) | pending | deferred |
 | T4C-0274 | Expose existing generic NPC shop inventories to the online server catalog (no transaction or client changes) | Multiplayer / parity | Delivered (PR #230; focused tests and package builds passed) | PR #230 (b8b0ccc) | deferred |
 | T4C-0273 | Enable online Archer combat with server-authoritative bow/quiver checks, ranged damage and range/line-of-sight validation matching single-player | Multiplayer / parity | Done (PR #229; local tests passed) | PR #229 | [CHANGELOG.md](CHANGELOG.md#2026-10-28--archer-attacks-are-supported-by-the-online-server-t4c-0273) |

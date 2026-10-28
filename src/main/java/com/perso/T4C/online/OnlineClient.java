@@ -84,6 +84,10 @@ public final class OnlineClient extends ApplicationAdapter {
   private java.util.List<OnlineInventoryRows.Row> displayedInventoryRows = java.util.List.of();
   /** Spell and potion lists (C / U); plain HUD text, closed with the other panels. */
   private final OnlineAbilityMenu abilityMenu = new OnlineAbilityMenu();
+  /** Shop panel (B from a shopkeeper's talk panel); plain HUD text, closed with the other panels. */
+  private final OnlineShopPanel shopPanel = new OnlineShopPanel();
+  /** The server's listing for the NPC being talked to, present only when that NPC really has a shop. */
+  private com.perso.T4C.online.model.ShopOffersReply talkShop;
   private String talkNpc;
   private String talkName;
   private String talkText;
@@ -257,12 +261,21 @@ public final class OnlineClient extends ApplicationAdapter {
             public boolean keyDown(int code) {
               if (!focused || connection == null) return false;
               if (code == Input.Keys.T) {
-                if (talkOpen) closePanels(); else { closePanels(); talkNearest(); }
+                if (talkOpen || shopPanel.isOpen()) closePanels(); else { closePanels(); talkNearest(); }
                 return true;
               }
               if (code == Input.Keys.I) { toggleInventory(); return true; }
               if (code == Input.Keys.C) { toggleAbilityMenu(OnlineAbilityMenu.Kind.SPELLS); return true; }
               if (code == Input.Keys.U) { toggleAbilityMenu(OnlineAbilityMenu.Kind.POTIONS); return true; }
+              if (talkOpen && talkShop != null && code == Input.Keys.B) { openShop(); return true; }
+              if (shopPanel.isOpen()) {
+                if (code == Input.Keys.TAB) { shopPanel.toggleMode(); return true; }
+                if (code == Input.Keys.Q) { shopPanel.cycleQuantity(); return true; }
+                if (code == Input.Keys.LEFT || code == Input.Keys.RIGHT) {
+                  shopPanel.turnPage(code == Input.Keys.RIGHT ? 1 : -1);
+                  return true;
+                }
+              }
               if (inventoryOpen && (code == Input.Keys.LEFT || code == Input.Keys.RIGHT)) {
                 var progress = ownProgress();
                 if (progress != null) {
@@ -273,6 +286,7 @@ public final class OnlineClient extends ApplicationAdapter {
               }
               // Digits belong to an open panel only; with no panel open they fall through untouched.
               int digit = digitFor(code);
+              if (digit > 0 && shopPanel.isOpen()) { chooseShopRow(digit); return true; }
               if (digit > 0 && talkOpen) { chooseTopic(digit); return true; }
               if (digit > 0 && inventoryOpen) { chooseRow(digit); return true; }
               if (digit > 0 && abilityMenu.isOpen()) { chooseAbility(digit); return true; }
@@ -469,7 +483,13 @@ public final class OnlineClient extends ApplicationAdapter {
     hudMessageUntil = System.currentTimeMillis() + MESSAGE_MS;
   }
 
-  private record Staged(boolean talk, boolean accepted, String npc, String messageKey, List<Integer> args) {}
+  /** {@code shop} marks a listing outcome (probe or refresh); {@code trade} a buy or sell outcome. */
+  private record Staged(boolean talk, boolean accepted, String npc, String messageKey, List<Integer> args,
+      com.perso.T4C.online.model.ShopOffersReply shop, boolean listing, boolean trade) {
+    Staged(boolean talk, boolean accepted, String npc, String messageKey, List<Integer> args) {
+      this(talk, accepted, npc, messageKey, args, null, false, false);
+    }
+  }
 
   /** Network thread: enqueue only. The render thread applies the outcome in {@link #applyStaged()}. */
   private void stageCommand(OnlineConnection.CommandResult result) {
@@ -479,13 +499,83 @@ public final class OnlineClient extends ApplicationAdapter {
   private void applyStaged() {
     Staged outcome;
     while ((outcome = staged.poll()) != null) {
-      if (outcome.talk() && outcome.accepted() && outcome.messageKey() != null)
+      if (outcome.listing()) applyListing(outcome);
+      else if (outcome.trade()) {
+        if (outcome.messageKey() != null) showMessage(outcome.messageKey(), outcome.args().toArray());
+        refreshShop();
+      } else if (outcome.talk() && outcome.accepted() && outcome.messageKey() != null)
         openTalk(outcome.npc(), outcome.messageKey(), outcome.args());
       else if (outcome.messageKey() != null) showMessage(outcome.messageKey(), outcome.args().toArray());
     }
   }
 
+  /**
+   * A listing from the server: while talking it proves the NPC is a shopkeeper (a refusal means it is
+   * not, and stays silent); while the shop panel is open it is the refreshed state after a trade.
+   */
+  private void applyListing(Staged outcome) {
+    if (shopPanel.isOpen()) {
+      if (outcome.accepted() && outcome.shop() != null) shopPanel.refresh(outcome.shop());
+      else if (outcome.messageKey() != null) showMessage(outcome.messageKey());
+      return;
+    }
+    if (talkOpen && outcome.npc() != null && outcome.npc().equals(talkNpc) && outcome.accepted()
+        && outcome.shop() != null) {
+      talkShop = outcome.shop();
+      talkTopics = List.of(); // a shopkeeper's authored topics are not served online
+    }
+  }
+
+  private void openShop() {
+    if (talkShop == null || talkNpc == null) return;
+    var listing = talkShop;
+    var npc = talkNpc;
+    var name = talkName;
+    closePanels();
+    shopPanel.open(npc, name, listing);
+  }
+
+  /** Asks the server for the current listing; a pending command just skips this refresh. */
+  private void refreshShop() {
+    if (!shopPanel.isOpen()) return;
+    var npc = shopPanel.npc();
+    try {
+      connection.shopOffers(npc)
+          .thenAccept(result -> staged.add(new Staged(false, result.accepted(), npc, result.messageKey(),
+              result.args(), result.shop(), true, false)))
+          .exceptionally(failed -> null);
+    } catch (IllegalStateException pendingOrDisconnected) { /* the next trade or key press refreshes */ }
+  }
+
+  private void probeShop(String npc) {
+    try {
+      connection.shopOffers(npc)
+          .thenAccept(result -> staged.add(new Staged(true, result.accepted(), npc, null, List.of(),
+              result.shop(), true, false)))
+          .exceptionally(failed -> null);
+    } catch (IllegalStateException pendingOrDisconnected) { /* no shop line this time */ }
+  }
+
+  /** Number key in the open shop panel: buy or sell that row. Prices and every check stay on the server. */
+  private void chooseShopRow(int pressed) {
+    var action = shopPanel.choose(pressed).orElse(null);
+    if (action == null) return;
+    try {
+      var pending = action.mode() == OnlineShopPanel.Mode.BUY
+          ? connection.shopBuy(action.npc(), action.itemKey(), action.quantity())
+          : connection.shopSell(action.npc(), action.itemKey(), action.quantity());
+      pending
+          .thenAccept(result -> staged.add(new Staged(false, result.accepted(), action.npc(), result.messageKey(),
+              result.args(), null, false, true)))
+          .exceptionally(failed -> null);
+    } catch (IllegalStateException pendingOrDisconnected) {
+      showMessage("online.shop.busy");
+    }
+  }
+
   private void closePanels() {
+    shopPanel.close();
+    talkShop = null;
     talkOpen = false;
     inventoryOpen = false;
     abilityMenu.close();
@@ -497,8 +587,10 @@ public final class OnlineClient extends ApplicationAdapter {
     talkText = I18n.message(messageKey, args.toArray());
     talkNpc = npc;
     talkTopics = OnlineNpcTopics.available(npc, I18n::has);
+    talkShop = null;
     talkOpen = true;
     inventoryOpen = false;
+    probeShop(npc);
   }
 
   /** Nearest NPC inside the server's interaction range. The server still decides dialogue and proximity. */
@@ -656,7 +748,13 @@ public final class OnlineClient extends ApplicationAdapter {
         font.draw(hud, I18n.message("online.talk.topic", i + 1, talkTopics.get(i)), 16, y);
         y -= line;
       }
+      if (talkShop != null) {
+        font.draw(hud, I18n.key("online.talk.shop"), 16, y);
+        y -= line;
+      }
       font.draw(hud, I18n.key("online.talk.close"), 16, y);
+    } else if (shopPanel.isOpen()) {
+      OnlineAbilityMenu.draw(hud, font, shopPanel.lines(key -> I18n.key(key, key)), width - 420, height - 16);
     } else if (abilityMenu.isOpen()) {
       var progress = view == null || view.character() == null ? null : view.character().progress();
       OnlineAbilityMenu.draw(hud, font,
@@ -782,7 +880,7 @@ public final class OnlineClient extends ApplicationAdapter {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     // Esc closes an open panel first; with no panel open it exits, or returns to the lobby in lobby mode.
     if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-      if (talkOpen || inventoryOpen || abilityMenu.isOpen()) closePanels();
+      if (talkOpen || inventoryOpen || abilityMenu.isOpen() || shopPanel.isOpen()) closePanels();
       else if (lobbyModel != null) { returnToLobby(); return; }
       else Gdx.app.exit();
     }
