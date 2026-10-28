@@ -17,6 +17,7 @@ import com.perso.T4C.gui.screen.Statistics;
 import com.perso.T4C.helper.ModifSprites;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.screens.MapRenderer;
+import com.perso.T4C.session.PlayerCommands;
 import com.perso.T4C.ui.PlayerHUD;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -28,6 +29,7 @@ public class GameInputHandler {
   private final Logger log;
   private final MapRenderer mapRenderer;
   private final Player player;
+  private final PlayerCommands commands;
   private Supplier<PlayerHUD> hudSupplier;
   private Runnable debugOverlayToggle;
   private Runnable teleportOverlayToggle;
@@ -41,10 +43,12 @@ public class GameInputHandler {
     mouseMovementSupplier = supplier;
   }
 
-  public GameInputHandler(Logger log, MapRenderer mapRenderer, Player player) {
+  public GameInputHandler(
+      Logger log, MapRenderer mapRenderer, Player player, PlayerCommands commands) {
     this.log = log;
     this.mapRenderer = mapRenderer;
     this.player = player;
+    this.commands = commands;
   }
 
   public void setTextInputActiveSupplier(BooleanSupplier textInputActiveSupplier) {
@@ -81,7 +85,7 @@ public class GameInputHandler {
         && !isCtrlDown()
         && !GuiManager.isOpen()
         && mouseMovement != null) movementInput.set(mouseMovement);
-    player.move(movementInput.x, movementInput.y, delta);
+    commands.move(movementInput.x, movementInput.y, delta);
   }
 
   static Vector2 projectGridDirection(int gridDx, int gridDy, Vector2 out) {

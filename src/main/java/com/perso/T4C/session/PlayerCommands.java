@@ -30,8 +30,8 @@ public interface PlayerCommands {
    * <p>Local session: today's {@code Player.move} (stun, exhaustion and attack gates, speed
    * buffs, collision, sliding) applied at once. Remote session: sends the input with a sequence
    * number, applies the same shared rule to the local puppet for prediction and reconciles with
-   * snapshots ({@code MovementReconciler}); the server stays authoritative. Not wired to the
-   * input handler yet.
+   * snapshots ({@code MovementReconciler}); the server stays authoritative. The
+   * input handler sends every frame's movement through this intent.
    */
   void move(float dx, float dy, float delta);
 }

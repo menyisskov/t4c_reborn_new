@@ -336,7 +336,7 @@ public class MainGameScreen implements Screen {
 
   private void initializeMapRendering() throws GameException {
     mapRenderer = createMapRenderer();
-    inputHandler = new GameInputHandler(log, mapRenderer, player);
+    inputHandler = new GameInputHandler(log, mapRenderer, player, session.commands());
   }
 
   private void initializeWorldEntities() {
@@ -1381,7 +1381,7 @@ public class MainGameScreen implements Screen {
         mapRenderer.dispose();
       }
       mapRenderer = createMapRenderer();
-      inputHandler = new GameInputHandler(log, mapRenderer, player);
+      inputHandler = new GameInputHandler(log, mapRenderer, player, session.commands());
       CompanionNPC survivingCompanion =
           companionManager != null ? companionManager.getCompanion() : null;
       if (npcManager != null) {
