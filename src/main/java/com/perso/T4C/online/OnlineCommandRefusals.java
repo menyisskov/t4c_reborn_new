@@ -16,6 +16,15 @@ final class OnlineCommandRefusals {
     String code = reason == null ? "" : reason;
     return switch (path) {
       case "/pickup" -> pickup(code);
+      case "/recover" -> switch (code) {
+        case "corpse_unavailable" -> "online.recover.unavailable";
+        case "item_unavailable" -> "online.recover.item_unavailable";
+        case "out_of_range" -> "online.recover.out_of_range";
+        case "too_heavy" -> "online.recover.too_heavy";
+        case "dead" -> "online.recover.dead";
+        case "busy", "revision" -> "online.recover.busy";
+        default -> "online.recover.refused";
+      };
       case "/equip" -> switch (code) {
         case "requirements" -> "online.equip.requirements";
         case "equipment_conflict" -> "online.equip.conflict";

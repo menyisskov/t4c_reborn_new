@@ -386,7 +386,10 @@ public final class PreviewServer implements AutoCloseable {
               item=parts.length>3 ? java.util.UUID.fromString(parts[3]) : null; }
             catch (IllegalArgumentException bad) { throw new PreviewWorld.Rejected(400,"input"); }
             var pending=onWorld(() -> { admit(token,epoch); return persistent.recoverCorpse(token,revision,corpse,item); });
-            var committed=pending.toCompletableFuture().get(2,TimeUnit.SECONDS);
+            OnlineStore.RewardResult committed;
+            try { committed=pending.toCompletableFuture().get(2,TimeUnit.SECONDS); }
+            // A definite corpse refusal (item_unavailable, too_heavy, ...) arrives as the completion's cause.
+            catch (ExecutionException error) { if(error.getCause() instanceof PreviewWorld.Rejected rejected) throw rejected; throw error; }
             json(exchange,observation,200,Map.of("revision",committed.character().revision()));
           }
           case "/equip", "/unequip" -> {
