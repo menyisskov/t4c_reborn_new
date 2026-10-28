@@ -206,6 +206,14 @@ Required behavior:
   requests were open, and health stayed 200. This measured under 200 ms of
   hostile-phase native progress, not a four-second soak, rendered play, remote
   abuse or the two-hour mixed gate.
+  T4C-0251 added a tamper battery, local PG16 WSL, 322 cases, not the integrated release build
+  ([NATIVE_TAMPER_PROBE.md](tools/NATIVE_TAMPER_PROBE.md)): one attacker session over raw HTTP and one victim on the
+  native adapter, covering foreign account-key/character joins, missing and garbled authorization, admin routes,
+  stale revision and epoch on every mutating route, replays and reordered input, oversized and malformed bodies,
+  forged targets and foreign items, corpses and owner-window loot, stat/gold/flag/item edit attempts, speed and
+  collision. 321 passed with no committed state changed and the victim playing throughout; 1 failed (`/recover`
+  reports a definite corpse-item refusal as `503 busy`, state unchanged, server fix not made here). Combat-time
+  forgery, enabled-portal transfers, rendered clients and remote/TLS abuse remain open, so this bullet stays unchecked.
 - [ ] Restore a backup into a separate database and finish a native gameplay/reconnect check there;
   matching table hashes alone do not satisfy restored gameplay acceptance. T4C-0213 verified
   a live schema-10 exported-snapshot restore across all eleven online tables, including
