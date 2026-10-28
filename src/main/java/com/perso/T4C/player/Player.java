@@ -98,6 +98,12 @@ public class Player extends Stats implements ProgressionState {
   @Getter private int rebirthCount = 0;
   @Getter private int lastDamageTaken = 0;
   @Getter private boolean respawnPointDefined = false;
+
+  /**
+   * True for a character a server owns (online). Such a player is never written to the local save
+   * file: {@code PlayerStateStore.save(Player, float)} refuses it. Always false in single-player.
+   */
+  @Getter @Setter private boolean remote = false;
   @Getter private float respawnWorldX;
   @Getter private float respawnWorldY;
   @Getter private int respawnWorldZ;

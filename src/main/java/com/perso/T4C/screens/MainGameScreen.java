@@ -148,6 +148,8 @@ public class MainGameScreen implements Screen {
   private boolean disposed;
   private boolean playerStateSaved;
   private float secondsSinceAutosave;
+  private final com.perso.T4C.session.GameSession session =
+      new com.perso.T4C.session.LocalGameSession();
   private boolean displayInitialized;
   private int loadingStep;
   private GameInputHandler inputHandler;
@@ -433,7 +435,7 @@ public class MainGameScreen implements Screen {
 
   private void savePlayerState() {
     secondsSinceAutosave = 0f;
-    PlayerStateStore.save(player, dayNightCycle.getHour());
+    session.persistence().save(player, dayNightCycle.getHour());
   }
 
   /**
