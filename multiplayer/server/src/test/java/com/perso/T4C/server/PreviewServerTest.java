@@ -796,12 +796,13 @@ class PreviewServerTest {
       server.start(); String url=server.url();
       String token=login(client,url,owner,corpse.dead().id());
       long revision=object(client.send(request(url,"/character",token,null),HttpResponse.BodyHandlers.ofString())).get("revision").getAsLong();
-      Thread.sleep(500);
+      assertEquals(200,client.send(request(url,"/corpses",token,null),HttpResponse.BodyHandlers.ofString()).statusCode());
+      long epoch=epochOf(client,url,token);
       slow.set(true);
       var response=client.send(HttpRequest.newBuilder(URI.create(url+"/recover")).timeout(Duration.ofSeconds(8))
           .header("Origin",url).header("Content-Type","text/plain")
           .header(com.perso.T4C.online.model.OnlineProtocol.VERSION_HEADER,current).header("Authorization","Bearer "+token)
-          .POST(HttpRequest.BodyPublishers.ofString(revision+" "+epochOf(client,url,token)+" "+corpse.id())).build(),HttpResponse.BodyHandlers.ofString());
+          .POST(HttpRequest.BodyPublishers.ofString(revision+" "+epoch+" "+corpse.id())).build(),HttpResponse.BodyHandlers.ofString());
       slow.set(false);
       assertEquals(503,response.statusCode(),response.body()); assertTrue(response.body().contains("busy"),response.body());
     }
