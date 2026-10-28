@@ -646,9 +646,9 @@ public final class PreviewServer implements AutoCloseable {
       UUID id=UUID.fromString(requestId);
       if(!id.toString().equals(requestId)) throw new IllegalArgumentException("Noncanonical UUID");
       name=CharacterCreationRules.normalizeName(name);
-      if(!CharacterCreationRules.isValidName(name) || !Set.of("male","female").contains(gender))
+      if(!CharacterCreationRules.isValidName(name) || !OnlineCharacterCreation.GENDERS.contains(gender))
         throw new IllegalArgumentException("Invalid creation");
-      if(!Set.of("warrior","paladin").contains(characterClass))
+      if(!OnlineCharacterCreation.CLASSES.contains(characterClass))
         throw new PreviewWorld.Rejected(400,"unsupported_class");
       return new OnlineCharacterCreation.Request(id,name,characterClass,gender,evil);
     } catch(PreviewWorld.Rejected rejected) { throw rejected; }
