@@ -92,6 +92,11 @@ class OnlineAccountClientTest {
       var refused=assertThrows(OnlineAccountClient.Rejected.class,()->client.create(new OnlineCharacterCreation.Request(
           UUID.randomUUID(),"Other","warrior","male",false)));
       assertEquals(409,refused.statusCode());assertFalse(refused.getMessage().contains(KEY));
+      assertNull(refused.code()); // A non-code body (here an echoed secret) is never surfaced.
+      fixture.createMode="taken";
+      var taken=assertThrows(OnlineAccountClient.Rejected.class,()->client.create(new OnlineCharacterCreation.Request(
+          UUID.randomUUID(),"Other","warrior","male",false)));
+      assertEquals(409,taken.statusCode());assertEquals("name_taken",taken.code());
     }
   }
 
@@ -138,6 +143,7 @@ class OnlineAccountClientTest {
               || !uri().toString().equals(exchange.getRequestHeaders().getFirst("Origin"))) {
             status=401;body="bad auth";
           } else if(createMode.equals("reject")) {status=409;body=KEY;}
+          else if(createMode.equals("taken")) {status=409;body="{\"error\":\"name_taken\"}";}
           else {
             var request=new Gson().fromJson(requestBody,OnlineCharacterCreation.Request.class);
             UUID replyId=createMode.equals("wrongId") ? UUID.randomUUID() : request.requestId();

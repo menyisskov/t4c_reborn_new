@@ -26,10 +26,13 @@ public final class OnlineAccountClient implements AutoCloseable {
 
   public static final class Rejected extends IOException {
     private final int statusCode;
-    private Rejected(int statusCode) {
-      super("Account request rejected (HTTP "+statusCode+")");this.statusCode=statusCode;
+    private final String code;
+    Rejected(int statusCode,String code) {
+      super("Account request rejected (HTTP "+statusCode+")");this.statusCode=statusCode;this.code=code;
     }
     public int statusCode() { return statusCode; }
+    /** The server's short refusal code (for example {@code name_taken}), or null when absent or not a plain code. */
+    public String code() { return code; }
   }
 
   public OnlineAccountClient(URI endpoint,String accountKey) {
@@ -113,8 +116,16 @@ public final class OnlineAccountClient implements AutoCloseable {
     catch(InterruptedException interrupted) { pending.cancel(true);throw interrupted; }
     catch(TimeoutException timeout) { pending.cancel(true);throw new IOException("Account request timed out"); }
     catch(ExecutionException|CancellationException failed) { throw new IOException("Account request unavailable"); }
-    if(response.statusCode()!=200) throw new Rejected(response.statusCode());
+    if(response.statusCode()!=200) throw new Rejected(response.statusCode(),refusalCode(response.body()));
     return new String(response.body(),StandardCharsets.UTF_8);
+  }
+
+  private static final java.util.regex.Pattern REFUSAL=java.util.regex.Pattern.compile("\\{\"error\":\"([a-z_]{1,32})\"}");
+  /** Only a strict {"error":"snake_case"} body is surfaced; anything else (including echoed secrets) is dropped. */
+  private static String refusalCode(byte[] body) {
+    if(body==null || body.length>256) return null;
+    var matcher=REFUSAL.matcher(new String(body,StandardCharsets.UTF_8).strip());
+    return matcher.matches() ? matcher.group(1) : null;
   }
 
   /** Bound streaming replies before allocating the entire body, including malformed/error bodies. */

@@ -12,6 +12,15 @@ commit links, and finer-grained notes.
 - Arrows no longer weigh anything, and your quiver never runs out of them. Quivers keep a small, equal weight.
 - Archers can now carry loot from the start; before, their starting arrows left them too heavy to pick anything up. Characters who already own arrows keep them.
 
+## 2026-10-28 — Create a character from the online lobby (T4C-0244)
+
+### Added
+- In the online character lobby you can now press Create (or C) to make a new character. Type a name, pick Warrior or Paladin, choose male or female and good or evil, then press Create; you return to the lobby with the new character already selected. An account with no characters is told to press Create to make its first one.
+- If creating fails you now see a plain message: the name is already used on your account, the account is full, the name is not allowed, the server is busy, or the server could not be reached.
+
+### Changed
+- The lobby no longer says that character creation is unavailable online.
+
 ## 2026-10-27 — Online HUD shows mana (T4C-0240)
 
 ### Changed
