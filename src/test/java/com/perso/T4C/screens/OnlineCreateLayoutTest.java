@@ -14,7 +14,6 @@ class OnlineCreateLayoutTest {
 
   @Test
   void everyServerClassHasARowOnTheForm() {
-    assertTrue(OnlineCharacterCreation.CLASSES.size() <= OnlineCreateLayout.MAX_CLASS_ROWS);
     for (int i = 0; i < OnlineCharacterCreation.CLASSES.size(); i++) {
       float y = OnlineCreateLayout.CLASS_Y + i * OnlineCreateLayout.CLASS_PITCH + 5f;
       assertEquals(i, OnlineCreateLayout.classAt(OnlineCreateLayout.LEFT_X + 5f, y, 0f, 0f,
@@ -23,6 +22,31 @@ class OnlineCreateLayoutTest {
     assertEquals(-1, OnlineCreateLayout.classAt(OnlineCreateLayout.LEFT_X + 5f,
         OnlineCreateLayout.CLASS_Y + 2 * OnlineCreateLayout.CLASS_PITCH + 5f, 0f, 0f, 2));
     assertEquals(-1, OnlineCreateLayout.classAt(-5f, -5f, 0f, 0f, 2));
+  }
+
+  @Test
+  void formFitsEveryClassWithinTheWindowWithoutOverlap() {
+    int rows = OnlineCharacterCreation.CLASSES.size();
+    assertTrue(OnlineCreateLayout.CLASS_HEIGHT + 3f <= OnlineCreateLayout.CLASS_PITCH);
+    float lastBottom = OnlineCreateLayout.classBottom(rows);
+    assertTrue(OnlineCreateLayout.statusLineY(rows) > lastBottom);
+    assertTrue(OnlineCreateLayout.errorLineY(rows) > OnlineCreateLayout.statusLineY(rows));
+    float height = OnlineCreateLayout.panelHeight(rows);
+    assertTrue(height >= OnlineCreateLayout.errorLineY(rows) + 16f);
+    // Same top edge as the lobby panel (y = (720 - 274) / 2 + 30): the taller form stays on screen.
+    float top = (720f - OnlineLobbyLayout.PANEL_HEIGHT) / 2f + 30f;
+    assertTrue(top + height <= 720f);
+    // The action buttons and the gender/alignment choices stay inside the taller panel.
+    assertTrue(OnlineCreateLayout.BACK_Y + OnlineLobbyLayout.BUTTON_HEIGHT <= lastBottom);
+    assertTrue(OnlineCreateLayout.ALIGN_Y + OnlineCreateLayout.SMALL_HEIGHT <= lastBottom);
+    // No class row overlaps the middle/right columns' controls horizontally.
+    assertTrue(OnlineCreateLayout.LEFT_X + OnlineCreateLayout.CLASS_WIDTH < OnlineCreateLayout.MID_X);
+  }
+
+  @Test
+  void panelGrowsWithTheClassCountAndNeverShrinksBelowTheLobby() {
+    assertEquals(OnlineLobbyLayout.PANEL_HEIGHT, OnlineCreateLayout.panelHeight(0));
+    assertTrue(OnlineCreateLayout.panelHeight(7) > OnlineCreateLayout.panelHeight(3));
   }
 
   @Test

@@ -4,6 +4,9 @@ import com.google.gson.GsonBuilder;
 import com.perso.T4C.item.ItemKeys;
 import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.item.ItemSalePricing;
+import com.perso.T4C.item.json.ItemJsonLoader;
+import com.perso.T4C.monster.core.MonsterRegistry;
+import com.perso.T4C.monster.json.MonsterJsonLoader;
 import com.perso.T4C.npc.catalog.ShopCatalog;
 import com.perso.T4C.online.model.NpcShopContent;
 import java.nio.file.Files;
@@ -16,6 +19,12 @@ public final class OnlineNpcShopExporter {
   private OnlineNpcShopExporter() {}
 
   public static NpcShopContent content() {
+    // Same registry the running game builds at start-up (generated + JSON items and monsters);
+    // without this the output depends on which tests or tools happened to load JSON content first.
+    MonsterRegistry.resetToGeneratedDefinitions();
+    MonsterJsonLoader.loadAndRegister();
+    ItemRegistry.resetAdditionalDefinitions();
+    ItemJsonLoader.loadAndRegister();
     List<NpcShopContent.Vendor> vendors =
         ShopCatalog.allShopInventories().entrySet().stream()
             .filter(

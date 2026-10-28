@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0282`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0283`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,7 +18,9 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0281 | Online NPC shops end to end: shared buy/sell rules for single-player and server, one atomic server transaction, shop routes, native shop panel, Sigfried hosted as a shopkeeper | Multiplayer / parity | In Progress (PR open; PostgreSQL contract tests run in CI) | pending | pending |
+| T4C-0282 | Spell engine stage 3: area spells, damage over time, shields and gateways | Multiplayer / parity | Open PR #237 (queued) | PR #237 | deferred |
+| T4C-0281 | Online NPC shops: single-player price parity and server-authoritative buy/sell | Multiplayer / parity | In Progress (PR #238 takeover) | PR #238 | deferred |
+| T4C-0280 | Fix two red main tests: the online character-creation form lays out one row per server class (all seven now, taller panel, hit-testing derived from the class list), and the NPC shop exporter now loads the same JSON items and monsters as the running game (its output used to depend on which tests had loaded them), so npc-shops-v2.json is regenerated with the 350 lines of JSON-item offers it was missing; ShopCatalogTest also tolerates CRLF Windows checkouts | Multiplayer / parity | In Progress | pending | [2026-10-28](CHANGELOG.md#2026-10-28--online-character-creation-lists-all-seven-classes-t4c-0280) |
 | T4C-0277 | Server movement parity: the online server now moves players with single-player's grid-reservation rule through the shared `MovementRules` (finish the claimed tile, slide -1,+1,-2,+2, single-player diagonal corner rule, rest on tile centres; wire, database and protocol 6 unchanged, fixed half-tile offset to the rule's anchors), with the old swept loop kept behind `-Dt4c.server.movement=swept` as rollback. Saved mid-tile positions snap to their tile centre on load. Impact analysis in `CLIENT_UNIFICATION_DESIGN.md` 3.10.1; `ServerMovementParityTest` proves equality with the old loop in open ground, speed and cardinal collision decisions and pins every deliberate difference | Multiplayer / parity | In Progress (PR open) | - | [2026-10-28](CHANGELOG.md) |
 | T4C-0275 | Export online NPC shop offers with the existing offline buy and resale prices | Multiplayer / parity | PR #231 open (local checks passed; offer data only; transactions/native shop flow remain open) | pending | deferred |
 | T4C-0274 | Expose existing generic NPC shop inventories to the online server catalog (no transaction or client changes) | Multiplayer / parity | Delivered (PR #230; focused tests and package builds passed) | PR #230 (b8b0ccc) | deferred |

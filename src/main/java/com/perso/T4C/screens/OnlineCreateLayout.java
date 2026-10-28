@@ -16,8 +16,10 @@ final class OnlineCreateLayout {
   static final float CLASS_PITCH = 30f;
   static final float CLASS_WIDTH = 250f;
   static final float CLASS_HEIGHT = 23f;
-  /** Rows that fit above the status line. */
-  static final int MAX_CLASS_ROWS = 3;
+  /** Gap between the last class row and the status line, and between status and error lines. */
+  static final float FOOTER_GAP = 10f;
+  static final float FOOTER_LINE_PITCH = 22f;
+  static final float FOOTER_PAD = 26f;
 
   static final float MID_X = 292f;
   static final float GENDER_LABEL_Y = 46f;
@@ -43,10 +45,28 @@ final class OnlineCreateLayout {
 
   private OnlineCreateLayout() {}
 
+  /** Bottom edge of the last class row; there is one row per class, however many the server has. */
+  static float classBottom(int classCount) {
+    return CLASS_Y + Math.max(0, classCount - 1) * CLASS_PITCH + CLASS_HEIGHT + 3f;
+  }
+
+  /** Status ("working") line: below the class list, never above the lobby's own status line. */
+  static float statusLineY(int classCount) {
+    return Math.max(OnlineLobbyLayout.STATUS_LINE_Y, classBottom(classCount) + FOOTER_GAP);
+  }
+
+  static float errorLineY(int classCount) {
+    return Math.max(OnlineLobbyLayout.ERROR_LINE_Y, statusLineY(classCount) + FOOTER_LINE_PITCH);
+  }
+
+  /** The panel grows downwards to hold every class row; its top edge stays where the lobby's is. */
+  static float panelHeight(int classCount) {
+    return Math.max(OnlineLobbyLayout.PANEL_HEIGHT, errorLineY(classCount) + FOOTER_PAD);
+  }
+
   /** Class row index under the pointer, or -1. */
   static int classAt(float px, float py, float panelX, float panelY, int classCount) {
-    int rows = Math.min(classCount, MAX_CLASS_ROWS);
-    for (int row = 0; row < rows; row++) {
+    for (int row = 0; row < classCount; row++) {
       if (inside(px, py, panelX + LEFT_X, panelY + CLASS_Y + row * CLASS_PITCH, CLASS_WIDTH, CLASS_HEIGHT))
         return row;
     }
