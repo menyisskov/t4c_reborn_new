@@ -10,10 +10,7 @@ import com.perso.T4C.helper.LocalCharacterStore;
 import com.perso.T4C.helper.PlayerStateDto;
 import com.perso.T4C.helper.PlayerStateStore;
 import com.perso.T4C.player.Player;
-import com.perso.T4C.screens.MainGameScreen;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.junit.jupiter.api.AfterEach;
@@ -66,28 +63,11 @@ class LocalCharacterSourceTest {
   // --- the two helpers that point at the code under test ---
 
   private static PlayerStateDto load() {
-    try {
-      Field unsafeField = Class.forName("sun.misc.Unsafe").getDeclaredField("theUnsafe");
-      unsafeField.setAccessible(true);
-      Object unsafe = unsafeField.get(null);
-      Object screen =
-          unsafe
-              .getClass()
-              .getMethod("allocateInstance", Class.class)
-              .invoke(unsafe, MainGameScreen.class);
-      Method m = MainGameScreen.class.getDeclaredMethod("loadInitialPlayerState");
-      m.setAccessible(true);
-      return (PlayerStateDto) m.invoke(screen);
-    } catch (InvocationTargetException e) {
-      if (e.getCause() instanceof RuntimeException re) throw re;
-      throw new AssertionError(e.getCause());
-    } catch (ReflectiveOperationException e) {
-      throw new AssertionError(e);
-    }
+    return new LocalGameSession().characters().loadInitialState();
   }
 
   private static void applyTo(PlayerStateDto state, Player player) {
-    PlayerStateStore.applyToPlayer(state, player);
+    new LocalGameSession().characters().applyTo(state, player);
   }
 
   // --- behaviour ---
