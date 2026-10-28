@@ -6,7 +6,7 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
-## 2026-10-28 — You can buy from and sell to shopkeepers online (T4C-0278)
+## 2026-10-28 — You can buy from and sell to shopkeepers online (T4C-0281)
 
 ### Added
 - Online, you can now talk to Sigfried the weaponsmith in the starter town, press B to open his shop, and buy from his stock or sell your own goods back. Prices, gold, carrying weight and your inventory all follow the same rules as single-player; the server works out every price, so nothing can be bought or sold for the wrong amount.
