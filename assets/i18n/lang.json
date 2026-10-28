@@ -56,7 +56,7 @@
   "online.loot.too_heavy": "You cannot carry that much weight.",
   "online.loot.unsupported_item": "That item cannot be picked up online yet.",
   "online.loot.refused": "The pickup was refused. The ground may have changed.",
-  "online.client.progress": "HP %d / %d | Level %d | Total XP %d | Gold %d",
+  "online.client.progress": "HP %d / %d | Mana %d / %d | Level %d | Total XP %d | Gold %d",
   "online.client.corpse": "Owned corpse: %d px away | Items %d | Gold %d | E: recover nearby",
   "online.client.target_health": "Target HP %d / %d",
   "online.talk.none": "No one is close enough to talk to.",

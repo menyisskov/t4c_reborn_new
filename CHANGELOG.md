@@ -15,6 +15,11 @@ commit links, and finer-grained notes.
 ### Changed
 - The lobby no longer says that character creation is unavailable online.
 
+## 2026-10-27 — Online HUD shows mana (T4C-0240)
+
+### Changed
+- The online status line now shows your current and maximum mana next to your health, so you can see whether you can afford a spell before you cast it. Characters without mana show 0 / 0.
+
 ## 2026-10-27 — Online character lobby and spell controls (T4C-0233, T4C-0234, T4C-0236, T4C-0237)
 
 ### Added
