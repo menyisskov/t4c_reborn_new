@@ -4,6 +4,11 @@ Updated: 2026-10-27, Asia/Jerusalem. Owner-facing roadmap and acceptance checkli
 This is the starting point for “what remains?”; implementation tasks live in
 [TASKS.md](../TASKS.md), and recorded release evidence lives in [ACCEPTANCE.md](ACCEPTANCE.md).
 
+> **Owner parity rule (2026-10-28).** The online game must look and play exactly like
+> single-player; the only difference is a client and a server. Anywhere this file limits
+> scope to a starter route, a class subset or a content subset, that limit is a temporary
+> divergence tracked in [PARITY.md](PARITY.md), not the Beta bar. Beta now means parity.
+
 ## Scope and release stages
 
 The next proposed playable checkpoint is a complete starter adventure with two players in
