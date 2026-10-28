@@ -425,7 +425,7 @@ public final class OnlineClient extends ApplicationAdapter {
     if (view==null || view.character()==null || !"connected".equals(connection.status())) return;
     var nearest=nearestCorpse(view);
     if (nearest==null) return;
-    try { connection.recover(nearest.id()).exceptionally(failed -> null); }
+    try { connection.recover(nearest.id()).thenAccept(this::stageCommand).exceptionally(failed -> null); }
     catch (IllegalStateException pendingOrDisconnected) { /* Single-flight commands stay bounded. */ }
   }
 

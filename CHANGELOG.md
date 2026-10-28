@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-28 — Recovering from a corpse explains why it failed (T4C-0255)
+
+### Fixed
+- In online play, recovering items from a corpse now tells you the real reason when it fails (the item is gone, the corpse is gone, you are too far away, or you cannot carry that much) instead of just saying the server is busy.
+
 ## 2026-10-28 — Online cheating attempts are now tested against a live server (T4C-0251)
 
 ### Changed
