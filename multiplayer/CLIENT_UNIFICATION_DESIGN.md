@@ -299,6 +299,38 @@ simulation, not intent), target selection by Tab, the hotbar and spell casts.
 - **Not yet moved:** the auto-attack tick keeps reading the same screen fields; when the remote
   session lands, those fields become the view of the server-held target (follow-up slice).
 
+### 3.10 Movement: single-player versus server, and the shared step (T4C-0269)
+
+Single-player and the online server move a player with two different rules. The pure step is
+now in `world/MovementRules` (`Mode.GRID_RESERVATION` = single-player, called by
+`PlayerMovement` and pinned bit for bit by `PlayerMovementGoldenTest`; `Mode.SWEPT_SUBSTEP` =
+the server rule, copied from `PreviewWorld.step`, not yet called by the server). Prediction
+(3.4) needs one rule on both sides, so the differences below are parity debt until the owner
+picks the surviving rule; single-player keeps its own.
+
+| Aspect | Single-player (`Player.move` -> `PlayerMovement.move`) | Server (`PreviewWorld.step`) |
+|---|---|---|
+| Input | 8 directions from keys (dy scaled by the 0.5 tile aspect, only the sign matters), mouse drag, click-to-move path | `/input epoch sequence dx dy`, dx and dy in -1..1, latest wins, expires after 12 ticks |
+| Time base | render frame `delta` (variable) | fixed tick, 34 per second, server-owned; repeated packets add nothing |
+| Speed | 300 px/s x `getEffectiveSpeedMultiplier()` (SPEED buffs, GM 0.1..10) | 300 px/s fixed, no buffs: 300 / 32 / 34 = 0.2757 tiles per tick (the maximum the tamper probe measures) |
+| Units and origin | world pixels (tile 32 x 16), position is a tile top-left corner (anchor) | tile units (double) in the hosted crop, spawn on a tile centre (+0.5), so actors rest half a tile right and down of single-player anchors |
+| Step model | reserves a whole tile, then glides to it; the reservation survives released input and cannot reverse mid-tile; a mid-tile load snaps to the next anchor in the input direction | no target: moves a fixed distance each tick in substeps of at most 0.2 tile, stops at once when input stops |
+| Diagonal | both axes advance at the same tiles/s (x pixels at 300, y at 150) | both axes advance 0.2757 tiles/tick, same tiles/s |
+| Collision query | `CollisionManager`: static map via shared `WorldCollision` (wall-foot rule) + dynamic blockers (monsters, NPCs) + teleport-passable tiles + sampled path check + map pixel bounds | precomputed grid from the shared `WorldCollision` per 80x60 crop; tile and tile above blocked; no dynamic blockers, no teleport tiles |
+| Footprint | destination tile and the tile above, plus the diagonal corner rule against the origin tile | tile and tile above only; diagonal needs both axis-only targets standable |
+| Blocked | slides: tries the four neighbouring directions in the order -1, +1, -2, +2 around the requested one (so it slides along walls) | stops; no sliding |
+| Gates | stunned, exhausted, attacking stop movement; GM can switch collisions off | frozen (transfer) or dead stop movement |
+| Facing | derived from the reserved direction (client animation) | none |
+
+Equal today: collision codes (`CollisionRules` equals the desktop `CollisionType` for all 256
+codes) and the distance covered per second in open ground (9.375 tiles/s). `MovementRulesTest`
+and `MovementRulesRealMapTest` pin both facts and the server loop.
+
+Open decisions for the owner: (1) adopt the grid-reservation rule on the server (exact parity,
+needs a per-player reservation in the world state, dynamic blockers and teleport tiles), or (2)
+keep the swept rule as the authoritative one and make the online client's own movement follow
+it. Parity says (1); it also removes the half-tile offset and the sliding gap.
+
 ## 4. Staged plan
 
 Sizes: S under a day, M a few days, L about a week, XL more. Every stage ends with the full

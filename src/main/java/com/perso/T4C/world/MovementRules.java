@@ -282,4 +282,68 @@ public final class MovementRules {
       return Math.round(grid) * reservationSize;
     }
   }
+
+  /**
+   * The online server's rule, copied from {@code PreviewWorld.step} so it can be shared and tested.
+   * Positions are tile units (doubles). The server owns time: every tick moves a fixed distance,
+   * whatever the client sent, in substeps of at most {@link #SUBSTEP_TILES}; a substep needs the
+   * diagonal target and both axis-only targets to be standable, and the first refusal ends the tick
+   * (no sliding, no partial substep).
+   */
+  public static final class Swept {
+    public static final double SUBSTEP_TILES = 0.2;
+
+    private Swept() {}
+
+    @FunctionalInterface
+    public interface Stand {
+      boolean canStand(double x, double y);
+    }
+
+    public record Position(double x, double y) {}
+
+    /**
+     * Distance one tick covers at a speed in world pixels per second. The expression is evaluated
+     * in float exactly as the server does, so the result is bit-identical to its distance (0.2757
+     * tiles at 300 px/s and 34 Hz, the maximum the tamper probe measures).
+     */
+    public static double tilesPerTick(float speedPixelsPerSecond, int ticksPerSecond) {
+      return speedPixelsPerSecond / GRID_W / ticksPerSecond;
+    }
+
+    public static Position step(
+        double x, double y, int dx, int dy, double tilesPerTick, Stand stand) {
+      int steps = (int) Math.ceil(tilesPerTick / SUBSTEP_TILES);
+      double amount = tilesPerTick / steps;
+      for (int i = 0; i < steps; i++) {
+        double nx = x + dx * amount;
+        double ny = y + dy * amount;
+        if (stand.canStand(nx, ny) && stand.canStand(nx, y) && stand.canStand(x, ny)) {
+          x = nx;
+          y = ny;
+        } else {
+          break;
+        }
+      }
+      return new Position(x, y);
+    }
+
+    /**
+     * The server's standing rule over a world: inside the map, and neither the tile nor the tile
+     * above it (the player's one-tile footprint above the foot) blocks movement.
+     */
+    public static boolean standsOn(WorldCollision world, double x, double y) {
+      if (!Double.isFinite(x) || !Double.isFinite(y) || x < 0 || y < 0) {
+        return false;
+      }
+      int tileX = (int) x;
+      int tileY = (int) y;
+      for (int above = 0; above <= PLAYER_COLLISION_FOOTPRINT_ABOVE_TILES; above++) {
+        if (!world.contains(tileX, tileY - above) || world.blocksMovement(tileX, tileY - above)) {
+          return false;
+        }
+      }
+      return true;
+    }
+  }
 }
