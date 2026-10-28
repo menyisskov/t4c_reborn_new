@@ -13,7 +13,7 @@ import java.util.UUID;
 
 /**
  * Inventory panel rows from the committed state. Equipped rows come first (in slot order), then
- * carried items, and number keys 1-9 address rows in that order. Unknown slots are dropped.
+ * carried items, and number keys 1-9 address rows on the current page. Unknown slots are dropped.
  */
 final class OnlineInventoryRows {
   /** Number keys 1-9 are the only row choices the panel offers. */
@@ -43,10 +43,22 @@ final class OnlineInventoryRows {
     return List.copyOf(rows);
   }
 
-  /** Digit 1 is the first row. Only the first nine rows are reachable from the panel. */
-  static Optional<Row> choose(List<Row> rows, int digit) {
-    if (digit < 1 || digit > rows.size() || digit > MAX_CHOICES) return Optional.empty();
-    return Optional.of(rows.get(digit - 1));
+  /** Clamp after a server refresh removes items, including when the list becomes empty. */
+  static int clampPage(int page, int size) {
+    return Math.max(0, Math.min(page, Math.max(0, (size - 1) / MAX_CHOICES)));
+  }
+
+  static List<Row> page(List<Row> rows, int page) {
+    int start = clampPage(page, rows.size()) * MAX_CHOICES;
+    return rows.subList(start, Math.min(start + MAX_CHOICES, rows.size()));
+  }
+
+  /** Digit 1 selects the first row of the current, clamped page. */
+  static Optional<Row> choose(List<Row> rows, List<Row> displayed, int page, int displayedPage, int digit) {
+    if (page != displayedPage || !rows.equals(displayed)) return Optional.empty();
+    var visible = page(rows, page);
+    if (digit < 1 || digit > visible.size() || digit > MAX_CHOICES) return Optional.empty();
+    return Optional.of(visible.get(digit - 1));
   }
 
   private static boolean validSlot(String slot) {
