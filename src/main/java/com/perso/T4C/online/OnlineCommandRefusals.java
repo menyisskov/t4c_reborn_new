@@ -50,6 +50,13 @@ final class OnlineCommandRefusals {
       case "dead" -> "online.ability.dead";
       case "busy", "revision" -> "online.ability.busy";
       case "not_learned" -> "online.cast.not_learned";
+      case "wrong_target", "pvp_forbidden" -> cast ? "online.cast.wrong_target" : "online.use.refused";
+      case "out_of_range" -> cast ? "online.cast.out_of_range" : "online.use.refused";
+      case "no_line_of_sight" -> cast ? "online.cast.no_line_of_sight" : "online.use.refused";
+      case "safe_haven" -> cast ? "online.cast.safe_haven" : "online.use.refused";
+      case "creature_unavailable" -> cast ? "online.cast.no_target" : "online.use.refused";
+      case "protected_target" -> cast ? "online.cast.protected" : "online.use.refused";
+      case "unsupported_combat" -> cast ? "online.cast.unsupported_combat" : "online.use.refused";
       case "item_not_owned" -> "online.use.not_owned";
       case "item_equipped" -> "online.use.equipped";
       case "no_healing_needed" -> "online.use.no_healing_needed";
