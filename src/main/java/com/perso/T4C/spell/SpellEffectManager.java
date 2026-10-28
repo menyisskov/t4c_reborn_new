@@ -2,12 +2,12 @@ package com.perso.T4C.spell;
 
 import com.perso.T4C.config.GameConstants;
 import com.perso.T4C.helper.DiceFormula;
+import com.perso.T4C.helper.RandomSource;
 import com.perso.T4C.monster.core.BaseMonster;
 import com.perso.T4C.player.Player;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 public final class SpellEffectManager {
   public record SummonRequest(String type, String definitionKey) {}
@@ -51,7 +51,7 @@ public final class SpellEffectManager {
       } else if (effect.getEffectType() == 13) {
         int spellId = evaluate(parameter(effect, 1), caster, target, rangeFromCenter);
         int chance = evaluate(parameter(effect, 2), caster, target, rangeFromCenter);
-        if (spellId > 0 && chance > 0 && ThreadLocalRandom.current().nextInt(101) <= chance) {
+        if (spellId > 0 && chance > 0 && RandomSource.current().nextInt(101) <= chance) {
           dispel(target, spellId);
         }
       } else if (effect.getEffectType() == 12) {
@@ -112,7 +112,7 @@ public final class SpellEffectManager {
         spell.getMinDamage(),
         spell.getMaxDamage(),
         context,
-        ThreadLocalRandom.current());
+        RandomSource.current());
   }
 
   private static boolean hasDrainLifeEffect(SpellData spell) {
@@ -210,20 +210,20 @@ public final class SpellEffectManager {
         SpellData targetSpell = SpellRegistry.findById(targetSpellId);
         if (targetSpell != null
             && chance > 0
-            && ThreadLocalRandom.current().nextInt(101) <= chance
+            && RandomSource.current().nextInt(101) <= chance
             && caster.dispelBuff(targetSpell.getName())) {
           dispelled++;
         }
       } else if (effect.getEffectType() == 15) {
         int chance = Math.max(0, Math.min(100, evaluatePlayer(parameter(effect, 1), caster)));
-        if (chance > 0 && ThreadLocalRandom.current().nextInt(101) <= chance) {
+        if (chance > 0 && RandomSource.current().nextInt(101) <= chance) {
           long duration = Math.max(1_000L, evaluatePlayer(spell.getDuration(), caster));
           caster.setHiddenFor(duration);
           invisible = true;
         }
       } else if (effect.getEffectType() == 16 || effect.getEffectType() == 17) {
         int chance = Math.max(0, Math.min(100, evaluatePlayer(parameter(effect, 1), caster)));
-        if (chance > 0 && ThreadLocalRandom.current().nextInt(101) <= chance) {
+        if (chance > 0 && RandomSource.current().nextInt(101) <= chance) {
           long duration = Math.max(1_000L, evaluatePlayer(spell.getDuration(), caster));
           if (effect.getEffectType() == 16) {
             caster.setDetectInvisibleFor(duration);
@@ -235,7 +235,7 @@ public final class SpellEffectManager {
         }
       } else if (effect.getEffectType() == 14) {
         int chance = Math.max(0, Math.min(100, evaluatePlayer(parameter(effect, 4), caster)));
-        if (chance > 0 && ThreadLocalRandom.current().nextInt(101) <= chance) {
+        if (chance > 0 && RandomSource.current().nextInt(101) <= chance) {
           long attack = Math.max(0L, evaluatePlayer(parameter(effect, 1), caster));
           long mental = Math.max(0L, evaluatePlayer(parameter(effect, 2), caster));
           long move = Math.max(0L, evaluatePlayer(parameter(effect, 3), caster));
@@ -311,7 +311,7 @@ public final class SpellEffectManager {
     for (SpellData.T4cEffect effect : spell.getT4cEffects()) {
       if (effect == null || effect.getEffectType() != 14) continue;
       int chance = Math.max(0, Math.min(100, evaluate(parameter(effect, 4), caster, target, 0d)));
-      if (chance <= 0 || ThreadLocalRandom.current().nextInt(101) > chance) continue;
+      if (chance <= 0 || RandomSource.current().nextInt(101) > chance) continue;
       return new TargetExhaustion(
           Math.max(0L, evaluate(parameter(effect, 1), caster, target, 0d)),
           Math.max(0L, evaluate(parameter(effect, 2), caster, target, 0d)),
@@ -347,13 +347,13 @@ public final class SpellEffectManager {
       if (now < hook.nextAt) continue;
       if (hook.oneShot) {
         iterator.remove();
-        if (ThreadLocalRandom.current().nextInt(101) <= hook.chance) {
+        if (RandomSource.current().nextInt(101) <= hook.chance) {
           triggered.add(hook);
         }
         continue;
       }
       hook.nextAt = now + hook.frequency;
-      if (ThreadLocalRandom.current().nextInt(101) <= hook.chance) {
+      if (RandomSource.current().nextInt(101) <= hook.chance) {
         triggered.add(hook);
       }
     }
@@ -382,7 +382,7 @@ public final class SpellEffectManager {
     }
     int low = Math.min(spell.getMinDamage(), spell.getMaxDamage());
     int high = Math.max(spell.getMinDamage(), spell.getMaxDamage());
-    return low == high ? low : ThreadLocalRandom.current().nextInt(low, high + 1);
+    return low == high ? low : RandomSource.current().nextInt(low, high + 1);
   }
 
   private static int evaluate(String formula, Player caster, BaseMonster target, double range) {

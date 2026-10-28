@@ -7,6 +7,7 @@ import com.perso.T4C.audio.SoundManager;
 import com.perso.T4C.combat.RegenerationRules;
 import com.perso.T4C.combat.StealthRules;
 import com.perso.T4C.exception.GameException;
+import com.perso.T4C.helper.RandomSource;
 import com.perso.T4C.helper.SanctuaryCombatRules;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
@@ -21,7 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -566,7 +566,7 @@ public class Player extends Stats implements ProgressionState {
       return;
     }
     low = Math.max(1, low);
-    int amount = (low == high) ? low : ThreadLocalRandom.current().nextInt(low, high + 1);
+    int amount = (low == high) ? low : RandomSource.current().nextInt(low, high + 1);
     long scaled =
         (long) amount
             * Math.max(0, 100 + buffStatBonuses.getOrDefault("healingReceivedPercent", 0))
