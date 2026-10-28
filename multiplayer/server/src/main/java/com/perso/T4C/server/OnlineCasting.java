@@ -67,7 +67,7 @@ final class OnlineCasting {
 
   /** Health and mana the spell would restore against committed stats; a missing formula restores nothing. */
   static Effects effects(SpellContent.Spell spell, CharacterProgress progress, ItemContent items, RandomGenerator random) {
-    var context = context(progress, items);
+    var context = OnlineSpellContexts.forSelf(progress, items);
     var healFormulas = new ArrayList<String>();
     int manaDelta = 0;
     boolean manaSeen = false;
@@ -112,7 +112,7 @@ final class OnlineCasting {
             || SpellCastRules.isActive(cooldowns.getOrDefault(STUN, 0L), now),
         false,
         progress.vitals().mana(),
-        context(progress, items),
+        OnlineSpellContexts.forCastRules(progress, items),
         random::nextInt);
     var outcome = SpellCastRules.evaluate(input);
     if (outcome.success()) return outcome;
@@ -153,29 +153,6 @@ final class OnlineCasting {
 
   private static void start(Map<String, Long> cooldowns, String key, long until) {
     cooldowns.merge(key, until, Math::max);
-  }
-
-  /** Attributes plus equipment boosts, with the light power the healing formulas read. */
-  static DiceFormula.Context context(CharacterProgress progress, ItemContent items) {
-    var bonuses = OnlineEquipmentBonuses.resolve(progress, items);
-    var base = progress.attributes();
-    int skill = progress.skills().getOrDefault("light", 0);
-    int light = (skill <= 0 ? 100 : skill)
-        + progress.questFlags().getOrDefault("legacy:power:light", 0)
-        + bonuses.getOrDefault(23, 0);
-    return new DiceFormula.Context(
-        base.strength() + bonuses.getOrDefault(3, 0),
-        base.endurance() + bonuses.getOrDefault(2, 0),
-        base.dexterity() + bonuses.getOrDefault(6, 0),
-        base.intelligence() + bonuses.getOrDefault(1, 0),
-        0,
-        base.wisdom() + bonuses.getOrDefault(4, 0),
-        0,
-        progress.advancement().level(),
-        0,
-        100,
-        100,
-        light);
   }
 
   private static String parameter(SpellContent.Effect effect, int id) {

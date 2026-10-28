@@ -3307,24 +3307,14 @@ public class MainGameScreen implements Screen {
     if (!CollisionManager.getInstance().isInitialized()) {
       return true;
     }
-    float dx = to.x - from.x;
-    float dy = to.y - from.y;
-    float distance = (float) Math.sqrt(dx * dx + dy * dy);
-    if (distance <= 0.001f) {
-      return true;
-    }
-    float step = Math.min(GRID_W, GRID_H) * 0.5f;
-    int steps = Math.max(1, (int) Math.ceil(distance / step));
-    float stepX = dx / steps;
-    float stepY = dy / steps;
-    for (int i = 1; i < steps; i++) {
-      float checkX = from.x + stepX * i;
-      float checkY = from.y + stepY * i;
-      if (CollisionManager.getInstance().blocksLineOfSight(checkX, checkY)) {
-        return false;
-      }
-    }
-    return true;
+    return com.perso.T4C.world.LineOfSightRules.sampled(
+        from.x,
+        from.y,
+        to.x,
+        to.y,
+        GRID_W,
+        GRID_H,
+        CollisionManager.getInstance()::blocksLineOfSight);
   }
 
   private boolean blocksSpellLineOfSight(float worldX, float worldY) {

@@ -4,6 +4,7 @@ import static com.perso.T4C.config.GameConstants.*;
 
 import com.perso.T4C.helper.BinaryIOUtils;
 import com.perso.T4C.world.CollisionRules;
+import com.perso.T4C.world.LineOfSightRules;
 import com.perso.T4C.world.WorldCollision;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -107,6 +108,33 @@ public final class PreviewMap {
   public boolean allowsCombat(double fromX, double fromY, double toX, double toY, boolean pvp) {
     return combatEndpointsSafe(fromX, fromY, toX, toY, pvp)
         && hasLineOfSight(fromX, fromY, toX, toY);
+  }
+
+  /**
+   * Documented flag: the line-of-sight rule spells must use so online casting matches single-player
+   * (stage 1c wires it). Melee and creature attacks keep the stricter {@link #hasLineOfSight}.
+   */
+  public static final LineOfSightRules.Mode SPELL_LINE_OF_SIGHT = LineOfSightRules.Mode.SPELL_SAMPLED;
+
+  /** Local tile coordinates. Runs the named rule; see {@link LineOfSightRules.Mode}. */
+  public boolean hasLineOfSight(LineOfSightRules.Mode mode, double fromX, double fromY, double toX, double toY) {
+    return switch (mode) {
+      case SPELL_SAMPLED -> hasSpellLineOfSight(fromX, fromY, toX, toY);
+      case SERVER_SUPERCOVER -> hasLineOfSight(fromX, fromY, toX, toY);
+    };
+  }
+
+  /**
+   * Single-player's spell line of sight over this map: the shared sampled pixel walk on world
+   * pixels (global tile x 32, y 16), so the same two positions give the same answer as offline.
+   * Endpoints are not tested, matching offline. Outside this map nothing is visible.
+   */
+  public boolean hasSpellLineOfSight(double fromX, double fromY, double toX, double toY) {
+    if (!contains(fromX, fromY) || !contains(toX, toY)) return false;
+    return LineOfSightRules.sampled(
+        (float) ((fromX + originX) * GRID_W), (float) ((fromY + originY) * GRID_H),
+        (float) ((toX + originX) * GRID_W), (float) ((toY + originY) * GRID_H), GRID_W, GRID_H,
+        (px, py) -> blocksSight((int) (px / GRID_W) - originX, (int) (py / GRID_H) - originY));
   }
 
   /**

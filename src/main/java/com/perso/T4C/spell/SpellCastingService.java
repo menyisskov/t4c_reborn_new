@@ -143,17 +143,50 @@ public final class SpellCastingService {
   }
 
   static DiceFormula.Context context(Player caster) {
-    return new DiceFormula.Context(
+    return SpellFormulaContexts.forCastRules(casterOf(caster));
+  }
+
+  /**
+   * The caster's numbers for spell formulas, read once from the live player. The online server
+   * fills the same record from its committed character, so both sides share {@link
+   * SpellFormulaContexts}.
+   */
+  static SpellFormulaContexts.Caster casterOf(Player caster) {
+    return new SpellFormulaContexts.Caster(
+        caster.getLevel(),
+        new SpellFormulaContexts.Stats(
             caster.getEffectiveStrength(),
             caster.getEffectiveEndurance(),
             caster.getEffectiveDexterity(),
             caster.getEffectiveIntelligence(),
-            0,
-            caster.getEffectiveWisdom(),
-            0,
-            caster.getLevel())
-        .withSelfTrue(selfTrue(caster))
-        .withEquippedItems(equippedItems(caster));
+            caster.getEffectiveWisdom()),
+        new SpellFormulaContexts.Stats(
+            caster.getTrueStrength(),
+            caster.getTrueEndurance(),
+            caster.getTrueDexterity(),
+            caster.getTrueIntelligence(),
+            caster.getTrueWisdom()),
+        caster.getTrueSkillLevel("attack"),
+        caster.getTrueSkillLevel("archery"),
+        caster.getTrueSkillLevel("dodge"),
+        elements(caster, false, false),
+        elements(caster, true, false),
+        elements(caster, true, true),
+        equippedItems(caster));
+  }
+
+  private static SpellFormulaContexts.Elements elements(
+      Player caster, boolean trueReading, boolean resistance) {
+    int[] values = new int[ElementRules.ELEMENTS.size()];
+    for (int i = 0; i < values.length; i++) {
+      String element = ElementRules.ELEMENTS.get(i);
+      values[i] =
+          resistance
+              ? caster.getTrueElementResistance(element)
+              : trueReading ? caster.getTrueElementPower(element) : caster.getElementPower(element);
+    }
+    return new SpellFormulaContexts.Elements(
+        values[0], values[1], values[2], values[3], values[4], values[5]);
   }
 
   static Map<Integer, Integer> equippedItems(Player caster) {
@@ -163,25 +196,6 @@ public final class SpellCastingService {
       if (item != null && item.getNumId() > 0) counts.merge(item.getNumId(), 1, Integer::sum);
     }
     return counts;
-  }
-
-  /** The caster's own true readings, for the {@code self.true_*} formula variables. */
-  static Map<String, Integer> selfTrue(Player caster) {
-    Map<String, Integer> readings = new LinkedHashMap<>();
-    readings.put("str", caster.getTrueStrength());
-    readings.put("end", caster.getTrueEndurance());
-    readings.put("agi", caster.getTrueDexterity());
-    readings.put("int", caster.getTrueIntelligence());
-    readings.put("wis", caster.getTrueWisdom());
-    readings.put("level", caster.getLevel());
-    readings.put("attack", caster.getTrueSkillLevel("attack"));
-    readings.put("archery", caster.getTrueSkillLevel("archery"));
-    readings.put("dodge", caster.getTrueSkillLevel("dodge"));
-    for (String element : List.of("fire", "earth", "air", "water", "light", "dark")) {
-      readings.put(element, caster.getTrueElementPower(element));
-      readings.put("r_" + element, caster.getTrueElementResistance(element));
-    }
-    return readings;
   }
 
 }

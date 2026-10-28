@@ -822,41 +822,21 @@ public class Player extends Stats implements ProgressionState {
   }
 
   public int getElementResistance(String element) {
-    int stat =
-        switch (element == null ? "" : element.toLowerCase()) {
-          case "air" -> 12;
-          case "fire" -> 13;
-          case "water" -> 14;
-          case "earth" -> 15;
-          case "light" -> 21;
-          case "dark" -> 22;
-          default -> Integer.MIN_VALUE;
-        };
     String normalized = element == null ? "" : element.toLowerCase();
-    int base = normalized.equals("light") ? 5000 : 100;
-    return base
-        + buffStatBonuses.getOrDefault("resist:" + normalized, 0)
-        + getQuestFlag("legacy:resist:" + normalized)
-        + EquipmentBonusRules.bonus(this, stat);
+    return com.perso.T4C.spell.ElementRules.resistance(
+        element,
+        buffStatBonuses.getOrDefault("resist:" + normalized, 0),
+        getQuestFlag("legacy:resist:" + normalized),
+        EquipmentBonusRules.bonus(this, com.perso.T4C.spell.ElementRules.resistanceStatId(element)));
   }
 
   public int getElementPower(String element) {
-    int stat =
-        switch (element == null ? "" : element.toLowerCase()) {
-          case "air" -> 16;
-          case "fire" -> 17;
-          case "water" -> 18;
-          case "earth" -> 19;
-          case "light" -> 23;
-          case "dark" -> 24;
-          default -> Integer.MIN_VALUE;
-        };
-    int base = getSkillLevel(element);
     String normalized = element == null ? "" : element.toLowerCase();
-    return (base <= 0 ? 100 : base)
-        + buffStatBonuses.getOrDefault("power:" + normalized, 0)
-        + getQuestFlag("legacy:power:" + normalized)
-        + EquipmentBonusRules.bonus(this, stat);
+    return com.perso.T4C.spell.ElementRules.power(
+        getSkillLevel(element),
+        buffStatBonuses.getOrDefault("power:" + normalized, 0),
+        getQuestFlag("legacy:power:" + normalized),
+        EquipmentBonusRules.bonus(this, com.perso.T4C.spell.ElementRules.powerStatId(element)));
   }
 
   public boolean canDetectInvisible() {
