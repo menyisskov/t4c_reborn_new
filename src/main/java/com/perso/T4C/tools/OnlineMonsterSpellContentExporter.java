@@ -44,13 +44,10 @@ public final class OnlineMonsterSpellContentExporter {
     if (DivineAfflictions.isAffliction(id)) return Behavior.AFFLICTION;
     // DivineAvatar overrides the raw roll for these judgment IDs; do not substitute BaseMonster's roll.
     if (id >= 18100 && id < 18200) return Behavior.UNSUPPORTED;
-    // These two legacy monster-only spells intentionally have no SpellRegistry entry.
-    // MonsterSpellRules still supplies their roll/balance and visual fallback.
-    if (spell == null) return id == 10095 || id == 10120
-        ? Behavior.ELEMENTAL_DAMAGE
-        : Behavior.UNSUPPORTED;
     if (MonsterSpellRules.usesArmor(id)) return Behavior.ARMOR_DAMAGE;
-    if (MonsterSpellRules.isElementalDamageSpell(id) && elementId(spell.getElement()) >= 0)
+    // The offline rules intentionally treat legacy monster-only and unlisted spell IDs as elemental
+    // attacks, using the authored fallback element even when there is no SpellRegistry row.
+    if (MonsterSpellRules.isElementalDamageSpell(id))
       return Behavior.ELEMENTAL_DAMAGE;
     return Behavior.UNSUPPORTED;
   }
@@ -67,11 +64,6 @@ public final class OnlineMonsterSpellContentExporter {
       case 6 -> "dark";
       default -> "water";
     };
-  }
-
-  /** Element IDs follow the legacy single-player spell callback; zero uses its water fallback. */
-  private static int elementId(int element) {
-    return element >= 0 && element <= 6 ? element : -1;
   }
 
   public static String render(MonsterSpellContent content) {
