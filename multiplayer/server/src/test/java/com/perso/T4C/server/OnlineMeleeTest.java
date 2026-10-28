@@ -159,6 +159,54 @@ class OnlineMeleeTest {
     } finally { sessions.shutdown(); }
   }
 
+  @Test void archerBowAttackUsesRangedReachAndCommitsTheHitWithoutConsumingArrows() throws Exception {
+    var store=OnlineStore.fromEnvironment();store.migrate();
+    var gson=new Gson();
+    var json=gson.toJsonTree(MonsterCatalog.loadBundled().monsters().get("Olin Haad Guard 3")).getAsJsonObject();
+    json.addProperty("health",1000);json.addProperty("acMin",0);json.addProperty("acMax",0);
+    json.addProperty("dodge",1);json.addProperty("agi",1);
+    var definition=gson.fromJson(json,MonsterDef.class);
+    var near=new MonsterContent.Spawn("archer-near-"+UUID.randomUUID(),definition.getName(),8,3,0,false,false);
+    var far=new MonsterContent.Spawn("archer-far-"+UUID.randomUUID(),definition.getName(),19,3,0,false,false);
+    var map=new PreviewMap(new boolean[10][22],0,0,3,3);
+    var world=new PreviewWorld(map,new MonsterContent(MonsterContent.VERSION,
+        Map.of(definition.getName(),definition),List.of(near,far)));
+    long nearId=world.creatureSpawns().stream().filter(spawn->spawn.spawn().persistenceKey().equals(near.persistenceKey()))
+        .findFirst().orElseThrow().id();
+    long farId=world.creatureSpawns().stream().filter(spawn->spawn.spawn().persistenceKey().equals(far.persistenceKey()))
+        .findFirst().orElseThrow().id();
+    var sessions=new PersistentSessions(store,map,world);
+    var prepared=OnlineCharacterCreator.prepare(CharacterClass.ARCHER,"male",false,new Random(7));
+    var key=store.provisionAccount();
+    var player=store.create(key.accountId(),"Ranged Archer",0,3.5,3.5,prepared.progress(),prepared.gold());
+    String token=sessions.join(store.acquire(key.secret(),player.id()),System.nanoTime()).token();
+    long now=System.currentTimeMillis();
+    try(var creatures=new PersistentCreatures(store,world)) {
+      var rolls=new Random(1) { @Override public int nextInt(int bound) { return bound-1; } };
+      var melee=new OnlineMelee(map,world,sessions,creatures,ItemCatalog.loadBundled(),rolls,()->now);
+      assertEquals("out_of_range_or_blocked",assertThrows(PreviewWorld.Rejected.class,
+          ()->melee.attack(token,player.revision(),farId)).getMessage(),"Bow range is longer than melee but still bounded");
+      assertEquals(player,store.load(key.accountId(),player.id()),"Rejected ranged intent cannot mutate progress");
+      var result=melee.attack(token,player.revision(),nearId).toCompletableFuture();
+      await(sessions,creatures,result);
+      var saved=result.get().character();
+      assertTrue(saved.experience()>player.experience());
+      assertEquals(player.progress().inventory(),saved.progress().inventory(),
+          "Single-player bow attacks do not consume arrows; online attacks preserve that rule");
+      assertEquals(player.progress().equipment(),saved.progress().equipment());
+      OnlineStore.SpawnState updated=null;
+      long deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(5);
+      while(updated==null && System.nanoTime()<deadline) {
+        sessions.step();creatures.step();
+        try { updated=creatures.life(nearId); }
+        catch(PreviewWorld.Rejected recovering) { Thread.sleep(5); }
+      }
+      assertNotNull(updated,"Creature state reload completes after the committed strike");
+      assertTrue(updated.health()<definition.getHealth(),"The ranged strike damages its authoritative creature");
+      assertTrue(saved.progress().cooldowns().get("attack")>now);
+    } finally { sessions.shutdown(); }
+  }
+
   private static void await(PersistentSessions sessions,PersistentCreatures creatures,CompletableFuture<?> result) throws Exception {
     long deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(5);
     while(!result.isDone() && System.nanoTime()<deadline) { sessions.step(); creatures.step(); Thread.sleep(5); }

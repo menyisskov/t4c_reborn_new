@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0273`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0274`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0273 | Enable online Archer combat with server-authoritative bow/quiver checks, ranged damage and range/line-of-sight validation matching single-player | Multiplayer / parity | Done (PR #229; local tests passed) | PR #229 | [CHANGELOG.md](CHANGELOG.md#2026-10-28--archer-attacks-are-supported-by-the-online-server-t4c-0273) |
 | T4C-0272 | Enable online character creation for the four spellcasting classes with their shared starting kits and server-supported spells | Multiplayer / parity | Done (PR #227; local tests passed) | PR #227 (eed302a5) | [CHANGELOG.md](CHANGELOG.md#2026-10-28--caster-classes-can-start-online-t4c-0272) |
 | T4C-0270 | Spell engine stage 2, buffs: the online server now resolves the 33 stage-2 spells (25 timed buffs, the curse, invisibility and the two detection spells, the two dispels, Renew Armor) through the shared engine, equal to the single-player code path value for value (seeded-random golden over four fixture casters, including a recast refreshing a running buff and formulas that read true values while buffed). Buffs are stored in the character record with the amounts rolled at cast time (never re-rolled; single-player re-rolls on load, deliberately not copied), an absolute expiry, and an anchor so logged-out time never runs a buff down; expiry is lazy at use and at settle, and takes back the maximum health a buff gave. Melee, retaliation, carry weight and spell numbers fold running buffs in; any buff the server does not model still fails closed. Records written before this load unchanged. The engine can also lay a buff on another player (rules decide which spells) but the server route for that is not yet open (needs a two-character atomic commit) | Systems/Online | In Progress | - | - |
 | T4C-0271 | Remove fixed two-hour duration from Beta/GA mixed-session release acceptance | Process/Tooling (Multiplayer acceptance) | Done | a1f2d1b1 | CHANGELOG.md |

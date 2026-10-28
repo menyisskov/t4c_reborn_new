@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-28 — Archer attacks are supported by the online server (T4C-0273)
+
+### Added
+- The online server now accepts Archer bow attacks with the same equipped bow, quiver, damage, range and line-of-sight rules as single-player. Arrows are not consumed, matching the existing game. Two-rendered-client presentation still needs verification.
+
 ## 2026-10-28 — Caster classes can start online (T4C-0272)
 
 ### Added

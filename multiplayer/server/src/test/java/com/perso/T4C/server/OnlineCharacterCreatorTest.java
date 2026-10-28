@@ -11,6 +11,22 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 class OnlineCharacterCreatorTest {
+  @Test void archerStartsOnlineWithItsSharedBowQuiverAndArrowKit() {
+    var type = CharacterClass.ARCHER;
+    assertTrue(OnlineCharacterCreation.CLASSES.contains(type.id()));
+    var prepared = OnlineCharacterCreator.prepare(type, "male", false, new Random(7));
+    var progress = prepared.progress();
+    assertEquals(type.id(), progress.characterClass());
+    assertEquals(type.startingSpellKeys().size(), progress.spells().size());
+    type.startingEquipment().forEach((slot, key) -> {
+      var id = progress.equipment().get(slot.name());
+      assertTrue(progress.inventory().stream().anyMatch(item -> item.id().equals(id) && item.key().equals(key)),
+          slot.name());
+    });
+    assertEquals(CharacterClass.STACKED_KIT_ITEM_COUNT, progress.inventory().stream()
+        .filter(item -> item.key().equals("item.wooden_arrow")).count());
+  }
+
   @Test void casterClassesReceiveTheirSharedStartingKitsAndPlayableSpells() {
     Map<String, CharacterClass> classes = Map.of(
         "cleric", CharacterClass.CLERIC,
@@ -35,7 +51,6 @@ class OnlineCharacterCreatorTest {
             entry.getKey() + " " + slot);
       });
     }
-    assertFalse(OnlineCharacterCreation.CLASSES.contains("archer"), "Archer needs server-authoritative ranged combat first");
   }
 
   @Test void preparesTheSharedClassKitAndRollWithoutDesktopStorage() {

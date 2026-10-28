@@ -81,6 +81,7 @@ final class AccountRosterService implements AutoCloseable {
   static CharacterClass resolveCharacterClass(String classId) {
     return switch(classId) {
         case "warrior" -> CharacterClass.WARRIOR;
+        case "archer" -> CharacterClass.ARCHER;
         case "paladin" -> CharacterClass.PALADIN;
         case "cleric" -> CharacterClass.CLERIC;
         case "healer" -> CharacterClass.HEALER;
