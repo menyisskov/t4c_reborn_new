@@ -6,7 +6,7 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
-## 2026-10-28 — Area spells work in online play (T4C-0280)
+## 2026-10-28 — Area spells work in online play (T4C-0282)
 
 ### Added
 - In online play, the area attack spells can now be cast: Fireball, Cinderburst, Boulders, Earthquake, Flame Wave, Meteor, Hurricane, Tornado, Avalanche, Blizzard, Chain Lightning, Firestorm, Rain of Fire, Ice Storm and the rest of the area attacks. They hit the same creatures as in single-player (the target and up to seven more nearby, the nearest first), weaker the farther they are from the centre, and every kill gives its experience, gold, loot and quest credit.
