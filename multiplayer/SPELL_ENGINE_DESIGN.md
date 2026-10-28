@@ -1,6 +1,6 @@
 # Online spell engine design (parity step 3)
 
-Status: **stages 1 and 2 implemented (T4C-0267, protocol 6: `/cast` takes an optional `u:<creature id>` / `p:<x>,<y>` token; `p:` is parsed but the shared rules refuse it for stage-1 and stage-2 spells; one multi-creature commit, `OnlineStore.commitSpellStrikes`; T4C-0270: timed buffs, section 8); stage 3 (area spells, section 9, T4C-0278); stages 4-5 are design only**. Original status: **design draft, not implemented** (T4C-0255, 2026-10-28). Top-tier architecture lane
+Status: **stages 1 and 2 implemented (T4C-0267, protocol 6: `/cast` takes an optional `u:<creature id>` / `p:<x>,<y>` token; `p:` is parsed but the shared rules refuse it for stage-1 and stage-2 spells; one multi-creature commit, `OnlineStore.commitSpellStrikes`; T4C-0270: timed buffs, section 8); stage 3 (area spells, section 9, T4C-0280); stages 4-5 are design only**. Original status: **design draft, not implemented** (T4C-0255, 2026-10-28). Top-tier architecture lane
 (AGENTS.md section 6). Implements the "Spell engine" line of [PARITY.md](PARITY.md): all 132 player
 spells and the monster spell attacks resolved on the server with the same results as single-player.
 Builds on [QUEST_ABILITY_DESIGN.md](QUEST_ABILITY_DESIGN.md) section 4 (Light Heal, `/cast`, `/use`,
@@ -389,7 +389,7 @@ revision fences, one receipt), then an `f:<player id>` token on `/cast` (additiv
 them (item and aura buffs do): percent armor class, experience, unlimited, healing-received and
 speed/resist-percent modifiers.
 
-## 9. Stage 3 as implemented (T4C-0278): area spells, and why there is no tick
+## 9. Stage 3 as implemented (T4C-0280): area spells, and why there is no tick
 
 `SpellCatalogV2.ENABLED_STAGE` is 3: 123 castable spells (48 + 33 + 42). The 42 stage-3 spells are 25 area
 attacks, 4 area heals, Poison, Poison Arrow, Plague, 3 shields and 7 gateways. Golden: `engine-stage3-golden.txt`
