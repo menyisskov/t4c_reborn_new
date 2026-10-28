@@ -69,11 +69,52 @@ class NativeAdapterSoak {
     }
   }
   static final int[][] DIRECTIONS={{1,0},{-1,0},{0,1},{0,-1}};
+  /** Concurrent joins allowed and the minimum gap between opens; the server admits only two public requests. */
+  static final int MAX_JOINING=1;
+  static final long OPEN_GAP_MILLIS=500;
+  /**
+   * Pure pacing of adapter opens (initial and reconnect) so a login burst never exceeds the server's
+   * two-wide public admission. {@code joining} counts adapters opened but not yet connected.
+   */
+  static final class OpenGate {
+    final int maxJoining; final long gapMillis; long nextOpenAt=Long.MIN_VALUE;
+    OpenGate(int maxJoining,long gapMillis) {
+      if(maxJoining<1 || gapMillis<0) throw new IllegalArgumentException("Invalid open gate");
+      this.maxJoining=maxJoining; this.gapMillis=gapMillis;
+    }
+    boolean mayOpen(int joining,long now) { return joining<maxJoining && now>=nextOpenAt; }
+    void opened(long now) { nextOpenAt=now+gapMillis; }
+  }
+  static void require(boolean ok,String what) { if(!ok) throw new AssertionError("Self-test failed: "+what); }
+  /** Headless check of the pacing helper: {@code NativeAdapterSoak.java --self-test}. */
+  static void selfTest() {
+    var gate=new OpenGate(2,500);
+    require(gate.mayOpen(0,0),"first open allowed");
+    gate.opened(0);
+    require(!gate.mayOpen(0,499),"gap enforced");
+    require(gate.mayOpen(1,500),"second concurrent join allowed after gap");
+    gate.opened(500);
+    require(!gate.mayOpen(2,1000),"concurrency bound enforced");
+    require(gate.mayOpen(1,1000),"slot reopens when a join completes");
+    // Twenty adapters through a one-wide gate with a 3-tick join each never exceed the bound and all open.
+    var one=new OpenGate(1,500); int opened=0,maxJoining=0; long[] doneAt=new long[20]; boolean[] joining=new boolean[20];
+    for(long t=0;t<200_000 && opened<20;t+=50) {
+      int j=0; for(int i=0;i<20;i++) { if(joining[i] && t>=doneAt[i]) joining[i]=false; if(joining[i]) j++; }
+      maxJoining=Math.max(maxJoining,j);
+      if(one.mayOpen(j,t)) { one.opened(t); joining[opened]=true; doneAt[opened]=t+1200; opened++; }
+    }
+    require(opened==20 && maxJoining<=1,"twenty paced opens, bounded joining");
+    boolean rejected=false; try { new OpenGate(0,0); } catch(IllegalArgumentException expected) { rejected=true; }
+    require(rejected,"invalid gate rejected");
+    System.out.println("NativeAdapterSoak self-test passed");
+  }
   static final class Player {
     final OnlineConnection.Credentials credentials;
     OnlineConnection connection;
     CompletableFuture<OnlineConnection.CommandResult> command;
     long commandStarted,nextCommand,reconnectAt,reconnectStarted,lastTick=-1,lastRevision=-1,lastFresh;
+    long openedAt=-1,firstConnectedMillis=-1;
+    boolean connectedSinceOpen;
     long attacks,recoveries,accepted,rejected,failures,reconnects,observations,moved,hpChanges;
     long locationEpoch=-1,epochChanges,worldTransfers;
     int world=-1;
@@ -87,6 +128,7 @@ class NativeAdapterSoak {
   static long ms() { return System.nanoTime()/1_000_000; }
   static void error(Player p,String text) { p.failures++; p.errors.add(text); }
   public static void main(String[] args) throws Exception {
+    if(args.length==1 && "--self-test".equals(args[0])) { selfTest(); return; }
     if(args.length!=6) throw new IllegalArgumentException("Expected endpoint profiles-directory seconds collision-file report-file server-pid-or-0");
     URI endpoint=URI.create(args[0]); Path profiles=Path.of(args[1]),report=Path.of(args[4]);
     String controlFile=System.getenv("T4C_SOAK_CONTROL_FILE");
@@ -132,16 +174,26 @@ class NativeAdapterSoak {
     long cpuStart=cpu(serverPid);
     Map<String,Object> databaseBefore=database();
     boolean completed=false;
-    for(int i=0;i<players.size();i++) {
-      Player p=players.get(i); p.connection=new OnlineConnection(endpoint,p.credentials);
-      p.reconnectAt=start+120_000+i*6_000L; p.lastFresh=start;
-    }
+    // Adapters open one at a time through the gate (initial opens and reconnects alike), see OpenGate.
+    var gate=new OpenGate(MAX_JOINING,OPEN_GAP_MILLIS);
     try(var http=HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build()) {
       runtimeSamples.sample(http,endpoint);
       while(ms()<end && (stopFile==null || !Files.exists(stopFile))) {
         long now=ms(); int connected=0;
+        int joining=0;
+        for(var q:players)
+          if(q.connection!=null && !q.expectedReconnect && !q.connectedSinceOpen && !q.connection.status().equals("connected")
+              && !q.connection.status().equals("disconnected")) joining++;
         for(int i=0;i<players.size();i++) {
           Player p=players.get(i);
+          if(p.connection==null) {
+            // Never opened yet: open through the gate, in profile order.
+            if(gate.mayOpen(joining,now)) {
+              p.connection=new OnlineConnection(endpoint,p.credentials); gate.opened(now); joining++;
+              p.openedAt=now; p.connectedSinceOpen=false; p.lastFresh=now; p.reconnectAt=now+120_000+i*6_000L;
+            }
+            continue;
+          }
           if(p.command!=null && p.command.isDone()) {
             long elapsed=now-p.commandStarted;
             int bucket=0; long[] limits={50,100,250,500,1000,2000,5000};
@@ -152,17 +204,27 @@ class NativeAdapterSoak {
             p.command=null;
           }
           if(p.expectedReconnect) {
-            if(now-p.reconnectStarted<3000) continue;
-            p.connection=new OnlineConnection(endpoint,p.credentials); p.expectedReconnect=false;
+            if(now-p.reconnectStarted<3000 || !gate.mayOpen(joining,now)) continue;
+            p.connection=new OnlineConnection(endpoint,p.credentials); p.expectedReconnect=false; gate.opened(now); joining++;
             p.lastTick=-1; p.lastFresh=now; p.reconnectAt=now+120_000; p.reconnects++;
+            p.openedAt=now; p.connectedSinceOpen=false;
+            continue;
           }
           var view=p.connection.view();
           if(!p.connection.status().equals("connected") || view==null) {
-            if(now-p.lastFresh>15_000) {
+            if(p.connection.status().equals("disconnected")) {
+              // The adapter's worker ended (for example after its bounded busy retries ran out): reopen soon.
+              error(p,p.connectedSinceOpen?"adapter_stopped_after_connect":"adapter_stopped_before_connect");
+              p.connection.close(); p.expectedReconnect=true; p.reconnectStarted=now;
+            } else if(now-p.lastFresh>15_000) {
               error(p,"connection_or_reconnect_timeout");
               p.connection.close(); p.expectedReconnect=true; p.reconnectStarted=now+30_000;
             }
             continue;
+          }
+          if(!p.connectedSinceOpen) {
+            p.connectedSinceOpen=true;
+            if(p.firstConnectedMillis<0) p.firstConnectedMillis=now-p.openedAt;
           }
           connected++; p.observations++;
           var snapshot=view.snapshot(); maxObserved=Math.max(maxObserved,snapshot.players().size());
@@ -251,7 +313,7 @@ class NativeAdapterSoak {
       }
       completed=ms()>=end;
     } finally {
-      for(var p:players) p.connection.close();
+      for(var p:players) if(p.connection!=null) p.connection.close();
       write(report,players,startedAt,start,connectedMillis,maxObserved,firstTick,lastTick,firstTickTime,lastTickTime,
           healthFailures,healthSamples,healthNanos,cpuStart,cpu(serverPid),databaseBefore,database(),runtimeSamples,completed);
     }
@@ -306,6 +368,7 @@ class NativeAdapterSoak {
     report.put("observedTickRate",lastTime>firstTime?(last-first)*1000.0/(lastTime-firstTime):0);
     report.put("tickDeficitProxy",lastTime>firstTime?Math.max(0,(lastTime-firstTime)*34.0/1000-(last-first)):0);
     report.put("serverCpuNanos",cpuStart>=0 && cpuEnd>=cpuStart?cpuEnd-cpuStart:-1);
+    report.put("openPacing",Map.of("maxConcurrentJoins",MAX_JOINING,"minGapMillis",OPEN_GAP_MILLIS));
     report.put("databaseBefore",dbBefore); report.put("databaseAfter",dbAfter);
     report.put("serverRuntime",runtimeSamples.report());
     report.put("latencyBucketsMillis",List.of("<=50","<=100","<=250","<=500","<=1000","<=2000","<=5000",">5000"));
@@ -317,6 +380,7 @@ class NativeAdapterSoak {
       row.put("locationEpochChanges",p.epochChanges); row.put("worldTransfers",p.worldTransfers);
       row.put("movementObservations",p.moved); row.put("hpChanges",p.hpChanges); row.put("latencyBuckets",p.latencyBuckets); results.add(row);
       row.put("commandPendingAtReport",p.command!=null);
+      row.put("firstConnectedMillis",p.firstConnectedMillis);
     }
     report.put("players",results);
     Path temporary=file.resolveSibling(file.getFileName()+".tmp");

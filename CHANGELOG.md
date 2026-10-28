@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-28 — Online play waits and retries when the server is busy (T4C-0250)
+
+### Changed
+- When the online server is busy while you connect, the game now waits a moment and tries again, for up to about ten seconds, instead of giving up straight away. Actions such as attacks and item use are never repeated automatically.
+
 ## 2026-10-28 — Online attacks explain why they were refused (T4C-0249)
 
 ### Added

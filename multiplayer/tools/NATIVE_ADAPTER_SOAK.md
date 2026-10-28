@@ -78,7 +78,18 @@ traffic snapshot retained in `initial`/`latest`, and refusal above 1 MiB.
 The driver routes movement through the real collision map, distributes targets across available
 creatures, rotates assignments every thirty seconds, attacks at bounded intervals, prioritizes
 its own corpse recovery, and reconnects players on staggered schedules after two minutes.
-Normal rejected gameplay intents (cooldowns, contention, stale revisions) are counted separately
+Adapter opens are paced (T4C-0250): the server admits only two concurrent public requests
+(`HttpRequestAdmission.MAX_PUBLIC`) and answers the rest `503 busy`, so the driver opens one adapter at
+a time with at least 500 ms between opens, initially and for every reconnect (`OpenGate`; the values are
+reported under `openPacing`). The real `OnlineConnection` also retries a definite `503 busy` on the
+anonymous `/map` read, on `/join` and on the post-join `/map` read, up to six times with jittered exponential
+backoff (about 125 to 250 ms rising to 1.5 to 3 s, under ten seconds in total). It never retries a gameplay
+command or a poll. An adapter whose worker ends (for example when those retries run out) is reported
+immediately as `adapter_stopped_before_connect` or `adapter_stopped_after_connect` and reopened after the
+usual three seconds, instead of waiting for the old fifteen-second timeout; a stuck "connecting" adapter
+still reports `connection_or_reconnect_timeout`. Each player row records `firstConnectedMillis`. The pacing
+helper has a headless self-check: run the soak source with the single argument `--self-test` (same
+classpath as the wrapper). Normal rejected gameplay intents (cooldowns, contention, stale revisions) are counted separately
 from connection failures. Shared creature lifetimes mean attacks may decrease while all targets
 await their authored respawn; the report must be inspected rather than assuming useful combat ran.
 
@@ -158,3 +169,48 @@ survival there. Nothing was worked around. No bandwidth, wire-level, database-op
 measured. Quests, loot, travel, rendered clients and TLS were not exercised. This does **not** pass the two-hour
 soak, the M5 gate or Beta. Per ACCEPTANCE.md the Beta soak gate is two real rendered clients; twenty-adapter runs
 are follow-up scale evidence.
+
+### Paced-open rerun, PG16 WSL, 12 minutes, not the two-hour gate (T4C-0250, 2026-10-28): passed the tool's zero-error criterion
+
+Same setup as the first smoke (fresh disposable PostgreSQL 16 cluster on loopback 56891, TEMP runtime snapshot,
+one `ServerMain --online` child on 18794 with a private control file, twenty adapters, 720 s), run from the
+T4C-0250 branch off `origin/main` abecaaf0 (protocol 5): one-at-a-time paced opens plus the client's busy retry.
+The wrapper exited 0, the report ran to completion (`finished: true`, 720.045 s), the cluster was destroyed and the
+TEMP runtime and provisioned profiles removed. Local PG16 evidence only.
+
+| Metric | First smoke (T4C-0247) | Paced rerun (T4C-0250) |
+| --- | --- | --- |
+| Time at 20 adapters | 214.2 s (29.8%) | 406.5 s (56.5%) |
+| Time at 19 or more | 226.8 s | 702.0 s (97.5%) |
+| All twenty first connected | late, after the 120 s+ reconnect schedule | 20 of 20 within 0.2 to 0.5 s of their own open; all up in about 11 s |
+| Adapter failures | 80 (`connection_or_reconnect_timeout`, 18 players) | 0 |
+| Reconnects (scheduled, every 120 s per player) | 156 | 96 |
+| Server 503 responses (`/map`, `/join`) | 61 and 19 | none recorded (no 503 row in the HTTP table) |
+| Attacks / recoveries | 713 / 9 | 932 / 14 |
+| Commands accepted / rejected | 438 / 284 | 600 / 346 |
+| HP changes / movement observations | 1,230 / 67,091 | 1,582 / 93,786 |
+| Command latency buckets (ms) | `<=100` 144, `<=250` 550, `<=500` 28 | `<=250` 279, `<=500` 665, `<=1000` 2 (946 commands) |
+| `/health` | mean 0.664 ms, 33.989 Hz | mean 0.494 ms, 34.001 Hz, 0 failures, tick deficit 0 |
+| Ticks | 25,385 ok, 0 failed, max callback 182.9 ms, 1 over budget | 24,742 ok, 0 failed, max callback 39.0 ms, 2 over budget, 0 deadline resets, max deadline debt 52.9 ms |
+| Peak heap used | 604.1 MiB | 645.5 MiB (committed 1,024 MiB) |
+| CPU | about 20% of one core | about 24% of one core (175.2 s over 720 s) |
+| Database (database-wide) | commits 1,175 to 46,649; connections 3 to 6 | commits 569 to 55,117; connections 3 to 5; rollbacks 0; deadlocks 0; size 8.37 to 9.85 MB |
+| HTTP | 179,932 requests; non-2xx 503 x80, 409 x297 | 261,885 requests, 2.054 GB body; only 409 (`/attack` 340, `/input` 23, `/recover` 3) |
+| Operator metrics samples | 144 / 0 failed | 144 / 0 failed |
+
+Reading it. Pacing removed the 503 storm: no adapter hit `busy` at all, so the client's new retry was not exercised
+by the soak (it is covered by `OnlineBusyBackoffTest`; this run does not prove the backoff against a real 503).
+Time at exactly 20 is not higher than 56.5% because the tool deliberately closes and reopens each adapter every 120 s
+(96 reconnects, each at least 3 s offline plus pacing), which holds the count at 19 for most of the remainder. That is
+the tool's churn, not a connection failure; it was a hidden part of the first smoke too. To measure a steadier plateau
+lengthen the reconnect period or add a no-reconnect option (not done). The lethal starter ground (T4C-0248) still
+shapes the attack/recovery mix. The result does **not** pass the two-hour soak, the M5 gate or Beta. No server code
+was changed.
+
+Admission adequacy (recommendation, not a change). With a login burst of twenty the server needed only the paced one-wide
+open; at most one join was in flight and the 116 joins had a 100 ms-or-faster handler lifetime for 116 of 116. Two public
+slots look adequate for a burst once clients pace or back off, because a join holds its slot for well under 100 ms
+and the retry schedule spreads the rest across a few seconds. An unpaced simultaneous burst of twenty would be expected to still
+see 503s for the first seconds (not re-measured here), and a real client without the new retry would have failed; with it the worst case
+is a login that takes up to roughly ten seconds before giving up. Re-measure with an unpaced burst (open gate set to
+twenty) if the owner wants a hard number before raising `MAX_PUBLIC`.

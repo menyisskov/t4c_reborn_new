@@ -215,7 +215,7 @@ public final class OnlineConnection implements AutoCloseable {
     String token = null;
     try (var client = OnlineEndpoint.client()) {
       try {
-        MapInfo map = JSON.fromJson(send(client, "/map", null, null), MapInfo.class);
+        MapInfo map = JSON.fromJson(sendRetryingBusy(client, "/map", null, null), MapInfo.class);
         if (map == null || map.protocolVersion() != OnlineProtocol.VERSION)
           throw new IllegalStateException("Incompatible online protocol; update client and server together");
         if (map.width() <= 0 || map.height() <= 0 || map.width() > 1024 || map.height() > 1024)
@@ -225,7 +225,7 @@ public final class OnlineConnection implements AutoCloseable {
         map.region();
         String login =
             credentials == null ? "" : credentials.secret() + " " + credentials.characterId();
-        Joined joined = JSON.fromJson(send(client, "/join", login, null), Joined.class);
+        Joined joined = JSON.fromJson(sendRetryingBusy(client, "/join", login, null), Joined.class);
         if (joined.id() <= 0 || joined.token() == null || !joined.token().matches("[0-9a-f]{64}"))
           throw new IllegalStateException("Invalid server session");
         token = joined.token();
@@ -401,11 +401,33 @@ public final class OnlineConnection implements AutoCloseable {
   }
 
   private MapInfo readMap(HttpClient client,String token,boolean persistent) throws Exception {
-    var loaded=JSON.fromJson(send(client,"/map",null,token),MapInfo.class);
+    var loaded=JSON.fromJson(sendRetryingBusy(client,"/map",null,token),MapInfo.class);
     if (loaded==null || loaded.protocolVersion()!=OnlineProtocol.VERSION || loaded.persistent()!=persistent)
       throw new IllegalStateException("Invalid region map");
     loaded.region(); // Validate the bounded descriptor before publishing actor coordinates.
     return loaded;
+  }
+
+  /**
+   * Idempotent start-up calls only: the map read and the join. The server answers a full public gate
+   * with 503 "busy" before it touches the world, and a join that times out inside the world is
+   * cancelled atomically, so a busy refusal never means the call was applied. Retry that refusal a
+   * bounded number of times with jittered exponential backoff. Every other status, timeout or
+   * transport failure is thrown at once, and no gameplay command or poll is ever retried here.
+   */
+  private String sendRetryingBusy(HttpClient client, String path, String body, String token) throws Exception {
+    for (int retry = 0; ; retry++) {
+      try {
+        return send(client, path, body, token);
+      } catch (Rejected rejected) {
+        if (!OnlineBusyBackoff.isBusy(rejected.code, rejected.reason) || retry >= OnlineBusyBackoff.MAX_RETRIES
+            || closed)
+          throw rejected;
+        Thread.sleep(OnlineBusyBackoff.delayMillis(retry,
+            java.util.concurrent.ThreadLocalRandom.current().nextDouble()));
+        if (closed) throw rejected;
+      }
+    }
   }
 
   private static String refusalReason(byte[] body) {
