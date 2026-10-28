@@ -51,9 +51,9 @@ re-measure before relying on a number.
 Each is a gap to close, never a decision to keep:
 
 - Warrior and Paladin only in character creation (`OnlineCharacterCreation.CLASSES`).
-- Stage-1 spells (40 attack with splash, 4 drain, 4 heal) are castable server-side (`spells-v2` stage gate, protocol 6); everything else stays refused. Casters cannot be created online yet, so only a character that already knows them can cast.
+- Stage-1 and stage-2 spells (40 attack with splash, 4 drain, 4 heal; 25 timed buffs, the curse, invisibility and detection, 2 dispels, Renew Armor: 81 in all) are castable server-side (`spells-v2` stage gate, protocol 6); everything else stays refused. Casters cannot be created online yet, so only a character that already knows them can cast. Buffs are laid on the caster only; laying one on another player is resolved by the engine but not yet reachable (needs a two-character atomic commit).
 - Melee only; bows, stun blow and companions refuse as unsupported combat.
-- Combat fails closed while any buff or world-event flag is active.
+- Combat fails closed while a world-event flag is active, or while a buff the server does not model (an older record without stored amounts, or an attribute outside `BuffAttributes.MODELLED`) is running. The 25 stage-2 buffs are modelled and fold into melee, retaliation, carry weight and spell numbers.
 - Other quests' flags block combat (quest-flag allowlist).
 - Goblins do not attack the Wild Horse (clan combat not simulated).
 - Monsters with spell attacks, scripts or unique loot are excluded from combat.

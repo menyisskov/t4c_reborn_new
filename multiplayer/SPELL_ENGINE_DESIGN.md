@@ -1,6 +1,6 @@
 # Online spell engine design (parity step 3)
 
-Status: **stage 1 implemented (T4C-0267, protocol 6: `/cast` takes an optional `u:<creature id>` / `p:<x>,<y>` token; `p:` is parsed but the shared rules refuse it for stage-1 spells; one multi-creature commit, `OnlineStore.commitSpellStrikes`); stages 2-5 are design only**. Original status: **design draft, not implemented** (T4C-0255, 2026-10-28). Top-tier architecture lane
+Status: **stages 1 and 2 implemented (T4C-0267, protocol 6: `/cast` takes an optional `u:<creature id>` / `p:<x>,<y>` token; `p:` is parsed but the shared rules refuse it for stage-1 and stage-2 spells; one multi-creature commit, `OnlineStore.commitSpellStrikes`; T4C-0270: timed buffs, section 8); stages 3-5 are design only**. Original status: **design draft, not implemented** (T4C-0255, 2026-10-28). Top-tier architecture lane
 (AGENTS.md section 6). Implements the "Spell engine" line of [PARITY.md](PARITY.md): all 132 player
 spells and the monster spell attacks resolved on the server with the same results as single-player.
 Builds on [QUEST_ABILITY_DESIGN.md](QUEST_ABILITY_DESIGN.md) section 4 (Light Heal, `/cast`, `/use`,
@@ -295,10 +295,9 @@ charges versus offline per-key pooling.
 Open questions for the owner:
 - Q1: PvP spell damage (44 spells carry `pvp=true`; single-player never exercises it). Proposed: refuse
   until a PvP rule set exists.
-- Q2: may players heal and buff other players (offline only companions)? Proposed: yes, same rules as
-  `FRIENDLY_UNIT`.
-- Q3: buffs keep their rolled amounts instead of re-rolling on load. Proposed: keep rolled amounts and
-  change offline to match (offline load-time re-roll looks unintended).
+- Q2: may players heal and buff other players (offline only companions)? Owner default: yes, same rules as
+  `FRIENDLY_UNIT`; the engine does it, the server route waits for a two-character commit (section 8).
+- Q3: buffs keep their rolled amounts instead of re-rolling on load. **Decided (owner): keep the rolled amount online; single-player is not changed** (section 8).
 - Q4: impact at cast time with cosmetic flight. Proposed: accept as a server divergence.
 - Q5: the 11 spells with no offline effect (curse on monsters, 3 shields, 7 gateways): reproduce as
   no-ops (proposed) or fix in single-player first.
@@ -312,3 +311,80 @@ must open Mage/Cleric/Healer/Battle Mage creation and skills/powers (`skills["fi
 1 is player-visible; stage 1 can ship server-side behind the class gate. **Monster engine** (step 5)
 carries stage 5's scripted casters. Content changes to spells after export are guarded by the
 freshness test.
+
+## 8. Stage 2 as implemented (T4C-0270)
+
+Resolved by `SpellEngine` (domain module) and committed by `OnlineSpellStrikes`, the same single-flight,
+revision-fenced path as every other cast; `SpellCatalogV2.ENABLED_STAGE` is 2 (81 castable spells: 48 +
+33). Golden: `engine-stage2-golden.txt` is recorded from single-player's own code path (cast rules, heal
+roll, `resolvePlayerBuffEffects`, `resolveDurationSeconds`, Renew Armor's recast order, utility effects,
+then the resulting `CombatProfiles.fromPlayer` / element power / resistance / max HP, as differences
+from before the cast) for all 33 spells and four casters (plain, skilled, geared, and "buffed" - already
+under Bless, Stone Skin and Mana Surge, so effective and true readings differ and a recast refreshes);
+the server reproduces it byte for byte from committed progress. Mana Surge shows a single-player
+behaviour worth knowing: its formula reads an effective power, so recasting it while it runs compounds
+(33 -> 44); online does exactly the same.
+
+**Persistence (no SQL migration, schema 13 stays).** `CharacterProgress.Buff` gained `modifiers`
+(normalised attribute -> the amount rolled at cast time) and `appliedAt`; `CURRENT_VERSION` is 2 and the
+record accepts 1 or 2. A version-1 record (four-field buffs) loads unchanged and keeps its version; a
+buff without stored amounts cannot be interpreted, so it fails closed exactly as before (the only way
+to have one is a record that predates this change; none exist online today). The record becomes
+version 2 the first time a buff is laid. The settle anchor is the cooldown entry `effects_anchor`
+(absolute UTC ms, written only while the character holds buffs) rather than a new top-level field: it
+needs no change to the 18-argument record constructor used in some 40 places and behaves like
+`regen_anchor`. Detection flags are cooldown entries `detect_invisible_until` / `detect_hidden_until`;
+invisibility reuses `hiddenUntil`.
+
+**Expiry and logged-out time.** `expiresAt > now` is active, `now == expiresAt` is expired. Expiry is lazy:
+every reader asks for the buffs active at its own `now`; the settle in `PersistentSessions.character()` and
+the checkpoint remove expired buffs and take back the maximum health they gave (`maxHp -= amount`, current
+HP clamped, as `Player.removeBuffContributions`). At join every finite expiry is shifted by the time since
+the last settle (`join - effects_anchor`), then the anchor moves to the join; every checkpoint of a
+character holding buffs re-anchors, so a crash loses at most one checkpoint interval of "online" time (the
+buff then keeps that much more time, never less). A buff with no duration (`durationSeconds` 0) never
+expires and is never shifted.
+
+**Rolled amounts are kept (Q3, owner decision).** Single-player rebuilds a saved buff's amounts from the
+character on every load (re-rolling dice such as Bless's `1d(self.wis/4)`); online keeps the amounts as
+cast. Single-player is not changed.
+
+**Folding.** Effective vs true: `OnlineSpellContexts.caster(progress, items, now)` adds the running buff
+amounts to effective stats and element powers; true stats, true powers and true resistances (what
+`self.true_*` reads) never include them. `OnlineCombatLoadout` adds strength, endurance, dexterity,
+intelligence, wisdom, armor class and the attack/archery/dodge skills; carry capacity reads buffed
+strength; `OnlineSpellContexts.effectiveResistance` gives the buffed resistances for later monster spell
+damage. Maximum health lives in the vitals. Anything outside `BuffAttributes.MODELLED` (percent armor
+class, experience, unlimited resources, healing received, skills 9 and 29, mana) fails closed in every
+consumer, so a buff is never half applied.
+
+**Spells.** Buffs (25): `Event.ApplyBuff(recipient, key, durationSeconds, modifiers)`; one effect per spell
+key, a recast replaces amounts and expiry. Curse (1): resolves like every hostile single-target cast -
+rules, cost, exhaustion, nothing else - because effect 2 does nothing to a monster (Q5 reproduced as a
+no-op; the golden proves the cost and the empty result). Invisibility, Detect Invisible, Detect Hidden, True
+Sight (4): one `nextInt(101) <= chance` roll per effect, flags for `max(1000, duration)` ms. Dispel and Cure
+Poison (2): per effect, the id is resolved with the exported `dispelTargets` map (id -> key of every spell
+single-player can resolve, castable online or not), the chance is rolled exactly when single-player rolls
+it (id resolves and chance > 0), and the caster's buff of that spell is removed if running. Renew Armor
+(1): re-lays the learned components in single-player's fixed order, each resolved against the caster as
+the previous ones left it (`SpellEngine.adjust`); a guard test compares the engine's list with the one in
+`MainGameScreen`.
+
+**Friendly targets (Q2, owner default: allowed).** The engine takes `Target.Friend(id)` for BUFF spells
+whose target type the shared rules accept for a friendly unit (3, 4, 10, 12, 13, 14, 17: Barrier,
+Protection, Bless, Mana Shield, Mana Surge, Major and Minor Combat Sense, Drowned Ward, Emberheart
+Resolve, Earthen Strength and the ultra line); self-only buffs (target type 5), flags, dispels, heals and
+attacks answer WRONG_TARGET. Formulas read the caster's level, stats and skills and the recipient's
+element powers and resistances (`SpellEngine.friendContext`, the temple-blessing precedent;
+single-player has no player-to-player buff, so there is no offline value to match - unit tests pin the
+semantics). The server does **not** yet accept a friend target on `/cast`: laying a buff on another
+player changes two characters (the caster pays, the recipient gains) and the store has no
+two-character commit. Doing it as two commits would risk a free buff or a lost payment on a failure.
+Open item for the next stage: `OnlineStore.commitFriendBuff` (both leases, rows locked in id order, both
+revision fences, one receipt), then an `f:<player id>` token on `/cast` (additive; protocol stays 6).
+
+**Stage-3 hand-off.** The `PERIODIC` effect work (DoT, hooks, gateways, shields) can reuse the
+`ApplyBuff` expiry/refresh/shift rules for timed effects, `OnlineBuffs.apply/expire/shiftForJoin`, the
+`effects_anchor`, and the strict-expiry convention. Still failing closed because no stage-2 spell uses
+them (item and aura buffs do): percent armor class, experience, unlimited, healing-received and
+speed/resist-percent modifiers.

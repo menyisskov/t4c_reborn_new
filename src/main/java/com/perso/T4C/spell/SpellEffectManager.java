@@ -487,36 +487,7 @@ public final class SpellEffectManager {
   }
 
   private static String normalizeBoostAttribute(String attribute) {
-    if (attribute == null) return null;
-    return switch (attribute.trim().toLowerCase()) {
-      case "str", "strength" -> "str";
-      case "agi", "agility", "dex", "dexterity" -> "dex";
-      case "end", "endurance" -> "end";
-      case "int", "intelligence" -> "int";
-      case "wis", "wisdom" -> "wis";
-      case "ac", "armor class" -> "armorClass";
-      case "ac percent" -> "armorClassPercent";
-      case "healing received" -> "healingReceivedPercent";
-      case "max hp", "maxhp" -> "maxHp";
-      case "attack" -> "skill:attack";
-      case "dodge" -> "skill:dodge";
-      case "skill 35", "archery" -> "skill:archery";
-      case "skill 9" -> "skill:9";
-      case "skill 29" -> "skill:29";
-      case "air", "fire", "water", "earth", "light", "dark" ->
-          "power:" + attribute.trim().toLowerCase();
-      case "mana" -> "mana";
-      case "radiance" -> "radiance";
-      case "r_air" -> "resist:air";
-      case "r_fire" -> "resist:fire";
-      case "r_water" -> "resist:water";
-      case "r_earth" -> "resist:earth";
-      case "r_light" -> "resist:light";
-      case "r_dark" -> "resist:dark";
-      case "exp", "experience", "xp" -> "exp";
-      case "unlimited" -> "unlimited";
-      default -> null;
-    };
+    return BuffAttributes.normalize(attribute);
   }
 
   private static String parameter(SpellData.T4cEffect effect, int id) {

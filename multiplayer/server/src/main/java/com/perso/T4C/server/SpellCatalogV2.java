@@ -17,7 +17,7 @@ import java.util.Objects;
  */
 public final class SpellCatalogV2 {
   /** Highest engine stage this server resolves (SPELL_ENGINE_DESIGN section 6). */
-  public static final int ENABLED_STAGE = 1;
+  public static final int ENABLED_STAGE = 2;
   private static SpellCatalogV2 bundled;
   private final SpellContentV2 content;
   private final int enabledStage;

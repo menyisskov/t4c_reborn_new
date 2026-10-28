@@ -119,6 +119,7 @@
   "online.cast.no_line_of_sight": "You cannot see the target.",
   "online.cast.safe_haven": "You cannot fight in a safe haven.",
   "online.cast.no_target": "There is nothing there to target.",
+  "online.cast.no_friend": "That player is not there to help.",
   "online.cast.protected": "That target cannot be attacked.",
   "online.cast.target_busy": "The target is busy; try again.",
   "online.cast.unsupported_combat": "A creature in the way cannot be fought online yet.",
