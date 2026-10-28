@@ -181,6 +181,13 @@ class HostedTransferTest {
       state=http(client,url,"/state",token,null);
       if(state.getAsJsonObject("region").get("world").getAsInt()==destinationWorld) return state;
       var own=actor(state,ownId);
+      double ox=own.get("x").getAsDouble(),oy=own.get("y").getAsDouble();
+      // The server finishes a claimed tile (single-player's rule). Steer only from a tile centre: while the
+      // actor glides, ask it to stop after the tile, so a stale direction never slides it past a corner.
+      if(Math.abs(ox-Math.floor(ox)-.5)>1e-6 || Math.abs(oy-Math.floor(oy)-.5)>1e-6) {
+        client.send(request(url,"/input",token,epoch+" "+sequence+++" 0 0"),java.net.http.HttpResponse.BodyHandlers.ofString());
+        Thread.sleep(30);continue;
+      }
       int start=(int)own.get("y").getAsDouble()*map.width+(int)own.get("x").getAsDouble();
       if(start==goal) { Thread.sleep(50);continue; }
       var previous=new int[map.width*map.height];Arrays.fill(previous,-1);previous[start]=start;
