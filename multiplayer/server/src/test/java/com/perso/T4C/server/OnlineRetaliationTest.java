@@ -16,6 +16,56 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
 @EnabledIfEnvironmentVariable(named="T4C_DB_URL",matches=".+")
 class OnlineRetaliationTest {
+  @Test void authoredElementalSpellRetaliationCommitsBalancedResistedHealth() throws Exception {
+    var store=OnlineStore.fromEnvironment(); store.migrate();
+    var gson=new Gson();
+    var json=gson.toJsonTree(MonsterCatalog.loadBundled().monsters().get("Olin Haad Guard 3")).getAsJsonObject();
+    json.addProperty("health",100000);
+    json.add("attacks",JsonParser.parseString("[{\"name\":\"\",\"value1\":1000000,\"value2\":100,\"value3\":10091,\"value4\":0,\"value5\":1}]"));
+    var definition=gson.fromJson(json,MonsterDef.class);
+    assertTrue(OnlineRetaliation.supported(definition));
+    var spawn=new MonsterContent.Spawn("spell-retaliation-"+UUID.randomUUID(),definition.getName(),3,3,0,false,false);
+    var map=new PreviewMap(new boolean[10][10],0,0,1,1);
+    var world=new PreviewWorld(map,new MonsterContent(MonsterContent.VERSION,Map.of(definition.getName(),definition),List.of(spawn)));
+    var sessions=new PersistentSessions(store,map,world);
+    var account=store.provisionAccount();
+    var original=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(1)).progress();
+    var progressJson=gson.toJsonTree(original).getAsJsonObject();
+    progressJson.getAsJsonObject("vitals").addProperty("hp",1500);
+    progressJson.getAsJsonObject("vitals").addProperty("maxHp",1500);
+    progressJson.add("respawn",JsonParser.parseString("{\"world\":0,\"x\":1.5,\"y\":1.5}"));
+    progressJson.add("buffs",gson.toJsonTree(List.of(new CharacterProgress.Buff(
+        "spell.test_water_resistance",Long.MAX_VALUE,0,0,Map.of("resist:water",100),0))));
+    var progress=gson.fromJson(progressJson,CharacterProgress.class);
+    var target=store.create(account.accountId(),"Spell retaliation target",0,3.5,3.5,progress,0);
+    long started=System.nanoTime(); var lease=store.acquire(account.secret(),target.id());
+    var token=sessions.join(lease,started).token();
+    try(var creatures=new PersistentCreatures(store,world)) {
+      var rolls=new Random(1) { @Override public int nextInt(int bound) { return bound-1; } };
+      var melee=new OnlineMelee(map,world,sessions,creatures,ItemCatalog.loadBundled(),rolls,System::currentTimeMillis);
+      var provoke=melee.attack(token,0,1).toCompletableFuture();
+      await(sessions,creatures,provoke::isDone); provoke.get();
+      await(sessions,creatures,() -> available(creatures));
+      assertEquals(target.id(),creatures.life(1).targetCharacter());
+
+      var retaliation=new OnlineRetaliation(map,world,sessions,creatures,ItemCatalog.loadBundled(),rolls,System::currentTimeMillis);
+      Thread.sleep(OnlineRetaliation.COOLDOWN_MILLIS+30);
+      retaliation.step(); retaliation.step();
+      assertEquals(1500,world.position(token).hp(),"Predicted health is not published before commit completion");
+      await(sessions,creatures,() -> sessions.character(token).revision()>1);
+
+      int raw=OnlineMonsterSpellAttacks.rawDamage(definition,10091,new Random(1) {
+        @Override public int nextInt(int bound) { return bound-1; }
+      });
+      int expected=OnlineMonsterSpellAttacks.elementalDamage(
+          OnlineMonsterSpellAttacks.supportedSpell(10091),definition,raw,
+          sessions.character(token).progress(),ItemCatalog.loadBundled(),System.currentTimeMillis());
+      assertTrue(expected>0);
+      assertEquals(1500-expected,world.position(token).hp());
+      assertEquals(world.position(token).hp(),store.load(account.accountId(),target.id()).progress().vitals().hp());
+    } finally { sessions.shutdown(); }
+  }
+
   @Test void retaliationPublishesCommittedHealthOnlyAndDeathRecoversAcrossLogout() throws Exception {
     var store=OnlineStore.fromEnvironment(); store.migrate();
     var gson=new Gson();

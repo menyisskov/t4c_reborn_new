@@ -29,9 +29,7 @@ final class OnlineRetaliation {
   }
 
   static boolean supported(MonsterDef definition) {
-    if (!definition.isCanAttack()) return true;
-    return definition.getAttacks().stream().allMatch(a -> a!=null && !a.isSpell()
-        && a.getName()!=null && a.getName().matches("(?i)[1-9][0-9]*d[1-9][0-9]*([+-][0-9]+)?"));
+    return OnlineMonsterSpellAttacks.supported(definition);
   }
 
   void step() {
@@ -58,9 +56,12 @@ final class OnlineRetaliation {
     var creature=world.creaturePosition(spawn.id());
     float distance=(float)Math.hypot((player.x()-creature.x())*GRID_W,
         (player.y()-creature.y())*GRID_H);
-    return MonsterPursuitRules.withinAttackReach(distance,spawn.definition().getAttacks())
-        && MonsterPursuitRules.tileRange(distance)<2
-        && map.allowsCombat(creature.x(),creature.y(),player.x(),player.y(),false);
+    int range = MonsterPursuitRules.tileRange(distance);
+    List<com.perso.T4C.monster.core.MonsterDef.Attack> attacks = spawn.definition().getAttacks();
+    boolean inRange = attacks == null || attacks.isEmpty()
+        ? range < 2
+        : attacks.stream().anyMatch(attack -> attack != null && attack.isInRange(range));
+    return inRange && map.allowsCombat(creature.x(),creature.y(),player.x(),player.y(),false);
   }
 
   private void attack(String token,PreviewWorld.CreatureSpawn spawn,OnlineStore.SpawnState life,
@@ -71,17 +72,39 @@ final class OnlineRetaliation {
     try { defender=OnlineCombatLoadout.resolve(progress,items,now,progress.cooldowns().getOrDefault("stun",0L)>now); }
     catch (IllegalArgumentException unsupported) { return; }
     var definition=spawn.definition(); var stats=MonsterCombatRules.resolve(definition);
-    var attack=MonsterCombatRules.chooseAttack(definition.getAttacks(),random);
+    var attacks=definition.getAttacks();
+    boolean spellSet=attacks!=null && attacks.stream().anyMatch(a -> a!=null && a.isSpell());
+    if (spellSet) {
+      double distance=Math.hypot((position.x()-world.creaturePosition(spawn.id()).x())*GRID_W,
+          (position.y()-world.creaturePosition(spawn.id()).y())*GRID_H);
+      int tiles=MonsterPursuitRules.tileRange((float)distance);
+      attacks=attacks.stream().filter(a -> a!=null && a.isInRange(tiles)).toList();
+    }
+    var attack=MonsterCombatRules.chooseAttack(attacks,random);
     int attackSkill=attack==null ? stats.attack() : Math.max(1,attack.getValue1());
     int raw=attack==null ? definition.getHitDamageMin()+
         (definition.getHitDamageMax()>definition.getHitDamageMin()
           ? random.nextInt(definition.getHitDamageMax()-definition.getHitDamageMin()+1) : 0)
+        : attack.isSpell() ? OnlineMonsterSpellAttacks.rawDamage(definition,attack.getSpellId(),random)
         : MonsterCombatRules.rollDamage(attack.getName(),random);
     var profile=new CombatProfile(stats.level(),stats.strength(),stats.endurance(),stats.agility(),
         attackSkill,attackSkill,stats.dodge(),MonsterCombatRules.rollArmor(stats.armorMin(),stats.armorMax(),random),
         false,false,true,Map.of());
-    var hit=CombatResolver.resolve(new PhysicalAttackRequest(profile,defender.profile(),raw,0,false),random);
-    int hp=Math.max(0,progress.vitals().hp()-hit.damage());
+    int damage;
+    if (attack!=null && attack.isSpell()) {
+      var spell=OnlineMonsterSpellAttacks.supportedSpell(attack.getSpellId());
+      if (spell==null) return;
+      damage=switch (spell.behavior()) {
+        case ELEMENTAL_DAMAGE -> OnlineMonsterSpellAttacks.elementalDamage(
+            spell,definition,raw,progress,items,now);
+        case ARMOR_DAMAGE -> CombatResolver.resolve(
+            new PhysicalAttackRequest(profile,defender.profile(),raw,0,false),random).damage();
+        default -> 0;
+      };
+    } else {
+      damage=CombatResolver.resolve(new PhysicalAttackRequest(profile,defender.profile(),raw,0,false),random).damage();
+    }
+    int hp=Math.max(0,progress.vitals().hp()-damage);
     CharacterProgress draft;
     OnlineStore.DeathTransition death=null;
     if (hp==0) {
