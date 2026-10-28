@@ -9,22 +9,31 @@ It is not rendered-client evidence and does not complete M2.
 ## What the probe does
 
 1. Starts its own server on a caller-selected loopback port and waits for `local-persistent` health.
-2. Provisions three characters on world 0 at a start tile that the probe derives itself (see
-   "Start position" below): a killer, a racer/observer and a weighted character. Each gets the full
-   warrior starter kit and keeps it equipped, so all three can fight and their equipment strength
-   bonuses apply. The weighted character gets one extra inventory stack, the over-weight fixture
-   (see "Over-weight fixture" below), appended to the kit and never replacing it.
-3. Checks that the protocol is 5 and that the adapters joined.
-4. Kills Skeletons with the killer's `attack` until at least three loot drops appear. The observer's
-   snapshot must show every drop.
-5. Simultaneous claim race: after the first drop's owner window has expired, the killer and the
-   racer submit `pickUp` for the same drop, released by one latch. Exactly one result must be
-   accepted. The loser must be refused as `loot_unavailable` or `busy`.
-6. Over-weight refusal: after the second drop's owner window, the weighted character's pickup must
-   be refused as `too_heavy`. The drop must stay visible to the observer.
-7. Lost-response reconnect: the racer submits a pickup for the third drop and closes its adapter at
-   once. The probe rejoins with the same credentials and issues no replay. The database decides
-   the outcome.
+2. Provisions and joins ONE character first, the killer, on world 0 at a start tile that the probe
+   derives itself (see "Start position" below). It has the full warrior starter kit equipped and a
+   level derived from the data (see "Killer level" below). The other three characters (racer,
+   weighted, second racer) do not exist until the drop they need exists (see "Positioning the other
+   characters" below).
+3. Checks that the protocol is 5 and that the killer joined.
+4. The killer fights Skeletons until a drop appears, each in turn: it retargets by DISTANCE (nearest
+   live Skeleton, not the first in the snapshot), walks toward it with the adapter's movement
+   direction when out of melee reach, and attacks inside reach. It drinks a carried healing potion
+   below half health. Drops that appear while it is working are kept and reused for later stages
+   (while younger than 10 minutes; ground loot lives 15). Each stage has a hard budget; a death or
+   respawn, a target that does not die in 75 s, 30 s in reach with no accepted attack, or 90 s with no
+   live Skeleton stops the run with a message instead of spinning.
+5. Simultaneous claim race (first drop): a racer is provisioned beside the drop and joins; once the
+   owner window has expired the killer and the racer submit `pickUp` for the same drop, released by one
+   latch. Exactly one result must be accepted. The loser must be refused as `online.loot.unavailable`
+   (server `loot_unavailable`) or the adapter's generic `online.loot.refused` (server `busy` or a stale
+   revision; the adapter maps those to the generic key). The database check below is the authority that
+   exactly one claim happened.
+6. Over-weight refusal (second drop): a weighted character is provisioned beside the drop; after the
+   owner window its pickup must be refused as `online.loot.too_heavy` (server `too_heavy`). The drop must
+   stay visible to the killer's snapshot.
+7. Lost-response reconnect (third drop): a second racer is provisioned beside the drop, submits a
+   pickup and closes its adapter at once. The probe rejoins with the same credentials and issues no
+   replay. The database decides the outcome.
 8. Graceful shutdown of the owned child, requiring exit 0, then a database check. Each loot row
    must match exactly: a `CLAIMED` row is held by exactly one character, which is its recorded
    claimant, and has exactly one claim receipt. Any other state is held by no character and has
@@ -78,14 +87,48 @@ uses the same sources as `HostedKillRegionTest`: the real `startingSlice` plan b
 runtime's `worldmap.colbin`, the `renewed_wards` circle and the authored `Skeleton` spawns inside it.
 It takes the first anchor (ordered by x, then y) that has a tile within one to two tiles which is
 hosted, standable (`HostedRegionPlan.canStand`), not a portal source (enabled or refused), within
-`PLAYER_MELEE_ATTACK_RANGE` and with combat line of sight (`PreviewMap.allowsCombat`). All three
-characters start on that tile. If no anchor qualifies, the probe stops with an
+`PLAYER_MELEE_ATTACK_RANGE` and with combat line of sight (`PreviewMap.allowsCombat`). Only the killer
+starts on that tile. If no anchor qualifies, the probe stops with an
 `IllegalArgumentException` beginning `Precondition failed:` and does nothing else. The chosen start
 tile, the anchor and the number of circle anchors are written to `report.json`.
 
 On the content in this checkout (offline dry check of `resolveStart` only; no server, port or
 database used) it resolves to start `(2767.5, 1086.5)` beside the anchor `(2767, 1087)`, one of 13
 circle anchors. That is informative, not a hard-coded input: the probe recomputes it each run.
+
+## Killer level
+
+The `renewed_wards` quest has `minLevel` 0, so the data does not say which level should fight its
+Skeletons. The Skeleton is level 4 with 69 health, hits for 4 to 10 and has 13 anchors a few tiles apart
+inside the 8-tile aggro range, so two can engage at once. The probe therefore provisions every character
+at twice the monster level (level 8, about 91 health), and prints `skeletonLevel`, `questMinimumLevel`
+and `probeCharacterLevel`. This is a probe headroom choice, not a balance statement.
+
+How: `levelUp` feeds the server's own award path (`OnlineProgression.award`, the code a kill runs) in
+memory until the level is reached, so health and unspent points come out as a player's would. The
+character is then created through `OnlineStore.create` as before, and the matching cumulative XP is
+stored in its `experience` column in the same throwaway database before it ever joins (the create call
+has no experience argument; level 8 with 0 XP would be refused `invalid_progression` on the first award).
+Both bounds of the server's own check hold by construction. Nothing is changed at runtime and no server
+guard is touched.
+
+## Positioning the other characters
+
+Pickup range is 8 tiles (Chebyshev, `OnlinePickupRules.MAX_TILE_DISTANCE`) and drops land on the dead
+Skeleton's tile. The racers and the weighted character are created through the same `create` path on a
+standable, hosted, non-portal tile within 6.5 tiles of their drop, chosen as the farthest of those from
+every live Skeleton, so no walk is needed. While the owner window (60 s) runs, the killer stays within
+5 tiles of the drop and fights only what is in reach, and the new character fights back only what is in
+reach. Each stage checks both claimants are within 7 tiles before it claims.
+
+## Diagnostics
+
+`report.json` carries `attackAndCommandOutcomes` (counts) and `diagnosticSamples` (the first six of each
+kind): every attack, potion and pickup result, with distance, health and the adapter's key. The adapter
+maps no refusal reason for `/attack` (`OnlineCommandRefusals` returns null for it), so a refused attack is
+recorded as `refused_reason_not_exposed_by_adapter`; the raw server code is not observable from the probe.
+A client-side mapping for `/attack` would make the next run self-explanatory (follow-up, outside this
+probe-only change).
 
 ## Isolation requirements
 
@@ -162,14 +205,14 @@ The probe's compile check was done against these three artifacts; the probe itse
 
 ## Assumptions to confirm on the first real run
 
-- The derived start tile is within melee reach of its anchor Skeleton, but the Skeleton is a live
-  creature: it may have patrolled or may aggro and fight the characters. The probe does not walk, so
-  after the anchored Skeleton dies, later targets must be respawns or Skeletons that wander into
-  reach. If the run stops at the kill cap or never finds a target, add walking or per-anchor starts
-  (a follow-up) instead of relaxing any server guard. Not yet verified.
-- All three characters start on the same tile; whether the server accepts stacked joins is untested.
-- Skeleton drops are random. The probe kills up to 30 Skeletons until three drops appear. A run
-  that stops at the kill cap fails with an explicit stage.
+- Walking and distance retargeting now exist and worked in run 3 (two Skeletons were killed), but the
+  killer did not survive the third engagement. Whether any single fighter survives long enough for three
+  drops is open (see the recorded run 3 and the owner question).
+- Skeleton drops are random: the authored table rolls about 9% per kill in total (0.03 + 0.01 + 0.02 +
+  0.03 + 0.0007), so three drops need about 33 kills on average. Each drop wait is capped at 14 minutes
+  and the whole run at 40; a run that runs out fails with an explicit stage and the kill count.
+- `OnlineCommandRefusals` maps pickup codes to `online.loot.*` keys. The earlier assertions compared the
+  raw server codes and could never have matched; they now compare the mapped keys.
 - The lost-response case is client-side: the adapter closes right after the request is sent.
   Whether the server answered before the close is recorded but not required. The database
   decides the outcome, and either a single claim or no claim is a pass. A duplicate is a failure.
@@ -216,7 +259,33 @@ carried 55 before and 10055 with the fixture.
   first-claim race, over-weight refusal, expiry and lost response were NOT reached. The database
   check and the exit-0 shutdown assertion were not reached either.
 
-Follow-up needed before another run (not done here): make the probe diagnosable (record attack refusal
-reasons instead of ignoring them), stop stacking weak characters on one tile (start the killer alone, or give
-it enough health or a safer approach), and walk or re-target by distance. Whether level-1 warriors can beat
-a Skeleton at all is a balance question for the owner, not for this tool.
+Follow-up taken in the next change: refusal logging, a lone killer, a data-derived level, distance
+retargeting and walking, bounded stages (all described above). Run 3 is the result.
+
+### Run 3 (T4C-0245, one rerun on a new disposable cluster): FAILED at the kill stage
+
+Same method as run 2, on a new PostgreSQL 16 cluster (loopback 56872, extra database
+`t4c_loot_<same hex>`, probe server 18792), destroyed afterwards. The runtime snapshot was removed; the
+sanitized `report.json` and server logs stayed under a TEMP evidence directory (not committed). The
+`createdb` call inside the cluster needs the cluster runtime's `LD_LIBRARY_PATH` (as `acceptance-cluster.sh`
+sets), otherwise it fails with a missing `libpq.so.5`.
+
+- Provisioning: one killer, level 8 (Skeleton level 4 x 2, quest minimum 0), 137,420 XP seeded, 91 maximum
+  health, full starter kit. Join and the protocol-5 check passed.
+- Kill stage: the killer walked to and killed 2 Skeletons (586 XP gained), using 3 healing potions, then was
+  defeated and respawned at the saved respawn tile (2951, 1038) with 45/91 health, about 60 seconds after
+  joining. The probe stopped at once with `killer was moved far away, presumed defeated and respawned ...
+  kills=2 acceptedAttacks=31` instead of spinning. No drop appeared (nothing in `online_ground_loot` or
+  `online_corpses`), so no loot assertion was reached and no racer, weighted or second racer was created.
+- Attack outcomes: 31 accepted, 59 refused with no reason exposed by the adapter (the probe attacks every
+  300 ms, so most are very likely cooldown refusals; all had `inReach=true` at 25 to 36 px). This confirms
+  the run-2 reading: fighting works, the problem is survival, not reach or a refused attack path.
+- Assertion groups: join and protocol passed; kill/drop, owner window, first-claim race, over-weight
+  refusal, expiry, lost response, database check and exit-0 shutdown NOT reached.
+
+Owner question (balance, not a probe fault): a level-8 warrior with a recruit's greatsword, leather kit and
+potions lost about 45 of 91 health killing two Skeletons and died to the next. A fresh level-1 warrior has
+33 to 38 health. Can a player realistically work through the 12-kill `renewed_wards` quest at its (zero)
+minimum level, and at what level should it start? The quest and the starter ground are authored for it, and the
+Skeletons are aggressive with 13 anchors inside each other's aggro range. The probe cannot make the loot
+assertions meaningful without a killer that survives, and giving it a higher level would hide the question.
