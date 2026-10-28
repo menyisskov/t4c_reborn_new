@@ -98,19 +98,30 @@ class PreviewWorldTest {
   }
 
   @Test void wallsAndDiagonalCornersRejectMovementAndSilenceStopsIt() {
-    boolean[][] cells = new boolean[8][8];
-    cells[3][4] = true;
-    var world = new PreviewWorld(new PreviewMap(cells, 0, 0, 3, 3));
-    var player = world.join();
-    for (int i = 0; i < 20; i++) { world.input(player.token(), i, 1, 1); world.step(); }
-    var stopped = world.snapshot(player.token()).players().getFirst();
-    assertTrue(stopped.x() < 4 && stopped.y() < 4, "Must not cut across the blocked corner");
-    world.input(player.token(), 20, -1, 0);
-    for (int i = 0; i < PreviewWorld.INPUT_TIMEOUT_TICKS + 1; i++) world.step();
-    var afterSilence = world.snapshot(player.token()).players().getFirst();
-    for (int i = 0; i < 20; i++) world.step();
-    assertEquals(afterSilence.x(), world.snapshot(player.token()).players().getFirst().x());
-    assertTrue(afterSilence.x() >= 0);
+    // Both movement rules (see ServerMovementParityTest) keep the player off the blocked tile and
+    // out of the blocked corner; only the swept rule stops dead, the grid rule slides and finishes
+    // its tile before standing still.
+    for (var mode : com.perso.T4C.world.MovementRules.Mode.values()) {
+      boolean[][] cells = new boolean[8][8];
+      cells[3][4] = true;
+      var world = new PreviewWorld(new PreviewMap(cells, 0, 0, 3, 3));
+      world.movementMode(mode);
+      var player = world.join();
+      for (int i = 0; i < 20; i++) {
+        world.input(player.token(), i, 1, 1);
+        world.step();
+        var now = world.snapshot(player.token()).players().getFirst();
+        assertTrue(world.map().canStand(now.x(), now.y()), mode + " must never stand on a blocked tile");
+        if (mode == com.perso.T4C.world.MovementRules.Mode.SWEPT_SUBSTEP)
+          assertTrue(now.x() < 4 && now.y() < 4, "Must not cut across the blocked corner");
+      }
+      world.input(player.token(), 20, -1, 0);
+      for (int i = 0; i < PreviewWorld.INPUT_TIMEOUT_TICKS + 1 + 8; i++) world.step(); // +8: a started tile is finished
+      var afterSilence = world.snapshot(player.token()).players().getFirst();
+      for (int i = 0; i < 20; i++) world.step();
+      assertEquals(afterSilence.x(), world.snapshot(player.token()).players().getFirst().x());
+      assertTrue(afterSilence.x() >= 0);
+    }
   }
 
   @Test void sessionsArePrivateBoundedAndExpireWithoutHeartbeat() {

@@ -390,7 +390,15 @@ class PreviewServerTest {
         assertTrue(snapshot.has("characterRevision"));
         assertTrue(snapshot.getAsJsonArray("players").get(0).getAsJsonObject().get("x").getAsDouble()>character.x());
         assertEquals(200,client.send(request(url,"/input",token,"0 1 0 0"),HttpResponse.BodyHandlers.ofString()).statusCode());
-        var stopped=object(client.send(request(url,"/state",token,null),HttpResponse.BodyHandlers.ofString()));
+        // The grid rule finishes the tile it started, so wait until the actor rests on a tile centre.
+        JsonObject stopped;
+        long restDeadline=System.nanoTime()+Duration.ofSeconds(3).toNanos();
+        do {
+          stopped=object(client.send(request(url,"/state",token,null),HttpResponse.BodyHandlers.ofString()));
+          double restingX=stopped.getAsJsonArray("players").get(0).getAsJsonObject().get("x").getAsDouble();
+          if (Math.abs(restingX-Math.floor(restingX)-0.5)<1e-9) break;
+          Thread.sleep(20);
+        } while (System.nanoTime()<restDeadline);
         savedX=stopped.getAsJsonArray("players").get(0).getAsJsonObject().get("x").getAsDouble();
         savedAppearance=stopped.getAsJsonArray("players").get(0).getAsJsonObject().get("appearance").getAsLong();
         assertEquals(0,savedAppearance,"Saved female appearance must override temporary player ID");

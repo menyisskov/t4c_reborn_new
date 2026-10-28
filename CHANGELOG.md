@@ -16,6 +16,12 @@ commit links, and finer-grained notes.
 ### Changed
 - Items you are wearing cannot be sold online; take them off first. Items that are only valuable because of how rarely monsters drop them cannot be sold to shopkeepers online yet.
 
+## 2026-10-28 — Online movement now matches single-player (T4C-0277)
+
+### Changed
+- In online play your character now walks exactly as in single-player: it moves one tile at a time, finishes the tile it has started when you let go of the key instead of stopping halfway, cannot turn around in the middle of a tile, and slides along walls and around corners instead of stopping dead against them. Walking speed is unchanged.
+- Characters saved while standing between two tiles come back standing on the tile they were on.
+
 ## 2026-10-28 — Archer attacks are supported by the online server (T4C-0273)
 
 ### Added
