@@ -301,6 +301,17 @@ quiz is gone; its i18n strings were deleted with it.
   now carries 50 of 86. Old saves only gain room, and arrows players already own are kept.
   `OnlineStarterKitWeightTest` fails if any class's fresh kit leaves under 30 spare capacity, and
   `WeaponAutoAttackTest` guards the no-consumption and weight rules. New quivers use weight 2.
+- **OPEN owner decision: the online starter hunting ground is very lethal for new characters
+  (found by the loot probe, 2026-10-28, T4C-0248).** The Renewed Wards quest has `minLevel` 0 and
+  asks for 12 Skeleton kills. Skeletons are aggressive and their 13 spawn points sit inside each
+  other's 8-tile aggro range. In two live probe runs: three stacked level-1 warriors (33 to 38 HP)
+  were each killed within about 35 seconds; a level-8 warrior (91 HP, greatsword, leather kit,
+  potions) killed two Skeletons, lost about 45 HP and then died to the third. The offline game
+  uses the same monster and quest data. Options for the owner: (A) raise the quest's minimum level
+  (and say so in Aelric's dialogue and the website); (B) reduce Skeleton aggro or pack density in
+  the hosted online region only; (C) keep it as designed and have Beta testers level elsewhere
+  first. Until the owner decides, a two-player Beta playthrough of the first quest should expect
+  early deaths. Evidence: `multiplayer/tools/NATIVE_LOOT_PROBE.md` "Recorded run".
 - **Kits are worn, not carried.** `LocalCharacterStore` writes them straight into the save's
   equipment map. Only shared supplies (torches, potions) and stacked ammunition go in the bag.
 - **Starting spells are referenced by key and resolved through the registry**, because saves store
