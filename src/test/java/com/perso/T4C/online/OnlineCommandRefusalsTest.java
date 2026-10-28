@@ -49,6 +49,19 @@ class OnlineCommandRefusalsTest {
   }
 
   @Test
+  void mapsCorpseRecoveryRefusalsToReadableKeysAndEveryKeyExists() {
+    assertEquals("online.recover.item_unavailable", OnlineCommandRefusals.messageKey("/recover", "item_unavailable"));
+    assertEquals("online.recover.too_heavy", OnlineCommandRefusals.messageKey("/recover", "too_heavy"));
+    assertEquals("online.recover.unavailable", OnlineCommandRefusals.messageKey("/recover", "corpse_unavailable"));
+    assertEquals("online.recover.refused", OnlineCommandRefusals.messageKey("/recover", "something_new"));
+    for (var reason : List.of("corpse_unavailable", "item_unavailable", "out_of_range", "too_heavy", "dead", "busy",
+        "revision", "anything-unknown")) {
+      var key = OnlineCommandRefusals.messageKey("/recover", reason);
+      assertTrue(I18n.has(key), key);
+    }
+  }
+
+  @Test
   void mapsAttackRefusalsAndFallsBackToOneGenericRefusalWithoutLeakingServerText() {
     assertEquals("online.attack.cooldown", OnlineCommandRefusals.messageKey("/attack", "cooldown"));
     assertEquals("online.attack.dead", OnlineCommandRefusals.messageKey("/attack", "dead"));

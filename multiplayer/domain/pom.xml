@@ -52,6 +52,7 @@
                         <include>com/perso/T4C/combat/SkillBonusRules.java</include>
                         <include>com/perso/T4C/combat/RegenerationRules.java</include>
                         <include>com/perso/T4C/helper/DiceFormula.java</include>
+                        <include>com/perso/T4C/helper/RandomSource.java</include>
                         <include>com/perso/T4C/world/WorldCollision.java</include>
                         <include>com/perso/T4C/world/CollisionRules.java</include>
                         <include>com/perso/T4C/config/GameConstants.java</include>

@@ -3,7 +3,6 @@ package com.perso.T4C.helper;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -474,7 +473,8 @@ public final class DiceFormula {
     double rollDice(int count, int faces) {
       if (count <= 0 || faces <= 0) return 0;
       int total = 0;
-      for (int i = 0; i < count; i++) total += ThreadLocalRandom.current().nextInt(faces) + 1;
+      java.util.random.RandomGenerator rng = RandomSource.current();
+      for (int i = 0; i < count; i++) total += rng.nextInt(faces) + 1;
       return total;
     }
   }
