@@ -1,6 +1,6 @@
 # Online spell engine design (parity step 3)
 
-Status: **design draft, not implemented** (T4C-0255, 2026-10-28). Top-tier architecture lane
+Status: **stage 1 implemented (T4C-0265, protocol 6: `/cast` takes an optional `u:<creature id>` / `p:<x>,<y>` token; `p:` is parsed but the shared rules refuse it for stage-1 spells; one multi-creature commit, `OnlineStore.commitSpellStrikes`); stages 2-5 are design only**. Original status: **design draft, not implemented** (T4C-0255, 2026-10-28). Top-tier architecture lane
 (AGENTS.md section 6). Implements the "Spell engine" line of [PARITY.md](PARITY.md): all 132 player
 spells and the monster spell attacks resolved on the server with the same results as single-player.
 Builds on [QUEST_ABILITY_DESIGN.md](QUEST_ABILITY_DESIGN.md) section 4 (Light Heal, `/cast`, `/use`,

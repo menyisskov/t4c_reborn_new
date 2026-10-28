@@ -233,7 +233,7 @@ include committed equipment bonuses. The anchor lives in `cooldowns["regen_ancho
 
 ### 4.5b Routes and settle points (A7, T4C-0230)
 
-**Implemented, additive, protocol stays 5.** `POST /cast` body `REVISION EPOCH SPELL_KEY` (cap 128) and
+**Implemented, additive, protocol stayed 5 at the time (protocol 6 since T4C-0265 adds an optional trailing target token to `/cast`; a body without one is exactly the behaviour below).** `POST /cast` body `REVISION EPOCH SPELL_KEY` (cap 128) and
 `POST /use` body `REVISION EPOCH ITEM_UUID` (cap 96) require the protocol header like `/pickup` and 404
 without storage. Each request builds one draft with `OnlineCasting`/`OnlineItemUse` from committed,
 regeneration-settled state and commits it once through the shared single-flight `commitGameplayEvent`

@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0265`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0266`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0265 | Spell engine stage 1c, server casting: the online server now resolves the 48 stage-1 spells (40 single-target attack spells with their quarter-strength splash on up to 7 adjacent monsters, 4 drains, 4 single heals) for characters who know them, through the shared engine (pure SpellEngine, spells-v2 stage gate, shared sampled line of sight, seeded-random golden equal to the single-player code path); /cast takes an optional target token (protocol 6); one atomic revision-fenced commit covers mana, exhaustion, every struck creature, kills, XP, gold, loot and quest credit | Systems/Online | In Progress | - | - |
 | T4C-0263 | Client unification seam step 3: the single-player "create the monster and NPC registries for the current map" block (queue the map spawns, wire the summon callback, run NPC popup events) moves behind the session seam as the first member of the world driver, move-only, with new tests pinning the queued spawn counts, order and summon behaviour first | Process/Tooling | Done | - | - |
 | T4C-0264 | Spell engine stage 1b, shared plumbing only (no change to what the online server does): one shared spell formula context (stats, true stats, element powers/resistances, gear counts) built from a caster snapshot by single-player and by online, with the online side now supplying the inputs it used to leave out; one shared spell line-of-sight rule (single-player's sampled walk, golden-tested over the real world map; the server's stricter attack ray kept for melee) with a documented server flag; spells-v2 export (all 132 player spells classified by effect kind and engine stage, 48 in stage 1) with a freshness test; spells-v1 and the online allowlist untouched | Process/Tooling (Multiplayer / parity prerequisite) | Done | this PR (branch claude/spell-stage1b-shared) | no player-visible change (no changelog entry) |
 | T4C-0261 | Client unification seam step 2: the single-player "where the starting character comes from" block (loading the named or legacy save, applying it to the new player) moves behind the session seam as a character source, move-only, with new tests pinning new character, existing save, missing and corrupt save and the named-character path first | Process/Tooling | Done | - | - |
