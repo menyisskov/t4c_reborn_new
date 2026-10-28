@@ -9,9 +9,12 @@ skipping/disabling tests, no rewriting someone else's history, etc.).
 
 ## Review engine
 
-Automated Codex review may run, but the owner no longer wants it to delay a
-merge. Green CI on the current head, no conflict, and self-review are the
-merge bar. Handle any findings already posted before merging.
+Automated Codex review and GitHub Actions checks may still be running, but the
+owner does not want them to delay a merge after local validation passes. Run
+and record the applicable tests against the proposed head, ensure there is no
+conflict, self-review, and handle any findings already posted before merging.
+Do not bypass an enforced GitHub branch-protection rule; if GitHub blocks the
+merge on a pending required check, report the block.
 
 This repo's automated PR reviewer is **Codex** (`chatgpt-codex-connector[bot]`),
 triggered automatically on PR open/sync/reopen. There is no Claude-based
@@ -52,7 +55,8 @@ comments if you're ever the one leaving them.
 
 Once all of the following hold, merge the PR yourself — don't wait for a
 human to click merge:
-- CI (`Build and test`) is green on the current head.
+- The applicable local tests and validation pass on the proposed head, and
+  their commands/results are recorded in the PR.
 - There is no merge conflict.
 - You've self-reviewed the change and made a judgment call on every Codex
   finding already posted: fixed what mattered,
@@ -62,5 +66,7 @@ Use `merge_pull_request` directly. This repo does not have GitHub's native
 auto-merge toggle enabled, so don't rely on `enable_pr_auto_merge` — it will
 fail; merge directly instead.
 
-Never merge while CI is red or while an important finding you judged worth
-fixing hasn't actually been pushed yet. A running review does not block merge.
+Do not wait for CI or a running review after local validation passes. If CI
+later fails, investigate and fix it promptly. Never bypass enforced branch
+protection, or merge while an important finding you judged worth fixing
+hasn't actually been pushed.

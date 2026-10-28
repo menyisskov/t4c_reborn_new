@@ -132,7 +132,7 @@ Required next rendered checks: two profiles, provoke guard with one, verify targ
 
 ## PR delivery
 
-Use ship-pr/steward. Self-review the actual scoped diff. Commit task/changelog/design decisions together, then a small task-hash follow-up. Open PR with GitHub tools and attach it to this chat. Green Build and test on current head plus no conflict and handled real findings permits direct merge; do not wait for a running automated review. Check existing review threads first and respect AGENTS.md one-original-review/fix-verification protocol. Preserve pending independent work when switching main/next branch. Rebuild local checkout after merge.
+Use ship-pr/steward. Self-review the actual scoped diff. Commit task/changelog/design decisions together, then a small task-hash follow-up. Run and record applicable local tests against the proposed head before opening a PR; attach the PR to this chat. Once local validation passes, there is no conflict, and real findings are handled, merge directly without waiting for GitHub Actions or automated review. Do not bypass enforced branch protection; report if GitHub blocks a merge on a pending required check. Check existing review threads first and respect AGENTS.md one-original-review/fix-verification protocol. Preserve pending independent work when switching main/next branch. Rebuild local checkout after merge.
 
 ## Remaining release sequence
 
@@ -273,7 +273,7 @@ passed 19 focused desktop tests, 21 domain plus 86 PostgreSQL server tests; the 
 probe returned in 2.026 seconds. A 15-second 20-native-adapter metrics run collected four private
 operator samples with zero metric/adapter/health failures and 13.975 seconds at twenty connected;
 the credential/path was absent from its ignored report. These are local adapter checks, not full
-Beta, two-hour or rendered-client evidence. Delivery still requires green CI and merge. Current QA metrics server
+Beta, two-hour or rendered-client evidence. Delivery follows the current local-validation merge policy in `AGENTS.md`; CI may finish after merge. Current QA metrics server
 PID52688 runs the matching persistent build; verify current metadata before actions.
 
 ## Loot groundwork checkpoint (T4C-0201/0202, Claude lane)

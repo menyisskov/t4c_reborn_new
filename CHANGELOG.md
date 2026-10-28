@@ -11,6 +11,16 @@ commit links, and finer-grained notes.
 ### Fixed
 - In online play, recovering items from a corpse now tells you the real reason when it fails (the item is gone, the corpse is gone, you are too far away, or you cannot carry that much) instead of just saying the server is busy.
 
+## 2026-10-28 — Plan for the online game to use the single-player screens (T4C-0254)
+
+### Changed
+- The project now has a plan for making the online game use exactly the same screens as single-player: the same map view, health bars, inventory, spell book, minimap, macros, shops and journal, with the server deciding what happens. It starts with moving and fighting, then adds items, spells, NPCs and the rest step by step. Single-player and its saves stay as they are.
+
+## 2026-10-28 — Merge after local tests pass (T4C-0253)
+
+### Changed
+- Pull requests can merge after their relevant local tests pass, without waiting for GitHub Actions to finish.
+
 ## 2026-10-28 — Online cheating attempts are now tested against a live server (T4C-0251)
 
 ### Changed

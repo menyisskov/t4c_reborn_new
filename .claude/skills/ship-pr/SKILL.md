@@ -1,12 +1,12 @@
 ---
 name: ship-pr
-description: End-to-end delivery of a change in this repo, from a finished working tree to a merged PR and a verified live site. Covers a self-review before opening the PR, task/changelog/guidelines bookkeeping, opening the PR, waiting on CI, merging, and post-merge cleanup. Use whenever the user says "open a PR", "ship it", "merge it", "double check and merge", "push this", or a content/balance task is done and needs to land. For the merge policy itself (when self-merge is allowed), this defers to the `steward` skill.
+description: End-to-end delivery of a change in this repo, from a finished working tree to a merged PR and a verified live site. Covers a self-review, task/changelog/guidelines bookkeeping, local validation, opening and merging a PR without waiting on CI, and post-merge cleanup. Use whenever the user says "open a PR", "ship it", "merge it", "double check and merge", "push this", or a content/balance task is done and needs to land. For the merge policy itself (when self-merge is allowed), this defers to the `steward` skill.
 ---
 
 # Ship a PR (t4c_reborn_new)
 
-> Green CI on the current head and a self-review are required by `AGENTS.md`.
-> Handle review findings already posted, but do not wait for Codex review.
+> Passing local validation on the proposed head and a self-review are required by `AGENTS.md`.
+> Open and merge without waiting for CI or Codex review; do not bypass enforced branch protection.
 
 `steward` says **when** a PR may be merged. This skill is the **how**, start to finish, and it
 exists because the same avoidable review round-trips kept happening: old saves missed by a new
@@ -63,15 +63,22 @@ Commit the regenerated `compendium/` data if it changed. If you touched `compend
 - [ ] Commit message references the task ID and ends with the session's attribution lines.
 - [ ] After the main commit, a small follow-up commit records its hash in the `TASKS.md` row.
 
-## 3. Open the PR and check CI
+## 3. Run local validation, open the PR, and merge promptly
 
 1. Branch: the session's designated branch. If its previous PR is already merged, restart it from
    `origin/main` (`git checkout -B <branch> origin/main`, bringing uncommitted work across with a
    stash). A normal push is then a fast-forward. **Never force-push.**
-2. Open the PR (GitHub MCP), ready for review. The body carries the technical detail the
-   changelog leaves out: rules as a table, what changed, how it was tested.
-3. Wait for **Build and test** to finish on the current head. Do not wait for Codex review.
-4. End your turn or merge once CI is green. Don't sleep or poll in a loop.
+2. Run the tests and validation appropriate to the change on the exact proposed head.
+   Record the commands and results. For code, run focused tests and any broader suite the
+   change warrants; for docs/config-only changes, run relevant parsers and `git diff --check`.
+   Do not claim checks passed unless you ran them successfully.
+3. Open the PR (GitHub MCP), ready for review. The body carries the technical detail the
+   changelog leaves out: rules as a table, what changed, and exactly how it was tested.
+4. If local validation passes, there is no merge conflict, and review findings are handled,
+   merge directly without waiting for GitHub Actions. CI may finish in the background; report
+   any later failure and fix it promptly. Never bypass an enforced branch-protection rule. If
+   GitHub blocks the merge on a pending required check, report the block rather than waiting
+   silently or bypassing protection.
 
 ## 4. Handle review findings
 
@@ -82,12 +89,13 @@ If a human or bot leaves findings, check each against the code, then decide.
   whole class, as the boostId-uniqueness test did.
 - **Not worth fixing** (out of scope, pre-existing, a destructive guess): reply once with the
   reason and resolve. You don't need the owner's sign-off.
-- If a pushed fix triggers a re-review, do not wait for it after CI is green.
+- If a pushed fix triggers a re-review, do not wait for it after local validation passes.
 
 ## 5. Merge and clean up
 
-Merge only when `steward`'s conditions hold: **Build and test** is green on the current head, there
-is no conflict, and any findings left by a reviewer have had a decision. Merge with
+Merge when `steward`'s conditions hold: applicable local validation passed on the proposed head, there
+is no conflict, and any findings left by a reviewer have had a decision. Do not wait for CI; never
+bypass branch protection. Merge with
 `merge_pull_request` (`merge_method: merge`, `expectedHeadSha` = current head). Then:
 
 - [ ] Delete your pending `send_later` triggers for this PR (`delete_trigger`).

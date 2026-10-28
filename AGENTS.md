@@ -85,17 +85,25 @@ without an automated reviewer moving the goalposts every push.
 
 ## 4. What "ready to merge" means
 
-There is no separate automated approval check in this repo. The PR's
-driving agent (a Claude Code session; see `.claude/skills/steward/SKILL.md`
-for its exact mechanics) merges directly, once:
-- CI (`Build and test`) is green on the current head, with no merge
-  conflict, and
-- the steward has self-reviewed the change and handled any automated review
-  findings already posted at merge time.
+There is no separate automated approval check in this repo. Before opening
+the PR, run and record the applicable local tests and validation against the
+exact proposed head. For code, this means the focused regression tests and any
+broader suite warranted by the change; for non-code changes, use the relevant
+format, schema, or diff checks.
+
+Once local validation passes, there is no merge conflict, and the steward has
+self-reviewed the change and handled any automated review findings already
+posted, open and merge the PR directly. Do not wait for GitHub Actions test
+checks or an automated review to finish; they may continue in the background.
+If a later CI result fails, investigate and fix it promptly, and report that
+result honestly. Follow repository branch protection: never bypass a required
+check or other enforced protection. If GitHub prevents the merge while a
+check is pending, report the block instead of waiting silently or bypassing
+it.
 
 Do not wait for Codex review to start or finish. Its "🔄 Running" status does
-not block a merge after the conditions above are met. A review posted after
-merge can be handled as follow-up work if it identifies a real issue.
+not block a merge after local validation passes. A review posted after merge
+can be handled as follow-up work if it identifies a real issue.
 
 A steward's own considered skip is a legitimate way to clear a finding —
 it does not require a human to sign off on each one. It is only legitimate
