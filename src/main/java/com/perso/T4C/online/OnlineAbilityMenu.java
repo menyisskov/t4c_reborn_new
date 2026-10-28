@@ -6,10 +6,13 @@ import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.online.model.CharacterProgress;
+import com.perso.T4C.online.model.CreatureView;
 import com.perso.T4C.online.model.SpellContent;
+import com.perso.T4C.online.model.SpellContentV2;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalLong;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -22,8 +25,8 @@ import java.util.function.Function;
 final class OnlineAbilityMenu {
   enum Kind { NONE, SPELLS, POTIONS }
 
-  /** Exactly one of {@code spellKey} (SPELLS) or {@code item} (POTIONS) is set. */
-  record Action(Kind kind, String spellKey, UUID item) {}
+  /** A spell key or potion identity; creature-targeted engine spells also require a live target id. */
+  record Action(Kind kind, String spellKey, UUID item, boolean requiresCreatureTarget) {}
 
   private final Function<String, ItemDefinition> items;
   private Kind open = Kind.NONE;
@@ -62,11 +65,21 @@ final class OnlineAbilityMenu {
     return "connected".equals(status) && progress != null && progress.vitals().hp() > 0;
   }
 
+  /** Resolves only the currently selected, still-living creature from the latest server snapshot. */
+  static OptionalLong liveCreatureTarget(long selectedId, List<CreatureView> creatures) {
+    if (selectedId <= 0 || creatures == null) return OptionalLong.empty();
+    return creatures.stream()
+        .filter(creature -> creature.id() == selectedId && creature.health() > 0)
+        .mapToLong(CreatureView::id)
+        .findFirst();
+  }
+
   /**
    * Digit 1-9 picks a row of the open list. A chosen row closes the list; a digit with no row, or a
    * press while unavailable, returns empty (an unavailable state also closes the list).
    */
-  Optional<Action> choose(int digit, CharacterProgress progress, SpellContent allowlist, boolean available) {
+  Optional<Action> choose(int digit, CharacterProgress progress, SpellContentV2 engineCatalog,
+      SpellContent potionAllowlist, boolean available) {
     if (!isOpen()) return Optional.empty();
     if (!available) {
       close();
@@ -74,21 +87,26 @@ final class OnlineAbilityMenu {
     }
     Optional<Action> picked =
         open == Kind.SPELLS
-            ? OnlineAbilityChoices.choose(OnlineAbilityChoices.castableSpells(progress, allowlist), digit)
-                .map(row -> new Action(Kind.SPELLS, row.key(), null))
+            ? OnlineAbilityChoices.choose(OnlineAbilityChoices.castableSpells(progress, engineCatalog), digit)
+                .map(row -> new Action(Kind.SPELLS, row.key(), null, row.requiresCreatureTarget()))
             : OnlineAbilityChoices.choose(
-                    OnlineAbilityChoices.usablePotions(progress, allowlist, items), digit)
-                .map(row -> new Action(Kind.POTIONS, null, row.instance()));
+                    OnlineAbilityChoices.usablePotions(progress, potionAllowlist, items), digit)
+                .map(row -> new Action(Kind.POTIONS, null, row.instance(), false));
     picked.ifPresent(action -> close());
     return picked;
   }
 
+  /** Compatibility overload for the preview harness; spells use the bundled v2 engine catalog. */
+  List<String> lines(CharacterProgress progress, SpellContent potionAllowlist) {
+    return lines(progress, OnlineSpellAllowlistV2.bundled(), potionAllowlist);
+  }
+
   /** Title, one line per row (first nine), an overflow note if needed, and the close hint. */
-  List<String> lines(CharacterProgress progress, SpellContent allowlist) {
+  List<String> lines(CharacterProgress progress, SpellContentV2 engineCatalog, SpellContent potionAllowlist) {
     var lines = new ArrayList<String>();
     if (open == Kind.SPELLS) {
       lines.add(I18n.key("online.ability.spells_title"));
-      var rows = OnlineAbilityChoices.castableSpells(progress, allowlist);
+      var rows = OnlineAbilityChoices.castableSpells(progress, engineCatalog);
       if (rows.isEmpty()) lines.add(I18n.key("online.ability.spells_empty"));
       for (int i = 0; i < rows.size() && i < OnlineAbilityChoices.MAX_CHOICES; i++)
         lines.add(
@@ -97,7 +115,7 @@ final class OnlineAbilityMenu {
       lines.add(I18n.key("online.ability.spells_close"));
     } else if (open == Kind.POTIONS) {
       lines.add(I18n.key("online.ability.potions_title"));
-      var rows = OnlineAbilityChoices.usablePotions(progress, allowlist, items);
+      var rows = OnlineAbilityChoices.usablePotions(progress, potionAllowlist, items);
       if (rows.isEmpty()) lines.add(I18n.key("online.ability.potions_empty"));
       for (int i = 0; i < rows.size() && i < OnlineAbilityChoices.MAX_CHOICES; i++)
         lines.add(
