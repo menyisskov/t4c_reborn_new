@@ -48,6 +48,25 @@ class OnlineCharacterCreationTest {
       assertEquals(400,client.send(post(url,owner.secret(),body.substring(0,body.length()-1)+",\"gold\":999}",version(),"application/json"),HttpResponse.BodyHandlers.ofString()).statusCode());
       assertEquals(400,client.send(post(url,owner.secret(),body.replace("\"evil\":false","\"evil\":\"false\""),version(),"application/json"),HttpResponse.BodyHandlers.ofString()).statusCode());
       assertEquals(400,client.send(post(url,owner.secret(),body.replace("\"warrior\"","\"archer\""),version(),"application/json"),HttpResponse.BodyHandlers.ofString()).statusCode());
+      var casterNames = java.util.Map.of(
+          "cleric", "Cleric", "healer", "Healer", "mage", "Magely", "battlemage", "Battlem");
+      for (var casterEntry : casterNames.entrySet()) {
+        String characterClass = casterEntry.getKey();
+        var casterAccount = store.provisionAccount();
+        String casterBody = body.replace(id, UUID.randomUUID().toString())
+            .replace("Hero", casterEntry.getValue())
+            .replace("\"warrior\"", "\"" + characterClass + "\"");
+        var casterResponse = client.send(post(url, casterAccount.secret(), casterBody, version(), "application/json"),
+            HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, casterResponse.statusCode(), casterResponse.body());
+        var caster = JSON.fromJson(casterResponse.body(), OnlineCharacterCreation.Result.class);
+        var casterProgress = store.load(casterAccount.accountId(), caster.character().id()).progress();
+        assertEquals(characterClass, caster.character().characterClass());
+        assertFalse(casterProgress.spells().isEmpty(), characterClass);
+        assertTrue(casterProgress.spells().stream().allMatch(spell ->
+            spell.equals("spell.arcane_spark") || spell.equals("spell.fire_dart")
+                || spell.equals("spell.stone_shard") || spell.equals("spell.heal_light")), characterClass);
+      }
       assertEquals(400,client.send(post(url,owner.secret(),body.replace("\"evil\":false","\"evil\":false,\"evil\":true"),version(),"application/json"),HttpResponse.BodyHandlers.ofString()).statusCode());
       assertEquals(400,client.send(HttpRequest.newBuilder(URI.create(url+"/account/characters?x=1"))
           .timeout(Duration.ofSeconds(5)).header("Content-Type","application/json")

@@ -4,6 +4,18 @@ Last reviewed: 2026-10-27, Asia/Jerusalem. This file is the restart point for a 
 
 ## Read first
 
+### Current gameplay slice: caster character creation (T4C-0272)
+
+The online create form and authenticated server endpoint now offer Warrior, Paladin, Cleric,
+Healer, Mage and Battle Mage. Starting attributes, equipment and spells come from the shared
+`CharacterClass`/`OnlineCharacterCreator`; server class resolution explicitly rejects Archer
+until ranged attacks are supported. Focused local form, kit and class-resolution tests passed;
+the authenticated creation integration tests passed 2/2 against a disposable PG16 cluster,
+which was destroyed and its port released. No desktop or owner QA resource was used. This is
+not full character parity or Beta acceptance. Next gameplay gaps remain ranged combat, broader
+monster/NPC/shop coverage, spells and the remaining online systems; inspect `PARITY.md` and
+the live peer register before claiming the next task.
+
 1. `../AGENT.md`, `../AGENTS.md`, `../CLAUDE.md` are authoritative engineering, review and delivery instructions.
 2. `../DESIGN_GUIDELINES.md`, section Multiplayer delivery, records lasting owner decisions and implementation contracts.
 3. `MILESTONES.md` is the owner-facing stage/six-milestone roadmap with exact completion criteria. `ACCEPTANCE.md` is the release evidence checklist. Unchecked Alpha/Beta gates remain unfinished.

@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-28 — Caster classes can start online (T4C-0272)
+
+### Added
+- Online character creation now offers Cleric, Healer, Mage and Battle Mage with the same starting stats, equipment and spells as single-player. Archer remains unavailable until ranged combat is implemented online.
+
 ## 2026-10-28 — Remove fixed two-hour Beta/GA session minimum (T4C-0271)
 
 ### Changed

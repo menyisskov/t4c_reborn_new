@@ -12,6 +12,14 @@ remain scale evidence, and the server's 20-player runtime cap is unchanged.
 [TASKS.md](../TASKS.md) tracks individual implementation deliveries; a completed task is
 not automatically a completed milestone.
 
+## Partial parity implementation evidence (not a milestone pass)
+
+T4C-0272 enables online creation of the four caster classes from the shared starting kits.
+Local tests passed: `OnlineCreateFormTest` 7/7, `OnlineCharacterCreatorTest` 2/2,
+`AccountRosterTest` 4 passed with its database-only case skipped, and the PostgreSQL-backed
+`OnlineCharacterCreationTest` 2/2 on a disposable local cluster. Archer remains unavailable;
+no rendered-client or broader class-combat acceptance is claimed.
+
 ## Verified foundation (updated 2026-10-27)
 
 T4C-0227 adds `httpTraffic` to the existing loopback/private-token
