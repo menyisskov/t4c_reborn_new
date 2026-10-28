@@ -1,6 +1,6 @@
 # Online spell engine design (parity step 3)
 
-Status: **stages 1 and 2 implemented (T4C-0267, protocol 6: `/cast` takes an optional `u:<creature id>` / `p:<x>,<y>` token; `p:` is parsed but the shared rules refuse it for stage-1 and stage-2 spells; one multi-creature commit, `OnlineStore.commitSpellStrikes`; T4C-0270: timed buffs, section 8); stage 3 (area spells, section 9, T4C-0282); stages 4-5 are design only**. Original status: **design draft, not implemented** (T4C-0255, 2026-10-28). Top-tier architecture lane
+Status: **stages 1 and 2 implemented (T4C-0267, protocol 6: `/cast` takes an optional `u:<creature id>` / `p:<x>,<y>` token; `p:` is parsed but the shared rules refuse it for stage-1 and stage-2 spells; one multi-creature commit, `OnlineStore.commitSpellStrikes`; T4C-0270: timed buffs, section 8); stages 3-5 are design only**. Original status: **design draft, not implemented** (T4C-0255, 2026-10-28). Top-tier architecture lane
 (AGENTS.md section 6). Implements the "Spell engine" line of [PARITY.md](PARITY.md): all 132 player
 spells and the monster spell attacks resolved on the server with the same results as single-player.
 Builds on [QUEST_ABILITY_DESIGN.md](QUEST_ABILITY_DESIGN.md) section 4 (Light Heal, `/cast`, `/use`,
@@ -388,48 +388,3 @@ revision fences, one receipt), then an `f:<player id>` token on `/cast` (additiv
 `effects_anchor`, and the strict-expiry convention. Still failing closed because no stage-2 spell uses
 them (item and aura buffs do): percent armor class, experience, unlimited, healing-received and
 speed/resist-percent modifiers.
-
-## 9. Stage 3 as implemented (T4C-0282): area spells, and why there is no tick
-
-`SpellCatalogV2.ENABLED_STAGE` is 3: 123 castable spells (48 + 33 + 42). The 42 stage-3 spells are 25 area
-attacks, 4 area heals, Poison, Poison Arrow, Plague, 3 shields and 7 gateways. Golden: `engine-stage3-golden.txt`
-is recorded from single-player's own code path (cast rules, `SpellEffectManager`, `SpellAreaTargeting` on real
-`Vector2` positions, the same selection and per-target roll order as `MainGameScreen`) for three casters and a
-fixed crowd of fifteen creatures (a stationary one, a dead one and a far one that must never be hit, more
-eligible creatures than the eight-target cap); the server reproduces it byte for byte.
-
-**Area rules (all copied, not redesigned).** Three routes, by target type. Self-centred (18: Earthquake, Flame
-Wave): the caster is the centre, a creature is hit when its tile distance (each axis in its own tile size) is at
-most the radius. Aimed at a creature (17, 19): that creature is hit first at range 0 and keeps one of the eight
-slots; the others must lie strictly inside the radius measured in pixels over the larger tile side (so a tile
-north counts half). Aimed at the ground (19, `p:<x>,<y>`): same strict rule around the tile, no primary, a protected
-tile is refused before anything is rolled. Targets are chosen before any damage, nearest first (ties by id), the
-sight rule is the shared sampled one and applies only to spells that need sight; each target rolls the centre
-formula at range 0 and the ranged formula with `r` = its distance otherwise (the falloff). Pixel maths is done in
-floats, as `Vector2` does, so edges agree. `WorldView.unitsNear` lets the server read only creatures inside the
-blast box; a creature that is dead, respawning or mid-commit is left alone (only the creature aimed at must be
-available). An area heal heals the caster only, because single-player routes it through its self-cast path. A
-ground target is a whole tile (protocol 6 carries integers); single-player takes any click position.
-
-**Commit.** No store change: `OnlineStore.commitSpellStrikes` was already N-creature (one transaction: caster
-progress, every creature's guarded health change, each kill's life claim with its drops, XP, gold, quest credit,
-the receipt). An area cast with no creature in the blast still spends the cost, through the plain gameplay event.
-
-**Damage over time: no scheduler, deliberately.** The design above (section 2.2) assumed Poison, Poison Arrow and
-Plague tick through linked spells (ids 10021, 10024, 10105). Those spells are not defined anywhere in
-single-player: `installTimedHooks` finds no spell for the id and installs no timer, so offline each of the three
-is one hit (Plague, whose effects are a hostile modifier on a monster and a hook, does nothing at all). Online must
-match, so they are resolved as that one hit (Poison and Plague without splash because they are not attacks; Poison
-Arrow with the quarter-strength splash). A tick scheduler, a periodic effect in the character record and a restart
-story would add behaviour the owner's rule forbids. `SpellEngineStageThreeGoldenTest` has a guard: if any of those
-ids ever becomes a defined spell, the test fails, and the exporter then tags the spell stage 4 by itself (it tags a
-damage-over-time spell stage 4 whenever a linked spell resolves). Entangle is that case today: its linked effects
-(10151, then 10349) exhaust the creature's movement and lower its dodge for a few seconds, which needs creature
-movement and defence state the server does not model; it stays at stage 4 with the portals, Word of Recall and Tame
-Beast. When that creature state exists, a periodic effect for creatures (in memory, as offline; an additive table
-only if it must survive a restart) is the way to build it, reusing the strict-expiry and join-shift rules of the
-character buffs.
-
-**Shields and gateways.** Offline a self cast installs no hook for them, so they cost mana, tire the caster and
-nothing else: resolved as exactly that (the heal roll draws nothing). This closes Q5's shield and gateway rows as
-reproduced no-ops.
