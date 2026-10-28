@@ -4,6 +4,7 @@ package com.perso.T4C.session;
 public final class LocalGameSession implements GameSession {
   private final CharacterPersistence persistence = new LocalCharacterPersistence();
   private final CharacterSource characters = new LocalCharacterSource();
+  private final WorldDriver world = new LocalWorldDriver();
 
   @Override
   public SessionKind kind() {
@@ -18,5 +19,10 @@ public final class LocalGameSession implements GameSession {
   @Override
   public CharacterPersistence persistence() {
     return persistence;
+  }
+
+  @Override
+  public WorldDriver world() {
+    return world;
   }
 }
