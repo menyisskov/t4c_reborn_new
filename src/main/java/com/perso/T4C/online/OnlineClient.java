@@ -570,12 +570,27 @@ public final class OnlineClient extends ApplicationAdapter {
   private void chooseAbility(int digit) {
     var progress = ownProgress();
     boolean available = OnlineAbilityMenu.available(connection.status(), progress);
-    var action = abilityMenu.choose(digit, progress, OnlineSpellAllowlist.bundled(), available).orElse(null);
+    var action = abilityMenu.choose(digit, progress, OnlineSpellAllowlistV2.bundled(),
+        OnlineSpellAllowlist.bundled(), available).orElse(null);
     if (action == null) return;
     try {
-      var pending = action.kind() == OnlineAbilityMenu.Kind.SPELLS
-          ? connection.cast(action.spellKey())
-          : connection.useItem(action.item());
+      java.util.concurrent.CompletionStage<OnlineConnection.CommandResult> pending;
+      if (action.kind() == OnlineAbilityMenu.Kind.SPELLS) {
+        if (action.requiresCreatureTarget()) {
+          var view = connection.view();
+          var liveTarget = OnlineAbilityMenu.liveCreatureTarget(
+              targetCreature, view == null ? null : view.snapshot().creatures());
+          if (liveTarget.isEmpty()) {
+            showMessage("online.cast.no_target");
+            return;
+          }
+          pending = connection.cast(action.spellKey(), liveTarget.getAsLong());
+        } else {
+          pending = connection.cast(action.spellKey());
+        }
+      } else {
+        pending = connection.useItem(action.item());
+      }
       pending.thenAccept(this::stageCommand).exceptionally(failed -> null);
     } catch (IllegalStateException pendingOrDisconnected) {
       showMessage("online.ability.busy");
@@ -644,7 +659,9 @@ public final class OnlineClient extends ApplicationAdapter {
       font.draw(hud, I18n.key("online.talk.close"), 16, y);
     } else if (abilityMenu.isOpen()) {
       var progress = view == null || view.character() == null ? null : view.character().progress();
-      OnlineAbilityMenu.draw(hud, font, abilityMenu.lines(progress, OnlineSpellAllowlist.bundled()), width - 360, height - 16);
+      OnlineAbilityMenu.draw(hud, font,
+          abilityMenu.lines(progress, OnlineSpellAllowlistV2.bundled(), OnlineSpellAllowlist.bundled()),
+          width - 360, height - 16);
     } else if (inventoryOpen) {
       float x = width - 360, y = height - 16;
       font.draw(hud, I18n.key("online.inventory.title"), x, y);
