@@ -4,6 +4,18 @@ Last reviewed: 2026-10-27, Asia/Jerusalem. This file is the restart point for a 
 
 ## Read first
 
+### Current gameplay slice: caster character creation (T4C-0272)
+
+The online create form and authenticated server endpoint now offer Warrior, Paladin, Cleric,
+Healer, Mage and Battle Mage. Starting attributes, equipment and spells come from the shared
+`CharacterClass`/`OnlineCharacterCreator`; server class resolution explicitly rejects Archer
+until ranged attacks are supported. Focused local form, kit and class-resolution tests passed;
+the authenticated creation integration tests passed 2/2 against a disposable PG16 cluster,
+which was destroyed and its port released. No desktop or owner QA resource was used. This is
+not full character parity or Beta acceptance. Next gameplay gaps remain ranged combat, broader
+monster/NPC/shop coverage, spells and the remaining online systems; inspect `PARITY.md` and
+the live peer register before claiming the next task.
+
 1. `../AGENT.md`, `../AGENTS.md`, `../CLAUDE.md` are authoritative engineering, review and delivery instructions.
 2. `../DESIGN_GUIDELINES.md`, section Multiplayer delivery, records lasting owner decisions and implementation contracts.
 3. `MILESTONES.md` is the owner-facing stage/six-milestone roadmap with exact completion criteria. `ACCEPTANCE.md` is the release evidence checklist. Unchecked Alpha/Beta gates remain unfinished.
@@ -11,7 +23,7 @@ Last reviewed: 2026-10-27, Asia/Jerusalem. This file is the restart point for a 
 
 The owner is PM/QA and has authorized autonomous implementation, focused tests, PRs, CI, self-review and merges. Use parallel sub-agents for independent tasks with explicit file ownership. Continue assigning the next crucial release item; optional polish does not outrank required gameplay. Never claim Beta complete from service unit tests alone.
 
-**Current owner decision (2026-10-27, T4C-0220):** Beta and GA concurrency acceptance is now two **real rendered clients**, including the final two-hour mixed gameplay/stability run on the integrated release. This supersedes older 20-client gate wording below; do not rewrite historical 20-adapter measurements or their failures. The existing server capacity remains 20. All other intended launch content/gameplay, anti-cheat, security, recovery, operations, distribution and owner QA gates remain open until verified. The starter checkpoint alone does not complete Beta; 20-player qualification is follow-up scale evidence.
+**Current owner decisions:** Beta and GA require two **real rendered clients** for mixed gameplay/stability evidence. The owner removed the fixed two-hour minimum on 2026-10-28: record actual session duration, but there is no duration threshold. Preserve older 20-adapter measurements and failures as historical evidence. The existing server capacity remains 20. All other intended launch content/gameplay, anti-cheat, security, recovery, operations, distribution and owner QA gates remain open until verified. The starter checkpoint alone does not complete Beta; 20-player qualification is follow-up scale evidence.
 
 ## T4C-0212 moving pursuit integration checkpoint
 
@@ -136,7 +148,7 @@ Use ship-pr/steward. Self-review the actual scoped diff. Commit task/changelog/d
 
 ## Remaining release sequence
 
-Map-transfer delivery is merged and reliability regressions pass; diagnose the new SQL08001 load failure without mutating its captured runtime, then rerun after a verified fix. The opening NPC service is merged; complete its rendered interaction and native character selection/account lifecycle, quests/general ground loot, required spells/abilities/inventory controls, broader hosted world routes and encounters, full creation-to-progression playthrough, crash/reconnect/database/restore playthroughs, and attack/replay/duplication abuse checks. Run sustained two-hour mixed gameplay with two real rendered clients on the final integrated release, with tick/DB/latency/resource measurements; qualify 20-player scale separately as follow-up evidence. HTTPS configuration exists, while external deployment and native remote QA remain open. Follow ACCEPTANCE.md rather than declaring Beta from this list alone. Deployment credentials or external hosting choices may need the owner; exhaust local work before asking.
+Map-transfer delivery is merged and reliability regressions pass; diagnose the new SQL08001 load failure without mutating its captured runtime, then rerun after a verified fix. The opening NPC service is merged; complete its rendered interaction and native character selection/account lifecycle, quests/general ground loot, required spells/abilities/inventory controls, broader hosted world routes and encounters, full creation-to-progression playthrough, crash/reconnect/database/restore playthroughs, and attack/replay/duplication abuse checks. Run mixed gameplay with two real rendered clients on the final integrated release, recording session duration and tick/DB/latency/resource measurements; no fixed duration minimum applies. Qualify 20-player scale separately as follow-up evidence. HTTPS configuration exists, while external deployment and native remote QA remain open. Follow ACCEPTANCE.md rather than declaring Beta from this list alone. Deployment credentials or external hosting choices may need the owner; exhaust local work before asking.
 
 ## Peer coordination and latest verification
 
@@ -197,7 +209,7 @@ capacity; do not assume it remains active. Inspect live agents/processes and coo
 
 Main18765 currently runs the earlier pooled99-test QA package on t4c_online, before the last shutdown
 correction. Native GUI control remains paused after the owner's physical Escape stop. Both previous
-immutable long runs failed and were stopped; no passing two-hour result exists. Do not restart another
+immutable long runs failed and were stopped; no passing integrated rendered-client mixed-session result exists. Do not restart another
 long run before scoped self-review, final integrated verification/probes and a useful clean smoke.
 Metrics code is not yet wired into an operator endpoint or soak report; no benchmark is established.
 
@@ -273,7 +285,7 @@ passed 19 focused desktop tests, 21 domain plus 86 PostgreSQL server tests; the 
 probe returned in 2.026 seconds. A 15-second 20-native-adapter metrics run collected four private
 operator samples with zero metric/adapter/health failures and 13.975 seconds at twenty connected;
 the credential/path was absent from its ignored report. These are local adapter checks, not full
-Beta, two-hour or rendered-client evidence. Delivery follows the current local-validation merge policy in `AGENTS.md`; CI may finish after merge. Current QA metrics server
+Beta or complete mixed rendered-client gameplay evidence. Delivery follows the current local-validation merge policy in `AGENTS.md`; CI may finish after merge. Current QA metrics server
 PID52688 runs the matching persistent build; verify current metadata before actions.
 
 ## Loot groundwork checkpoint (T4C-0201/0202, Claude lane)
@@ -579,7 +591,7 @@ stalled-body failure, accepted a valid 433,111-byte/897-row snapshot in
 The original green PR163 head predates this fix and cannot establish the
 final contract; rerun current-head CI after the follow-up commit.
 These are not wire bandwidth, database latency, live load,
-rendered play or the two-hour M5/Beta gate. No DB/server/GUI/owner QA
+rendered play or the mixed rendered-client M5/Beta gate. No DB/server/GUI/owner QA
 resource was used for the isolated checks. T4C-0225 remains Planned pending
 Claude handoff; next free ID T4C-0228.
 
@@ -603,7 +615,7 @@ exit 0 and free port. Preserve the first oversize-101 probe failure and
 second fresh-DB PASS (source `64959051`, report `A55545BD`) separately;
 all three databases, logs and reports remain retained. This does not verify
 four seconds of continuous attack, rendered/remote traffic, arbitrary DoS,
-two-hour mixed play or completed M5/Beta. T4C-0225 remains Planned pending
+complete mixed rendered-client gameplay or completed M5/Beta. T4C-0225 remains Planned pending
 explicit Claude handoff; next task ID is T4C-0227. Owner QA and GUI remain
 under their own resource claims.
 

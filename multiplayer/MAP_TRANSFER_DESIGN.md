@@ -126,8 +126,8 @@ Use the existing explicit native asset mapping:
 The region loader, narrow portal exception, global coordinator, transaction receipts, epoch protocol, native asset-switch code and hosted cross-map death publication are implemented. Focused tests cover the consequential persistence and isolation joins; do not reimplement them from the older imperative rationale above.
 
 1. Resume desktop QA only when authorized after the owner's physical stop. Run two rendered clients through 16/17, reconnect inside, then join both in the interior; verify actual map art and offline launch separately.
-2. Complete a fresh clean two-hour mixed 20-adapter run on the fixed binaries, followed by final integrated-release load and rendered/network checks. Preserve failures instead of counting elapsed time as acceptance.
+2. Treat 20-adapter scale runs as optional follow-up evidence, not a Beta/GA gate. Complete final integrated-release mixed gameplay and rendered/network checks with two real clients; record duration and preserve failures.
 3. Verify crash/restart and restored gameplay through transfers and fatal relocation.
 4. Expand hosted routes/content deliberately, including self-target source suppression, supported encounters and valid saved respawns. Keep unknown/unhosted destinations explicit.
 
-Full Beta still requires broader hosted-map coverage, supported content/NPC/quest behavior, progression and economy joins, secure remote transport/accounts, restart/restore evidence and sustained mixed 20-client operation. Passing this two-region slice proves a transfer vertical slice, not those remaining acceptance criteria.
+Full Beta still requires broader hosted-map coverage, supported content/NPC/quest behavior, progression and economy joins, secure remote transport/accounts, restart/restore evidence and mixed gameplay/stability evidence with two real rendered clients. Passing this two-region slice proves a transfer vertical slice, not those remaining acceptance criteria.

@@ -16,6 +16,9 @@ class OnlineCreateFormTest {
 
   @Test
   void everyOfferedClassIsARealGameClassAndHasEnglishText() {
+    assertEquals(
+        java.util.List.of("warrior", "archer", "paladin", "cleric", "healer", "mage", "battlemage"),
+        OnlineCharacterCreation.CLASSES);
     for (String id : OnlineCharacterCreation.CLASSES) {
       CharacterClass match = null;
       for (CharacterClass value : CharacterClass.values()) if (value.id().equals(id)) match = value;
