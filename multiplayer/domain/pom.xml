@@ -74,6 +74,9 @@
                         <include>com/perso/T4C/spell/SpellKeys.java</include>
                         <include>com/perso/T4C/spell/SpellCastRules.java</include>
                         <include>com/perso/T4C/spell/SpellHealRules.java</include>
+                        <include>com/perso/T4C/spell/ElementRules.java</include>
+                        <include>com/perso/T4C/spell/SpellFormulaContexts.java</include>
+                        <include>com/perso/T4C/world/LineOfSightRules.java</include>
                     </includes>
                     <testIncludes>
                         <testInclude>com/perso/T4C/monster/core/MonsterPursuitRulesTest.java</testInclude>
@@ -81,6 +84,8 @@
                         <testInclude>com/perso/T4C/spell/SpellKeysTest.java</testInclude>
                         <testInclude>com/perso/T4C/spell/SpellCastRulesTest.java</testInclude>
                         <testInclude>com/perso/T4C/spell/SpellHealRulesTest.java</testInclude>
+                        <testInclude>com/perso/T4C/spell/SpellFormulaContextsTest.java</testInclude>
+                        <testInclude>com/perso/T4C/world/LineOfSightRulesTest.java</testInclude>
                         <testInclude>com/perso/T4C/combat/CombatResolverTest.java</testInclude>
                         <testInclude>com/perso/T4C/combat/WeaponDamageRulesTest.java</testInclude>
                         <testInclude>com/perso/T4C/combat/WeaponTimingRulesTest.java</testInclude>

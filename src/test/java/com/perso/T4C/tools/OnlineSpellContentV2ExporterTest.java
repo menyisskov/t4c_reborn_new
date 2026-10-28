@@ -1,0 +1,59 @@
+package com.perso.T4C.tools;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import com.perso.T4C.online.model.SpellContentV2.Kind;
+import com.perso.T4C.spell.SpellRegistry;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+import org.junit.jupiter.api.Test;
+
+/** The classification the engine stages are planned from (SPELL_ENGINE_DESIGN 1.2 and 6). */
+class OnlineSpellContentV2ExporterTest {
+  @Test
+  void everyPlayerSpellIsClassifiedAndTheCountsMatchTheDesign() {
+    var content = OnlineSpellContentV2Exporter.snapshot();
+    assertEquals(SpellRegistry.playerCastableSpells().size(), content.spells().size());
+    Map<Kind, Long> counts = new EnumMap<>(Kind.class);
+    content.spells().values().forEach(spell -> counts.merge(spell.kind(), 1L, Long::sum));
+    // These are the design's table; a content change that moves one is a deliberate decision.
+    var expected = Map.ofEntries(Map.entry(Kind.NUKE, 40L), Map.entry(Kind.AREA_DAMAGE, 25L),
+        Map.entry(Kind.DRAIN, 4L), Map.entry(Kind.HEAL, 4L), Map.entry(Kind.AREA_HEAL, 4L),
+        Map.entry(Kind.BUFF, 25L), Map.entry(Kind.DEBUFF, 1L), Map.entry(Kind.DOT, 4L),
+        Map.entry(Kind.SHIELD, 3L), Map.entry(Kind.GATEWAY, 7L), Map.entry(Kind.PORTAL, 6L),
+        Map.entry(Kind.RECALL, 1L), Map.entry(Kind.DETECTION, 4L), Map.entry(Kind.DISPEL, 2L),
+        Map.entry(Kind.SPECIAL, 2L));
+    assertEquals(expected, counts);
+  }
+
+  @Test
+  void stageOneIsExactlyTheFortyEightDirectSpells() {
+    var stageOne = OnlineSpellContentV2Exporter.snapshot().spells().values().stream()
+        .filter(spell -> spell.stage() == 1).toList();
+    assertEquals(48, stageOne.size());
+    assertTrue(stageOne.stream().allMatch(spell -> spell.support().equals("stage-1")));
+    var kinds = stageOne.stream().map(spell -> spell.kind()).collect(Collectors.toSet());
+    assertEquals(java.util.Set.of(Kind.NUKE, Kind.DRAIN, Kind.HEAL), kinds);
+    // Every stage-1 spell carries a first-parameter damage or heal formula the engine evaluates.
+    assertTrue(stageOne.stream().allMatch(spell -> spell.effects().stream().anyMatch(effect ->
+        (effect.type() == 1 || effect.type() == 10) && effect.params().stream().anyMatch(param ->
+            param.id() == 1 && param.expression() != null && !param.expression().isBlank()))
+        || spell.maxDamage() > 0));
+    assertTrue(stageOne.stream().filter(spell -> spell.kind() == Kind.NUKE).allMatch(spell ->
+        spell.attack() && spell.targetType() == 11 && spell.radius() >= 0));
+    assertTrue(stageOne.stream().filter(spell -> spell.kind() == Kind.HEAL).allMatch(spell ->
+        !spell.attack() && spell.targetType() == 3));
+  }
+
+  @Test
+  void theSelfHealKeepsTheSameFormulasAsTheLiveAllowlist() {
+    var v2 = OnlineSpellContentV2Exporter.snapshot().spells().get("spell.heal_light");
+    var v1 = OnlineSpellContentExporter.snapshot().spells().get("spell.heal_light");
+    assertEquals(v1.effects(), v2.effects());
+    assertEquals(v1.manaCost(), v2.manaCost());
+    assertEquals(v1.mentalExhaustion(), v2.mentalExhaustion());
+    assertEquals(v1.id(), v2.id());
+    assertEquals(1, v2.stage());
+  }
+}

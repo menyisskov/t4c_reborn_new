@@ -17,14 +17,16 @@ class OnlineSpellQuestContentFreshnessTest {
   @TempDir Path temporary;
 
   @ParameterizedTest
-  @ValueSource(strings = {"spells", "quests"})
+  @ValueSource(strings = {"spells", "quests", "spells-v2"})
   void packagedContentMatchesActualRuntimeDefinitions(String kind) throws Exception {
     String exporter = switch (kind) {
       case "spells" -> OnlineSpellContentExporter.class.getName();
       case "quests" -> OnlineQuestContentExporter.class.getName();
+      case "spells-v2" -> OnlineSpellContentV2Exporter.class.getName();
       default -> throw new IllegalArgumentException("Unknown content kind " + kind);
     };
-    String actual = Files.readString(Path.of("multiplayer/server/src/main/resources/content/" + kind + "-v1.json"))
+    String file = kind.equals("spells-v2") ? "spells-v2.json" : kind + "-v1.json";
+    String actual = Files.readString(Path.of("multiplayer/server/src/main/resources/content/" + file))
         .replace("\r\n", "\n");
     // Export in a fresh production-classpath JVM so freshness never depends on test ordering.
     String tests = Path.of(getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).toString();
