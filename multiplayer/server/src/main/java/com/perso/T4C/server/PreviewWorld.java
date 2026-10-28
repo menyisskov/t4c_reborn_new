@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import com.perso.T4C.online.model.CreatureView;
 import com.perso.T4C.online.model.MonsterContent;
+import com.perso.T4C.world.MovementRules;
 
 /** Owned exclusively by the simulation thread. Network clients supply directions, never positions. */
 public final class PreviewWorld {
@@ -34,11 +35,14 @@ public final class PreviewWorld {
     double x, y;
     int hp=1,maxHp=1;
     boolean frozen;
+    final ServerMovement.Glide glide = new ServerMovement.Glide();
     double requestCredits = REQUEST_BURST;
     long budgetTick;
   }
   final int worldId;
   private final PreviewMap map;
+  private final ServerMovement.Terrain terrain;
+  private MovementRules.Mode movement = ServerMovement.defaultMode();
   private final List<CreatureView> creatures;
   record CreatureSpawn(long id, MonsterContent.Spawn spawn, com.perso.T4C.monster.core.MonsterDef definition) {}
   private final List<CreatureSpawn> creatureSpawns;
@@ -54,7 +58,7 @@ public final class PreviewWorld {
   public PreviewWorld(PreviewMap map, MonsterContent content) { this(map,content,0); }
 
   PreviewWorld(PreviewMap map,MonsterContent content,int worldId) {
-    this.map = map; this.worldId=worldId;
+    this.map = map; this.worldId=worldId; this.terrain = new ServerMovement.Terrain(map);
     var residents=new ArrayList<CreatureView>();
     var authored=new ArrayList<CreatureSpawn>();
     var keys=new java.util.HashSet<String>();
@@ -78,6 +82,13 @@ public final class PreviewWorld {
     creatureSpawns=List.copyOf(authored);
     for (var creature : creatures)
       creaturePositions.put(creature.id(), new CreaturePosition(creature.x(), creature.y()));
+  }
+
+  /** Which movement rule steps players; defaults to single-player's grid reservation. */
+  MovementRules.Mode movementMode() { return movement; }
+  void movementMode(MovementRules.Mode mode) {
+    movement = java.util.Objects.requireNonNull(mode);
+    for (Player p : players.values()) p.glide.clear();
   }
 
   List<CreatureSpawn> creatureSpawns() { return creatureSpawns; }
@@ -118,6 +129,9 @@ public final class PreviewWorld {
 
   Joined joinAt(double x,double y,long appearance,long globalId) {
     if (players.size() >= MAX_PLAYERS) throw new Rejected(409, "full");
+    // Positions saved before grid movement (or mid-glide) may sit between tiles: rest on the centre
+    // of the tile they stand on, which was legal when it was saved.
+    if (movement == MovementRules.Mode.GRID_RESERVATION) { x = ServerMovement.anchor(x); y = ServerMovement.anchor(y); }
     if (!map.canStand(x,y)) throw new Rejected(409,"position");
     byte[] secret = new byte[32];
     random.nextBytes(secret);
@@ -196,14 +210,14 @@ public final class PreviewWorld {
   void relocate(String token,double x,double y) {
     if (!map.canStand(x,y)) throw new IllegalArgumentException("Blocked relocation");
     var p=players.get(token);
-    if (p!=null) { p.x=x; p.y=y; p.dx=0; p.dy=0; }
+    if (p!=null) { p.x=x; p.y=y; p.dx=0; p.dy=0; p.glide.clear(); }
   }
 
   void transferTo(PreviewWorld destination,String token,double x,double y) {
     if(!destination.map.canStand(x,y)) throw new IllegalArgumentException("Blocked transfer destination");
     var player=players.get(token);if(player==null) return;
     if(destination!=this && destination.players.containsKey(token)) throw new IllegalStateException("Duplicate actor owner");
-    players.remove(token);player.x=x;player.y=y;player.dx=0;player.dy=0;player.frozen=true;
+    players.remove(token);player.x=x;player.y=y;player.dx=0;player.dy=0;player.glide.clear();player.frozen=true;
     player.lastSeen=destination.tick;player.lastInput=destination.tick;player.budgetTick=destination.tick;
     destination.players.put(token,player);
   }
@@ -214,12 +228,18 @@ public final class PreviewWorld {
     tick++;
     players.values().removeIf(p -> tick - p.lastSeen > SESSION_TIMEOUT_TICKS);
     // Fixed server-owned time and speed. Repeated input packets cannot add movement budget.
+    boolean grid = movement == MovementRules.Mode.GRID_RESERVATION;
     double distance = PLAYER_SPEED / GRID_W / TICK_RATE;
     int steps = (int) Math.ceil(distance / 0.2);
     double amount = distance / steps;
     for (Player p : players.values()) {
       if (p.frozen || p.hp<=0) continue;
       if (tick - p.lastInput > INPUT_TIMEOUT_TICKS) { p.dx = 0; p.dy = 0; }
+      if (grid) {
+        var moved = ServerMovement.step(map, terrain, p.glide, p.x, p.y, p.dx, p.dy);
+        p.x = moved.x(); p.y = moved.y();
+        continue;
+      }
       for (int i = 0; i < steps; i++) {
         double x = p.x + p.dx * amount, y = p.y + p.dy * amount;
         // Swept substeps plus orthogonal checks prevent tunneling and diagonal corner cuts.
