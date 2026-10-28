@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.perso.T4C.config.MapDefinition;
-import com.perso.T4C.exception.GameException;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.monster.core.MonsterManager;
 import com.perso.T4C.npc.core.NPCManager;
@@ -22,7 +21,7 @@ import org.junit.jupiter.api.parallel.ResourceLock;
  * Characterizes the single-player "create the monster and NPC registries for the current map"
  * block: what is queued (spawns are lazy, so nothing is alive yet), in which order, and how the
  * summon callback behaves. Written before the block moved behind {@code WorldDriver}; only the
- * {@link #load} helper changes when it moves.
+ * {@link #load} helper changed when it moved.
  */
 @ResourceLock("npc.summon")
 class WorldEntitiesCharacterizationTest {
@@ -39,26 +38,13 @@ class WorldEntitiesCharacterizationTest {
 
   private static void load(MapDefinition map) {
     currentMap = map;
-    monsters = new MonsterManager(null);
-    NpcScriptRuntime.setSummonCallback(
-        (name, x, y, z) -> {
-          if (currentMap == null || currentMap.getZ() != z) return false;
-          if (monsters.spawnMonster(name, x, y, false)) return true;
-          return npcs != null && npcs.spawnNPC(name, x, y);
-        });
-    monsters.setXpCurve(XpCurve.loadDefault());
-    try {
-      monsters.initializeMonstersFromMap(map.getMapPath());
-    } catch (GameException e) {
-      throw new AssertionError(e);
-    }
-    npcs = new NPCManager(null, null);
-    try {
-      npcs.initializeNpcsFromMap(map.getMapPath());
-    } catch (GameException e) {
-      throw new AssertionError(e);
-    }
-    npcs.triggerPopupEvents(null);
+    WorldEntities entities =
+        new LocalGameSession()
+            .world()
+            .loadEntities(
+                new WorldEntityInputs(null, null, XpCurve.loadDefault(), () -> currentMap, null));
+    monsters = entities.monsters();
+    npcs = entities.npcs();
   }
 
   // --- behaviour ---

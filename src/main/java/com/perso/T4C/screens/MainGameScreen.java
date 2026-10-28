@@ -341,9 +341,18 @@ public class MainGameScreen implements Screen {
   }
 
   private void initializeWorldEntities() {
-    monsterManager = createMonsterManager();
-    npcManager = createNpcManager();
-    npcManager.triggerPopupEvents(player);
+    loadWorldEntities();
+  }
+
+  private void loadWorldEntities() {
+    com.perso.T4C.session.WorldEntities entities =
+        session
+            .world()
+            .loadEntities(
+                new com.perso.T4C.session.WorldEntityInputs(
+                    outlineShader, questService, xpCurve, () -> currentMap, player));
+    monsterManager = entities.monsters();
+    npcManager = entities.npcs();
   }
 
   private void initializeCompanionAndCallbacks() throws GameException {
@@ -817,35 +826,6 @@ public class MainGameScreen implements Screen {
     CollisionManager.getInstance()
         .setDynamicProvider((worldX, worldY) -> renderer.isDoorBlockedAt(worldX, worldY));
     return renderer;
-  }
-
-  private NPCManager createNpcManager() {
-    NPCManager manager = new NPCManager(outlineShader, questService);
-    try {
-      String mapPath = currentMap != null ? currentMap.getMapPath() : Paths.MAP;
-      manager.initializeNpcsFromMap(mapPath);
-    } catch (GameException e) {
-      log.error("Failed to initialize NPCs from map json", e);
-    }
-    return manager;
-  }
-
-  private MonsterManager createMonsterManager() {
-    MonsterManager manager = new MonsterManager(outlineShader);
-    NpcScriptRuntime.setSummonCallback(
-        (name, x, y, z) -> {
-          if (currentMap == null || currentMap.getZ() != z) return false;
-          if (manager.spawnMonster(name, x, y, false)) return true;
-          return npcManager != null && npcManager.spawnNPC(name, x, y);
-        });
-    manager.setXpCurve(xpCurve);
-    try {
-      String mapPath = currentMap != null ? currentMap.getMapPath() : Paths.MAP;
-      manager.initializeMonstersFromMap(mapPath);
-    } catch (GameException e) {
-      log.error("Failed to initialize monsters from map json", e);
-    }
-    return manager;
   }
 
   private void configureCallbacks() {
@@ -1411,9 +1391,7 @@ public class MainGameScreen implements Screen {
         }
         npcManager.dispose();
       }
-      monsterManager = createMonsterManager();
-      npcManager = createNpcManager();
-      npcManager.triggerPopupEvents(player);
+      loadWorldEntities();
       if (companionManager != null) {
         companionManager.setNpcManager(npcManager);
         npcManager.setCompanionManager(companionManager);
