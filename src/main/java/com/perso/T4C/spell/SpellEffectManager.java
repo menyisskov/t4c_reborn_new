@@ -81,32 +81,7 @@ public final class SpellEffectManager {
         if (formula != null) healFormulas.add(formula);
       }
     }
-    DiceFormula.Context base = SpellCastingService.context(caster);
-    DiceFormula.Context context =
-        new DiceFormula.Context(
-                base.str,
-                base.end,
-                base.agi,
-                base.intel,
-                base.wil,
-                base.wis,
-                base.luck,
-                base.level,
-                0,
-                100,
-                100,
-                100,
-                100,
-                100,
-                100,
-                elementalPower(caster, "fire"),
-                elementalPower(caster, "earth"),
-                elementalPower(caster, "air"),
-                elementalPower(caster, "water"),
-                elementalPower(caster, "light"),
-                elementalPower(caster, "dark"))
-            .withSelfTrue(base.selfTrue)
-            .withEquippedItems(base.equippedItems);
+    DiceFormula.Context context = casterContext(caster);
     return SpellHealRules.healthDelta(
         healFormulas,
         spell.getMinDamage(),
@@ -387,37 +362,16 @@ public final class SpellEffectManager {
 
   private static int evaluate(String formula, Player caster, BaseMonster target, double range) {
     if (formula == null || formula.isBlank()) return 0;
-    int fire = resistance(target, 1);
-    int earth = resistance(target, 2);
-    int air = resistance(target, 3);
-    int water = resistance(target, 4);
-    int light = resistance(target, 5);
-    int dark = resistance(target, 6);
     DiceFormula.Context context =
-        new DiceFormula.Context(
-                caster.getEffectiveStrength(),
-                caster.getEffectiveEndurance(),
-                caster.getEffectiveDexterity(),
-                caster.getEffectiveIntelligence(),
-                0,
-                caster.getEffectiveWisdom(),
-                0,
-                caster.getLevel(),
-                0,
-                fire,
-                earth,
-                air,
-                water,
-                light,
-                dark,
-                elementalPower(caster, "fire"),
-                elementalPower(caster, "earth"),
-                elementalPower(caster, "air"),
-                elementalPower(caster, "water"),
-                elementalPower(caster, "light"),
-                elementalPower(caster, "dark"))
-            .withSelfTrue(SpellCastingService.selfTrue(caster))
-            .withEquippedItems(SpellCastingService.equippedItems(caster));
+        SpellFormulaContexts.against(
+            SpellCastingService.casterOf(caster),
+            new SpellFormulaContexts.Elements(
+                resistance(target, 1),
+                resistance(target, 2),
+                resistance(target, 3),
+                resistance(target, 4),
+                resistance(target, 5),
+                resistance(target, 6)));
     String withRange =
         formula.replaceAll("(?<![A-Za-z_.])r(?![A-Za-z_])", Double.toString(Math.max(0d, range)));
     return DiceFormula.of(withRange).evaluate(context);
@@ -454,8 +408,7 @@ public final class SpellEffectManager {
   }
 
   private static int resistance(BaseMonster target, int element) {
-    int value = target.getElementResistance(element);
-    return value <= 0 ? 100 : value;
+    return ElementRules.targetResistance(target.getElementResistance(element));
   }
 
   private static int elementalPower(Player caster, String element) {
@@ -471,32 +424,8 @@ public final class SpellEffectManager {
     return DiceFormula.of(formula).evaluate(context);
   }
 
-  private static DiceFormula.Context casterContext(Player caster) {
-    DiceFormula.Context base = SpellCastingService.context(caster);
-    return new DiceFormula.Context(
-            base.str,
-            base.end,
-            base.agi,
-            base.intel,
-            base.wil,
-            base.wis,
-            base.luck,
-            base.level,
-            0,
-            100,
-            100,
-            100,
-            100,
-            100,
-            100,
-            elementalPower(caster, "fire"),
-            elementalPower(caster, "earth"),
-            elementalPower(caster, "air"),
-            elementalPower(caster, "water"),
-            elementalPower(caster, "light"),
-            elementalPower(caster, "dark"))
-        .withSelfTrue(base.selfTrue)
-        .withEquippedItems(base.equippedItems);
+  static DiceFormula.Context casterContext(Player caster) {
+    return SpellFormulaContexts.forSelf(SpellCastingService.casterOf(caster));
   }
 
   /**
