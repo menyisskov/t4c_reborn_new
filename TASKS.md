@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0276`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0278`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0277 | Spell engine stage 3, area spells: the online server now resolves 42 more spells through the shared engine, equal to the single-player code path value for value (seeded-random golden: 25 area attacks aimed at a creature, at the ground or centred on the caster with single-player's own target selection, nearest eight, ranged-formula falloff and per-axis distance rules; 4 area heals, which heal the caster only as offline; Poison, Poison Arrow and Plague, which are one hit offline because the tick spells they link are not defined, so no tick scheduler is needed or built; the 3 shields and 7 gateways, which only cost on a self cast offline). The p:x,y target of /cast is real for ground spells (range, shared sight rule, safe-haven refusal before any roll); every struck creature, kill, drop, quest credit and the caster's costs commit in the existing single atomic commit. Entangle stays at stage 4 (its linked effects need creature movement and defence state). ENABLED_STAGE is 3: 123 castable spells | Systems/Online | In Progress | - | - |
 | T4C-0275 | Export online NPC shop offers with the existing offline buy and resale prices | Multiplayer / parity | PR #231 open (local checks passed; offer data only; transactions/native shop flow remain open) | pending | deferred |
 | T4C-0274 | Expose existing generic NPC shop inventories to the online server catalog (no transaction or client changes) | Multiplayer / parity | Delivered (PR #230; focused tests and package builds passed) | PR #230 (b8b0ccc) | deferred |
 | T4C-0273 | Enable online Archer combat with server-authoritative bow/quiver checks, ranged damage and range/line-of-sight validation matching single-player | Multiplayer / parity | Done (PR #229; local tests passed) | PR #229 | [CHANGELOG.md](CHANGELOG.md#2026-10-28--archer-attacks-are-supported-by-the-online-server-t4c-0273) |

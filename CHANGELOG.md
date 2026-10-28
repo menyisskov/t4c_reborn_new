@@ -6,6 +6,14 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-28 — Area spells work in online play (T4C-0277)
+
+### Added
+- In online play, the area attack spells can now be cast: Fireball, Cinderburst, Boulders, Earthquake, Flame Wave, Meteor, Hurricane, Tornado, Avalanche, Blizzard, Chain Lightning, Firestorm, Rain of Fire, Ice Storm and the rest of the area attacks. They hit the same creatures as in single-player (the target and up to seven more nearby, the nearest first), weaker the farther they are from the centre, and every kill gives its experience, gold, loot and quest credit.
+- The area healing spells (Mass Healing, Healing Mist, Wellspring Mercy, Dawnwell Renewal) heal you, as they do in single-player.
+- Poison, Poison Arrow and Plague can be cast online and do exactly what they do in single-player. The Fire, Ice and Electric Shields and the seven gateway spells can be cast and cost mana, with nothing else happening, as in single-player.
+- Entangle, the portal spells, Word of Recall and Tame Beast are still not available online.
+
 ## 2026-10-28 — Archer attacks are supported by the online server (T4C-0273)
 
 ### Added

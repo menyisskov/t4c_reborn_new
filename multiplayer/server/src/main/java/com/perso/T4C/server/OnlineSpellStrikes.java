@@ -149,8 +149,10 @@ final class OnlineSpellStrikes {
       throw rejected("unsupported_spell");
     }
     boolean attack = spell.kind() == SpellContentV2.Kind.NUKE || spell.kind() == SpellContentV2.Kind.DRAIN
-        || spell.kind() == SpellContentV2.Kind.DEBUFF;
-    if (target instanceof SpellEngine.Target.Unit && attack
+        || spell.kind() == SpellContentV2.Kind.DEBUFF || spell.kind() == SpellContentV2.Kind.DOT
+        || spell.kind() == SpellContentV2.Kind.AREA_DAMAGE;
+    // An area spell can hurt creatures without aiming at one, so it is held to the same combat support.
+    if ((target instanceof SpellEngine.Target.Unit || spell.kind() == SpellContentV2.Kind.AREA_DAMAGE) && attack
         && (progress.companion() != null || !OnlineQuestFlags.supported(progress.questFlags(), QuestCatalog.bundled())))
       throw rejected("unsupported_combat");
     SpellFormulaContexts.Caster caster;
@@ -413,6 +415,29 @@ final class OnlineSpellStrikes {
       }
       near = List.copyOf(list);
       return near;
+    }
+
+    /**
+     * Area spells: only the creatures whose tile lies in the box are read, so a reserved or recovering
+     * creature far from the blast never refuses the cast. Ascending id, as the engine's ties require.
+     */
+    @Override public List<SpellEngine.UnitView> unitsNear(double centerX, double centerY, double tilesX, double tilesY) {
+      var list = new ArrayList<SpellEngine.UnitView>();
+      var spawns = new ArrayList<>(source.spawns());
+      spawns.sort(java.util.Comparator.comparingLong(PreviewWorld.CreatureSpawn::id));
+      for (var spawn : spawns) {
+        var position = source.position(spawn.id());
+        if (Math.abs(position.x() - centerX) > tilesX || Math.abs(position.y() - centerY) > tilesY) continue;
+        try {
+          var fact = read(spawn.id());
+          if (fact != null) list.add(unitOf(fact));
+        } catch (PreviewWorld.Rejected unavailable) {
+          // A creature that is dead, respawning or mid-commit is not in the blast: it is left alone
+          // (only the creature aimed at must be available, which unit() still enforces).
+          if (!"creature_unavailable".equals(unavailable.getMessage())) throw unavailable;
+        }
+      }
+      return list;
     }
 
     @Override public boolean combatSafe(double fromX, double fromY, double toX, double toY) {
