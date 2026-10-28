@@ -728,6 +728,11 @@ class PreviewServerTest {
     } finally { store.release(session); }
   }
 
+  /** A death moves the character, so its location epoch is no longer zero. */
+  private long epochOf(HttpClient client,String url,String token) throws Exception {
+    return object(client.send(request(url,"/character",token,null),HttpResponse.BodyHandlers.ofString())).get("locationEpoch").getAsLong();
+  }
+
   /** The corpse list is read right after joining; retry only while the session has not seen it yet. */
   private HttpResponse<String> recoverWhenKnown(HttpClient client,String url,String token,String current,String body) throws Exception {
     HttpResponse<String> response=null;
@@ -755,10 +760,10 @@ class PreviewServerTest {
       // Another player's corpse is not visible to this session.
       String foreign=login(client,url,stranger,other.id());
       long foreignRevision=object(client.send(request(url,"/character",foreign,null),HttpResponse.BodyHandlers.ofString())).get("revision").getAsLong();
-      var notYours=client.send(abilityRequest(url,"/recover",foreign,current,foreignRevision+" 0 "+corpse.id()),HttpResponse.BodyHandlers.ofString());
+      var notYours=client.send(abilityRequest(url,"/recover",foreign,current,foreignRevision+" "+epochOf(client,url,foreign)+" "+corpse.id()),HttpResponse.BodyHandlers.ofString());
       assertEquals(409,notYours.statusCode(),notYours.body()); assertTrue(notYours.body().contains("corpse_unavailable"),notYours.body());
       // An item that is not on the corpse is a definite refusal, not a busy server.
-      var missing=recoverWhenKnown(client,url,token,current,revision+" 0 "+corpse.id()+" "+java.util.UUID.randomUUID());
+      var missing=recoverWhenKnown(client,url,token,current,revision+" "+epochOf(client,url,token)+" "+corpse.id()+" "+java.util.UUID.randomUUID());
       assertEquals(409,missing.statusCode(),missing.body()); assertTrue(missing.body().contains("item_unavailable"),missing.body());
       assertEquals(200,client.send(request(url,"/character",token,null),HttpResponse.BodyHandlers.ofString()).statusCode(),"A refusal keeps the player connected");
       assertEquals(corpse.dead(),store.load(owner.accountId(),corpse.dead().id()),"The refusal changed nothing");
@@ -766,7 +771,7 @@ class PreviewServerTest {
       String heavyToken=login(client,url,heavyAccount,heavyCorpse.dead().id());
       long heavyRevision=object(client.send(request(url,"/character",heavyToken,null),HttpResponse.BodyHandlers.ofString())).get("revision").getAsLong();
       var heavyBefore=store.load(heavyAccount.accountId(),heavyCorpse.dead().id());
-      var tooHeavy=recoverWhenKnown(client,url,heavyToken,current,heavyRevision+" 0 "+heavyCorpse.id()+" "+heavyCorpse.items().getFirst().id());
+      var tooHeavy=recoverWhenKnown(client,url,heavyToken,current,heavyRevision+" "+epochOf(client,url,heavyToken)+" "+heavyCorpse.id()+" "+heavyCorpse.items().getFirst().id());
       assertEquals(409,tooHeavy.statusCode(),tooHeavy.body()); assertTrue(tooHeavy.body().contains("too_heavy"),tooHeavy.body());
       assertEquals(heavyBefore,store.load(heavyAccount.accountId(),heavyCorpse.dead().id()),"The refusal changed nothing");
     }
@@ -794,7 +799,7 @@ class PreviewServerTest {
       var response=client.send(HttpRequest.newBuilder(URI.create(url+"/recover")).timeout(Duration.ofSeconds(8))
           .header("Origin",url).header("Content-Type","text/plain")
           .header(com.perso.T4C.online.model.OnlineProtocol.VERSION_HEADER,current).header("Authorization","Bearer "+token)
-          .POST(HttpRequest.BodyPublishers.ofString(revision+" 0 "+corpse.id())).build(),HttpResponse.BodyHandlers.ofString());
+          .POST(HttpRequest.BodyPublishers.ofString(revision+" "+epochOf(client,url,token)+" "+corpse.id())).build(),HttpResponse.BodyHandlers.ofString());
       slow.set(false);
       assertEquals(503,response.statusCode(),response.body()); assertTrue(response.body().contains("busy"),response.body());
     }
