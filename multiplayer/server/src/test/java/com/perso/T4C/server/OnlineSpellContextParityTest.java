@@ -59,7 +59,7 @@ class OnlineSpellContextParityTest {
     return chosen;
   }
 
-  private static CharacterProgress character(String name, ItemContent items) {
+  static CharacterProgress character(String name, ItemContent items) {
     int[] c = CHARACTERS.get(name);
     var base = OnlineCharacterCreator.prepare(CharacterClass.WARRIOR, "male", false, new Random(3)).progress();
     var inventory = new ArrayList<CharacterProgress.Item>();

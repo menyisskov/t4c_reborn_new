@@ -18,7 +18,7 @@ re-measure before relying on a number.
 | NPCs | about 2,574 placed spawns | 2 (Kilhiam, Warden Aelric) |
 | Shops | 21 | 0 |
 | Quests | 35 | 1 (renewed_wards) |
-| Player spells | 132 | 1 castable (Light Heal) |
+| Player spells | 132 | 49 castable server-side (Light Heal self-cast plus the 48 stage-1 spells: 40 attack, 4 drain, 4 heal; classes that learn them arrive later) |
 | Classes | 7 | 2 (Warrior, Paladin) |
 | Combat | melee, bows, two weapons, stun blow, stealth, spells | melee only |
 | Interface | full GUI (inventory, spell book, minimap, macros, options, journal) | plain text panels |
@@ -51,7 +51,7 @@ re-measure before relying on a number.
 Each is a gap to close, never a decision to keep:
 
 - Warrior and Paladin only in character creation (`OnlineCharacterCreation.CLASSES`).
-- Only Light Heal castable (`spells-v1`, mirrored by the client allowlist).
+- Stage-1 spells (40 attack with splash, 4 drain, 4 heal) are castable server-side (`spells-v2` stage gate, protocol 6); everything else stays refused. Casters cannot be created online yet, so only a character that already knows them can cast.
 - Melee only; bows, stun blow and companions refuse as unsupported combat.
 - Combat fails closed while any buff or world-event flag is active.
 - Other quests' flags block combat (quest-flag allowlist).

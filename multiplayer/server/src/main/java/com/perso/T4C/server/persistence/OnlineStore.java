@@ -114,6 +114,21 @@ public final class OnlineStore implements AutoCloseable {
         throw new IllegalArgumentException("Invalid creature damage");
     }
   }
+  /**
+   * One creature hit by a spell. A lethal strike also carries the kill's rolled ground drops, which commit
+   * under that creature's own life claim. The captured pose is required: every spell strike is a
+   * pose-guarded update, like a melee strike.
+   */
+  public record SpellStrike(CreatureStrike strike, CreatureProvocation provocation, java.util.List<LootDropDraft> drops) {
+    public SpellStrike {
+      Objects.requireNonNull(strike); drops=java.util.List.copyOf(drops);
+      if (strike.motion()==null) throw new IllegalArgumentException("A spell strike needs the captured creature pose");
+      if (!drops.isEmpty() && strike.after()!=0) throw new IllegalArgumentException("Loot requires a lethal strike");
+      if (provocation!=null && (!provocation.key().equals(strike.key()) || !provocation.life().equals(strike.life())))
+        throw new IllegalArgumentException("Different provoked life");
+      for (int i=0;i<drops.size();i++) if (drops.get(i).index()!=i) throw new IllegalArgumentException("Invalid loot index");
+    }
+  }
   /** One already resolved server-authored physical exchange. A miss has after==before. */
   public record ClanAttack(SpawnMotion source, SpawnMotion target, int maximumHealth,
       int before, int after, long expectedNext, long nextNext) {
@@ -1058,6 +1073,131 @@ public final class OnlineStore implements AutoCloseable {
         }
         state = load(c, account, character, false);
         c.commit(); return new RewardResult(true, state);
+      } catch (SQLException | RuntimeException error) { c.rollback(); throw error; }
+    }
+  }
+
+  /**
+   * One spell cast that damaged one or more creatures: caster progress, every creature's pose-guarded
+   * health change, every kill's life claim with its drops, and the receipt commit in one transaction.
+   * {@code event} is a fresh server id for the cast (the receipt); each lethal strike additionally
+   * claims its own life id through {@code online_world_rewards}, which needs a receipt row of the same
+   * id, so a kill another attacker already claimed rolls the whole cast back. A repeat of the same event
+   * and payload is a harmless replay; the same event with a different payload is a conflict.
+   */
+  public RewardResult commitSpellStrikes(Session session, long revision, UUID event, long gold, long experience,
+      CharacterProgress progress, java.util.List<SpellStrike> strikes) throws SQLException {
+    if (revision<0) throw new IllegalArgumentException("Invalid revision");
+    Objects.requireNonNull(event); Objects.requireNonNull(progress);
+    if (gold<0 || experience<0) throw new IllegalArgumentException("Negative reward");
+    strikes=java.util.List.copyOf(strikes);
+    if (strikes.isEmpty()) throw new IllegalArgumentException("A spell commit needs at least one strike");
+    var keys=new java.util.HashSet<String>();
+    for (var hit:strikes) {
+      if (!keys.add(hit.strike().key())) throw new IllegalArgumentException("Creature struck twice");
+      var motion=hit.strike().motion();
+      if (!motion.key().equals(hit.strike().key()) || !motion.life().equals(hit.strike().life()))
+        throw new IllegalArgumentException("Different creature motion life");
+      if (motion.targetCharacter()!=null && !motion.targetCharacter().equals(session.characterId()))
+        throw new IllegalArgumentException("Invalid creature target epoch");
+      if (hit.provocation()!=null && !hit.provocation().targetCharacter().equals(session.characterId()))
+        throw new IllegalArgumentException("Invalid provocation owner");
+      if (hit.provocation()!=null && hit.provocation().motion()!=null && !hit.provocation().motion().equals(motion))
+        throw new IllegalArgumentException("Different creature poses");
+      for (var drop:hit.drops())
+        if (Math.abs(drop.x()-motion.x())>1e-7 || Math.abs(drop.y()-motion.y())>1e-7)
+          throw new IllegalArgumentException("Drop is not at creature death position");
+    }
+    String encoded=encodeProgress(progress);
+    String fingerprint=fingerprint(encoded+"\nspell-strikes-v1\n"+JSON.toJson(canonical(JSON.toJsonTree(strikes))));
+    UUID account=session.accountId(), character=session.characterId();
+    try (var c=connections.open()) {
+      c.setAutoCommit(false);
+      try {
+        var state=lockSession(c,session);
+        try (var s=c.prepareStatement("SELECT gold, experience, payload_hash FROM online_rewards WHERE character_id=? AND event_id=?")) {
+          s.setObject(1,character); s.setObject(2,event);
+          try (var rows=s.executeQuery()) {
+            if (rows.next()) {
+              if (rows.getLong(1)!=gold || rows.getLong(2)!=experience || !Objects.equals(fingerprint,rows.getString(3)))
+                throw new Conflict("Reward event payload mismatch");
+              c.commit(); return new RewardResult(false,state);
+            }
+          }
+        }
+        if (state.revision()!=revision) throw new Conflict("Stale gameplay event");
+        // The cast receipt precedes the per-kill receipts: nothing else references it.
+        try (var s=c.prepareStatement("INSERT INTO online_rewards(character_id,event_id,gold,experience,payload_hash) VALUES (?,?,?,?,?)")) {
+          s.setObject(1,character); s.setObject(2,event); s.setLong(3,gold); s.setLong(4,experience);
+          s.setString(5,fingerprint); s.executeUpdate();
+        }
+        for (var hit:strikes) {
+          var strike=hit.strike(); var motion=strike.motion(); boolean lethal=strike.after()==0;
+          if (motion.targetCharacter()!=null && (motion.targetEpoch()==null || state.locationEpoch()!=motion.targetEpoch()))
+            throw new Conflict("Creature target epoch changed");
+          try (var s=c.prepareStatement("""
+              UPDATE online_spawns SET current_x=?,current_y=?,mode=?,target_character=?,target_epoch=?,
+                target_spawn_key=?,target_life=?,
+                next_attack_at=CASE WHEN ? AND target_character IS NULL THEN ? ELSE next_attack_at END,
+                state_revision=state_revision+1
+              WHERE spawn_key=? AND event_id=? AND state_revision=? AND died_at IS NULL AND COALESCE(health,1)>0
+              """)) {
+            s.setDouble(1,motion.x());s.setDouble(2,motion.y());
+            s.setString(3,lethal ? "IDLE" : motion.mode());
+            s.setObject(4,lethal ? null : motion.targetCharacter());
+            s.setObject(5,lethal ? null : motion.targetEpoch());
+            s.setString(6,lethal ? null : motion.targetSpawnKey());
+            s.setObject(7,lethal ? null : motion.targetLife());
+            s.setBoolean(8,hit.provocation()!=null);s.setLong(9,hit.provocation()==null ? 0 : hit.provocation().nextAttackAt());
+            s.setString(10,motion.key());s.setObject(11,motion.life());s.setLong(12,motion.revision());
+            if (s.executeUpdate()!=1) throw new Conflict("Creature life unavailable");
+          }
+          try (var s=c.prepareStatement("""
+              UPDATE online_spawns SET health=?,state_revision=state_revision+CASE WHEN ? THEN 0 ELSE 1 END,
+                died_at=CASE WHEN ? THEN clock_timestamp() ELSE died_at END,
+                death_kind=CASE WHEN ? THEN 'PLAYER' ELSE death_kind END,
+                target_character=CASE WHEN ? THEN NULL ELSE target_character END,
+                target_epoch=CASE WHEN ? THEN NULL ELSE target_epoch END,
+                target_spawn_key=CASE WHEN ? THEN NULL ELSE target_spawn_key END,
+                target_life=CASE WHEN ? THEN NULL ELSE target_life END,
+                next_attack_at=CASE WHEN ? THEN 0 ELSE next_attack_at END,
+                mode=CASE WHEN ? THEN 'IDLE' ELSE mode END
+              WHERE spawn_key=? AND event_id=? AND died_at IS NULL AND COALESCE(health,?)=? AND (? OR current_x IS NULL)
+              """)) {
+            s.setInt(1,strike.after());s.setBoolean(2,true);
+            for (int p=3;p<=10;p++) s.setBoolean(p,lethal);
+            s.setString(11,strike.key()); s.setObject(12,strike.life());
+            s.setInt(13,strike.maximumHealth()); s.setInt(14,strike.before());s.setBoolean(15,true);
+            if (s.executeUpdate()!=1) throw new Conflict("Creature life or health changed");
+          }
+          if (!lethal) continue;
+          try (var s=c.prepareStatement("INSERT INTO online_rewards(character_id,event_id,gold,experience,payload_hash) VALUES (?,?,0,0,?)")) {
+            s.setObject(1,character); s.setObject(2,strike.life()); s.setString(3,fingerprint); s.executeUpdate();
+          }
+          try (var s=c.prepareStatement("INSERT INTO online_world_rewards(event_id,character_id) VALUES (?,?) ON CONFLICT (event_id) DO NOTHING")) {
+            s.setObject(1,strike.life()); s.setObject(2,character);
+            if (s.executeUpdate()!=1) throw new Conflict("World event already awarded");
+          }
+          if (!hit.drops().isEmpty()) {
+            try (var s=c.prepareStatement("""
+                INSERT INTO online_ground_loot(id,source_event,drop_index,world,x,y,item_key,quantity,charges,owner_character,owner_until,expires_at)
+                VALUES (?,?,?,?,?,?,?,?,?,?,clock_timestamp()+(? * interval '1 millisecond'),clock_timestamp()+(? * interval '1 millisecond'))
+                """)) {
+              for (var drop:hit.drops()) {
+                s.setObject(1,drop.id()); s.setObject(2,strike.life()); s.setInt(3,drop.index()); s.setInt(4,drop.world());
+                s.setDouble(5,drop.x()); s.setDouble(6,drop.y()); s.setString(7,drop.key()); s.setInt(8,drop.quantity());
+                s.setInt(9,drop.charges()); s.setObject(10,character); s.setLong(11,LOOT_OWNER_WINDOW_MILLIS);
+                s.setLong(12,LOOT_LIFETIME_MILLIS); s.addBatch();
+              }
+              for (int changed:s.executeBatch()) if (changed!=1) throw new Conflict("Loot drop not created");
+            }
+          }
+        }
+        try (var s=c.prepareStatement("UPDATE online_characters SET gold=gold+?, experience=experience+?, progress=?::jsonb, revision=revision+1, updated_at=now() WHERE id=?")) {
+          s.setLong(1,gold); s.setLong(2,experience); s.setString(3,encoded); s.setObject(4,character); s.executeUpdate();
+        }
+        state=load(c,account,character,false);
+        c.commit(); return new RewardResult(true,state);
       } catch (SQLException | RuntimeException error) { c.rollback(); throw error; }
     }
   }

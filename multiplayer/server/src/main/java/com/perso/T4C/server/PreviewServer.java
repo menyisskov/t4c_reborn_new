@@ -127,6 +127,27 @@ public final class PreviewServer implements AutoCloseable {
     http.createContext("/", this::handle);
   }
 
+  /** The reply to a potion or a self-cast of the live allowlist. */
+  private static Map<String,Object> abilityJson(PersistentSessions.AbilityReply done) {
+    var reply=new java.util.LinkedHashMap<String,Object>();
+    reply.put("revision",done.revision());reply.put("healthGained",done.healthGained());
+    reply.put("manaSpent",done.manaSpent());reply.put("manaGained",done.manaGained());
+    return reply;
+  }
+  /** The reply to an engine cast: the same fields plus every creature the spell damaged. */
+  private static Map<String,Object> spellJson(OnlineSpellStrikes.Reply done) {
+    var reply=new java.util.LinkedHashMap<String,Object>();
+    reply.put("revision",done.revision());reply.put("healthGained",done.healthGained());
+    reply.put("manaSpent",done.manaSpent());reply.put("manaGained",0);
+    var hits=new java.util.ArrayList<Map<String,Object>>();
+    for (var hit:done.hits()) {
+      var entry=new java.util.LinkedHashMap<String,Object>();
+      entry.put("target",hit.target());entry.put("damage",hit.damage());entry.put("health",hit.health());entry.put("killed",hit.killed());
+      hits.add(entry);
+    }
+    reply.put("hits",hits);
+    return reply;
+  }
   private HostedWorlds.Region admit(String token,Long epoch) {
     var context=hosted.actor(token);context.world.admitRequest(token);
     if(epoch!=null) { if(persistent!=null) persistent.requireEpoch(token,epoch);else if(epoch!=0) throw new PreviewWorld.Rejected(409,"region_epoch"); }
@@ -451,21 +472,33 @@ public final class PreviewServer implements AutoCloseable {
             String token=token(exchange);
             boolean cast="/cast".equals(path);
             String uuid="[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
-            if (!body.matches("[0-9]{1,19} [0-9]{1,19} "+(cast ? "spell\\.[a-z0-9_]{1,64}" : uuid)))
+            // Protocol 6: /cast may end with one target token, u:<creature id> or p:<x>,<y>; absent means self.
+            String aim="u:[0-9]{1,19}|p:-?[0-9]{1,6},-?[0-9]{1,6}";
+            if (!body.matches("[0-9]{1,19} [0-9]{1,19} "+(cast ? "spell\\.[a-z0-9_]{1,64}( "+aim+")?" : uuid)))
               throw new PreviewWorld.Rejected(400,"input");
             String[] parts=body.split(" "); long revision,epoch; java.util.UUID instance=null;
+            com.perso.T4C.spell.engine.SpellEngine.Target target=new com.perso.T4C.spell.engine.SpellEngine.Target.Self();
             try { revision=Long.parseLong(parts[0]);epoch=Long.parseLong(parts[1]);
-              if (!cast) instance=java.util.UUID.fromString(parts[2]); }
+              if (!cast) instance=java.util.UUID.fromString(parts[2]);
+              else if (parts.length>3) target=parts[3].startsWith("u:")
+                  ? new com.perso.T4C.spell.engine.SpellEngine.Target.Unit(Long.parseLong(parts[3].substring(2)))
+                  : new com.perso.T4C.spell.engine.SpellEngine.Target.Position(
+                      Integer.parseInt(parts[3].substring(2,parts[3].indexOf(','))),
+                      Integer.parseInt(parts[3].substring(parts[3].indexOf(',')+1))); }
             catch (IllegalArgumentException bad) { throw new PreviewWorld.Rejected(400,"input"); }
-            final var consumable=instance;
+            final var consumable=instance; final var aimed=target;
             // One receipt-bound commit per request: a refusal changes nothing, an ambiguous outcome is never replayed.
-            var pending=onWorld(() -> { admit(token,epoch);
-              return cast ? persistent.cast(token,revision,parts[2]) : persistent.useItem(token,revision,consumable); });
-            PersistentSessions.AbilityReply done;
+            var pending=onWorld(() -> { var region=admit(token,epoch);
+              if (!cast) return persistent.useItem(token,revision,consumable).thenApply(PreviewServer::abilityJson);
+              // The live self-cast allowlist (spells-v1) is served exactly as before; the engine serves the rest.
+              if (aimed instanceof com.perso.T4C.spell.engine.SpellEngine.Target.Self && persistent.legacySelfCast(parts[2]))
+                return persistent.cast(token,revision,parts[2]).thenApply(PreviewServer::abilityJson);
+              if (region.spells==null) throw new PreviewWorld.Rejected(409,"unsupported_ability");
+              return region.spells.cast(token,revision,parts[2],aimed).thenApply(PreviewServer::spellJson); });
+            Map<String,Object> done;
             try { done=pending.toCompletableFuture().get(2,TimeUnit.SECONDS); }
             catch (ExecutionException error) { if(error.getCause() instanceof PreviewWorld.Rejected rejected) throw rejected; throw error; }
-            json(exchange,observation,200,Map.of("revision",done.revision(),"healthGained",done.healthGained(),
-                "manaSpent",done.manaSpent(),"manaGained",done.manaGained()));
+            json(exchange,observation,200,done);
           }
           case "/region-ready" -> {
             String token=token(exchange);if(!body.matches("[0-9]{1,19}")) throw new PreviewWorld.Rejected(400,"input");

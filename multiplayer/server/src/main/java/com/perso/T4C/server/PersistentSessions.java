@@ -70,8 +70,9 @@ final class PersistentSessions {
       OnlineStore.CreatureStrike strike, OnlineStore.CreatureProvocation provocation,
       OnlineStore.MonsterAttack monsterAttack, OnlineStore.DeathTransition death, UUID corpse, UUID corpseItem,
       com.perso.T4C.server.persistence.PortalTransfer transfer, UUID loot, List<LootDropDraft> drops,
+      List<OnlineStore.SpellStrike> spellStrikes,
       CompletableFuture<OnlineStore.RewardResult> result) {
-    GameplayEvent { drops=List.copyOf(drops); }
+    GameplayEvent { drops=List.copyOf(drops); spellStrikes=spellStrikes==null ? List.of() : List.copyOf(spellStrikes); }
   }
   private record Completion(Binding binding, OnlineStore.CharacterState saved, boolean finalSave,
       long allowedUntil, OnlineStore.RewardResult reward, String refusal, Exception error) {}
@@ -183,6 +184,12 @@ final class PersistentSessions {
     return commitAbility(token,revision,draft);
   }
 
+  /** True when the live spells-v1 allowlist casts this key as a self-cast; those casts keep the original path. */
+  boolean legacySelfCast(String spellKey) {
+    var spell=spells().spells().get(spellKey);
+    return spell!=null && spell.use()==com.perso.T4C.online.model.SpellContent.Use.CAST;
+  }
+
   /** Uses one loose consumable instance on its owner; same commit rules as {@link #cast}. */
   CompletionStage<AbilityReply> useItem(String token,long revision,UUID instance) {
     var saved=usableCharacter(token,revision);
@@ -197,13 +204,18 @@ final class PersistentSessions {
             draft.manaSpent(),draft.manaGained()));
   }
 
-  private OnlineStore.CharacterState usableCharacter(String token,long revision) {
+  OnlineStore.CharacterState usableCharacter(String token,long revision) {
+    return usableCharacter(token,revision,true);
+  }
+
+  /** As above; a caller that brings its own item content (the region spell path) does not need the hosted one. */
+  OnlineStore.CharacterState usableCharacter(String token,long revision,boolean requireHostedItems) {
     var binding=active(token);
     if(binding.event!=null || binding.awaitingRegionReady) throw new PreviewWorld.Rejected(409,"busy");
     if(binding.saved.revision()!=revision) throw new PreviewWorld.Rejected(409,"revision");
     var saved=character(token);
     if(saved.progress()==null) throw new PreviewWorld.Rejected(409,"uninitialized_character");
-    if(hosted.items==null) throw new PreviewWorld.Rejected(409,"unsupported_ability");
+    if(requireHostedItems && hosted.items==null) throw new PreviewWorld.Rejected(409,"unsupported_ability");
     return saved;
   }
 
@@ -387,6 +399,27 @@ final class PersistentSessions {
   }
 
   /**
+   * One spell cast that damaged creatures: the caster's draft, every strike, every kill's life claim and its
+   * drops commit in one transaction under a fresh cast id. Same single-flight, revision-fenced path as a melee
+   * strike; the kills' drops are published to the region cache only after the commit.
+   */
+  CompletionStage<OnlineStore.RewardResult> commitSpellStrikes(String token,long expectedRevision,UUID eventId,
+      long gold,long experience,CharacterProgress progress,List<OnlineStore.SpellStrike> strikes) {
+    Objects.requireNonNull(eventId);Objects.requireNonNull(progress);
+    if (strikes.isEmpty()) throw new IllegalArgumentException("A spell commit needs at least one strike");
+    if (gold<0 || experience<0) throw new IllegalArgumentException("Negative reward");
+    var binding=active(token);
+    if (binding.event!=null || binding.awaitingRegionReady) throw new PreviewWorld.Rejected(409,"busy");
+    if (binding.saved.revision()!=expectedRevision) throw new PreviewWorld.Rejected(409,"revision");
+    var drops=strikes.stream().flatMap(hit -> hit.drops().stream()).toList();
+    var result=new CompletableFuture<OnlineStore.RewardResult>();
+    binding.event=new GameplayEvent(eventId,gold,experience,progress,false,null,null,null,null,null,null,null,null,
+        drops,strikes,result);
+    if (!binding.pending) submit(binding);
+    return result.minimalCompletionStage();
+  }
+
+  /**
    * Single-flight pickup of one committed drop. The database claim is authoritative; the simulation
    * only fences the epoch and rejects what its cache already knows is impossible.
    */
@@ -409,7 +442,7 @@ final class PersistentSessions {
     if (Math.max(Math.abs(x-found.x()),Math.abs(y-found.y()))>com.perso.T4C.server.OnlinePickupRules.MAX_TILE_DISTANCE)
       throw new PreviewWorld.Rejected(409,"out_of_range");
     var result=new CompletableFuture<OnlineStore.RewardResult>();
-    binding.event=new GameplayEvent(UUID.randomUUID(),0,0,progress,false,null,null,null,null,null,null,null,loot,List.of(),result);
+    binding.event=new GameplayEvent(UUID.randomUUID(),0,0,progress,false,null,null,null,null,null,null,null,loot,List.of(),List.of(),result);
     if (!binding.pending) submit(binding);
     return result.minimalCompletionStage();
   }
@@ -442,7 +475,7 @@ final class PersistentSessions {
     if (gold<0 || experience<0) throw new IllegalArgumentException("Negative reward");
     var result=new CompletableFuture<OnlineStore.RewardResult>();
     binding.event=new GameplayEvent(Objects.requireNonNull(eventId),gold,experience,
-        Objects.requireNonNull(progress),worldReward,strike,provocation,attack,death,corpse,corpseItem,null,null,drops,result);
+        Objects.requireNonNull(progress),worldReward,strike,provocation,attack,death,corpse,corpseItem,null,null,drops,List.of(),result);
     if (death!=null || corpse!=null) binding.region.world.freeze(token,true);
     if (!binding.pending) submit(binding);
     return result.minimalCompletionStage();
@@ -477,7 +510,7 @@ final class PersistentSessions {
     var draft=new com.perso.T4C.server.persistence.PortalTransfer(portal.portalId(),binding.region.spec.key(),target.spec.key(),
         portal.source(),portal.destination(),binding.saved.locationEpoch(),Math.addExact(System.currentTimeMillis(),350));
     binding.position=position;binding.region.world.freeze(binding.token,true);
-    binding.event=new GameplayEvent(UUID.randomUUID(),0,0,binding.saved.progress(),false,null,null,null,null,null,null,draft,null,List.of(),new CompletableFuture<>());
+    binding.event=new GameplayEvent(UUID.randomUUID(),0,0,binding.saved.progress(),false,null,null,null,null,null,null,draft,null,List.of(),List.of(),new CompletableFuture<>());
   }
 
   private Binding active(String token) {
@@ -573,6 +606,8 @@ final class PersistentSessions {
                 ? store.commitTransfer(binding.session,revision,event.id(),event.transfer())
                 : event.monsterAttack()!=null
                 ? store.commitMonsterAttack(binding.session,revision,event.id(),event.progress(),event.monsterAttack(),event.death())
+                : !event.spellStrikes().isEmpty()
+                ? store.commitSpellStrikes(binding.session,revision,event.id(),event.gold(),event.experience(),event.progress(),event.spellStrikes())
                 : event.strike()!=null
                 ? store.commitCreatureStrike(binding.session,revision,event.id(),event.gold(),event.experience(),event.progress(),event.strike(),event.provocation(),event.drops())
                 : event.worldReward()

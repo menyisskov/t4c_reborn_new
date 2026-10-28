@@ -6,6 +6,14 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-28 — Attack and drain spells work in online play (T4C-0267)
+
+### Added
+- In online play, attack spells and drain spells can now be cast at monsters, and the stronger heals can be cast on yourself. They cost mana, tire you out and have the same damage, splash onto neighbouring monsters, kills, experience, gold and drops as in single-player. A spell can only be cast at a monster you can see, within range, and never inside a safe haven.
+
+### Changed
+- The online game and its clients now need to be updated together (the connection version changed).
+
 ## 2026-10-28 — Recovering from a corpse explains why it failed (T4C-0256)
 
 ### Fixed

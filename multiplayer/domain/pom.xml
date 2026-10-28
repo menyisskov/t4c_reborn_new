@@ -75,6 +75,8 @@
                         <include>com/perso/T4C/spell/SpellCastRules.java</include>
                         <include>com/perso/T4C/spell/SpellHealRules.java</include>
                         <include>com/perso/T4C/spell/ElementRules.java</include>
+                        <include>com/perso/T4C/spell/SpellSplash.java</include>
+                        <include>com/perso/T4C/spell/engine/*.java</include>
                         <include>com/perso/T4C/spell/SpellFormulaContexts.java</include>
                         <include>com/perso/T4C/world/LineOfSightRules.java</include>
                     </includes>

@@ -1,0 +1,145 @@
+# Stage-1 spell outcomes from the single-player code path; the engine must equal them.
+spell.abyssal_spear plain verdict=NONE mana=50 primary=988 res3=233 res8=230 res2=257 res4=268 res7=256 res9=262
+spell.abyssal_spear skilled verdict=NONE mana=50 primary=984 res3=277 res8=271 res2=258 res4=283 res7=259 res9=274
+spell.abyssal_spear geared verdict=NONE mana=50 primary=907 res3=273 res8=279 res2=238 res4=285 res7=223 res9=220
+spell.arcane_spark plain verdict=NONE mana=1 primary=9 res3=4 res8=1 res2=3 res4=1 res7=3 res9=3
+spell.arcane_spark skilled verdict=NONE mana=1 primary=16 res3=1 res8=2 res2=2 res4=3 res7=4 res9=3
+spell.arcane_spark geared verdict=NONE mana=1 primary=11 res3=4 res8=3 res2=2 res4=4 res7=4 res9=2
+spell.call_lightning plain verdict=NONE mana=7 primary=484 res3=3 res8=11 res2=7 res4=10 res7=11 res9=5
+spell.call_lightning skilled verdict=NONE mana=7 primary=752 res3=3 res8=10 res2=13 res4=14 res7=12 res9=14
+spell.call_lightning geared verdict=NONE mana=7 primary=519 res3=5 res8=11 res2=14 res4=9 res7=7 res9=10
+spell.drain_life plain verdict=NONE mana=6 primary=1016 drain=1016 res3=4 res8=157 res2=7 res4=7 res7=7 res9=6
+spell.drain_life skilled verdict=NONE mana=6 primary=791 drain=791 res3=6 res8=180 res2=4 res4=8 res7=8 res9=4
+spell.drain_life geared verdict=NONE mana=6 primary=710 drain=710 res3=8 res8=139 res2=7 res4=6 res7=5 res9=7
+spell.dust_devil plain verdict=NONE mana=2 primary=194 res3=1 res8=2 res2=5 res4=5 res7=4 res9=2
+spell.dust_devil skilled verdict=NONE mana=2 primary=280 res3=1 res8=5 res2=4 res4=4 res7=4 res9=5
+spell.dust_devil geared verdict=NONE mana=2 primary=330 res3=1 res8=4 res2=5 res4=4 res7=3 res9=2
+spell.emberqueens_wrath plain verdict=NONE mana=70 primary=1204 res3=869 res8=331 res2=353 res4=283 res7=136 res9=370
+spell.emberqueens_wrath skilled verdict=NONE mana=70 primary=2122 res3=1065 res8=454 res2=432 res4=526 res7=207 res9=565
+spell.emberqueens_wrath geared verdict=NONE mana=70 primary=1698 res3=1246 res8=518 res2=459 res4=470 res7=178 res9=522
+spell.fire_bolt plain verdict=NONE mana=6 primary=69 res3=21 res8=17 res2=14 res4=17 res7=6 res9=12
+spell.fire_bolt skilled verdict=NONE mana=6 primary=73 res3=64 res8=20 res2=22 res4=14 res7=7 res9=28
+spell.fire_bolt geared verdict=NONE mana=6 primary=66 res3=60 res8=25 res2=18 res4=15 res7=11 res9=16
+spell.fire_dart plain verdict=NONE mana=1 primary=23 res3=12 res8=3 res2=4 res4=3 res7=2 res9=3
+spell.fire_dart skilled verdict=NONE mana=1 primary=15 res3=14 res8=3 res2=3 res4=7 res7=2 res9=8
+spell.fire_dart geared verdict=NONE mana=1 primary=27 res3=21 res8=8 res2=3 res4=4 res7=3 res9=6
+spell.flaming_arrow plain verdict=NONE mana=3 primary=27 res3=22 res8=7 res2=10 res4=4 res7=3 res9=6
+spell.flaming_arrow skilled verdict=NONE mana=3 primary=66 res3=27 res8=10 res2=14 res4=13 res7=3 res9=8
+spell.flaming_arrow geared verdict=NONE mana=3 primary=33 res3=42 res8=12 res2=14 res4=9 res7=5 res9=11
+spell.flare plain verdict=NONE mana=14 primary=101 res3=55 res8=24 res2=22 res4=20 res7=9 res9=17
+spell.flare skilled verdict=NONE mana=14 primary=186 res3=85 res8=27 res2=34 res4=45 res7=11 res9=42
+spell.flare geared verdict=NONE mana=14 primary=182 res3=68 res8=38 res2=29 res4=38 res7=13 res9=44
+spell.freeze plain verdict=NONE mana=5 primary=40 res3=8 res8=5 res2=7 res4=8 res7=6 res9=9
+spell.freeze skilled verdict=NONE mana=5 primary=31 res3=7 res8=8 res2=7 res4=6 res7=7 res9=9
+spell.freeze geared verdict=NONE mana=5 primary=33 res3=6 res8=9 res2=6 res4=7 res7=6 res9=10
+spell.galespike plain verdict=NONE mana=30 primary=9462 res3=53 res8=162 res2=155 res4=162 res7=140 res9=131
+spell.galespike skilled verdict=NONE mana=30 primary=8828 res3=53 res8=148 res2=172 res4=171 res7=151 res9=156
+spell.galespike geared verdict=NONE mana=30 primary=9874 res3=60 res8=178 res2=192 res4=160 res7=162 res9=187
+spell.glacier plain verdict=NONE mana=13 primary=128 res3=23 res8=33 res2=23 res4=32 res7=18 res9=25
+spell.glacier skilled verdict=NONE mana=13 primary=109 res3=35 res8=31 res2=31 res4=18 res7=23 res9=24
+spell.glacier geared verdict=NONE mana=13 primary=142 res3=21 res8=24 res2=33 res4=27 res7=30 res9=28
+spell.gravebreaker plain verdict=NONE mana=50 primary=352 res3=241 res8=201 res2=207 res4=243 res7=243 res9=208
+spell.gravebreaker skilled verdict=NONE mana=50 primary=356 res3=248 res8=255 res2=209 res4=261 res7=276 res9=267
+spell.gravebreaker geared verdict=NONE mana=50 primary=452 res3=279 res8=282 res2=267 res4=267 res7=267 res9=266
+spell.greater_drain plain verdict=NONE mana=10 primary=1520 drain=1520 res3=11 res8=218 res2=11 res4=9 res7=12 res9=12
+spell.greater_drain skilled verdict=NONE mana=10 primary=1630 drain=1630 res3=9 res8=277 res2=9 res4=9 res7=10 res9=13
+spell.greater_drain geared verdict=NONE mana=10 primary=1742 drain=1742 res3=14 res8=175 res2=9 res4=12 res7=10 res9=14
+spell.heal_critical plain verdict=NONE mana=7 heal=40
+spell.heal_critical skilled verdict=NONE mana=7 heal=71
+spell.heal_critical geared verdict=NONE mana=7 heal=66
+spell.heal_light plain verdict=NONE mana=2 heal=12
+spell.heal_light skilled verdict=NONE mana=2 heal=19
+spell.heal_light geared verdict=NONE mana=2 heal=18
+spell.heal_serious plain verdict=NONE mana=4 heal=25
+spell.heal_serious skilled verdict=NONE mana=4 heal=43
+spell.heal_serious geared verdict=NONE mana=4 heal=41
+spell.healing plain verdict=NONE mana=13 heal=79
+spell.healing skilled verdict=NONE mana=13 heal=125
+spell.healing geared verdict=NONE mana=13 heal=129
+spell.ice_ball plain verdict=NONE mana=11 primary=95 res3=17 res8=14 res2=22 res4=27 res7=15 res9=27
+spell.ice_ball skilled verdict=NONE mana=11 primary=88 res3=27 res8=29 res2=18 res4=17 res7=18 res9=18
+spell.ice_ball geared verdict=NONE mana=11 primary=94 res3=29 res8=20 res2=20 res4=16 res7=18 res9=16
+spell.ice_bolt plain verdict=NONE mana=6 primary=44 res3=13 res8=12 res2=12 res4=15 res7=10 res9=12
+spell.ice_bolt skilled verdict=NONE mana=6 primary=68 res3=13 res8=13 res2=15 res4=10 res7=11 res9=12
+spell.ice_bolt geared verdict=NONE mana=6 primary=61 res3=17 res8=12 res2=13 res4=15 res7=11 res9=12
+spell.ice_shard plain verdict=NONE mana=3 primary=17 res3=4 res8=6 res2=7 res4=7 res7=8 res9=7
+spell.ice_shard skilled verdict=NONE mana=3 primary=29 res3=6 res8=4 res2=4 res4=8 res7=8 res9=5
+spell.ice_shard geared verdict=NONE mana=3 primary=19 res3=6 res8=9 res2=7 res4=7 res7=6 res9=6
+spell.inferno plain verdict=NONE mana=19 primary=93 res3=69 res8=25 res2=29 res4=26 res7=16 res9=23
+spell.inferno skilled verdict=NONE mana=19 primary=167 res3=115 res8=42 res2=62 res4=38 res7=20 res9=45
+spell.inferno geared verdict=NONE mana=19 primary=198 res3=110 res8=54 res2=48 res4=38 res7=16 res9=47
+spell.lesser_drain plain verdict=NONE mana=3 primary=961 drain=961 res3=8 res8=79 res2=7 res4=6 res7=3 res9=8
+spell.lesser_drain skilled verdict=NONE mana=3 primary=675 drain=675 res3=5 res8=106 res2=5 res4=6 res7=5 res9=4
+spell.lesser_drain geared verdict=NONE mana=3 primary=1046 drain=1046 res3=4 res8=109 res2=8 res4=7 res7=8 res9=5
+spell.lightning_bolt plain verdict=NONE mana=4 primary=310 res3=2 res8=9 res2=8 res4=5 res7=7 res9=6
+spell.lightning_bolt skilled verdict=NONE mana=4 primary=429 res3=1 res8=6 res2=8 res4=9 res7=4 res9=9
+spell.lightning_bolt geared verdict=NONE mana=4 primary=551 res3=3 res8=9 res2=10 res4=5 res7=8 res9=9
+spell.magmaheart_lance plain verdict=NONE mana=50 primary=838 res3=542 res8=208 res2=200 res4=203 res7=92 res9=223
+spell.magmaheart_lance skilled verdict=NONE mana=50 primary=1244 res3=821 res8=384 res2=404 res4=326 res7=154 res9=308
+spell.magmaheart_lance geared verdict=NONE mana=50 primary=1620 res3=936 res8=318 res2=383 res4=333 res7=149 res9=413
+spell.mana_burst plain verdict=NONE mana=8 primary=57 res3=14 res8=9 res2=9 res4=8 res7=11 res9=13
+spell.mana_burst skilled verdict=NONE mana=8 primary=40 res3=11 res8=13 res2=9 res4=13 res7=15 res9=9
+spell.mana_burst geared verdict=NONE mana=8 primary=48 res3=15 res8=14 res2=13 res4=12 res7=14 res9=15
+spell.mountains_fist plain verdict=NONE mana=60 primary=381 res3=250 res8=309 res2=270 res4=285 res7=241 res9=295
+spell.mountains_fist skilled verdict=NONE mana=60 primary=490 res3=284 res8=296 res2=264 res4=327 res7=320 res9=297
+spell.mountains_fist geared verdict=NONE mana=60 primary=514 res3=302 res8=278 res2=248 res4=257 res7=249 res9=248
+spell.nightfang plain verdict=NONE mana=30 primary=18950 res3=143 res8=3232 res2=155 res4=134 res7=139 res9=130
+spell.nightfang skilled verdict=NONE mana=30 primary=21660 res3=135 res8=2992 res2=133 res4=159 res7=152 res9=163
+spell.nightfang geared verdict=NONE mana=30 primary=23417 res3=145 res8=3227 res2=174 res4=148 res7=175 res9=169
+spell.radiant_spear plain verdict=NONE mana=50 primary=996 res3=437 res8=256 res2=231 res4=226 res7=213 res9=216
+spell.radiant_spear skilled verdict=NONE mana=50 primary=1596 res3=704 res8=370 res2=366 res4=387 res7=387 res9=434
+spell.radiant_spear geared verdict=NONE mana=50 primary=1502 res3=590 res8=413 res2=340 res4=394 res7=370 res9=434
+spell.rime_lance plain verdict=NONE mana=30 primary=520 res3=161 res8=119 res2=139 res4=145 res7=119 res9=163
+spell.rime_lance skilled verdict=NONE mana=30 primary=588 res3=150 res8=172 res2=136 res4=178 res7=141 res9=160
+spell.rime_lance geared verdict=NONE mana=30 primary=619 res3=159 res8=172 res2=144 res4=144 res7=178 res9=150
+spell.riptide_surge plain verdict=NONE mana=10 primary=54 res3=23 res8=18 res2=16 res4=14 res7=22 res9=16
+spell.riptide_surge skilled verdict=NONE mana=10 primary=53 res3=24 res8=13 res2=20 res4=18 res7=23 res9=14
+spell.riptide_surge geared verdict=NONE mana=10 primary=78 res3=18 res8=23 res2=21 res4=21 res7=16 res9=14
+spell.scorchbrand plain verdict=NONE mana=30 primary=622 res3=362 res8=121 res2=142 res4=148 res7=61 res9=152
+spell.scorchbrand skilled verdict=NONE mana=30 primary=809 res3=527 res8=252 res2=250 res4=215 res7=100 res9=217
+spell.scorchbrand geared verdict=NONE mana=30 primary=959 res3=566 res8=268 res2=246 res4=263 res7=88 res9=226
+spell.seraphs_verdict plain verdict=NONE mana=60 primary=1164 res3=417 res8=315 res2=262 res4=232 res7=232 res9=309
+spell.seraphs_verdict skilled verdict=NONE mana=60 primary=1624 res3=728 res8=476 res2=422 res4=392 res7=514 res9=460
+spell.seraphs_verdict geared verdict=NONE mana=60 primary=1643 res3=810 res8=448 res2=519 res4=422 res7=403 res9=505
+spell.shatter plain verdict=NONE mana=5 primary=11 res3=7 res8=7 res2=6 res4=6 res7=7 res9=7
+spell.shatter skilled verdict=NONE mana=5 primary=11 res3=8 res8=7 res2=7 res4=7 res7=7 res9=7
+spell.shatter geared verdict=NONE mana=5 primary=12 res3=8 res8=8 res2=8 res4=8 res7=8 res9=7
+spell.skysplitter plain verdict=NONE mana=50 primary=12120 res3=74 res8=198 res2=249 res4=200 res7=221 res9=261
+spell.skysplitter skilled verdict=NONE mana=50 primary=16457 res3=79 res8=228 res2=252 res4=223 res7=279 res9=231
+spell.skysplitter geared verdict=NONE mana=50 primary=15788 res3=91 res8=256 res2=241 res4=228 res7=273 res9=229
+spell.soul_steal plain verdict=NONE mana=16 primary=2061 drain=2061 res3=19 res8=319 res2=13 res4=18 res7=13 res9=20
+spell.soul_steal skilled verdict=NONE mana=16 primary=2037 drain=2037 res3=14 res8=381 res2=13 res4=20 res7=17 res9=14
+spell.soul_steal geared verdict=NONE mana=16 primary=1933 drain=1933 res3=14 res8=394 res2=16 res4=17 res7=21 res9=17
+spell.soulrend plain verdict=NONE mana=50 primary=31550 res3=215 res8=5302 res2=257 res4=235 res7=268 res9=250
+spell.soulrend skilled verdict=NONE mana=50 primary=30400 res3=213 res8=4702 res2=249 res4=245 res7=215 res9=228
+spell.soulrend geared verdict=NONE mana=50 primary=29117 res3=245 res8=5251 res2=235 res4=251 res7=209 res9=225
+spell.stone_shard plain verdict=NONE mana=2 primary=6 res3=4 res8=3 res2=3 res4=3 res7=5 res9=3
+spell.stone_shard skilled verdict=NONE mana=2 primary=8 res3=4 res8=4 res2=4 res4=4 res7=4 res9=5
+spell.stone_shard geared verdict=NONE mana=2 primary=7 res3=5 res8=5 res2=3 res4=4 res7=3 res9=4
+spell.stonefang plain verdict=NONE mana=30 primary=208 res3=132 res8=121 res2=142 res4=132 res7=126 res9=147
+spell.stonefang skilled verdict=NONE mana=30 primary=246 res3=165 res8=141 res2=149 res4=174 res7=171 res9=149
+spell.stonefang geared verdict=NONE mana=30 primary=270 res3=150 res8=168 res2=165 res4=149 res7=179 res9=144
+spell.sunforge_brand plain verdict=NONE mana=60 primary=928 res3=752 res8=286 res2=265 res4=311 res7=106 res9=259
+spell.sunforge_brand skilled verdict=NONE mana=60 primary=1513 res3=924 res8=408 res2=365 res4=369 res7=167 res9=456
+spell.sunforge_brand geared verdict=NONE mana=60 primary=1924 res3=969 res8=492 res2=489 res4=415 res7=162 res9=446
+spell.sunscour plain verdict=NONE mana=30 primary=570 res3=227 res8=154 res2=160 res4=124 res7=133 res9=157
+spell.sunscour skilled verdict=NONE mana=30 primary=1003 res3=374 res8=257 res2=276 res4=227 res7=213 res9=227
+spell.sunscour geared verdict=NONE mana=30 primary=1097 res3=453 res8=229 res2=253 res4=257 res7=224 res9=272
+spell.tempest_lance plain verdict=NONE mana=60 primary=18205 res3=96 res8=279 res2=273 res4=234 res7=246 res9=309
+spell.tempest_lance skilled verdict=NONE mana=60 primary=15171 res3=114 res8=283 res2=279 res4=289 res7=288 res9=271
+spell.tempest_lance geared verdict=NONE mana=60 primary=17331 res3=94 res8=342 res2=265 res4=286 res7=285 res9=336
+spell.tidebreaker plain verdict=NONE mana=60 primary=1264 res3=287 res8=304 res2=280 res4=271 res7=284 res9=275
+spell.tidebreaker skilled verdict=NONE mana=60 primary=1242 res3=310 res8=295 res2=289 res4=315 res7=277 res9=294
+spell.tidebreaker geared verdict=NONE mana=60 primary=1303 res3=253 res8=279 res2=262 res4=336 res7=285 res9=324
+spell.tsunami plain verdict=NONE mana=22 primary=102 res3=28 res8=34 res2=34 res4=27 res7=24 res9=35
+spell.tsunami skilled verdict=NONE mana=22 primary=166 res3=36 res8=35 res2=34 res4=39 res7=29 res9=41
+spell.tsunami geared verdict=NONE mana=22 primary=122 res3=35 res8=36 res2=37 res4=26 res7=36 res9=26
+spell.turn_undead plain verdict=NONE mana=5 primary=9 res3=3 res8=2 res2=2 res4=2 res7=2 res9=2
+spell.turn_undead skilled verdict=NONE mana=5 primary=10 res3=4 res8=2 res2=2 res4=2 res7=2 res9=2
+spell.turn_undead geared verdict=NONE mana=5 primary=12 res3=5 res8=3 res2=2 res4=2 res7=2 res9=3
+spell.voidreave_lance plain verdict=NONE mana=60 primary=39550 res3=299 res8=5632 res2=257 res4=257 res7=257 res9=286
+spell.voidreave_lance skilled verdict=NONE mana=60 primary=41230 res3=316 res8=5272 res2=242 res4=276 res7=275 res9=312
+spell.voidreave_lance geared verdict=NONE mana=60 primary=35007 res3=282 res8=5279 res2=292 res4=298 res7=312 res9=291
+spell.vortex_of_air plain verdict=NONE mana=10 primary=1030 res3=6 res8=13 res2=9 res4=20 res7=9 res9=16
+spell.vortex_of_air skilled verdict=NONE mana=10 primary=794 res3=5 res8=11 res2=17 res4=10 res7=13 res9=17
+spell.vortex_of_air geared verdict=NONE mana=10 primary=520 res3=6 res8=20 res2=17 res4=14 res7=10 res9=20
