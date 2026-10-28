@@ -18,7 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0275 | Export online NPC shop offers with the existing offline buy and resale prices | Multiplayer / parity | Locally verified (offer data only; transactions/native shop flow remain open; PR pending) | pending | deferred |
+| T4C-0275 | Export online NPC shop offers with the existing offline buy and resale prices | Multiplayer / parity | PR #231 open (local checks passed; offer data only; transactions/native shop flow remain open) | pending | deferred |
 | T4C-0274 | Expose existing generic NPC shop inventories to the online server catalog (no transaction or client changes) | Multiplayer / parity | Delivered (PR #230; focused tests and package builds passed) | PR #230 (b8b0ccc) | deferred |
 | T4C-0273 | Enable online Archer combat with server-authoritative bow/quiver checks, ranged damage and range/line-of-sight validation matching single-player | Multiplayer / parity | Done (PR #229; local tests passed) | PR #229 | [CHANGELOG.md](CHANGELOG.md#2026-10-28--archer-attacks-are-supported-by-the-online-server-t4c-0273) |
 | T4C-0272 | Enable online character creation for the four spellcasting classes with their shared starting kits and server-supported spells | Multiplayer / parity | Done (PR #227; local tests passed) | PR #227 (eed302a5) | [CHANGELOG.md](CHANGELOG.md#2026-10-28--caster-classes-can-start-online-t4c-0272) |
