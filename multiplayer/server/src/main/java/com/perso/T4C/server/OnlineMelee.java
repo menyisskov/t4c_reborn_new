@@ -126,7 +126,7 @@ final class OnlineMelee {
         p.buffs(),cooldowns,0,p.companion());
   }
   /** Count only the authoritative lethal claimant; these flags share the strike's receipt and transaction. */
-  private static CharacterProgress withLethalQuestCredit(CharacterProgress progress,String monster,int world,double x,double y) {
+  static CharacterProgress withLethalQuestCredit(CharacterProgress progress,String monster,int world,double x,double y) {
     var flags=new HashMap<>(progress.questFlags());
     String log=QuestRules.killLogFlag(monster);
     // A lifetime kill log cannot wrap negative and make later online combat unsupported.

@@ -13,6 +13,7 @@ final class HostedWorlds implements AutoCloseable {
     final PreviewWorld world;
     PersistentCreatures creatures;
     OnlineMelee melee;
+    OnlineSpellStrikes spells;
     OnlineRetaliation retaliation;
     OnlineClanCombat clanCombat;
     RegionNpcs npcs;
@@ -47,6 +48,7 @@ final class HostedWorlds implements AutoCloseable {
         validateClanAuthority(region,classifedRequired(classified));
         region.creatures=new PersistentCreatures(store,region.world,region.map,region.spec.key(),sessions,items,classified);
         region.melee=new OnlineMelee(region.map,region.world,sessions,region.creatures,items,new java.security.SecureRandom(),System::currentTimeMillis);
+        region.spells=new OnlineSpellStrikes(region.map,region.world,sessions,region.creatures,items,SpellCatalogV2.bundled(),new java.security.SecureRandom(),System::currentTimeMillis);
         region.retaliation=new OnlineRetaliation(region.map,region.world,sessions,region.creatures,items,new java.security.SecureRandom(),System::currentTimeMillis);
         region.clanCombat=new OnlineClanCombat(region.map,region.world,region.creatures,classified,
             new java.security.SecureRandom(),System::currentTimeMillis);
