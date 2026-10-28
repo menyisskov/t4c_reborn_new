@@ -28,6 +28,34 @@ public final class LocalWorldDriver implements WorldDriver {
     return new WorldEntities(monsterManager, npcManager);
   }
 
+  @Override
+  public void tickEntities(EntityTick tick) {
+    if (tick.npcs() != null) {
+      tick.npcs()
+          .updateVisible(
+              tick.delta(),
+              tick.playerPosition(),
+              tick.startX(),
+              tick.endX(),
+              tick.startY(),
+              tick.endY(),
+              tick.margin());
+    }
+    if (tick.monsters() != null) {
+      tick.monsters().setScriptPlayer(tick.player());
+      // GM peace mode: monsters get no player to chase, so they drop any fight with them.
+      tick.monsters()
+          .updateVisible(
+              tick.delta(),
+              tick.player().isGmPeace() ? null : tick.playerPosition(),
+              tick.startX(),
+              tick.endX(),
+              tick.startY(),
+              tick.endY(),
+              tick.margin());
+    }
+  }
+
   private NPCManager createNpcManager(WorldEntityInputs inputs) {
     NPCManager manager = new NPCManager(inputs.outlineShader(), inputs.questService());
     try {
