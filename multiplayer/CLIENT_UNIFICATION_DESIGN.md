@@ -326,10 +326,55 @@ Equal today: collision codes (`CollisionRules` equals the desktop `CollisionType
 codes) and the distance covered per second in open ground (9.375 tiles/s). `MovementRulesTest`
 and `MovementRulesRealMapTest` pin both facts and the server loop.
 
-Open decisions for the owner: (1) adopt the grid-reservation rule on the server (exact parity,
-needs a per-player reservation in the world state, dynamic blockers and teleport tiles), or (2)
-keep the swept rule as the authoritative one and make the online client's own movement follow
-it. Parity says (1); it also removes the half-tile offset and the sliding gap.
+Decided by the owner parity rule: the server adopts the grid-reservation rule (3.10.1).
+
+#### 3.10.1 Decision and server adoption (T4C-0272)
+
+The owner rule decides the open question above: single-player is the reference, so the server
+adopts `Mode.GRID_RESERVATION` (option 1). `PreviewWorld.step` now calls `ServerMovement.step`,
+which runs `MovementRules.Grid.reserve` and `advance` with the server's fixed delta (budget 300 / 34
+= 8.82 px, horizontal-equivalent, per tick). The previous loop stays in the file as
+`Mode.SWEPT_SUBSTEP`, selected by `-Dt4c.server.movement=swept` or `PreviewWorld.movementMode(...)`;
+it is the rollback and the reference the tests compare against.
+
+**Convention (the half-tile offset).** The wire, snapshots, persistence and every consumer keep
+tile-centre doubles in the hosted crop: a player resting on tile (3,5) is at (3.5, 5.5), exactly
+what spawns, respawns, corpses and transfers already write. The shared rule works in world pixels
+where a position is a tile's top-left anchor. `ServerMovement` converts with one fixed, exact
+offset: `pixelX = (x - 0.5) * 32`, `pixelY = (y - 0.5) * 16` and back. Resting positions are
+therefore identical to before and nothing about stored positions changes. Only a position taken
+mid-glide (a checkpoint can now fall between tiles) is off the centre.
+
+**Impact analysis: who consumes server positions.**
+
+| Consumer | Effect of the grid rule | Action |
+|---|---|---|
+| Snapshots (`/state`) and the native client | Same wire (tile-centre doubles, protocol 6 unchanged). The client mirrors snapshots and has no prediction, so it simply sees tile-to-tile glides; a released key now finishes its tile (at most one tile, 3.6 ticks) | none |
+| Persistence checkpoints and `PersistentSessions` | A checkpoint may store a mid-glide position. Load goes through `PreviewWorld.joinAt`, which snaps a position between tiles to the centre of the tile it stands on (legal under both rules); exact centres load untouched. Old saves (positions the swept loop left anywhere) load the same way | `joinAt` snap, test of old-format positions |
+| Hosted transfers, respawn, corpse recovery, `relocate`, `transferTo` | Server-written positions; they clear any glide in progress, then the player rests where it was put (a mid-tile placement still works: the rule snaps toward the next anchor in the input direction, as offline does) | glide cleared |
+| Creature pursuit, aggro, retaliation range, NPC talk range, loot pickup range | All are distance checks on fractional doubles; none assumed a stop-anywhere position. A player rests on a centre more often, which cannot move a range boundary by more than the half tile they already tolerated | none |
+| Tamper probe (`SPEED-spam`, `SPEED-walls`) | The per-tick maximum stays 0.2757 tiles per axis (same tick distance; leftover budget after an arrival is spent on the next reservation, never added). Samples stay standable: while gliding the foot tile is the origin or the destination, both legal | assertion unchanged; probe not re-run |
+| QA tools (`NativeAdapterSoak`, `NativeLootProbe`, `NativePursuitProbe`, `NativeTransferProbe`) | They steer by tile-centre BFS and assume an instant stop; they now overshoot a released tile by up to one tile | re-validate at the next live window (not run here) |
+| Preview web client (`client.js`) | Draws snapshots only | none |
+
+**What equals the old loop and what differs on purpose** (pinned by `ServerMovementParityTest`):
+
+| Behaviour | Result |
+|---|---|
+| Open ground, held input, eight directions | positions equal the old loop every tick (within 2e-4 tile; float versus double) |
+| Speed | at most 0.2757 tiles per axis per tick, any input sequence |
+| Cardinal collision decisions (enter the next tile or not) | identical to the old precomputed grid on a random map built the way production builds it |
+| Diagonal the old loop allowed | always allowed; the extra diagonals the grid allows are exactly the documented ones (a blocked side tile, or the wall-adjacent exception) |
+| Blocked step | slides in the order -1, +1, -2, +2 around the requested direction instead of stopping |
+| Released key | the reserved tile is finished, then the player rests on a centre (no instant stop mid-tile) |
+| Reverse mid-tile | impossible until arrival |
+| Saved mid-tile position | snaps to the centre of its tile on load; illegal tiles are still refused |
+| Never | standing on a blocked tile, under random input over five random maps |
+
+**Remaining, not done here.** Dynamic blockers (monsters, NPCs, other players), speed buffs and GM
+speed (the server holds no player speed state), the stun/exhausted/attacking gates, teleport-passable
+tiles beyond hosted portal sources, the wall-foot difference between `PreviewMap.load` (applies it)
+and `RegionMapLoader` (does not), and client-side prediction on top of the now shared rule.
 
 ## 4. Staged plan
 
@@ -370,8 +415,9 @@ Other risks:
   update and death paths. The `remoteControlled` flag must short-circuit every one; a test sweeps
   all registered monster and NPC classes, applies a death snapshot and asserts no loot, XP, quest
   or sound callback fires.
-- **Movement rule divergence** (server substep rule versus `PlayerMovement`). Until stage 2,
-  online movement can differ slightly from offline; recorded as parity debt.
+- **Movement rule divergence** (server substep rule versus `PlayerMovement`). Resolved for the
+  step itself by T4C-0272 (3.10.1): the server runs the single-player grid-reservation rule.
+  What remains is dynamic blockers, speed state and the client-side prediction.
 - **Static singletons** (`GuiManager`, `SystemMessage`, `CollisionManager`) assume one game per
   process. Acceptable: one session per client process.
 - **Polling transport** latency on a real network; replaceable inside `OnlineConnection`.

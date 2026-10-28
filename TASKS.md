@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0270`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0273`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0272 | Server movement parity: the online server now moves players with single-player's grid-reservation rule through the shared `MovementRules` (finish the claimed tile, slide -1,+1,-2,+2, single-player diagonal corner rule, rest on tile centres; wire, database and protocol 6 unchanged, fixed half-tile offset to the rule's anchors), with the old swept loop kept behind `-Dt4c.server.movement=swept` as rollback. Saved mid-tile positions snap to their tile centre on load. Impact analysis in `CLIENT_UNIFICATION_DESIGN.md` 3.10.1; `ServerMovementParityTest` proves equality with the old loop in open ground, speed and cardinal collision decisions and pins every deliberate difference | Multiplayer / parity | In Progress (PR open) | - | [2026-10-28](CHANGELOG.md) |
 | T4C-0267 | Spell engine stage 1c, server casting: the online server now resolves the 48 stage-1 spells (40 single-target attack spells with their quarter-strength splash on up to 7 adjacent monsters, 4 drains, 4 single heals) for characters who know them, through the shared engine (pure SpellEngine, spells-v2 stage gate, shared sampled line of sight, seeded-random golden equal to the single-player code path); /cast takes an optional target token (protocol 6); one atomic revision-fenced commit covers mana, exhaustion, every struck creature, kills, XP, gold, loot and quest credit | Systems/Online | In Progress | - | - |
 | T4C-0265 | Client unification seam step 4: audit every way the game can write the save directory, prove which a remote (server-owned) character can reach, route the GUI and input-handler saves through the session persistence where they can reach it, refuse remote players in the shared account vault, and add tests that a remote character run through representative save sequences writes nothing | Process/Tooling | Done | - | - |
 | T4C-0263 | Client unification seam step 3: the single-player "create the monster and NPC registries for the current map" block (queue the map spawns, wire the summon callback, run NPC popup events) moves behind the session seam as the first member of the world driver, move-only, with new tests pinning the queued spawn counts, order and summon behaviour first | Process/Tooling | Done | - | - |
