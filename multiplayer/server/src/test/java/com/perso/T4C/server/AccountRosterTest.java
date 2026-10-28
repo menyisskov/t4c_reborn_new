@@ -13,19 +13,20 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
 class AccountRosterTest {
-  @Test void classSelectionResolvesEveryCasterButKeepsRangedUnavailableUntilImplemented() {
+  @Test void classSelectionResolvesEverySupportedStartingClass() {
     var expected = java.util.Map.of(
         "warrior", CharacterClass.WARRIOR,
+        "archer", CharacterClass.ARCHER,
         "paladin", CharacterClass.PALADIN,
         "cleric", CharacterClass.CLERIC,
         "healer", CharacterClass.HEALER,
         "mage", CharacterClass.MAGE,
         "battlemage", CharacterClass.BATTLE_MAGE);
-    assertEquals(java.util.List.of("warrior", "paladin", "cleric", "healer", "mage", "battlemage"),
+    assertEquals(java.util.List.of("warrior", "archer", "paladin", "cleric", "healer", "mage", "battlemage"),
         OnlineCharacterCreation.CLASSES);
     expected.forEach((id, type) -> assertEquals(type, AccountRosterService.resolveCharacterClass(id)));
     var rejected = assertThrows(PreviewWorld.Rejected.class,
-        () -> AccountRosterService.resolveCharacterClass("archer"));
+        () -> AccountRosterService.resolveCharacterClass("unknown"));
     assertEquals(400, rejected.status);
   }
 

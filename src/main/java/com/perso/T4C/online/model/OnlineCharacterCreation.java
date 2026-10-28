@@ -7,7 +7,7 @@ import java.util.UUID;
 public final class OnlineCharacterCreation {
   /** Classes the server accepts for online creation; the server and the native form both read this list. */
   public static final java.util.List<String> CLASSES =
-      java.util.List.of("warrior", "paladin", "cleric", "healer", "mage", "battlemage");
+      java.util.List.of("warrior", "archer", "paladin", "cleric", "healer", "mage", "battlemage");
   /** Genders the server accepts. */
   public static final java.util.List<String> GENDERS = java.util.List.of("male", "female");
 
