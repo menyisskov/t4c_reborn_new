@@ -461,17 +461,21 @@ class OnlineConnectionTest {
       assertEquals("connected", connection.status(), "A refused cast is a normal conflict");
       assertEquals("cast 1 0 spell.heal_light", bodies.getFirst());
 
+      var targeted = connection.cast("spell.arcane_spark", 42).toCompletableFuture().get(3, TimeUnit.SECONDS);
+      assertFalse(targeted.accepted());
+      assertEquals("cast 1 0 spell.arcane_spark u:42", bodies.getLast());
+
       var used = connection.useItem(potion).toCompletableFuture().get(3, TimeUnit.SECONDS);
       assertTrue(used.accepted());
       assertEquals("online.ability.result", used.messageKey());
       assertEquals(java.util.List.of(9, 3), used.args(), "health gained and net mana");
       assertEquals(2, used.character().revision());
       assertEquals("use 1 0 " + potion, bodies.getLast());
-      assertEquals(2, bodies.size());
+      assertEquals(3, bodies.size());
       var picked = connection.pickUp(UUID.randomUUID()).toCompletableFuture().get(3, TimeUnit.SECONDS);
       assertTrue(picked.accepted(), "The version-gated pickup also stays usable through this adapter");
       assertEquals(3, picked.character().revision());
-      assertEquals(3, bodies.size());
+      assertEquals(4, bodies.size());
     } finally {
       server.stop(0);
     }

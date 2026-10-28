@@ -13,40 +13,79 @@ import java.util.Map;
  * Builds the shared spell formula inputs from committed online state, with the same terms
  * single-player reads from a live {@code Player}: base attributes plus equipment bonuses, trained
  * skills plus gear for attack/archery/dodge, element powers and resistances from skill, legacy
- * quest bonus and gear, and the equipped item counts. Active spell buffs are not integrated online
- * yet (casting fails closed while any is active), so effective and true readings are equal here.
+ * quest bonus and gear, and the equipped item counts. The <em>effective</em> readings also include
+ * the spell buffs running at {@code now}; the <em>true</em> readings (what {@code self.true_*}
+ * formulas read) never do, so recasting a buff refreshes it instead of compounding, as offline.
  */
 final class OnlineSpellContexts {
   private OnlineSpellContexts() {}
 
+  /** The caster with no spell buffs counted: equal effective and true readings. */
   static SpellFormulaContexts.Caster caster(CharacterProgress progress, ItemContent items) {
+    return caster(progress, items, Map.of());
+  }
+
+  /** The caster with the buffs running at {@code now} counted in its effective readings. */
+  static SpellFormulaContexts.Caster caster(CharacterProgress progress, ItemContent items, long now) {
+    OnlineBuffs.requireModelled(progress, now);
+    return caster(progress, items, OnlineBuffs.totals(progress, now));
+  }
+
+  private static SpellFormulaContexts.Caster caster(CharacterProgress progress, ItemContent items, Map<String, Integer> buff) {
     var bonuses = OnlineEquipmentBonuses.resolve(progress, items);
     var base = progress.attributes();
-    var stats = new SpellFormulaContexts.Stats(
+    var trueStats = new SpellFormulaContexts.Stats(
         base.strength() + bonuses.getOrDefault(3, 0),
         base.endurance() + bonuses.getOrDefault(2, 0),
         base.dexterity() + bonuses.getOrDefault(6, 0),
         base.intelligence() + bonuses.getOrDefault(1, 0),
         base.wisdom() + bonuses.getOrDefault(4, 0));
+    var stats = new SpellFormulaContexts.Stats(
+        trueStats.strength() + buff.getOrDefault("str", 0),
+        trueStats.endurance() + buff.getOrDefault("end", 0),
+        trueStats.dexterity() + buff.getOrDefault("dex", 0),
+        trueStats.intelligence() + buff.getOrDefault("int", 0),
+        trueStats.wisdom() + buff.getOrDefault("wis", 0));
     var power = new int[ElementRules.ELEMENTS.size()];
-    var resistance = new int[ElementRules.ELEMENTS.size()];
+    var truePower = new int[power.length];
+    var resistance = new int[power.length];
     for (int i = 0; i < power.length; i++) {
       String element = ElementRules.ELEMENTS.get(i);
-      power[i] = ElementRules.power(progress.skills().getOrDefault(element, 0), 0,
+      truePower[i] = ElementRules.power(progress.skills().getOrDefault(element, 0), 0,
           progress.questFlags().getOrDefault("legacy:power:" + element, 0),
           bonuses.getOrDefault(ElementRules.powerStatId(element), 0));
+      power[i] = truePower[i] + buff.getOrDefault("power:" + element, 0);
       resistance[i] = ElementRules.resistance(element, 0,
           progress.questFlags().getOrDefault("legacy:resist:" + element, 0),
           bonuses.getOrDefault(ElementRules.resistanceStatId(element), 0));
     }
-    var powers = new SpellFormulaContexts.Elements(power[0], power[1], power[2], power[3], power[4], power[5]);
     return new SpellFormulaContexts.Caster(
-        progress.advancement().level(), stats, stats,
+        progress.advancement().level(), stats, trueStats,
         skill(progress, bonuses, "attack"), skill(progress, bonuses, "archery"), skill(progress, bonuses, "dodge"),
-        powers, powers,
-        new SpellFormulaContexts.Elements(resistance[0], resistance[1], resistance[2], resistance[3],
-            resistance[4], resistance[5]),
+        elements(power), elements(truePower), elements(resistance),
         equippedItems(progress, items));
+  }
+
+  /**
+   * Element resistances including the buffs running at {@code now} (what {@code Player.getElementResistance}
+   * reads); the spell formulas only ever read the true ones in {@link SpellFormulaContexts.Caster}.
+   */
+  static SpellFormulaContexts.Elements effectiveResistance(CharacterProgress progress, ItemContent items, long now) {
+    OnlineBuffs.requireModelled(progress, now);
+    var bonuses = OnlineEquipmentBonuses.resolve(progress, items);
+    var buff = OnlineBuffs.totals(progress, now);
+    var values = new int[ElementRules.ELEMENTS.size()];
+    for (int i = 0; i < values.length; i++) {
+      String element = ElementRules.ELEMENTS.get(i);
+      values[i] = ElementRules.resistance(element, buff.getOrDefault("resist:" + element, 0),
+          progress.questFlags().getOrDefault("legacy:resist:" + element, 0),
+          bonuses.getOrDefault(ElementRules.resistanceStatId(element), 0));
+    }
+    return elements(values);
+  }
+
+  private static SpellFormulaContexts.Elements elements(int[] values) {
+    return new SpellFormulaContexts.Elements(values[0], values[1], values[2], values[3], values[4], values[5]);
   }
 
   /** Cast-rule formulas (mana cost, exhaustion, success): the context offline uses for the same. */
@@ -54,9 +93,17 @@ final class OnlineSpellContexts {
     return SpellFormulaContexts.forCastRules(caster(progress, items));
   }
 
+  static DiceFormula.Context forCastRules(CharacterProgress progress, ItemContent items, long now) {
+    return SpellFormulaContexts.forCastRules(caster(progress, items, now));
+  }
+
   /** Caster-side effect formulas such as self heals. */
   static DiceFormula.Context forSelf(CharacterProgress progress, ItemContent items) {
     return SpellFormulaContexts.forSelf(caster(progress, items));
+  }
+
+  static DiceFormula.Context forSelf(CharacterProgress progress, ItemContent items, long now) {
+    return SpellFormulaContexts.forSelf(caster(progress, items, now));
   }
 
   private static int skill(CharacterProgress progress, Map<Integer, Integer> bonuses, String name) {

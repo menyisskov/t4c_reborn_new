@@ -142,8 +142,11 @@ final class PersistentSessions {
     var saved=binding.saved;var progress=saved.progress();
     if(progress==null) return;
     long now=wallClock.getAsLong();
-    var base=progress.cooldowns().getOrDefault(OnlineRegeneration.ANCHOR,-1L)<binding.joinedAt
-        ? OnlineRegeneration.reanchor(progress,binding.joinedAt) : progress;
+    // Logged-out time never runs a buff down (shifted at join); expired buffs give their maximum health back.
+    var effects=OnlineBuffs.expire(OnlineBuffs.shiftForJoin(progress,binding.joinedAt),now);
+    boolean effectsChanged=effects!=progress;
+    var base=effects.cooldowns().getOrDefault(OnlineRegeneration.ANCHOR,-1L)<binding.joinedAt
+        ? OnlineRegeneration.reanchor(effects,binding.joinedAt) : effects;
     CharacterProgress settled;
     try {
       settled=hosted.items==null ? OnlineRegeneration.settle(base,now,ThreadLocalRandom.current(),Map.of())
@@ -154,8 +157,8 @@ final class PersistentSessions {
     boolean idle=vitals.hp()==0 || (vitals.hp()==vitals.maxHp() && vitals.mana()==vitals.maxMana());
     long anchorBefore=base.cooldowns().getOrDefault(OnlineRegeneration.ANCHOR,-1L);
     boolean consumedTicks=settled.cooldowns().getOrDefault(OnlineRegeneration.ANCHOR,-1L)!=anchorBefore;
-    if(!changed && (idle || !consumedTicks)) return;
-    if(changed) binding.progressUnsaved=true;
+    if(!changed && !effectsChanged && (idle || !consumedTicks)) return;
+    if(changed || effectsChanged) binding.progressUnsaved=true;
     binding.saved=withProgress(saved,settled);
   }
 
@@ -567,6 +570,9 @@ final class PersistentSessions {
     CharacterProgress checkpointProgress=null;
     if (event==null && binding.saved.progress()!=null) {
       settleRegeneration(binding);
+      // A character holding buffs is re-anchored at every checkpoint, so a crash or logout loses little.
+      var anchoredProgress=OnlineBuffs.anchored(binding.saved.progress(),wallClock.getAsLong());
+      if (anchoredProgress!=binding.saved.progress()) { binding.saved=withProgress(binding.saved,anchoredProgress);binding.progressUnsaved=true; }
       if (binding.progressUnsaved) { checkpointProgress=binding.saved.progress();binding.progressUnsaved=false; }
     }
     final var persistProgress=checkpointProgress;

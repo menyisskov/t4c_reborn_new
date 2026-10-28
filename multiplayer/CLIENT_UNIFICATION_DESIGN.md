@@ -328,7 +328,7 @@ and `MovementRulesRealMapTest` pin both facts and the server loop.
 
 Decided by the owner parity rule: the server adopts the grid-reservation rule (3.10.1).
 
-#### 3.10.1 Decision and server adoption (T4C-0272)
+#### 3.10.1 Decision and server adoption (T4C-0277)
 
 The owner rule decides the open question above: single-player is the reference, so the server
 adopts `Mode.GRID_RESERVATION` (option 1). `PreviewWorld.step` now calls `ServerMovement.step`,
@@ -416,7 +416,7 @@ Other risks:
   all registered monster and NPC classes, applies a death snapshot and asserts no loot, XP, quest
   or sound callback fires.
 - **Movement rule divergence** (server substep rule versus `PlayerMovement`). Resolved for the
-  step itself by T4C-0272 (3.10.1): the server runs the single-player grid-reservation rule.
+  step itself by T4C-0277 (3.10.1): the server runs the single-player grid-reservation rule.
   What remains is dynamic blockers, speed state and the client-side prediction.
 - **Static singletons** (`GuiManager`, `SystemMessage`, `CollisionManager`) assume one game per
   process. Acceptable: one session per client process.

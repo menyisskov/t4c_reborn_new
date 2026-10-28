@@ -6,11 +6,36 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
-## 2026-10-28 — Online movement now matches single-player (T4C-0272)
+## 2026-10-28 — Online movement now matches single-player (T4C-0277)
 
 ### Changed
 - In online play your character now walks exactly as in single-player: it moves one tile at a time, finishes the tile it has started when you let go of the key instead of stopping halfway, cannot turn around in the middle of a tile, and slides along walls and around corners instead of stopping dead against them. Walking speed is unchanged.
 - Characters saved while standing between two tiles come back standing on the tile they were on.
+## 2026-10-28 — Archer attacks are supported by the online server (T4C-0273)
+
+### Added
+- The online server now accepts Archer bow attacks with the same equipped bow, quiver, damage, range and line-of-sight rules as single-player. Arrows are not consumed, matching the existing game. Two-rendered-client presentation still needs verification.
+
+## 2026-10-28 — Caster classes can start online (T4C-0272)
+
+### Added
+- Online character creation now offers Cleric, Healer, Mage and Battle Mage with the same starting stats, equipment and spells as single-player. Archer remains unavailable until ranged combat is implemented online.
+
+## 2026-10-28 — Remove fixed two-hour Beta/GA session minimum (T4C-0271)
+
+### Changed
+- Beta/GA mixed-session acceptance still requires two real rendered clients, required gameplay coverage, stability and telemetry evidence, but no longer has a fixed two-hour minimum. Record actual session duration; ending a session alone does not pass the gate.
+- Historical soak durations and results remain unchanged.
+
+## 2026-10-28 — Buff spells work in online play (T4C-0270)
+
+### Added
+- In online play, the protective and strengthening spells can now be cast on yourself: Barrier, Protection, Stone Skin, Mana Shield, Mana Surge, Bless, Nimbleness, Light, Sanctuary and the rest of the buff spells, as well as Invisibility, Detect Invisible, Detect Hidden, True Sight, Dispel, Cure Poison, Renew Armor and Curse. They cost the same mana, tire you out the same way and give the same bonuses as in single-player, and casting one again refreshes it instead of adding to it.
+- Buffs keep running while you are logged out, with exactly the time they had left when you left, and they survive a server restart.
+
+### Changed
+- While a buff is running, your fights online use your boosted armor, strength, dexterity and skills, and your boosted carrying strength; when it ends, everything goes back and any extra maximum health it gave is taken off.
+- A buff keeps the strength it was cast with. (Single-player re-rolls a buff's strength every time the game is loaded; online it stays as cast.)
 
 ## 2026-10-28 — Attack and drain spells work in online play (T4C-0267)
 

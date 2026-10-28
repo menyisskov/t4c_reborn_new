@@ -15,15 +15,17 @@ The next proposed playable checkpoint is a complete starter adventure with two p
 the native game client. It is an intermediate checkpoint; passing it alone does not complete
 Beta or promise to port the entire single-player game within these six milestones. On
 2026-10-27 the owner changed the Beta/GA concurrency gate from 20 players to two
-**real rendered clients**. All other intended launch content, gameplay, security, anti-cheat,
-recovery and two-hour mixed-stability requirements remain. The existing 20-player server
-capacity is unchanged; further 20-player qualification is follow-up scale evidence.
+**real rendered clients**. The owner has since removed the fixed two-hour session-duration
+minimum: record the duration of mixed-play evidence, but do not use a duration threshold as a
+release gate. All intended launch content, gameplay, security, anti-cheat and recovery
+requirements remain. The existing 20-player server capacity is unchanged; further 20-player
+qualification is follow-up scale evidence.
 
 | Stage | Required outcome | Completion rule |
 | --- | --- | --- |
 | Alpha | Authoritative, persistent gameplay through the native client: accounts, required character state, combat, NPC/quest/reward loop, travel, recovery and essential operations. | Every Alpha gate in ACCEPTANCE.md has passing evidence; service tests alone are insufficient. |
 | Two-player playable checkpoint | Two people can enter, play the selected starter adventure, progress and return to their saved characters. | M1–M6 below all pass on the same integrated build and declared content scope. |
-| Beta | Complete intended launch gameplay and reliable concurrent operation for two real rendered clients. | Two-player checkpoint plus the full Beta gates, broader launch content and final two-hour mixed gameplay/stability evidence with two real rendered clients. |
+| Beta | Complete intended launch gameplay and reliable concurrent operation for two real rendered clients. | Two-player checkpoint plus the full Beta gates, broader launch content and mixed gameplay/stability evidence with two real rendered clients; no fixed duration minimum. |
 | GA | Essential end-to-end game, secure deployed connection, reproducible client/server delivery and proven operations/recovery. | Beta gates plus deployed release checks and owner QA acceptance in ACCEPTANCE.md. |
 | Post-GA | Optional content, addons, convenience utilities, dashboards, polish and scaling improvements. | Prioritize separately; essential gameplay, anti-cheat and data integrity cannot be deferred here. |
 
@@ -210,7 +212,7 @@ Required behavior:
   moved and saw each other while eight incomplete joins and eight forged-body
   requests were open, and health stayed 200. This measured under 200 ms of
   hostile-phase native progress, not a four-second soak, rendered play, remote
-  abuse or the two-hour mixed gate.
+  abuse or the mixed gameplay/stability gate; the session has no fixed duration minimum.
   T4C-0251 added a tamper battery, local PG16 WSL, 322 cases, not the integrated release build
   ([NATIVE_TAMPER_PROBE.md](tools/NATIVE_TAMPER_PROBE.md)): one attacker session over raw HTTP and one victim on the
   native adapter, covering foreign account-key/character joins, missing and garbled authorization, admin routes,
@@ -227,13 +229,14 @@ Required behavior:
   committed progress, balances and positions after real lease expiry, then left normally.
   This was a network read check without rendered gameplay, new loot, combat or travel on the
   restore, so the full playthrough gate remains open.
-- [ ] Run a two-hour mixed session with two real rendered clients on the integrated candidate,
-  with zero unexplained disconnects, crashes, invariant violations, duplicate value or lost
-  acknowledged progress.
+- [ ] Run a mixed session with two real rendered clients on the integrated candidate, with zero
+  unexplained disconnects, crashes, invariant violations, duplicate value or lost acknowledged
+  progress. Record its duration; there is no fixed minimum. Ending a session alone does not pass
+  this gate: the required scenarios and evidence must be complete and satisfy the criteria.
   Include combat, loot, quests, travel and intentional reconnects rather than idle connections.
 - [ ] Record actual tick duration/debt, CPU/memory, bandwidth, database/command latency, occupancy
   and every error/recovery. Investigate stalls and growing queues/resources; do not count a failed
-  run as passed because its timer ended. T4C-0198 recorded a two-hour native-adapter baseline,
+  run as passed merely because it ended. T4C-0198 recorded a two-hour native-adapter baseline,
   but 20-player occupancy lasted only 58.213 minutes and the run lacked quest/loot/travel,
   bandwidth and database-latency measures. That historical 20-adapter run does not satisfy the
   current two-rendered-client mixed Beta/GA gate; further 20-player scale qualification is

@@ -73,10 +73,9 @@ public final class OnlinePickupRules {
   }
 
   static int effectiveStrength(CharacterProgress progress, ItemContent content, long now) {
-    if (progress.buffs().stream().anyMatch(buff -> buff.expiresAt() > now)) {
-      throw new IllegalArgumentException("Active buff stat effects are not integrated");
-    }
+    OnlineBuffs.requireModelled(progress, now);
     return progress.attributes().strength()
+        + OnlineBuffs.totals(progress, now).getOrDefault("str", 0)
         + OnlineEquipmentBonuses.resolve(progress, content).getOrDefault(STRENGTH_STAT_ID, 0);
   }
 }

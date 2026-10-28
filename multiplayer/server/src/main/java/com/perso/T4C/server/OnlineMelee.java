@@ -12,7 +12,7 @@ import java.util.*;
 import java.util.concurrent.CompletionStage;
 import java.util.function.LongSupplier;
 
-/** Immediate-impact melee slice. All arguments except revision/target originate on the server. */
+/** Server-authoritative physical attack resolver for melee and bow strikes. */
 final class OnlineMelee {
   private final PreviewMap map;
   private final PreviewWorld world;
@@ -55,19 +55,26 @@ final class OnlineMelee {
         || !OnlineRetaliation.supported(definition))
       throw rejected("unsupported_combat");
     var position=world.position(token);
-    double x=captured.x()-map.originX,y=captured.y()-map.originY;
-    if (Math.hypot((position.x()-x)*GRID_W,(position.y()-y)*GRID_H)>PLAYER_MELEE_ATTACK_RANGE
-        || !map.allowsCombat(position.x(),position.y(),x,y,false)) throw rejected("out_of_range_or_blocked");
     OnlineCombatLoadout loadout;
     try { loadout=OnlineCombatLoadout.resolve(p,items,now,false); }
     catch (IllegalArgumentException unsupported) { throw rejected("unsupported_combat"); }
+    boolean ranged=isBow(loadout.primary()) || isBow(loadout.secondary());
     if (loadout.profile().skill("stun_blow")>0
-        || (loadout.primary()!=null && loadout.primary().bow()) || (loadout.secondary()!=null && loadout.secondary().bow()))
+        || (ranged && (loadout.secondary()==null || loadout.secondary().structure()!=QUIVER_STRUCTURE_ID)))
       throw rejected("unsupported_combat");
+    double x=captured.x()-map.originX,y=captured.y()-map.originY;
+    double range=ranged ? BOW_ATTACK_RANGE : PLAYER_MELEE_ATTACK_RANGE;
+    boolean visible=ranged ? map.hasSpellLineOfSight(position.x(),position.y(),x,y)
+        : map.hasLineOfSight(position.x(),position.y(),x,y);
+    if (Math.hypot((position.x()-x)*GRID_W,(position.y()-y)*GRID_H)>range
+        || !map.combatEndpointsSafe(position.x(),position.y(),x,y,false) || !visible)
+      throw rejected("out_of_range_or_blocked");
     var resolved=CombatResolver.resolve(new PhysicalAttackRequest(loadout.profile(),
         MonsterCombatRules.resolve(definition).profile(false,random),
-        WeaponDamageRules.melee(loadout.stats(),loadout.primary(),loadout.secondary(),loadout.damageBonus()),
-        WeaponDamageRules.offHand(loadout.stats(),loadout.primary(),loadout.secondary(),loadout.damageBonus()),false),random);
+        ranged ? WeaponDamageRules.bow(loadout.stats(),loadout.primary(),loadout.secondary(),loadout.damageBonus())
+            : WeaponDamageRules.melee(loadout.stats(),loadout.primary(),loadout.secondary(),loadout.damageBonus()),
+        ranged ? 0 : WeaponDamageRules.offHand(loadout.stats(),loadout.primary(),loadout.secondary(),loadout.damageBonus()),
+        ranged),random);
     int before=life.health()==null ? definition.getHealth() : life.health();
     if (before<=0) throw rejected("creature_unavailable");
     int damage=Math.min(before,resolved.damage()),after=before-damage;
@@ -125,6 +132,7 @@ final class OnlineMelee {
         p.inventory(),p.equipment(),p.skills(),p.spells(),p.questFlags(),p.storage(),p.storageGold(),p.respawn(),
         p.buffs(),cooldowns,0,p.companion());
   }
+  private static boolean isBow(WeaponDamageRules.Weapon weapon) { return weapon!=null && weapon.bow(); }
   /** Count only the authoritative lethal claimant; these flags share the strike's receipt and transaction. */
   static CharacterProgress withLethalQuestCredit(CharacterProgress progress,String monster,int world,double x,double y) {
     var flags=new HashMap<>(progress.questFlags());

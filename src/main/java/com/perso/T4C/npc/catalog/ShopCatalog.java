@@ -2,8 +2,11 @@ package com.perso.T4C.npc.catalog;
 
 import com.perso.T4C.npc.behavior.NpcBehavior;
 import com.perso.T4C.npc.behavior.ShopBehavior;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 public final class ShopCatalog {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
@@ -605,6 +608,17 @@ public final class ShopCatalog {
         || "GulfridSteelhammer".equals(id)) return null;
 
     return i == null ? null : new ShopBehavior(i);
+  }
+
+  /** Immutable snapshot of the generic vendor inventories already used by the offline game. */
+  public static Map<String, List<String>> allShopInventories() {
+    var ids = new TreeSet<>(M.keySet());
+    ids.addAll(List.of("ChryseidaYolangda", "Fali", "WitchDoctorKwarlgloth"));
+    var inventories = new TreeMap<String, List<String>>();
+    for (String id : ids) {
+      if (get(id) instanceof ShopBehavior shop) inventories.put(id, shop.items());
+    }
+    return Collections.unmodifiableMap(inventories);
   }
 
   private static final List<String> QUIVERS =

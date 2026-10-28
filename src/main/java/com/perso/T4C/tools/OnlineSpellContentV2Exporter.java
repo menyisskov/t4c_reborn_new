@@ -46,7 +46,25 @@ public final class OnlineSpellContentV2Exporter {
         new SpellContentV2.Learning(spell.getMinLevel(), spell.getMinInt(), spell.getMinWis()),
         new SpellContentV2.Visual(spell.getProjectileSpell(), spell.getImpactSpell(), spell.getSound(),
             spell.getSoundImpact(), spell.getVisualEffect(), spell.getVisualEffectTarget()),
-        effects);
+        effects, dispelTargets(spell));
+  }
+
+  /** Id to key for every spell a dispel effect names that single-player can resolve. */
+  private static java.util.Map<Integer, String> dispelTargets(SpellData spell) {
+    var targets = new TreeMap<Integer, String>();
+    for (var effect : spell.getT4cEffects()) {
+      if (effect == null || effect.getEffectType() != 13) continue;
+      String expression = param(effect, 1);
+      if (expression == null) continue;
+      try {
+        int id = Integer.parseInt(expression.trim());
+        var target = SpellRegistry.findById(id);
+        if (target != null) targets.put(id, target.getKey());
+      } catch (NumberFormatException computed) {
+        throw new IllegalArgumentException("Dispel target of " + spell.getKey() + " is not a literal id");
+      }
+    }
+    return targets;
   }
 
   private static String orZero(String formula) {

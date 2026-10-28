@@ -451,7 +451,7 @@ does.
 | `DB-corpse-B` B's corpse at the end of the run | unrecovered, 777 gold, 1 item | false/777/1 | PASS |
 | `DB-corpse-A` A's own corpse at the end of the run | recovered exactly once (gold 0, empty) | true/0/0 | PASS |
 
-## Movement rule change (T4C-0272)
+## Movement rule change (T4C-0277)
 
 The server now moves players with single-player's grid-reservation rule (rollback:
 `-Dt4c.server.movement=swept`). The recorded run above used the swept rule and was not repeated.

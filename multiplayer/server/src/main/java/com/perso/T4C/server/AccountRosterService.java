@@ -56,11 +56,7 @@ final class AccountRosterService implements AutoCloseable {
   CompletableFuture<OnlineCharacterCreation.Result> create(String peer,String secret,
       OnlineCharacterCreation.Request request) {
     return submit(peer,()-> {
-      CharacterClass type=switch(request.characterClass()) {
-        case "warrior" -> CharacterClass.WARRIOR;
-        case "paladin" -> CharacterClass.PALADIN;
-        default -> throw new PreviewWorld.Rejected(400,"unsupported_class");
-      };
+      CharacterClass type=resolveCharacterClass(request.characterClass());
       var hostedStart=plan.regions().getFirst();
       var spec=hostedStart.spec();
       var map=hostedStart.map();
@@ -80,6 +76,19 @@ final class AccountRosterService implements AutoCloseable {
           progress.gender(),progress.advancement().level(),row.world(),created.inUse() ? "in_use" : "ready");
       return new OnlineCharacterCreation.Result(request.requestId(),summary);
     });
+  }
+
+  static CharacterClass resolveCharacterClass(String classId) {
+    return switch(classId) {
+        case "warrior" -> CharacterClass.WARRIOR;
+        case "archer" -> CharacterClass.ARCHER;
+        case "paladin" -> CharacterClass.PALADIN;
+        case "cleric" -> CharacterClass.CLERIC;
+        case "healer" -> CharacterClass.HEALER;
+        case "mage" -> CharacterClass.MAGE;
+        case "battlemage" -> CharacterClass.BATTLE_MAGE;
+        default -> throw new PreviewWorld.Rejected(400,"unsupported_class");
+      };
   }
 
   CompletableFuture<OnlineRoster> request(String peer,String secret,UUID after) {

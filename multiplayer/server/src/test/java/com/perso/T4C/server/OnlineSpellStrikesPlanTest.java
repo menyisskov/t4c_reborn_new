@@ -119,9 +119,9 @@ class OnlineSpellStrikesPlanTest {
     assertEquals("creature_unavailable", refusal(() -> unchecked(progress(20, known, Map.of()), "spell.fire_dart", 77L, source)));
     assertEquals("out_of_range", refusal(() -> unchecked(progress(20, known, Map.of()), "spell.fire_dart", 2L, source)));
     assertEquals("wrong_target", refusal(() -> unchecked(progress(20, known, Map.of()), "spell.fire_dart", null, source)));
-    // Stage 2 and later spells stay refused exactly like an unknown key.
+    // Stage 3 and later spells (areas, damage over time) stay refused exactly like an unknown key.
     assertEquals("unsupported_spell", refusal(() -> unchecked(progress(20, Set.of("spell.fireball"), Map.of()), "spell.fireball", 1L, source)));
-    assertEquals("unsupported_spell", refusal(() -> unchecked(progress(20, Set.of("spell.barrier"), Map.of()), "spell.barrier", null, source)));
+    assertEquals("unsupported_spell", refusal(() -> unchecked(progress(20, Set.of("spell.poison"), Map.of()), "spell.poison", 1L, source)));
     source.busy = true;
     assertEquals("creature_unavailable", refusal(() -> unchecked(progress(20, known, Map.of()), "spell.fire_dart", 1L, source)));
   }

@@ -130,7 +130,7 @@ Temporary-preview restrictions below apply to `--preview`. Persistent `--online`
   replace intent, never add movement budget. Players move by single-player's grid-reservation
   rule (a claimed tile is finished, blocked steps slide), so no step skips a blocked cell.
   The scheduler currently runs at 34 Hz. `-Dt4c.server.movement=swept` selects the previous
-  swept-substep rule as a rollback (T4C-0272).
+  swept-substep rule as a rollback (T4C-0277).
 - Random 256-bit bearer tokens identify temporary sessions. Snapshots expose public player
   IDs, never tokens. Input sequence numbers reject replay/reordering. These are local
   sessions, **not user accounts or production authentication**.

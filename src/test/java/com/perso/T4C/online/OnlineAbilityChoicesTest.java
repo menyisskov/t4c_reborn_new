@@ -7,6 +7,8 @@ import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.online.model.CharacterProgress;
 import com.perso.T4C.online.model.CharacterProgress.Item;
 import com.perso.T4C.online.model.SpellContent;
+import com.perso.T4C.online.model.SpellContentV2;
+import com.perso.T4C.spell.engine.SpellEngine;
 import com.perso.T4C.tools.OnlineSpellContentExporter;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,7 @@ import org.junit.jupiter.api.Test;
 
 class OnlineAbilityChoicesTest {
   private static final SpellContent ALLOWLIST = OnlineSpellContentExporter.snapshot();
+  private static final SpellContentV2 ENGINE_CATALOG = OnlineSpellAllowlistV2.bundled();
 
   /** The exporter registers JSON items globally; leave the shared registry as other tests expect it. */
   @org.junit.jupiter.api.AfterAll
@@ -32,14 +35,18 @@ class OnlineAbilityChoicesTest {
         List.of(), Map.of(), 0, null);
   }
 
-  private static String castableKey() {
-    return ALLOWLIST.spells().values().stream().filter(s -> s.use() == SpellContent.Use.CAST)
-        .map(SpellContent.Spell::key).findFirst().orElseThrow();
+  private static String supportedKey() {
+    return ENGINE_CATALOG.spells().values().stream()
+        .filter(s -> s.stage() <= OnlineSpellAllowlistV2.ENABLED_STAGE && SpellEngine.supported(s))
+        .map(SpellContentV2.Spell::key).sorted().findFirst().orElseThrow();
   }
 
-  private static String grantOnlyKey() {
-    return ALLOWLIST.spells().values().stream().filter(s -> s.use() == SpellContent.Use.GRANT_ONLY)
-        .map(SpellContent.Spell::key).findFirst().orElseThrow();
+  private static String targetedKey() {
+    return ENGINE_CATALOG.spells().values().stream()
+        .filter(s -> s.stage() <= OnlineSpellAllowlistV2.ENABLED_STAGE && SpellEngine.supported(s))
+        .filter(s -> s.kind() == SpellContentV2.Kind.NUKE || s.kind() == SpellContentV2.Kind.DRAIN
+            || s.kind() == SpellContentV2.Kind.DEBUFF)
+        .map(SpellContentV2.Spell::key).sorted().findFirst().orElseThrow();
   }
 
   private static ItemDefinition potion() {
@@ -56,11 +63,11 @@ class OnlineAbilityChoicesTest {
   }
 
   @Test
-  void listsOnlyLearnedSpellsTheServerCastsWithTheAuthoredManaCost() {
-    var castable = castableKey();
-    var spell = ALLOWLIST.spells().get(castable);
+  void listsOnlyLearnedEngineSpellsTheServerSupportsWithTheAuthoredManaCost() {
+    var castable = supportedKey();
+    var spell = ENGINE_CATALOG.spells().get(castable);
     var rows = OnlineAbilityChoices.castableSpells(
-        progress(Set.of(castable, grantOnlyKey(), "spell.not_in_catalogue"), List.of(), Map.of()), ALLOWLIST);
+        progress(Set.of(castable, "spell.not_in_catalogue"), List.of(), Map.of()), ENGINE_CATALOG);
 
     assertEquals(1, rows.size());
     assertEquals(castable, rows.getFirst().key());
@@ -70,8 +77,32 @@ class OnlineAbilityChoicesTest {
 
   @Test
   void unlearnedSpellsAreNotOffered() {
-    assertTrue(OnlineAbilityChoices.castableSpells(progress(Set.of(), List.of(), Map.of()), ALLOWLIST).isEmpty());
-    assertTrue(OnlineAbilityChoices.castableSpells(null, ALLOWLIST).isEmpty());
+    assertTrue(OnlineAbilityChoices.castableSpells(progress(Set.of(), List.of(), Map.of()), ENGINE_CATALOG).isEmpty());
+    assertTrue(OnlineAbilityChoices.castableSpells(null, ENGINE_CATALOG).isEmpty());
+  }
+
+  @Test
+  void stageGateExcludesAnOtherwiseSupportedSpellAboveTheCurrentServerStage() {
+    var spell = ENGINE_CATALOG.spells().get(supportedKey());
+    var tooNew = new SpellContentV2.Spell(spell.key() + "_stage3", spell.id(), spell.kind(), 3, "stage-3",
+        spell.targetType(), spell.attack(), spell.selfCenteredAttack(), spell.pvp(), spell.lineOfSight(),
+        spell.manaCost(), spell.successRate(), spell.mentalExhaustion(), spell.physicalExhaustion(),
+        spell.attackExhaustion(), spell.cooldownSeconds(), spell.radius(), spell.element(), spell.attackType(),
+        spell.minDamage(), spell.maxDamage(), spell.duration(), spell.frequency(), spell.learning(), spell.visual(),
+        spell.effects(), spell.dispelTargets());
+    var catalog = new SpellContentV2(SpellContentV2.VERSION, Map.of(spell.key(), spell, tooNew.key(), tooNew));
+    var rows = OnlineAbilityChoices.castableSpells(
+        progress(Set.of(spell.key(), tooNew.key()), List.of(), Map.of()), catalog);
+
+    assertEquals(List.of(spell.key()), rows.stream().map(OnlineAbilityChoices.SpellChoice::key).toList());
+  }
+
+  @Test
+  void creatureAttackSpellsAreMarkedForMonsterTargeting() {
+    var rows = OnlineAbilityChoices.castableSpells(
+        progress(Set.of(targetedKey()), List.of(), Map.of()), ENGINE_CATALOG);
+    assertEquals(1, rows.size());
+    assertTrue(rows.getFirst().requiresCreatureTarget());
   }
 
   @Test

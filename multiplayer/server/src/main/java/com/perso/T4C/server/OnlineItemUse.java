@@ -30,7 +30,7 @@ final class OnlineItemUse {
     var selected = selectSpell(definition.spells(), random);
     if (selected == null) throw OnlineCasting.rejected("chance_failed");
     var spell = itemSpell(spells, selected.spellId());
-    var effects = OnlineCasting.effects(spell, progress, items, random);
+    var effects = OnlineCasting.effects(spell, progress, items, now, random);
     if (effects.healthDelta() > 0 && progress.vitals().hp() >= progress.vitals().maxHp())
       throw OnlineCasting.rejected("no_healing_needed");
     if (effects.manaDelta() > 0 && progress.vitals().mana() >= progress.vitals().maxMana())

@@ -146,6 +146,13 @@ public final class PreviewServer implements AutoCloseable {
       hits.add(entry);
     }
     reply.put("hits",hits);
+    var buffs=new java.util.ArrayList<Map<String,Object>>();
+    for (var laid:done.buffs()) {
+      var entry=new java.util.LinkedHashMap<String,Object>();
+      entry.put("spell",laid.spell());entry.put("expiresAt",laid.expiresAt());
+      buffs.add(entry);
+    }
+    reply.put("buffs",buffs);
     return reply;
   }
   private HostedWorlds.Region admit(String token,Long epoch) {

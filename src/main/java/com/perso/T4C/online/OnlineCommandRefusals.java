@@ -55,6 +55,7 @@ final class OnlineCommandRefusals {
       case "no_line_of_sight" -> cast ? "online.cast.no_line_of_sight" : "online.use.refused";
       case "safe_haven" -> cast ? "online.cast.safe_haven" : "online.use.refused";
       case "creature_unavailable" -> cast ? "online.cast.no_target" : "online.use.refused";
+      case "friend_unavailable" -> cast ? "online.cast.no_friend" : "online.use.refused";
       case "protected_target" -> cast ? "online.cast.protected" : "online.use.refused";
       case "unsupported_combat" -> cast ? "online.cast.unsupported_combat" : "online.use.refused";
       case "item_not_owned" -> "online.use.not_owned";

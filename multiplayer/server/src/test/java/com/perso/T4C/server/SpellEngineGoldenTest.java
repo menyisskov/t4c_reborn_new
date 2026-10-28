@@ -84,6 +84,7 @@ class SpellEngineGoldenTest {
         case SpellEngine.Event.DrainHeal d -> out.append(" drain=").append(d.amount());
         case SpellEngine.Event.Damage d -> out.append(d.kind() == SpellEngine.DamageKind.DIRECT ? " primary=" : " res" + d.target() + "=")
             .append(d.amount());
+        default -> throw new AssertionError("Stage 1 spells emit no " + event);
       }
     }
     return out.toString();
