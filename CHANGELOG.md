@@ -27,6 +27,12 @@ commit links, and finer-grained notes.
 - Arrows no longer weigh anything, and your quiver never runs out of them. Quivers keep a small, equal weight.
 - Archers can now carry loot from the start; before, their starting arrows left them too heavy to pick anything up. Characters who already own arrows keep them.
 
+## 2026-10-28 — Online game now targets single-player parity (T4C-0252)
+
+### Changed
+- The goal for the online game is now that it plays and looks exactly like the single-player game, with the only difference being a client and a server. The earlier plan for a smaller starter-area-only online release no longer applies. A checklist of what is still missing is tracked in the project's multiplayer notes.
+- The skeleton hunting ground near the temple stays exactly as hard as it is in single-player.
+
 ## 2026-10-28 — Create a character from the online lobby (T4C-0244)
 
 ### Added
