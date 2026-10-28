@@ -80,6 +80,8 @@
                         <include>com/perso/T4C/spell/engine/*.java</include>
                         <include>com/perso/T4C/spell/SpellFormulaContexts.java</include>
                         <include>com/perso/T4C/world/LineOfSightRules.java</include>
+                        <include>com/perso/T4C/world/MovementRules.java</include>
+                        <include>com/perso/T4C/world/MovementReconciler.java</include>
                     </includes>
                     <testIncludes>
                         <testInclude>com/perso/T4C/monster/core/MonsterPursuitRulesTest.java</testInclude>
@@ -89,6 +91,8 @@
                         <testInclude>com/perso/T4C/spell/SpellHealRulesTest.java</testInclude>
                         <testInclude>com/perso/T4C/spell/SpellFormulaContextsTest.java</testInclude>
                         <testInclude>com/perso/T4C/world/LineOfSightRulesTest.java</testInclude>
+                        <testInclude>com/perso/T4C/world/MovementRulesTest.java</testInclude>
+                        <testInclude>com/perso/T4C/world/MovementReconcilerTest.java</testInclude>
                         <testInclude>com/perso/T4C/combat/CombatResolverTest.java</testInclude>
                         <testInclude>com/perso/T4C/combat/WeaponDamageRulesTest.java</testInclude>
                         <testInclude>com/perso/T4C/combat/WeaponTimingRulesTest.java</testInclude>

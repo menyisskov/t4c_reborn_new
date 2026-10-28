@@ -44,4 +44,15 @@ public final class LocalPlayerCommands implements PlayerCommands {
       }
     }
   }
+
+  @Override
+  public void move(float dx, float dy, float delta) {
+    if (host == null) {
+      throw new IllegalStateException("local commands used before the screen bound them");
+    }
+    Player player = host.player();
+    if (player != null) {
+      player.move(dx, dy, delta);
+    }
+  }
 }

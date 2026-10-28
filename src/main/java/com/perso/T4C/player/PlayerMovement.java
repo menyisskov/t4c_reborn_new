@@ -5,14 +5,15 @@ import static com.perso.T4C.config.GameConstants.GRID_W;
 import static com.perso.T4C.config.GameConstants.PLAYER_COLLISION_FOOTPRINT_ABOVE_TILES;
 import static com.perso.T4C.config.GameConstants.PLAYER_COLLISION_FOOTPRINT_BELOW_TILES;
 import static com.perso.T4C.config.GameConstants.PLAYER_COLLISION_FOOTPRINT_HORIZONTAL_TILES;
-import static com.perso.T4C.config.GameConstants.PLAYER_MOVEMENT_RESERVATION_STEP_TILES;
 
 import com.perso.T4C.config.GameConstants;
 import com.perso.T4C.config.NativeTimingProfile;
 import com.perso.T4C.helper.CollisionManager;
 import com.perso.T4C.model.Coordinates;
+import com.perso.T4C.world.MovementRules;
 import java.util.ArrayDeque;
 import java.util.List;
+import lombok.AccessLevel;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,7 @@ public class PlayerMovement {
   private static final Logger log = LoggerFactory.getLogger(PlayerMovement.class);
   private static final long BLOCK_LOG_COOLDOWN_MS = 500L;
   private static final int LOADED_POSITION_RECOVERY_RADIUS = 32;
-  private static final float POSITION_EPSILON = 0.001f;
+  private static final float POSITION_EPSILON = MovementRules.Grid.POSITION_EPSILON;
   private String currentAngle = "000";
   private boolean moving = false;
   private boolean flipX = false;
@@ -36,6 +37,8 @@ public class PlayerMovement {
   private float activeStepExpectedX = 0f;
   private float activeStepExpectedY = 0f;
   private int activeStepExpectedZ = 0;
+  @Getter(AccessLevel.NONE)
+  private CollisionTerrain terrain;
 
   public static final class PathNode {
     public final int x;
@@ -174,22 +177,26 @@ public class PlayerMovement {
         }
         return;
       }
-      float targetX = reservationTarget(pos.getX(), GRID_W, inputX);
-      float targetY = reservationTarget(pos.getY(), GRID_H, inputY);
       CollisionManager collisionManager = CollisionManager.getInstance();
       boolean checkCollisions =
           player.isPlayerCollisionsEnabled() && collisionManager.isInitialized();
-      boolean primaryAccepted =
-          isWithinMapBounds(player, targetX, targetY)
-              && (!checkCollisions
-                  || canReservePlayerStep(
-                      collisionManager, pos.getX(), pos.getY(), targetX, targetY, inputX, inputY));
-      if (primaryAccepted) {
-        reserveGridStep(pos, targetX, targetY, inputX, inputY);
-      } else if (checkCollisions
-          && tryReserveAdjacentDirection(player, collisionManager, pos, inputX, inputY)) {
+      MovementRules.Reservation reservation =
+          MovementRules.Grid.reserve(
+              terrain(collisionManager),
+              pos.getX(),
+              pos.getY(),
+              inputX,
+              inputY,
+              checkCollisions,
+              player.getMapPixelWidth(),
+              player.getMapPixelHeight());
+      if (reservation != null) {
+        reserveGridStep(pos, reservation);
       } else {
-        maybeLogBlockedMove(collisionManager, targetX, targetY);
+        maybeLogBlockedMove(
+            collisionManager,
+            MovementRules.Grid.reservationTarget(pos.getX(), GRID_W, inputX),
+            MovementRules.Grid.reservationTarget(pos.getY(), GRID_H, inputY));
         if (!advancedThisUpdate) {
           moving = false;
         }
@@ -201,138 +208,6 @@ public class PlayerMovement {
         return;
       }
     }
-  }
-
-  private boolean tryReserveAdjacentDirection(
-      Player player, CollisionManager collisionManager, Coordinates pos, int inputX, int inputY) {
-    int requestedDirection = toT4cDirection(inputX, inputY);
-    for (int offset = 1; offset <= 2; offset++) {
-      for (int sign : new int[] {-1, 1}) {
-        int[] move = fromT4cDirection(wrapT4cDirection(requestedDirection + sign * offset));
-        if (tryReserveSlideStep(player, collisionManager, pos, move[0], move[1], inputX, inputY)) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  private int wrapT4cDirection(int direction) {
-    return ((direction - 1) % 8 + 8) % 8 + 1;
-  }
-
-  private boolean tryReserveSlideStep(
-      Player player,
-      CollisionManager collisionManager,
-      Coordinates pos,
-      int moveX,
-      int moveY,
-      int requestedX,
-      int requestedY) {
-    float targetX = reservationTarget(pos.getX(), GRID_W, moveX);
-    float targetY = reservationTarget(pos.getY(), GRID_H, moveY);
-    if (!isWithinMapBounds(player, targetX, targetY)
-        || !canReserveSlidingStep(
-            collisionManager, pos.getX(), pos.getY(), targetX, targetY, requestedX, requestedY)) {
-      return false;
-    }
-    reserveGridStep(pos, targetX, targetY, moveX, moveY);
-    return true;
-  }
-
-  @FunctionalInterface
-  private interface FootprintProbe {
-    boolean rejects(float offsetX, float offsetY);
-  }
-
-  private boolean footprintAccepts(
-      CollisionManager collisionManager,
-      float fromX,
-      float fromY,
-      float toX,
-      float toY,
-      int moveX,
-      int moveY,
-      FootprintProbe probe) {
-    if (!collisionManager.canMoveForPlayer(fromX, fromY, toX, toY)) {
-      return false;
-    }
-    int horizontalTiles = moveX == 0 ? 0 : PLAYER_COLLISION_FOOTPRINT_HORIZONTAL_TILES;
-    int verticalTiles = PLAYER_COLLISION_FOOTPRINT_ABOVE_TILES;
-    int maxTiles = Math.max(horizontalTiles, verticalTiles);
-    for (int tile = 1; tile <= maxTiles; tile++) {
-      float offsetX = moveX * GRID_W * tile;
-      float offsetY = -GRID_H * tile;
-      boolean horizontal = tile <= horizontalTiles;
-      boolean vertical = tile <= verticalTiles;
-      if (horizontal && probe.rejects(offsetX, 0f)) {
-        return false;
-      }
-      if (vertical && probe.rejects(0f, offsetY)) {
-        return false;
-      }
-      if (horizontal && vertical && probe.rejects(offsetX, offsetY)) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  private boolean canReservePlayerStep(
-      CollisionManager collisionManager,
-      float fromX,
-      float fromY,
-      float toX,
-      float toY,
-      int moveX,
-      int moveY) {
-    boolean diagonal = moveX != 0 && moveY != 0;
-    boolean teleportDestination =
-        collisionManager.isPlayerPassableTile((int) (toX / GRID_W), (int) (toY / GRID_H));
-    return footprintAccepts(
-        collisionManager,
-        fromX,
-        fromY,
-        toX,
-        toY,
-        moveX,
-        moveY,
-        (offsetX, offsetY) -> {
-          if (teleportDestination) {
-            return false;
-          }
-          boolean destination = offsetX == 0f && offsetY == 0f;
-          if (!(destination
-              ? collisionManager.hasPlayerCollision(toX, toY)
-              : collisionManager.hasCollision(toX + offsetX, toY + offsetY))) {
-            return false;
-          }
-          boolean verticalOnly = offsetX == 0f && offsetY != 0f;
-          return !(diagonal
-              && verticalOnly
-              && collisionManager.hasCollision(fromX, fromY + offsetY));
-        });
-  }
-
-  private boolean canReserveSlidingStep(
-      CollisionManager collisionManager,
-      float fromX,
-      float fromY,
-      float toX,
-      float toY,
-      int moveX,
-      int moveY) {
-    return footprintAccepts(
-        collisionManager,
-        fromX,
-        fromY,
-        toX,
-        toY,
-        moveX,
-        moveY,
-        (offsetX, offsetY) ->
-            !collisionManager.hasCollision(fromX + offsetX, fromY + offsetY)
-                && collisionManager.hasCollision(toX + offsetX, toY + offsetY));
   }
 
   private boolean hasStaticPlayerFootprintCollision(
@@ -354,114 +229,76 @@ public class PlayerMovement {
     return false;
   }
 
-  private int toT4cDirection(int moveX, int moveY) {
-    if (moveX == 0 && moveY < 0) return 1;
-    if (moveX > 0 && moveY < 0) return 2;
-    if (moveX > 0 && moveY == 0) return 3;
-    if (moveX > 0 && moveY > 0) return 4;
-    if (moveX == 0 && moveY > 0) return 5;
-    if (moveX < 0 && moveY > 0) return 6;
-    if (moveX < 0 && moveY == 0) return 7;
-    if (moveX < 0 && moveY < 0) return 8;
-    throw new IllegalArgumentException("A movement direction cannot be zero");
-  }
-
-  private int[] fromT4cDirection(int direction) {
-    return switch (direction) {
-      case 1 -> new int[] {0, -1};
-      case 2 -> new int[] {1, -1};
-      case 3 -> new int[] {1, 0};
-      case 4 -> new int[] {1, 1};
-      case 5 -> new int[] {0, 1};
-      case 6 -> new int[] {-1, 1};
-      case 7 -> new int[] {-1, 0};
-      case 8 -> new int[] {-1, -1};
-      default ->
-          throw new IllegalArgumentException("T4C movement direction must be between 1 and 8");
-    };
-  }
-
-  private void reserveGridStep(
-      Coordinates pos, float targetX, float targetY, int moveX, int moveY) {
+  private void reserveGridStep(Coordinates pos, MovementRules.Reservation reservation) {
     activeGridStep = true;
-    activeStepTargetX = targetX;
-    activeStepTargetY = targetY;
-    activeStepMoveX = moveX;
-    activeStepMoveY = moveY;
+    activeStepTargetX = reservation.targetX();
+    activeStepTargetY = reservation.targetY();
+    activeStepMoveX = reservation.moveX();
+    activeStepMoveY = reservation.moveY();
     activeStepExpectedX = pos.getX();
     activeStepExpectedY = pos.getY();
     activeStepExpectedZ = pos.getZ();
   }
 
+  private CollisionTerrain terrain(CollisionManager collisionManager) {
+    if (terrain == null || terrain.collisionManager != collisionManager) {
+      terrain = new CollisionTerrain(collisionManager);
+    }
+    return terrain;
+  }
+
+  /** Lets the shared movement rule ask the desktop collision singleton its four questions. */
+  private static final class CollisionTerrain implements MovementRules.Terrain {
+    private final CollisionManager collisionManager;
+
+    CollisionTerrain(CollisionManager collisionManager) {
+      this.collisionManager = collisionManager;
+    }
+
+    @Override
+    public boolean hasCollision(float worldX, float worldY) {
+      return collisionManager.hasCollision(worldX, worldY);
+    }
+
+    @Override
+    public boolean hasPlayerCollision(float worldX, float worldY) {
+      return collisionManager.hasPlayerCollision(worldX, worldY);
+    }
+
+    @Override
+    public boolean canMoveForPlayer(float fromX, float fromY, float toX, float toY) {
+      return collisionManager.canMoveForPlayer(fromX, fromY, toX, toY);
+    }
+
+    @Override
+    public boolean isPlayerPassableTile(int gridX, int gridY) {
+      return collisionManager.isPlayerPassableTile(gridX, gridY);
+    }
+  }
+
   private float continueActiveGridStep(Player player, Coordinates pos, float travelBudget) {
     computeAngleFlip(activeStepMoveX, -activeStepMoveY);
-    float remainingX = Math.abs(activeStepTargetX - pos.getX());
-    float remainingY = Math.abs(activeStepTargetY - pos.getY()) * GRID_W / GRID_H;
-    float remainingDistance = Math.max(remainingX, remainingY);
-    float pixelStep = Math.min(Math.max(0f, travelBudget), remainingDistance);
-    float toX = moveToward(pos.getX(), activeStepTargetX, Math.abs(activeStepMoveX) * pixelStep);
-    float toY =
-        moveToward(
-            pos.getY(), activeStepTargetY, Math.abs(activeStepMoveY) * pixelStep * GRID_H / GRID_W);
-    boolean arrived =
-        Math.abs(toX - activeStepTargetX) < 0.001f && Math.abs(toY - activeStepTargetY) < 0.001f;
-    if (arrived) {
-      toX = activeStepTargetX;
-      toY = activeStepTargetY;
-    }
-    player.setWorldPosition(toX, toY, pos.getZ());
+    MovementRules.Reservation reservation =
+        new MovementRules.Reservation(
+            activeStepTargetX, activeStepTargetY, activeStepMoveX, activeStepMoveY);
+    MovementRules.Grid.Advance advance =
+        MovementRules.Grid.advance(pos.getX(), pos.getY(), reservation, travelBudget);
+    player.setWorldPosition(advance.x(), advance.y(), pos.getZ());
     moving = true;
-    activeStepExpectedX = toX;
-    activeStepExpectedY = toY;
+    activeStepExpectedX = advance.x();
+    activeStepExpectedY = advance.y();
     activeStepExpectedZ = pos.getZ();
-    if (arrived) {
+    if (advance.arrived()) {
       clearActiveGridStep();
       discardReachedPathNodes(player.getCoordinates());
     }
-    return Math.max(0f, travelBudget - pixelStep);
-  }
-
-  private float moveToward(float value, float target, float distance) {
-    if (value < target) {
-      return Math.min(value + distance, target);
-    }
-    return Math.max(value - distance, target);
+    return Math.max(0f, travelBudget - advance.spent());
   }
 
   private boolean isAtExpectedActiveStepPosition(Coordinates pos) {
     return Math.abs(pos.getX() - activeStepExpectedX) < POSITION_EPSILON
         && Math.abs(pos.getY() - activeStepExpectedY) < POSITION_EPSILON
         && pos.getZ() == activeStepExpectedZ;
-  }
-
-  private boolean isWithinMapBounds(Player player, float targetX, float targetY) {
-    return targetX >= 0f
-        && targetY >= 0f
-        && targetX < player.getMapPixelWidth()
-        && targetY < player.getMapPixelHeight();
-  }
-
-  private float reservationTarget(float value, float gridSize, int direction) {
-    if (direction == 0) {
-      return value;
-    }
-    return previousGridAnchor(value, gridSize, direction)
-        + direction * gridSize * PLAYER_MOVEMENT_RESERVATION_STEP_TILES;
-  }
-
-  private float previousGridAnchor(float value, float gridSize, int direction) {
-    float reservationSize = gridSize * PLAYER_MOVEMENT_RESERVATION_STEP_TILES;
-    float grid = value / reservationSize;
-    if (Math.abs(grid - Math.round(grid)) < POSITION_EPSILON) {
-      return Math.round(grid) * reservationSize;
-    }
-    if (direction > 0) {
-      return (float) Math.floor(grid) * reservationSize;
-    }
-    if (direction < 0) {
-      return (float) Math.ceil(grid) * reservationSize;
-    }
-    return Math.round(grid) * reservationSize;
   }
 
   private void discardReachedPathNodes(Coordinates pos) {

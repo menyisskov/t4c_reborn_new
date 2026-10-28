@@ -6,7 +6,7 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
-## 2026-10-28 — Buff spells work in online play (T4C-0269)
+## 2026-10-28 — Buff spells work in online play (T4C-0270)
 
 ### Added
 - In online play, the protective and strengthening spells can now be cast on yourself: Barrier, Protection, Stone Skin, Mana Shield, Mana Surge, Bless, Nimbleness, Light, Sanctuary and the rest of the buff spells, as well as Invisibility, Detect Invisible, Detect Hidden, True Sight, Dispel, Cure Poison, Renew Armor and Curse. They cost the same mana, tire you out the same way and give the same bonuses as in single-player, and casting one again refreshes it instead of adding to it.
