@@ -3,3 +3,6 @@
 # ils vivent sur disque et sont ignores (voir .gitignore).
 # Les petits .bin de donnees (items, monsters, npcs, mappings...)
 # sont stockes en clair.
+
+# Shell scripts run inside WSL/Linux; CRLF would break them.
+*.sh text eol=lf

@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0247`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0248`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0247 | Private disposable PostgreSQL 16 cluster tooling (WSL Ubuntu) for live acceptance runs: create/status/crash/start/stop/destroy script, PowerShell wrapper with process-scoped DB environment and dry-run, and usage doc | Process/Tooling | Tooling prepared, NOT yet run (awaiting owner confirmation) | PR open (claude/acceptance-cluster) | n/a (tooling) |
 | T4C-0246 | Arrows no longer weigh anything and every quiver has a small fixed weight, so the Archer (which started at 140 carried against a limit of 86) can loot from the start; the quiver never runs out of arrows; owner decision 2026-10-28 | Multiplayer / balance | Done | PR open (claude/arrows-weightless) | [2026-10-28](CHANGELOG.md#2026-10-28--arrows-weigh-nothing-and-quivers-never-run-out-t4c-0246) |
 | T4C-0245 | Keep the native loot probe starter kit equipped while adding its overweight fixture, then run one isolated local probe | Multiplayer / M2 native acceptance tooling | Implementation done, probe NOT yet run (needs database access) | pending | deferred |
 | T4C-0244 | Stage native online character-creation form in the existing lobby for owner visual review | Multiplayer / M1 native UI | Done (owner approved the rendered screenshots 2026-10-28; not run against a live server) | PR192; OnlineCreateFormTest, OnlineCreateLayoutTest, OnlineAccountClientTest | [2026-10-28](CHANGELOG.md#2026-10-28--create-a-character-from-the-online-lobby-t4c-0244) |
