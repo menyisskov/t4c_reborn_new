@@ -91,7 +91,7 @@ final class OnlineSpellStrikes {
    */
   CompletionStage<Reply> cast(String token, long revision, String spellKey, SpellEngine.Target target) {
     if (!sessions.belongs(token, world)) throw rejected("region");
-    var saved = sessions.usableCharacter(token, revision);
+    var saved = sessions.usableCharacter(token, revision, false);
     long now = clock.getAsLong();
     var position = world.position(token);
     var source = new CreatureSource() {

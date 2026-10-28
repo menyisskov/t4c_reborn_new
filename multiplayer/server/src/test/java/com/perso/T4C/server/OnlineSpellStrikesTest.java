@@ -63,7 +63,8 @@ class OnlineSpellStrikesTest {
       assertTrue(saved.progress().cooldowns().get(OnlineCasting.MENTAL_EXHAUSTION) > now);
       assertTrue(saved.experience() > 0);
       assertEquals(reply.revision(), saved.revision());
-      assertTrue(creatures.life(1).diedAt() != null || world.snapshot(token).creatures().size() == 1);
+      assertNotNull(store.loadOrCreateSpawn(killed.persistenceKey()).diedAt(), "the kill is durable");
+      assertNotNull(store.loadOrCreateSpawn(splashed.persistenceKey()).health(), "the splashed creature kept its reduced health");
       assertEquals("revision", assertThrows(PreviewWorld.Rejected.class, () -> spells.cast(token, 0, "spell.fire_dart", unit)).getMessage(),
           "a repeat of the same revision is fenced and never replayed");
     } finally { sessions.shutdown(); }

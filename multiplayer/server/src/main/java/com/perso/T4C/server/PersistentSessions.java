@@ -205,12 +205,17 @@ final class PersistentSessions {
   }
 
   OnlineStore.CharacterState usableCharacter(String token,long revision) {
+    return usableCharacter(token,revision,true);
+  }
+
+  /** As above; a caller that brings its own item content (the region spell path) does not need the hosted one. */
+  OnlineStore.CharacterState usableCharacter(String token,long revision,boolean requireHostedItems) {
     var binding=active(token);
     if(binding.event!=null || binding.awaitingRegionReady) throw new PreviewWorld.Rejected(409,"busy");
     if(binding.saved.revision()!=revision) throw new PreviewWorld.Rejected(409,"revision");
     var saved=character(token);
     if(saved.progress()==null) throw new PreviewWorld.Rejected(409,"uninitialized_character");
-    if(hosted.items==null) throw new PreviewWorld.Rejected(409,"unsupported_ability");
+    if(requireHostedItems && hosted.items==null) throw new PreviewWorld.Rejected(409,"unsupported_ability");
     return saved;
   }
 
