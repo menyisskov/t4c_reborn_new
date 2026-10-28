@@ -8,7 +8,7 @@ import java.util.Objects;
 
 /** Data-only vendor stock exported from the existing offline NPC shop catalog. */
 public record NpcShopContent(int version, List<Vendor> vendors) {
-  public static final int VERSION = 1;
+  public static final int VERSION = 2;
 
   public NpcShopContent {
     if (version != VERSION) throw new IllegalArgumentException("Unsupported NPC shop content version");
@@ -21,13 +21,21 @@ public record NpcShopContent(int version, List<Vendor> vendors) {
     if (vendors.isEmpty()) throw new IllegalArgumentException("Empty NPC shop content");
   }
 
-  public record Vendor(String npcId, List<String> itemKeys) {
+  public record Vendor(String npcId, List<Offer> offers) {
     public Vendor {
       if (npcId == null || npcId.isBlank()) throw new IllegalArgumentException("Invalid vendor NPC id");
-      Objects.requireNonNull(itemKeys, "itemKeys");
-      itemKeys = itemKeys.stream().map(ItemKeys::normalize).toList();
-      if (itemKeys.isEmpty() || itemKeys.stream().anyMatch(k -> k == null || k.isBlank()))
+      Objects.requireNonNull(offers, "offers");
+      offers = List.copyOf(offers);
+      if (offers.isEmpty())
         throw new IllegalArgumentException("Empty or invalid vendor inventory");
+    }
+  }
+
+  public record Offer(String itemKey, long buyPrice, long sellPrice) {
+    public Offer {
+      itemKey = ItemKeys.normalize(itemKey);
+      if (itemKey == null || itemKey.isBlank() || buyPrice < 0 || sellPrice < 0)
+        throw new IllegalArgumentException("Invalid vendor offer");
     }
   }
 }

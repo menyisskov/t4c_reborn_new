@@ -17,16 +17,28 @@ public final class NpcShopCatalog {
     this.content = Objects.requireNonNull(content);
     Objects.requireNonNull(items);
     for (var vendor : content.vendors()) {
-      for (String key : vendor.itemKeys()) {
-        if (!items.items().containsKey(key)) {
-          throw new IllegalArgumentException("Unknown shop item: " + key);
+      for (var offer : vendor.offers()) {
+        var definition = items.items().get(offer.itemKey());
+        if (definition == null) {
+          throw new IllegalArgumentException("Unknown shop item: " + offer.itemKey());
         }
+        if (offer.buyPrice() != definition.price())
+          throw new IllegalArgumentException("Shop buy price mismatch: " + offer.itemKey());
+        long expectedSellPrice =
+            definition.undroppable()
+                ? 0
+                : definition.price() > 0 || !definition.rarityPriced()
+                    ? Math.max(1L, definition.price() / 2L)
+                    : -1;
+        if ((expectedSellPrice >= 0 && offer.sellPrice() != expectedSellPrice)
+            || (expectedSellPrice < 0 && offer.sellPrice() <= 0))
+          throw new IllegalArgumentException("Invalid shop sell price: " + offer.itemKey());
       }
     }
   }
 
   public static NpcShopCatalog loadBundled() throws IOException {
-    try (var input = NpcShopCatalog.class.getResourceAsStream("/content/npc-shops-v1.json")) {
+    try (var input = NpcShopCatalog.class.getResourceAsStream("/content/npc-shops-v2.json")) {
       if (input == null) throw new IOException("Missing bundled NPC shop content");
       NpcShopContent content = read(input);
       return new NpcShopCatalog(content, ItemCatalog.loadBundled());

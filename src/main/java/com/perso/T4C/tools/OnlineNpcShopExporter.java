@@ -3,6 +3,7 @@ package com.perso.T4C.tools;
 import com.google.gson.GsonBuilder;
 import com.perso.T4C.item.ItemKeys;
 import com.perso.T4C.item.ItemRegistry;
+import com.perso.T4C.item.ItemSalePricing;
 import com.perso.T4C.npc.catalog.ShopCatalog;
 import com.perso.T4C.online.model.NpcShopContent;
 import java.nio.file.Files;
@@ -28,6 +29,12 @@ public final class OnlineNpcShopExporter {
                         entry.getValue().stream()
                             .filter(key -> ItemRegistry.findByKey(key) != null)
                             .map(ItemKeys::normalize)
+                            .map(
+                                key -> {
+                                  var item = ItemRegistry.findByKey(key);
+                                  return new NpcShopContent.Offer(
+                                      key, item.getPrice(), ItemSalePricing.sellPrice(item));
+                                })
                             .toList()))
             .toList();
     return new NpcShopContent(NpcShopContent.VERSION, vendors);
