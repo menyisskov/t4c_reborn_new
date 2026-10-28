@@ -29,7 +29,6 @@ import com.perso.T4C.combat.CombatResult;
 import com.perso.T4C.combat.PhysicalAttackRequest;
 import com.perso.T4C.combat.SeraphArrivalAnimation;
 import com.perso.T4C.combat.SeraphAuraService;
-import com.perso.T4C.input.WeaponAutoAttack;
 import com.perso.T4C.config.GamePreferencesStore;
 import com.perso.T4C.config.MapDefinition;
 import com.perso.T4C.config.NativeTimingProfile;
@@ -53,7 +52,6 @@ import com.perso.T4C.harvest.HerbNode;
 import com.perso.T4C.helper.AppearanceDefaultsCatalog;
 import com.perso.T4C.helper.CollisionManager;
 import com.perso.T4C.helper.CollisionReader;
-import com.perso.T4C.helper.DiceFormula;
 import com.perso.T4C.helper.DisplayModeToggle;
 import com.perso.T4C.helper.MapReader;
 import com.perso.T4C.helper.ModifSprites;
@@ -74,6 +72,7 @@ import com.perso.T4C.input.MonsterInputHandler;
 import com.perso.T4C.input.NPCInputHandler;
 import com.perso.T4C.input.ObjectClickHandler;
 import com.perso.T4C.input.TileClickHandler;
+import com.perso.T4C.input.WeaponAutoAttack;
 import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.monster.core.BaseMonster;
 import com.perso.T4C.monster.core.MonsterDef;
@@ -2606,7 +2605,8 @@ public class MainGameScreen implements Screen {
       return 1.0;
     }
     String attackDelay = weapon.getAtkDelay();
-    var speed = com.perso.T4C.combat.WeaponTimingRules.resolve(attackDelay, weapon.getAttackSpeed());
+    var speed =
+        com.perso.T4C.combat.WeaponTimingRules.resolve(attackDelay, weapon.getAttackSpeed());
     if (speed.invalidDelay()) {
       log.warn("Invalid attack delay '{}' for weapon {}", attackDelay, weapon.getKey());
     }
@@ -4072,22 +4072,20 @@ public class MainGameScreen implements Screen {
       player.update(delta);
       playerPositionTemp.set(player.getPositionVector());
       int margin = 5;
-      if (npcManager != null) {
-        npcManager.updateVisible(
-            delta, playerPositionTemp, renderStartX, renderEndX, renderStartY, renderEndY, margin);
-      }
-      if (monsterManager != null) {
-        monsterManager.setScriptPlayer(player);
-        // GM peace mode: monsters get no player to chase, so they drop any fight with them.
-        monsterManager.updateVisible(
-            delta,
-            player.isGmPeace() ? null : playerPositionTemp,
-            renderStartX,
-            renderEndX,
-            renderStartY,
-            renderEndY,
-            margin);
-      }
+      session
+          .world()
+          .tickEntities(
+              new com.perso.T4C.session.EntityTick(
+                  npcManager,
+                  monsterManager,
+                  player,
+                  playerPositionTemp,
+                  delta,
+                  renderStartX,
+                  renderEndX,
+                  renderStartY,
+                  renderEndY,
+                  margin));
       pruneSelectedMonster();
       performAttackTick();
       spellEffectManager.update(this::applyPeriodicSpellImpact);

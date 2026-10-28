@@ -96,6 +96,7 @@ class WorldTickCharacterizationTest {
     entries.set(damage, new ArrayList<>());
     set(screen, "floatingDamage", damage);
     set(screen, "spellEffectManager", new SpellEffectManager());
+    set(screen, "session", new com.perso.T4C.session.LocalGameSession());
     set(screen, "playerPositionTemp", new Vector2());
     set(screen, "player", player);
     set(screen, "npcManager", npcs ? new FakeNpcs() : null);
