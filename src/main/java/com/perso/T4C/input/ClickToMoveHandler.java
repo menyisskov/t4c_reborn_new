@@ -6,7 +6,6 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.perso.T4C.helper.MapReader;
-import com.perso.T4C.helper.PlayerStateStore;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.model.QuickSlotEntry;
 import com.perso.T4C.player.Player;
@@ -210,7 +209,7 @@ public class ClickToMoveHandler extends InputAdapter {
       target.setSlot(sourceSlot);
     }
     resetQuickbarInteraction();
-    PlayerStateStore.save(player);
+    PlayerHUD.persistenceOf(hud).save(player);
   }
 
   private void removeQuickSlot(int slot) {
@@ -228,7 +227,7 @@ public class ClickToMoveHandler extends InputAdapter {
     }
     if (removed) {
       resetQuickbarInteraction();
-      PlayerStateStore.save(player);
+      PlayerHUD.persistenceOf(hud).save(player);
     }
   }
 

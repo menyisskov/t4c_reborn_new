@@ -18,7 +18,6 @@ import com.perso.T4C.gui.widget.GuiBoxedText;
 import com.perso.T4C.gui.widget.GuiButton;
 import com.perso.T4C.gui.widget.GuiText;
 import com.perso.T4C.gui.widget.SpellTooltipText;
-import com.perso.T4C.helper.PlayerStateStore;
 import com.perso.T4C.helper.SpriteLoader;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.model.QuickSlotEntry;
@@ -183,7 +182,7 @@ public class SpellBook extends CharacterPanel {
     if (!macros.removeIf(m -> spellName.equals(m.getSpellName()))) {
       macros.add(new MacroBinding(spellName, MacroBinding.UNBOUND, 0));
     }
-    PlayerStateStore.save(player);
+    PlayerHUD.persistenceOf(hud).save(player);
   }
 
   private void addPageBox(
@@ -393,7 +392,7 @@ public class SpellBook extends CharacterPanel {
     } else {
       target.setSpell(spellName);
     }
-    PlayerStateStore.save(player);
+    PlayerHUD.persistenceOf(hud).save(player);
   }
 
   private static void ensureRegistry() {
