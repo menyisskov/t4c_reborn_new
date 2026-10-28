@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-28 — Plan for the online game to use the single-player screens (T4C-0254)
+
+### Changed
+- The project now has a plan for making the online game use exactly the same screens as single-player: the same map view, health bars, inventory, spell book, minimap, macros, shops and journal, with the server deciding what happens. It starts with moving and fighting, then adds items, spells, NPCs and the rest step by step. Single-player and its saves stay as they are.
+
 ## 2026-10-28 — Merge after local tests pass (T4C-0253)
 
 ### Changed
