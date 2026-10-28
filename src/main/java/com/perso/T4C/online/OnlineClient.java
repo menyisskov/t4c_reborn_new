@@ -395,7 +395,11 @@ public final class OnlineClient extends ApplicationAdapter {
         .orElse(null);
     if (nearest==null) return;
     targetCreature=nearest.id();
-    try { connection.attack(targetCreature).exceptionally(failed -> null); }
+    try {
+      connection.attack(targetCreature)
+          .thenAccept(result -> { if (!OnlineCommandRefusals.ATTACK_COOLDOWN.equals(result.messageKey())) stageCommand(result); })
+          .exceptionally(failed -> null);
+    }
     catch (IllegalStateException pendingOrDisconnected) { /* Single-flight input is intentionally bounded. */ }
   }
 

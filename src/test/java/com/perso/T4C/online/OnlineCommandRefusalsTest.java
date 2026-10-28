@@ -49,8 +49,25 @@ class OnlineCommandRefusalsTest {
   }
 
   @Test
-  void commandsWithoutPlayerFacingRefusalsReturnNothing() {
-    assertNull(OnlineCommandRefusals.messageKey("/attack", "busy"));
+  void mapsAttackRefusalsAndFallsBackToOneGenericRefusalWithoutLeakingServerText() {
+    assertEquals("online.attack.cooldown", OnlineCommandRefusals.messageKey("/attack", "cooldown"));
+    assertEquals("online.attack.dead", OnlineCommandRefusals.messageKey("/attack", "dead"));
+    assertEquals("online.attack.out_of_reach", OnlineCommandRefusals.messageKey("/attack", "out_of_range_or_blocked"));
+    assertEquals("online.attack.no_target", OnlineCommandRefusals.messageKey("/attack", "creature_unavailable"));
+    assertEquals("online.attack.busy", OnlineCommandRefusals.messageKey("/attack", "revision"));
+    assertEquals("online.attack.refused", OnlineCommandRefusals.messageKey("/attack", "something_new"));
+    assertEquals("online.attack.refused", OnlineCommandRefusals.messageKey("/attack", null));
+    assertNull(OnlineCommandRefusals.messageKey("/input", "busy"));
+  }
+
+  @Test
+  void everyAttackRefusalKeyExistsInTheEnglishCatalogue() {
+    for (var reason : List.of("cooldown", "dead", "out_of_range_or_blocked", "creature_unavailable",
+        "creature_busy", "protected_target", "unsupported_combat", "busy", "revision", "region",
+        "uninitialized_character", "anything-unknown")) {
+      var key = OnlineCommandRefusals.messageKey("/attack", reason);
+      assertTrue(I18n.has(key), key);
+    }
   }
 
   @Test

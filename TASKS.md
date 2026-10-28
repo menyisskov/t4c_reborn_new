@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0249`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0250`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0249 | Native online client explains why a melee attack was refused (map the server's /attack refusal codes to English messages; the routine swing-cooldown refusal is readable by the probe but not shown on the HUD) | Multiplayer / M2 native client | Done (offline tests + package; not run against a live server) | this PR | [2026-10-28](CHANGELOG.md) |
 | T4C-0248 | The starter Skeleton hunting ground is very lethal for new characters (probe evidence: level-1 warriors die in about 35 s; a level-8 warrior kills two Skeletons and dies to the third); decision on quest minimum level or online aggro waits on the owner (options A-C in DESIGN_GUIDELINES.md) | Multiplayer / balance | Planned (owner decision needed) | none yet | deferred |
 | T4C-0247 | Private disposable PostgreSQL 16 cluster tooling (WSL Ubuntu) for live acceptance runs: create/status/crash/start/stop/destroy script, PowerShell wrapper with process-scoped DB environment and dry-run, and usage doc | Process/Tooling | Tooling prepared; first live use 2026-10-28 (loot probe, created and destroyed one cluster cleanly) | PR open (claude/acceptance-cluster) | n/a (tooling) |
 | T4C-0246 | Arrows no longer weigh anything and every quiver has a small fixed weight, so the Archer (which started at 140 carried against a limit of 86) can loot from the start; the quiver never runs out of arrows; owner decision 2026-10-28 | Multiplayer / balance | Done | PR open (claude/arrows-weightless) | [2026-10-28](CHANGELOG.md#2026-10-28--arrows-weigh-nothing-and-quivers-never-run-out-t4c-0246) |

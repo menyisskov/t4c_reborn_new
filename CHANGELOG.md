@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-28 — Online attacks explain why they were refused (T4C-0249)
+
+### Added
+- When an attack is refused in online play you now see why: you are dead, the target is out of reach or blocked, there is nothing to attack, someone else is already attacking it, it cannot be attacked, or your character is busy. Swinging again before you have recovered stays silent.
+
 ## 2026-10-28 — Arrows weigh nothing and quivers never run out (T4C-0246)
 
 ### Changed
