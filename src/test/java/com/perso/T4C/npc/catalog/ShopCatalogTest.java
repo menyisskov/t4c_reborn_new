@@ -4,10 +4,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.perso.T4C.item.ItemKeys;
 import com.perso.T4C.item.ItemRegistry;
+import com.perso.T4C.item.ItemSalePricing;
 import com.perso.T4C.npc.behavior.ShopBehavior;
 import com.perso.T4C.tools.OnlineNpcShopExporter;
 import java.util.List;
 import java.util.Map;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 
 class ShopCatalogTest {
@@ -35,9 +38,24 @@ class ShopCatalogTest {
                     .filter(key -> ItemRegistry.findByKey(key) != null)
                     .map(ItemKeys::normalize)
                     .toList(),
-                vendor.itemKeys()));
+                vendor.offers().stream().map(com.perso.T4C.online.model.NpcShopContent.Offer::itemKey).toList()));
+    exported.vendors().forEach(
+        vendor ->
+            vendor.offers().forEach(
+                offer -> {
+                  var definition = ItemRegistry.findByKey(offer.itemKey());
+                  assertEquals(definition.getPrice(), offer.buyPrice());
+                  assertEquals(ItemSalePricing.sellPrice(definition), offer.sellPrice());
+                }));
     assertThrows(UnsupportedOperationException.class, () -> inventories.clear());
     assertThrows(UnsupportedOperationException.class, () -> inventories.values().iterator().next().clear());
-    assertEquals(OnlineNpcShopExporter.json(), OnlineNpcShopExporter.json());
+    try {
+      assertEquals(
+          OnlineNpcShopExporter.json(),
+          Files.readString(
+              Path.of("multiplayer/server/src/main/resources/content/npc-shops-v2.json")));
+    } catch (java.io.IOException error) {
+      fail("Could not read generated NPC shop content", error);
+    }
   }
 }
