@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0313`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0314`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0313 | Online client lists and windows follow single-player: the I, C and U lists and the shop draw in the same centred journal window single-player uses (right way up, clear of the radar), the shop title shows the shopkeeper's name, a greeting offers the NPC's topics so a quest can be asked for and accepted, and overlapping NPC click boxes resolve to the figure under the cursor in both modes | Content/Systems (online client) | Done (PR open) | pending | [2026-10-29](CHANGELOG.md) |
 | T4C-0312 | Live RENDERED evidence for the gameplay panels on a disposable PostgreSQL cluster: inventory equip/unequip with committed state and rejoin, Light Heal and a healing potion through the C and U controls, the NPC shop (buy, too poor, over-weight, sell), the other player's walking frames, and the renewed_wards quest kills and turn-in; the first click on a shopkeeper (or any NPC) and a shop trade refused as busy by a checkpoint racing the click are now retried once; the driver and provisioning tool gain the wares and quest scenes. Defects in the shop, ability and inventory panels are listed, not fixed (Codex UI lane) | Multiplayer / M2, M3, M4 evidence | Done (PR open) | pending | [2026-10-29](CHANGELOG.md) |
 | T4C-0311 | Rehearse a clean-machine install of the client and server QA packages on one machine (scrubbed environment, fresh profile, disposable PostgreSQL) and fix the Windows PowerShell 5.1 packaging defects it exposed; write down what a real second-machine delivery still needs | Process/Tooling | Done (PR open) | pending | none (no player-visible change) |
 | T4C-0310 | M5 fault-drill evidence on the current build: new twenty-adapter drill tool (hard server kill, abrupt PostgreSQL crash, lost-acknowledgement of the opening letter) with a committed-state verifier; six drill runs plus a re-run of the restart probe (pass) and the 322-case tamper battery (322 of 322) all passed, no defect found; the M5 database-recovery bullet is ticked, restart and lost-acknowledgement bullets stay open. Claim/release: adds NativeFaultDrill.java, run-native-fault-drill.ps1, NATIVE_FAULT_DRILL.md; evidence notes in MILESTONES.md, ACCEPTANCE.md, NATIVE_RESTART_PROBE.md, NATIVE_TAMPER_PROBE.md; no server, OnlineRetaliation, shop or UI file touched | Multiplayer/Process | In Progress | PR | n/a (no player-visible change) |
