@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Developer driver for the first LIVE rendered online run (T4C-0296; not shipped, not a test).
+ * Developer driver for the first LIVE rendered online run (T4C-0297; not shipped, not a test).
  * It is the real launcher game ({@link MyGame}: the lobby, then the real {@link MainGameScreen}
  * over a remote session) against a running server, plus a script that plays a human:
  *

@@ -61,6 +61,12 @@ re-measure before relying on a number.
   the server's step, other players have no name or health bar, and the screen must confirm the
   region to the connection before any input is sent (launcher step). Full table:
   `CLIENT_UNIFICATION_DESIGN.md` 3.13.
+  Progress (T4C-0297, R4 live run): the first live rendered online run (real window, lobby, real
+  game screen, own movement, a second connected player, Switch character back to the lobby with the
+  rejoin hold) worked against a disposable server; images in `multiplayer/design/live-*.png`.
+  Parity debt it records: the online screen renders very dark (day/night is not the server's; cause not isolated), no
+  "connecting" text in the lobby, reconnect after a server restart not yet exercised. Details:
+  `CLIENT_UNIFICATION_DESIGN.md` 3.14.
 - [ ] **Characters:** all 7 classes, creation screen and preview identical to single-player,
   stat and skill allocation, training, rebirth.
 - [ ] **Combat:** melee, archery, two weapons, stun blow, stealth, armor class and auras.

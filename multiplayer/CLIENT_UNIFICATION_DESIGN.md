@@ -498,6 +498,60 @@ Next, R4: the launcher opens the real screen from the lobby with a `RemoteGameSe
 builds `GameInputHandler` with the session's commands, binds the host, calls `confirmRegionReady`
 after each map load and shows the reconnect banner.
 
+### 3.14 Remote session, step R4: launcher and the first live rendered run (T4C-0297)
+
+**Scope change.** While R4 was being built, the lobby-to-real-screen launcher landed on `main`
+(T4C-0293 to 0296: `MyGame.launchOnlineLobby`, `MainGameScreen(MyGame, OnlineConnection)`, the region
+acknowledgement, the disconnect text with "R" back to the lobby, remote shops, inventory and
+abilities). The R4 launcher written in parallel (`OnlineGame`, `OnlineGameFlow`) duplicated it and was
+dropped, not merged. What this step adds on top of `main`: Switch character (Options) on a remote
+session saves nothing and returns to the lobby instead of the local roster, and the return records
+the 35 s rejoin hold (`MyGame.returnToOnlineLobby`), and the live evidence below. Launch is still the
+opt-in `--lobby` / `-Lobby`; the default launch is unchanged.
+
+**Live run (2026-10-29, local evidence only).** Disposable PG16 cluster `t4c_acc_f393573926df`
+(acceptance-cluster.ps1, loopback 57311), one `ServerMain --online` child on 18811 (game socket
+18812), two operator-provisioned characters on two accounts (`--provision-online`, profiles in TEMP,
+deleted afterwards). One rendered client window (real LibGDX window, no special JVM options, audio
+disabled) running the real launcher `MyGame` and the real `MainGameScreen`; the second player was a
+headless `OnlineConnection` adapter in the same process. Everything was torn down (cluster
+`DESTROY_OK`, server stopped, profiles deleted); no protected port, QA process or existing database was
+touched. Driven by `OnlineLiveRunDriver` (test scope): the lobby's Enter key delivered to the lobby's
+own input processor; movement keys fed through a wrapper around `Gdx.input.isKeyPressed` (the game
+polls keys, so this is the screen's own handler running on scripted key state, not OS-level key
+events); the Switch character action invoked on the screen (the Options button click itself was not
+driven). Screenshots are the real back buffer.
+
+| Image (`multiplayer/design/`) | What it shows |
+|---|---|
+| `live-1-lobby.png` | the account lobby listing the provisioned warrior |
+| `live-2-temple-hud.png` | the real game screen in the Lighthaven temple: HUD, hotbar, chat, radar, health orb, temple NPCs from the server |
+| `live-3-own-character-moving.png` | 0.9 s into a held "right": the camera has scrolled with the character; the second player stands in view on the right |
+| `live-4-after-move-other-player.png` | after the walk: a different part of the temple, the other player and NPCs in the world |
+| `live-5-back-in-lobby.png` | after Switch character: the lobby shows "still being released, you can play again in 33 s" (lease hold) |
+
+Worked: lobby to world in about 3 s after Enter (screen built in one frame, 9.8 s after launch
+including asset loading), no reconnect or snapshot error in the client log, own movement visibly
+tracks the held key, the adapter stays connected and the other player is drawn, Switch character
+returns to the lobby with the hold. Not driven or not shown: attack, pickup, NPC click (covered by
+R3 previews and tests), reconnect after a server restart (stage 1 exit criterion, still open; the
+current behaviour is the disconnect text and "R" back to the lobby), a real mouse or OS key event.
+
+**Findings** (nothing was fixed beyond the Switch character path; each is parity debt):
+
+1. The online screen is very dark. The remote screen starts a fresh day/night cycle (default constructor, whose 7 * 3600 default is passed to the hour parameter in seconds, so the starting time is unclear) and not the server
+   world time of day; the cause of the darkness was not isolated here. The own character
+   is hard to find in the screenshots. A server clock (or a fixed daylight for online) is needed.
+2. Other players have no name, health bar or appearance (known, 3.12); in the images the second
+   player is a small default figure.
+3. While joining, the lobby shows nothing (no "connecting" text) before the game screen appears.
+4. `ServerMain --online` kept running a listener entry for the game socket briefly after stop (OS
+   TIME_WAIT, no owning process); nothing to fix.
+
+Single-player is unchanged: `MainGameScreenGoldenTest` (3 tests, not skipped) and every pin in the
+stage 0 and seam sets pass with the golden images untouched. Next: the reconnect-after-restart
+check and a longer two-rendered-client run (stage 1 exit), then stage 2.
+
 ## 4. Staged plan
 
 Sizes: S under a day, M a few days, L about a week, XL more. Every stage ends with the full
