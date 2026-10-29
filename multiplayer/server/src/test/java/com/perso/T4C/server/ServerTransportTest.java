@@ -78,7 +78,7 @@ class ServerTransportTest {
       var configured=ServerTransport.fromEnvironment(Map.of("T4C_TLS_KEYSTORE",keystore.toString(),
           "T4C_TLS_PASSWORD_FILE",password.toString(),"T4C_PUBLIC_ORIGIN",origin));
       assertFalse(configured.acceptsHost("attacker.example:"+port,port));
-      try (var preview=new PreviewServer(new PreviewMap(new boolean[8][8],0,0,3,3),port,null,null,configured);
+      try (var preview=PreviewServerRestarts.onSamePort(new PreviewMap(new boolean[8][8],0,0,3,3),port,null,null,configured);
            var client=HttpClient.newBuilder().sslContext(context).build()) {
         preview.start(); assertEquals(origin,preview.url());
         var mapReply=client.send(HttpRequest.newBuilder(URI.create(origin+"/map")).timeout(Duration.ofSeconds(5)).GET().build(),

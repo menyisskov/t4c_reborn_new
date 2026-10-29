@@ -253,6 +253,11 @@ class HostedTransferTest {
           int next=ny*map.width+nx;if(previous[next]>=0) continue;previous[next]=node;queue.add(next);
         }
       }
+      // A mid-glide position does not reveal its direction, so a wrong arrival-tile guess can name a
+      // tile that cannot reach the portal. Replan from the next /state; only a tile-centred actor
+      // (an unambiguous start) may fail the reachability assertion.
+      boolean centred=Math.abs(ox-Math.floor(ox)-.5)<=1e-6 && Math.abs(oy-Math.floor(oy)-.5)<=1e-6;
+      if(previous[goal]<0 && !centred) { Thread.sleep(20);continue; }
       assertTrue(previous[goal]>=0,"Authored portal must be reachable from tile "+tileX+","+tileY+" (actor "+ox+","+oy+", last move "+lastX+","+lastY+", standable="+map.canStand(tileX+.5,tileY+.5)+", region "+state.getAsJsonObject("region")+", hp "+own+")");
       int next=goal;while(previous[next]!=start) next=previous[next];
       int moveX=Integer.compare(next%map.width,start%map.width),moveY=Integer.compare(next/map.width,start/map.width);

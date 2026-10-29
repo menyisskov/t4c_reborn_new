@@ -6,7 +6,7 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
-## 2026-10-29 — The Lighthaven sewers are open in online play (T4C-0303)
+## 2026-10-29 — The Lighthaven sewers are open in online play (T4C-0304)
 
 ### Added
 - In online play, the whole Lighthaven interior can now be explored, and the stairs at its east end lead down through the three sewer levels below it, with their rats, bats, slimes, spiders and goblins. Each level's stairs lead back up to the one above.
@@ -14,6 +14,10 @@ commit links, and finer-grained notes.
 ### Changed
 - The Lighthaven interior is bigger online: it now reaches the east end where the sewer stairs are, instead of stopping a short way inside the door.
 - Two of the sewer levels are slightly smaller online than in single-player: a small north-west corner of the middle level and a tiny nook at the far east of the lowest level cannot be entered. A handful of creatures that single-player places inside solid rock or under a wall are not present online.
+## 2026-10-29 — The automatic checks became more reliable (T4C-0303)
+
+### Changed
+- The automatic checks that run on every change no longer fail at random in a few restart, traffic-counting and door-walking tests; no game behavior changed.
 
 ## 2026-10-29 — Player movement is only slightly quicker than monsters (T4C-0302)
 

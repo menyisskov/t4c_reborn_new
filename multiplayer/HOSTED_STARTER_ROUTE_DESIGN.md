@@ -302,7 +302,7 @@ component of its target tile). Result for "what is the next hosting slice that u
   soak was not re-run for this change; pursuit cost scales with players near monsters, so re-measure
   before the next Beta soak.
 
-## Lighthaven sewers, and a correction to the reach audit — T4C-0303, 2026-10-29
+## Lighthaven sewers, and a correction to the reach audit — T4C-0304, 2026-10-29
 
 The T4C-0300 audit said the starter crop's portal graph reaches "ten more dungeon chambers". That count
 flooded the whole 1.29 M-tile starter continent. A player can only walk inside the hosted 249 x 117 crop,
