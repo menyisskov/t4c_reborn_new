@@ -70,6 +70,8 @@ class RemoteWorldDriverTest {
 
   @BeforeEach
   void build() {
+    // JSON-authored gear is registered by the game bootstrap only.
+    com.perso.T4C.item.json.ItemJsonLoader.loadAndRegister("assets/items");
     ground = new GroundItemManager();
     driver = new RemoteWorldDriver(() -> view, ground);
     view = null;
@@ -79,6 +81,7 @@ class RemoteWorldDriverTest {
 
   @AfterEach
   void removeSoundListener() {
+    com.perso.T4C.item.ItemRegistry.resetAdditionalDefinitions();
     SoundSpy.remove();
   }
 
@@ -410,5 +413,88 @@ class RemoteWorldDriverTest {
   void theRemoteSessionHandsOutThisDriver() {
     var session = new RemoteGameSession(() -> view, ground);
     assertInstanceOf(RemoteWorldDriver.class, session.world());
+  }
+
+  // --- public look of other players ---
+
+  private static OnlineConnection.Actor dressed(
+      long id, String name, String gender, Map<String, String> equipment) {
+    return new OnlineConnection.Actor(id, 10.5, 12.5, 1L, 0L, 40, 80, name, gender, equipment);
+  }
+
+  private Player onlyOther(OnlineConnection.Actor actor, long tick) {
+    view =
+        view(tick, MAP.region(), List.of(actor(OWN, 3.5, 5.5, 100, 100), actor), List.of(), List.of(), List.of());
+    tick(0.016f);
+    return driver.otherPlayers().get(0);
+  }
+
+  @Test
+  void anotherPlayerIsDressedFromItsPublicLookThroughTheSinglePlayerAppearancePipeline() {
+    Player other =
+        onlyOther(
+            dressed(
+                9,
+                "Brindle",
+                "female",
+                Map.of(
+                    "BODY", "item.acolytes_dawnlit_robe",
+                    "SHIELD", "item.adamantite_shield_3")),
+            1);
+    var parts = other.getAnimations().getPartMap();
+    // The female wardrobe override the own character gets: the robe is drawn from its sprite set.
+    assertEquals("WoWhiteRobe", parts.get(com.perso.T4C.player.BodyPart.BODY));
+    assertTrue(parts.get(com.perso.T4C.player.BodyPart.SHIELD).contains("CentaurShield"));
+    assertEquals("Brindle", other.getName());
+    assertEquals("FEMALE", other.getGender());
+
+    // The same worn items through the own-character path give the same drawn parts.
+    Player own = new Player();
+    own.setGender("FEMALE");
+    own.setEquippedItems(
+        Map.of(
+            com.perso.T4C.player.BodyPart.BODY, "item.acolytes_dawnlit_robe",
+            com.perso.T4C.player.BodyPart.SHIELD, "item.adamantite_shield_3"));
+    com.perso.T4C.helper.PlayerAppearanceDefaults.applyDefaults(own);
+    assertEquals(own.getAnimations().getPartMap(), parts);
+  }
+
+  @Test
+  void aNakedPublicLookKeepsTheNakedPartsAndAnUnknownItemDrawsNothingExtra() {
+    Player naked = onlyOther(dressed(9, "Brindle", "male", Map.of()), 1);
+    assertEquals("MALE", naked.getGender());
+    var nakedParts = naked.getAnimations().getPartMap();
+    assertFalse(nakedParts.isEmpty());
+    assertEquals(
+        com.perso.T4C.helper.AppearanceDefaultsCatalog.nakedParts("MALE").get(com.perso.T4C.player.BodyPart.BODY),
+        nakedParts.get(com.perso.T4C.player.BodyPart.BODY));
+  }
+
+  @Test
+  void equippingOnTheServerRebuildsTheModelInPlaceAndUnequippingStripsIt() {
+    Player first = onlyOther(dressed(9, "Brindle", "female", Map.of()), 1);
+    float x = first.getPositionVector().x;
+    var naked = Map.copyOf(first.getAnimations().getPartMap());
+
+    Player robed =
+        onlyOther(dressed(9, "Brindle", "female", Map.of("BODY", "item.acolytes_dawnlit_robe")), 2);
+    assertNotSame(first, robed, "the look changed, so the model is rebuilt");
+    assertEquals(x, robed.getPositionVector().x, 0.01f, "in the same place");
+    assertEquals("WoWhiteRobe", robed.getAnimations().getPartMap().get(com.perso.T4C.player.BodyPart.BODY));
+
+    Player same =
+        onlyOther(dressed(9, "Brindle", "female", Map.of("BODY", "item.acolytes_dawnlit_robe")), 3);
+    assertSame(robed, same, "an unchanged look keeps the model");
+
+    Player stripped = onlyOther(dressed(9, "Brindle", "female", Map.of()), 4);
+    assertEquals(naked, stripped.getAnimations().getPartMap());
+  }
+
+  @Test
+  void anActorWithoutAPublicLookKeepsTheDefaultLookOfOlderServers() {
+    Player old = onlyOther(actor(9, 10.5, 12.5, 40, 80), 1);
+    assertEquals("MALE", old.getGender());
+    Player even = onlyOther(actor(10, 10.5, 12.5, 40, 80), 2);
+    assertEquals("FEMALE", even.getGender());
   }
 }
