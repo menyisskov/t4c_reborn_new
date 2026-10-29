@@ -64,7 +64,7 @@ playthrough and recovery criteria pass. Never infer Done from a task count or te
 | M2 — Inventory and loot | Server ground loot (drops, owner window, first-claim-wins, expiry, carry-weight rule), per-item corpse recovery within carry limits, native pickup/equip/inventory panels; all merged with CI evidence | Existing inventory/equipment work; T4C-0201, 0202, 0204, 0218, 0228 | The two-adapter loot probe now starts legitimately (T4C-0235) but has never run (needs a database and port window); rendered loot play against a live server |
 | M3 — Complete authored adventure | Quest service rules, flag allowlist, once-only turn-in rewards, native talk panel, and the Skeleton hunting ground hosted as one world-0 region with unhosted portals refused; merged | T4C-0193, 0194, 0195, 0206, 0218, 0231 | Kill credit played through end to end against a live server, the Goblin-to-Wild-Horse fight (owner accepted it as not simulated for Beta), rendered walkthrough |
 | M4 — Supported combat and abilities | Restricted melee/physical retaliation, server-authoritative patrol/pursuit with guarded persistence, two-native-adapter pursuit/restart proof and a brief two-client rendered pursuit/retaliation/reconnect check | T4C-0189, 0190, 0209, 0210, 0211, 0212, 0229, 0230, 0236, 0237 | Server regeneration, `/cast` and `/use` routes and the native C/U spell and potion controls are merged (only Light Heal is castable online so far); not yet run against a live server. Still open: longer rendered pursuit, durable clan combat, reset/death and integrated gameplay acceptance |
-| M5 — Reliability and anti-cheat | Pool/shutdown/fault probes, local HTTPS trust/hostname refusal and two-adapter reconnect, live two-account key-rotation fencing, historical two-hour native-adapter baseline with partial 20-player occupancy, isolated restart and database-crash probes, brief rendered reconnect pass, and a 12-minute mixed twenty-adapter soak with eight adapters taking paced portal trips (49 region transfers, zero failures, 56.0% at twenty; T4C-0308); full mixed recovery/load/abuse gates open (two-hour, two real clients, bandwidth, abuse) | T4C-0191, 0197, 0198, 0207, 0208, 0216, 0219, 0308 | Broader gameplay recovery, rendered restart, two-real-client mixed soak, bandwidth/DB latency and abuse checks |
+| M5 — Reliability and anti-cheat | Pool/shutdown/fault probes, local HTTPS trust/hostname refusal and two-adapter reconnect, live two-account key-rotation fencing, historical two-hour native-adapter baseline with partial 20-player occupancy, isolated restart and database-crash probes, twenty-adapter forced-kill, PostgreSQL-crash and lost-acknowledgement drills (T4C-0310; database-recovery bullet ticked), brief rendered reconnect pass, and a 12-minute mixed twenty-adapter soak with eight adapters taking paced portal trips (49 region transfers, zero failures, 56.0% at twenty; T4C-0308); full mixed recovery/load/abuse gates open (two-hour, two real clients, bandwidth, abuse) | T4C-0191, 0197, 0198, 0207, 0208, 0216, 0219, 0308, 0310 | Broader gameplay recovery, rendered restart, two-real-client mixed soak, bandwidth/DB latency and abuse checks |
 | M6 — Package and native acceptance | Create-only client and local-loopback server QA packages, headless integrity checks, isolated persistent server stop and brief two-window local client smoke pass; clean-machine, remote and full rendered playthrough open | T4C-0205, 0215 and cross-cutting work | Clean-machine delivery and complete two-rendered-client playthrough |
 
 Task IDs not yet claimed are deliberately not represented as completed or assigned work.
@@ -214,13 +214,43 @@ Required behavior:
   committed tile with identical inventory and saw each other again, and a greeting after the restart gave no
   second letter. A forced kill, a database crash, a lost acknowledgement and the mixed-session gate were not
   run rendered, so the bullet stays open.
-- [ ] Database unavailability/recovery fails safely and resumes from committed state. Test actual
+  T4C-0310 (2026-10-29, `origin/main` c079b1c0, protocol 7/schema 13, local PG16 WSL, native adapters, not rendered)
+  revalidated the forced kill on the current build with twenty paced adapters playing combat and (second run) paced portal
+  trips: the server process was hard-killed mid-session and restarted on the same database. Everything the sampler had seen
+  committed was still there (revisions never lower, 18 of 20 characters byte-identical at their last observed revision right
+  after the kill and 2 had advanced, all receipts/events present, one opening letter each, no item id held twice), the 20
+  old leases stayed live for the first 25 s and then expired on their 30 s clock, all twenty adapters were back at +40 s,
+  and the final graceful stop exited 0. `NativeRestartProbe` (two adapters, letters, forced kill, real lease expiry 29.7 s)
+  also passed again on the current build. Details and limits: [tools/NATIVE_FAULT_DRILL.md](tools/NATIVE_FAULT_DRILL.md).
+  The bullet stays open: no rendered forced kill, and a kill during a loot claim, quest turn-in or death was not exercised
+  (portal trips were mid-flight at the kill but no transfer was provably in flight).
+- [x] Database unavailability/recovery fails safely and resumes from committed state. Test actual
   database recovery separately from an HTTP timeout or a mocked SQL failure.
   T4C-0208 passed a narrow two-adapter opening-letter drill against a newly created schema-9
   PostgreSQL cluster with real process crash/recovery. An unchanged probe also passed a
-  separate clean committed-source schema-10 run; broader gameplay and rendered checks remain open.
+  separate clean committed-source schema-10 run.
+  T4C-0310 (2026-10-29, `origin/main` c079b1c0, protocol 7/schema 13, local PG16 WSL, native adapters) closes the "broader
+  gameplay" part with twenty paced adapters playing (combat, movement, and in the second run portal trips with 23 committed
+  transfers): the cluster's own postmaster was stopped in immediate mode mid-session and started again (PostgreSQL crash
+  recovery). The server stayed alive, failed closed (19 to 20 `Online persistence failed ... character disconnected` lines,
+  all connection-class, no invented success), its pool recovered without a restart, everything seen committed before the
+  crash was still there unchanged, leases expired on their own clock and all twenty adapters rejoined (+38.6 s and +49.2 s
+  after the crash). Two runs, both PASS. Ticked on that evidence; limits: native adapters only (no rendered client), local
+  PG16 only (CI's PG18 job stays the authority), no loot claim/quest turn-in in flight at the crash. The unchanged
+  T4C-0208 probe could not be re-run (its fixed port 55433 is outside this work's allowed set); the new drill is a
+  separate tool, see [tools/NATIVE_FAULT_DRILL.md](tools/NATIVE_FAULT_DRILL.md).
 - [ ] Crash/lost acknowledgement around reward, pickup, quest turn-in, death and transfer produces
   no duplicated value or lost acknowledged progress. An unacknowledged commit is discoverable on rejoin.
+  T4C-0310 (2026-10-29, local PG16 WSL, native adapters) produced both sides of a lost acknowledgement for the opening
+  reward by hard-killing the server 0 to 300 ms after the greeting request was handed to the adapter: kills up to 150 ms
+  left no letter (reply lost, nothing committed), kills at 200 and 300 ms left the letter committed with the reply lost
+  (visible in the database right after the kill); after restart and lease expiry a retried greeting from every character
+  ended with exactly one letter each and 20 reward receipts. The same fault under twenty-adapter load (server kill and
+  PostgreSQL crash, each also with eight portal-walking adapters) lost no committed revision or receipt and duplicated
+  no reward receipt, loot claim, letter or item id. The 322-case tamper battery (replays, reordered and duplicate commands)
+  passed again, 322 of 322, on the current build. Not exercised: a crash around a pickup claim (the loot probe needs a killer
+  that survives the lethal starter ground, T4C-0248), a quest turn-in, a death, or a transfer provably in flight. The bullet
+  stays open. See [tools/NATIVE_FAULT_DRILL.md](tools/NATIVE_FAULT_DRILL.md).
 - [ ] Account-key rotation/foreign ownership, stale/reordered/duplicate commands, speed/stat/item
   edits, oversized requests and forged targets/rewards are rejected without corrupting valid play.
   T4C-0219 checked one local two-native-session rotation: the old account key was denied,
