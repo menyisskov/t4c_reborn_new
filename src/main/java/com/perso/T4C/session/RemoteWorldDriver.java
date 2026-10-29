@@ -411,6 +411,7 @@ public final class RemoteWorldDriver implements WorldDriver {
         player.getCoordinates().setX(position.x + (entry.target.x - position.x) * alpha);
         player.getCoordinates().setY(position.y + (entry.target.y - position.y) * alpha);
       }
+      player.getMovement().puppetMoving(moving);
       player.getAnimations().update(delta, moving);
     }
   }
