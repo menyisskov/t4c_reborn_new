@@ -22,7 +22,7 @@ walk to an authored portal source tile in the current region, transfer, spend `T
 (default 20) in the destination, optionally go one or two levels deeper (up to three hops, so the sewer stairs are
 used), then walk back through the paired portals to the starting region. A walker rests
 `T4C_SOAK_PORTAL_INTERVAL_SECONDS` (default 60) between trips and abandons a leg after
-`T4C_SOAK_PORTAL_LEG_TIMEOUT_SECONDS` (default 150). The first trips are staggered from 30 s in. The routes are derived
+`T4C_SOAK_PORTAL_LEG_TIMEOUT_SECONDS` (default 300; the hub to cave-mouth walk alone takes up to 165 s at the shared player speed, so 150 timed out about one leg per run). The first trips are staggered from 30 s in. The routes are derived
 from the trusted hosted plan (a portal is walked when both its source and target are in hosted regions and it has a
 way back), never from network strings, and walking uses the same arriving-tile planning as the combat walker, to the
 exact portal source tile. Every guard is unchanged: a region change without an epoch change, an epoch regression, a
@@ -418,3 +418,25 @@ that is a hypothesis. (3) The Codex-claimed retaliation, shop and UI files were 
 
 Limits. 8 of 20 adapters walk; the 56% at twenty is still the tool's reconnect-churn ceiling (96 scheduled closes); no steady plateau at twenty was measured.
 Twelve minutes and one run per configuration. This does **not** pass the two-hour soak, the M5 gate or Beta.
+### Follow-up (T4C-0309, 2026-10-29): the cave-mouth leg timeout and the transfer Conflict explained
+
+Both items T4C-0308 left unfixed were run to ground.
+
+**Leg timeout near the cave mouths (2777.7,1099.5): not a stall.** A headless replay drives the real `PreviewWorld` (the server's grid-reservation rule over the
+hosted collision crop) with the soak's walker (cardinal breadth-first route, 100 ms plans, steering by the arriving tile). From 2,239 start tiles around the three
+cave-mouth portals every connected start reached its goal; the only non-arrivals were 14 starts in disconnected pockets of the collision map, which no walker can
+leave. Nothing in the shared rule or the server traps a walker, so no movement rule changed and the single-player golden tests are untouched. The cause is length: ideal
+walking at the shared player speed takes 142 s from the Lighthaven door arrival (2932,1059) and 147 s from the hub spawn to the mouth, up to 164 s from the creature
+circle (2951,1038), and 143 s back from the cave arrival (2772,1096) to door 16. That is the whole of the default 150 s leg timeout before any creature body-blocks the
+walker, so about one leg per run ended a few tiles short (2777.7,1099.5 is eight tiles from the mouth). The default is now 300 s and
+`PortalWalkTimingTest` pins both facts: the walk is long (over 120 s) and the timeout keeps at least 50% headroom over the slowest ideal route.
+
+**Transfer Conflict: the database-clock race, reproduced.** The portal cooldown is stamped on the server clock (`now + 350 ms`) and the guarded transaction compares
+it with `clock_timestamp()` on the database. A hop proposed on the first tick the server clock allowed it (a walker or test relocating straight onto the next portal
+after arriving) could be refused while the database clock was a few milliseconds behind, and the refusal was handled as an unknown outcome: disconnect and lease hold.
+With the server clock held 1.5 s ahead of the database in a test, the pre-fix build printed `operation=transfer, classes=Conflict` and dropped the walker, exactly the
+flake in `HostedTransferTest`. By elimination, as for `monster_attack`: the revision, epoch and world checks pass under the row lock just before the cooldown check, so the
+stored cooldown is the value the server already saw expire and only the two clocks differ. The refusal is now a definite `portal_cooldown` (nothing written, guard
+unchanged and still in the database), the walker is unfrozen and the server proposes the hop again a quarter second later. `HostedTransferTest` gained a test with the
+server clock ahead (the hop commits only once the database agrees, the session survives) and a test that a transfer inside a stored cooldown is refused and writes
+nothing. Full server suite on a disposable PG16 cluster: 324 tests, 0 failures. No soak run was repeated for this change.

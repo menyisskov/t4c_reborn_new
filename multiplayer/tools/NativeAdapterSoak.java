@@ -69,6 +69,8 @@ class NativeAdapterSoak {
     }
   }
   static final int[][] DIRECTIONS={{1,0},{-1,0},{0,1},{0,-1}};
+  /** Ideal cardinal walks hub-to-cave-mouth take up to ~165 s (PortalWalkTimingTest pins this with headroom); 150 s timed legs out. */
+  static final int DEFAULT_LEG_TIMEOUT_SECONDS=300;
   /** Concurrent joins allowed and the minimum gap between opens; the server admits only two public requests. */
   static final int MAX_JOINING=1;
   static final long OPEN_GAP_MILLIS=500;
@@ -311,7 +313,7 @@ class NativeAdapterSoak {
     int walkers=envInt("T4C_SOAK_PORTAL_WALKERS",0,0,20);
     long tripIntervalMillis=envInt("T4C_SOAK_PORTAL_INTERVAL_SECONDS",60,5,3600)*1000L;
     long tripDwellMillis=envInt("T4C_SOAK_PORTAL_DWELL_SECONDS",20,1,600)*1000L;
-    long tripLegTimeoutMillis=envInt("T4C_SOAK_PORTAL_LEG_TIMEOUT_SECONDS",150,30,900)*1000L;
+    long tripLegTimeoutMillis=envInt("T4C_SOAK_PORTAL_LEG_TIMEOUT_SECONDS",DEFAULT_LEG_TIMEOUT_SECONDS,30,900)*1000L;
     List<PortalRoute> routes=List.of();
     if(walkers>0) {
       try(var in=NativeAdapterSoak.class.getResourceAsStream("/content/portals-v1.json")) {
