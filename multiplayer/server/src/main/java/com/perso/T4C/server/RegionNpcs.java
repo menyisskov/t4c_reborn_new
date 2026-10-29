@@ -20,6 +20,7 @@ final class RegionNpcs {
 
   private final List<NpcView> views;
   private final Map<String,String> supportedByView;
+  private final Map<String,String> shopkeeperByView;
 
   RegionNpcs(NpcInteractionCatalog catalog, ItemContent items, RegionMapLoader.Spec region) {
     this(catalog,items,region,null);
@@ -37,10 +38,14 @@ final class RegionNpcs {
       var supported=new HashMap<String,String>();
       for(var view:views) supported.put(view.id(),view.id());
       supportedByView=Map.copyOf(supported);
+      var shops=new HashMap<String,String>();
+      for(var view:views) if(OnlineShops.vendor(view.id()).isPresent()) shops.put(view.id(),view.id());
+      shopkeeperByView=Map.copyOf(shops);
       return;
     }
     var published=new ArrayList<NpcView>();
     var supported=new HashMap<String,String>();
+    var shopkeepers=new HashMap<String,String>();
     var ids=new HashSet<String>();
     List<NpcAppearanceContent.Spawn> inRegion=appearances.inRegion(region);
     for(var spawn:inRegion) {
@@ -53,12 +58,15 @@ final class RegionNpcs {
       published.add(new NpcView(id,spawn.displayName(),spawn.x()-region.originX(),
           spawn.y()-region.originY(),spawn.spriteBase(),spawn.parts()));
       registered.ifPresent(n->supported.put(id,n.id()));
+      if(OnlineShops.vendor(spawn.canonicalNpcId()).isPresent())
+        shopkeepers.put(id,spawn.canonicalNpcId());
     }
     for(var npc:catalog.npcs())
       if(region.contains(npc.world(),npc.x(),npc.y()) && !supported.containsKey(npc.id()))
         throw new IllegalArgumentException("Registered NPC missing from appearance inventory");
     views=List.copyOf(published);
     supportedByView=Map.copyOf(supported);
+    shopkeeperByView=Map.copyOf(shopkeepers);
   }
 
   List<NpcView> views() { return views; }
@@ -76,9 +84,14 @@ final class RegionNpcs {
     var npc=views.stream().filter(n->n.id().equals(npcId)).findFirst()
         .orElseThrow(()->new IllegalArgumentException("NPC is not in this region"));
     String canonical=supportedByView.get(npcId);
-    if(canonical==null) throw new IllegalArgumentException("NPC interaction unavailable");
-    interactions.requireReachable(saved,world,map.originX+x,map.originY+y,canonical,
-        map.hasLineOfSight(x,y,npc.x(),npc.y()));
+    boolean lineOfSight=map.hasLineOfSight(x,y,npc.x(),npc.y());
+    if(canonical!=null) interactions.requireReachable(saved,world,map.originX+x,map.originY+y,canonical,lineOfSight);
+    else {
+      canonical=shopkeeperByView.get(npcId);
+      if(canonical==null) throw new IllegalArgumentException("NPC interaction unavailable");
+      interactions.requireShopkeeperReachable(saved,world,map.originX+x,map.originY+y,canonical,
+          world,map.originX+npc.x(),map.originY+npc.y(),lineOfSight);
+    }
     return OnlineShops.vendor(canonical).isPresent() ? java.util.Optional.of(canonical) : java.util.Optional.empty();
   }
 
@@ -87,8 +100,14 @@ final class RegionNpcs {
     var npc=views.stream().filter(n->n.id().equals(npcId)).findFirst()
         .orElseThrow(()->new IllegalArgumentException("NPC is not in this region"));
     String canonical=supportedByView.get(npcId);
-    if(canonical==null) throw new IllegalArgumentException("NPC interaction unavailable");
+    boolean lineOfSight=map.hasLineOfSight(x,y,npc.x(),npc.y());
+    if(canonical==null) {
+      canonical=shopkeeperByView.get(npcId);
+      if(canonical==null) throw new IllegalArgumentException("NPC interaction unavailable");
+      return interactions.prepareShopkeeper(saved,world,map.originX+x,map.originY+y,canonical,
+          world,map.originX+npc.x(),map.originY+npc.y(),lineOfSight,topic);
+    }
     return interactions.prepare(saved,world,map.originX+x,map.originY+y,canonical,
-        map.hasLineOfSight(x,y,npc.x(),npc.y()),topic,UUID::randomUUID,now,random);
+        lineOfSight,topic,UUID::randomUUID,now,random);
   }
 }
