@@ -4,6 +4,12 @@ Last reviewed: 2026-10-27, Asia/Jerusalem. This file is the restart point for a 
 
 ## Read first
 
+### Clean-machine rehearsal (T4C-0311, 2026-10-29)
+
+Both QA packages were rebuilt from `f3d4ed62` and rehearsed in a scrubbed environment on this machine (not a second machine); four Windows
+PowerShell 5.1 packaging defects were fixed and the remaining second-machine checklist is in [MILESTONES.md](MILESTONES.md) M6. Rebuild with
+`package-online-client.ps1 -Name <new>` and `package-online-server.ps1 -Name <new> -SourceRevision <sha>`; both now run under stock 5.1.
+
 ### Latest live rendered evidence (T4C-0306, 2026-10-29)
 
 Two real rendered windows were run against a real server on a disposable PostgreSQL cluster with the test-scope

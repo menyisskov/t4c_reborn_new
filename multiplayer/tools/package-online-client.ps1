@@ -109,8 +109,10 @@ Set-Location -LiteralPath $root
 $logs = Join-Path $root 'logs'
 New-Item -ItemType Directory -Path $logs -Force | Out-Null
 $log = Join-Path $logs ('online-' + [guid]::NewGuid().ToString('N'))
-& $java -cp $cp com.perso.T4C.online.OnlineClient $endpointValue 1>> ($log + '.log') 2>> ($log + '-error.log')
-if ($LASTEXITCODE -ne 0) { throw "Online client exited with code $LASTEXITCODE. Logs: $logs" }
+# Start-Process keeps the client's stderr out of the PowerShell error stream. Redirecting a native command's stderr with 2>>
+# under Windows PowerShell 5.1 (the shell launch-online.bat uses) turns the first stderr line into a terminating error and kills the client.
+$clientProcess = Start-Process -FilePath $java -ArgumentList ('-cp "' + $cp + '" com.perso.T4C.online.OnlineClient "' + $endpointValue + '"') -WorkingDirectory $root -NoNewWindow -Wait -PassThru -RedirectStandardOutput ($log + '.log') -RedirectStandardError ($log + '-error.log')
+if ($clientProcess.ExitCode -ne 0) { throw "Online client exited with code $($clientProcess.ExitCode). Logs: $logs" }
 '@
 [IO.File]::WriteAllText((Join-Path $bundle 'launch-online.ps1'), $launch + "`n", [Text.UTF8Encoding]::new($false))
 $batch = '@echo off' + "`r`n" + 'if /I "%~1"=="-CheckOnly" (' + "`r`n" + '  powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0launch-online.ps1" -CheckOnly' + "`r`n" + ') else (' + "`r`n" + '  powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0launch-online.ps1"' + "`r`n" + ')' + "`r`n"
@@ -132,7 +134,10 @@ $lines.Add("fact`tplatform`tWindows-x86_64")
 $lines.Add("fact`tjavaMinimum`t21")
 $files = @(Get-ChildItem -LiteralPath $bundle -File -Recurse | Sort-Object FullName)
 foreach ($file in $files) {
-    $relative = [IO.Path]::GetRelativePath($bundle, $file.FullName).Replace('\','/')
+    # Windows PowerShell 5.1 (the only shell on a stock Windows 10/11 box) has no [IO.Path]::GetRelativePath.
+    $bundlePrefix = $bundle.TrimEnd('\','/') + [IO.Path]::DirectorySeparatorChar
+    if (!$file.FullName.StartsWith($bundlePrefix, [StringComparison]::OrdinalIgnoreCase)) { throw 'Package file outside the bundle.' }
+    $relative = $file.FullName.Substring($bundlePrefix.Length).Replace('\','/')
     if ($relative -notmatch '^[A-Za-z0-9_./ -]+$' -or $relative.Contains('..') -or $relative.Contains([char]9)) { throw 'Unsafe package path.' }
     $lines.Add("file`t$relative`t$((Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash.ToLowerInvariant())")
 }

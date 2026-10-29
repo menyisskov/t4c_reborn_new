@@ -4,8 +4,11 @@ This is a create-only test package for the native **online** client. It contains
 desktop application JAR, runtime dependency JARs, tracked game assets, the licensed
 online GLFW correction, and a headless integrity checker. It contains no JRE. The
 tester needs Windows x64, an installed x64 Java 21 or newer runtime on `PATH`, and
-network access to the intended server. The builder needs Git, Maven, and a Java 21
-JDK. Neither Git, Maven, this checkout, nor a Maven cache is needed by the tester.
+network access to the intended server. The package is about 640 MB extracted
+(about 290 MB of it is the tracked `assets/origin/` folder of original-game files, which
+the online client was observed not to need; see "Clean-machine rehearsal" below).
+The builder needs Git, Maven, and a Java 21
+JDK. Both the builder and the launcher run under stock Windows PowerShell 5.1 or PowerShell 7. Neither Git, Maven, this checkout, nor a Maven cache is needed by the tester.
 
 ## Build and distribute
 
@@ -43,7 +46,18 @@ verified checksum resource.
 ## Install, check, and connect
 
 Extract or copy the complete directory somewhere writable, including a path with
-spaces if desired. Use PowerShell from any working directory:
+spaces if desired. A stock Windows client defaults to a script execution policy that
+refuses unsigned `.ps1` files (and a zip downloaded through a browser marks every file
+as from the internet), so start the launcher through an explicit policy for that one
+process, or use `launch-online.bat`, which already does so:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File 'C:\Games\T4C Online QA\launch-online.ps1' -CheckOnly
+```
+
+If you prefer to call the script directly, first run
+`Get-ChildItem -Recurse 'C:\Games\T4C Online QA' | Unblock-File` and make sure your
+execution policy is `RemoteSigned` or looser. Use PowerShell from any working directory:
 
 ```powershell
 & 'C:\Games\T4C Online QA\launch-online.ps1' -CheckOnly
@@ -82,3 +96,31 @@ check establishes package file integrity, not rendering, remote connectivity,
 full gameplay, or clean-machine acceptance. The required rendered two-client,
 remote-machine, offline-regression, and owner QA gates remain separate in
 `multiplayer/MILESTONES.md` and `multiplayer/ACCEPTANCE.md`.
+
+## Clean-machine rehearsal (T4C-0311, 2026-10-29) and what it does not prove
+
+A package built from `f3d4ed62` was zipped, extracted into a new empty directory with spaces
+in its name outside the repository, and run from a scrubbed process environment: no `T4C_*`
+variables, a `PATH` of only the JDK `bin`, `System32` and Windows PowerShell, a fresh
+profile/`APPDATA`/`LOCALAPPDATA`/`TEMP` directory and an unrelated working directory. It joined
+the packaged server (see [SERVER_DISTRIBUTION.md](SERVER_DISTRIBUTION.md)) on loopback. This is
+a **same-machine rehearsal with a scrubbed environment**; it is not a second machine. The host
+still has a JDK, a GPU driver, a Defender configuration, a firewall policy and a warm file cache
+that a tester's machine may lack. Observed:
+
+- `-CheckOnly` passed through `launch-online.bat` and through `-ExecutionPolicy Bypass`, and
+  failed (as expected) under `-ExecutionPolicy Restricted` with "running scripts is disabled".
+- The packaged launcher started the real client, a window titled "T4C Reborn - Online Alpha"
+  connected to the server's game socket, stayed responsive, and closed cleanly with exit code 0.
+- The only install-directory writes were the `logs/` files. The game wrote nothing under the
+  profile directory except extracted native DLLs (LWJGL, libGDX, the pinned GLFW) in `TEMP`;
+  the GLFW extraction directory is not removed on exit (one small directory per launch).
+- With `assets/origin/` moved away, the client (started with `java -cp`, bypassing the
+  manifest check) connected and rendered its window the same way, so that folder is dead weight
+  in this package. Whether to stop shipping it is an owner decision (it also holds original
+  game executables and DLLs that antivirus products may flag); the builder still copies it.
+- Two builder/launcher defects found by this rehearsal were fixed: the builder used a .NET Core
+  only API and failed under Windows PowerShell 5.1, and the launcher died with a "NativeCommandError"
+  on the client's first stderr line under 5.1 (so `launch-online.bat` could never start the
+  client). The launcher now starts the client with `Start-Process` and file redirection.
+

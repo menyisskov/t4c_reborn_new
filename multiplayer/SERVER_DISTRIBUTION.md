@@ -50,6 +50,21 @@ port must be free and separately reserved when other local QA runs are active.
 & 'C:\Games\T4C Server QA\stop-server.ps1' -StateDirectory 'C:\Private\t4c-qa-run-1'
 ```
 
+On a stock Windows client the default execution policy refuses unsigned scripts (and a browser-downloaded
+zip marks each file as from the internet). Either run `Get-ChildItem -Recurse 'C:\Games\T4C Server QA' | Unblock-File`
+with a `RemoteSigned` or looser policy, or start each script through an explicit per-process policy, for example
+`powershell.exe -NoProfile -ExecutionPolicy Bypass -File 'C:\Games\T4C Server QA\start-server.ps1' -Port 18773`.
+The package has no `.bat` wrapper. The scripts work under Windows PowerShell 5.1 and PowerShell 7.
+
+The package has no provisioning wrapper script, but the packaged JAR carries the operator commands. With the
+same `T4C_DB_*` variables set, from any directory (the profile is written to a path you choose, outside the
+package, and holds an account key, so keep it private):
+
+```powershell
+java -jar 'C:\Games\T4C Server QA\t4c-server.jar' --provision-online 'C:\Games\T4C Server QA\assets\maps\worldmap\worldmap.colbin' 'C:\Private\player-one.json' PlayerOne
+java -jar 'C:\Games\T4C Server QA\t4c-server.jar' --provision-online-account 'C:\Private\account-only.json'
+```
+
 If `-StateDirectory` is omitted, start creates a unique directory under
 `%LOCALAPPDATA%\T4C Online Server QA` and prints its path. The directory must not
 already exist and must be outside the bundle. Its `session.json`, private shutdown
@@ -79,3 +94,17 @@ This launcher intentionally offers local HTTP only. Remote operation needs the
 separate foreground HTTPS deployment in [TLS.md](TLS.md), with a trusted hostname,
 certificate, firewall configuration and end-to-end validation. This package does
 not establish clean-machine, remote, rendered two-client, full M6 or Beta evidence.
+
+## Clean-machine rehearsal (T4C-0311, 2026-10-29)
+
+A package built from `f3d4ed62` was zipped and extracted into a new empty directory with spaces in its
+name outside the repository, then run from a scrubbed process environment (no repo on the `PATH` or working
+directory, no inherited `T4C_*` variables except the three database values passed to that one process, a fresh
+profile and `TEMP`). Against a newly created disposable PostgreSQL 16 cluster: `start-server.ps1` reached
+`local-persistent` health with the game socket accepting; `--provision-online` created two private profiles from the
+packaged JAR and map; the packaged client joined and stayed connected; `stop-server.ps1` reported a graceful
+exit code 0. The package directory was byte-identical before and after (the server writes only to the external state
+directory). The package holds no credentials, keys or developer paths (text entries of the package and both JARs
+were scanned). This is a same-machine rehearsal, not a second machine. The Windows PowerShell 5.1 builder defects found
+here (the `java -version` check and the negative-test helpers failing on stderr) were fixed.
+
