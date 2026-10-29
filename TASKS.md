@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0305`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0306`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0305 | Online: other players now show their walking animation instead of floating, which the slower player speed (T4C-0302) had exposed | Multiplayer / parity | Done | this PR | [2026-10-29](CHANGELOG.md#2026-10-29--other-players-walk-instead-of-floating-in-online-play-t4c-0305) |
 | T4C-0304 | Host the Lighthaven interior in full and the three sewer levels below it (stairs 0-5), the only dungeon areas a player can walk to from the hosted crop | Multiplayer / M3 | Done (PR open) | pending | [2026-10-29](CHANGELOG.md) |
 | T4C-0303 | Make the flaky CI server tests deterministic: restart tests rebind only the HTTP port (the game socket no longer assumes port+1), the HTTP metrics test drains whole responses before closing, the portal walker replans from ambiguous mid-glide positions | Process/Tooling | Done | this PR | [2026-10-29](CHANGELOG.md) |
 | T4C-0302 | Bring baseline player movement to about 20% faster than monsters, shared by offline and online play | Multiplayer / Cross-cutting/GA | Done | this PR | [CHANGELOG.md](CHANGELOG.md) |

@@ -55,6 +55,8 @@ public final class RemoteWorldDriver implements WorldDriver {
   private static final Logger log = LoggerFactory.getLogger(RemoteWorldDriver.class);
   private static final float PLAYER_EASE_SECONDS = 0.06f;
   private static final float PLAYER_SNAP_DISTANCE = 4f * 32f;
+  /** Walking continues this long after the last server position change (a few 34 Hz ticks). */
+  private static final float PLAYER_WALK_HOLD_SECONDS = 0.15f;
 
   private final Supplier<OnlineConnection.View> views;
   private final GroundItemManager ground;
@@ -75,6 +77,9 @@ public final class RemoteWorldDriver implements WorldDriver {
   private static final class PlayerEntry {
     final Player player;
     final Vector2 target = new Vector2();
+
+    /** Seconds since the server last moved this player; walking stays on while it is recent. */
+    float sinceTargetMoved = Float.MAX_VALUE;
 
     PlayerEntry(Player player) {
       this.player = player;
@@ -378,7 +383,10 @@ public final class RemoteWorldDriver implements WorldDriver {
           continue;
         }
       } else {
-        entry.player.getMovement().faceToward(entry.target.x, entry.target.y, x, y);
+        if (entry.target.x != x || entry.target.y != y) {
+          entry.player.getMovement().faceToward(entry.target.x, entry.target.y, x, y);
+          entry.sinceTargetMoved = 0f;
+        }
         entry.target.set(x, y);
       }
       entry.player.setMaxHp(Math.max(1, actor.maxHp()));
@@ -401,12 +409,15 @@ public final class RemoteWorldDriver implements WorldDriver {
       Player player = entry.player;
       Vector2 position = player.getPositionVector();
       float distance = position.dst(entry.target);
-      boolean moving = false;
+      entry.sinceTargetMoved += Math.max(0f, delta);
+      // At the single-player walking pace a server step is only a pixel or two, so the eased
+      // position is nearly always within the snap tolerance: walking must follow the server's
+      // recent movement, not the residual easing distance, or other players glide without legs.
+      boolean moving = entry.sinceTargetMoved < PLAYER_WALK_HOLD_SECONDS;
       if (distance > PLAYER_SNAP_DISTANCE || distance <= 0.5f) {
         player.getCoordinates().setX(entry.target.x);
         player.getCoordinates().setY(entry.target.y);
       } else {
-        moving = true;
         float alpha = 1f - (float) Math.exp(-Math.max(0f, delta) / PLAYER_EASE_SECONDS);
         player.getCoordinates().setX(position.x + (entry.target.x - position.x) * alpha);
         player.getCoordinates().setY(position.y + (entry.target.y - position.y) * alpha);
