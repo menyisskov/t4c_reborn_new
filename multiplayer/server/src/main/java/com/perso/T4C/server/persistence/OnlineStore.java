@@ -1277,28 +1277,36 @@ public final class OnlineStore implements AutoCloseable {
     }
   }
 
-  /** A due-time miss is deferrable only while every attack CAS precondition still matches. */
+  /**
+   * A due-time miss is deferrable only while every attack CAS precondition still matches. The guarded UPDATE has
+   * exactly these predicates plus the database-clock due check, so when the locked row still satisfies all the others
+   * the UPDATE can only have missed on the due check (the database clock was a moment before the deadline). The due
+   * check is deliberately not read a second time here: a later clock reading is routinely past a deadline the UPDATE
+   * saw as not yet due (1 to 2 ms in the T4C-0306 soaks), which turned a harmless deferral back into a Conflict
+   * that disconnected the target.
+   */
   private static boolean attackDeadlineNotDue(Connection c,MonsterAttack attack) throws SQLException {
     try(var q=c.prepareStatement("""
-        SELECT event_id,state_revision,target_character,next_attack_at,current_x,health,died_at,
-          next_attack_at>floor(extract(epoch FROM clock_timestamp())*1000)
+        SELECT event_id,state_revision,target_character,next_attack_at,current_x,health,died_at
         FROM online_spawns WHERE spawn_key=? FOR UPDATE
         """)) {
       q.setString(1,attack.key());
       try(var rows=q.executeQuery()) {
         if(!rows.next()) return false;
-        UUID event=rows.getObject(1,UUID.class),target=rows.getObject(3,UUID.class);
-        long rowRevision=rows.getLong(2),deadline=rows.getLong(4);
-        Double currentX=rows.getObject(5,Double.class);
-        Integer health=rows.getObject(6,Integer.class);
-        var motion=attack.motion();
-        boolean expected=attack.life().equals(event) && attack.targetCharacter().equals(target)
-            && attack.expectedNext()==deadline && rows.getTimestamp(7)==null
-            && (health==null || health>0)
-            && (motion==null ? currentX==null : motion.revision()==rowRevision);
-        return expected && rows.getBoolean(8);
+        return onlyDueCheckMissed(attack,rows.getObject(1,UUID.class),rows.getLong(2),rows.getObject(3,UUID.class),
+            rows.getLong(4),rows.getObject(5,Double.class),rows.getObject(6,Integer.class),rows.getTimestamp(7)!=null);
       }
     }
+  }
+
+  /** True when every attack CAS precondition except the database-clock due check matches the locked row. */
+  static boolean onlyDueCheckMissed(MonsterAttack attack,UUID rowEvent,long rowRevision,UUID rowTarget,long rowDeadline,
+      Double currentX,Integer health,boolean died) {
+    var motion=attack.motion();
+    return attack.life().equals(rowEvent) && attack.targetCharacter().equals(rowTarget)
+        && attack.expectedNext()==rowDeadline && !died
+        && (health==null || health>0)
+        && (motion==null ? currentX==null : motion.revision()==rowRevision);
   }
 
   /** Atomic server-authored portal movement, with durable epoch fencing and receipt replay. */

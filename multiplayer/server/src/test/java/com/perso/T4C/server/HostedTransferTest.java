@@ -189,7 +189,7 @@ class HostedTransferTest {
       var closed=hosted.sessions.leave(joined.token());assertFalse(closed.isDone());
       pause.set(false);release.countDown();await(hosted,closed::isDone);closed.get();
       var saved=store.load(account.accountId(),created.id());assertEquals(1,saved.world());assertEquals(1,saved.locationEpoch());
-      assertEquals(304,saved.x());assertEquals(383,saved.y());
+      assertEquals(304.5,saved.x());assertEquals(383.5,saved.y(),"Arrival is the centre of the authored tile, not its corner");
       var rejoined=store.acquire(account.secret(),created.id());store.release(rejoined);
     } finally { pause.set(false);release.countDown();hosted.close(); }
   }

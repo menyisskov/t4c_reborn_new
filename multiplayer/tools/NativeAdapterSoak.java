@@ -85,6 +85,116 @@ class NativeAdapterSoak {
     boolean mayOpen(int joining,long now) { return joining<maxJoining && now>=nextOpenAt; }
     void opened(long now) { nextOpenAt=now+gapMillis; }
   }
+  /** One enabled authored portal: the hosted region it leaves, the region it enters, and its absolute source tile. */
+  record PortalRoute(int id,String fromKey,String toKey,int sourceX,int sourceY) {}
+  /**
+   * Routes derived from the trusted hosted plan: an authored portal is enabled exactly when its source and its
+   * target both lie in hosted regions (the plan refuses a hosted target for any disabled source). Duplicate source
+   * tiles keep the first, like the server's catalog. Only routes that also have a way back are kept.
+   */
+  static List<PortalRoute> portalRoutes(List<HostedRegionPlan.Region> regions,List<com.perso.T4C.online.model.PortalContent.Portal> portals) {
+    var seen=new HashSet<String>(); var all=new ArrayList<PortalRoute>();
+    for(var p:portals) {
+      String from=regionAt(regions,p.sourceWorld(),p.sourceX(),p.sourceY()),to=regionAt(regions,p.targetWorld(),p.targetX(),p.targetY());
+      if(from==null || to==null || !seen.add(p.sourceWorld()+":"+p.sourceX()+":"+p.sourceY())) continue;
+      all.add(new PortalRoute(p.id(),from,to,p.sourceX(),p.sourceY()));
+    }
+    return all.stream().filter(r -> all.stream().anyMatch(b -> b.fromKey().equals(r.toKey()) && b.toKey().equals(r.fromKey()))).toList();
+  }
+  static String regionAt(List<HostedRegionPlan.Region> regions,int world,int x,int y) {
+    for(var r:regions) { var s=r.spec();
+      if(s.world()==world && x>=s.originX() && y>=s.originY() && x<s.originX()+s.width() && y<s.originY()+s.height()) return s.key(); }
+    return null;
+  }
+  /** True for exactly {@code walkers} of {@code total} adapters, spread evenly through the profile order. */
+  static boolean isPortalWalker(int index,int total,int walkers) { return (long)(index+1)*walkers/total>(long)index*walkers/total; }
+  /**
+   * Pure per-adapter trip state machine: IDLE, then walk OUT through a portal, DWELL in the destination, optionally
+   * go deeper, then walk BACK through the paired portals to the home region. Any region that is not the expected
+   * one (death respawn, reconnect elsewhere) aborts the trip. The caller supplies time and the region key; this
+   * class never touches the network, so the self-test can drive it.
+   */
+  static final class PortalTrip {
+    enum Phase { IDLE,OUT,DWELL,BACK }
+    static final int MAX_DEPTH=3;
+    final int index; final List<PortalRoute> routes; final long intervalMillis,dwellMillis,legTimeoutMillis;
+    Phase phase=Phase.IDLE; long nextTripAt,dwellUntil,legStartedAt;
+    final ArrayDeque<String> trail=new ArrayDeque<>();
+    PortalRoute route; int depthTarget;
+    long started,completed,aborted,timeouts,outbound,inbound;
+    final Set<String> notes=new TreeSet<>();
+    /** Caller-maintained last known position, appended to abort notes so a stuck walker can be located. */
+    String where="";
+    PortalTrip(int index,List<PortalRoute> routes,long firstAt,long intervalMillis,long dwellMillis,long legTimeoutMillis) {
+      this.index=index; this.routes=routes; this.nextTripAt=firstAt; this.intervalMillis=intervalMillis;
+      this.dwellMillis=dwellMillis; this.legTimeoutMillis=legTimeoutMillis;
+    }
+    boolean walking() { return phase==Phase.OUT || phase==Phase.BACK; }
+    private List<PortalRoute> forward(String key,String avoid) {
+      return routes.stream().filter(r -> r.fromKey().equals(key) && !r.toKey().equals(avoid)).toList();
+    }
+    private void abort(long now,String note,boolean timeout) {
+      if(timeout) timeouts++; else aborted++;
+      if(notes.size()<6) notes.add(note+"@"+where);
+      phase=Phase.IDLE; route=null; trail.clear(); nextTripAt=now+intervalMillis;
+    }
+    /** Advance timers; call each loop for a connected adapter in region {@code key}. */
+    void tick(long now,String key) {
+      switch(phase) {
+        case IDLE -> {
+          if(now<nextTripAt) return;
+          var options=forward(key,null);
+          if(options.isEmpty()) { nextTripAt=now+intervalMillis; return; }
+          route=options.get((int)((index+started)%options.size())); started++;
+          depthTarget=1+(int)((index+started)%MAX_DEPTH); trail.clear(); phase=Phase.OUT; legStartedAt=now;
+        }
+        case DWELL -> {
+          if(now<dwellUntil) return;
+          var deeper=trail.size()+1<depthTarget?forward(key,trail.peek()):List.<PortalRoute>of();
+          if(!deeper.isEmpty()) { route=deeper.get((int)((index+started)%deeper.size())); phase=Phase.OUT; legStartedAt=now; }
+          else { route=backRoute(key); if(route==null) abort(now,"no_way_back_from_"+key,false); else { phase=Phase.BACK; legStartedAt=now; } }
+        }
+        case OUT,BACK -> {
+          if(now-legStartedAt>legTimeoutMillis) abort(now,phase+"_timeout_portal_"+route.id()+"_in_"+key,true);
+        }
+      }
+    }
+    private PortalRoute backRoute(String key) {
+      String home=trail.peek(); if(home==null) return null;
+      return routes.stream().filter(r -> r.fromKey().equals(key) && r.toKey().equals(home)).findFirst().orElse(null);
+    }
+    /** The region the adapter is now in changed (committed location epoch). */
+    void onRegion(long now,String key) {
+      if(phase==Phase.IDLE) return;
+      if(phase==Phase.DWELL) { abort(now,"region_changed_during_dwell_to_"+key,false); return; }
+      if(!key.equals(route.toKey())) { abort(now,phase+"_unexpected_region_"+key,false); return; }
+      if(phase==Phase.OUT) {
+        trail.push(route.fromKey()); outbound++; phase=Phase.DWELL; dwellUntil=now+dwellMillis; route=null;
+      } else {
+        trail.pop(); inbound++;
+        if(trail.isEmpty()) { completed++; phase=Phase.IDLE; route=null; nextTripAt=now+intervalMillis; }
+        else { route=backRoute(key); if(route==null) abort(now,"no_way_back_from_"+key,false); else legStartedAt=now; }
+      }
+    }
+  }
+  /** Cardinal breadth-first step over the collision map to an exact goal tile; null when unreachable or already there. */
+  static int[] pathToTile(PreviewMap map,int sx,int sy,int gx,int gy) {
+    if(sx==gx && sy==gy) return null;
+    if(sx<0 || sy<0 || sx>=map.width || sy>=map.height || gx<0 || gy<0 || gx>=map.width || gy>=map.height) return null;
+    int[] parent=new int[map.width*map.height]; Arrays.fill(parent,-1);
+    int[] queue=new int[parent.length]; int head=0,tail=0,start=sy*map.width+sx,goal=gy*map.width+gx; queue[tail++]=start; parent[start]=start;
+    while(head<tail && parent[goal]<0) {
+      int cell=queue[head++],cx=cell%map.width,cy=cell/map.width;
+      for(int[] d:DIRECTIONS) {
+        int nx=cx+d[0],ny=cy+d[1],id=ny*map.width+nx;
+        if(nx<0 || ny<0 || nx>=map.width || ny>=map.height || parent[id]>=0 || !map.canStand(nx+.5,ny+.5)) continue;
+        parent[id]=cell; queue[tail++]=id;
+      }
+    }
+    if(parent[goal]<0) return null;
+    int cell=goal; while(parent[cell]!=start) cell=parent[cell];
+    return new int[]{cell%map.width,cell/map.width};
+  }
   static void require(boolean ok,String what) { if(!ok) throw new AssertionError("Self-test failed: "+what); }
   /** Headless check of the pacing helper: {@code NativeAdapterSoak.java --self-test}. */
   static void selfTest() {
@@ -106,6 +216,27 @@ class NativeAdapterSoak {
     require(opened==20 && maxJoining<=1,"twenty paced opens, bounded joining");
     boolean rejected=false; try { new OpenGate(0,0); } catch(IllegalArgumentException expected) { rejected=true; }
     require(rejected,"invalid gate rejected");
+    // Portal walkers: evenly spread, and the trip machine goes out, dwells, deepens, returns and aborts on surprises.
+    for(int n=0;n<=20;n++) { int c=0; for(int i=0;i<20;i++) if(isPortalWalker(i,20,n)) c++; require(c==n,"exactly "+n+" walkers"); }
+    var routes=List.of(new PortalRoute(16,"start","hall",5,5),new PortalRoute(17,"hall","start",6,6),
+        new PortalRoute(0,"hall","sewer",7,7),new PortalRoute(1,"sewer","hall",8,8),new PortalRoute(99,"start","gone",9,9));
+    var trip=new PortalTrip(0,routes,1000,5000,2000,60_000);
+    trip.tick(999,"start"); require(trip.phase==PortalTrip.Phase.IDLE,"trip waits for its first time");
+    trip.tick(1000,"start"); require(trip.walking() && trip.route.id()==16,"trip starts out through portal 16");
+    trip.onRegion(1500,"hall"); require(trip.phase==PortalTrip.Phase.DWELL && trip.outbound==1,"arrival starts the dwell");
+    trip.tick(3499,"hall"); require(trip.phase==PortalTrip.Phase.DWELL,"dwell lasts");
+    trip.tick(3500,"hall");
+    if(trip.phase==PortalTrip.Phase.OUT) {
+      require(trip.route.id()==0,"deeper step uses the forward portal"); trip.onRegion(4000,"sewer");
+      trip.tick(6000,"sewer"); require(trip.route.id()==1,"back from the sewer");
+      trip.onRegion(6500,"hall"); require(trip.phase==PortalTrip.Phase.BACK,"continues back");
+    }
+    require(trip.phase==PortalTrip.Phase.BACK && trip.route.id()==17,"returns through portal 17");
+    trip.onRegion(7000,"start"); require(trip.phase==PortalTrip.Phase.IDLE && trip.completed==1 && trip.nextTripAt==12000,"trip completes and rests");
+    trip.tick(12000,"start"); trip.onRegion(12500,"elsewhere"); require(trip.phase==PortalTrip.Phase.IDLE && trip.aborted==1,"surprise region aborts");
+    var slow=new PortalTrip(1,routes,0,5000,2000,60_000); slow.tick(0,"start"); slow.tick(60_001,"start");
+    require(slow.phase==PortalTrip.Phase.IDLE && slow.timeouts==1,"stalled leg times out");
+    require(portalRoutes(List.of(),List.of()).isEmpty(),"no regions, no routes");
     System.out.println("NativeAdapterSoak self-test passed");
   }
   static final class Player {
@@ -116,16 +247,27 @@ class NativeAdapterSoak {
     long openedAt=-1,firstConnectedMillis=-1;
     boolean connectedSinceOpen;
     long attacks,recoveries,accepted,rejected,failures,reconnects,observations,moved,hpChanges;
-    long locationEpoch=-1,epochChanges,worldTransfers;
+    long locationEpoch=-1,epochChanges,worldTransfers,regionTransfers;
+    PortalTrip trip;
     int world=-1;
     String regionKey;
     double x=Double.NaN,y; int hp=-1; int lastDx,lastDy;
     boolean expectedReconnect;
     final long[] latencyBuckets=new long[8];
     final Set<String> errors=new TreeSet<>();
+    /** Bounded context for an error (region and position), reported beside the unchanged error names. */
+    final Set<String> errorDetails=new TreeSet<>();
     Player(OnlineConnection.Credentials c) { credentials=c; }
   }
   static long ms() { return System.nanoTime()/1_000_000; }
+  /** Report section for the optional portal walk; null (omitted) when it is off. */
+  static Map<String,Object> portalConfig;
+  static int envInt(String name,int fallback,int min,int max) {
+    String text=System.getenv(name); if(text==null || text.isBlank()) return fallback;
+    int value; try { value=Integer.parseInt(text.trim()); } catch(NumberFormatException bad) { throw new IllegalArgumentException(name+" must be an integer"); }
+    if(value<min || value>max) throw new IllegalArgumentException(name+" must be "+min+".."+max);
+    return value;
+  }
   static void error(Player p,String text) { p.failures++; p.errors.add(text); }
   public static void main(String[] args) throws Exception {
     if(args.length==1 && "--self-test".equals(args[0])) { selfTest(); return; }
@@ -164,9 +306,32 @@ class NativeAdapterSoak {
     }
     if(players.size()!=20 || players.stream().map(p -> p.credentials.characterId()).distinct().count()!=20)
       throw new IllegalArgumentException("Exactly twenty distinct player-NN.json QA profiles are required");
+    // Optional paced portal walking (off unless T4C_SOAK_PORTAL_WALKERS is 1..20): that many evenly spread adapters
+    // periodically walk an authored portal, dwell in the destination, optionally go deeper, and walk back.
+    int walkers=envInt("T4C_SOAK_PORTAL_WALKERS",0,0,20);
+    long tripIntervalMillis=envInt("T4C_SOAK_PORTAL_INTERVAL_SECONDS",60,5,3600)*1000L;
+    long tripDwellMillis=envInt("T4C_SOAK_PORTAL_DWELL_SECONDS",20,1,600)*1000L;
+    long tripLegTimeoutMillis=envInt("T4C_SOAK_PORTAL_LEG_TIMEOUT_SECONDS",150,30,900)*1000L;
+    List<PortalRoute> routes=List.of();
+    if(walkers>0) {
+      try(var in=NativeAdapterSoak.class.getResourceAsStream("/content/portals-v1.json")) {
+        if(in==null) throw new IllegalArgumentException("Portal content unavailable");
+        var content=new Gson().fromJson(new String(in.readNBytes(4*1024*1024),java.nio.charset.StandardCharsets.UTF_8),com.perso.T4C.online.model.PortalContent.class);
+        routes=portalRoutes(hosted.regions(),content.portals());
+      }
+      if(routes.isEmpty()) throw new IllegalArgumentException("No enabled hosted portal route to walk");
+    }
     Files.createDirectories(report.toAbsolutePath().getParent());
     if(Files.exists(report)) throw new IllegalArgumentException("Report already exists");
     long start=ms(),end=start+duration*1000L,lastSample=start,nextReport=start;
+    if(walkers>0) {
+      for(int i=0;i<players.size();i++) if(isPortalWalker(i,players.size(),walkers))
+        players.get(i).trip=new PortalTrip(i,routes,start+30_000+i*4_000L,tripIntervalMillis,tripDwellMillis,tripLegTimeoutMillis);
+      portalConfig=new LinkedHashMap<>();
+      portalConfig.put("walkers",walkers); portalConfig.put("intervalSeconds",tripIntervalMillis/1000);
+      portalConfig.put("dwellSeconds",tripDwellMillis/1000); portalConfig.put("legTimeoutSeconds",tripLegTimeoutMillis/1000);
+      portalConfig.put("routes",routes.stream().map(r -> r.id()+":"+r.fromKey()+"->"+r.toKey()).toList());
+    }
     long[] connectedMillis=new long[21];
     long firstTick=-1,lastTick=-1,firstTickTime=0,lastTickTime=0,healthFailures=0,healthSamples=0,healthNanos=0;
     int maxObserved=0;
@@ -244,6 +409,9 @@ class NativeAdapterSoak {
               if(region.locationEpoch()<p.locationEpoch) error(p,"location_epoch_regressed");
               p.epochChanges++;
               if(p.world!=region.world()) p.worldTransfers++;
+              if(!Objects.equals(p.regionKey,region.key())) p.regionTransfers++;
+              p.lastDx=0; p.lastDy=0;
+              if(p.trip!=null) p.trip.onRegion(now,region.key());
             }
             p.connection.stopInput(); p.lastTick=-1; p.lastFresh=now; p.x=Double.NaN;
             p.locationEpoch=region.locationEpoch(); p.world=region.world(); p.regionKey=region.key();
@@ -259,7 +427,13 @@ class NativeAdapterSoak {
           if(view.character().revision()<p.lastRevision) error(p,"character_revision_regressed");
           p.lastRevision=view.character().revision();
           var self=snapshot.players().stream().filter(a -> a.id()==view.ownId()).findFirst().orElseThrow();
-          if(!map.canStand(self.x(),self.y())) error(p,"position_not_walkable");
+          if(!map.canStand(self.x(),self.y())) {
+            error(p,"position_not_walkable");
+            if(p.errorDetails.size()<5) p.errorDetails.add("position_not_walkable@"+region.key()+" epoch "+region.locationEpoch()
+                +" abs "+(map.originX+self.x())+","+(map.originY+self.y())+" last "+p.lastDx+","+p.lastDy
+                +(p.trip!=null?" trip "+p.trip.phase:""));
+          }
+          if(p.trip!=null) p.trip.where=region.key()+" abs "+(map.originX+self.x())+","+(map.originY+self.y());
           if(self.hp()<0 || self.hp()>self.maxHp()) error(p,"invalid_health");
           if(!Double.isNaN(p.x) && Math.hypot(p.x-self.x(),p.y-self.y())>.01) p.moved++;
           if(p.hp>=0 && p.hp!=self.hp()) p.hpChanges++;
@@ -268,6 +442,24 @@ class NativeAdapterSoak {
             p.connection.close(); p.expectedReconnect=true; p.reconnectStarted=now; continue;
           }
           if(p.command!=null) continue;
+          if(p.trip!=null) {
+            p.trip.tick(now,region.key());
+            if(p.trip.walking()) {
+              // Same arriving-tile planning as the combat walker, but to the exact authored portal source tile.
+              var goal=p.trip.route;
+              int goalX=goal.sourceX()-map.originX,goalY=goal.sourceY()-map.originY;
+              int arrivingX=arrivingTile(self.x(),p.lastDx),arrivingY=arrivingTile(self.y(),p.lastDy);
+              int[] next=pathToTile(map,arrivingX,arrivingY,goalX,goalY);
+              if(next==null) {
+                p.connection.stopInput();
+                if(arrivingX!=goalX || arrivingY!=goalY) p.trip.notes.add("portal_"+goal.id()+"_unreachable_from_"+arrivingX+","+arrivingY);
+              } else {
+                p.lastDx=Integer.signum(next[0]-arrivingX); p.lastDy=Integer.signum(next[1]-arrivingY);
+                p.connection.direction(p.lastDx,p.lastDy);
+              }
+              continue;
+            }
+          }
           OnlineConnection.Corpse corpse=view.corpses().stream()
               .filter(c -> c.world()==region.world() && c.x()>=region.originX() && c.y()>=region.originY()
                   && c.x()<region.originX()+region.width() && c.y()<region.originY()+region.height())
@@ -388,11 +580,33 @@ class NativeAdapterSoak {
     for(int i=0;i<players.size();i++) {
       var p=players.get(i); var row=new LinkedHashMap<String,Object>(); row.put("player",i+1);
       row.put("attacks",p.attacks); row.put("recoveries",p.recoveries); row.put("accepted",p.accepted); row.put("rejected",p.rejected);
-      row.put("failures",p.failures); row.put("errors",p.errors); row.put("reconnects",p.reconnects);
+      row.put("failures",p.failures); row.put("errors",p.errors); row.put("errorDetails",p.errorDetails); row.put("reconnects",p.reconnects);
       row.put("locationEpochChanges",p.epochChanges); row.put("worldTransfers",p.worldTransfers);
+      row.put("regionTransfers",p.regionTransfers);
+      if(p.trip!=null) {
+        var trip=new LinkedHashMap<String,Object>();
+        trip.put("started",p.trip.started); trip.put("completed",p.trip.completed); trip.put("aborted",p.trip.aborted);
+        trip.put("timeouts",p.trip.timeouts); trip.put("outbound",p.trip.outbound); trip.put("inbound",p.trip.inbound);
+        trip.put("phase",p.trip.phase.toString()); trip.put("notes",p.trip.notes);
+        row.put("portalTrip",trip);
+      }
       row.put("movementObservations",p.moved); row.put("hpChanges",p.hpChanges); row.put("latencyBuckets",p.latencyBuckets); results.add(row);
       row.put("commandPendingAtReport",p.command!=null);
       row.put("firstConnectedMillis",p.firstConnectedMillis);
+    }
+    if(portalConfig!=null) {
+      var totals=new LinkedHashMap<String,Object>(portalConfig);
+      long tStarted=0,tCompleted=0,tAborted=0,tTimeouts=0,tOutbound=0,tInbound=0,tRegion=0;
+      for(var p:players) {
+        tRegion+=p.regionTransfers;
+        if(p.trip==null) continue;
+        tStarted+=p.trip.started; tCompleted+=p.trip.completed; tAborted+=p.trip.aborted; tTimeouts+=p.trip.timeouts;
+        tOutbound+=p.trip.outbound; tInbound+=p.trip.inbound;
+      }
+      totals.put("tripsStarted",tStarted); totals.put("tripsCompleted",tCompleted); totals.put("tripsAborted",tAborted);
+      totals.put("legTimeouts",tTimeouts); totals.put("outboundTransfers",tOutbound); totals.put("inboundTransfers",tInbound);
+      totals.put("regionTransfersAllAdapters",tRegion);
+      report.put("portalWalk",totals);
     }
     report.put("players",results);
     Path temporary=file.resolveSibling(file.getFileName()+".tmp");
