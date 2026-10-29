@@ -127,6 +127,92 @@ class HostedKillRegionTest {
     }
   }
 
+  /** Tiles of one authored dungeon chamber: the 8-neighbour, no-corner-cutting flood the cave test uses. */
+  private static List<int[]> chamber(int startX,int startY) throws Exception {
+    var dungeon=WORLD.getParent().getParent().resolve("dungeon/DungeonMap.colbin");
+    try(var in=new java.io.DataInputStream(com.perso.T4C.helper.BinaryIOUtils.openInputStream(dungeon.toFile(),1<<16))) {
+      int w=com.perso.T4C.helper.BinaryIOUtils.readIntLE(in),h=com.perso.T4C.helper.BinaryIOUtils.readIntLE(in);
+      var data=in.readNBytes(w*h);var seen=new boolean[w*h];var queue=new ArrayDeque<Integer>();var tiles=new ArrayList<int[]>();
+      queue.add(startY*w+startX);seen[startY*w+startX]=true;
+      while(!queue.isEmpty()) {
+        int c=queue.remove();int x=c%w,y=c/w;tiles.add(new int[]{x,y});
+        for(int dy=-1;dy<=1;dy++) for(int dx=-1;dx<=1;dx++) {
+          int nx=x+dx,ny=y+dy;if((dx==0&&dy==0)||nx<0||ny<0||nx>=w||ny>=h||seen[ny*w+nx]) continue;
+          if(com.perso.T4C.world.CollisionRules.blocksMovement(data[ny*w+nx]&255)) continue;
+          if(dx!=0&&dy!=0&&(com.perso.T4C.world.CollisionRules.blocksMovement(data[y*w+nx]&255)
+              ||com.perso.T4C.world.CollisionRules.blocksMovement(data[ny*w+x]&255))) continue;
+          seen[ny*w+nx]=true;queue.add(ny*w+nx);
+        }
+      }
+      return tiles;
+    }
+  }
+
+  @Test void lighthavenSewersAreHostedWholeExceptTwoDocumentedCropsAndEveryStairStaysInside() throws Exception {
+    var plan=HostedRegionPlan.startingSlice(WORLD);
+    record Level(String key,int landX,int landY,int maxLost) {}
+    // maxLost is the honest cost of the crop: 0 for chambers hosted whole.
+    var levels=List.of(new Level(HostedRegionPlan.INTERIOR_KEY,304,383,0),
+        new Level(HostedRegionPlan.SEWER_UPPER_KEY,168,201,0),
+        new Level(HostedRegionPlan.SEWER_MIDDLE_KEY,121,332,2709),
+        new Level(HostedRegionPlan.SEWER_LOWER_KEY,154,529,30));
+    var specs=new ArrayList<RegionMapLoader.Spec>();
+    for(var level:levels) {
+      var region=plan.regions().stream().filter(r->level.key().equals(r.spec().key())).findFirst().orElseThrow();
+      var spec=region.spec();specs.add(spec);
+      assertEquals(1,spec.world());assertTrue(spec.width()<=256 && spec.height()<=256);
+      var tiles=chamber(level.landX(),level.landY());
+      long lost=tiles.stream().filter(t->!spec.contains(1,t[0]+.5,t[1]+.5)).count();
+      assertTrue(lost<=level.maxLost(),level.key()+" crops "+lost+" walkable tiles, documented "+level.maxLost());
+      assertTrue(tiles.size()>1000,level.key()+" is a real chamber");
+      assertTrue(spec.contains(1,level.landX()+.5,level.landY()+.5));
+      assertTrue(region.map().canStand(level.landX()+.5-spec.originX(),level.landY()+.5-spec.originY()),level.key()+" landing tile");
+    }
+    for(int i=0;i<specs.size();i++) for(int j=i+1;j<specs.size();j++) {
+      var a=specs.get(i);var b=specs.get(j);
+      assertFalse(a.originX()<(long)b.originX()+b.width() && b.originX()<(long)a.originX()+a.width()
+          && a.originY()<(long)b.originY()+b.height() && b.originY()<(long)a.originY()+a.height(),a.key()+" overlaps "+b.key());
+    }
+    // Stairs: 0/1 interior<->upper, 2/3 upper<->middle, 4/5 middle<->lower, each landing in the neighbour.
+    var expected=Map.of(0,HostedRegionPlan.SEWER_UPPER_KEY,1,HostedRegionPlan.INTERIOR_KEY,2,HostedRegionPlan.SEWER_MIDDLE_KEY,
+        3,HostedRegionPlan.SEWER_UPPER_KEY,4,HostedRegionPlan.SEWER_LOWER_KEY,5,HostedRegionPlan.SEWER_MIDDLE_KEY);
+    for(var entry:expected.entrySet()) {
+      var p=authored().stream().filter(a->a.id()==entry.getKey()).findFirst().orElseThrow();
+      var hop=plan.portals.resolve(p.sourceWorld(),p.sourceX()+.5,p.sourceY()+.5,plan::canStand).orElseThrow();
+      assertEquals(entry.getKey().intValue(),hop.portalId());
+      assertEquals(entry.getValue(),plan.require(p.targetWorld(),p.targetX()+.5,p.targetY()+.5).spec().key(),"Stair "+p.id());
+      var source=plan.require(p.sourceWorld(),p.sourceX()+.5,p.sourceY()+.5);
+      assertTrue(source.map().canStand(p.sourceX()+.5-source.map().originX,p.sourceY()+.5-source.map().originY),"Stair "+p.id()+" source is standable");
+    }
+    assertEquals(Set.of(947),plan.refusedPortals.stream().map(p->p.id()).collect(java.util.stream.Collectors.toSet()));
+  }
+
+  @Test void theUnhostableSpawnListIsExactlyTheAuthoredSpawnsNoCreatureCanStandOn() throws Exception {
+    var plan=HostedRegionPlan.startingSlice(WORLD);
+    var unstandable=new TreeSet<String>();
+    for(var region:plan.regions())
+      for(var spawn:MonsterCatalog.loadBundled().region(region.spec().world(),region.spec().originX(),region.spec().originY(),
+          region.spec().width(),region.spec().height()))
+        if(spawn.definition()!=null && !region.map().canStand(spawn.x()-region.spec().originX(),spawn.y()-region.spec().originY()))
+          unstandable.add(spawn.persistenceKey());
+    assertEquals(new TreeSet<>(plan.unhostableSpawnKeys),unstandable,"Every excluded spawn is unstandable and every unstandable spawn is excluded");
+    assertEquals(5,unstandable.size());
+  }
+
+  @Test void lighthavenSewerResidentsAreHostedWithoutLosingStartup() throws Exception {
+    var plan=HostedRegionPlan.startingSlice(WORLD);
+    try(var hosted=new HostedWorlds(plan,null,ItemCatalog.loadBundled(),MonsterCatalog.loadBundled())) {
+      for(var key:List.of(HostedRegionPlan.INTERIOR_KEY,HostedRegionPlan.SEWER_UPPER_KEY,HostedRegionPlan.SEWER_MIDDLE_KEY,HostedRegionPlan.SEWER_LOWER_KEY)) {
+        var region=hosted.regions.stream().filter(r->key.equals(r.spec.key())).findFirst().orElseThrow();
+        var expected=MonsterCatalog.loadBundled().region(1,region.spec.originX(),region.spec.originY(),region.spec.width(),region.spec.height())
+            .stream().filter(s->!plan.unhostableSpawnKeys.contains(s.persistenceKey())).toList();
+        assertEquals(expected.size(),region.world.creatureSpawns().size(),key+": every authored resident except the listed unstandable ones is hosted");
+        assertTrue(region.world.creatureSpawns().size()>=20,key);
+        assertTrue(region.world.creatureSpawns().stream().allMatch(s->s.definition()!=null));
+      }
+    }
+  }
+
   @Test void temple_aelric_and_kill_circle_are_mutually_walkable_inside_the_region() throws Exception {
     var plan=HostedRegionPlan.startingSlice(WORLD);
     var region=plan.regions().stream().filter(r->r.spec().world()==0).findFirst().orElseThrow();

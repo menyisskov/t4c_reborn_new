@@ -37,7 +37,10 @@ final class HostedWorlds implements AutoCloseable {
     // The v2 inventory is checked against the bundled v1 export. Supplied subsets remain valid
     // for isolated worlds while their authored definitions and spawn checks stay in PreviewWorld.
     var classified=monsters==null ? null : MonsterCatalog.loadClassifiedBundled(MonsterCatalog.loadBundled());
-    var hostedMonsters=withoutNpcOwnedSpawns(monsters,classified);
+    var npcFiltered=withoutNpcOwnedSpawns(monsters,classified);
+    var hostedMonsters=npcFiltered==null || plan.unhostableSpawnKeys.isEmpty() ? npcFiltered
+        : new MonsterContent(npcFiltered.version(),npcFiltered.monsters(),
+            npcFiltered.spawns().stream().filter(s->!plan.unhostableSpawnKeys.contains(s.persistenceKey())).toList());
     regions=plan.regions.stream().map(r->new Region(r.spec(),r.map(),new PreviewWorld(r.map(),hostedMonsters,r.spec().world()))).toList();
     for(var region:regions) region.npcs=appearances==null
         ? new RegionNpcs(catalog,items,region.spec)

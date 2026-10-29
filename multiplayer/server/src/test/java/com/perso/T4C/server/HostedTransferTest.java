@@ -108,6 +108,34 @@ class HostedTransferTest {
     }
   }
 
+  @Test void sewerStairsCarryAWalkerDownThroughEveryLevelAndBackUpToTheInterior() throws Exception {
+    var store=OnlineStore.fromEnvironment();store.migrate();var account=store.provisionAccount();
+    var p=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(2)).progress();
+    var created=store.create(account.accountId(),"Sewer walker",0,2944.5,1059.5,p,0);
+    var plan=HostedRegionPlan.startingSlice(Path.of("../../assets/maps/worldmap/worldmap.colbin"));
+    try(var hosted=new HostedWorlds(plan,store,ItemCatalog.loadBundled(),MonsterCatalog.loadBundled())) {
+      var joined=hosted.sessions.join(store.acquire(account.secret(),created.id()),System.nanoTime());
+      hosted.sessions.regionReady(joined.token(),0);
+      // door 16 into the interior, then stairs 0, 2, 4 down and 5, 3, 1 back up.
+      String[] keys={HostedRegionPlan.INTERIOR_KEY,HostedRegionPlan.SEWER_UPPER_KEY,HostedRegionPlan.SEWER_MIDDLE_KEY,HostedRegionPlan.SEWER_LOWER_KEY,
+          HostedRegionPlan.SEWER_MIDDLE_KEY,HostedRegionPlan.SEWER_UPPER_KEY,HostedRegionPlan.INTERIOR_KEY};
+      int[][] sources={{2931,1056},{415,395},{367,93},{205,289},{155,527},{123,330},{170,199}};
+      for(int i=0;i<keys.length;i++) {
+        var from=hosted.actor(joined.token());
+        from.world.relocate(joined.token(),sources[i][0]+.5-from.map.originX,sources[i][1]+.5-from.map.originY);
+        final int step=i;
+        await(hosted,()->hosted.sessions.region(joined.token()).locationEpoch()==step+1);
+        assertEquals(keys[i],hosted.sessions.region(joined.token()).key(),"Hop "+i);
+        hosted.sessions.regionReady(joined.token(),i+1);
+      }
+      var saved=hosted.actor(joined.token()).world.position(joined.token());
+      assertEquals(416,Math.floor(saved.x()+hosted.actor(joined.token()).map.originX),"Stair 1 lands beside stair 0 in the interior");
+      var left=hosted.sessions.leave(joined.token());await(hosted,left::isDone);left.get();
+      var loaded=store.load(account.accountId(),created.id());
+      assertEquals(1,loaded.world());assertEquals(7,loaded.locationEpoch());
+    }
+  }
+
   @Test void walkingOntoARefusedKillCirclePortalKeepsTheSessionAndPositionInTheStartRegion() throws Exception {
     var store=OnlineStore.fromEnvironment();store.migrate();var account=store.provisionAccount();
     var p=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(2)).progress();
@@ -191,7 +219,7 @@ class HostedTransferTest {
       var rejoined=http(client,server.url(),"/join",null,account.secret()+" "+first.id());
       assertEquals(1,rejoined.getAsJsonObject("region").get("world").getAsInt());
       String returnedToken=rejoined.get("token").getAsString();http(client,server.url(),"/region-ready",returnedToken,"1");
-      var returned=walkPortal(client,server.url(),returnedToken,rejoined.get("id").getAsLong(),plan.require(1,304,383).map(),42,28,1,0);
+      var returned=walkPortal(client,server.url(),returnedToken,rejoined.get("id").getAsLong(),plan.require(1,304,383).map(),306-plan.require(1,304,383).map().originX,381-plan.require(1,304,383).map().originY,1,0);
       assertEquals(2,returned.getAsJsonObject("region").get("locationEpoch").getAsLong());
       http(client,server.url(),"/region-ready",returnedToken,"2");
       assertEquals(2,http(client,server.url(),"/state",other,null).getAsJsonArray("players").size());

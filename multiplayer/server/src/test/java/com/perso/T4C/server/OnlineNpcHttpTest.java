@@ -29,7 +29,7 @@ class OnlineNpcHttpTest {
     double x=npc.x()+0.5,y=npc.y()+0.5;
     assertTrue(start.map().canStand(x-start.map().originX,y-start.map().originY));
     var character=store.create(owner.accountId(),"HTTP letter",npc.world(),x,y,prepared.progress(),prepared.gold());
-    var second=plan.regions().get(1);var secondMap=second.map();
+    var second=plan.regions().stream().filter(r->HostedRegionPlan.CAVE_KEY.equals(r.spec().key())).findFirst().orElseThrow();var secondMap=second.map();
     var foreign=store.create(other.accountId(),"Other region",second.spec().world(),secondMap.originX+secondMap.spawnX,
         secondMap.originY+secondMap.spawnY,prepared.progress(),prepared.gold());
     var map=start.map();
@@ -144,7 +144,7 @@ class OnlineNpcHttpTest {
     var prepared=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(13));
     var near=store.provisionAccount();var far=store.provisionAccount();
     var first=plan.regions().getFirst();var firstMap=first.map();
-    var second=plan.regions().get(1);var secondMap=second.map();
+    var second=plan.regions().stream().filter(r->HostedRegionPlan.CAVE_KEY.equals(r.spec().key())).findFirst().orElseThrow();var secondMap=second.map();
     double homeX=firstMap.originX+firstMap.spawnX+0.5,homeY=firstMap.originY+firstMap.spawnY+0.5;
     double otherX=secondMap.originX+secondMap.spawnX+0.5,otherY=secondMap.originY+secondMap.spawnY+0.5;
     var nearCharacter=store.create(near.accountId(),"Loot viewer",first.spec().world(),homeX,homeY,prepared.progress(),prepared.gold());

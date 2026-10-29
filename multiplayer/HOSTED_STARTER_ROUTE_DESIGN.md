@@ -302,6 +302,38 @@ component of its target tile). Result for "what is the next hosting slice that u
   soak was not re-run for this change; pursuit cost scales with players near monsters, so re-measure
   before the next Beta soak.
 
+## Lighthaven sewers, and a correction to the reach audit — T4C-0303, 2026-10-29
+
+The T4C-0300 audit said the starter crop's portal graph reaches "ten more dungeon chambers". That count
+flooded the whole 1.29 M-tile starter continent. A player can only walk inside the hosted 249 x 117 crop,
+and re-running the same walkable-component graph from the crop alone reaches exactly five dungeon areas:
+the skeleton cave (hosted by T4C-0300), the Lighthaven interior (hosted but cropped to 80 x 60) and a
+chain of three sewer levels below it (portals 0/1, 2/3 and 4/5). The other chambers hang off continental
+portals (20-27, 61-67, 948-973) that sit hundreds of tiles outside the crop; they need the transit decision,
+not a bigger rectangle.
+
+- **Lighthaven interior grown to its whole walkable component**, 278..442 x 267..432 (165 x 166). Stair 0
+  sits at 415,395, 71 tiles beyond the old crop, so the old 80 x 60 crop could not reach any sewer. The
+  old crop held no walkable tile outside this box.
+- **Three sewer levels**, each a region of its own: upper 148..387 x 17..242 (240 x 226, whole), middle
+  8..217 x 243..411 (210 x 169) and lower 138..277 x 412..557 (140 x 146). The tight boxes of the upper and
+  middle levels overlap (148..217 x 172..242) and one region may not overlap another, so the middle level
+  gives up its north-west lobe (2,709 of 18,532 walkable tiles, 8 residents) and the lower level a 30-tile
+  nub with no residents. Both crops make the lost tiles unreachable (the region edge is a wall) and no
+  portal, spawn or stair is lost; `HostedKillRegionTest` pins the exact permitted loss.
+- **Unhostable spawns.** Persisted creatures must stand on a standable tile. Five authored spawns do not
+  (three in solid rock, two under a wall), so startup would refuse the whole region. They are listed by
+  persistence key in `HostedRegionPlan.UNHOSTABLE_SPAWN_KEYS` and dropped before the creature world is
+  built; the guard in `PersistentCreatures` is untouched, and a test proves the list is exactly the set of
+  unstandable authored spawns (no pattern, no silent skips).
+- **Residents.** 27 + 46 + 43 + 28 creatures (rats, bats, giant bats, slimes, spiders, goblins), all low
+  level, plus display-only appearance NPCs (Twin Nevanis, Twin Shovanis, Balork) with no interaction. The
+  existing clan and unsupported-combat guards accepted every region; nothing was weakened.
+- **Cost.** Idle step on a disposable PostgreSQL cluster: whole six-region tick 1.09 ms (was 1.04 ms for
+  three regions; budget 29.4 ms), 0.003 to 0.008 ms per region. Pursuit cost still scales with players near
+  monsters, and no new soak was run.
+- **Still refused:** portal 947 and the continental portals. No quest is added.
+
 ## Implemented — T4C-0231 (Q10), 2026-10-27
 
 `HostedRegionPlan.startingSlice` now hosts the world-0 `start` region at
