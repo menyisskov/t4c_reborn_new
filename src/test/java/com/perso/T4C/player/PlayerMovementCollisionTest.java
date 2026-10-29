@@ -32,8 +32,9 @@ class PlayerMovementCollisionTest {
   }
 
   @Test
-  void playerBaselineMovementIsOnlySlightlyFasterThanMonsterMovement() {
-    assertEquals(1.2f, PLAYER_SPEED / MONSTER_SPEED, 0.001f);
+  void playerBaselineMovementMatchesTheTunedSpeed() {
+    assertEquals(75f, PLAYER_SPEED);
+    assertEquals(5f / 3f, PLAYER_SPEED / MONSTER_SPEED, 0.001f);
   }
 
   @TempDir Path tempDir;
