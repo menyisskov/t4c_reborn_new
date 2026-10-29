@@ -1239,7 +1239,14 @@ public final class OnlineStore implements AutoCloseable {
             q.setLong(4,motion.targetEpoch());q.setLong(5,attack.nextNext());
             q.setString(6,attack.key());q.setObject(7,attack.life());q.setLong(8,motion.revision());
             q.setObject(9,attack.targetCharacter());q.setLong(10,attack.expectedNext());
-            if(q.executeUpdate()!=1) throw new Conflict("Creature attack changed or not due");
+            if(q.executeUpdate()!=1) {
+              String diag="";
+              try(var d=c.prepareStatement("SELECT state_revision,next_attack_at,target_character,event_id,died_at,health,current_x,floor(extract(epoch FROM clock_timestamp())*1000) FROM online_spawns WHERE spawn_key=?")) {
+                d.setString(1,attack.key());
+                try(var r=d.executeQuery()) { if(r.next()) diag=" DBROW rev="+r.getLong(1)+" next="+r.getLong(2)+" target="+r.getObject(3)+" life="+r.getObject(4)+" died="+r.getObject(5)+" health="+r.getObject(6)+" x="+r.getObject(7)+" dbnow="+r.getLong(8); }
+              }
+              throw new Conflict("Creature attack changed or not due EXPECT rev="+motion.revision()+" next="+attack.expectedNext()+" target="+attack.targetCharacter()+" life="+attack.life()+" jvmnow="+System.currentTimeMillis()+diag);
+            }
           }
         } else {
           try(var q=c.prepareStatement("UPDATE online_spawns SET next_attack_at=?,state_revision=state_revision+1 WHERE spawn_key=? AND event_id=? AND current_x IS NULL AND target_character=? AND next_attack_at=? AND next_attack_at<=floor(extract(epoch FROM clock_timestamp())*1000) AND died_at IS NULL AND COALESCE(health,1)>0")) {
