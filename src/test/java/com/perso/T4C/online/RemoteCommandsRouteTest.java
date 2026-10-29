@@ -25,7 +25,7 @@ import java.util.function.BooleanSupplier;
 import org.junit.jupiter.api.Test;
 
 /**
- * The online commands over a real {@link OnlineConnection} against a local fake server (T4C-0290):
+ * The online commands over a real {@link OnlineConnection} against a local fake server (T4C-0292):
  * which route and body each intent produces, how the prediction frame travels with {@code /input}
  * and comes back in the snapshot's acknowledged sequence, and how refusals read.
  */

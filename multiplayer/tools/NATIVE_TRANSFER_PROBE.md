@@ -19,3 +19,7 @@ Optional arguments are endpoint origin and world collision file, in that order. 
 Recorded check (2026-10-27): entrance 16, observer isolation, dungeon reconnect and return 17 passed with actual native networking and PostgreSQL; saved epoch 2/world 0 and character progress were preserved. Root's run completed in about ten seconds on the local QA realm.
 
 This evidence covers the native networking path, not rendered map resources, animation, focus or remote TLS. Rendered two-client world switching remains an acceptance gate. The probe's 90-second per-leg timeout is a failure bound, not an expected duration or performance target.
+
+Movement rule change (T4C-0288): the walker plans from the tile the player is arriving on (the last direction sent),
+because the server now finishes a claimed tile (single-player's grid-reservation rule, PR #234). Compile-checked
+against the current runtime; not re-run live for this change.

@@ -119,7 +119,7 @@ class NativeAdapterSoak {
     long locationEpoch=-1,epochChanges,worldTransfers;
     int world=-1;
     String regionKey;
-    double x=Double.NaN,y; int hp=-1;
+    double x=Double.NaN,y; int hp=-1; int lastDx,lastDy;
     boolean expectedReconnect;
     final long[] latencyBuckets=new long[8];
     final Set<String> errors=new TreeSet<>();
@@ -288,9 +288,15 @@ class NativeAdapterSoak {
               p.nextCommand=now+1100+(i*37)%300;
             }
           } else {
-            double[] next=path(map,self.x(),self.y(),tx,ty);
+            // The server finishes a claimed tile (single-player's grid reservation rule): route from the tile
+            // the player is ARRIVING on and steer relative to that tile, not to the mid-glide position.
+            int arrivingX=arrivingTile(self.x(),p.lastDx),arrivingY=arrivingTile(self.y(),p.lastDy);
+            double[] next=path(map,arrivingX+.5,arrivingY+.5,tx,ty);
             if(next==null) p.connection.stopInput();
-            else p.connection.direction(direction(next[0]-self.x()),direction(next[1]-self.y()));
+            else {
+              p.lastDx=direction(next[0]-(arrivingX+.5)); p.lastDy=direction(next[1]-(arrivingY+.5));
+              p.connection.direction(p.lastDx,p.lastDy);
+            }
           }
         }
         connectedMillis[connected]+=now-lastSample; lastSample=now;
@@ -318,6 +324,12 @@ class NativeAdapterSoak {
           healthFailures,healthSamples,healthNanos,cpuStart,cpu(serverPid),databaseBefore,database(),runtimeSamples,completed);
     }
     System.out.println("Native network-adapter soak finished; report: "+report.toAbsolutePath());
+  }
+  /** Tile a glide is arriving on (the last direction sent while off-centre); mirrors HostedTransferTest.walkPortal. */
+  static int arrivingTile(double c,int last) {
+    int tile=(int)Math.round(c-.5);
+    if(Math.abs(c-Math.floor(c)-.5)>1e-6) tile=last>0 ? (int)Math.ceil(c-.5) : last<0 ? (int)Math.floor(c-.5) : tile;
+    return tile;
   }
   static int direction(double delta) { return Math.abs(delta)<.12?0:delta>0?1:-1; }
   static double distance(double x,double y,double tx,double ty) {

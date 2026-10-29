@@ -443,7 +443,7 @@ Preview image (a real `MainGameScreen` drawing the puppets of a hand-made snapsh
 Next, R3: `PlayerCommands` over the connection (attack, move, pick up, interact) with tickets, using
 the ids above.
 
-### 3.13 Remote session, step R3: the commands (T4C-0290)
+### 3.13 Remote session, step R3: the commands (T4C-0292)
 
 `RemoteGameSession.commands()` is `RemotePlayerCommands` (headless, not wired to the launcher).
 The screen binds it once with a `Host` (the player, and where a message goes: the same

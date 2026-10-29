@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
 /**
- * The online commands against a fake link (T4C-0290): every command maps to the right request,
+ * The online commands against a fake link (T4C-0292): every command maps to the right request,
  * refusals reach the host as messages, the local player never changes on an attack, pickup or
  * interaction, and own movement is predicted and reconciled.
  */

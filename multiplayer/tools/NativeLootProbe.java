@@ -100,7 +100,7 @@ public final class NativeLootProbe {
   private static final class Fighter {
     final String label; final Player player; final OnlineConnection c;
     double lastX=Double.NaN,lastY=Double.NaN;
-    int kills,acceptedAttacks;
+    int kills,acceptedAttacks,lastDx,lastDy;
     long lastAttackMs,lastPotionMs,targetSince,firstReachMs=-1,noTargetSince=-1;
     long target=-1; int targetAccepted;
     final Map<Long,Long> ignoreUntil=new HashMap<>();
@@ -478,11 +478,24 @@ public final class NativeLootProbe {
     return Math.hypot((me.x()-x)*GameConstants.GRID_W,(me.y()-y)*GameConstants.GRID_H);
   }
 
-  /** Holds the adapter's movement intent toward a local point (one grid step axis at a time is up to the server). */
+  /**
+   * Holds the adapter's movement intent toward a local point. The server finishes a claimed tile
+   * (single-player's grid reservation rule), so the intent is chosen relative to the tile the player is
+   * ARRIVING on (the last direction sent), with a half-tile dead band so it cannot oscillate around a target.
+   */
   private static void steer(Fighter f,OnlineConnection.Actor me,double tx,double ty) {
-    int dx=Math.abs(tx-me.x())>.35 ? (tx>me.x()?1:-1) : 0;
-    int dy=Math.abs(ty-me.y())>.35 ? (ty>me.y()?1:-1) : 0;
+    double ax=arrivingTile(me.x(),f.lastDx)+.5,ay=arrivingTile(me.y(),f.lastDy)+.5;
+    int dx=Math.abs(tx-ax)>=.5 ? (tx>ax?1:-1) : 0;
+    int dy=Math.abs(ty-ay)>=.5 ? (ty>ay?1:-1) : 0;
+    f.lastDx=dx; f.lastDy=dy;
     f.c.direction(dx,dy);
+  }
+
+  /** Tile a glide is arriving on (the last direction sent while off-centre); mirrors HostedTransferTest.walkPortal. */
+  private static int arrivingTile(double c,int last) {
+    int tile=(int)Math.round(c-.5);
+    if(Math.abs(c-Math.floor(c)-.5)>1e-6) tile=last>0 ? (int)Math.ceil(c-.5) : last<0 ? (int)Math.floor(c-.5) : tile;
+    return tile;
   }
 
   private enum Tick { ATTACKED, WALKING, IDLE, NO_TARGET }

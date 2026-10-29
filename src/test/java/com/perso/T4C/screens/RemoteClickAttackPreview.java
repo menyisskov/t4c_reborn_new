@@ -46,7 +46,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 /**
- * Developer preview for the remote commands (T4C-0290, not shipped, not a golden): opens the REAL
+ * Developer preview for the remote commands (T4C-0292, not shipped, not a golden): opens the REAL
  * single-player {@link MainGameScreen}, swaps its session for a {@link RemoteGameSession} over a
  * scripted link (no network, no server), fills the world from a hand-made snapshot and then
  * "clicks" the far Skeleton through the screen's own attack callback. The scripted server refuses

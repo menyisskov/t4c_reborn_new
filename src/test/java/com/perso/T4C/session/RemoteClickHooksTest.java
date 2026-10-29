@@ -19,7 +19,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 /**
- * The two click hooks an online session installs (T4C-0290): a click on loot or on an NPC becomes
+ * The two click hooks an online session installs (T4C-0292): a click on loot or on an NPC becomes
  * an intent and changes nothing locally; without a hook both stay exactly as they were (pinned by
  * {@code GroundItemPickupCharacterizationTest} and {@code PuppetSwitchCharacterizationTest}).
  */

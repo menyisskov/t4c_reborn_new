@@ -49,7 +49,7 @@ re-measure before relying on a number.
   (appearance is an opaque id), no walk animation for them and no slot for them in the game screen
   (both added in R3), and puppets glide with a 60 ms ease instead of
   the planned 100 ms-behind interpolation buffer. Full table: `CLIENT_UNIFICATION_DESIGN.md` 3.12.
-  Progress (T4C-0290, remote session R3, headless and unwired): `RemoteGameSession.commands()` is
+  Progress (T4C-0292, remote session R3, headless and unwired): `RemoteGameSession.commands()` is
   `RemotePlayerCommands` over the existing connection: attack (server creature id), own movement
   (predicted with the shared rule, sequenced, reconciled with snapshots), pickup by loot id and NPC
   interaction by id, with refusals shown as the single-player system messages; the screen draws

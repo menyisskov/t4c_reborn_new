@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 /**
- * Characterizes the single-player click pickup (T4C-0290) before the online hook exists: it must
+ * Characterizes the single-player click pickup (T4C-0292) before the online hook exists: it must
  * pass unchanged afterwards. A pickup hits the topmost item under the click, refuses beyond the
  * reach it is given, moves the item into the inventory and pays a corpse's gold once.
  */
