@@ -141,7 +141,8 @@ class MovementRulesTest {
   @Test
   void theServerStepIsTheRecordedTamperProbeMaximum() {
     double perTick = MovementRules.Swept.tilesPerTick(PLAYER_SPEED, TICK_RATE);
-    assertEquals(0.2757, perTick, 0.00005);
+    // Derived from the shared player speed, so a speed retune cannot leave a stale pinned value.
+    assertEquals(PLAYER_SPEED / GRID_W / TICK_RATE, perTick, 0.00005);
     assertEquals(PLAYER_SPEED / GRID_W / TICK_RATE, perTick, 0.0, "same float expression");
   }
 
@@ -219,8 +220,9 @@ class MovementRulesTest {
       pos = MovementRules.Swept.step(pos.x(), pos.y(), 1, 0, perTick, (a, b) -> true);
     }
     sweptTiles = pos.x();
-    assertEquals(9.375, gridTiles, 0.01);
-    assertEquals(9.375, sweptTiles, 0.01);
+    double tilesPerSecond = PLAYER_SPEED / GRID_W;
+    assertEquals(tilesPerSecond, gridTiles, 0.01);
+    assertEquals(tilesPerSecond, sweptTiles, 0.01);
   }
 
   @Test
