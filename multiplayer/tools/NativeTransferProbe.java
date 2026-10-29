@@ -12,17 +12,19 @@ public class NativeTransferProbe {
  static OnlineConnection.View view(OnlineConnection c){var v=c.view();if(v==null)throw new AssertionError("Unexpected native disconnect");return v;}
  static OnlineConnection.Actor own(OnlineConnection c){var v=view(c);return v.snapshot().players().stream().filter(a->a.id()==v.ownId()).findFirst().orElseThrow();}
  static void connected(OnlineConnection c)throws Exception{waitFor(()->c.view()!=null,10);c.confirmRegionReady(view(c).map().locationEpoch());}
+ /** Tile a glide is arriving on (server finishes a claimed tile); mirrors HostedTransferTest.walkPortal. */
+ static int arrivingTile(double c,int last){int t=(int)Math.round(c-.5);if(Math.abs(c-Math.floor(c)-.5)>1e-6)t=last>0?(int)Math.ceil(c-.5):last<0?(int)Math.floor(c-.5):t;return t;}
  static void walk(OnlineConnection c,PreviewMap map,int goalX,int goalY,int destination)throws Exception{
-   long end=System.nanoTime()+TimeUnit.SECONDS.toNanos(90);int goal=goalY*map.width+goalX;
+   long end=System.nanoTime()+TimeUnit.SECONDS.toNanos(90);int goal=goalY*map.width+goalX;int lastX=0,lastY=0;
    while(System.nanoTime()<end){
      var v=view(c);if(v.map().world()==destination){c.stopInput();return;}
-     c.confirmRegionReady(v.map().locationEpoch());var a=own(c);int start=(int)a.y()*map.width+(int)a.x();
-     if(start==goal){c.stopInput();Thread.sleep(30);continue;}
+     c.confirmRegionReady(v.map().locationEpoch());var a=own(c);int start=arrivingTile(a.y(),lastY)*map.width+arrivingTile(a.x(),lastX);
+     if(start==goal){c.stopInput();lastX=0;lastY=0;Thread.sleep(30);continue;}
      int[] prev=new int[map.width*map.height];Arrays.fill(prev,-1);prev[start]=start;var q=new ArrayDeque<Integer>();q.add(start);
      while(!q.isEmpty()&&prev[goal]<0){int node=q.remove(),x=node%map.width,y=node/map.width;for(var d:new int[][]{{1,0},{-1,0},{0,1},{0,-1}}){int nx=x+d[0],ny=y+d[1];if(!map.canStand(nx+.5,ny+.5))continue;int next=ny*map.width+nx;if(prev[next]>=0)continue;prev[next]=node;q.add(next);}}
      if(prev[goal]<0)throw new AssertionError("Authored portal is unreachable");
      int next=goal;while(prev[next]!=start)next=prev[next];
-     c.direction(Integer.compare(next%map.width,start%map.width),Integer.compare(next/map.width,start/map.width));Thread.sleep(25);
+     lastX=Integer.compare(next%map.width,start%map.width);lastY=Integer.compare(next/map.width,start/map.width);c.direction(lastX,lastY);Thread.sleep(25);
    }
    throw new AssertionError("Native portal traversal timed out at "+own(c).x()+","+own(c).y());
  }
