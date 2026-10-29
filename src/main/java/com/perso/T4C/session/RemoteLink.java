@@ -22,6 +22,11 @@ public interface RemoteLink {
 
   CompletionStage<OnlineConnection.CommandResult> interact(String npc);
 
+  /** Recovers the character's own corpse by server id; range, ownership and contents are the server's. */
+  default CompletionStage<OnlineConnection.CommandResult> recover(UUID corpse) {
+    throw new IllegalStateException("Corpse recovery is not available on this link");
+  }
+
   /** As {@link #interact(String)}, asking the NPC about one authored topic (0-99). */
   default CompletionStage<OnlineConnection.CommandResult> interact(String npc, int topic) {
     throw new IllegalStateException("Topics are not available on this link");

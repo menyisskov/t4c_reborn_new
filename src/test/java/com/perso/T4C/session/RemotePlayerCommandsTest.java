@@ -85,6 +85,11 @@ class RemotePlayerCommandsTest {
     }
 
     @Override
+    public CompletionStage<OnlineConnection.CommandResult> recover(UUID corpse) {
+      return reply("recover " + corpse);
+    }
+
+    @Override
     public CompletionStage<OnlineConnection.CommandResult> interact(String npc, int topic) {
       return reply("interact " + npc + " " + topic);
     }
@@ -428,6 +433,45 @@ class RemotePlayerCommandsTest {
     link.answer("online.loot.out_of_range");
     session.commands().pump();
     assertEquals(List.of(I18n.key("online.loot.out_of_range")), host.messages);
+  }
+
+  @Test
+  void clickingYourOwnCorpseAsksTheServerToRecoverItAndShowsItsAnswer() throws Exception {
+    UUID id = UUID.randomUUID();
+    var base = view(1, 4, actor(localX(100), localY(205), 0), List.of(), List.of(), List.of());
+    link.view =
+        new OnlineConnection.View(
+            base.ownId(),
+            base.map(),
+            base.snapshot(),
+            null,
+            List.of(
+                new OnlineConnection.Corpse(id, 0, 103.5, 204.5, 2, 0),
+                new OnlineConnection.Corpse(UUID.randomUUID(), 5, 103.5, 204.5, 2, 0),
+                new OnlineConnection.Corpse(UUID.randomUUID(), 0, 110.5, 204.5, 0, 0)));
+    tickWorld();
+    float corpseX = (float) (103.5 - 0.5) * GRID_W;
+    float corpseY = (float) (204.5 - 0.5) * GRID_H;
+
+    // Far beyond reach: the server, not the client, judges range.
+    GroundItemManager.PickupResult result = ground.pickUpAt(corpseX, corpseY, player, 99, 3);
+
+    assertEquals(GroundItemManager.PickupStatus.REQUESTED, result.status);
+    assertEquals(List.of("recover " + id), link.calls);
+    link.answer("online.recover.out_of_range");
+    session.commands().pump();
+    assertEquals(List.of(I18n.key("online.recover.out_of_range")), host.messages);
+    // Another world's corpse and an emptied one are neither drawn nor clickable.
+    assertEquals(
+        GroundItemManager.PickupStatus.NONE,
+        ground.pickUpAt((float) (110.5 - 0.5) * GRID_W, corpseY, player, 99, 3).status);
+
+    link.next = new CompletableFuture<>();
+    host.messages.clear();
+    assertEquals(GroundItemManager.PickupStatus.REQUESTED, ground.pickUpAt(corpseX, corpseY, player, 99, 3).status);
+    link.answer(null);
+    session.commands().pump();
+    assertEquals(List.of(I18n.key("online.recover.done")), host.messages);
   }
 
   @Test

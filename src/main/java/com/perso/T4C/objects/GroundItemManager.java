@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.IntConsumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -52,9 +53,19 @@ public class GroundItemManager {
   private final Random random = new Random();
   /** Online sessions only; null (the default) keeps the click pickup entirely local. */
   private Predicate<GroundItem> remotePickup;
+  /** Online sessions only: the player's own corpses as the server lists them (empty in single-player). */
+  private List<RemoteCorpse> remoteCorpses = List.of();
+  private Predicate<UUID> remoteRecover;
 
   public record CorpseDrop(
       float x, float y, int gold, List<String> itemNames, long createdAtMillis) {}
+
+  /**
+   * Online: a corpse the server holds for this player. Drawn like the single-player corpse (its
+   * name where the character fell) while something is left on it; a click asks the server to
+   * recover it. {@code x}/{@code y} are pixel anchors like {@link CorpseDrop}.
+   */
+  public record RemoteCorpse(UUID id, float x, float y, boolean hasContents) {}
 
   private record WorldDrops(List<GroundItem> items, List<CorpseDrop> corpses) {}
 
@@ -135,6 +146,19 @@ public class GroundItemManager {
     this.remotePickup = remotePickup;
   }
 
+  /** Online sessions only: replaces the corpses drawn and clickable (the server's list is the truth). */
+  public void setRemoteCorpses(List<RemoteCorpse> corpses) {
+    remoteCorpses = corpses == null ? List.of() : List.copyOf(corpses);
+  }
+
+  /**
+   * Online sessions only: a click on a drawn corpse is sent to the server, which decides range,
+   * ownership and contents. The hook returns whether it took the intent; {@code null} disables it.
+   */
+  public void setRemoteRecover(Predicate<UUID> remoteRecover) {
+    this.remoteRecover = remoteRecover;
+  }
+
   public void dropItem(String itemKey, int remainingCharges, float x, float y) {
     if (itemKey != null) items.add(GroundItem.ofItem(itemKey, x, y, remainingCharges));
   }
@@ -149,6 +173,17 @@ public class GroundItemManager {
       item.isObject = false;
       item.y = groundItem.getDepthY();
       item.renderAction = () -> groundItem.render(batch, outlineShader);
+      out.add(item);
+    }
+    for (RemoteCorpse corpse : remoteCorpses) {
+      if (!corpse.hasContents()) continue;
+      ObjectRenderer.RenderItem item = pool.get();
+      item.isObject = false;
+      item.y = corpse.y() / com.perso.T4C.config.GameConstants.GRID_H;
+      item.renderAction =
+          () ->
+              NameRenderer.renderName(
+                  batch, "Corpse", corpse.x() - 16f, corpse.y() - 28f, 32f, 32f);
       out.add(item);
     }
     for (CorpseDrop corpse : corpses) {
@@ -205,12 +240,12 @@ public class GroundItemManager {
         return true;
       }
     }
-    return false;
+    return remoteCorpseAt(worldX, worldY) != null;
   }
 
   public PickupResult pickUpAt(
       float worldX, float worldY, Player player, int tileDistance, int maxTileDistance) {
-    if (player == null || items.isEmpty()) {
+    if (player == null || (items.isEmpty() && remoteCorpses.isEmpty())) {
       return PickupResult.NONE;
     }
     for (int i = items.size() - 1; i >= 0; i--) {
@@ -257,10 +292,23 @@ public class GroundItemManager {
       player.addGold(corpse.gold());
       return new PickupResult(PickupStatus.PICKED_UP, corpse.gold() + " gold from your corpse");
     }
+    RemoteCorpse remote = remoteCorpseAt(worldX, worldY);
+    if (remote != null && remoteRecover != null && remoteRecover.test(remote.id())) {
+      return new PickupResult(PickupStatus.REQUESTED, "corpse");
+    }
     return PickupResult.NONE;
   }
 
+  private RemoteCorpse remoteCorpseAt(float worldX, float worldY) {
+    for (RemoteCorpse corpse : remoteCorpses) {
+      if (corpse.hasContents() && distanceSquared(worldX, worldY, corpse.x(), corpse.y()) <= 32f * 32f)
+        return corpse;
+    }
+    return null;
+  }
+
   public void clear() {
+    remoteCorpses = List.of();
     items.clear();
     corpses.clear();
     dropsByWorld.clear();

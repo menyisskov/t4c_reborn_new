@@ -66,6 +66,48 @@ class OnlineItemUseTest {
         OnlineItemUse.prepareUse(state(p), charge.id(), NOW, new Random(5), multi, SpellCatalog.loadBundled())).getMessage());
   }
 
+  @Test void manaPotionRestoresItsAuthoredManaConsumesOneAndRefusesAtFullMana() throws Exception {
+    var items = ItemCatalog.loadBundled();
+    var spells = SpellCatalog.loadBundled();
+    var stack = new CharacterProgress.Item(UUID.randomUUID(), "item.potion_of_mana", 2, 1);
+    var low = progress(new CharacterProgress.Vitals(10, 100, 5, 40), List.of(stack), Map.of(), Map.of());
+    var used = OnlineItemUse.prepareUse(state(low), stack.id(), NOW, new Random(5), items, spells);
+    assertEquals(25, used.manaGained());
+    assertEquals(30, used.progress().vitals().mana());
+    assertEquals(0, used.healthGained());
+    assertEquals(1, used.progress().inventory().get(0).quantity(), "exactly one unit leaves the stack");
+    // The clamp is the offline one: a pool two short of full gains two.
+    var nearly = progress(new CharacterProgress.Vitals(10, 100, 38, 40), List.of(stack), Map.of(), Map.of());
+    assertEquals(2, OnlineItemUse.prepareUse(state(nearly), stack.id(), NOW, new Random(5), items, spells).manaGained());
+    // Offline refuses a potion at full mana; so does the server, keeping the stack.
+    var full = progress(new CharacterProgress.Vitals(10, 100, 40, 40), List.of(stack), Map.of(), Map.of());
+    assertEquals("no_mana_needed", assertThrows(PreviewWorld.Rejected.class, () ->
+        OnlineItemUse.prepareUse(state(full), stack.id(), NOW, new Random(5), items, spells)).getMessage());
+  }
+
+  @Test void healingPotionsAddNoExhaustionSoTheNextPotionWorksAtOnce() throws Exception {
+    var items = ItemCatalog.loadBundled();
+    var spells = SpellCatalog.loadBundled();
+    var heal = new CharacterProgress.Item(UUID.randomUUID(), "item.healing_potion", 2, 1);
+    var mana = new CharacterProgress.Item(UUID.randomUUID(), "item.potion_of_mana", 1, 1);
+    var p = progress(new CharacterProgress.Vitals(10, 100, 5, 40), List.of(heal, mana), Map.of(), Map.of());
+    var first = OnlineItemUse.prepareUse(state(p), heal.id(), NOW, new Random(5), items, spells);
+    assertEquals(50, first.healthGained());
+    assertEquals(0, first.progress().cooldowns().getOrDefault(OnlineCasting.MENTAL_EXHAUSTION, 0L));
+    var second = OnlineItemUse.prepareUse(state(first.progress()), mana.id(), NOW, new Random(5), items, spells);
+    assertEquals(25, second.manaGained());
+  }
+
+  @Test void buffPotionsAreRefusedWithAClearCodeAndNothingChanges() throws Exception {
+    var items = ItemCatalog.loadBundled();
+    var spells = SpellCatalog.loadBundled();
+    var buff = new CharacterProgress.Item(UUID.randomUUID(), "item.potion_of_fortitude", 1, 1);
+    var p = progress(new CharacterProgress.Vitals(10, 100, 5, 40), List.of(buff), Map.of(), Map.of());
+    var code = assertThrows(PreviewWorld.Rejected.class, () ->
+        OnlineItemUse.prepareUse(state(p), buff.id(), NOW, new Random(5), items, spells)).getMessage();
+    assertTrue(code.equals("no_effect") || code.equals("unsupported_spell"), code);
+  }
+
   private static OnlineStore.CharacterState state(CharacterProgress p) {
     return new OnlineStore.CharacterState(UUID.randomUUID(), UUID.randomUUID(), "Drinker", 0, 3, 3, 0, 0, 0, p);
   }

@@ -16,7 +16,7 @@ import java.util.Set;
  */
 public final class SpellCatalog {
   private static final Set<Integer> CAST_EFFECTS = Set.of(1, 2);
-  private static final Set<Integer> ITEM_EFFECTS = Set.of(1);
+  private static final Set<Integer> ITEM_EFFECTS = Set.of(1, 2);
   private final SpellContent content;
 
   public SpellCatalog(SpellContent content) {
@@ -28,7 +28,10 @@ public final class SpellCatalog {
     switch (spell.use()) {
       case GRANT_ONLY -> { }
       case CAST -> requirePlain(spell, CAST_EFFECTS);
-      case ITEM -> requirePlain(spell, ITEM_EFFECTS);
+      case ITEM -> {
+        requirePlain(spell, ITEM_EFFECTS);
+        requireManaRestore(spell);
+      }
     }
   }
 
@@ -36,6 +39,14 @@ public final class SpellCatalog {
     if (spell.attack() || spell.pvp() || spell.effects().isEmpty()
         || !spell.effects().stream().allMatch(effect -> allowedEffects.contains(effect.type())))
       throw new IllegalArgumentException("unsupported_spell");
+  }
+
+  /** A consumable mana effect must be a restore on MANA; any other type-2 effect is a buff the server cannot run. */
+  private static void requireManaRestore(SpellContent.Spell spell) {
+    boolean ok = spell.effects().stream().filter(effect -> effect.type() == 2)
+        .allMatch(effect -> effect.params().stream()
+            .anyMatch(param -> param.id() == 2 && "MANA".equalsIgnoreCase(param.expression())));
+    if (!ok) throw new IllegalArgumentException("unsupported_spell");
   }
 
   /** The named spell, whatever its use. Unknown keys are refused. */
