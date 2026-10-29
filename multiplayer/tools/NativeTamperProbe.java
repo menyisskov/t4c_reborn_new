@@ -817,8 +817,8 @@ public final class NativeTamperProbe {
     }
     String dupKey="{\"requestId\":\""+UUID.randomUUID()+"\",\"name\":\"Tm"+randomLetters(6)+"\",\"characterClass\":\"warrior\",\"gender\":\"male\",\"evil\":false,\"evil\":true}";
     tamper("EDIT-create-dup-field","character creation with a duplicated field","400",r->r.is(400),()->post("/account/characters",creation,dupKey));
-    tamper("EDIT-create-class","character creation of an unsupported class (mage)","400 unsupported_class",r->r.is(400),
-        ()->post("/account/characters",creation,"{\"requestId\":\""+UUID.randomUUID()+"\",\"name\":\"Tm"+randomLetters(6)+"\",\"characterClass\":\"mage\",\"gender\":\"male\",\"evil\":false}"));
+    tamper("EDIT-create-class","character creation of an unsupported class (necromancer; mage became a supported class with caster creation)","400 unsupported_class",r->r.is(400),
+        ()->post("/account/characters",creation,"{\"requestId\":\""+UUID.randomUUID()+"\",\"name\":\"Tm"+randomLetters(6)+"\",\"characterClass\":\"necromancer\",\"gender\":\"male\",\"evil\":false}"));
     row("EDIT-create-count","characters on A's account after the creation tampering","unchanged",
         "roster "+rosterBefore+"->"+rosterCount(),rosterBefore==rosterCount());
     var fin=dbA();
@@ -900,14 +900,18 @@ public final class NativeTamperProbe {
     boolean reached=false;
     long until=System.nanoTime()+TimeUnit.SECONDS.toNanos(75);
     int[] cur=null;
+    int lastX=0,lastY=0;
     while(System.nanoTime()<until) {
       var p=pos();
-      int cx=(int)Math.floor(p[1]),cy=(int)Math.floor(p[2]);
+      // The server finishes a claimed tile (single-player's grid reservation rule), so plan from the tile the
+      // player is ARRIVING on (the last direction sent), not from the floor of a mid-glide position.
+      int cx=arrivingTile(p[1],lastX),cy=arrivingTile(p[2],lastY);
       cur=new int[]{cx,cy};
       if(cx==tx && cy==ty) { reached=true;break; }
       int[] next=nextStep(plan,cx,cy,tx,ty);
       if(next==null) break;
-      aPost("/input",aEpoch+" "+(seq++)+" "+Integer.signum(next[0]-cx)+" "+Integer.signum(next[1]-cy));
+      lastX=Integer.signum(next[0]-cx);lastY=Integer.signum(next[1]-cy);
+      aPost("/input",aEpoch+" "+(seq++)+" "+lastX+" "+lastY);
       Thread.sleep(25);
     }
     // Standing still on the tile: a transfer would be committed within a few ticks.
@@ -923,6 +927,13 @@ public final class NativeTamperProbe {
     row("PORTAL-refused","stand on the refused portal source tile 2964,1038 (target world 1, unhosted)","no transfer: region key 'start', world 0, same epoch, session alive",
         String.format("position %.1f,%.1f; region key %s; committed world %d; state %d",p[1],p[2],key,fin.world(),aGet("/state").status),
         key.equals("start") && fin.world()==WORLD && aGet("/state").is(200));
+  }
+
+  /** Tile index a glide is arriving on: the centre-rounded tile at rest, else the next tile in the last direction sent. Mirrors HostedTransferTest.walkPortal. */
+  static int arrivingTile(double c,int last) {
+    int tile=(int)Math.round(c-.5);
+    if(Math.abs(c-Math.floor(c)-.5)>1e-6) tile=last>0 ? (int)Math.ceil(c-.5) : last<0 ? (int)Math.floor(c-.5) : tile;
+    return tile;
   }
 
   private static int[] nextStep(HostedRegionPlan plan,int sx,int sy,int tx,int ty) {
