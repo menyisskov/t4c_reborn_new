@@ -1239,13 +1239,19 @@ public final class OnlineStore implements AutoCloseable {
             q.setLong(4,motion.targetEpoch());q.setLong(5,attack.nextNext());
             q.setString(6,attack.key());q.setObject(7,attack.life());q.setLong(8,motion.revision());
             q.setObject(9,attack.targetCharacter());q.setLong(10,attack.expectedNext());
-            if(q.executeUpdate()!=1) throw new Conflict("Creature attack changed or not due");
+            if(q.executeUpdate()!=1) {
+              if (attackDeadlineNotDue(c,attack)) { c.commit();return new RewardResult(false,state); }
+              throw new Conflict("Creature attack changed or not due");
+            }
           }
         } else {
           try(var q=c.prepareStatement("UPDATE online_spawns SET next_attack_at=?,state_revision=state_revision+1 WHERE spawn_key=? AND event_id=? AND current_x IS NULL AND target_character=? AND next_attack_at=? AND next_attack_at<=floor(extract(epoch FROM clock_timestamp())*1000) AND died_at IS NULL AND COALESCE(health,1)>0")) {
             q.setLong(1,attack.nextNext());q.setString(2,attack.key());q.setObject(3,attack.life());
             q.setObject(4,attack.targetCharacter());q.setLong(5,attack.expectedNext());
-            if(q.executeUpdate()!=1) throw new Conflict("Creature attack changed or not due");
+            if(q.executeUpdate()!=1) {
+              if (attackDeadlineNotDue(c,attack)) { c.commit();return new RewardResult(false,state); }
+              throw new Conflict("Creature attack changed or not due");
+            }
           }
         }
         long goldLost=death==null ? 0 : death.goldLost(),xpLost=death==null ? 0 : death.experienceLost();
@@ -1268,6 +1274,30 @@ public final class OnlineStore implements AutoCloseable {
         }
         state=load(c,session.accountId(),session.characterId(),false);c.commit();return new RewardResult(true,state);
       } catch(SQLException|RuntimeException failure) { c.rollback();throw failure; }
+    }
+  }
+
+  /** A due-time miss is deferrable only while every attack CAS precondition still matches. */
+  private static boolean attackDeadlineNotDue(Connection c,MonsterAttack attack) throws SQLException {
+    try(var q=c.prepareStatement("""
+        SELECT event_id,state_revision,target_character,next_attack_at,current_x,health,died_at,
+          next_attack_at>floor(extract(epoch FROM clock_timestamp())*1000)
+        FROM online_spawns WHERE spawn_key=? FOR UPDATE
+        """)) {
+      q.setString(1,attack.key());
+      try(var rows=q.executeQuery()) {
+        if(!rows.next()) return false;
+        UUID event=rows.getObject(1,UUID.class),target=rows.getObject(3,UUID.class);
+        long rowRevision=rows.getLong(2),deadline=rows.getLong(4);
+        Double currentX=rows.getObject(5,Double.class);
+        Integer health=rows.getObject(6,Integer.class);
+        var motion=attack.motion();
+        boolean expected=attack.life().equals(event) && attack.targetCharacter().equals(target)
+            && attack.expectedNext()==deadline && rows.getTimestamp(7)==null
+            && (health==null || health>0)
+            && (motion==null ? currentX==null : motion.revision()==rowRevision);
+        return expected && rows.getBoolean(8);
+      }
     }
   }
 

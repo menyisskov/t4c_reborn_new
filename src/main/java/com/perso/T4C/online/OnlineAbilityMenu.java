@@ -22,16 +22,16 @@ import java.util.function.Function;
  * never talks to the network: the caller sends the returned {@link Action} through the connection and
  * the server stays the authority on mana, cooldown, exhaustion and effect.
  */
-final class OnlineAbilityMenu {
-  enum Kind { NONE, SPELLS, POTIONS }
+public final class OnlineAbilityMenu {
+  public enum Kind { NONE, SPELLS, POTIONS }
 
   /** A spell key or potion identity; creature-targeted engine spells also require a live target id. */
-  record Action(Kind kind, String spellKey, UUID item, boolean requiresCreatureTarget) {}
+  public record Action(Kind kind, String spellKey, UUID item, boolean requiresCreatureTarget) {}
 
   private final Function<String, ItemDefinition> items;
   private Kind open = Kind.NONE;
 
-  OnlineAbilityMenu() {
+  public OnlineAbilityMenu() {
     this(ItemRegistry::findByKey);
   }
 
@@ -39,15 +39,15 @@ final class OnlineAbilityMenu {
     this.items = items;
   }
 
-  boolean isOpen() {
+  public boolean isOpen() {
     return open != Kind.NONE;
   }
 
-  Kind kind() {
+  public Kind kind() {
     return open;
   }
 
-  void close() {
+  public void close() {
     open = Kind.NONE;
   }
 
@@ -55,18 +55,18 @@ final class OnlineAbilityMenu {
    * Pressing the key of the open list closes it, the other key switches lists. When the character is
    * dead or disconnected the press is ignored and nothing stays open.
    */
-  void toggle(Kind requested, boolean available) {
+  public void toggle(Kind requested, boolean available) {
     if (requested == Kind.NONE || !available || open == requested) open = Kind.NONE;
     else open = requested;
   }
 
   /** True only for a connected character that is alive. */
-  static boolean available(String status, CharacterProgress progress) {
+  public static boolean available(String status, CharacterProgress progress) {
     return "connected".equals(status) && progress != null && progress.vitals().hp() > 0;
   }
 
   /** Resolves only the currently selected, still-living creature from the latest server snapshot. */
-  static OptionalLong liveCreatureTarget(long selectedId, List<CreatureView> creatures) {
+  public static OptionalLong liveCreatureTarget(long selectedId, List<CreatureView> creatures) {
     if (selectedId <= 0 || creatures == null) return OptionalLong.empty();
     return creatures.stream()
         .filter(creature -> creature.id() == selectedId && creature.health() > 0)
@@ -78,7 +78,7 @@ final class OnlineAbilityMenu {
    * Digit 1-9 picks a row of the open list. A chosen row closes the list; a digit with no row, or a
    * press while unavailable, returns empty (an unavailable state also closes the list).
    */
-  Optional<Action> choose(int digit, CharacterProgress progress, SpellContentV2 engineCatalog,
+  public Optional<Action> choose(int digit, CharacterProgress progress, SpellContentV2 engineCatalog,
       SpellContent potionAllowlist, boolean available) {
     if (!isOpen()) return Optional.empty();
     if (!available) {
@@ -94,6 +94,11 @@ final class OnlineAbilityMenu {
                 .map(row -> new Action(Kind.POTIONS, null, row.instance(), false));
     picked.ifPresent(action -> close());
     return picked;
+  }
+
+  /** Uses the same bundled spell catalogs as the native online client. */
+  public Optional<Action> choose(int digit, CharacterProgress progress, boolean available) {
+    return choose(digit, progress, OnlineSpellAllowlistV2.bundled(), OnlineSpellAllowlist.bundled(), available);
   }
 
   /** Compatibility overload for the preview harness; spells use the bundled v2 engine catalog. */
@@ -124,6 +129,11 @@ final class OnlineAbilityMenu {
       lines.add(I18n.key("online.ability.potions_close"));
     }
     return lines;
+  }
+
+  /** Builds the current list using the same bundled catalogs as the native online client. */
+  public List<String> lines(CharacterProgress progress) {
+    return lines(progress, OnlineSpellAllowlistV2.bundled(), OnlineSpellAllowlist.bundled());
   }
 
   private static void more(List<String> lines, int total) {

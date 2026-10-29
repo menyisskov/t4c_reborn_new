@@ -136,6 +136,53 @@ class OnlineRetaliationTest {
     } finally { sessions.shutdown(); }
   }
 
+  @Test void applicationClockAheadOfDatabaseDeadlineDefersAttackWithoutDisconnect() throws Exception {
+    var store=OnlineStore.fromEnvironment(); store.migrate();
+    var gson=new Gson();
+    var json=gson.toJsonTree(MonsterCatalog.loadBundled().monsters().get("Olin Haad Guard 3")).getAsJsonObject();
+    json.addProperty("health",100000);
+    json.add("attacks",JsonParser.parseString("[{\"name\":\"1d1+1000\",\"value1\":1000000,\"value2\":100}]"));
+    var definition=gson.fromJson(json,MonsterDef.class);
+    var spawn=new MonsterContent.Spawn("clock-skew-retaliation-"+UUID.randomUUID(),definition.getName(),3,3,0,false,false);
+    var map=new PreviewMap(new boolean[10][10],0,0,1,1);
+    var world=new PreviewWorld(map,new MonsterContent(MonsterContent.VERSION,Map.of(definition.getName(),definition),List.of(spawn)));
+    var sessions=new PersistentSessions(store,map,world);
+    var account=store.provisionAccount();
+    var progress=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(1)).progress();
+    var progressJson=gson.toJsonTree(progress).getAsJsonObject();
+    progressJson.getAsJsonObject("vitals").addProperty("hp",1500);
+    progressJson.getAsJsonObject("vitals").addProperty("maxHp",1500);
+    progressJson.add("respawn",JsonParser.parseString("{\"world\":0,\"x\":1.5,\"y\":1.5}"));
+    progress=gson.fromJson(progressJson,CharacterProgress.class);
+    var character=store.create(account.accountId(),"Clock skew target",0,3.5,3.5,progress,0);
+    long started=System.nanoTime(); var lease=store.acquire(account.secret(),character.id());
+    var token=sessions.join(lease,started).token();
+    try(var creatures=new PersistentCreatures(store,world)) {
+      var rolls=new Random(1) { @Override public int nextInt(int bound) { return bound-1; } };
+      var melee=new OnlineMelee(map,world,sessions,creatures,ItemCatalog.loadBundled(),rolls,System::currentTimeMillis);
+      var provoke=melee.attack(token,0,1).toCompletableFuture();
+      await(sessions,creatures,provoke::isDone); provoke.get();
+      await(sessions,creatures,() -> available(creatures));
+      var before=creatures.life(1);
+      long persistedDeadline=before.nextAttackAt();
+      assertTrue(persistedDeadline>System.currentTimeMillis());
+
+      var retaliation=new OnlineRetaliation(map,world,sessions,creatures,ItemCatalog.loadBundled(),rolls,
+          () -> persistedDeadline+60_000);
+      retaliation.step();
+      await(sessions,creatures,() -> available(creatures));
+
+      var after=store.load(account.accountId(),character.id());
+      var afterSpawn=creatures.life(1);
+      assertTrue(sessions.belongs(token,world),"A not-yet-due attack is deferred without disconnecting the target");
+      assertEquals(1,after.revision(),"A deferred attack does not revise the character");
+      assertEquals(1500,after.progress().vitals().hp(),"A deferred attack does not alter health");
+      assertEquals(persistedDeadline,afterSpawn.nextAttackAt(),"A deferred attack preserves its persisted deadline");
+      assertEquals(before.stateRevision(),afterSpawn.stateRevision(),"A deferred attack preserves the spawn CAS revision");
+      assertEquals(character.id(),afterSpawn.targetCharacter(),"A deferred attack preserves aggro");
+    } finally { sessions.shutdown(); }
+  }
+
   private static boolean available(PersistentCreatures creatures) {
     try { creatures.life(1); return true; } catch(PreviewWorld.Rejected busy) { return false; }
   }

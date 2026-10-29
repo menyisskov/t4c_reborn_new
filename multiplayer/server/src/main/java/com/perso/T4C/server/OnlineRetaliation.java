@@ -128,8 +128,8 @@ final class OnlineRetaliation {
             creatures.release(spawn.id());
             // Reload authoritative next attack and life after both known and uncertain outcomes.
             creatures.damageCommitted(spawn.id());
-            // A lost commit acknowledgement may still have cleared every persisted target.
-            if (fatal) creatures.characterDied(saved.id());
+            // A deferred deadline leaves aggro intact; a failed acknowledgement still reloads all targets.
+            if (fatal && (error!=null || result!=null && result.applied())) creatures.characterDied(saved.id());
           });
     } catch (RuntimeException failure) { creatures.release(spawn.id()); throw failure; }
   }

@@ -359,6 +359,24 @@ class RemoteWorldDriverTest {
     assertTrue(driver.otherPlayers().isEmpty());
   }
 
+  @Test
+  void anotherPlayerWalksWhileItGlidesToANewPositionAndRestsWhenItArrives() {
+    view =
+        view(1, MAP.region(), List.of(actor(OWN, 3.5, 5.5, 100, 100), actor(9, 10.5, 12.5, 40, 80)),
+            List.of(), List.of(), List.of());
+    tick(0.016f);
+    Player other = driver.otherPlayers().get(0);
+    assertFalse(other.getMovement().isMoving(), "placed, not walking");
+
+    view =
+        view(2, MAP.region(), List.of(actor(OWN, 3.5, 5.5, 100, 100), actor(9, 13.5, 12.5, 40, 80)),
+            List.of(), List.of(), List.of());
+    tick(0.016f);
+    assertTrue(other.getMovement().isMoving(), "on its way to the new tile");
+    for (int i = 0; i < 100; i++) tick(0.05f);
+    assertFalse(other.getMovement().isMoving(), "arrived");
+  }
+
   // --- the session ---
 
   @Test

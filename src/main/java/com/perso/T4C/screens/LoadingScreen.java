@@ -115,7 +115,8 @@ public class LoadingScreen implements Screen {
         }
         failedSounds.clear();
       } else {
-        game.setScreen(new CharacterSelectionScreen(game));
+        if (game.onlineLobbyLaunch()) game.showOnlineLobby();
+        else game.setScreen(new CharacterSelectionScreen(game));
       }
     }
   }

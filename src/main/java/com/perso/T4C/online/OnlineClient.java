@@ -185,6 +185,13 @@ public final class OnlineClient extends ApplicationAdapter {
     this.endpoint = endpoint;
   }
 
+  public static boolean persistentViewReady(OnlineConnection.View view) {
+    if (view==null || view.map()==null || view.snapshot()==null || view.character()==null
+        || view.character().progress()==null || !view.map().persistent()
+        || view.snapshot().players()==null || !view.map().region().equals(view.snapshot().region())) return false;
+    return view.snapshot().players().stream().anyMatch(actor -> actor!=null && actor.id()==view.ownId());
+  }
+
   public static void main(String[] args) {
     OnlineNativeLibrary.configure();
     boolean lobbyRequested =
@@ -203,9 +210,8 @@ public final class OnlineClient extends ApplicationAdapter {
       }
     }
     if (OnlineLobbyLaunch.select(lobbyRequested, loadedProfile != null) == OnlineLobbyLaunch.Mode.LOBBY) {
-      client.lobbyAccountKey = loadedProfile.secret();
-      client.lobbyModel = loadedProfile.lobbyModel();
-      // Nothing connects until the player confirms a character.
+      com.perso.T4C.MyGame.launchOnlineLobby(endpoint,loadedProfile.secret(),loadedProfile.lobbyModel());
+      return;
     } else if (loadedProfile != null) {
       client.credentials = loadedProfile.directCredentials();
     }
