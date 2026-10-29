@@ -296,3 +296,40 @@ Limits. The 12-minute length and the paced reconnect churn are unchanged, so the
 The skew was inferred from the logged JVM time against the database time inside the failing transaction (a few milliseconds each);
 production hosts with a different clock offset see the same race, which is why the deferral matters beyond this machine.
 Local PG16 evidence only. This does **not** pass the soak gate, M5 or Beta.
+
+### Rerun with the hosted skeleton cave (T4C-0301, 2026-10-29): passed the tool's zero-error criterion
+
+PR #260 (T4C-0300) hosts the closed skeleton cave (hosted spawns about 50 to about 80, portals 12-15 enabled) and was not
+soaked before review. Same setup as the fixed-main run: fresh disposable PostgreSQL 16 cluster on loopback 56941, one
+`ServerMain --online` child on 18811 from the PR head `cd0f2953` (PR #260 then merged at `21378cca`; its one later commit changes only a test message; protocol 7, region `skeleton-cave` loaded), a private control
+file, twenty paced adapters, 720 s. The wrapper exited 0 and the report ran to completion (`finished: true`, 720.095 s). The server was
+stopped through the private `/admin/shutdown` (200), the cluster destroyed, and the sanitized report stays in TEMP, not committed.
+Local PG16 evidence only.
+
+| Metric (12 minutes) | Fixed main `f7f8c26f` (T4C-0298) | PR #260 head `cd0f2953` (this run) |
+| --- | --- | --- |
+| Time at 20 adapters | 403.3 s (56.0%) | 403.0 s (56.0%) |
+| Time at 19 or more | 97.3% | 97.4% (701.1 s) |
+| Adapter failures | 0 | 0 |
+| Reconnects (scheduled) | 96 | 96 |
+| Database rollbacks / deadlocks | 0 / 0 | 0 / 0 (commits 3,326 to 80,957) |
+| `/health` tick rate | 34.000 Hz, mean 1.12 ms | 33.999 Hz, mean 1.55 ms, 0 failures, tick deficit proxy 0.94 |
+| "Online persistence failed" lines | 0 | 0 (the whole server log is three startup lines) |
+| Server ticks | not recorded | 26,357 ok, 0 failed, mean 2.26 ms, max 23.9 ms, 0 over budget, 0 deadline resets, max deadline debt 6.7 ms |
+| Attacks / recoveries | 1,575 / 18 | 1,402 / 16 |
+| Commands accepted / rejected | 999 / 593 | 911 / 507 |
+| Command latency (ms, all adapters) | `<=250` 159, `<=500` 1,402, `<=1000` 31 | `<=250` 164, `<=500` 1,244, `<=1000` 10 |
+| HTTP non-2xx | not recorded | only 409: `/attack` 503, `/input` 27, `/recover` 4 (no 503, no 401) |
+| Peak heap used / process CPU | not recorded / not recorded | 623 MiB / 281.6 s (see below) |
+
+Reading it. No regression in any measured gate: occupancy, failures, reconnects, rollbacks and tick rate match the baseline, and no
+persistence failure of any operation appeared. Mean `/health` latency (1.55 ms against 1.12 ms) and the lower attack count are within
+the run-to-run spread seen between earlier runs (0.49 to 1.27 ms for `/health`). Process CPU of 281.6 s over 775 s of server uptime is higher
+than the 175 to 178 s recorded for the earlier twelve-minute runs, although mean tick cost (2.26 ms against 2.29 ms in T4C-0288) did not rise;
+the baseline for fixed main was not captured, so this is reported, not explained. The extra CPU is not visible in any tick, deadline or latency
+figure.
+
+Limits. The soak tool never walks a portal (`worldTransfers` 0), so the adapters stayed in the starting world and Lighthaven; the skeleton
+cave was loaded and its creatures simulated, but no adapter entered it. This run therefore shows that hosting the extra region does not
+degrade the existing twenty-player load; it says nothing about players inside the cave. The 56% at twenty remains the tool's reconnect-churn
+ceiling. Local PG16 evidence only; this does **not** pass the soak gate, M5 or Beta. No server code was changed.
