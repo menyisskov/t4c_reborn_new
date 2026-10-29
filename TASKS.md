@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0296`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0300`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0299 | Online quest catalog fail-closed gate: every hosted quest must have a hosted giver and a completable kill ground | Multiplayer / M3 | Done | this PR | [2026-10-29](CHANGELOG.md) |
 | T4C-0295 | Expose the committed online inventory/equipment panel in the real game screen and route equip/unequip over the persistent socket | Multiplayer / parity | In Progress (focused client tests 30/30 passed; package and changed-file format checks passed; PR pending) | pending | [CHANGELOG.md](CHANGELOG.md#2026-10-29--online-inventory-and-equipment-are-available-in-the-game-screen-t4c-0295) |
 | T4C-0294 | Make server-authoritative NPC shops accessible in the real online game screen over the persistent socket | Multiplayer / parity | Done (PR #254 merged at `4bdc6535`; focused local tests 48/48 passed) | PR #254 (`4bdc6535`) | [CHANGELOG.md](CHANGELOG.md#2026-10-29--online-shopkeepers-are-accessible-in-the-real-game-t4c-0294) |
 | T4C-0293 | Feed the online lobby into the real game screen and make lobby updates refreshable | Multiplayer / parity | Done (PR #253 merged; local checks passed) | PR #253 | no player-visible change beyond online lobby |
