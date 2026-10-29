@@ -11,7 +11,7 @@ commit links, and finer-grained notes.
 ### Fixed
 - Online monsters can now use authored Heal Serious (10616) to heal themselves, capped at their authored maximum HP; the heal and next-attack deadline commit together, without damaging the player they were retaliating against.
 
-## 2026-10-30 — Monster clan fights use authored damage spells online (T4C-0317)
+## 2026-10-30 — Online monsters use authored attack ranges (T4C-0320)  ### Changed - Online monsters with authored ranged attacks now stop and attack at their authored range; hostile-clan combat honors the same range while preserving line-of-sight and the existing melee fallback. Offline behavior is unchanged.  ## 2026-10-30 — Monster clan fights use authored damage spells online (T4C-0317)
 
 ### Fixed
 - In close-range hostile monster-clan fights online, supported authored elemental and armor-damage spells now resolve instead of producing zero damage from empty dice text; committed outcomes keep the existing durable life and restart behavior.

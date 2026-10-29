@@ -25,6 +25,25 @@ class OnlineMonsterPursuitTest {
     return new OnlineMonsterPursuit.TargetView(id, epoch, 0, "start", x, y, true, true, true);
   }
 
+  @Test void authoredRangedMonsterStopsAtItsSpellRangeInsteadOfClosingToMelee() throws Exception {
+    var definition=MonsterCatalog.loadBundled().monsters().get("Goblin Bomberman");
+    assertNotNull(definition);
+    assertTrue(definition.getAttacks().stream().anyMatch(attack -> attack!=null && attack.isSpell()
+        && attack.getMaxRangeTiles()>2), "The fixture must retain its authored ranged spell");
+    var map=new PreviewMap(new boolean[10][30],0,0,1,3);
+    var spawn=new MonsterContent.Spawn("ranged","Goblin Bomberman",1,3,0,false,true);
+    UUID life=UUID.randomUUID(),character=UUID.randomUUID();
+    var chase=new OnlineMonsterPursuit(map,spawn,definition,"start",
+        new OnlineMonsterPursuit.Seed(life,1.5,3.5,OnlineMonsterPursuit.Mode.RETALIATION,character,7));
+    var inRange=chase.step(List.of(target(character,7,4.5,3.5)),STEP,false,false);
+    assertTrue(inRange.attackReady());
+    assertEquals(1.5,inRange.x(),1e-8,"Ranged attacks should not force the monster to close distance");
+    var outOfRange=new OnlineMonsterPursuit(map,spawn,definition,"start",
+        new OnlineMonsterPursuit.Seed(life,1.5,3.5,OnlineMonsterPursuit.Mode.RETALIATION,character,7))
+        .step(List.of(target(character,7,18.5,3.5)),STEP,false,false);
+    assertFalse(outOfRange.attackReady(),"Authored maximum spell range still applies");
+  }
+
   @Test void chasesThroughWallGapWithoutCrossingBlockedCells() throws Exception {
     boolean[][] cells = new boolean[9][10];
     for (int y = 0; y < 9; y++) if (y < 5 || y > 7) cells[y][4] = true;
