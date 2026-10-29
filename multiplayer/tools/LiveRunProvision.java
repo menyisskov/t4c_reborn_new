@@ -24,7 +24,7 @@ import java.util.Random;
 import java.util.UUID;
 
 /**
- * Operator tool for the live RENDERED two-client runs (T4C-0305). It provisions two disposable
+ * Operator tool for the live RENDERED two-client runs (T4C-0306). It provisions two disposable
  * accounts, one warrior each, into the database named by T4C_DB_URL / T4C_DB_USER / T4C_DB_PASSWORD
  * (the server must have migrated that database first) and writes two private profile files that
  * {@code OnlineLiveRunDriver} loads. Nothing is printed except non-secret labels.

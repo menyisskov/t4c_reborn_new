@@ -90,7 +90,7 @@ Required behavior:
   T4C-0216 passed local two-adapter HTTPS and separate standard-JSSE unknown-CA/hostname
   refusals; remote deployment and rendered-client acceptance still require verification.
 
-T4C-0305 (2026-10-29, local rendered, not remote): two real windows each selected their own operator-provisioned
+T4C-0306 (2026-10-29, local rendered, not remote): two real windows each selected their own operator-provisioned
 character in the lobby, drew each other, walked to Kilhiam and clicked him through the screen's own NPC click handler
 (each got exactly one letter; a repeat click and a greeting after a server stop/restart gave none); an out-of-range
 click was refused by the server. That ticks the Kilhiam appearance/talk bullet above. The dialogue bullet stays open:
@@ -117,7 +117,7 @@ Required behavior:
   No alternate pickup path bypasses corpse ownership or duplicates recovered contents.
 - [ ] Reconnect, restart and a lost pickup acknowledgement retain exactly the committed outcome.
 
-T4C-0305 (2026-10-29, local rendered): two level-8 warriors killed Skeletons by clicking them; a drop appeared in both
+T4C-0306 (2026-10-29, local rendered): two level-8 warriors killed Skeletons by clicking them; a drop appeared in both
 windows; two clients then clicked one drop (its 60 s owner window long over) at the same moment and the database shows
 exactly one claimant and one receipt, the loser refused on screen. Equip, an inventory refusal, a claim race inside the
 owner window, corpse recovery and reload-from-PostgreSQL of the final items were not driven, so every M2 bullet stays
@@ -187,7 +187,7 @@ Required behavior:
 - [ ] Level progression/stat allocation and required class behavior follow shared game rules.
   Single-player behavior and old save compatibility remain unchanged.
 
-T4C-0305 (2026-10-29, local rendered, warrior only): both windows fought Skeletons at the same time through the
+T4C-0306 (2026-10-29, local rendered, warrior only): both windows fought Skeletons at the same time through the
 monster click handler and both gained committed experience; one player died once (a corpse row exists) and respawned in
 the temple. That death was incidental, not a scripted death/respawn, targeting-contention, costs/cooldown or other-role
 scenario, so no M4 bullet is ticked.
@@ -208,7 +208,7 @@ Required behavior:
   expiry after a forced server-process kill; the integrated rendered and broader mutation cases remain open.
   T4C-0216 additionally checked two native adapter reconnects and committed movement over local
   trusted HTTPS, without a server restart or network fault.
-  T4C-0305 added the first RENDERED restart/reconnect (local, graceful stop only, 2026-10-29): with both windows
+  T4C-0306 added the first RENDERED restart/reconnect (local, graceful stop only, 2026-10-29): with both windows
   in the temple the server was stopped through the private shutdown and restarted on the same database; both
   clients showed the disconnect text, returned to the lobby with R, rejoined after the 33 s lease hold at the
   committed tile with identical inventory and saw each other again, and a greeting after the restart gave no

@@ -4,7 +4,7 @@ Last reviewed: 2026-10-27, Asia/Jerusalem. This file is the restart point for a 
 
 ## Read first
 
-### Latest live rendered evidence (T4C-0305, 2026-10-29)
+### Latest live rendered evidence (T4C-0306, 2026-10-29)
 
 Two real rendered windows were run against a real server on a disposable PostgreSQL cluster with the test-scope
 `OnlineLiveRunDriver` and `multiplayer/tools/LiveRunProvision.java`: lobby selection, mutual sight, Kilhiam talk, a graceful

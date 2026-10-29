@@ -552,7 +552,7 @@ Single-player is unchanged: `MainGameScreenGoldenTest` (3 tests, not skipped) an
 stage 0 and seam sets pass with the golden images untouched. Next: the reconnect-after-restart
 check and a longer two-rendered-client run (stage 1 exit), then stage 2.
 
-### 3.15 Live rendered two-client runs: sight, talk, restart, fight, loot (T4C-0305)
+### 3.15 Live rendered two-client runs: sight, talk, restart, fight, loot (T4C-0306)
 
 **Evidence class: rendered clients, local only.** Two real LibGDX windows (separate processes, each the
 real `MyGame` launcher and the real `MainGameScreen`, 1280x768, audio off) against one real
@@ -615,6 +615,7 @@ operator creates `server-restarted` in the sync directory after the restart.
 5. **Not edited: the pickup-race loser sees the generic refusal text** (`online.loot.refused`), not "someone else took it".
 6. After a server restart the lobby still holds the client 33 s (the 35 s lease hold is applied by the client whatever
    the cause). Safe, but a restart needs no hold; a UX point for the owner.
+8. Other players' legs: these runs used a build from before PR #266 (walk hold for other players), and the screenshots are single frames, so whether the other player's legs animate while walking was not observed and is not claimed. A later run on a build with #266 would show it.
 7. A game run rewrites the tracked `t4c-chat.log`; it must be reverted before committing.
 
 ## 4. Staged plan

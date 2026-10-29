@@ -35,7 +35,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Predicate;
 
 /**
- * Developer driver for LIVE rendered online runs (T4C-0297, extended by T4C-0305; test scope, not
+ * Developer driver for LIVE rendered online runs (T4C-0297, extended by T4C-0306; test scope, not
  * shipped, not a unit test). It is the real launcher game ({@link MyGame}: the lobby, then the real
  * {@link MainGameScreen} over a remote session) against a running server, plus a script that plays
  * a human. Run ONE process per player, each with its own window and its own account profile.
