@@ -651,7 +651,10 @@ public final class NativePursuitProbe {
         require(Math.abs(actor.y() - startY) < .25 && startX - actor.x() < 3.5
             && map.canStand(actor.x(), actor.y()),
             "Straight west retreat changed row, crossed collision or exceeded margin");
-        if (startX - actor.x() >= 3.0) {
+        // The server finishes a claimed tile (single-player's grid reservation rule), so a released key
+        // still completes the tile it was gliding into. Stop once the third west tile is claimed (past 2.0
+        // tiles from the tile-centre start); the glide then ends exactly 3.0 tiles away, never 4.
+        if (startX - actor.x() >= 2.05) {
           retreated = true;
           a.stopInput();
         } else a.direction(-1, 0);
