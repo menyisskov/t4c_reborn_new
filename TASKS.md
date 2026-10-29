@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0307`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0308`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0307 | Fix three small online defects found by the live two-client run: the public ground-loot view now counts the owner window down and clears the owner when it ends; a pickup lost to another player says so; simultaneous NPC talk reports a retryable busy message. Claim authority and protocol version unchanged; new refusal code `loot_taken` (old clients show the generic text) | Multiplayer/Fix | In Progress | PR | [2026-10-29](CHANGELOG.md#2026-10-29--online-loot-countdown-and-clearer-messages-t4c-0307) |
 | T4C-0306 | Live RENDERED two-client acceptance runs on a disposable PostgreSQL cluster: lobby selection, mutual sight, Kilhiam talk, server stop/restart and the disconnect-to-lobby rejoin, attack, loot drop and a simultaneous pickup race through the real screen; online NPC greetings show the character name instead of a literal placeholder; evidence and findings recorded | Multiplayer / M1, M2, M4, M5 evidence | Done (PR open) | pending | [2026-10-29](CHANGELOG.md) |
 | T4C-0305 | Online: other players now show their walking animation instead of floating, which the slower player speed (T4C-0302) had exposed | Multiplayer / parity | Done | this PR | [2026-10-29](CHANGELOG.md#2026-10-29--other-players-walk-instead-of-floating-in-online-play-t4c-0305) |
 | T4C-0304 | Host the Lighthaven interior in full and the three sewer levels below it (stairs 0-5), the only dungeon areas a player can walk to from the hosted crop | Multiplayer / M3 | Done (PR open) | pending | [2026-10-29](CHANGELOG.md) |

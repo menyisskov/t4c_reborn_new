@@ -483,7 +483,11 @@ public final class PreviewServer implements AutoCloseable {
             // Optional authored topic index; the NPC dispatcher rejects an index the NPC does not have.
             var topic=parts.length==4 ? java.util.OptionalInt.of(Integer.parseInt(parts[3])) : java.util.OptionalInt.empty();
             var pending=onWorld(()->{ admit(token,epoch);return persistent.interact(token,revision,parts[2],topic); });
-            json(exchange,observation,200,pending.toCompletableFuture().get(2,TimeUnit.SECONDS));
+            com.perso.T4C.online.model.NpcInteractionReply reply;
+            try { reply=pending.toCompletableFuture().get(2,TimeUnit.SECONDS); }
+            // A definite refusal (busy, revision) arrives as the completion's cause; unwrap it into its 409 code.
+            catch (ExecutionException error) { if(error.getCause() instanceof PreviewWorld.Rejected rejected) throw rejected; throw error; }
+            json(exchange,observation,200,reply);
           }
           case "/pickup" -> {
             if (persistent==null) throw new PreviewWorld.Rejected(404,"route");
@@ -664,7 +668,7 @@ public final class PreviewServer implements AutoCloseable {
     var self=region.world.position(token);
     var character=persistent.character(token).id();
     double viewerX=region.map.originX+self.x(),viewerY=region.map.originY+self.y();
-    var nearest=region.loot.snapshot().stream()
+    var nearest=region.loot.view().stream()
         .sorted(java.util.Comparator.comparingDouble(loot -> Math.max(Math.abs(loot.x()-viewerX),Math.abs(loot.y()-viewerY))))
         .limit(GROUND_LOOT_VIEW_LIMIT).toList();
     for (var loot : nearest) {

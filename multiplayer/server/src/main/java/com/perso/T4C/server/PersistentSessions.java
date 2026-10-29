@@ -23,7 +23,7 @@ final class PersistentSessions {
   private static final Set<String> CORPSE_REFUSALS=Set.of(OnlineStore.CORPSE_TOO_HEAVY,OnlineStore.CORPSE_ITEM_UNAVAILABLE);
   private static final Set<String> SHOP_REFUSALS=OnlineStore.SHOP_REFUSALS;
   private static final Set<String> PICKUP_REFUSALS=Set.of("revision","loot_unavailable","loot_reserved",
-      "out_of_range","too_heavy","unsupported_item","unsupported_pickup");
+      "out_of_range","too_heavy","unsupported_item","unsupported_pickup",OnlinePickupRules.LOOT_TAKEN);
   private final OnlineStore store;
   private final HostedWorlds hosted;
   /** Wall clock for absolute expiries and regeneration anchors; tests replace it. */
@@ -449,7 +449,8 @@ final class PersistentSessions {
     var region=binding.region;
     if (!region.loot.loaded()) throw new PreviewWorld.Rejected(503,"busy");
     var found=region.loot.get(Objects.requireNonNull(loot));
-    if (found==null) throw new PreviewWorld.Rejected(409,"loot_unavailable");
+    if (found==null) throw new PreviewWorld.Rejected(409,
+        region.loot.takenByOther(loot,binding.saved.id()) ? OnlinePickupRules.LOOT_TAKEN : "loot_unavailable");
     var position=region.world.position(token);
     binding.position=position;
     double x=region.map.originX+position.x(),y=region.map.originY+position.y();
@@ -754,7 +755,7 @@ final class PersistentSessions {
         var refused=binding.event;
         binding.event=null;
         // The database says this drop is no longer on the ground, so the cache was stale: drop it and re-sync.
-        if ("loot_unavailable".equals(completed.refusal())) {
+        if ("loot_unavailable".equals(completed.refusal()) || OnlinePickupRules.LOOT_TAKEN.equals(completed.refusal())) {
           binding.region.loot.remove(refused.loot());
           refreshLoot(binding.region);
         }
@@ -793,7 +794,7 @@ final class PersistentSessions {
 
   /** Runs only after a commit. A claimed drop leaves the cache; committed kill drops join it. */
   private void publishLoot(Binding binding,HostedWorlds.Region region,GameplayEvent event,OnlineStore.RewardResult reward) {
-    if (event.loot()!=null) region.loot.remove(event.loot());
+    if (event.loot()!=null) region.loot.removeClaimed(event.loot(),binding.saved.id());
     if (event.drops().isEmpty()) return;
     // A replayed kill's drops may already be claimed, so the database decides what this region holds.
     if (!reward.applied()) { refreshLoot(region); return; }
