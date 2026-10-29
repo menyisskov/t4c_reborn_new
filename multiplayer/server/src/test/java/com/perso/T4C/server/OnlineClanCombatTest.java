@@ -8,6 +8,7 @@ import com.perso.T4C.combat.CombatResolver;
 import com.perso.T4C.combat.MonsterCombatRules;
 import com.perso.T4C.combat.PhysicalAttackRequest;
 import com.perso.T4C.monster.core.MonsterDef;
+import com.perso.T4C.monster.core.MonsterSpellDamageRules;
 import com.perso.T4C.online.model.MonsterContent;
 import com.perso.T4C.server.persistence.OnlineStore;
 import java.util.List;
@@ -21,11 +22,16 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 /** The directed authored pair must commit through the same bounded creature worker as movement. */
 @EnabledIfEnvironmentVariable(named="T4C_DB_URL",matches=".+")
 class OnlineClanCombatTest {
-  @Test void goblinCanKillPassiveHorseWithoutPlayerRewardAndRestartKeepsItsLife() throws Exception {
+  @Test void goblinBombermanSpellCanKillPassiveHorseWithoutPlayerRewardAndRestartKeepsItsLife() throws Exception {
     var store=OnlineStore.fromEnvironment();store.migrate();
     var canonical=MonsterCatalog.loadBundled();
     var classified=MonsterCatalog.loadClassifiedBundled(canonical);
-    var goblin=canonical.monsters().get("Goblin");
+    var bomberJson=new Gson().toJsonTree(canonical.monsters().get("Goblin Bomberman")).getAsJsonObject();
+    var authoredSpell=canonical.monsters().get("Goblin Bomberman").getAttacks().stream()
+        .filter(MonsterDef.Attack::isSpell).findFirst().orElseThrow();
+    assertEquals(10219,authoredSpell.getSpellId());
+    bomberJson.add("attacks",new Gson().toJsonTree(List.of(authoredSpell)));
+    MonsterDef bomber=new Gson().fromJson(bomberJson,MonsterDef.class);
     var horseJson=new Gson().toJsonTree(canonical.monsters().get("Wild Horse")).getAsJsonObject();
     horseJson.addProperty("health",1);horseJson.addProperty("acMin",0);horseJson.addProperty("acMax",0);
     horseJson.addProperty("agi",1);
@@ -33,23 +39,24 @@ class OnlineClanCombatTest {
     MonsterDef horse=new Gson().fromJson(horseJson,MonsterDef.class);
     assertTrue(OnlineLootDrafts.supports(horse,ItemCatalog.loadBundled()));
     var expectedRolls=rolls();
-    var authored=MonsterCombatRules.chooseAttack(goblin.getAttacks(),expectedRolls);
-    assertNotNull(authored);
-    var sourceStats=MonsterCombatRules.resolve(goblin);
+    var sourceStats=MonsterCombatRules.resolve(bomber);
     var targetStats=MonsterCombatRules.resolve(horse);
-    int raw=MonsterCombatRules.rollDamage(authored.getName(),expectedRolls);
-    int authoredSkill=Math.max(1,authored.getValue1());
+    int rolled=OnlineMonsterSpellAttacks.rawDamage(bomber,authoredSpell.getSpellId(),expectedRolls);
+    int raw=MonsterSpellDamageRules.balanceElementalDamage(authoredSpell.getSpellId(),
+        Math.max(1,bomber.getLevel()),rolled,bomber.getName());
+    int authoredSkill=Math.max(1,authoredSpell.getValue1());
     var attacker=new CombatProfile(sourceStats.level(),sourceStats.strength(),sourceStats.endurance(),
         sourceStats.agility(),authoredSkill,authoredSkill,sourceStats.dodge(),
         MonsterCombatRules.rollArmor(sourceStats.armorMin(),sourceStats.armorMax(),expectedRolls),
         false,false,true,Map.of());
     int expectedDamage=CombatResolver.resolve(new PhysicalAttackRequest(attacker,
         targetStats.profile(false,expectedRolls),raw,0,false),expectedRolls).damage();
-    assertTrue(expectedDamage>0,"The authored attack skill must land this fixed physical roll");
-    var hunter=new MonsterContent.Spawn("Goblin","Goblin",3,3,0,false,true);
+    assertTrue(expectedDamage>0,"The authored spell damage must land this fixed combat roll");
+    var hunter=new MonsterContent.Spawn("Goblin Bomberman","Goblin Bomberman",3,3,0,false,true);
+    // Adjacent engagement keeps the established clan attack cadence while choosing its spell.
     var prey=new MonsterContent.Spawn("Horse","Wild Horse",4,3,0,false,false);
     var content=new MonsterContent(MonsterContent.VERSION,
-        Map.of(goblin.getName(),goblin,horse.getName(),horse),List.of(hunter,prey));
+        Map.of(bomber.getName(),bomber,horse.getName(),horse),List.of(hunter,prey));
     var map=new PreviewMap(new boolean[10][10],0,0,3,3);
     UUID hunterLife,preyLife;
     var world=new PreviewWorld(map,content);
@@ -63,7 +70,7 @@ class OnlineClanCombatTest {
         Thread.sleep(5);
         saved=store.loadOrCreateSpawn(prey.persistenceKey());
       }
-      assertNotNull(saved.diedAt(),"A real directed physical exchange must kill the one-HP passive defender");
+      assertNotNull(saved.diedAt(),"A real directed authored spell must kill the one-HP passive defender");
       assertEquals("CLAN",saved.deathKind());assertNull(saved.recipient());assertNull(saved.claimedAt());
       assertEquals(Math.max(0,horse.getHealth()-expectedDamage),saved.health());
       assertEquals(preyLife,saved.eventId());
@@ -83,9 +90,9 @@ class OnlineClanCombatTest {
   }
 
   private static Random rolls() {
-    // Give the horse its authored dodge while separating the Goblin's authored skill from
-    // its lower generic agility-plus-level score on the same deterministic exchange.
+    // Force a low dodge roll so this zero-skill spell exercises damage instead of a miss.
     return new Random(1) { @Override public int nextInt(int bound) {
+      if (bound==90) return 0;
       return bound>=80 ? Math.min(30,bound-1) : bound-1;
     } };
   }

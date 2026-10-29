@@ -4,6 +4,17 @@ Last reviewed: 2026-10-27, Asia/Jerusalem. This file is the restart point for a 
 
 ## Read first
 
+### Hostile clan spell damage (T4C-0317, 2026-10-30)
+
+On branch `codex/clan-spell-0317` based on main `7249c3d4`, online clan combat now filters
+authored attacks by the established adjacent cadence, rolls supported elemental/armor-damage
+spells and applies the same monster-vs-monster combat resolution as offline. The Goblin
+Bomberman spell 10219 → Wild Horse PostgreSQL test passed 1/1 and persisted the death/life
+identity through restart with no player reward; server package and diff check passed. No
+schema/protocol change or rendered-client run. Two earlier failures remain preserved in `%TEMP%`
+and are summarized in `ACCEPTANCE.md`. Current task is delivery/review of PR #278; after merge,
+continue with the remaining exact gameplay parity gaps, not Beta completion.
+
 ### Live rendered gameplay panels (T4C-0312, 2026-10-29)
 
 A second rendered pass drove the inventory (equip/unequip with a restart and rejoin), Light Heal and a healing potion

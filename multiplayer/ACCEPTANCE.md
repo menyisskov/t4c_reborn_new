@@ -20,6 +20,15 @@ Local tests passed: `OnlineCreateFormTest` 7/7, `OnlineCharacterCreatorTest` 2/2
 `OnlineCharacterCreationTest` 2/2 on a disposable local cluster. Archer remains unavailable;
 no rendered-client or broader class-combat acceptance is claimed.
 
+T4C-0317 verifies the authored Goblin Bomberman spell 10219 against its directed hostile
+Wild Horse clan target on a disposable local PostgreSQL 16 cluster: the damage/death commit
+preserved the creature life identity through restart and awarded no player reward. The exact
+`OnlineClanCombatTest` run passed 1/1, the server package built, and `git diff --check` passed.
+The cluster was destroyed. Two failed fixture attempts are retained in `%TEMP%` and noted in
+`PEER_WORK.md`; one exposed the spell's authored zero attack skill, the other exposed that the
+existing pursuit controller grants clan attacks only at adjacent range. This evidence is backend
+only: no rendered client was used, and M4/Beta remain incomplete.
+
 ## Verified foundation (updated 2026-10-27)
 
 T4C-0227 adds `httpTraffic` to the existing loopback/private-token

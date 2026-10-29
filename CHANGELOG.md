@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-30 — Monster clan fights use authored damage spells online (T4C-0317)
+
+### Fixed
+- In close-range hostile monster-clan fights online, supported authored elemental and armor-damage spells now resolve instead of producing zero damage from empty dice text; committed outcomes keep the existing durable life and restart behavior.
+
 ## 2026-10-30 — Player walking speed tuned to 75 (T4C-0316)
 
 ### Changed
