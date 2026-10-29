@@ -22,7 +22,17 @@ public final class PreviewWorld {
   private static final double REQUESTS_PER_SECOND = 60;
   private static final double REQUEST_BURST = 60;
   public record Joined(String token, long id) {}
-  public record PlayerView(long id, double x, double y, long sequence, long appearance, int hp, int maxHp) {}
+  /**
+   * One actor in a snapshot. {@code name}, {@code gender} and {@code equipment} (worn slot to item key,
+   * only items with a visible appearance) are the public look of the character, derived from its
+   * committed state; they are null for an actor with no committed character.
+   */
+  public record PlayerView(long id, double x, double y, long sequence, long appearance, int hp, int maxHp,
+      String name, String gender, java.util.Map<String,String> equipment) {
+    public PlayerView(long id, double x, double y, long sequence, long appearance, int hp, int maxHp) {
+      this(id,x,y,sequence,appearance,hp,maxHp,null,null,null);
+    }
+  }
   public record Snapshot(long tick, List<PlayerView> players, List<CreatureView> creatures) {}
   record CreaturePosition(double x, double y) {}
   public static final class Rejected extends RuntimeException {
@@ -31,6 +41,8 @@ public final class PreviewWorld {
   }
   private static final class Player {
     long id, sequence = -1, lastSeen, lastInput, appearance;
+    String name, gender;
+    java.util.Map<String,String> equipment;
     int dx, dy;
     double x, y;
     int hp=1,maxHp=1;
@@ -133,7 +145,7 @@ public final class PreviewWorld {
     // of the tile they stand on, which was legal when it was saved.
     if (movement == MovementRules.Mode.GRID_RESERVATION) { x = ServerMovement.anchor(x); y = ServerMovement.anchor(y); }
     // Grid rule: any tile the movement rule lets a player rest on is a legal place to rejoin. Its wall-slide step can end on
-    // a tile the stricter above-foot fold (canStand) refuses, and refusing it would lock that character out (T4C-0314).
+    // a tile the stricter above-foot fold (canStand) refuses, and refusing it would lock that character out (T4C-0315).
     boolean legal = movement == MovementRules.Mode.GRID_RESERVATION ? map.canRestOnGrid(x,y) : map.canStand(x,y);
     if (!legal) throw new Rejected(409,"position");
     byte[] secret = new byte[32];
@@ -182,7 +194,7 @@ public final class PreviewWorld {
   public Snapshot snapshot(String token) {
     authenticate(token);
     List<PlayerView> result = new ArrayList<>(players.size());
-    for (Player p : players.values()) result.add(new PlayerView(p.id, p.x, p.y, p.sequence,p.appearance,p.hp,p.maxHp));
+    for (Player p : players.values()) result.add(view(p));
     return new Snapshot(tick, List.copyOf(result),creatures.stream().filter(c -> !inactiveCreatures.contains(c.id()))
         .map(c -> {
           var position=creaturePosition(c.id());
@@ -196,7 +208,17 @@ public final class PreviewWorld {
 
   PlayerView position(String token) {
     var p = players.get(token);
-    return p == null ? null : new PlayerView(p.id, p.x, p.y, p.sequence,p.appearance,p.hp,p.maxHp);
+    return p == null ? null : view(p);
+  }
+
+  private static PlayerView view(Player p) {
+    return new PlayerView(p.id,p.x,p.y,p.sequence,p.appearance,p.hp,p.maxHp,p.name,p.gender,p.equipment);
+  }
+
+  /** Publishes the committed public look of one actor; the map is copied and never shared with the caller. */
+  void look(String token,String name,String gender,java.util.Map<String,String> equipment) {
+    var p=players.get(token);
+    if (p!=null) { p.name=name; p.gender=gender; p.equipment=equipment==null ? null : java.util.Map.copyOf(equipment); }
   }
 
   void health(String token,int hp,int maxHp) {

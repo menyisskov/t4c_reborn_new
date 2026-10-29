@@ -149,6 +149,7 @@ public class MainGameScreen implements Screen {
   private float secondsSinceAutosave;
   private final com.perso.T4C.session.GameSession session;
   private final com.perso.T4C.online.OnlineConnection remoteConnection;
+  private final java.util.List<Player> remoteHoveredPlayers = new java.util.ArrayList<>();
   private final com.perso.T4C.online.OnlineShopPanel remoteShopPanel =
       new com.perso.T4C.online.OnlineShopPanel();
   private final com.perso.T4C.online.OnlineInventoryPanel remoteInventoryPanel =
@@ -4048,12 +4049,24 @@ public class MainGameScreen implements Screen {
     if (!(session.world() instanceof com.perso.T4C.session.RemoteWorldDriver remote)) {
       return;
     }
+    remoteHoveredPlayers.clear();
+    boolean pointerFree =
+        Gdx.input != null
+            && !GuiManager.isPointerOver(Gdx.input.getX(), Gdx.input.getY())
+            && (hud == null || !hud.isHudHit(Gdx.input.getX(), Gdx.input.getY()));
     for (Player other : remote.otherPlayers()) {
       Vector2 pos = other.getPositionVector();
+      // Same hover rule as the own player and monsters: the pointer inside the drawn bounds
+      // outlines the figure in its health colour; its name is drawn with the other names.
+      other.getAnimations().getRenderBounds(pos, other.getMovement(), playerRenderBoundsTemp);
+      Vector3 worldCoords = pointerFree ? getWorldCoords() : null;
+      boolean hovered =
+          worldCoords != null && playerRenderBoundsTemp.contains(worldCoords.x, worldCoords.y);
+      if (hovered) remoteHoveredPlayers.add(other);
       addEntityRenderItem(
           entityItems,
           playerRenderDepth(pos.y),
-          () -> other.render(batchDecor, outlineShader, false));
+          () -> other.render(batchDecor, outlineShader, hovered));
     }
   }
 
@@ -4261,6 +4274,9 @@ public class MainGameScreen implements Screen {
           .getObjectRenderer()
           .renderNameOverlay(
               batch, mapRenderer.getObjectPositions(), mapRenderer.getObjectMappings());
+    }
+    for (Player hovered : remoteHoveredPlayers) {
+      com.perso.T4C.entity.RemotePlayerNameplate.render(batch, hovered, true);
     }
     renderPlayerTalkText(batch);
   }

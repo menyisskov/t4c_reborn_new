@@ -139,4 +139,25 @@ class PreviewWorldTest {
     var fresh = world.join();
     assertEquals(1, world.snapshot(fresh.token()).players().size());
   }
+
+  @Test void thePublishedLookIsOnlyWhatTheServerSetAndIsNotSharedMutableState() {
+    var world = openWorld();
+    var one = world.join();
+    var two = world.join();
+    assertNull(world.snapshot(two.token()).players().getFirst().name(), "no look until the server commits one");
+    var worn = new java.util.HashMap<String,String>(Map.of("BODY","item.robe"));
+    world.look(one.token(), "Brindle", "female", worn);
+    worn.put("HEAD","item.secret_later_edit");
+    var seen = world.snapshot(two.token()).players().stream().filter(p -> p.id() == one.id()).findFirst().orElseThrow();
+    assertEquals("Brindle", seen.name());
+    assertEquals("female", seen.gender());
+    assertEquals(Map.of("BODY","item.robe"), seen.equipment());
+    assertThrows(UnsupportedOperationException.class, () -> seen.equipment().clear());
+    var gson = new com.google.gson.Gson().toJson(seen);
+    assertTrue(gson.contains("\"equipment\":{\"BODY\":\"item.robe\"}"));
+    // An actor with no look serialises exactly as before (no new keys): older clients see no change.
+    var plain = new com.google.gson.Gson().toJson(world.snapshot(two.token()).players().stream()
+        .filter(p -> p.id() == two.id()).findFirst().orElseThrow());
+    assertFalse(plain.contains("name") || plain.contains("gender") || plain.contains("equipment"));
+  }
 }

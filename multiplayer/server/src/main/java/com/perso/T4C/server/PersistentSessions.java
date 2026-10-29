@@ -882,7 +882,11 @@ final class PersistentSessions {
 
   private void publishHealth(Binding binding) {
     var progress=binding.saved.progress();
-    if (progress!=null) binding.region.world.health(binding.token,progress.vitals().hp(),progress.vitals().maxHp());
+    if (progress==null) return;
+    binding.region.world.health(binding.token,progress.vitals().hp(),progress.vitals().maxHp());
+    // The public look (name, gender, visible worn items) follows the same committed state.
+    binding.region.world.look(binding.token,binding.saved.name(),progress.gender(),
+        com.perso.T4C.online.model.PublicLook.visibleEquipment(progress,hosted.items));
   }
 
   /** Runs on the simulation owner after ticking stops. Bounded graceful flush; never invent a save. */

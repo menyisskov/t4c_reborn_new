@@ -7,7 +7,7 @@ import java.util.*;
 import org.junit.jupiter.api.Test;
 
 /**
- * T4C-0314. The 2-hour native soak saw two adapters at positions the strict standing rule ({@code canStand}, which folds
+ * T4C-0315. The 2-hour native soak saw two adapters at positions the strict standing rule ({@code canStand}, which folds
  * the tile above the foot into the block) calls blocked. The server's grid rule is single-player's: it looks at the static
  * foot collision, and its wall-slide step may enter a tile whose tile above is blocked when the departure tile had the
  * same block. So players can legitimately come to rest on a tile {@code canStand} refuses, and a character who logs out

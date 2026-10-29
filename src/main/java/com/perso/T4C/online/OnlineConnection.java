@@ -32,7 +32,38 @@ public final class OnlineConnection implements AutoCloseable {
     }
   }
 
-  public record Actor(long id, double x, double y, long sequence, long appearance, int hp, int maxHp) {}
+  /**
+   * One player in a snapshot. {@code name}, {@code gender} and {@code equipment} (worn slot to item
+   * key, visible items only) are the server-derived public look; a server that does not send them
+   * (or an actor with no committed character) leaves them null and the actor draws in the default look.
+   */
+  public record Actor(long id, double x, double y, long sequence, long appearance, int hp, int maxHp,
+      String name, String gender, java.util.Map<String, String> equipment) {
+    public Actor {
+      if (equipment != null) {
+        equipment = java.util.Collections.unmodifiableMap(new java.util.LinkedHashMap<>(equipment));
+      }
+    }
+
+    public Actor(long id, double x, double y, long sequence, long appearance, int hp, int maxHp) {
+      this(id, x, y, sequence, appearance, hp, maxHp, null, null, null);
+    }
+
+    /** Whether the optional public look is well formed; bounded so a hostile server cannot flood the renderer. */
+    boolean lookValid() {
+      if (name != null && (name.isBlank() || name.length() > 64)) return false;
+      if (gender != null && !gender.equals("male") && !gender.equals("female")) return false;
+      if (equipment != null) {
+        if (equipment.size() > com.perso.T4C.online.model.PublicLook.MAX_SLOTS) return false;
+        for (var worn : equipment.entrySet()) {
+          if (worn.getKey() == null || worn.getValue() == null || worn.getValue().length() > 256) return false;
+          try { com.perso.T4C.player.BodyPart.valueOf(worn.getKey()); }
+          catch (IllegalArgumentException unknown) { return false; }
+        }
+      }
+      return true;
+    }
+  }
 
   /** Loot is region-local like creatures; it is published only with a snapshot whose region matches the map epoch. */
   public record Snapshot(long tick, List<Actor> players, Long characterRevision, List<CreatureView> creatures,
@@ -398,6 +429,7 @@ public final class OnlineConnection implements AutoCloseable {
                 || actor.x() < 0
                 || actor.y() < 0
                 || actor.maxHp() <= 0 || actor.hp() < 0 || actor.hp() > actor.maxHp()
+                || !actor.lookValid()
                 || actor.x() >= map.width()
                 || actor.y() >= map.height())
               throw new IllegalStateException("Invalid server position");

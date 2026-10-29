@@ -32,7 +32,7 @@ an adapter failure. The report adds a `portalWalk` section (routes, trips starte
 outbound/inbound transfers), per-adapter `regionTransfers` and `portalTrip`, and bounded `errorDetails` (region and
 position beside an error name). Unit checks run with `NativeAdapterSoak.java --self-test`.
 
-### Optional steadier mode (T4C-0314)
+### Optional steadier mode (T4C-0315)
 
 `T4C_SOAK_RECONNECT_INTERVAL_SECONDS=N` (30 to 86400, default 120 = unchanged) sets the time between each adapter's scheduled
 reconnects. At the default every adapter closes and reopens every two minutes, and the one-at-a-time paced opens plus the
@@ -43,7 +43,7 @@ Reconnect coverage shrinks accordingly, so use the default when reconnects are w
 The walkability guard checks the snapshot position against the server's own movement rule (`PreviewMap.onGridPath`): a tile
 centre the grid rule lets a player rest on, or a point on the straight glide between two adjacent such centres (diagonals too).
 Anything off that lattice or inside a foot-blocked tile still counts as `position_not_walkable`. It replaced `canStand`, which
-folds the tile above the foot into the block and is stricter than the rule that moves players (see the T4C-0314 section).
+folds the tile above the foot into the block and is stricter than the rule that moves players (see the T4C-0315 section).
 
 Already-running protocol 3 baselines use immutable copies of their original harness and runtime.
 Do not replace those copies with this source or combine their results with protocol 4 evidence.
@@ -454,7 +454,7 @@ unchanged and still in the database), the walker is unfrozen and the server prop
 server clock ahead (the hop commits only once the database agrees, the session survives) and a test that a transfer inside a stored cooldown is refused and writes
 nothing. Full server suite on a disposable PG16 cluster: 324 tests, 0 failures. No soak run was repeated for this change.
 
-### Two-hour mixed soak (T4C-0314, 2026-10-29): the run itself failed the zero-error criterion on a guard/rule mismatch, which exposed a rejoin lockout; fixed and re-run for 30 minutes
+### Two-hour mixed soak (T4C-0315, 2026-10-29): the run itself failed the zero-error criterion on a guard/rule mismatch, which exposed a rejoin lockout; fixed and re-run for 30 minutes
 
 The M5 two-hour, twenty-adapter soak on `origin/main` `b19beb34` (protocol 7, schema 13; includes movement parity, the hosted skeleton cave,
 Lighthaven interior and three sewer levels, the `monster_attack` deferral fix, centred arrivals, the portal-cooldown retry and the loot countdown) with
@@ -463,7 +463,7 @@ tooling), one `ServerMain --online` on 18847 from the worktree jar copied to a s
 `serverRuntime.latest` and the server process every 300 s. Wrapper exit 0, `/admin/shutdown` 200, server exit 0, cluster destroyed, ports free. A second,
 30-minute run on the fixed build used `T4C_SOAK_RECONNECT_INTERVAL_SECONDS=900`. Local PG16 evidence only; native adapters, not rendered clients.
 
-| Metric | T4C-0198 (2 h, protocol 4, no walking, old build) | T4C-0308 E (12 min, 8 walkers) | **T4C-0314 two-hour run (this build)** | T4C-0314 30-min steady run (fixed build, 900 s reconnects) |
+| Metric | T4C-0198 (2 h, protocol 4, no walking, old build) | T4C-0308 E (12 min, 8 walkers) | **T4C-0315 two-hour run (this build)** | T4C-0315 30-min steady run (fixed build, 900 s reconnects) |
 | --- | --- | --- | --- | --- |
 | Duration | 7,200.0 s | 720 s | 7,200.1 s | 1,800.1 s |
 | Time at 20 adapters | 3,492.8 s (48.5%) | 403.0 s (56.0%) | **3,567.8 s (49.6%)** | **1,724.0 s (95.8%)** |
@@ -513,7 +513,7 @@ So the guard disagreed with the authoritative rule on tiles the rule lets player
 that logged out resting on such a tile was refused on rejoin (409 `position`) and stayed locked out.** A sweep over every tile of the starting crop with
 eight directions found reachable rest positions the old join refused (the first was 2932.5,1056.5, a few tiles from the Lighthaven door arrival).
 
-Fix (`T4C-0314`): in grid mode `joinAt` accepts any position the movement rule can rest on (`PreviewMap.canRestOnGrid`; the swept mode keeps `canStand`);
+Fix (`T4C-0315`): in grid mode `joinAt` accepts any position the movement rule can rest on (`PreviewMap.canRestOnGrid`; the swept mode keeps `canStand`);
 the soak's guard now checks the server's own lattice (`PreviewMap.onGridPath`: tile centres the rule can rest on or the straight glide between two
 adjacent such centres, diagonals included) and still fails a position off the lattice or in a foot-blocked tile. `GridRestPositionTest` pins both: every
 reachable rest in the starting crop is rejoinable and on the lattice (the sweep covers over 100,000 rests and reaches a rest `canStand` refuses), the two

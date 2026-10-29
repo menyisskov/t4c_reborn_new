@@ -435,7 +435,7 @@ class NativeAdapterSoak {
           var self=snapshot.players().stream().filter(a -> a.id()==view.ownId()).findFirst().orElseThrow();
           // The server steps players with single-player's grid rule: positions are tile centres or points on a straight glide
           // between two adjacent tile centres (diagonals too) that the rule lets a player rest on. canStand's stricter
-          // above-foot fold is not that rule (T4C-0314); this check still refuses anything off the lattice or in a wall.
+          // above-foot fold is not that rule (T4C-0315); this check still refuses anything off the lattice or in a wall.
           if(!map.onGridPath(self.x(),self.y())) {
             error(p,"position_not_walkable");
             if(p.errorDetails.size()<5) p.errorDetails.add("position_not_walkable@"+region.key()+" epoch "+region.locationEpoch()

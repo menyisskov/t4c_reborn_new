@@ -6,6 +6,13 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-29 — Other players wear their gear and show their name online (T4C-0314)
+
+### Fixed
+- In online play, other players are now drawn as the character they really are: their gender and the armour, robe, helmet, weapon and shield they have equipped, exactly as the same gear looks on your own character, instead of everyone appearing in the default unclothed look.
+- When you point at another player online, they are outlined in their health colour and their name appears above them, the same way creatures and townsfolk react to the pointer in single-player.
+- A player who puts on or takes off gear online changes appearance for everyone nearby right away.
+
 ## 2026-10-29 — Shopkeepers no longer say they are busy right after you walk up (T4C-0312)
 
 ### Fixed
