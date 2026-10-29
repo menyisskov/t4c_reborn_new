@@ -22,7 +22,7 @@ import com.perso.T4C.world.MovementRules;
 final class ServerMovement {
   /** System property that picks the rule: {@code grid} (default, single-player's) or {@code swept}. */
   static final String PROPERTY = "t4c.server.movement";
-  /** Pixels one tick may cover (horizontal equivalent): 300 / 34 = 8.82, i.e. 0.2757 tiles. */
+  /** Pixels one tick may cover (horizontal equivalent); derived from the shared player speed. */
   static final float BUDGET_PER_TICK = PLAYER_SPEED / PreviewWorld.TICK_RATE;
 
   private static final float EPSILON = 0.001f;

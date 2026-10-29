@@ -9,7 +9,7 @@ public class GameConstants {
   public static final float OVERLAY_PERCENTAGE_DEFAULT = 75f;
   public static final int GRID_W = 32;
   public static final int GRID_H = 16;
-  public static final float PLAYER_SPEED = 300f;
+  public static final float PLAYER_SPEED = 54f;
   public static final float PLAYER_MOVEMENT_RESERVATION_STEP_TILES = 1f;
   public static final int PLAYER_COLLISION_FOOTPRINT_HORIZONTAL_TILES = 0;
   public static final int PLAYER_COLLISION_FOOTPRINT_ABOVE_TILES = 1;

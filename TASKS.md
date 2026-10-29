@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0302`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0303`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0302 | Bring baseline player movement to about 20% faster than monsters, shared by offline and online play | Multiplayer / Cross-cutting/GA | Done | this PR | [CHANGELOG.md](CHANGELOG.md) |
 | T4C-0300 | Host the closed skeleton cave behind the authored cave mouths (portals 12-15) and audit why no further quest can be hosted by growing the crop | Multiplayer / M3 | Done | this PR | [2026-10-29](CHANGELOG.md) |
 | T4C-0301 | Re-run the 12-minute twenty-adapter soak against PR #260 (hosted skeleton cave, spawns about 50 to about 80): no regression versus fixed main (56.0% at twenty, 97.4% at 19 or more, 0 failures, 0 rollbacks, 34.0 Hz, no persistence failures) | Process/Tooling | Done (PR open; docs only) | pending | none (no player-visible change) |
 | T4C-0299 | Online quest catalog fail-closed gate: every hosted quest must have a hosted giver and a completable kill ground | Multiplayer / M3 | Done | this PR | [2026-10-29](CHANGELOG.md) |

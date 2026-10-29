@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-29 — Player movement is only slightly quicker than monsters (T4C-0302)
+
+### Changed
+- Players now move about 20% faster than monsters, both offline and online. Existing speed buffs still apply as before.
+
 ## 2026-10-29 — The skeleton cave is open in online play (T4C-0300)
 
 ### Added
