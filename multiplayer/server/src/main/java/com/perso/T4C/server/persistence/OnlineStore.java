@@ -92,6 +92,16 @@ public final class OnlineStore implements AutoCloseable {
     }
     public MonsterAttack { spawnKey(key); Objects.requireNonNull(life); Objects.requireNonNull(targetCharacter); if(expectedNext<0 || nextNext<=expectedNext) throw new IllegalArgumentException("Invalid attack deadline"); }
   }
+  public record MonsterHeal(String key, UUID life, UUID targetCharacter, long expectedNext, long nextNext,
+      long stateRevision, int before, int after, int maximumHealth, SpawnMotion motion) {
+    public MonsterHeal {
+      spawnKey(key); Objects.requireNonNull(life); Objects.requireNonNull(targetCharacter); Objects.requireNonNull(motion);
+      if(expectedNext<0 || nextNext<=expectedNext || stateRevision<0 || maximumHealth<=0
+          || before<=0 || before>maximumHealth || after<before || after>maximumHealth
+          || !key.equals(motion.key()) || !life.equals(motion.life())
+          || !targetCharacter.equals(motion.targetCharacter())) throw new IllegalArgumentException("Invalid monster heal");
+    }
+  }
   public record DeathTransition(long experienceLost, CharacterProgress.Respawn destination,
       CharacterProgress.Respawn corpsePosition, java.util.List<CharacterProgress.Item> droppedItems,
       long goldLost, long goldDropped) {
@@ -1273,6 +1283,54 @@ public final class OnlineStore implements AutoCloseable {
           try(var q=c.prepareStatement("UPDATE online_spawns SET target_character=NULL,target_epoch=NULL,mode='RETURN',next_attack_at=0,state_revision=state_revision+1 WHERE target_character=?")) { q.setObject(1,session.characterId());q.executeUpdate(); }
         }
         state=load(c,session.accountId(),session.characterId(),false);c.commit();return new RewardResult(true,state);
+      } catch(SQLException|RuntimeException failure) { c.rollback();throw failure; }
+    }
+  }
+
+  /** Commits monster self-healing and its retaliation deadline under the creature and target CAS. */
+  public RewardResult commitMonsterHeal(Session session, long revision, UUID event,
+      CharacterProgress progress, MonsterHeal heal) throws SQLException {
+    Objects.requireNonNull(event);Objects.requireNonNull(heal);
+    if(revision<0 || !heal.targetCharacter().equals(session.characterId())) throw new IllegalArgumentException("Invalid heal owner");
+    String encoded=encodeProgress(progress);
+    String digest=fingerprint(encoded+"\nmonster-heal-v1\n"+JSON.toJson(heal));
+    try(var c=connections.open()) {
+      c.setAutoCommit(false);
+      try {
+        var state=lockSession(c,session);
+        try(var q=c.prepareStatement("SELECT character_id,payload_hash FROM online_combat_events WHERE event_id=?")) {
+          q.setObject(1,event);
+          try(var rows=q.executeQuery()) { if(rows.next()) {
+            if(!session.characterId().equals(rows.getObject(1,UUID.class)) || !digest.equals(rows.getString(2))) throw new Conflict("Combat event payload mismatch");
+            c.commit();return new RewardResult(false,state);
+          } }
+        }
+        if(state.revision()!=revision || state.locationEpoch()!=heal.motion().targetEpoch()
+            || state.progress()==null || state.progress().vitals().hp()<=0) throw new Conflict("Stale heal target");
+        var before=loadSpawn(c,heal.key());
+        if(!before.eventId().equals(heal.life()) || before.stateRevision()!=heal.stateRevision()
+            || before.diedAt()!=null || before.nextAttackAt()!=heal.expectedNext()
+            || !session.characterId().equals(before.targetCharacter())
+            || !Objects.equals(before.targetEpoch(),heal.motion().targetEpoch())
+            || (before.health()==null ? heal.maximumHealth() : before.health())!=heal.before())
+          throw new Conflict("Creature heal life or target changed");
+        var motion=heal.motion();
+        try(var q=c.prepareStatement("""
+            UPDATE online_spawns SET current_x=?,current_y=?,mode=?,target_epoch=?,next_attack_at=?,health=?,state_revision=state_revision+1
+            WHERE spawn_key=? AND event_id=? AND state_revision=? AND target_character=? AND target_epoch=? AND next_attack_at=?
+              AND next_attack_at<=floor(extract(epoch FROM clock_timestamp())*1000) AND died_at IS NULL
+              AND COALESCE(health,?)=?
+            """)) {
+          q.setDouble(1,motion.x());q.setDouble(2,motion.y());q.setString(3,motion.mode());q.setLong(4,motion.targetEpoch());
+          q.setLong(5,heal.nextNext());q.setInt(6,heal.after());q.setString(7,heal.key());q.setObject(8,heal.life());
+          q.setLong(9,heal.stateRevision());q.setObject(10,session.characterId());q.setLong(11,motion.targetEpoch());
+          q.setLong(12,heal.expectedNext());q.setInt(13,heal.maximumHealth());q.setInt(14,heal.before());
+          if(q.executeUpdate()!=1) throw new Conflict("Creature heal changed or not due");
+        }
+        try(var q=c.prepareStatement("INSERT INTO online_combat_events(event_id,character_id,payload_hash) VALUES(?,?,?)")) {
+          q.setObject(1,event);q.setObject(2,session.characterId());q.setString(3,digest);q.executeUpdate();
+        }
+        c.commit();return new RewardResult(true,state);
       } catch(SQLException|RuntimeException failure) { c.rollback();throw failure; }
     }
   }

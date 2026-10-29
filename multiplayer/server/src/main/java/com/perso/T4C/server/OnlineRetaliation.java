@@ -81,12 +81,30 @@ final class OnlineRetaliation {
       attacks=attacks.stream().filter(a -> a!=null && a.isInRange(tiles)).toList();
     }
     var attack=MonsterCombatRules.chooseAttack(attacks,random);
+    boolean selfHeal=attack!=null && attack.isSpell() && attack.getSpellId()==10616
+        && OnlineMonsterSpellAttacks.supportedHeal(attack.getSpellId())!=null;
+    if(attack!=null && attack.isSpell() && OnlineMonsterSpellAttacks.supportedSpell(attack.getSpellId())==null && !selfHeal) return;
     int attackSkill=attack==null ? stats.attack() : Math.max(1,attack.getValue1());
     int raw=attack==null ? definition.getHitDamageMin()+
         (definition.getHitDamageMax()>definition.getHitDamageMin()
           ? random.nextInt(definition.getHitDamageMax()-definition.getHitDamageMin()+1) : 0)
         : attack.isSpell() ? OnlineMonsterSpellAttacks.rawDamage(definition,attack.getSpellId(),random)
         : MonsterCombatRules.rollDamage(attack.getName(),random);
+    if(selfHeal) {
+      int maximum=definition.getHealth();
+      int before=life.health()==null ? maximum : Math.min(maximum,life.health());
+      int after=(int)Math.min(maximum,(long)before+Math.max(0,raw));
+      if(before<=0) return;
+      var motion=creatures.capture(spawn.id());
+      var heal=new OnlineStore.MonsterHeal(life.key(),life.eventId(),saved.id(),life.nextAttackAt(),
+          Math.addExact(now,COOLDOWN_MILLIS),life.stateRevision(),before,after,maximum,motion);
+      creatures.reserve(spawn.id());
+      try {
+        sessions.commitMonsterHeal(token,saved.revision(),UUID.randomUUID(),progress,heal)
+            .whenComplete((result,error)->{creatures.release(spawn.id());creatures.damageCommitted(spawn.id());});
+      } catch(RuntimeException failure) { creatures.release(spawn.id());throw failure; }
+      return;
+    }
     var profile=new CombatProfile(stats.level(),stats.strength(),stats.endurance(),stats.agility(),
         attackSkill,attackSkill,stats.dodge(),MonsterCombatRules.rollArmor(stats.armorMin(),stats.armorMax(),random),
         false,false,true,Map.of());

@@ -116,7 +116,10 @@ class PreviewWorldTest {
           assertTrue(now.x() < 4 && now.y() < 4, "Must not cut across the blocked corner");
       }
       world.input(player.token(), 20, -1, 0);
-      for (int i = 0; i < PreviewWorld.INPUT_TIMEOUT_TICKS + 1 + 8; i++) world.step(); // +8: a started tile is finished
+      // A started tile is finished: one tile takes GRID_W / (speed per tick) ticks, so derive it from the shared speed.
+      int finishTile = (int) Math.ceil(com.perso.T4C.config.GameConstants.GRID_W
+          / (com.perso.T4C.config.GameConstants.PLAYER_SPEED / (double) PreviewWorld.TICK_RATE)) + 1;
+      for (int i = 0; i < PreviewWorld.INPUT_TIMEOUT_TICKS + 1 + finishTile; i++) world.step();
       var afterSilence = world.snapshot(player.token()).players().getFirst();
       for (int i = 0; i < 20; i++) world.step();
       assertEquals(afterSilence.x(), world.snapshot(player.token()).players().getFirst().x());

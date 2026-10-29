@@ -73,7 +73,7 @@ final class PersistentSessions {
       OnlineStore.CreatureStrike strike, OnlineStore.CreatureProvocation provocation,
       OnlineStore.MonsterAttack monsterAttack, OnlineStore.DeathTransition death, UUID corpse, UUID corpseItem,
       com.perso.T4C.server.persistence.PortalTransfer transfer, UUID loot, List<LootDropDraft> drops,
-      List<OnlineStore.SpellStrike> spellStrikes,
+      List<OnlineStore.SpellStrike> spellStrikes, OnlineStore.MonsterHeal monsterHeal,
       CompletableFuture<OnlineStore.RewardResult> result, OnlineShopTrades.Trade shop) {
     GameplayEvent { drops=List.copyOf(drops); spellStrikes=spellStrikes==null ? List.of() : List.copyOf(spellStrikes); }
     GameplayEvent(UUID id, long gold, long experience, CharacterProgress progress, boolean worldReward,
@@ -82,7 +82,7 @@ final class PersistentSessions {
         com.perso.T4C.server.persistence.PortalTransfer transfer, UUID loot, List<LootDropDraft> drops,
         List<OnlineStore.SpellStrike> spellStrikes, CompletableFuture<OnlineStore.RewardResult> result) {
       this(id,gold,experience,progress,worldReward,strike,provocation,monsterAttack,death,corpse,corpseItem,transfer,
-          loot,drops,spellStrikes,result,null);
+          loot,drops,spellStrikes,null,result,null);
     }
   }
   private record Completion(Binding binding, OnlineStore.CharacterState saved, boolean finalSave,
@@ -430,7 +430,7 @@ final class PersistentSessions {
     var drops=strikes.stream().flatMap(hit -> hit.drops().stream()).toList();
     var result=new CompletableFuture<OnlineStore.RewardResult>();
     binding.event=new GameplayEvent(eventId,gold,experience,progress,false,null,null,null,null,null,null,null,null,
-        drops,strikes,result);
+        drops,strikes,null,result,null);
     if (!binding.pending) submit(binding);
     return result.minimalCompletionStage();
   }
@@ -459,7 +459,7 @@ final class PersistentSessions {
     if (Math.max(Math.abs(x-found.x()),Math.abs(y-found.y()))>com.perso.T4C.server.OnlinePickupRules.MAX_TILE_DISTANCE)
       throw new PreviewWorld.Rejected(409,"out_of_range");
     var result=new CompletableFuture<OnlineStore.RewardResult>();
-    binding.event=new GameplayEvent(UUID.randomUUID(),0,0,progress,false,null,null,null,null,null,null,null,loot,List.of(),List.of(),result);
+    binding.event=new GameplayEvent(UUID.randomUUID(),0,0,progress,false,null,null,null,null,null,null,null,loot,List.of(),List.of(),null,result,null);
     if (!binding.pending) submit(binding);
     return result.minimalCompletionStage();
   }
@@ -505,7 +505,7 @@ final class PersistentSessions {
     catch (OnlineShopTrades.Refused refused) { throw new PreviewWorld.Rejected(409,refused.refusal().code()); }
     var result=new CompletableFuture<OnlineStore.RewardResult>();
     binding.event=new GameplayEvent(UUID.randomUUID(),0,0,progress,false,null,null,null,null,null,null,null,null,
-        List.of(),List.of(),result,trade);
+        List.of(),List.of(),null,result,trade);
     if (!binding.pending) submit(binding);
     return result.minimalCompletionStage().thenApply(committed->new ShopReceipt(committed.character().revision(),
         quantity,Math.abs(committed.character().gold()-goldBefore)));
@@ -533,6 +533,18 @@ final class PersistentSessions {
   CompletionStage<OnlineStore.RewardResult> commitMonsterAttack(String token,long revision,UUID event,
       CharacterProgress progress,OnlineStore.MonsterAttack attack,OnlineStore.DeathTransition death) {
     return commitEvent(token,revision,event,0,0,progress,false,null,null,Objects.requireNonNull(attack),death,null);
+  }
+
+  CompletionStage<OnlineStore.RewardResult> commitMonsterHeal(String token,long revision,UUID event,
+      CharacterProgress progress,OnlineStore.MonsterHeal heal) {
+    var binding=active(token);
+    if(binding.event!=null || binding.awaitingRegionReady) throw new PreviewWorld.Rejected(409,"busy");
+    if(binding.saved.revision()!=revision) throw new PreviewWorld.Rejected(409,"revision");
+    var result=new CompletableFuture<OnlineStore.RewardResult>();
+    binding.event=new GameplayEvent(Objects.requireNonNull(event),0,0,Objects.requireNonNull(progress),false,
+        null,null,null,null,null,null,null,null,List.of(),List.of(),Objects.requireNonNull(heal),result,null);
+    if(!binding.pending) submit(binding);
+    return result.minimalCompletionStage();
   }
 
   private CompletionStage<OnlineStore.RewardResult> commitEvent(String token, long expectedRevision,
@@ -602,7 +614,7 @@ final class PersistentSessions {
     var draft=new com.perso.T4C.server.persistence.PortalTransfer(portal.portalId(),binding.region.spec.key(),target.spec.key(),
         portal.source(),arrivalAtTileCentre(portal.destination()),binding.saved.locationEpoch(),Math.addExact(wallClock.getAsLong(),350));
     binding.position=position;binding.region.world.freeze(binding.token,true);
-    binding.event=new GameplayEvent(UUID.randomUUID(),0,0,binding.saved.progress(),false,null,null,null,null,null,null,draft,null,List.of(),List.of(),new CompletableFuture<>());
+    binding.event=new GameplayEvent(UUID.randomUUID(),0,0,binding.saved.progress(),false,null,null,null,null,null,null,draft,null,List.of(),List.of(),null,new CompletableFuture<>(),null);
   }
 
   private Binding active(String token) {
@@ -717,7 +729,9 @@ final class PersistentSessions {
                 refusal=conflict.getMessage();
               }
             } else {
-            reward=event.monsterAttack()!=null
+            reward=event.monsterHeal()!=null
+                ? store.commitMonsterHeal(binding.session,revision,event.id(),event.progress(),event.monsterHeal())
+                : event.monsterAttack()!=null
                 ? store.commitMonsterAttack(binding.session,revision,event.id(),event.progress(),event.monsterAttack(),event.death())
                 : !event.spellStrikes().isEmpty()
                 ? store.commitSpellStrikes(binding.session,revision,event.id(),event.gold(),event.experience(),event.progress(),event.spellStrikes())
@@ -745,6 +759,7 @@ final class PersistentSessions {
     if (event.corpse()!=null) return com.perso.T4C.server.persistence.PersistenceFailure.Operation.CORPSE;
     if (event.transfer()!=null) return com.perso.T4C.server.persistence.PersistenceFailure.Operation.TRANSFER;
     if (event.monsterAttack()!=null) return com.perso.T4C.server.persistence.PersistenceFailure.Operation.MONSTER_ATTACK;
+    if (event.monsterHeal()!=null) return com.perso.T4C.server.persistence.PersistenceFailure.Operation.MONSTER_ATTACK;
     if (!event.spellStrikes().isEmpty() || event.strike()!=null)
       return com.perso.T4C.server.persistence.PersistenceFailure.Operation.SPELL_CREATURE_STRIKE;
     if (event.worldReward()) return com.perso.T4C.server.persistence.PersistenceFailure.Operation.WORLD_REWARD;
