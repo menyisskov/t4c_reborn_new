@@ -81,6 +81,12 @@ public final class OnlineConnection implements AutoCloseable {
   private final Credentials credentials;
   private final AtomicInteger direction = new AtomicInteger(4);
   private final AtomicInteger pendingTap = new AtomicInteger(-1);
+  /** Client input frame that set the held direction (prediction); -1 for the text client. */
+  private volatile long frameTag = -1;
+  /** Bounded record of which client frame was current when each /input sequence was sent. */
+  private final java.util.concurrent.ConcurrentSkipListMap<Long, Long> inputFrames =
+      new java.util.concurrent.ConcurrentSkipListMap<>();
+  private static final int MAX_INPUT_FRAMES = 512;
   private final java.util.concurrent.atomic.AtomicLong readyRegion = new java.util.concurrent.atomic.AtomicLong(-1);
   private volatile long acknowledgedRegion = -1;
   private final java.util.concurrent.atomic.AtomicReference<GameplayCommand> gameplay =
@@ -112,6 +118,26 @@ public final class OnlineConnection implements AutoCloseable {
     if (dx < -1 || dx > 1 || dy < -1 || dy > 1)
       throw new IllegalArgumentException("Invalid direction");
     direction.set((dx + 1) * 3 + dy + 1);
+  }
+
+  /**
+   * As {@link #direction(int, int)}, naming the client input frame (a monotonically increasing
+   * number of the predicting client) that set it. Each {@code /input} sent afterwards remembers
+   * the newest frame, so {@link #acknowledgedFrame} can translate the snapshot's last applied
+   * input sequence back into a client frame for reconciliation. The protocol is unchanged.
+   */
+  public void direction(int dx, int dy, long frame) {
+    direction(dx, dy);
+    frameTag = frame;
+  }
+
+  /**
+   * The newest client frame that had been sent when the server's input {@code sequence} was
+   * sent, or -1 when none is known (nothing sent yet, or the entry aged out of the bounded record).
+   */
+  public long acknowledgedFrame(long sequence) {
+    var entry = inputFrames.floorEntry(sequence);
+    return entry == null ? -1 : entry.getValue();
   }
 
   /** Preserve a brief key press even if press/release both happen between rendered frames. */
@@ -286,6 +312,7 @@ public final class OnlineConnection implements AutoCloseable {
         map=readMap(map.persistent());
         if (!map.region().equals(joined.region())) throw new IllegalStateException("Joined map changed unexpectedly");
         long sequence = 0;
+        inputFrames.clear();
         OnlineCharacterView character = null;
         List<Corpse> corpses = List.of();
         while (!closed) {
@@ -345,6 +372,8 @@ public final class OnlineConnection implements AutoCloseable {
           int tap = pendingTap.getAndSet(-1);
           if (intent == 4 && tap >= 0) intent = tap;
           if (acknowledgedRegion!=map.locationEpoch()) intent=4;
+          inputFrames.put(sequence, frameTag);
+          if (inputFrames.size() > MAX_INPUT_FRAMES) inputFrames.pollFirstEntry();
           try { sendSession("POST","/input",map.locationEpoch()+" "+sequence++ + " " + (intent / 3 - 1) + " " + (intent % 3 - 1)); }
           catch (Rejected rejected) { if (rejected.code!=409) throw rejected; }
           int regionRetries=0;

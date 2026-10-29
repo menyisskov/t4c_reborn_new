@@ -38,13 +38,14 @@ class RemoteGameSessionTest {
   }
 
   @Test
-  void theWorldIsTheSnapshotDriverAndCommandsSayTheyAreNotAvailableOnlineYet() {
+  void theWorldIsTheSnapshotDriverAndCommandsAreTheRemoteIntents() {
     RemoteGameSession session = new RemoteGameSession(() -> null);
     assertInstanceOf(RemoteWorldDriver.class, session.world());
-    var attack =
-        assertThrows(UnsupportedOperationException.class, () -> session.commands().attack(null));
-    assertEquals("not available online yet: commands().attack", attack.getMessage());
+    assertInstanceOf(RemotePlayerCommands.class, session.commands());
+    session.commands().attack(null);
     assertThrows(
-        UnsupportedOperationException.class, () -> session.commands().move(1, 0, 0.016f));
+        IllegalStateException.class,
+        () -> session.commands().move(1, 0, 0.016f),
+        "used before the screen bound it");
   }
 }

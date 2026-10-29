@@ -68,6 +68,7 @@ public final class RemoteWorldDriver implements WorldDriver {
   private final Set<String> unknownDefinitions = new HashSet<>();
   private Long lastTick;
   private OnlineRegion lastRegion;
+  private RemoteIntents intents;
 
   private record NpcEntry(BaseNPC npc, String appearance) {}
 
@@ -96,6 +97,7 @@ public final class RemoteWorldDriver implements WorldDriver {
     monsterRegistry.setPuppetMode(true);
     npcRegistry = new NPCManager(inputs.outlineShader(), null);
     npcRegistry.setPuppetMode(true);
+    attachIntents();
     OnlineConnection.View view = views.get();
     if (view != null && view.snapshot() != null && view.map() != null) {
       apply(view);
@@ -111,6 +113,7 @@ public final class RemoteWorldDriver implements WorldDriver {
       reset();
       monsterRegistry = monsterTarget;
       npcRegistry = npcTarget;
+      attachIntents();
     }
     OnlineConnection.View view = views.get();
     if (view != null && view.snapshot() != null && view.map() != null) {
@@ -144,6 +147,41 @@ public final class RemoteWorldDriver implements WorldDriver {
       if (entry.getValue().npc() == npc) return entry.getKey();
     }
     return null;
+  }
+
+  /** The server id of a puppet loot item of this driver, or null (step R3 sends pickups by id). */
+  public UUID lootId(GroundItem item) {
+    for (Map.Entry<UUID, GroundItem> entry : loot.entrySet()) {
+      if (entry.getValue() == item) return entry.getKey();
+    }
+    return null;
+  }
+
+  /**
+   * Routes clicks on this driver's loot and NPCs to the session as intents by server id (the
+   * ground-item and NPC click hooks); until bound, a click on a puppet does nothing.
+   */
+  public void bindIntents(RemoteIntents intents) {
+    this.intents = intents;
+    attachIntents();
+  }
+
+  private void attachIntents() {
+    if (intents == null) return;
+    if (ground != null) {
+      ground.setRemotePickup(
+          item -> {
+            UUID id = lootId(item);
+            return id != null && intents.pickUp(id);
+          });
+    }
+    if (npcRegistry != null) {
+      npcRegistry.setRemoteInteract(
+          npc -> {
+            String id = npcId(npc);
+            return id != null && intents.interact(id);
+          });
+    }
   }
 
   /** Definition names the server sent that this client has no monster class for (debug aid). */

@@ -1,20 +1,27 @@
 package com.perso.T4C.session;
 
-import com.perso.T4C.monster.core.BaseMonster;
+import com.perso.T4C.objects.GroundItemManager;
 import com.perso.T4C.online.OnlineConnection;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.concurrent.CompletionStage;
 import java.util.function.Supplier;
 
 /**
- * Online session: the character comes from the server's committed state (R1) and the world is the
- * server's latest snapshot applied to puppet monsters, NPCs and loot (R2); nothing is ever saved
- * locally. The commands are placeholders that say so; they arrive with step R3 (intents over the
- * connection).
+ * Online session: the character comes from the server's committed state (R1), the world is the
+ * server's latest snapshot applied to puppet monsters, NPCs and loot (R2), and the commands are
+ * intents sent over the persistent connection (R3); nothing is ever saved locally.
+ *
+ * <p>The commands cover attack, own movement, pickup and NPC interaction. Every other player
+ * action (equipment, item use, spells, shops, corpse recovery, chat, trade) has no {@link
+ * PlayerCommands} member yet; the connection can already carry some of them, but the screens that
+ * start them are not routed to the session until their own steps.
  */
 public final class RemoteGameSession implements GameSession {
   private final RemoteCharacterSource characters;
   private final CharacterPersistence persistence = new RemoteCharacterPersistence();
-  private final WorldDriver world;
-  private final PlayerCommands commands = new UnavailableCommands();
+  private final RemoteWorldDriver world;
+  private final RemotePlayerCommands commands;
 
   /** Reads the character and position from whatever view the connection currently holds. */
   public RemoteGameSession(Supplier<OnlineConnection.View> views) {
@@ -22,17 +29,33 @@ public final class RemoteGameSession implements GameSession {
   }
 
   /**
+   * A session with no connection behind it (headless character and world tests): its commands
+   * fail like a link that is down.
+   *
    * @param ground the screen's ground-item registry that server loot is drawn into, or null
    */
-  public RemoteGameSession(
-      Supplier<OnlineConnection.View> views, com.perso.T4C.objects.GroundItemManager ground) {
-    this.characters = new RemoteCharacterSource(views);
-    this.world = new RemoteWorldDriver(views, ground);
+  public RemoteGameSession(Supplier<OnlineConnection.View> views, GroundItemManager ground) {
+    this(new DetachedLink(views), ground);
+  }
+
+  /** The online session over a live connection. */
+  public RemoteGameSession(OnlineConnection connection, GroundItemManager ground) {
+    this(new OnlineConnectionLink(Objects.requireNonNull(connection, "connection")), ground);
+  }
+
+  /** The online session over any link (tests use a fake). */
+  public RemoteGameSession(RemoteLink link, GroundItemManager ground) {
+    this.characters = new RemoteCharacterSource(link::view);
+    this.world = new RemoteWorldDriver(link::view, ground);
+    this.commands = new RemotePlayerCommands(link, world::creatureId);
+    this.world.bindIntents(commands);
   }
 
   RemoteGameSession(RemoteCharacterSource characters) {
     this.characters = characters;
-    this.world = new RemoteWorldDriver(() -> null, null);
+    DetachedLink link = new DetachedLink(() -> null);
+    this.world = new RemoteWorldDriver(link::view, null);
+    this.commands = new RemotePlayerCommands(link, world::creatureId);
   }
 
   @Override
@@ -56,8 +79,13 @@ public final class RemoteGameSession implements GameSession {
   }
 
   @Override
-  public PlayerCommands commands() {
+  public RemotePlayerCommands commands() {
     return commands;
+  }
+
+  /** The remote world driver (also exposes the other players the screen draws). */
+  public RemoteWorldDriver remoteWorld() {
+    return world;
   }
 
   /** The last mirrored character with its server item identities, or {@code null} before load. */
@@ -65,19 +93,44 @@ public final class RemoteGameSession implements GameSession {
     return characters.mirrored();
   }
 
-  private static UnsupportedOperationException unavailable(String member) {
-    return new UnsupportedOperationException("not available online yet: " + member);
-  }
+  /** A link that reads views but cannot send anything: every send fails as a down link does. */
+  private static final class DetachedLink implements RemoteLink {
+    private final Supplier<OnlineConnection.View> views;
 
-  private static final class UnavailableCommands implements PlayerCommands {
-    @Override
-    public void attack(BaseMonster target) {
-      throw unavailable("commands().attack");
+    DetachedLink(Supplier<OnlineConnection.View> views) {
+      this.views = views;
     }
 
     @Override
-    public void move(float dx, float dy, float delta) {
-      throw unavailable("commands().move");
+    public OnlineConnection.View view() {
+      return views.get();
+    }
+
+    private static IllegalStateException down() {
+      return new IllegalStateException("Persistent session is not connected");
+    }
+
+    @Override
+    public CompletionStage<OnlineConnection.CommandResult> attack(long creature) {
+      throw down();
+    }
+
+    @Override
+    public CompletionStage<OnlineConnection.CommandResult> pickUp(UUID loot) {
+      throw down();
+    }
+
+    @Override
+    public CompletionStage<OnlineConnection.CommandResult> interact(String npc) {
+      throw down();
+    }
+
+    @Override
+    public void direction(int dx, int dy, long frame) {}
+
+    @Override
+    public long acknowledgedFrame(long sequence) {
+      return -1;
     }
   }
 }
