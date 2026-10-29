@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-29 — Online quests can no longer be added without a reachable quest giver and kill ground (T4C-0299)
+
+### Changed
+- Warden Aelric's Skeleton quest is still the only quest playable online. The online game now refuses to offer any further quest unless its quest giver can be spoken to and enough of its target monsters stand inside the hunting area, so a quest can never be accepted online and then be impossible to finish. Each quest giver offers one quest online for now.
+
 ## 2026-10-29 — Online inventory and equipment are available in the game screen (T4C-0295)
 
 ### Added

@@ -23,7 +23,11 @@ public final class QuestCatalog {
 
   public QuestCatalog(QuestContent content, MonsterContent monsters, ItemContent items, SpellCatalog spells) {
     Objects.requireNonNull(content);
+    var givers = new java.util.HashSet<String>();
     for (var quest : content.quests().values()) {
+      requireRunnable(quest);
+      // Dialogue dispatch serves exactly one quest per giver; a second would be silently unreachable.
+      if (!givers.add(quest.giverNpc())) throw new IllegalArgumentException("Giver already has an online quest");
       if (!monsters.monsters().containsKey(quest.targetMonster()))
         throw new IllegalArgumentException("Unresolved quest monster");
       requireItem(quest.requiredItemKey(), items);
@@ -34,6 +38,18 @@ public final class QuestCatalog {
       }
       definitions.put(quest.id(), toDefinition(quest));
     }
+  }
+
+  /**
+   * Fail closed on quest shapes the online rules do not run: a shared activation flag (the combat
+   * flag allowlist would refuse it) and objective-less quests.
+   */
+  private static void requireRunnable(QuestContent.Quest quest) {
+    if (quest.giverNpc() == null || quest.giverNpc().isBlank())
+      throw new IllegalArgumentException("Quest has no giver");
+    if (quest.activationFlag() != null && !quest.activationFlag().isBlank())
+      throw new IllegalArgumentException("Unsupported quest activation flag");
+    if (quest.requiredKills() <= 0) throw new IllegalArgumentException("Quest has no kill objective");
   }
 
   /** Inventory entries use the normalized item.<key> form; a bare key would silently never match. */

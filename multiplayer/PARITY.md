@@ -17,7 +17,7 @@ re-measure before relying on a number.
 | Portals | 1,118 | 2 (16/17); all others refused |
 | NPCs | about 2,574 placed spawns | 2 (Kilhiam, Warden Aelric) |
 | Shops | 21 | 0 |
-| Quests | 35 | 1 (renewed_wards) |
+| Quests | 35 | 1 (renewed_wards); rules generic, the rest wait on hosting their givers and kill grounds |
 | Player spells | 132 | Stage 1 and 2 (81 spells) plus Light Heal; starting spell kits are now offered to six online classes |
 | Classes | 7 | 6 (Warrior, Paladin, Cleric, Healer, Mage, Battle Mage); Archer awaits online ranged combat |
 | Combat | melee, bows, two weapons, stun blow, stealth, spells | melee and supported stage-1/2 spells; bows, dual wield, stun and stealth still unavailable |
@@ -94,6 +94,7 @@ Each is a gap to close, never a decision to keep:
 - Melee only; bows, stun blow and companions refuse as unsupported combat.
 - Combat fails closed while a world-event flag is active, or while a buff the server does not model (an older record without stored amounts, or an attribute outside `BuffAttributes.MODELLED`) is running. The 25 stage-2 buffs are modelled and fold into melee, retaliation, carry weight and spell numbers.
 - Other quests' flags block combat (quest-flag allowlist).
+- Quest generalisation status (T4C-0299): the quest rules (accept, lethal-claimant kill credit, normalized `item.<key>` requirements, once-only atomic turn-in, flag allowlist) already run over every catalog entry, so the allowlist grows with the catalog. The catalog now refuses quests the rules do not run (shared activation flag, no kill objective, a second quest for the same giver), and `HostedQuestCompletableTest` fails the build if a catalog quest lacks a hosted giver or enough hosted targets inside its circle. The other 34 quests are blocked on hosting, not on rules: their givers (for example TideWardenBryn, SentinelCorwin) and kill grounds are outside the two hosted crops. Still open: several quests per giver and campaign chains (Maelin, Vael, Tholvenn, Ophira, Kaelis: topic selection plus greeting turn-in of several quests), quests with an unlock-zone reward, item-only quests (no kill objective), the journal and kill log display, and a quest-by-quest `OnlineQuestContentExporter` allowlist extension as each region is hosted.
 - Goblins do not attack the Wild Horse (clan combat not simulated).
 - Monsters with spell attacks, scripts or unique loot are excluded from combat.
 - Multi-charge items are refused; no player ground drop.
