@@ -1531,6 +1531,16 @@ public class MainGameScreen implements Screen {
 
   private void switchCharacter() {
     if (switchingCharacter || disposed) return;
+    if (isRemoteSession()) {
+      // Online: nothing to save and no local roster; the lobby (account roster) is next.
+      switchingCharacter = true;
+      clearCurrentAttackTarget();
+      clearSelectedMonster();
+      cancelActiveTargetedSpell();
+      GuiManager.close();
+      Gdx.app.postRunnable(() -> game.returnToOnlineLobby(MainGameScreen.this));
+      return;
+    }
     switchingCharacter = true;
     clearCurrentAttackTarget();
     clearSelectedMonster();
