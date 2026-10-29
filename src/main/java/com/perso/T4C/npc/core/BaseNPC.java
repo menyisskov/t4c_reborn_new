@@ -81,6 +81,15 @@ public abstract class BaseNPC extends Stats implements Nameable {
 
   protected boolean isInteracting = false;
 
+  // Online puppet mode (T4C-0288). Default false: nothing below changes single-player. A puppet
+  // is placed only from server snapshots and runs no patrol, dialogue, hostility, script or sound.
+  private static final float PUPPET_EASE_SECONDS = 0.06f;
+  private static final float PUPPET_SNAP_DISTANCE = 4f * 32f;
+  private boolean puppet;
+  private final Vector2 puppetTarget = new Vector2();
+  private boolean puppetPlaced;
+  private boolean puppetMoving;
+
   protected Vector2 savedPatrolTarget = null;
 
   protected float savedPauseTimer = 0f;
@@ -152,6 +161,68 @@ public abstract class BaseNPC extends Stats implements Nameable {
     isPaused = true;
   }
 
+  /** Turns this NPC into an online puppet (or back); see {@link #puppetPlace}. */
+  public void setPuppet(boolean puppet) {
+
+    this.puppet = puppet;
+  }
+
+  public boolean isPuppet() {
+
+    return puppet;
+  }
+
+  /**
+   * Snapshot position (world pixels): the first call places the NPC, later calls turn it toward
+   * the move and let it glide there. Nothing else about the NPC changes.
+   */
+  public void puppetPlace(float worldX, float worldY) {
+
+    if (!puppetPlaced) {
+
+      puppetPlaced = true;
+
+      initialPosition.set(worldX, worldY);
+
+      position.set(worldX, worldY);
+
+      puppetTarget.set(worldX, worldY);
+
+      return;
+    }
+
+    if (puppetTarget.x != worldX || puppetTarget.y != worldY) {
+
+      movement.faceToward(puppetTarget, new Vector2(worldX, worldY));
+    }
+
+    puppetTarget.set(worldX, worldY);
+  }
+
+  private void updatePuppet(float delta) {
+
+    if (puppetPlaced) {
+
+      float distance = position.dst(puppetTarget);
+
+      if (distance > PUPPET_SNAP_DISTANCE) {
+
+        position.set(puppetTarget);
+
+      } else if (distance > 0f) {
+
+        position.lerp(
+            puppetTarget, 1f - (float) Math.exp(-Math.max(0f, delta) / PUPPET_EASE_SECONDS));
+      }
+
+      puppetMoving = position.dst(puppetTarget) > 0.5f;
+
+      if (!puppetMoving) position.set(puppetTarget);
+    }
+
+    animations.update(delta, puppetMoving);
+  }
+
   public void setSpawnPosition(float worldX, float worldY) {
 
     initialPosition.set(worldX, worldY);
@@ -219,6 +290,13 @@ public abstract class BaseNPC extends Stats implements Nameable {
   }
 
   public void update(float delta, Vector2 playerPosition) {
+
+    if (puppet) {
+
+      updatePuppet(delta);
+
+      return;
+    }
 
     if (isInteracting) {
 
@@ -479,7 +557,7 @@ public abstract class BaseNPC extends Stats implements Nameable {
 
   public void provoke() {
 
-    if (isHostile) {
+    if (puppet || isHostile) {
 
       return;
     }
@@ -614,7 +692,7 @@ public abstract class BaseNPC extends Stats implements Nameable {
 
   public void fleeFrom(Player attacker) {
 
-    if (attacker == null) return;
+    if (puppet || attacker == null) return;
 
     Vector2 source = attacker.getPositionVector();
 
@@ -663,16 +741,19 @@ public abstract class BaseNPC extends Stats implements Nameable {
   public void onAttack(Player player) {}
 
   public void onAttacked(Player player) {
+    if (puppet) return;
     playNpcSound(soundProfile().hit());
   }
 
   public void onDeath(Player player) {
+    if (puppet) return;
     playNpcSound(soundProfile().death());
   }
 
   public void onDestroy(Player player) {}
 
   public void onHit(Player player) {
+    if (puppet) return;
     playNpcSound(soundProfile().hit());
   }
 
@@ -709,6 +790,8 @@ public abstract class BaseNPC extends Stats implements Nameable {
   }
 
   public boolean onClick(Player player) {
+
+    if (puppet) return false;
 
     Vector2 playerPosition = player.getPositionVector();
 

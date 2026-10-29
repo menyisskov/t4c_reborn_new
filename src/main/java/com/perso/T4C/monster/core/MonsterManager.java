@@ -78,6 +78,8 @@ public class MonsterManager {
   private java.util.function.Consumer<BaseMonster> playerKillCallback;
   private java.util.function.Consumer<NpcScriptRuntime.Effects> scriptEffectsCallback;
   private Player scriptPlayer;
+  // Online puppet mode (T4C-0288): the registry only holds snapshot-driven puppets. Default false.
+  private boolean puppetMode;
   private final Set<BaseMonster> notifiedPlayerKills =
       Collections.newSetFromMap(new IdentityHashMap<>());
   private final Set<BaseMonster> notifiedSpawns =
@@ -91,6 +93,18 @@ public class MonsterManager {
 
   public MonsterManager(ShaderProgram outlineShader) {
     this.outlineShader = outlineShader;
+  }
+
+  /**
+   * Online puppet registry: monsters added to it become puppets and nothing here simulates,
+   * respawns, scripts, pays loot or experience, or summons; the server does all of that.
+   */
+  public void setPuppetMode(boolean puppetMode) {
+    this.puppetMode = puppetMode;
+  }
+
+  public boolean isPuppetMode() {
+    return puppetMode;
   }
 
   public boolean despawnMonster(BaseMonster monster) {
@@ -128,7 +142,7 @@ public class MonsterManager {
   }
 
   public void notifyKilledByPlayer(BaseMonster monster) {
-    if (monster == null || !monster.isDead() || !notifiedPlayerKills.add(monster)) {
+    if (puppetMode || monster == null || !monster.isDead() || !notifiedPlayerKills.add(monster)) {
       return;
     }
     if (lootCallback != null) {
@@ -165,6 +179,11 @@ public class MonsterManager {
   }
 
   public void addMonster(BaseMonster monster) {
+    if (puppetMode) {
+      monster.setPuppet(true);
+      monsters.add(monster);
+      return;
+    }
     monsters.add(monster);
     if (isHuntingMonster(monster)) scheduleNextRespawn(monster);
     monster.setScriptPlayer(scriptPlayer);
@@ -185,6 +204,7 @@ public class MonsterManager {
   }
 
   public void update(float delta, Vector2 playerPosition) {
+    if (puppetMode) return;
     spawnAllPending();
     for (BaseMonster monster : monsters) {
       monster.update(delta, playerPosition, monsters);
@@ -203,6 +223,7 @@ public class MonsterManager {
 
   public void updateVisible(
       float delta, Vector2 playerPosition, int startX, int endX, int startY, int endY, int margin) {
+    if (puppetMode) return;
     spawnPendingInView(startX, endX, startY, endY, margin);
     visibleNow.clear();
     for (BaseMonster monster : monsters) {
@@ -332,13 +353,13 @@ public class MonsterManager {
   }
 
   private void emitSpawn(BaseMonster monster) {
-    if (scriptPlayer == null || !notifiedSpawns.add(monster)) return;
+    if (puppetMode || scriptPlayer == null || !notifiedSpawns.add(monster)) return;
     if (monster instanceof MonsterLifecycle lifecycle) emit(lifecycle.onSpawn(scriptPlayer));
     else if (monster instanceof DataMonster data) emit(NpcScriptRuntime.spawn(data, scriptPlayer));
   }
 
   private void emit(BaseMonster monster, String event, Player player) {
-    if (player == null) return;
+    if (puppetMode || player == null) return;
     if (monster instanceof MonsterLifecycle lifecycle) {
       NpcScriptRuntime.Effects effects =
           switch (event) {
@@ -373,6 +394,7 @@ public class MonsterManager {
   }
 
   public boolean spawnMonster(String name, float worldX, float worldY, boolean respawn) {
+    if (puppetMode) return false;
     MonsterDef def = MonsterRegistry.findByName(name);
     if (def == null) {
       return false;
@@ -430,7 +452,7 @@ public class MonsterManager {
   }
 
   public boolean attackMonster(BaseMonster monster, Player player) {
-    if (monster == null || monster.isDead() || player == null || !monster.canBeAttackedByPlayer()) {
+    if (puppetMode || monster == null || monster.isDead() || player == null || !monster.canBeAttackedByPlayer()) {
       return false;
     }
     Vector2 playerPos = player.getPositionVector();

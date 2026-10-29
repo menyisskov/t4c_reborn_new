@@ -117,6 +117,15 @@ public abstract class BaseMonster implements Nameable {
   protected long corpseHiddenAtMs = Long.MAX_VALUE;
   protected long respawnTime;
   private boolean respawnEnabled = true;
+
+  // Online puppet mode (T4C-0288). Default false: nothing below changes single-player. A puppet
+  // is driven only by server snapshots (puppetPlace, puppetHealth): it runs no AI, pathing,
+  // damage, loot, experience, respawn, script or sound logic of its own.
+  private static final float PUPPET_EASE_SECONDS = 0.06f;
+  private static final float PUPPET_SNAP_DISTANCE = 4f * 32f;
+  private boolean puppet;
+  private final Vector2 puppetTarget = new Vector2();
+  private boolean puppetPlaced;
   protected boolean stationary = false;
   private Player scriptPlayer;
   private Consumer<NpcScriptRuntime.Effects> scriptEffectsCallback;
@@ -210,6 +219,10 @@ public abstract class BaseMonster implements Nameable {
   }
 
   public void update(float delta, Vector2 playerPosition, List<BaseMonster> nearbyMonsters) {
+    if (puppet) {
+      updatePuppet(delta);
+      return;
+    }
     if (stuckCooldown > 0f) {
       stuckCooldown = Math.max(0f, stuckCooldown - delta);
     }
@@ -925,7 +938,7 @@ public abstract class BaseMonster implements Nameable {
   }
 
   public void takeDamage(int damage) {
-    if (isDead) return;
+    if (puppet || isDead) return;
     health -= damage;
     log.info("{} takes {} damage! Health: {}/{}", name, damage, health, maxHealth);
     if (health <= 0) {
@@ -937,7 +950,7 @@ public abstract class BaseMonster implements Nameable {
   }
 
   public void heal(int amount) {
-    if (!isDead && amount > 0) health = Math.min(maxHealth, health + amount);
+    if (!puppet && !isDead && amount > 0) health = Math.min(maxHealth, health + amount);
   }
 
   public void applyCombatDefinition(MonsterDef definition) {
@@ -1029,7 +1042,8 @@ public abstract class BaseMonster implements Nameable {
   }
 
   public void applyPlayerDamage(int damage, Player player, XpCurve xpCurve) {
-    if (isDead
+    if (puppet
+        || isDead
         || !SanctuaryCombatRules.canFight(
             player == null ? null : player.getPositionVector(), position)) {
       return;
@@ -1061,7 +1075,7 @@ public abstract class BaseMonster implements Nameable {
   }
 
   public void applyClanDamage(int damage, BaseMonster attacker) {
-    if (isDead) {
+    if (puppet || isDead) {
       return;
     }
     if (attacker != null && canAttackClanTarget() && isEnemyOf(attacker)) {
@@ -1071,6 +1085,10 @@ public abstract class BaseMonster implements Nameable {
   }
 
   protected void die() {
+    if (puppet) {
+      dieAsPuppet();
+      return;
+    }
     isDead = true;
     animations.startDeath();
     deathTime = System.currentTimeMillis();
@@ -1096,7 +1114,8 @@ public abstract class BaseMonster implements Nameable {
   }
 
   public void aggroOn(Vector2 playerPosition) {
-    if (isDead
+    if (puppet
+        || isDead
         || stationary
         || playerPosition == null
         || !SanctuaryCombatRules.canFight(position, playerPosition)) {
@@ -1114,7 +1133,7 @@ public abstract class BaseMonster implements Nameable {
   }
 
   public void aggroOnCompanion(com.perso.T4C.npc.companion.CompanionNPC companion) {
-    if (isDead || stationary || companion == null || companion.isDead()) {
+    if (puppet || isDead || stationary || companion == null || companion.isDead()) {
       return;
     }
     if (!isAggro || companionAggroTarget != companion) {
@@ -1268,7 +1287,7 @@ public abstract class BaseMonster implements Nameable {
   }
 
   public boolean shouldRespawn() {
-    if (!respawnEnabled || !isDead) return false;
+    if (puppet || !respawnEnabled || !isDead) return false;
     if (!animations.isDeadComplete()) return false;
     long currentTime = System.currentTimeMillis();
     return (currentTime - deathTime) >= respawnTime;
@@ -1287,7 +1306,7 @@ public abstract class BaseMonster implements Nameable {
   }
 
   public boolean shouldRemoveAfterDeath() {
-    return !respawnEnabled && isDead && animations.isDeadComplete();
+    return !puppet && !respawnEnabled && isDead && animations.isDeadComplete();
   }
 
   public void setRespawnDelayMillis(long delayMillis) {
@@ -1295,6 +1314,7 @@ public abstract class BaseMonster implements Nameable {
   }
 
   public void respawn() {
+    if (puppet) return;
     isDead = false;
     deathTime = 0L;
     corpseHiddenAtMs = Long.MAX_VALUE;
@@ -1320,6 +1340,86 @@ public abstract class BaseMonster implements Nameable {
     animations.reset();
     nameDisplayUntil = 0L;
     log.info("{} has respawned at position ({}, {})", name, getTileX(), getTileY());
+  }
+
+  /**
+   * Turns this monster into an online puppet (or back). A puppet keeps its sprites, animations,
+   * hover, selection, health bar and name, but every piece of game logic is switched off and its
+   * animations are muted: sounds come from server events, never from a local state change.
+   */
+  public void setPuppet(boolean puppet) {
+    this.puppet = puppet;
+    animations.setMuted(puppet);
+  }
+
+  public boolean isPuppet() {
+    return puppet;
+  }
+
+  /**
+   * Snapshot position (world pixels). The first call places the monster; later calls turn it toward
+   * the move and let it glide there, the same facing rule as the text client's motion class.
+   */
+  public void puppetPlace(float x, float y) {
+    if (!puppetPlaced) {
+      puppetPlaced = true;
+      position.set(x, y);
+      initialPosition.set(x, y);
+      puppetTarget.set(x, y);
+      movement.stop();
+      return;
+    }
+    movement.setDirection(x - puppetTarget.x, y - puppetTarget.y);
+    puppetTarget.set(x, y);
+  }
+
+  /**
+   * Snapshot health. Death plays the normal death animation (silently, without callbacks); a
+   * living snapshot after a death means the server respawned it.
+   */
+  public void puppetHealth(int newHealth, int newMaxHealth) {
+    if (newMaxHealth > 0) maxHealth = newMaxHealth;
+    if (newHealth <= 0) {
+      health = 0;
+      if (!isDead) dieAsPuppet();
+      return;
+    }
+    if (isDead) {
+      isDead = false;
+      deathTime = 0L;
+      corpseHiddenAtMs = Long.MAX_VALUE;
+      animations.reset();
+      movement.stop();
+    }
+    health = Math.min(newHealth, maxHealth);
+  }
+
+  private void dieAsPuppet() {
+    health = 0;
+    isDead = true;
+    animations.startDeath();
+    deathTime = System.currentTimeMillis();
+    corpseHiddenAtMs =
+        deathTime
+            + ThreadLocalRandom.current()
+                .nextLong(CORPSE_MIN_VISIBLE_MILLIS, CORPSE_MAX_VISIBLE_MILLIS + 1);
+  }
+
+  private void updatePuppet(float delta) {
+    if (puppetPlaced && !isDead) {
+      float distance = position.dst(puppetTarget);
+      if (distance > PUPPET_SNAP_DISTANCE) {
+        position.set(puppetTarget);
+      } else if (distance > 0f) {
+        position.lerp(
+            puppetTarget, 1f - (float) Math.exp(-Math.max(0f, delta) / PUPPET_EASE_SECONDS));
+      }
+      if (position.dst(puppetTarget) <= 0.5f) {
+        position.set(puppetTarget);
+        movement.stop();
+      }
+    }
+    animations.update(delta, !isDead && movement.isMoving());
   }
 
   @Override
