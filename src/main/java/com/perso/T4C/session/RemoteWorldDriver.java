@@ -4,6 +4,7 @@ import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
 
 import com.badlogic.gdx.math.Vector2;
+import com.perso.T4C.helper.AppearanceDefaultsCatalog;
 import com.perso.T4C.monster.core.BaseMonster;
 import com.perso.T4C.monster.core.MonsterManager;
 import com.perso.T4C.monster.core.MonsterRegistry;
@@ -127,6 +128,22 @@ public final class RemoteWorldDriver implements WorldDriver {
     List<Player> out = new ArrayList<>(players.size());
     players.values().forEach(entry -> out.add(entry.player));
     return out;
+  }
+
+  /** The server id of a puppet monster of this driver, or -1 (step R3 sends intents by id). */
+  public long creatureId(BaseMonster monster) {
+    for (Map.Entry<Long, BaseMonster> entry : monsters.entrySet()) {
+      if (entry.getValue() == monster) return entry.getKey();
+    }
+    return -1L;
+  }
+
+  /** The server id of a puppet NPC of this driver, or null. */
+  public String npcId(BaseNPC npc) {
+    for (Map.Entry<String, NpcEntry> entry : npcs.entrySet()) {
+      if (entry.getValue().npc() == npc) return entry.getKey();
+    }
+    return null;
   }
 
   /** Definition names the server sent that this client has no monster class for (debug aid). */
@@ -297,7 +314,21 @@ public final class RemoteWorldDriver implements WorldDriver {
       PlayerEntry entry = players.get(actor.id());
       if (entry == null) {
         try {
-          Player player = new Player();
+          // The snapshot carries no appearance parts yet, so every other player gets the default
+          // naked look the text client already uses (female for even ids).
+          String gender =
+              actor.id() % 2 == 0
+                  ? AppearanceDefaultsCatalog.FEMALE
+                  : AppearanceDefaultsCatalog.MALE;
+          var parts = new ArrayList<Object>();
+          AppearanceDefaultsCatalog.nakedParts(gender)
+              .forEach(
+                  (part, sprite) -> {
+                    parts.add(part);
+                    parts.add(sprite);
+                  });
+          Player player = new Player(parts.toArray());
+          player.setGender(gender);
           player.setRemote(true);
           entry = new PlayerEntry(player);
           player.getCoordinates().setX(x);

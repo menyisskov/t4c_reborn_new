@@ -156,6 +156,9 @@ class RemoteWorldDriverTest {
         "built by the same factory single-player uses");
     assertEquals((100 + 3) * GRID_W, first.getPosition().x);
     assertEquals((200 + 4) * GRID_H, first.getPosition().y);
+    assertEquals(1L, driver.creatureId(first));
+    assertEquals(2L, driver.creatureId(monsters.get(1)));
+    assertEquals(-1L, driver.creatureId(null));
     assertEquals(7, first.getHealth());
     assertEquals(10, first.getMaxHealth());
   }
@@ -289,6 +292,8 @@ class RemoteWorldDriverTest {
     assertInstanceOf(PuppetNpc.class, npcs.get(1));
     assertTrue(npcs.get(0).isPuppet());
     assertTrue(npcs.get(1).isPuppet());
+    assertEquals(LighthavenSamaritan.ID, driver.npcId(npcs.get(0)));
+    assertEquals("N0123456789", driver.npcId(npcs.get(1)));
     assertEquals((100 + 2) * GRID_W, npcs.get(0).getPosition().x);
     assertEquals((200 + 5) * GRID_H, npcs.get(1).getPosition().y);
 
