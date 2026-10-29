@@ -19,6 +19,7 @@ import com.perso.T4C.online.OnlineConnection;
 import com.perso.T4C.online.model.CreatureView;
 import com.perso.T4C.online.model.GroundLootView;
 import com.perso.T4C.online.model.NpcView;
+import com.perso.T4C.online.model.ShopOffersReply;
 import com.perso.T4C.player.Player;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,6 +53,8 @@ class RemotePlayerCommandsTest {
     final List<Long> frames = new ArrayList<>();
     final Map<Long, Long> acknowledged = new HashMap<>();
     CompletableFuture<OnlineConnection.CommandResult> next = new CompletableFuture<>();
+    CompletableFuture<OnlineConnection.CommandResult> offers = new CompletableFuture<>();
+    CompletableFuture<OnlineConnection.CommandResult> trade = new CompletableFuture<>();
     RuntimeException throwOnSend;
 
     @Override
@@ -81,6 +84,24 @@ class RemotePlayerCommandsTest {
     }
 
     @Override
+    public CompletionStage<OnlineConnection.CommandResult> shopOffers(String npc) {
+      calls.add("shopOffers " + npc);
+      return offers;
+    }
+
+    @Override
+    public CompletionStage<OnlineConnection.CommandResult> shopBuy(String npc, String itemKey, int quantity) {
+      calls.add("shopBuy " + npc + " " + itemKey + " " + quantity);
+      return trade;
+    }
+
+    @Override
+    public CompletionStage<OnlineConnection.CommandResult> shopSell(String npc, String itemKey, int quantity) {
+      calls.add("shopSell " + npc + " " + itemKey + " " + quantity);
+      return trade;
+    }
+
+    @Override
     public void direction(int dx, int dy, long frame) {
       directions.add(new int[] {dx, dy});
       frames.add(frame);
@@ -99,6 +120,7 @@ class RemotePlayerCommandsTest {
   private static final class TestHost implements RemotePlayerCommands.Host {
     final Player player;
     final List<String> messages = new ArrayList<>();
+    final List<String> shops = new ArrayList<>();
 
     TestHost(Player player) {
       this.player = player;
@@ -112,6 +134,11 @@ class RemotePlayerCommandsTest {
     @Override
     public void showMessage(String text) {
       messages.add(text);
+    }
+
+    @Override
+    public void showShop(String npc, ShopOffersReply offers) {
+      shops.add(npc + ":" + offers.gold());
     }
   }
 
@@ -359,6 +386,45 @@ class RemotePlayerCommandsTest {
     link.answer("online.npc.unavailable");
     session.commands().pump();
     assertEquals(List.of(I18n.key("online.npc.unavailable")), host.messages);
+  }
+
+  @Test
+  void shopkeeperClickOpensServerListingAndTradeRefreshesItWithoutLocalMutation() {
+    String npc = LighthavenSamaritan.ID;
+    var listing = new ShopOffersReply(4, 80, npc,
+        List.of(new ShopOffersReply.Line("item.dagger", 12, 2)), List.of());
+    int goldBefore = player.getGold();
+    int daggersBefore = InventoryService.count(player, "item.dagger");
+
+    assertTrue(session.commands().interact(npc));
+    link.next.complete(new OnlineConnection.CommandResult(true, null, "npc.shop"));
+    assertEquals(List.of("interact " + npc, "shopOffers " + npc), link.calls);
+    link.offers.complete(new OnlineConnection.CommandResult(true, null, null, List.of(), listing));
+    assertTrue(host.shops.isEmpty(), "network replies are delivered by the render-thread pump");
+    session.commands().pump();
+    assertEquals(List.of(npc + ":80"), host.shops);
+
+    link.offers = new CompletableFuture<>();
+    link.trade = new CompletableFuture<>();
+    assertTrue(session.commands().shopBuy(npc, "item.dagger", 1));
+    link.trade.complete(new OnlineConnection.CommandResult(true, null, "online.shop.bought", List.of(1, 12)));
+    assertEquals("shopOffers " + npc, link.calls.get(link.calls.size() - 1));
+    link.offers.complete(new OnlineConnection.CommandResult(true, null, null, List.of(),
+        new ShopOffersReply(5, 68, npc, List.of(new ShopOffersReply.Line("item.dagger", 12, 1)), List.of())));
+    session.commands().pump();
+    assertEquals(List.of(npc + ":80", npc + ":68"), host.shops);
+    assertEquals(List.of(I18n.message("online.shop.bought", 1, 12)), host.messages);
+    assertEquals(goldBefore, player.getGold());
+    assertEquals(daggersBefore, InventoryService.count(player, "item.dagger"));
+
+    link.next = new CompletableFuture<>();
+    link.offers = new CompletableFuture<>();
+    assertTrue(session.commands().interact(npc));
+    link.next.complete(new OnlineConnection.CommandResult(true, null, "npc.shop"));
+    session.commands().closeShop();
+    link.offers.complete(new OnlineConnection.CommandResult(true, null, null, List.of(), listing));
+    session.commands().pump();
+    assertEquals(List.of(npc + ":80", npc + ":68"), host.shops, "closing ignores a late listing reply");
   }
 
   // --- movement ---

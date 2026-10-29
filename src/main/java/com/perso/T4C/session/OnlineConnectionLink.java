@@ -34,6 +34,21 @@ public final class OnlineConnectionLink implements RemoteLink {
   }
 
   @Override
+  public CompletionStage<OnlineConnection.CommandResult> shopOffers(String npc) {
+    return connection.shopOffers(npc);
+  }
+
+  @Override
+  public CompletionStage<OnlineConnection.CommandResult> shopBuy(String npc, String itemKey, int quantity) {
+    return connection.shopBuy(npc, itemKey, quantity);
+  }
+
+  @Override
+  public CompletionStage<OnlineConnection.CommandResult> shopSell(String npc, String itemKey, int quantity) {
+    return connection.shopSell(npc, itemKey, quantity);
+  }
+
+  @Override
   public void direction(int dx, int dy, long frame) {
     connection.direction(dx, dy, frame);
   }
