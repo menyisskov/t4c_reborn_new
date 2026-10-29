@@ -485,3 +485,5 @@ the class `mage` as an "unsupported class". Caster creation (T4C-0272) made `mag
 build returned 200 and created a character (`EDIT-create-class` and `EDIT-create-count` failed, 320 PASS / 2 FAIL). The case
 now asks for a class that does not exist (`necromancer`) and still expects `400 unsupported_class`. A second run on the same
 code was cut short by an interrupted session (cluster and server stopped, cleaned up); the run recorded above is the full rerun.
+
+Re-run on the current build (T4C-0310, 2026-10-29, `origin/main` c079b1c0, protocol 7/schema 13, disposable PG16 cluster `t4c_acc_*`, server on 18843): **322 PASS, 0 FAIL**, owned server exited 0 after the private admin stop.

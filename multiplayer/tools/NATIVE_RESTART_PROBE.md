@@ -92,3 +92,5 @@ backup restore, remote transport, general quest/loot replay or a sustained soak.
 The opening letter is the one consequential mutation exercised. A tool pass is
 evidence for this narrow behavior only; milestone acceptance still needs the
 rendered two-client playthrough and the other checked gates in `MILESTONES.md`.
+
+Revalidated on the current build (T4C-0310, 2026-10-29, `origin/main` c079b1c0, protocol 7/schema 13, disposable PG16 cluster, ServerMain on 18842): unchanged probe PASS, lease wait 29,673 ms, all stderr logs empty. A twenty-adapter version is in [NATIVE_FAULT_DRILL.md](NATIVE_FAULT_DRILL.md).
