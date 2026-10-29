@@ -215,7 +215,7 @@ see 503s for the first seconds (not re-measured here), and a real client without
 is a login that takes up to roughly ten seconds before giving up. Re-measure with an unpaced burst (open gate set to
 twenty) if the owner wants a hard number before raising `MAX_PUBLIC`.
 
-### Rerun after server movement parity, PG16 WSL, 12 minutes (T4C-0287, 2026-10-29): FAILED, with a server-side persistence finding
+### Rerun after server movement parity, PG16 WSL, 12 minutes (T4C-0288, 2026-10-29): FAILED, with a server-side persistence finding
 
 Same setup as the paced rerun (fresh disposable PostgreSQL 16 cluster on loopback 56982, TEMP runtime snapshot, one
 `ServerMain --online` child on 18797 with a private control file, twenty adapters, 720 s, one-at-a-time paced opens), but
@@ -224,7 +224,7 @@ also the shop, spell-engine and regeneration changes merged since the previous r
 from the tile the player is arriving on. The report ran to completion (`finished: true`, 720.045 s); the cluster was
 destroyed and the TEMP runtime and profiles removed. Local PG16 evidence only.
 
-| Metric | Paced rerun (T4C-0250) | After movement parity (T4C-0287) |
+| Metric | Paced rerun (T4C-0250) | After movement parity (T4C-0288) |
 | --- | --- | --- |
 | Time at 20 adapters | 406.5 s (56.5%) | 23.4 s (3.2%) |
 | Time at 19 or more | 702.0 s (97.5%) | 55.5 s (7.7%); most time at 13 to 17 |

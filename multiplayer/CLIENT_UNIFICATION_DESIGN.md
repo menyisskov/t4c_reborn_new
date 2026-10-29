@@ -376,6 +376,22 @@ speed (the server holds no player speed state), the stun/exhausted/attacking gat
 tiles beyond hosted portal sources, the wall-foot difference between `PreviewMap.load` (applies it)
 and `RegionMapLoader` (does not), and client-side prediction on top of the now shared rule.
 
+### 3.11 Remote session, step R1: the character (T4C-0287)
+
+`RemoteGameSession` (kind `REMOTE`, headless, not wired to any screen) exists with
+`RemoteCharacterSource`, a persistence that writes nothing, and placeholders for the world driver
+and the commands that throw `UnsupportedOperationException("not available online yet: <member>")`.
+`ProgressMirror.toStateDto(OnlineConnection.View)` is the design's `ProgressMirror`: it turns the
+committed `CharacterProgress` plus the own actor and region into the `PlayerStateDto` the existing
+`PlayerStateMapper.applyToPlayer` fills the `Player` from (the mapper was reused in the forward
+direction; no mapper code changed). `applyTo` sets `Player.remote` before the mapper runs. The
+conventions that differ between the two models (worn items leave the inventory, a two-slot item
+fills both slots, experience split with the server's own curve, base health without buff health,
+region-local tile centres to absolute tile anchors) are documented on `ProgressMirror`; the item
+instance ids are kept beside the state for the later `ItemInstanceIndex`. A view that is not ready
+fails with `IllegalStateException` rather than starting a new character. Parity debt list: PARITY.md.
+Next, R2: the world driver applies snapshots to the monster, NPC and ground-item objects.
+
 ## 4. Staged plan
 
 Sizes: S under a day, M a few days, L about a week, XL more. Every stage ends with the full

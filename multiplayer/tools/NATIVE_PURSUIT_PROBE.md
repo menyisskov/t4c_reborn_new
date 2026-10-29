@@ -27,7 +27,7 @@ Output files include `report.txt` (sanitized stage, coordinates, health/progress
 
 An eventual pass proves committed passive-guard provocation, server-authored guard movement closing on settled stationary A in B's native snapshot, B isolation, durable creature checkpoint, A's normal reconnect and same-candidate graceful restart recovery of living guard pose/HP/life. It does not prove rendered movement, natural aggressive acquisition, target contention, full wall navigation, sanctuary or return behavior, death/respawn, in-flight stale-CAS races, displaced drop/quest credit, forced-restart recovery, abilities, or the full two-rendered-client M4/M6 and 20-player Beta gates. The current world-0 crop has no `6`/`7` sanctuary tile; Olin's 60-tile retaliation leash cannot be exceeded there without artificial content, so do not invent a reset test. A deterministic service test should gate an in-flight checkpoint against death/epoch clear. This route asserts traversable player cells and observed creature positions, not a complete wall-path/return contract.
 
-Movement rule change (T4C-0287): the server now finishes a claimed tile (single-player's grid-reservation rule, PR #234),
+Movement rule change (T4C-0288): the server now finishes a claimed tile (single-player's grid-reservation rule, PR #234),
 so the west retreat releases the key once the third tile is claimed (more than 2.05 tiles from the start) and the glide
 ends exactly 3.0 tiles away instead of overshooting a tile. The 3.5-tile bound and every other assertion are unchanged.
 Compile-checked against the current runtime; not re-run live for this change.

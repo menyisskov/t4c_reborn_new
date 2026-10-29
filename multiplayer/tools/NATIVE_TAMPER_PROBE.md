@@ -464,10 +464,10 @@ finishes its tile (the actor keeps gliding for up to 3.6 ticks), and blocked ste
 of stopping, so the samples of `SPEED-walls` along a wall are no longer constant. The probe was
 not run for that change; the next section records the run.
 
-### Recorded run after server movement parity (T4C-0287, 2026-10-29)
+### Recorded run after server movement parity (T4C-0288, 2026-10-29)
 
 **Tamper battery, local PG16 WSL, 322 cases, after server movement parity, not the integrated release build.**
-Source `origin/main` 0a6622f9 plus the T4C-0287 probe edits (merged with later main), protocol 5, disposable PostgreSQL 16
+Source `origin/main` 0a6622f9 plus the T4C-0288 probe edits (merged with later main), protocol 5, disposable PostgreSQL 16
 cluster on loopback 56981 (destroyed afterwards, `DESTROY_OK`), one `ServerMain --online` child on 18796, TEMP runtime
 snapshot (removed afterwards). Result: **322 PASS, 0 FAIL**; the server exited 0 after the private admin stop.
 
