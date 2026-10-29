@@ -83,6 +83,16 @@ re-measure before relying on a number.
 - [ ] **World systems and rules:** world events, trials, divine systems, karma, the full death
   penalty, return scrolls.
 - [ ] **Audio and effects** from server events.
+  Progress (T4C-0314, other players' look): the snapshot's actor now carries the server-derived
+  public look (name, gender, worn items that draw something) and the client dresses other players
+  through the single-player appearance pipeline, so their armour, robe, helmet, weapon and shield
+  match what the same gear looks like on the own character; a hovered player gets the
+  single-player health-colour outline and the shared name text. Additive wire fields, protocol
+  stays 7 (older servers leave them out and the default look remains). Remaining: the name shows
+  on hover only (monsters and townsfolk also show theirs for a few seconds after a click; players
+  have no click action yet), no class, level, stealth/invisibility, spell-effect or attack
+  animations for other players, and the look is refreshed with the server's committed state, not
+  mid-swing.
 - [ ] **Chat** (the minimum multiplayer addition for a two-client game).
 
 ## Temporary divergences (debt, not design)

@@ -434,7 +434,7 @@ the witness player nothing.
 | NPC stationary, idle, health, hostility | `NpcView` has id, name, position, sprite | stationary NPCs do not play their idle loop; no NPC combat |
 | Corpses | `View.corpses` is not applied | no corpse sprite or recover target yet |
 | Loot owner window, charges | `ownerRemainingMs` exists; charges absent | no owner tooltip; charges unknown |
-| Other players: name, class, appearance parts, equipment, stealth, actions | only an opaque `appearance` id and hp | default look; no name; no walk animation, not drawn by `MainGameScreen` (both added in R3, 3.13); exposed by `RemoteWorldDriver.otherPlayers()` |
+| Other players: name, class, appearance parts, equipment, stealth, actions | `Actor` carries id, position, hp and, since T4C-0314, the public look: name, gender and the worn items that draw something (all derived server-side from committed state); class, stealth and actions are still not sent | dressed through `PlayerAppearanceDefaults` like the own character (default look for an older server); name and health-colour outline on hover; walk animation and `MainGameScreen` drawing from R3; exposed by `RemoteWorldDriver.otherPlayers()` |
 | Interpolation buffer (render 100 ms behind) | n/a | puppets ease 60 ms toward the newest snapshot instead |
 | Server id to object | held by the driver (`creatureId`, `npcId`) | step R3 sends intents by these ids |
 

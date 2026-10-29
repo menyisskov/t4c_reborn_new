@@ -4,7 +4,6 @@ import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
 
 import com.badlogic.gdx.math.Vector2;
-import com.perso.T4C.helper.AppearanceDefaultsCatalog;
 import com.perso.T4C.monster.core.BaseMonster;
 import com.perso.T4C.monster.core.MonsterManager;
 import com.perso.T4C.monster.core.MonsterRegistry;
@@ -47,8 +46,8 @@ import org.slf4j.LoggerFactory;
  * {@link ProgressMirror}.
  *
  * <p>The screen owns the ground-item registry, so it is handed in. Other players have no type in the
- * screen yet; they are kept as remote {@link Player} puppets (default look: the snapshot carries
- * only an opaque appearance id) and exposed through {@link #otherPlayers()} for the render hook that
+ * screen yet; they are kept as remote {@link Player} puppets, dressed from the public look the
+ * snapshot carries (gender and visible worn items, see {@link RemotePlayerLook}), and exposed through {@link #otherPlayers()} for the render hook that
  * comes with wiring.
  */
 public final class RemoteWorldDriver implements WorldDriver {
@@ -81,8 +80,12 @@ public final class RemoteWorldDriver implements WorldDriver {
     /** Seconds since the server last moved this player; walking stays on while it is recent. */
     float sinceTargetMoved = Float.MAX_VALUE;
 
-    PlayerEntry(Player player) {
+    /** What the model was built from; a change rebuilds it. */
+    final String look;
+
+    PlayerEntry(Player player, String look) {
       this.player = player;
+      this.look = look;
     }
   }
 
@@ -355,25 +358,29 @@ public final class RemoteWorldDriver implements WorldDriver {
       float x = (float) (originX + actor.x() - 0.5) * GRID_W;
       float y = (float) (originY + actor.y() - 0.5) * GRID_H;
       PlayerEntry entry = players.get(actor.id());
+      String look = RemotePlayerLook.signature(actor);
+      if (entry != null && !entry.look.equals(look)) {
+        // Worn items or name changed on the server: rebuild the model, keeping place and walking.
+        try {
+          Player rebuilt = RemotePlayerLook.build(actor);
+          rebuilt.getCoordinates().setX(entry.player.getCoordinates().getX());
+          rebuilt.getCoordinates().setY(entry.player.getCoordinates().getY());
+          PlayerEntry replacement = new PlayerEntry(rebuilt, look);
+          replacement.target.set(entry.target);
+          replacement.sinceTargetMoved = entry.sinceTargetMoved;
+          players.put(actor.id(), replacement);
+          entry = replacement;
+        } catch (RuntimeException failure) {
+          log.warn("Could not rebuild online player {}", actor.id(), failure);
+        }
+      }
       if (entry == null) {
         try {
-          // The snapshot carries no appearance parts yet, so every other player gets the default
-          // naked look the text client already uses (female for even ids).
-          String gender =
-              actor.id() % 2 == 0
-                  ? AppearanceDefaultsCatalog.FEMALE
-                  : AppearanceDefaultsCatalog.MALE;
-          var parts = new ArrayList<Object>();
-          AppearanceDefaultsCatalog.nakedParts(gender)
-              .forEach(
-                  (part, sprite) -> {
-                    parts.add(part);
-                    parts.add(sprite);
-                  });
-          Player player = new Player(parts.toArray());
-          player.setGender(gender);
-          player.setRemote(true);
-          entry = new PlayerEntry(player);
+          // The look comes from the snapshot's public data (gender, visible worn items, name) and
+          // goes through the same appearance pipeline single-player uses; an actor without it
+          // keeps the default naked look (female for even ids).
+          Player player = RemotePlayerLook.build(actor);
+          entry = new PlayerEntry(player, look);
           player.getCoordinates().setX(x);
           player.getCoordinates().setY(y);
           entry.target.set(x, y);

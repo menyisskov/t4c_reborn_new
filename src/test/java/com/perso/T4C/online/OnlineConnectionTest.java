@@ -97,7 +97,8 @@ class OnlineConnectionTest {
                 case "/join" -> "{\"token\":\"" + token + "\",\"id\":7,\"region\":"+region+"}";
                 case "/state" ->
                     "{\"tick\":8,\"region\":"+region+",\"characterRevision\":" + revision.get()
-                        + ",\"players\":[{\"id\":7,\"x\":40.5,\"y\":30.5,\"sequence\":0,\"hp\":27,\"maxHp\":40}],"
+                        + ",\"players\":[{\"id\":7,\"x\":40.5,\"y\":30.5,\"sequence\":0,\"hp\":27,\"maxHp\":40,"
+                        + "\"name\":\"Brindle\",\"gender\":\"female\",\"equipment\":{\"BODY\":\"item.acolytes_dawnlit_robe\"}}],"
                         + "\"npcs\":[{\"id\":\"Kilhiam\",\"displayName\":\"${npc.kilhiam}\",\"x\":57,\"y\":29,\"parts\":{\"BODY\":\"WoWhiteRobe\"}}],"
                         + "\"creatures\":[{\"id\":1,\"definition\":\"Guard\",\"x\":21,\"y\":37,"
                         + "\"health\":55,\"maxHealth\":55,\"walkPattern\":\"Warrio#l\"}]}";
@@ -132,6 +133,14 @@ class OnlineConnectionTest {
         assertEquals(7, connection.view().ownId());
         assertEquals(27, connection.view().snapshot().players().getFirst().hp());
         assertEquals(40, connection.view().snapshot().players().getFirst().maxHp());
+        assertEquals("Brindle", connection.view().snapshot().players().getFirst().name());
+        assertEquals("female", connection.view().snapshot().players().getFirst().gender());
+        assertEquals(
+            java.util.Map.of("BODY", "item.acolytes_dawnlit_robe"),
+            connection.view().snapshot().players().getFirst().equipment());
+        assertThrows(
+            UnsupportedOperationException.class,
+            () -> connection.view().snapshot().players().getFirst().equipment().clear());
         assertEquals("Kilhiam",connection.view().snapshot().npcs().getFirst().id());
         assertEquals(Integer.toString(com.perso.T4C.online.model.OnlineProtocol.VERSION), protocol.get());
         assertEquals(2904, connection.view().map().originX());

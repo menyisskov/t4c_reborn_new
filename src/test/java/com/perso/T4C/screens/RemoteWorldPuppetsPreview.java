@@ -137,7 +137,13 @@ public final class RemoteWorldPuppetsPreview extends MyGame {
     var players =
         List.of(
             new OnlineConnection.Actor(7, 20.5, 12.5, 1, 0, 150, 180),
-            new OnlineConnection.Actor(9, rx(-2) + 0.5, ry(2) + 0.5, 1, 0, 90, 120));
+            new OnlineConnection.Actor(
+                9, rx(-2) + 0.5, ry(2) + 0.5, 1, 0, 90, 120, "Brindle", "female",
+                Map.of("BODY", "item.acolytes_dawnlit_robe", "SHIELD", "item.adamantite_shield_3")),
+            new OnlineConnection.Actor(
+                11, rx(-4) + 0.5, ry(2) + 0.5, 1, 0, 30, 120, "Garrick", "male",
+                Map.of("BODY", "item.acolytes_dawnlit_robe")),
+            new OnlineConnection.Actor(13, rx(-6) + 0.5, ry(2) + 0.5, 1, 0, 120, 120));
     var snapshot = new OnlineConnection.Snapshot(1, players, 1L, creatures, map.region(), npcs, loot);
     return new OnlineConnection.View(7, map, snapshot, null, List.of());
   }
@@ -212,12 +218,27 @@ public final class RemoteWorldPuppetsPreview extends MyGame {
     // with the screen's own camera so the preview shows them where they would stand.
     batch.setProjectionMatrix(camera.combined);
     batch.begin();
-    for (Player other : driver.otherPlayers()) other.render(batch, null, false);
+    // Two are drawn hovered (outline in the health colour, name above), as the screen does.
+    var shader = (com.badlogic.gdx.graphics.glutils.ShaderProgram) peekQuiet(screen, "outlineShader");
+    int index = 0;
+    for (Player other : driver.otherPlayers()) {
+      boolean hovered = index++ < 2;
+      other.render(batch, shader, hovered);
+      com.perso.T4C.entity.RemotePlayerNameplate.render(batch, other, hovered);
+    }
     batch.end();
     frame++;
     if (frame == 10) {
       save("remote-world-puppets.png");
       Gdx.app.exit();
+    }
+  }
+
+  private static Object peekQuiet(Object target, String field) {
+    try {
+      return peek(target, field);
+    } catch (Exception e) {
+      return null;
     }
   }
 
