@@ -59,6 +59,23 @@ public final class LiveRunProvision {
       questScene(plan, out, args.length > 3 ? args[3] : "");
       return;
     }
+    if ("mortal".equals(scene)) {
+      // One level-8 warrior with 3 hit points beside a Skeleton anchor: dies within seconds (death and respawn diagnostics).
+      Spot start = skeletonStart(plan, map);
+      var kit = OnlineCharacterCreator.prepare(CharacterClass.WARRIOR, "female", false, new Random(77));
+      var vit = kit.progress().vitals();
+      var weak = ProgressEdits.withVitals(kit.progress(), new CharacterProgress.Vitals(3, vit.maxHp(), vit.mana(), vit.maxMana()));
+      try (var store = OnlineStore.fromEnvironment()) {
+        makeFrom(store, out.resolve("player-a.json"), "Live Mortal" + (args.length > 3 ? args[3] : ""), start, weak, kit.gold(), 0);
+        // makeFrom does not create the Bravo profile: the solo scene needs only one.
+      }
+      System.out.println("PROVISION_OK");
+      return;
+    }
+    if ("beta".equals(scene)) {
+      betaScene(plan, out, args.length > 3 ? args[3] : "");
+      return;
+    }
     if ("move-skeletons".equals(scene) || "move-giver".equals(scene)) {
       move(plan, map, out, scene);
       return;
@@ -119,6 +136,98 @@ public final class LiveRunProvision {
       makeFrom(store, out.resolve("player-b.json"), "Live Walker" + suffix, b, heavy, warrior.gold(), 0);
     }
     System.out.println("PROVISION_OK");
+  }
+
+  /**
+   * T4C-0316 scene {@code beta}: two level-30 warriors beside WardenAelric for the long mixed session (quest topic
+   * panel, equip observed by the other window, loot, portals, soak). The second one (Bravo) carries a filler stack of a
+   * one-weight item sized so that exactly {@link #BRAVO_HEADROOM} weight units are left: a Skeleton drop heavier than
+   * that (Leather Gloves, Skeleton Bone: weight 3) is refused for Bravo as too heavy while Alpha, who carries only the
+   * starting kit, can take it, and the lighter drops can still be raced for. Nothing the server enforces is changed.
+   */
+  static final long BRAVO_HEADROOM = 2;
+
+  private static void betaScene(HostedRegionPlan plan, Path out, String suffix) throws Exception {
+    Spot a = besideNpc(plan, "WardenAelric");
+    Spot b = nearby(plan, a, 2, 1);
+    var npc = NpcInteractionCatalog.loadBundled().require("WardenAelric");
+    System.out.println("scene=beta alpha=(" + a.x() + "," + a.y() + ") bravo=(" + b.x() + "," + b.y() + ") warden=(" + npc.x() + "," + npc.y() + ")");
+    var items = ItemCatalog.loadBundled();
+    // The tile the driver walks to for the Skeleton fights (the same anchor rule as the loot probe).
+    PreviewMap map = plan.regions().stream().filter(r -> r.spec().world() == WORLD).findFirst().orElseThrow().map();
+    Spot ground = skeletonStart(plan, map);
+    System.out.println("skeletonGround=" + (int) Math.floor(ground.x()) + "," + (int) Math.floor(ground.y()));
+    try (var store = OnlineStore.fromEnvironment()) {
+      makeWithHeadroom(store, out.resolve("player-a.json"), "Live Alpha" + suffix, a, 30, items, -1);
+      makeWithHeadroom(store, out.resolve("player-b.json"), "Live Bravo" + suffix, b, 30, items, BRAVO_HEADROOM);
+    }
+    System.out.println("PROVISION_OK");
+  }
+
+  private static void makeWithHeadroom(OnlineStore store, Path profile, String name, Spot at, int level,
+      com.perso.T4C.online.model.ItemContent content, long headroom) throws Exception {
+    // Level the character exactly as make() does, then add the filler stack before it is created.
+    var kit = OnlineCharacterCreator.prepare(CharacterClass.WARRIOR, "female", false, new Random(name.hashCode()));
+    CharacterProgress progress = kit.progress();
+    long experience = 0;
+    XpCurve curve = XpCurve.loadDefault();
+    double rate = PlayerProgression.scaledAward(1_000_000L, 0f, false) / 1_000_000d;
+    Random random = new Random(level * 7919L + name.hashCode());
+    for (int i = 0; i < 64 && progress.advancement().level() < level; i++) {
+      long remaining = curve.getTotalXp(level) - experience;
+      long base = Math.max(1L, (long) Math.ceil(remaining / rate));
+      var state = new OnlineStore.CharacterState(UUID.randomUUID(), UUID.randomUUID(), name, WORLD, 0, 0, 0, experience, 0, progress);
+      var award = OnlineProgression.award(state, base, 0, random);
+      if (award.experience() <= 0) break;
+      experience += award.experience();
+      progress = award.progress();
+    }
+    if (progress.advancement().level() < level) throw new IllegalStateException("could not reach level " + level);
+    // Both beta characters carry twenty Healing Potions so a twenty-minute fight does not end in an incidental death.
+    var stocked = new java.util.ArrayList<>(progress.inventory());
+    stocked.add(new CharacterProgress.Item(UUID.randomUUID(), "item.healing_potion", 20, 0));
+    {
+      var q = progress;
+      progress = new CharacterProgress(q.version(), q.characterClass(), q.gender(), q.attributes(), q.vitals(),
+          q.advancement(), stocked, q.equipment(), q.skills(), q.spells(), q.questFlags(), q.storage(),
+          q.storageGold(), q.respawn(), q.buffs(), q.cooldowns(), q.hiddenUntil(), q.companion());
+    }
+    if (headroom < 0) {
+      finish(store, profile, name, at, progress, kit.gold(), experience, "no filler stack");
+      return;
+    }
+    var filler = content.items().values().stream()
+        .filter(d -> d.weight() == 1 && !d.unique() && !d.undroppable())
+        .min(java.util.Comparator.comparing(com.perso.T4C.online.model.ItemContent.Definition::key))
+        .orElseThrow();
+    long maximum = com.perso.T4C.item.CarryCapacityRules.maximumWeight(OnlinePickupRules.effectiveStrength(progress, content, 0L));
+    long carried = OnlinePickupRules.carriedWeight(progress, content);
+    long quantity = maximum - carried - headroom;
+    if (quantity < 1 || quantity > Integer.MAX_VALUE) throw new IllegalStateException("cannot size the filler stack: " + quantity);
+    var inventory = new java.util.ArrayList<>(progress.inventory());
+    inventory.add(new CharacterProgress.Item(UUID.randomUUID(), filler.key(), (int) quantity, 0));
+    var p = progress;
+    progress = new CharacterProgress(p.version(), p.characterClass(), p.gender(), p.attributes(), p.vitals(),
+        p.advancement(), inventory, p.equipment(), p.skills(), p.spells(), p.questFlags(), p.storage(),
+        p.storageGold(), p.respawn(), p.buffs(), p.cooldowns(), p.hiddenUntil(), p.companion());
+    System.out.println("filler " + filler.key() + " x" + quantity + " maximum " + maximum + " carried before " + carried + " headroom " + headroom);
+    finish(store, profile, name, at, progress, kit.gold(), experience, headroom + " weight units of headroom");
+  }
+
+  private static void finish(OnlineStore store, Path profile, String name, Spot at, CharacterProgress progress, long gold,
+      long experience, String note) throws Exception {
+    privateFile(profile);
+    var key = store.provisionAccount();
+    var created = store.create(key.accountId(), name, WORLD, at.x(), at.y(), progress, gold);
+    try (var db = DriverManager.getConnection(System.getenv("T4C_DB_URL"), System.getenv("T4C_DB_USER"), System.getenv("T4C_DB_PASSWORD"));
+        var ps = db.prepareStatement("UPDATE online_characters SET experience=? WHERE id=? AND revision=0")) {
+      ps.setLong(1, experience);
+      ps.setObject(2, created.id());
+      if (ps.executeUpdate() != 1) throw new IllegalStateException("experience seed did not apply");
+    }
+    String json = new Gson().toJson(Map.of("accountId", key.accountId(), "characterId", created.id(), "secret", key.secret()));
+    Files.writeString(profile, json, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
+    System.out.println("provisioned " + name + " level " + progress.advancement().level() + " with " + note);
   }
 
   /** A standable tile within three tiles of the authored NPC (talking distance). */
