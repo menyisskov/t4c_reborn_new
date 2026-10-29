@@ -149,6 +149,8 @@ public class MainGameScreen implements Screen {
   private float secondsSinceAutosave;
   private final com.perso.T4C.session.GameSession session;
   private final com.perso.T4C.online.OnlineConnection remoteConnection;
+  private final com.perso.T4C.online.OnlineShopPanel remoteShopPanel =
+      new com.perso.T4C.online.OnlineShopPanel();
   private boolean displayInitialized;
   private int loadingStep;
   private GameInputHandler inputHandler;
@@ -346,6 +348,24 @@ public class MainGameScreen implements Screen {
       commands.bind(new com.perso.T4C.session.RemotePlayerCommands.Host() {
         @Override public Player player() { return MainGameScreen.this.player; }
         @Override public void showMessage(String text) { showSystemMessage(text); }
+        @Override public void showShop(
+            String npc, com.perso.T4C.online.model.ShopOffersReply offers) {
+          if (remoteShopPanel.isOpen() && npc.equals(remoteShopPanel.npc())) {
+            remoteShopPanel.refresh(offers);
+            return;
+          }
+          String name = npc;
+          var view = remoteConnection == null ? null : remoteConnection.view();
+          var snapshot = view == null ? null : view.snapshot();
+          if (snapshot != null) {
+            name = snapshot.npcs().stream()
+                .filter(actor -> npc.equals(actor.id()))
+                .map(com.perso.T4C.online.model.NpcView::displayName)
+                .findFirst()
+                .orElse(npc);
+          }
+          remoteShopPanel.open(npc, name, offers);
+        }
       });
     } else {
       questService = new QuestService(xpCurve, this::savePlayerState, this::showSystemMessage);
@@ -1534,11 +1554,16 @@ public class MainGameScreen implements Screen {
         "input",
         () -> {
           synchronizeRemoteRegion();
+          if (remoteShopPanel.isOpen()
+              && (remoteConnection == null || !"connected".equals(remoteConnection.status()))) {
+            closeRemoteShop();
+          }
           if (seraphArrivalBlocksMovement()
               || remoteConnection!=null && !"connected".equals(remoteConnection.status())) {
             return;
           }
-          inputHandler.handleInput(delta, player);
+          if (remoteShopPanel.isOpen()) session.commands().move(0, 0, delta);
+          else inputHandler.handleInput(delta, player);
         });
     section("autosave", () -> updateAutosave(delta));
     section("teleport", this::updateTeleportForPlayer);
@@ -1659,8 +1684,18 @@ public class MainGameScreen implements Screen {
         case "disconnected" -> I18n.key("online.client.disconnected");
         default -> I18n.key("online.client.connecting");
       };
-      com.perso.T4C.ui.FontManager.getInstance().getTahomaFont(13,com.badlogic.gdx.graphics.Color.WHITE,false)
+      var font = com.perso.T4C.ui.FontManager.getInstance()
+          .getTahomaFont(13,com.badlogic.gdx.graphics.Color.WHITE,false);
+      font
           .draw(batch,text,20,hudCamera.viewportHeight-18);
+      if (remoteShopPanel.isOpen()) {
+        var lines = remoteShopPanel.lines(MainGameScreen::onlineShopItemName);
+        float y = hudCamera.viewportHeight - 16;
+        for (int i = 0; i < lines.size(); i++) {
+          if (i > 0) y -= i == 1 ? font.getLineHeight() * 1.5f : font.getLineHeight();
+          font.draw(batch, lines.get(i), hudCamera.viewportWidth - 420, y);
+        }
+      }
       batch.end();
     }
     stage.act(delta);
@@ -4968,6 +5003,34 @@ public class MainGameScreen implements Screen {
     GroundItemClickHandler lootClicks=new GroundItemClickHandler(camera,groundItemManager,player,systemMessage);
     InputMultiplexer remote=new InputMultiplexer();
     remote.addProcessor(new com.badlogic.gdx.InputAdapter() {
+      @Override public boolean keyDown(int keycode) {
+        if (!remoteShopPanel.isOpen()) return false;
+        if (keycode == Input.Keys.T || keycode == Input.Keys.ESCAPE) {
+          closeRemoteShop();
+          return true;
+        }
+        if (keycode == Input.Keys.TAB) { remoteShopPanel.toggleMode(); return true; }
+        if (keycode == Input.Keys.Q) { remoteShopPanel.cycleQuantity(); return true; }
+        if (keycode == Input.Keys.LEFT || keycode == Input.Keys.RIGHT) {
+          remoteShopPanel.turnPage(keycode == Input.Keys.RIGHT ? 1 : -1);
+          return true;
+        }
+        int digit = keycode >= Input.Keys.NUM_1 && keycode <= Input.Keys.NUM_9
+            ? keycode - Input.Keys.NUM_1 + 1 : 0;
+        if (digit == 0) return false;
+        var action = remoteShopPanel.choose(digit).orElse(null);
+        if (action != null) {
+          var commands = (com.perso.T4C.session.RemotePlayerCommands) session.commands();
+          if (action.mode() == com.perso.T4C.online.OnlineShopPanel.Mode.BUY) {
+            commands.shopBuy(action.npc(), action.itemKey(), action.quantity());
+          } else {
+            commands.shopSell(action.npc(), action.itemKey(), action.quantity());
+          }
+        }
+        return true;
+      }
+    });
+    remote.addProcessor(new com.badlogic.gdx.InputAdapter() {
       private boolean returnQueued;
       @Override public boolean keyDown(int keycode) {
         if (keycode!=Input.Keys.R || !"disconnected".equals(remoteConnection.status()) || returnQueued)
@@ -4979,6 +5042,17 @@ public class MainGameScreen implements Screen {
     });
     remote.addProcessor(monsters);remote.addProcessor(npcClicks);remote.addProcessor(lootClicks);
     Gdx.input.setInputProcessor(remote);
+  }
+
+  private void closeRemoteShop() {
+    remoteShopPanel.close();
+    if (isRemoteSession())
+      ((com.perso.T4C.session.RemotePlayerCommands) session.commands()).closeShop();
+  }
+
+  private static String onlineShopItemName(String key) {
+    var item = com.perso.T4C.item.ItemRegistry.findByKey(key);
+    return item == null ? key : I18n.resolve(item.getName());
   }
 
   @Override

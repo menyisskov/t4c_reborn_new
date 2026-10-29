@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0293`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0295`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,7 +18,9 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0292 | Client unification remote session R3: `RemoteGameSession.commands()` becomes `RemotePlayerCommands` over the existing connection (attack by server creature id, sequenced input with prediction and reconciliation, pickup by loot id, NPC interact by id); single-player pickup and NPC click route to it only in an online session; other players are drawn by the real screen; headless tests and a real-screen preview; no launcher, server or protocol change | Multiplayer / parity | In Progress (PR open) | pending | none (no player-visible change yet) |
+| T4C-0294 | Make server-authoritative NPC shops accessible in the real online game screen over the persistent socket | Multiplayer / parity | In Progress (local focused tests 48/48 passed; PR pending) | pending | [CHANGELOG.md](CHANGELOG.md#2026-10-29--online-shopkeepers-are-accessible-in-the-real-game-t4c-0294) |
+| T4C-0293 | Feed the online lobby into the real game screen and make lobby updates refreshable | Multiplayer / parity | Done (PR #253 merged; local checks passed) | PR #253 | no player-visible change beyond online lobby |
+| T4C-0292 | Client unification remote session R3: `RemoteGameSession.commands()` becomes `RemotePlayerCommands` over the existing connection (attack by server creature id, sequenced input with prediction and reconciliation, pickup by loot id, NPC interact by id); single-player pickup and NPC click route to it only in an online session; other players are drawn by the real screen; headless tests and a real-screen preview; no launcher, server or protocol change | Multiplayer / parity | Done (PR #251 merged; local focused tests passed) | PR #251 | no player-visible change yet |
 | T4C-0288 | Re-validate the native probes after server movement parity: walkers plan from the arriving tile; tamper battery 322/322 PASS; soak rerun found persistence Conflict disconnects unrelated to movement | Process/Tooling | Done (PR #248 merged at `592f9a90`; soak failure preserved) | PR #248 | none (tooling only) |
 | T4C-0287 | Client unification remote session R1: a headless `RemoteGameSession` (kind remote, saves nothing) whose character source builds the real `Player` from the server's committed character state through the existing state mapper and marks it remote; world driver and commands are explicit "not available online yet" placeholders; no UI, launcher, server or protocol change | Multiplayer / parity | In Progress (PR open) | pending | none (no player-visible change yet) |
 | T4C-0290 | Correct NativeTransferProbe pathfinding to follow server grid-reservation steps after movement parity | Multiplayer / acceptance tooling | Done (PR #249 merged at `38fc70f6`; local javac/preflight passed; isolated two-adapter entrance/rejoin/return passed) | PR #249 (`38fc70f6`) | deferred |

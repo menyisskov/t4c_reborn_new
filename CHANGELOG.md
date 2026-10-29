@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-29 — Online shopkeepers are accessible in the real game (T4C-0294)
+
+### Added
+- In online play, interacting with a shopkeeper opens the buy and sell list in the game screen. Purchases and sales refresh from the server.
+
 ## 2026-10-28 — Online shopkeepers can trade with players (T4C-0281)
 
 ### Added

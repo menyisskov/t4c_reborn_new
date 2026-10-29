@@ -164,6 +164,21 @@ public final class RemoteClickAttackPreview extends MyGame {
     }
 
     @Override
+    public CompletionStage<OnlineConnection.CommandResult> shopOffers(String npc) {
+      throw new IllegalStateException("Shop routes are outside this preview");
+    }
+
+    @Override
+    public CompletionStage<OnlineConnection.CommandResult> shopBuy(String npc, String itemKey, int quantity) {
+      throw new IllegalStateException("Shop routes are outside this preview");
+    }
+
+    @Override
+    public CompletionStage<OnlineConnection.CommandResult> shopSell(String npc, String itemKey, int quantity) {
+      throw new IllegalStateException("Shop routes are outside this preview");
+    }
+
+    @Override
     public void direction(int dx, int dy, long frame) {}
 
     @Override

@@ -21,6 +21,12 @@ public interface RemoteLink {
 
   CompletionStage<OnlineConnection.CommandResult> interact(String npc);
 
+  CompletionStage<OnlineConnection.CommandResult> shopOffers(String npc);
+
+  CompletionStage<OnlineConnection.CommandResult> shopBuy(String npc, String itemKey, int quantity);
+
+  CompletionStage<OnlineConnection.CommandResult> shopSell(String npc, String itemKey, int quantity);
+
   /** Holds a direction (each component -1..1); {@code frame} names the predicted client input. */
   void direction(int dx, int dy, long frame);
 

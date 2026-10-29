@@ -126,6 +126,21 @@ public final class RemoteGameSession implements GameSession {
     }
 
     @Override
+    public CompletionStage<OnlineConnection.CommandResult> shopOffers(String npc) {
+      throw down();
+    }
+
+    @Override
+    public CompletionStage<OnlineConnection.CommandResult> shopBuy(String npc, String itemKey, int quantity) {
+      throw down();
+    }
+
+    @Override
+    public CompletionStage<OnlineConnection.CommandResult> shopSell(String npc, String itemKey, int quantity) {
+      throw down();
+    }
+
+    @Override
     public void direction(int dx, int dy, long frame) {}
 
     @Override

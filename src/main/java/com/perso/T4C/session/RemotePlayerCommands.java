@@ -6,6 +6,7 @@ import static com.perso.T4C.config.GameConstants.GRID_W;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.monster.core.BaseMonster;
 import com.perso.T4C.online.OnlineConnection;
+import com.perso.T4C.online.model.ShopOffersReply;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.world.MovementReconciler;
 import com.perso.T4C.world.MovementRules;
@@ -14,6 +15,7 @@ import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 import java.util.function.ToLongFunction;
@@ -63,6 +65,9 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
     Player player();
 
     void showMessage(String text);
+
+    /** Called by {@link #pump()} on the render thread when the server returns a shop listing. */
+    default void showShop(String npc, ShopOffersReply offers) {}
   }
 
   /** The swing-cooldown refusal is routine and never shown (same key as the text client). */
@@ -77,12 +82,21 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
   /** Unacknowledged frames kept before the replay restarts from the server (a dead link). */
   public static final int MAX_PENDING_FRAMES = 600;
 
-  private record Outcome(String key, List<Integer> args) {}
+  private record Outcome(String key, List<Integer> args, String shopNpc, ShopOffersReply shop, long shopGeneration) {
+    static Outcome message(String key, List<Integer> args) {
+      return new Outcome(key, args, null, null, -1);
+    }
+
+    static Outcome shop(String npc, ShopOffersReply listing, long generation) {
+      return new Outcome(null, List.of(), npc, listing, generation);
+    }
+  }
 
   private final RemoteLink link;
   private final ToLongFunction<BaseMonster> creatureIds;
   private final RemoteMovementRule rule;
   private final Queue<Outcome> outcomes = new ConcurrentLinkedQueue<>();
+  private final AtomicLong shopGeneration = new AtomicLong();
   private Host host;
 
   private MovementReconciler reconciler;
@@ -150,7 +164,115 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
   @Override
   public boolean interact(String npc) {
     if (npc == null) return false;
-    return send(() -> link.interact(npc), "online.npc.refused");
+    long generation = shopGeneration.incrementAndGet();
+    try {
+      link.interact(npc)
+          .whenComplete(
+              (result, failure) -> {
+                if (failure != null || result == null) {
+                  outcomes.add(Outcome.message("online.npc.refused", List.of()));
+                } else if (result.accepted()) {
+                  // The socket is single-flight. Queue offers only after interaction has completed.
+                  requestShopAfter(npc, result, generation);
+                } else {
+                  outcomes.add(Outcome.message(result.messageKey(), result.args()));
+                }
+              });
+      return true;
+    } catch (IllegalStateException pendingOrOffline) {
+      outcomes.add(Outcome.message("online.npc.refused", List.of()));
+      return true;
+    } catch (IllegalArgumentException invalidIdentity) {
+      return false;
+    }
+  }
+
+  @Override
+  public boolean shopOffers(String npc) {
+    if (npc == null) return false;
+    return requestOffers(npc, "online.shop.busy", false, shopGeneration.get());
+  }
+
+  @Override
+  public boolean shopBuy(String npc, String itemKey, int quantity) {
+    return trade(npc, itemKey, quantity, true);
+  }
+
+  @Override
+  public boolean shopSell(String npc, String itemKey, int quantity) {
+    return trade(npc, itemKey, quantity, false);
+  }
+
+  @Override
+  public void closeShop() {
+    shopGeneration.incrementAndGet();
+  }
+
+  private boolean trade(String npc, String itemKey, int quantity, boolean buying) {
+    if (npc == null || itemKey == null) return false;
+    long generation = shopGeneration.get();
+    try {
+      var action = buying ? link.shopBuy(npc, itemKey, quantity) : link.shopSell(npc, itemKey, quantity);
+      action.whenComplete(
+          (result, failure) -> {
+            if (failure != null || result == null) {
+              outcomes.add(Outcome.message("online.shop.refused", List.of()));
+              return;
+            }
+            outcomes.add(Outcome.message(result.messageKey(), result.args()));
+            if (shopGeneration.get() == generation)
+              requestOffers(npc, "online.shop.busy", true, generation);
+          });
+      return true;
+    } catch (IllegalStateException pendingOrOffline) {
+      outcomes.add(Outcome.message("online.shop.busy", List.of()));
+      return true;
+    } catch (IllegalArgumentException invalidRequest) {
+      return false;
+    }
+  }
+
+  private void requestShopAfter(String npc, OnlineConnection.CommandResult interaction, long generation) {
+    if (shopGeneration.get() != generation) return;
+    try {
+      link.shopOffers(npc)
+          .whenComplete(
+              (listing, failure) -> {
+                if (shopGeneration.get() != generation) return;
+                if (failure != null || listing == null) {
+                  outcomes.add(Outcome.message(interaction.messageKey(), interaction.args()));
+                } else if (listing.accepted() && listing.shop() != null) {
+                  outcomes.add(Outcome.shop(npc, listing.shop(), generation));
+                } else {
+                  outcomes.add(Outcome.message(interaction.messageKey(), interaction.args()));
+                }
+              });
+    } catch (IllegalStateException | IllegalArgumentException unavailable) {
+      outcomes.add(Outcome.message(interaction.messageKey(), interaction.args()));
+    }
+  }
+
+  private boolean requestOffers(String npc, String failureKey, boolean quietIfBusy, long generation) {
+    try {
+      link.shopOffers(npc)
+          .whenComplete(
+              (result, failure) -> {
+                if (shopGeneration.get() != generation) return;
+                if (failure != null || result == null) {
+                  if (!quietIfBusy) outcomes.add(Outcome.message(failureKey, List.of()));
+                } else if (result.accepted() && result.shop() != null) {
+                  outcomes.add(Outcome.shop(npc, result.shop(), generation));
+                } else if (!quietIfBusy) {
+                  outcomes.add(Outcome.message(result.messageKey() == null ? failureKey : result.messageKey(), result.args()));
+                }
+              });
+      return true;
+    } catch (IllegalStateException pendingOrOffline) {
+      if (!quietIfBusy) outcomes.add(Outcome.message(failureKey, List.of()));
+      return true;
+    } catch (IllegalArgumentException invalidIdentity) {
+      return false;
+    }
   }
 
   private boolean send(
@@ -162,12 +284,12 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
               (result, failure) ->
                   outcomes.add(
                       failure != null || result == null
-                          ? new Outcome(failureKey, List.of())
-                          : new Outcome(result.messageKey(), result.args())));
+                  ? Outcome.message(failureKey, List.of())
+                          : Outcome.message(result.messageKey(), result.args())));
       return true;
     } catch (IllegalStateException pendingOrOffline) {
       // Single-flight: a second click while one is in flight, or a link that is down. Say so.
-      outcomes.add(new Outcome(failureKey, List.of()));
+      outcomes.add(Outcome.message(failureKey, List.of()));
       return true;
     } catch (IllegalArgumentException invalidIdentity) {
       return false;
@@ -178,6 +300,11 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
   public void pump() {
     Outcome outcome;
     while ((outcome = outcomes.poll()) != null) {
+      if (outcome.shop() != null) {
+        if (host != null && outcome.shopGeneration() == shopGeneration.get())
+          host.showShop(outcome.shopNpc(), outcome.shop());
+        continue;
+      }
       String key = outcome.key();
       if (key == null || SILENT_COOLDOWN_KEY.equals(key) || host == null) continue;
       host.showMessage(
