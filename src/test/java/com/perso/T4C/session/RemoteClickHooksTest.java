@@ -167,4 +167,22 @@ class RemoteClickHooksTest {
     assertTrue(sawOverlap, "the two boxes overlap on some rows");
     assertTrue(behindWon && frontWon, "each figure can be clicked, including the one behind");
   }
+
+  @Test
+  void singlePlayerKeepsPickingTheFirstNpcWhenBoxesOverlap() {
+    NPCManager manager = new NPCManager(null);
+    BaseNPC first = samaritan(manager);
+    BaseNPC second = new LighthavenSamaritan(new NpcContext(null));
+    manager.addNPC(second);
+    second.puppetPlace(640f, 368f);
+    boolean sawOverlap = false;
+    for (float y = 200f; y <= 440f; y += 1f) {
+      boolean overFirst = first.isMouseOver(640f, y);
+      boolean overSecond = second.isMouseOver(640f, y);
+      if (overFirst && overSecond) sawOverlap = true;
+      if (overFirst) assertSame(first, manager.findNpcAt(640f, y), "y=" + y);
+      else if (overSecond) assertSame(second, manager.findNpcAt(640f, y), "y=" + y);
+    }
+    assertTrue(sawOverlap);
+  }
 }

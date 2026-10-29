@@ -17,7 +17,7 @@ commit links, and finer-grained notes.
 - In online play, the inventory (I), spell (C) and potion (U) lists and the shop window now open in the same centred window the single-player menus use, reading from the top down. Before, they were drawn upside down in the bottom right corner on top of the radar.
 - In online play, the shop window now shows the shopkeeper's name in its title instead of a stray code word.
 - In online play, speaking to someone who has things to say now lists what you can ask about; press its number to ask. This is how a quest is offered and accepted, which was not possible online before.
-- When two people stand so close that their click areas overlap (for example Moonrock in front of Warden Aelric), clicking one of them now talks to the one under your cursor instead of always the same one, in both single-player and online play.
+- When two people stand so close that their click areas overlap (for example Moonrock in front of Warden Aelric), clicking one of them now talks to the one under your cursor instead of always the same one, in online play. Single-player is unchanged.
 
 ## 2026-10-29 — Portals no longer drop you when you hop twice in a row (T4C-0309)
 

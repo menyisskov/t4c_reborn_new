@@ -324,11 +324,31 @@ public class NPCManager {
   }
 
   /**
-   * The NPC under the cursor. When click boxes overlap (one NPC standing just behind another) the
+   * The NPC under the cursor. Single-player takes the first NPC in list order. Online (puppet
+   * mode) resolves overlap: when click boxes overlap (one NPC standing just behind another) the
    * NPC whose box centre is nearest the cursor wins, and the one drawn in front (lower on screen)
    * breaks a tie, so a click on a visible figure never lands on the NPC beside or behind it.
    */
   public BaseNPC findNpcAt(float mouseX, float mouseY) {
+
+    if (!puppetMode) {
+
+      // Single-player: the first NPC in list order, exactly as before.
+      for (BaseNPC npc : npcs) {
+
+        if (npc.isMouseOver(mouseX, mouseY)) {
+
+          return npc;
+        }
+      }
+
+      return null;
+    }
+
+    return findPuppetNpcAt(mouseX, mouseY);
+  }
+
+  private BaseNPC findPuppetNpcAt(float mouseX, float mouseY) {
 
     BaseNPC best = null;
 
@@ -389,9 +409,7 @@ public class NPCManager {
       return clicked != null && remoteInteract.test(clicked);
     }
 
-    BaseNPC clickedNpc = findNpcAt(mouseX, mouseY);
-
-    for (BaseNPC npc : clickedNpc == null ? List.<BaseNPC>of() : List.of(clickedNpc)) {
+    for (BaseNPC npc : npcs) {
 
       if (npc.isMouseOver(mouseX, mouseY)) {
 

@@ -699,9 +699,9 @@ fixed in the screen, not in the legacy text client:
   greeting that opens no shop now opens the same window listing the NPC's authored keywords (`npc.topic_keyword.*.0`);
   digit keys send `interact(npc, topic)`, Esc, I, C, U, walking a tile or a disconnect close it. A reply to a topic never
   reopens the list.
-- *Overlapping boxes:* `NPCManager.findNpcAt` (used by single-player clicks too) now picks, among the boxes under the
-  cursor, the one whose box centre is nearest, the one lower on screen on a tie. Earlier both modes took the first NPC in
-  list order.
+- *Overlapping boxes:* in puppet (online) mode `NPCManager.findNpcAt` picks, among the boxes under the
+  cursor, the one whose box centre is nearest, the one lower on screen on a tie. Single-player keeps the first NPC in
+  list order, unchanged (pinned by `RemoteClickHooksTest`).
 - *Not verified:* a live two-window run on a server; the changes are covered by unit tests and the rendered preview only.
 
 ## 4. Staged plan
