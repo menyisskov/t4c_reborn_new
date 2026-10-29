@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0285`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0288`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0287 | Re-validate the native probes after server movement parity: walkers plan from the arriving tile; tamper battery 322/322 PASS; soak rerun failed on a server persistence Conflict unrelated to movement (evidence recorded) | Process/Tooling | Done (PR open) | pending | none (tooling only) |
 | T4C-0282 | Spell engine stage 3: area spells, damage over time, shields and gateways | Multiplayer / parity | Open PR #237 (queued) | PR #237 | deferred |
 | T4C-0281 | Online NPC shops: single-player price parity and server-authoritative buy/sell | Multiplayer / parity | In Progress (PR #238 takeover) | PR #238 | deferred |
 | T4C-0284 | NPC engine design: classification of all 504 NPC identities and 2,574 placed spawns by role and by how their behaviour is expressed (data, parameterised, hand-written script), options compared, and the chosen hybrid: data dialogue, shops and trainers served by a generic server engine, while the existing NPC scripts run unchanged on the server behind one conversation port; staged plan starting with data-only dialogue ([NPC_ENGINE_DESIGN.md](multiplayer/NPC_ENGINE_DESIGN.md)) | Multiplayer / design | Design draft | this PR | none (docs only) |

@@ -289,3 +289,11 @@ potions lost about 45 of 91 health killing two Skeletons and died to the next. A
 minimum level, and at what level should it start? The quest and the starter ground are authored for it, and the
 Skeletons are aggressive with 13 anchors inside each other's aggro range. The probe cannot make the loot
 assertions meaningful without a killer that survives, and giving it a higher level would hide the question.
+
+## Movement rule change (T4C-0287)
+
+The server moves players with single-player's grid-reservation rule (PR #234): a released key finishes its
+tile, there is no mid-tile reversal, and blocked steps slide. The probe's `steer` now picks its direction relative
+to the tile the player is arriving on (the last direction sent) with a half-tile dead band, so the stop-at-once
+assumption no longer makes it oscillate around a target. It compiles against the current runtime; it was **not run**
+for this change (the Skeleton ground is lethal for new characters, T4C-0248).

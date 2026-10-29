@@ -219,7 +219,8 @@ Required behavior:
   stale revision and epoch on every mutating route, replays and reordered input, oversized and malformed bodies,
   forged targets and foreign items, corpses and owner-window loot, stat/gold/flag/item edit attempts, speed and
   collision. 321 passed with no committed state changed and the victim playing throughout; 1 failed (`/recover`
-  reports a definite corpse-item refusal as `503 busy`, state unchanged, server fix not made here). Combat-time
+  reports a definite corpse-item refusal as `503 busy`, state unchanged; fixed since by PR #209). After server movement
+  parity (T4C-0287) the same 322 cases all passed (322 PASS, 0 FAIL). Combat-time
   forgery, enabled-portal transfers, rendered clients and remote/TLS abuse remain open, so this bullet stays unchecked.
 - [ ] Restore a backup into a separate database and finish a native gameplay/reconnect check there;
   matching table hashes alone do not satisfy restored gameplay acceptance. T4C-0213 verified
