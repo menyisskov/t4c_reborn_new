@@ -81,7 +81,7 @@ public abstract class BaseNPC extends Stats implements Nameable {
 
   protected boolean isInteracting = false;
 
-  // Online puppet mode (T4C-0288). Default false: nothing below changes single-player. A puppet
+  // Online puppet mode (T4C-0289). Default false: nothing below changes single-player. A puppet
   // is placed only from server snapshots and runs no patrol, dialogue, hostility, script or sound.
   private static final float PUPPET_EASE_SECONDS = 0.06f;
   private static final float PUPPET_SNAP_DISTANCE = 4f * 32f;

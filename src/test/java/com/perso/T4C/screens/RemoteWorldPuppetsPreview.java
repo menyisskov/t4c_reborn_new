@@ -40,7 +40,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Developer preview for the remote world driver (T4C-0288, not shipped, not a golden): opens the
+ * Developer preview for the remote world driver (T4C-0289, not shipped, not a golden): opens the
  * REAL single-player {@link MainGameScreen} on the golden fixture character, then replaces its
  * monster and NPC registries with the puppets {@link RemoteWorldDriver} builds from a hand-made
  * snapshot (no network, no server) and saves one PNG of what the real renderer draws: puppet

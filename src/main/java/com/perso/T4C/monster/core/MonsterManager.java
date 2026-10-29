@@ -78,7 +78,7 @@ public class MonsterManager {
   private java.util.function.Consumer<BaseMonster> playerKillCallback;
   private java.util.function.Consumer<NpcScriptRuntime.Effects> scriptEffectsCallback;
   private Player scriptPlayer;
-  // Online puppet mode (T4C-0288): the registry only holds snapshot-driven puppets. Default false.
+  // Online puppet mode (T4C-0289): the registry only holds snapshot-driven puppets. Default false.
   private boolean puppetMode;
   private final Set<BaseMonster> notifiedPlayerKills =
       Collections.newSetFromMap(new IdentityHashMap<>());

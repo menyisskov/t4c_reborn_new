@@ -118,7 +118,7 @@ public abstract class BaseMonster implements Nameable {
   protected long respawnTime;
   private boolean respawnEnabled = true;
 
-  // Online puppet mode (T4C-0288). Default false: nothing below changes single-player. A puppet
+  // Online puppet mode (T4C-0289). Default false: nothing below changes single-player. A puppet
   // is driven only by server snapshots (puppetPlace, puppetHealth): it runs no AI, pathing,
   // damage, loot, experience, respawn, script or sound logic of its own.
   private static final float PUPPET_EASE_SECONDS = 0.06f;

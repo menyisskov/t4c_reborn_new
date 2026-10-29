@@ -392,7 +392,7 @@ instance ids are kept beside the state for the later `ItemInstanceIndex`. A view
 fails with `IllegalStateException` rather than starting a new character. Parity debt list: PARITY.md.
 Next, R2: the world driver applies snapshots to the monster, NPC and ground-item objects.
 
-### 3.12 Remote session, step R2: the world as puppets (T4C-0288)
+### 3.12 Remote session, step R2: the world as puppets (T4C-0289)
 
 `RemoteGameSession.world()` is now `RemoteWorldDriver` (headless, not wired to any screen).
 `loadEntities` builds a `MonsterManager` and an `NPCManager` in **puppet mode**: no spawn is queued

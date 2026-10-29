@@ -38,7 +38,7 @@ re-measure before relying on a number.
   (the snapshot's live hp is not applied yet), day/night hour (default), appearance of other
   players (snapshot carries only an opaque id), and the storage and companion fields only as far
   as the server stores them.
-  Progress (T4C-0288, remote session R2, headless and unwired): `RemoteGameSession.world()` is
+  Progress (T4C-0289, remote session R2, headless and unwired): `RemoteGameSession.world()` is
   `RemoteWorldDriver`, which applies each server snapshot to the real `BaseMonster`, `BaseNPC` and
   `GroundItem` objects (puppet mode: no AI, loot, experience, quest, sound, respawn or script of
   their own) and to remote `Player` puppets for other players; a sweep test applies a death to all

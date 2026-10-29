@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
 /**
- * The online puppet switch (T4C-0288): in puppet mode every logic entry point of a monster, an NPC
+ * The online puppet switch (T4C-0289): in puppet mode every logic entry point of a monster, an NPC
  * and their registries is inert, while the default mode (pinned by {@link
  * PuppetSwitchCharacterizationTest}) is untouched.
  */

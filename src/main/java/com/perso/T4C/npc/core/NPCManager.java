@@ -35,7 +35,7 @@ public class NPCManager {
 
   private BaseNPC activeConversationNpc;
 
-  // Online puppet mode (T4C-0288): the registry only holds snapshot-driven puppets. Default false.
+  // Online puppet mode (T4C-0289): the registry only holds snapshot-driven puppets. Default false.
   private boolean puppetMode;
 
   @Setter private CompanionManager companionManager;

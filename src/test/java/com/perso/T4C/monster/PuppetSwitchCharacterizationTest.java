@@ -25,7 +25,7 @@ import org.junit.jupiter.api.parallel.ResourceLock;
 
 /**
  * Characterizes, in the default (non-puppet) mode, every single-player method that the online
- * puppet switch (T4C-0288) touches: a lethal hit fires the death callback and plays the death
+ * puppet switch (T4C-0289) touches: a lethal hit fires the death callback and plays the death
  * sound, a kill pays loot and kill callbacks once, damage pays experience, a dead monster is
  * removed or respawned on schedule, an NPC click starts a conversation in range and a hit NPC
  * dies and is removed. Written before the switch exists; it must pass unchanged afterwards.
