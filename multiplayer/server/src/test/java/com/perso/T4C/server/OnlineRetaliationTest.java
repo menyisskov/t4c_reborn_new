@@ -16,6 +16,56 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
 @EnabledIfEnvironmentVariable(named="T4C_DB_URL",matches=".+")
 class OnlineRetaliationTest {
+  @Test void authoredHealSeriousHealsMonsterToMaximumAndPersistsItsCooldown() throws Exception {
+    var store=OnlineStore.fromEnvironment(); store.migrate();
+    var gson=new Gson();
+    var json=gson.toJsonTree(MonsterCatalog.loadBundled().monsters().get("Olin Haad Guard 3")).getAsJsonObject();
+    json.addProperty("health",2000);
+    json.addProperty("level",1000);
+    json.add("attacks",JsonParser.parseString("[{\"name\":\"\",\"value1\":1000000,\"value2\":100,\"value3\":10616,\"value4\":0,\"value5\":100}]") );
+    var definition=gson.fromJson(json,MonsterDef.class);
+    assertTrue(OnlineRetaliation.supported(definition));
+    var spawn=new MonsterContent.Spawn("heal-retaliation-"+UUID.randomUUID(),definition.getName(),3,3,0,false,false);
+    var map=new PreviewMap(new boolean[10][10],0,0,1,1);
+    var world=new PreviewWorld(map,new MonsterContent(MonsterContent.VERSION,Map.of(definition.getName(),definition),List.of(spawn)));
+    var sessions=new PersistentSessions(store,map,world);
+    var account=store.provisionAccount();
+    var progress=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(1)).progress();
+    var target=store.create(account.accountId(),"Heal retaliation target",0,3.5,3.5,progress,0);
+    long started=System.nanoTime();var lease=store.acquire(account.secret(),target.id());
+    var token=sessions.join(lease,started).token();
+    var rolls=new Random(1) { @Override public int nextInt(int bound) { return bound-1; } };
+    var items=ItemCatalog.loadBundled();
+    try {
+      OnlineStore.SpawnState injured;
+      try(var creatures=new PersistentCreatures(store,world)) {
+        var melee=new OnlineMelee(map,world,sessions,creatures,items,rolls,System::currentTimeMillis);
+        var hit=melee.attack(token,0,1).toCompletableFuture();
+        await(sessions,creatures,hit::isDone);hit.get();
+        await(sessions,creatures,()->available(creatures));
+        injured=creatures.life(1);
+        assertNotNull(injured.health());
+        assertTrue(injured.health()>0 && injured.health()<definition.getHealth(),"A real player hit damages the monster before healing");
+        int playerHp=store.load(account.accountId(),target.id()).progress().vitals().hp();
+        var retaliation=new OnlineRetaliation(map,world,sessions,creatures,items,rolls,System::currentTimeMillis);
+        Thread.sleep(Math.max(0,injured.nextAttackAt()-System.currentTimeMillis())+30);
+        retaliation.step();
+        await(sessions,creatures,()->available(creatures));
+        var healed=creatures.life(1);
+        assertEquals(definition.getHealth(),healed.health(),"Heal Serious caps at authored maximum HP");
+        assertTrue(healed.nextAttackAt()>injured.nextAttackAt(),"The heal commits the next attack deadline");
+        assertTrue(healed.stateRevision()>injured.stateRevision());
+        assertEquals(playerHp,store.load(account.accountId(),target.id()).progress().vitals().hp(),"A self-heal never damages its target player");
+      }
+      try(var reloaded=new PersistentCreatures(store,world)) {
+        var afterRestart=reloaded.life(1);
+        assertEquals(definition.getHealth(),afterRestart.health());
+        assertEquals("RETALIATION",afterRestart.mode());
+        assertTrue(afterRestart.nextAttackAt()>injured.nextAttackAt());
+      }
+    } finally { sessions.shutdown(); }
+  }
+
   @Test void authoredElementalSpellRetaliationCommitsBalancedResistedHealth() throws Exception {
     var store=OnlineStore.fromEnvironment(); store.migrate();
     var gson=new Gson();

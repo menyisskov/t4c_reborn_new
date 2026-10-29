@@ -24,6 +24,11 @@ final class OnlineMonsterSpellCatalog {
         ? spell : null;
   }
 
+  MonsterSpellContent.Spell selfHealSpell(int id) {
+    var spell = content.spells().get(Integer.toString(id));
+    return id == 10616 && spell != null && spell.behavior() == Behavior.SELF_HEAL ? spell : null;
+  }
+
   static synchronized OnlineMonsterSpellCatalog bundled() {
     if (bundled == null) {
       try {
