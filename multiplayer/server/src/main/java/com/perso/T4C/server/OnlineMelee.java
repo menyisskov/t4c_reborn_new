@@ -51,7 +51,7 @@ final class OnlineMelee {
     // Never silently omit authored script/quest behavior. Loot is accepted only for tables the online roll can grant.
     if ((definition.getSourceEvents()!=null && !definition.getSourceEvents().isEmpty())
         || !OnlineLootDrafts.supports(definition,items)
-        || !OnlineQuestFlags.supported(p.questFlags(),QuestCatalog.bundled()) || p.companion()!=null || p.skills().getOrDefault("stun_blow",0)>0
+        || !OnlineQuestFlags.supported(p.questFlags(),QuestCatalog.bundled()) || p.companion()!=null
         || !OnlineRetaliation.supported(definition))
       throw rejected("unsupported_combat");
     var position=world.position(token);
@@ -59,8 +59,7 @@ final class OnlineMelee {
     try { loadout=OnlineCombatLoadout.resolve(p,items,now,false); }
     catch (IllegalArgumentException unsupported) { throw rejected("unsupported_combat"); }
     boolean ranged=isBow(loadout.primary()) || isBow(loadout.secondary());
-    if (loadout.profile().skill("stun_blow")>0
-        || (ranged && (loadout.secondary()==null || loadout.secondary().structure()!=QUIVER_STRUCTURE_ID)))
+    if (ranged && (loadout.secondary()==null || loadout.secondary().structure()!=QUIVER_STRUCTURE_ID))
       throw rejected("unsupported_combat");
     double x=captured.x()-map.originX,y=captured.y()-map.originY;
     double range=ranged ? BOW_ATTACK_RANGE : PLAYER_MELEE_ATTACK_RANGE;
@@ -70,7 +69,7 @@ final class OnlineMelee {
         || !map.combatEndpointsSafe(position.x(),position.y(),x,y,false) || !visible)
       throw rejected("out_of_range_or_blocked");
     var resolved=CombatResolver.resolve(new PhysicalAttackRequest(loadout.profile(),
-        MonsterCombatRules.resolve(definition).profile(false,random),
+        MonsterCombatRules.resolve(definition).profile(creatures.stunned(target,now),random),
         ranged ? WeaponDamageRules.bow(loadout.stats(),loadout.primary(),loadout.secondary(),loadout.damageBonus())
             : WeaponDamageRules.melee(loadout.stats(),loadout.primary(),loadout.secondary(),loadout.damageBonus()),
         ranged ? 0 : WeaponDamageRules.offHand(loadout.stats(),loadout.primary(),loadout.secondary(),loadout.damageBonus()),
@@ -78,6 +77,7 @@ final class OnlineMelee {
     int before=life.health()==null ? definition.getHealth() : life.health();
     if (before<=0) throw rejected("creature_unavailable");
     int damage=Math.min(before,resolved.damage()),after=before-damage;
+    long stunDuration=resolved.hit() ? resolved.stunDurationMillis() : 0;
     var progression=OnlineProgression.award(saved,MonsterExperience.damageReward(definition.getXpPerHit(),damage),now,random);
     long experience=progression.experience(),gold=0;
     List<LootDropDraft> drops=List.of();
@@ -119,6 +119,7 @@ final class OnlineMelee {
         // Session completions run on the simulation owner, including its shutdown drain.
         pendingTargets.remove(target);
         creatures.release(target);
+        if (error==null && result!=null && stunDuration>0) creatures.stunCommitted(target,clock.getAsLong(),stunDuration);
         if (damage>0 || provocation!=null) {
           if (error!=null || after==0) creatures.rewardCommitted(target); // Hide uncertain outcomes until reload.
           else creatures.damageCommitted(target);

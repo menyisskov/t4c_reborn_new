@@ -159,6 +159,40 @@ class OnlineMeleeTest {
     } finally { sessions.shutdown(); }
   }
 
+  @Test void learnedStunBlowAppliesOnlyAfterTheHitCommitsAndExpires() throws Exception {
+    var store=OnlineStore.fromEnvironment();store.migrate();
+    var gson=new Gson();
+    var json=gson.toJsonTree(MonsterCatalog.loadBundled().monsters().get("Olin Haad Guard 3")).getAsJsonObject();
+    json.addProperty("health",10000);json.addProperty("end",1);json.addProperty("acMin",0);json.addProperty("acMax",0);
+    json.addProperty("dodge",1);json.addProperty("agi",1);
+    var definition=gson.fromJson(json,MonsterDef.class);
+    var spawn=new MonsterContent.Spawn("stun-blow-"+UUID.randomUUID(),definition.getName(),3,3,0,false,false);
+    var map=new PreviewMap(new boolean[8][8],0,0,3,3);
+    var world=new PreviewWorld(map,new MonsterContent(MonsterContent.VERSION,
+        Map.of(definition.getName(),definition),List.of(spawn)));
+    var sessions=new PersistentSessions(store,map,world);
+    var prepared=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(11));
+    var progressJson=gson.toJsonTree(prepared.progress()).getAsJsonObject();
+    progressJson.getAsJsonObject("skills").addProperty("stun_blow",200);
+    var learned=gson.fromJson(progressJson,com.perso.T4C.online.model.CharacterProgress.class);
+    var key=store.provisionAccount();
+    var player=store.create(key.accountId(),"Stun blow fighter",0,3.5,3.5,learned,prepared.gold());
+    var token=sessions.join(store.acquire(key.secret(),player.id()),System.nanoTime()).token();
+    var now=new java.util.concurrent.atomic.AtomicLong(System.currentTimeMillis());
+    try(var creatures=new PersistentCreatures(store,world)) {
+      var rolls=new Random(1) { @Override public int nextInt(int bound) { return bound==100 ? 0 : bound-1; } };
+      var melee=new OnlineMelee(map,world,sessions,creatures,ItemCatalog.loadBundled(),rolls,now::get);
+      var attack=melee.attack(token,player.revision(),1).toCompletableFuture();
+      assertFalse(creatures.stunned(1,now.get()),"An uncommitted attack cannot apply its stun effect");
+      await(sessions,creatures,attack);
+      assertTrue(attack.get().character().revision()>player.revision(),
+          "The learned stun skill must be accepted by the authoritative attack path");
+      assertTrue(creatures.stunned(1,now.get()),"A successful committed hit applies its resolved stun duration");
+      now.addAndGet(3000);
+      assertFalse(creatures.stunned(1,now.get()),"Creature stun is transient and expires without persistence");
+    } finally { sessions.shutdown(); }
+  }
+
   @Test void archerBowAttackUsesRangedReachAndCommitsTheHitWithoutConsumingArrows() throws Exception {
     var store=OnlineStore.fromEnvironment();store.migrate();
     var gson=new Gson();
