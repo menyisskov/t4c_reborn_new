@@ -22,6 +22,11 @@ public interface RemoteLink {
 
   CompletionStage<OnlineConnection.CommandResult> interact(String npc);
 
+  /** As {@link #interact(String)}, asking the NPC about one authored topic (0-99). */
+  default CompletionStage<OnlineConnection.CommandResult> interact(String npc, int topic) {
+    throw new IllegalStateException("Topics are not available on this link");
+  }
+
   CompletionStage<OnlineConnection.CommandResult> equip(UUID instance, BodyPart slot);
 
   CompletionStage<OnlineConnection.CommandResult> unequip(BodyPart slot);

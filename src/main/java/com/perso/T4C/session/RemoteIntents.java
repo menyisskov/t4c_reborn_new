@@ -14,6 +14,11 @@ public interface RemoteIntents {
 
   boolean interact(String npc);
 
+  /** Asks the NPC about one authored topic (the server validates it); the quest offer is topic 0. */
+  default boolean interact(String npc, int topic) {
+    return false;
+  }
+
   boolean equip(UUID instance, BodyPart slot);
 
   boolean unequip(BodyPart slot);

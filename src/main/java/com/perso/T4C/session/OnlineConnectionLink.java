@@ -35,6 +35,11 @@ public final class OnlineConnectionLink implements RemoteLink {
   }
 
   @Override
+  public CompletionStage<OnlineConnection.CommandResult> interact(String npc, int topic) {
+    return connection.interact(npc, java.util.OptionalInt.of(topic));
+  }
+
+  @Override
   public CompletionStage<OnlineConnection.CommandResult> equip(UUID instance, BodyPart slot) {
     return connection.equip(instance, slot);
   }

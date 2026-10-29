@@ -964,6 +964,35 @@ public abstract class BaseNPC extends Stats implements Nameable {
         && mouseY <= position.y + heightBelow;
   }
 
+  /**
+   * Squared distance from the point to the centre of the box {@link #isMouseOver} tests, so that
+   * when several boxes overlap the click can go to the figure the cursor is actually on.
+   */
+  public float mouseOverDistanceSquared(float mouseX, float mouseY) {
+
+    float centreX = position.x;
+
+    float centreY = position.y - 25f;
+
+    if (animations.hasObjectAppearance()) {
+
+      Rectangle bounds = getRenderBounds(mouseOverBounds);
+
+      if (bounds.width > 0f && bounds.height > 0f) {
+
+        centreX = bounds.x + bounds.width / 2f;
+
+        centreY = bounds.y + bounds.height / 2f;
+      }
+    }
+
+    float dx = mouseX - centreX;
+
+    float dy = mouseY - centreY;
+
+    return dx * dx + dy * dy;
+  }
+
   public void onResourcesReloaded() {
 
     try {

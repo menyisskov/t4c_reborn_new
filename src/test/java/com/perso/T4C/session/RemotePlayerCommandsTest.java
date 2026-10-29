@@ -85,6 +85,11 @@ class RemotePlayerCommandsTest {
     }
 
     @Override
+    public CompletionStage<OnlineConnection.CommandResult> interact(String npc, int topic) {
+      return reply("interact " + npc + " " + topic);
+    }
+
+    @Override
     public CompletionStage<OnlineConnection.CommandResult> equip(UUID instance, BodyPart slot) {
       return reply("equip " + instance + " " + slot);
     }
@@ -184,6 +189,7 @@ class RemotePlayerCommandsTest {
     final Player player;
     final List<String> messages = new ArrayList<>();
     final List<String> shops = new ArrayList<>();
+    final List<String> talks = new ArrayList<>();
 
     TestHost(Player player) {
       this.player = player;
@@ -202,6 +208,11 @@ class RemotePlayerCommandsTest {
     @Override
     public void showShop(String npc, ShopOffersReply offers) {
       shops.add(npc + ":" + offers.gold());
+    }
+
+    @Override
+    public void showTalk(String npc) {
+      talks.add(npc);
     }
   }
 
@@ -516,6 +527,27 @@ class RemotePlayerCommandsTest {
     link.offers.complete(new OnlineConnection.CommandResult(true, null, null, List.of(), listing));
     session.commands().pump();
     assertEquals(List.of(npc + ":80", npc + ":68"), host.shops, "closing ignores a late listing reply");
+  }
+
+  @Test
+  void aGreetingWithNoShopBehindItOffersTheTopicsAndATopicIsSentWithItsIndex() {
+    String npc = LighthavenSamaritan.ID;
+    assertTrue(session.commands().interact(npc));
+    link.next.complete(new OnlineConnection.CommandResult(true, null, "npc.kilhiam.letter"));
+    link.offers.complete(new OnlineConnection.CommandResult(false, null, "online.shop.none"));
+    session.commands().pump();
+    assertEquals(List.of(npc), host.talks, "the topic list is offered after a greeting with no shop");
+    assertEquals(1, host.messages.size());
+
+    link.next = new CompletableFuture<>();
+    assertTrue(session.commands().interact(npc, 0));
+    assertEquals("interact " + npc + " 0", link.calls.get(link.calls.size() - 1));
+    link.next.complete(new OnlineConnection.CommandResult(true, null, "npc.kilhiam.letter"));
+    session.commands().pump();
+    assertEquals(List.of(npc), host.talks, "a topic reply does not reopen the list");
+    assertEquals(2, host.messages.size());
+    assertFalse(session.commands().interact(npc, 100), "the server only knows topics 0-99");
+    assertFalse(session.commands().interact(null, 0));
   }
 
   // --- movement ---

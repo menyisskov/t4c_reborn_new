@@ -73,6 +73,9 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
 
     /** Called by {@link #pump()} on the render thread when the server returns a shop listing. */
     default void showShop(String npc, ShopOffersReply offers) {}
+
+    /** Called by {@link #pump()} after a greeting that opened no shop: offer the NPC's topics. */
+    default void showTalk(String npc) {}
   }
 
   /** The swing-cooldown refusal is routine and never shown (same key as the text client). */
@@ -87,13 +90,23 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
   /** Unacknowledged frames kept before the replay restarts from the server (a dead link). */
   public static final int MAX_PENDING_FRAMES = 600;
 
-  private record Outcome(String key, List<Integer> args, String shopNpc, ShopOffersReply shop, long shopGeneration) {
+  private record Outcome(
+      String key,
+      List<Integer> args,
+      String shopNpc,
+      ShopOffersReply shop,
+      long shopGeneration,
+      String talkNpc) {
     static Outcome message(String key, List<Integer> args) {
-      return new Outcome(key, args, null, null, -1);
+      return new Outcome(key, args, null, null, -1, null);
     }
 
     static Outcome shop(String npc, ShopOffersReply listing, long generation) {
-      return new Outcome(null, List.of(), npc, listing, generation);
+      return new Outcome(null, List.of(), npc, listing, generation, null);
+    }
+
+    static Outcome talk(String npc) {
+      return new Outcome(null, List.of(), null, null, -1, npc);
     }
   }
 
@@ -193,6 +206,26 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
   }
 
   @Override
+  public boolean interact(String npc, int topic) {
+    if (npc == null || topic < 0 || topic > 99) return false;
+    try {
+      link.interact(npc, topic)
+          .whenComplete(
+              (result, failure) ->
+                  outcomes.add(
+                      failure != null || result == null
+                          ? Outcome.message("online.npc.refused", List.of())
+                          : Outcome.message(result.messageKey(), result.args())));
+      return true;
+    } catch (IllegalStateException pendingOrOffline) {
+      outcomes.add(Outcome.message("online.npc.refused", List.of()));
+      return true;
+    } catch (IllegalArgumentException invalidIdentity) {
+      return false;
+    }
+  }
+
+  @Override
   public boolean equip(UUID instance, BodyPart slot) {
     if (instance == null || slot == null) return false;
     return send(() -> link.equip(instance, slot), "online.equip.refused");
@@ -282,16 +315,22 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
               (listing, failure) -> {
                 if (shopGeneration.get() != generation) return;
                 if (failure != null || listing == null) {
-                  outcomes.add(Outcome.message(interaction.messageKey(), interaction.args()));
+                  greeted(npc, interaction);
                 } else if (listing.accepted() && listing.shop() != null) {
                   outcomes.add(Outcome.shop(npc, listing.shop(), generation));
                 } else {
-                  outcomes.add(Outcome.message(interaction.messageKey(), interaction.args()));
+                  greeted(npc, interaction);
                 }
               });
     } catch (IllegalStateException | IllegalArgumentException unavailable) {
-      outcomes.add(Outcome.message(interaction.messageKey(), interaction.args()));
+      greeted(npc, interaction);
     }
+  }
+
+  /** A greeting with no shop behind it: say it, then offer the NPC's topics. */
+  private void greeted(String npc, OnlineConnection.CommandResult interaction) {
+    outcomes.add(Outcome.message(interaction.messageKey(), interaction.args()));
+    outcomes.add(Outcome.talk(npc));
   }
 
   private boolean requestOffers(String npc, String failureKey, boolean quietIfBusy, long generation) {
@@ -342,6 +381,10 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
   public void pump() {
     Outcome outcome;
     while ((outcome = outcomes.poll()) != null) {
+      if (outcome.talkNpc() != null) {
+        if (host != null) host.showTalk(outcome.talkNpc());
+        continue;
+      }
       if (outcome.shop() != null) {
         if (host != null && outcome.shopGeneration() == shopGeneration.get())
           host.showShop(outcome.shopNpc(), outcome.shop());

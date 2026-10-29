@@ -323,17 +323,34 @@ public class NPCManager {
     return findNpcAt(mouseX, mouseY) != null;
   }
 
+  /**
+   * The NPC under the cursor. When click boxes overlap (one NPC standing just behind another) the
+   * NPC whose box centre is nearest the cursor wins, and the one drawn in front (lower on screen)
+   * breaks a tie, so a click on a visible figure never lands on the NPC beside or behind it.
+   */
   public BaseNPC findNpcAt(float mouseX, float mouseY) {
+
+    BaseNPC best = null;
+
+    float bestDistance = Float.MAX_VALUE;
 
     for (BaseNPC npc : npcs) {
 
-      if (npc.isMouseOver(mouseX, mouseY)) {
+      if (!npc.isMouseOver(mouseX, mouseY)) continue;
 
-        return npc;
+      float distance = npc.mouseOverDistanceSquared(mouseX, mouseY);
+
+      if (best == null
+          || distance < bestDistance
+          || (distance == bestDistance && npc.getPosition().y > best.getPosition().y)) {
+
+        best = npc;
+
+        bestDistance = distance;
       }
     }
 
-    return null;
+    return best;
   }
 
   public void onMouseMove(float mouseX, float mouseY) {
@@ -368,13 +385,13 @@ public class NPCManager {
     if (puppetMode) {
       // Online: a click on an NPC is only an intent for the server; nothing starts here.
       if (remoteInteract == null) return false;
-      for (BaseNPC npc : npcs) {
-        if (npc.isMouseOver(mouseX, mouseY)) return remoteInteract.test(npc);
-      }
-      return false;
+      BaseNPC clicked = findNpcAt(mouseX, mouseY);
+      return clicked != null && remoteInteract.test(clicked);
     }
 
-    for (BaseNPC npc : npcs) {
+    BaseNPC clickedNpc = findNpcAt(mouseX, mouseY);
+
+    for (BaseNPC npc : clickedNpc == null ? List.<BaseNPC>of() : List.of(clickedNpc)) {
 
       if (npc.isMouseOver(mouseX, mouseY)) {
 
