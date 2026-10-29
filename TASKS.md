@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0320`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0321`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0320 | Online: every restore potion is usable (Potion of Mana added) and the character's own corpse is drawn and recoverable on the real screen | Multiplayer / M2 | In Progress (PR open; not merged) | branch worktree-agent-a8a1bbccd184866ed | [CHANGELOG.md](CHANGELOG.md#2026-10-30--potion-of-mana-works-online-and-your-corpse-can-be-recovered-from-the-screen-t4c-0320) |
 | T4C-0319 | Persist authored monster self-healing spell behavior online | Multiplayer / M4 | Done (PR pending) | 3a46ba5 | [CHANGELOG.md](CHANGELOG.md#2026-10-30--authored-monster-heal-persists-online-t4c-0319) |
 | T4C-0317 | Preserve authored monster spell attacks in persistent hostile clan combat | Multiplayer / M4 | Done (PR #278; local validation) | PR #278, backend persistence test 1/1 | [CHANGELOG.md](CHANGELOG.md#2026-10-30--monster-clan-fights-use-authored-damage-spells-online-t4c-0317) |
 | T4C-0316 | Raise baseline player movement to 75, shared by offline and online play | Multiplayer / Cross-cutting/GA | Done | PR #277, merge 7249c3d4 | [CHANGELOG.md](CHANGELOG.md#2026-10-30--player-walking-speed-tuned-to-75-t4c-0316) |
