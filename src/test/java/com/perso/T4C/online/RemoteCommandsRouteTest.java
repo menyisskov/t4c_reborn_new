@@ -219,9 +219,11 @@ class RemoteCommandsRouteTest {
             }
           });
       assertTrue(commands.pickUp(UUID.randomUUID()));
-      awaitTrue(() -> otherCalls(calls).size() == 1);
-      Thread.sleep(100);
-      commands.pump();
+      awaitTrue(
+          () -> {
+            commands.pump();
+            return !shown.isEmpty();
+          });
       assertEquals(List.of(I18n.key("online.loot.unavailable")), shown);
     } finally {
       stop(server);
