@@ -38,13 +38,9 @@ class RemoteGameSessionTest {
   }
 
   @Test
-  void worldAndCommandsSayTheyAreNotAvailableOnlineYet() {
+  void theWorldIsTheSnapshotDriverAndCommandsSayTheyAreNotAvailableOnlineYet() {
     RemoteGameSession session = new RemoteGameSession(() -> null);
-    var load =
-        assertThrows(
-            UnsupportedOperationException.class, () -> session.world().loadEntities(null));
-    assertEquals("not available online yet: world().loadEntities", load.getMessage());
-    assertThrows(UnsupportedOperationException.class, () -> session.world().tickEntities(null));
+    assertInstanceOf(RemoteWorldDriver.class, session.world());
     var attack =
         assertThrows(UnsupportedOperationException.class, () -> session.commands().attack(null));
     assertEquals("not available online yet: commands().attack", attack.getMessage());

@@ -35,6 +35,9 @@ public class NPCManager {
 
   private BaseNPC activeConversationNpc;
 
+  // Online puppet mode (T4C-0289): the registry only holds snapshot-driven puppets. Default false.
+  private boolean puppetMode;
+
   @Setter private CompanionManager companionManager;
 
   public NPCManager(ShaderProgram outlineShader) {
@@ -49,7 +52,30 @@ public class NPCManager {
     this.questService = questService;
   }
 
+  /**
+   * Online puppet registry: NPCs added to it become puppets, and nothing here runs popup events,
+   * summons, combat, conversations or per-frame logic; the server owns all of it.
+   */
+  public void setPuppetMode(boolean puppetMode) {
+
+    this.puppetMode = puppetMode;
+  }
+
+  public boolean isPuppetMode() {
+
+    return puppetMode;
+  }
+
   public void addNPC(BaseNPC npc) {
+
+    if (puppetMode) {
+
+      npc.setPuppet(true);
+
+      npcs.add(npc);
+
+      return;
+    }
 
     npcs.add(npc);
 
@@ -61,6 +87,8 @@ public class NPCManager {
   }
 
   public void triggerPopupEvents(Player player) {
+
+    if (puppetMode) return;
 
     lifecyclePlayer = player;
 
@@ -113,6 +141,8 @@ public class NPCManager {
 
   public boolean spawnNPC(String name, float worldX, float worldY) {
 
+    if (puppetMode) return false;
+
     try {
 
       BaseNPC npc = NpcFactoryRegistry.create(name, npcContext());
@@ -139,6 +169,8 @@ public class NPCManager {
 
   public void update(float delta, Vector2 playerPosition) {
 
+    if (puppetMode) return;
+
     for (BaseNPC npc : List.copyOf(npcs)) {
 
       npc.update(delta, playerPosition);
@@ -156,6 +188,8 @@ public class NPCManager {
 
   public void updateVisible(
       float delta, Vector2 playerPosition, int startX, int endX, int startY, int endY, int margin) {
+
+    if (puppetMode) return;
 
     spawnPendingInView(startX, endX, startY, endY, margin);
     for (BaseNPC npc : List.copyOf(npcs)) {
@@ -236,6 +270,8 @@ public class NPCManager {
   }
 
   public boolean talkToActiveNpc(String text, Player player) {
+
+    if (puppetMode) return false;
 
     clearInactiveConversation();
 
@@ -322,6 +358,8 @@ public class NPCManager {
 
   public boolean onClick(float mouseX, float mouseY, Player player) {
 
+    if (puppetMode) return false;
+
     for (BaseNPC npc : npcs) {
 
       if (npc.isMouseOver(mouseX, mouseY)) {
@@ -367,6 +405,8 @@ public class NPCManager {
 
   public boolean attackNpc(float mouseX, float mouseY, Player player, SystemMessage systemMessage) {
 
+    if (puppetMode) return false;
+
     BaseNPC npc = findNpcAt(mouseX, mouseY);
 
     if (npc == null) {
@@ -409,7 +449,7 @@ public class NPCManager {
 
   public boolean damageNpc(BaseNPC npc, int damage, Player player) {
 
-    if (npc == null || damage <= 0 || !npcs.contains(npc)) return false;
+    if (puppetMode || npc == null || damage <= 0 || !npcs.contains(npc)) return false;
     if (!SanctuaryCombatRules.canFight(
         player == null ? null : player.getPositionVector(), npc.getPosition())) return false;
 
@@ -435,7 +475,7 @@ public class NPCManager {
 
   public void onNpcAttacked(BaseNPC npc, Player player) {
 
-    if (npc == null || !npcs.contains(npc) || npc instanceof CompanionNPC) {
+    if (puppetMode || npc == null || !npcs.contains(npc) || npc instanceof CompanionNPC) {
 
       return;
     }
