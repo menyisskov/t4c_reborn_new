@@ -2,6 +2,7 @@ package com.perso.T4C.session;
 
 import com.perso.T4C.objects.GroundItemManager;
 import com.perso.T4C.online.OnlineConnection;
+import com.perso.T4C.player.BodyPart;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletionStage;
@@ -12,10 +13,9 @@ import java.util.function.Supplier;
  * server's latest snapshot applied to puppet monsters, NPCs and loot (R2), and the commands are
  * intents sent over the persistent connection (R3); nothing is ever saved locally.
  *
- * <p>The commands cover attack, own movement, pickup and NPC interaction. Every other player
- * action (equipment, item use, spells, shops, corpse recovery, chat, trade) has no {@link
- * PlayerCommands} member yet; the connection can already carry some of them, but the screens that
- * start them are not routed to the session until their own steps.
+ * <p>The remote command seam also forwards equipment changes to the server; it never applies
+ * inventory or equipment changes locally. Item use, spells, corpse recovery, chat and trade remain
+ * unavailable online until their own steps route them to the session.
  */
 public final class RemoteGameSession implements GameSession {
   private final RemoteCharacterSource characters;
@@ -122,6 +122,16 @@ public final class RemoteGameSession implements GameSession {
 
     @Override
     public CompletionStage<OnlineConnection.CommandResult> interact(String npc) {
+      throw down();
+    }
+
+    @Override
+    public CompletionStage<OnlineConnection.CommandResult> equip(UUID instance, BodyPart slot) {
+      throw down();
+    }
+
+    @Override
+    public CompletionStage<OnlineConnection.CommandResult> unequip(BodyPart slot) {
       throw down();
     }
 

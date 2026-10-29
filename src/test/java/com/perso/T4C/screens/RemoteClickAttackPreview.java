@@ -164,6 +164,18 @@ public final class RemoteClickAttackPreview extends MyGame {
     }
 
     @Override
+    public CompletionStage<OnlineConnection.CommandResult> equip(
+        java.util.UUID instance, com.perso.T4C.player.BodyPart slot) {
+      throw new IllegalStateException("Equipment routes are outside this preview");
+    }
+
+    @Override
+    public CompletionStage<OnlineConnection.CommandResult> unequip(
+        com.perso.T4C.player.BodyPart slot) {
+      throw new IllegalStateException("Equipment routes are outside this preview");
+    }
+
+    @Override
     public CompletionStage<OnlineConnection.CommandResult> shopOffers(String npc) {
       throw new IllegalStateException("Shop routes are outside this preview");
     }

@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-29 — Online inventory and equipment are available in the game screen (T4C-0295)
+
+### Added
+- Press I during online play to view the server's carried and equipped items, including stack quantities and charges. Select an equipment row with 1–9 to equip or unequip it; the server validates and commits the change.
+
 ## 2026-10-29 — Online shopkeepers are accessible in the real game (T4C-0294)
 
 ### Added
