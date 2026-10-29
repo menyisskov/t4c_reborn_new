@@ -7,15 +7,18 @@ import com.perso.T4C.combat.CombatResolver;
 import com.perso.T4C.combat.CombatProfile;
 import com.perso.T4C.combat.MonsterCombatRules;
 import com.perso.T4C.combat.PhysicalAttackRequest;
+import com.perso.T4C.monster.core.MonsterDef;
 import com.perso.T4C.monster.core.MonsterPursuitRules;
+import com.perso.T4C.monster.core.MonsterSpellDamageRules;
 import com.perso.T4C.online.model.MonsterContent;
 import com.perso.T4C.server.persistence.OnlineStore;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.LongSupplier;
 
-/** Simulation-owned physical clan exchanges; persistence and publication remain in PersistentCreatures. */
+/** Simulation-owned authored clan exchanges; persistence and publication remain in PersistentCreatures. */
 final class OnlineClanCombat {
   private final PreviewMap map;
   private final PreviewWorld world;
@@ -66,18 +69,33 @@ final class OnlineClanCombat {
     double sx=source.x()-map.originX,sy=source.y()-map.originY;
     double tx=target.x()-map.originX,ty=target.y()-map.originY;
     float pixels=(float)Math.hypot((sx-tx)*GRID_W,(sy-ty)*GRID_H);
-    if(!MonsterPursuitRules.withinAttackReach(pixels,sourceSpawn.definition().getAttacks())
-        || MonsterPursuitRules.tileRange(pixels)>=2 || !map.hasLineOfSight(sx,sy,tx,ty)) return;
+    int tiles=MonsterPursuitRules.tileRange(pixels);
+    var attacks=sourceSpawn.definition().getAttacks();
+    var eligible=attacks==null ? List.<MonsterDef.Attack>of()
+        : attacks.stream().filter(a->a!=null && a.isInRange(tiles) && damagingAttack(a)).toList();
+    boolean authoredAttacks=attacks!=null && !attacks.isEmpty();
+    if((authoredAttacks && eligible.isEmpty()) || tiles>=2
+        || !MonsterPursuitRules.withinAttackReach(pixels,sourceSpawn.definition().getAttacks())
+        || !map.hasLineOfSight(sx,sy,tx,ty)) return;
     int before=targetLife.health()==null ? targetSpawn.definition().getHealth() : targetLife.health();
     if(before<=0) return;
     var sourceStats=MonsterCombatRules.resolve(sourceSpawn.definition());
     var targetStats=MonsterCombatRules.resolve(targetSpawn.definition());
-    var authored=MonsterCombatRules.chooseAttack(sourceSpawn.definition().getAttacks(),random);
+    var authored=authoredAttacks ? MonsterCombatRules.chooseAttack(eligible,random) : null;
     int attackSkill=authored==null ? sourceStats.attack() : Math.max(1,authored.getValue1());
-    int raw=authored==null ? sourceSpawn.definition().getHitDamageMin()
+    int rolled=authored==null ? sourceSpawn.definition().getHitDamageMin()
         + (sourceSpawn.definition().getHitDamageMax()>sourceSpawn.definition().getHitDamageMin()
             ? random.nextInt(sourceSpawn.definition().getHitDamageMax()-sourceSpawn.definition().getHitDamageMin()+1) : 0)
+        : authored.isSpell() ? OnlineMonsterSpellAttacks.rawDamage(sourceSpawn.definition(),authored.getSpellId(),random)
         : MonsterCombatRules.rollDamage(authored.getName(),random);
+    int raw=rolled;
+    if(authored!=null && authored.isSpell()) {
+      var spell=OnlineMonsterSpellAttacks.supportedSpell(authored.getSpellId());
+      if(spell==null) return;
+      if(spell.behavior()==com.perso.T4C.online.model.MonsterSpellContent.Behavior.ELEMENTAL_DAMAGE)
+        raw=MonsterSpellDamageRules.balanceElementalDamage(spell.id(),
+            Math.max(1,sourceSpawn.definition().getLevel()),rolled,sourceSpawn.definition().getName());
+    }
     var attacker=new CombatProfile(sourceStats.level(),sourceStats.strength(),sourceStats.endurance(),
         sourceStats.agility(),attackSkill,attackSkill,sourceStats.dodge(),
         MonsterCombatRules.rollArmor(sourceStats.armorMin(),sourceStats.armorMax(),random),
@@ -98,5 +116,12 @@ final class OnlineClanCombat {
     var draft=new OnlineStore.ClanAttack(source,target,targetSpawn.definition().getHealth(),
         before,after,sourceLife.nextAttackAt(),Math.addExact(now,OnlineRetaliation.COOLDOWN_MILLIS));
     creatures.submitClanAttack(sourceId,targetId,draft);
+  }
+
+  private static boolean damagingAttack(MonsterDef.Attack attack) {
+    if(!attack.isSpell()) return true;
+    var spell=OnlineMonsterSpellAttacks.supportedSpell(attack.getSpellId());
+    return spell!=null && (spell.behavior()==com.perso.T4C.online.model.MonsterSpellContent.Behavior.ELEMENTAL_DAMAGE
+        || spell.behavior()==com.perso.T4C.online.model.MonsterSpellContent.Behavior.ARMOR_DAMAGE);
   }
 }
