@@ -50,7 +50,7 @@ public class MyGame extends Game {
     this(null,null,null);
   }
 
-  private MyGame(URI onlineEndpoint,String onlineAccountKey,
+  protected MyGame(URI onlineEndpoint,String onlineAccountKey,
       com.perso.T4C.online.OnlineLobbyModel onlineLobbyModel) {
     this.onlineEndpoint=onlineEndpoint;
     this.onlineAccountKey=onlineAccountKey;
@@ -90,7 +90,11 @@ public class MyGame extends Game {
   /** Returns a disconnected remote character to account selection so it can rejoin cleanly. */
   public void returnToOnlineLobby(MainGameScreen remoteScreen) {
     if (onlineLobbyModel==null || getScreen()!=remoteScreen || !remoteScreen.isRemoteSession()) return;
+    // The server keeps the session lease for a while after the link ends; hold the rejoin.
+    onlineLobbyModel.beginReturnFromGame();
     remoteScreen.dispose();
+    onlineLobbyModel.finishReturnFromGame(
+        com.perso.T4C.online.OnlineLobbyLaunch.leaseDeadline(System.currentTimeMillis()));
     showOnlineLobby();
   }
 
