@@ -452,6 +452,34 @@ class RemotePlayerCommandsTest {
   }
 
   @Test
+  void anNpcLineThatGreetsByNameShowsTheOwnCharacterNameNotALiteralPlaceholder() {
+    player.setName("Live Alpha");
+    link.view =
+        view(
+            1,
+            4,
+            actor(localX(100), localY(205), 0),
+            List.of(),
+            List.of(
+                new NpcView(
+                    LighthavenSamaritan.ID,
+                    "Samaritan",
+                    3,
+                    4,
+                    LighthavenSamaritan.SPRITE_BASE,
+                    Map.of())),
+            List.of());
+    assertTrue(session.commands().interact(LighthavenSamaritan.ID));
+
+    link.answer("npc.kilhiam.letter");
+    session.commands().pump();
+
+    assertEquals(1, host.messages.size());
+    assertTrue(host.messages.get(0).startsWith("Hello Live Alpha, a messenger"), host.messages.get(0));
+    assertFalse(host.messages.get(0).contains("%s"));
+  }
+
+  @Test
   void shopkeeperClickOpensServerListingAndTradeRefreshesItWithoutLocalMutation() {
     String npc = LighthavenSamaritan.ID;
     var listing = new ShopOffersReply(4, 80, npc,

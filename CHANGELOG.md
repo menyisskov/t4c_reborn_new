@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-29 — Online greetings use your character's name (T4C-0305)
+
+### Fixed
+- In online play, NPCs that greet you by name (for example Kilhiam's parchment greeting) now say your character's name. Before, the line showed a stray "%s" where the name belongs.
+
 ## 2026-10-29 — The Lighthaven sewers are open in online play (T4C-0304)
 
 ### Added
