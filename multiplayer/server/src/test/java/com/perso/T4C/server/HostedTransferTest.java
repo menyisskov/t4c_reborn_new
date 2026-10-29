@@ -225,7 +225,7 @@ class HostedTransferTest {
           int next=ny*map.width+nx;if(previous[next]>=0) continue;previous[next]=node;queue.add(next);
         }
       }
-      assertTrue(previous[goal]>=0,"Authored portal must be reachable");
+      assertTrue(previous[goal]>=0,"Authored portal must be reachable from tile "+tileX+","+tileY+" (actor "+ox+","+oy+", last move "+lastX+","+lastY+", standable="+map.canStand(tileX+.5,tileY+.5)+", region "+state.getAsJsonObject("region")+", hp "+own+")");
       int next=goal;while(previous[next]!=start) next=previous[next];
       int moveX=Integer.compare(next%map.width,start%map.width),moveY=Integer.compare(next/map.width,start/map.width);
       lastX=moveX;lastY=moveY;
