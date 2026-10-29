@@ -28,6 +28,16 @@ re-measure before relying on a number.
 
 - [ ] **Client unification.** The online client runs the real single-player screens against a
   remote backend (intents out, server snapshots in) instead of growing a second GUI.
+  Progress (T4C-0286, remote session R1, headless and unwired): `RemoteGameSession` builds the
+  real `Player` from the server's committed character through `ProgressMirror` and the existing
+  `PlayerStateMapper`, marks it remote and saves nothing. Parity debt it records (single-player
+  defaults are used, nothing invented): character class (the `Player` has no class field),
+  cooldowns (the `Player` keeps none), quick slots and macros (client-local store, empty for now),
+  GM rank (always player), buff amounts (re-rolled on load by the mapper instead of the server's
+  rolled amounts), per-instance item charges (summed per key), vitals between character revisions
+  (the snapshot's live hp is not applied yet), day/night hour (default), appearance of other
+  players (snapshot carries only an opaque id), and the storage and companion fields only as far
+  as the server stores them.
 - [ ] **Characters:** all 7 classes, creation screen and preview identical to single-player,
   stat and skill allocation, training, rebirth.
 - [ ] **Combat:** melee, archery, two weapons, stun blow, stealth, armor class and auras.

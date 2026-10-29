@@ -3,6 +3,7 @@ package com.perso.T4C.session;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.perso.T4C.helper.PlayerStateStore;
 import com.perso.T4C.item.AccountStorage;
@@ -113,6 +114,30 @@ class RemoteSessionWritesNothingTest {
     session.persistence().save(p);
     PlayerHUD.persistenceOf(null).save(p);
     CharacterPersistence.local().save(p);
+
+    assertUntouched(before);
+  }
+
+  @Test
+  void aRemoteGameSessionWritesNothingThroughTheScreensSaveEntryPoints() throws IOException {
+    Map<String, byte[]> before = snapshot();
+    RemoteGameSession session =
+        new RemoteGameSession(() -> ProgressMirrorTest.view(ProgressMirrorTest.fixture()));
+    Player p = new Player();
+    session.characters().applyTo(session.characters().loadInitialState(), p);
+    assertTrue(p.isRemote());
+
+    // The autosave and every routed window save go through the session's persistence ...
+    session.persistence().save(p, 7f);
+    session.persistence().save(p);
+    // ... a forgotten direct call is refused by the guard ...
+    PlayerStateStore.save(p);
+    PlayerStateStore.save(p, 9f);
+    // ... and the remote persistence writes nothing even for a Player that is not flagged.
+    Player unflagged = remote();
+    unflagged.setRemote(false);
+    session.persistence().save(unflagged, 3f);
+    session.persistence().save(unflagged);
 
     assertUntouched(before);
   }
