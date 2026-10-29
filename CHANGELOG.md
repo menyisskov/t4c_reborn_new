@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-30 — Player walking speed tuned to 75 (T4C-0316)
+
+### Changed
+- Player walking speed is now 75 in offline and online play, within the requested 70–80 range. Monster speed and movement buffs are unchanged.
+
 ## 2026-10-29 — Other players wear their gear and show their name online (T4C-0314)
 
 ### Fixed
