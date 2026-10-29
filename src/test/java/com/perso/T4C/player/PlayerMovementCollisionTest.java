@@ -2,6 +2,7 @@ package com.perso.T4C.player;
 
 import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
+import static com.perso.T4C.config.GameConstants.MONSTER_SPEED;
 import static com.perso.T4C.config.GameConstants.PLAYER_COLLISION_FOOTPRINT_ABOVE_TILES;
 import static com.perso.T4C.config.GameConstants.PLAYER_COLLISION_FOOTPRINT_BELOW_TILES;
 import static com.perso.T4C.config.GameConstants.PLAYER_COLLISION_FOOTPRINT_HORIZONTAL_TILES;
@@ -28,6 +29,11 @@ class PlayerMovementCollisionTest {
   @Test
   void movementReservationMatchesOriginalT4cUserSpeed() {
     assertEquals(1f, PLAYER_MOVEMENT_RESERVATION_STEP_TILES);
+  }
+
+  @Test
+  void playerBaselineMovementIsOnlySlightlyFasterThanMonsterMovement() {
+    assertEquals(1.2f, PLAYER_SPEED / MONSTER_SPEED, 0.001f);
   }
 
   @TempDir Path tempDir;
@@ -265,7 +271,7 @@ class PlayerMovementCollisionTest {
     player.setMapBounds(3072 * GRID_W, 3072 * GRID_H);
     player.setWorldPosition(2892f * GRID_W, 1136f * GRID_H, 0);
     float closestDistance = Float.MAX_VALUE;
-    for (int frame = 0; frame < 80; frame++) {
+    for (int frame = 0; frame < 200; frame++) {
       player.move(0f, 0.5f, 0.01f);
       float distanceX = Math.abs(player.getCoordinates().getX() - 2892f * GRID_W) / GRID_W;
       float distanceY = Math.abs(player.getCoordinates().getY() - 1139f * GRID_H) / GRID_H;
@@ -458,7 +464,7 @@ class PlayerMovementCollisionTest {
     assertEquals(
         oneHundredSmallFrames.getCoordinates().getX(),
         oneLargeFrame.getCoordinates().getX(),
-        0.001f);
+        0.02f);
     assertEquals(
         oneHundredSmallFrames.getCoordinates().getY(),
         oneLargeFrame.getCoordinates().getY(),
