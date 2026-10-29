@@ -552,6 +552,72 @@ Single-player is unchanged: `MainGameScreenGoldenTest` (3 tests, not skipped) an
 stage 0 and seam sets pass with the golden images untouched. Next: the reconnect-after-restart
 check and a longer two-rendered-client run (stage 1 exit), then stage 2.
 
+### 3.15 Live rendered two-client runs: sight, talk, restart, fight, loot (T4C-0306)
+
+**Evidence class: rendered clients, local only.** Two real LibGDX windows (separate processes, each the
+real `MyGame` launcher and the real `MainGameScreen`, 1280x768, audio off) against one real
+`ServerMain --online` on a disposable PostgreSQL 16 cluster (`acceptance-cluster.ps1`, cluster
+`t4c_acc_ede1df959c39`, loopback 57411; server HTTP 18851, game socket 18852; protocol 7 and the
+schema-13 migrations of `main` e8c062c0 plus this branch). No protected port, QA process, owner window
+or existing database was touched; the cluster was destroyed (`DESTROY_OK`), the server stopped
+and the private profiles deleted afterwards. Nothing here is remote or clean-machine evidence.
+
+**How it is driven (honest scope).** `OnlineLiveRunDriver` (test scope, one process per player, marker
+files in a shared directory to line the two up) feeds the *screen's own handlers*: Enter and R go to the
+lobby's/screen's own input processor; walking is scripted key state behind `Gdx.input.isKeyPressed`
+(path found over the client's own collision map); attack, NPC talk and loot pickup are left clicks
+(`touchDown`/`touchUp`) delivered to the screen's input processor at the pixel where the target is
+drawn, so `MonsterInputHandler`, the NPC click handler and `GroundItemClickHandler` run unchanged and
+send their intent to the server. Not real OS mouse/key events. Not driven: character creation, equip,
+inventory/spell panels, spells, shops, quests, portals/travel, the Options button, a region-separated
+observer, fatal-return/corpse recovery, an inventory-refusal pickup, the claim race *inside* the owner
+window, any run longer than a few minutes, any lost-response fault. Operator tool
+`multiplayer/tools/LiveRunProvision.java` created the accounts and characters (level-1 warriors in the
+temple, level-8 warriors beside a Skeleton anchor, the same headroom rule as `NativeLootProbe`); the
+operator stopped and restarted the server with the private graceful `/admin/shutdown`.
+
+Reproduce (PowerShell, repo root, after `mvn -q -DskipTests package dependency:build-classpath
+-Dmdep.outputFile=target/classpath.txt` and `mvn -q -f multiplayer/pom.xml -DskipTests package`): create the cluster
+(`-Action Create -Port <free>`), start `t4c-server.jar --online worldmap.colbin <port>` through `-Action RunEnv` (set
+`T4C_CONTROL_FILE`, `T4C_BIND_ADDRESS=127.0.0.1`), run `LiveRunProvision COLLISION temple|skeletons OUTDIR [SUFFIX]`
+through `RunEnv`, then start two `OnlineLiveRunDriver` processes with arguments
+`http://127.0.0.1:<port> <profile> <shots> <tag ending A or B> temple|skeletons <syncdir> <windowX> 20`
+(classpath `target/classes;target/test-classes;<classpath.txt>`, working directory the repository root). The
+operator creates `server-restarted` in the sync directory after the restart.
+
+| Scene and result (images in `multiplayer/design/`) | Observed |
+|---|---|
+| Lobby selection, `live2-01` | each account's lobby lists its own warrior as Ready; Enter selects it; the real screen is built about 3 s later (11 to 12 s after launch). |
+| Mutual sight, `live2-04` | both windows drew the other player at once (`otherPlayers` = 1 on each side); both stood a few tiles apart at the authored spawn. |
+| Talk out of range, `live2-06` | the first click (driver still stuck behind a bench, 208 px away) was refused by the server: "That person cannot talk to you right now." |
+| Kilhiam, first greeting and repeat | after a collision-aware walk (10 to 12 s) each client clicked Kilhiam; each got exactly one parchment letter (0 to 1), a repeat click gave no second one. |
+| Server stop and restart, `live2-09`, `live2-10` | graceful stop (HTTP 200); within about 5 s both clients showed "Disconnected. Press R to reconnect."; R (the screen's own key) returned each to the lobby, which showed "still being released, you can play again in 33 s"; Enter retried every 2.5 s rejoined both after 33.1 s. |
+| After the restart, `live2-12` | position equal to the committed tile (a few pixels from the pre-stop spot), inventory identical, the other player drawn again; a greeting after the restart gave the repeat text and no second letter for either player. |
+| Attack, `live2-13` | two level-8 warriors clicked Skeletons through the monster click handler; about 38 attack clicks each; both gained committed experience; the first drop (Leather Gloves) appeared after about 34 s (`live2-14`, both beside it). |
+| Death and respawn, `live2-15` | player A kept standing among Skeletons while waiting and died once (one `online_corpses` row for that character in the database); the screenshot shows A back in the temple after the respawn. The death was incidental, not a scripted death scenario. |
+| Pickup race, `live2-16` | the drop of the previous run (killer's 60 s window long over) was clicked by both clients at the same moment: the database shows one claimant (`CLAIMED`, one claim receipt) and the other player's HUD showed "The pickup was refused. The ground may have changed."; the winner's inventory went from 1 to 2 Leather Gloves, the loser's stayed the same; both snapshots then listed no loot. |
+| Greeting with the own name, `live2-07`, `live2-08` | after the fix below the parchment greeting reads "Hello Live Bravo V, a messenger brought this parchment for you." When both players clicked Kilhiam in the same instant, one of them got "The conversation was refused. Try again." and succeeded on the second click (one letter each in the end). |
+
+**Findings.**
+
+1. **The online screen is very dark** (`live2-02`) and does hinder screenshots: the own character and NPCs are hard
+   to see. The driver set the screen's day/night cycle to hour 12 through reflection (`live2-03`); that is a driver
+   convenience, not an in-game toggle. `DayNightCycle` was not touched (owner decision pending).
+2. **Fixed here: a literal `%s` in NPC greetings.** Server replies carry integer arguments only, so
+   "Hello %s, a messenger brought this parchment" arrived with the placeholder. `RemotePlayerCommands` now fills a
+   text placeholder with the client's own character name (test `RemotePlayerCommandsTest`, verified live).
+3. **Not edited, for the loot/server lane: the public loot view never counts the owner window down.**
+   `ownerRemainingMs` stayed at 60000 for the 90 s the drop sat there (`RegionGroundLoot` keeps the value read at
+   publication); `ownerPlayerId` stays set. The claim itself uses database time and was correct (the race above).
+   A client cannot show when a drop becomes free.
+4. **Not edited: simultaneous talk to one NPC** refused one player with the generic "conversation was refused" (the retry
+   worked). Probably single-flight on the NPC; the key does not say "busy".
+5. **Not edited: the pickup-race loser sees the generic refusal text** (`online.loot.refused`), not "someone else took it".
+6. After a server restart the lobby still holds the client 33 s (the 35 s lease hold is applied by the client whatever
+   the cause). Safe, but a restart needs no hold; a UX point for the owner.
+8. Other players' legs: these runs used a build from before PR #266 (walk hold for other players), and the screenshots are single frames, so whether the other player's legs animate while walking was not observed and is not claimed. A later run on a build with #266 would show it.
+7. A game run rewrites the tracked `t4c-chat.log`; it must be reverted before committing.
+
 ## 4. Staged plan
 
 Sizes: S under a day, M a few days, L about a week, XL more. Every stage ends with the full

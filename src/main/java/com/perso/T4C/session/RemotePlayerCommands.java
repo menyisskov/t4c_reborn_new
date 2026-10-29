@@ -350,7 +350,26 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
       String key = outcome.key();
       if (key == null || SILENT_COOLDOWN_KEY.equals(key) || host == null) continue;
       host.showMessage(
-          outcome.args().isEmpty() ? I18n.key(key) : I18n.message(key, outcome.args().toArray()));
+          outcome.args().isEmpty()
+              ? withOwnName(I18n.key(key))
+              : I18n.message(key, outcome.args().toArray()));
+    }
+  }
+
+  /**
+   * The server's replies carry integer arguments only, so an NPC line that greets the player by
+   * name (single-player fills it with the character's name) arrived with a literal {@code %s}.
+   * A template that asks for a single text value gets the player's own character name, which
+   * the client already holds; anything else is shown unchanged.
+   */
+  private String withOwnName(String template) {
+    Player player = host == null ? null : host.player();
+    String name = player == null ? null : player.getName();
+    if (name == null || name.isBlank() || !template.contains("%s")) return template;
+    try {
+      return String.format(java.util.Locale.ROOT, template, name);
+    } catch (java.util.IllegalFormatException unsupported) {
+      return template;
     }
   }
 

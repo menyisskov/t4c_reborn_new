@@ -81,7 +81,7 @@ Required behavior:
   stats, items and gold. A retried or interrupted request cannot create duplicates or regrant a kit.
 - [ ] Invalid keys, foreign characters, a character already in use and incompatible versions give
   usable errors. Selection alone acquires no gameplay lease or player slot.
-- [ ] Kilhiam appears using authored appearance/location. The native talk control sends identity
+- [x] Kilhiam appears using authored appearance/location. The native talk control sends identity
   only; range, line of sight, region, readiness and current revision are server decisions.
 - [ ] Authored English dialogue is readable in the client. First-letter item/flag commits together;
   repeated greetings, reconnect and a lost response never grant another copy.
@@ -89,6 +89,13 @@ Required behavior:
   connection uses trusted HTTPS with hostname verification; no plaintext or trust-all workaround.
   T4C-0216 passed local two-adapter HTTPS and separate standard-JSSE unknown-CA/hostname
   refusals; remote deployment and rendered-client acceptance still require verification.
+
+T4C-0306 (2026-10-29, local rendered, not remote): two real windows each selected their own operator-provisioned
+character in the lobby, drew each other, walked to Kilhiam and clicked him through the screen's own NPC click handler
+(each got exactly one letter; a repeat click and a greeting after a server stop/restart gave none); an out-of-range
+click was refused by the server. That ticks the Kilhiam appearance/talk bullet above. The dialogue bullet stays open:
+the lost-response case was not driven rendered, and character creation was not driven. See
+[CLIENT_UNIFICATION_DESIGN.md](CLIENT_UNIFICATION_DESIGN.md) 3.15 and `multiplayer/design/live2-*.png`.
 
 Done evidence: both rendered clients create/select their own characters, connect, converse, close
 and reconnect. Retain operator profiles as a compatibility path. See [ACCOUNT_LIFECYCLE.md](ACCOUNT_LIFECYCLE.md)
@@ -109,6 +116,12 @@ Required behavior:
 - [ ] Death/corpse recovery conserves protected equipment and dropped contents under shared rules.
   No alternate pickup path bypasses corpse ownership or duplicates recovered contents.
 - [ ] Reconnect, restart and a lost pickup acknowledgement retain exactly the committed outcome.
+
+T4C-0306 (2026-10-29, local rendered): two level-8 warriors killed Skeletons by clicking them; a drop appeared in both
+windows; two clients then clicked one drop (its 60 s owner window long over) at the same moment and the database shows
+exactly one claimant and one receipt, the loser refused on screen. Equip, an inventory refusal, a claim race inside the
+owner window, corpse recovery and reload-from-PostgreSQL of the final items were not driven, so every M2 bullet stays
+open. Also found: the public view's owner-window countdown never advances (see CLIENT_UNIFICATION_DESIGN.md 3.15).
 
 Done evidence: player A earns/picks up/equips loot while player B observes the shared world;
 repeat with a simultaneous claim and an inventory refusal. Reload from PostgreSQL and verify
@@ -174,6 +187,11 @@ Required behavior:
 - [ ] Level progression/stat allocation and required class behavior follow shared game rules.
   Single-player behavior and old save compatibility remain unchanged.
 
+T4C-0306 (2026-10-29, local rendered, warrior only): both windows fought Skeletons at the same time through the
+monster click handler and both gained committed experience; one player died once (a corpse row exists) and respawned in
+the temple. That death was incidental, not a scripted death/respawn, targeting-contention, costs/cooldown or other-role
+scenario, so no M4 bullet is ticked.
+
 Done evidence: a native combat scenario for each declared starter role, including two players
 contending for a target, leaving reach/sight, death/recovery and reconnect with costs/cooldowns intact.
 
@@ -190,6 +208,12 @@ Required behavior:
   expiry after a forced server-process kill; the integrated rendered and broader mutation cases remain open.
   T4C-0216 additionally checked two native adapter reconnects and committed movement over local
   trusted HTTPS, without a server restart or network fault.
+  T4C-0306 added the first RENDERED restart/reconnect (local, graceful stop only, 2026-10-29): with both windows
+  in the temple the server was stopped through the private shutdown and restarted on the same database; both
+  clients showed the disconnect text, returned to the lobby with R, rejoined after the 33 s lease hold at the
+  committed tile with identical inventory and saw each other again, and a greeting after the restart gave no
+  second letter. A forced kill, a database crash, a lost acknowledgement and the mixed-session gate were not
+  run rendered, so the bullet stays open.
 - [ ] Database unavailability/recovery fails safely and resumes from committed state. Test actual
   database recovery separately from an HTTP timeout or a mocked SQL failure.
   T4C-0208 passed a narrow two-adapter opening-letter drill against a newly created schema-9

@@ -4,6 +4,16 @@ Last reviewed: 2026-10-27, Asia/Jerusalem. This file is the restart point for a 
 
 ## Read first
 
+### Latest live rendered evidence (T4C-0306, 2026-10-29)
+
+Two real rendered windows were run against a real server on a disposable PostgreSQL cluster with the test-scope
+`OnlineLiveRunDriver` and `multiplayer/tools/LiveRunProvision.java`: lobby selection, mutual sight, Kilhiam talk, a graceful
+server stop/restart with the disconnect-to-lobby rejoin, Skeleton combat, a drop and a pickup race. What was and was not
+driven, the reproduction recipe and seven findings (dark default light, frozen owner-window countdown in the public loot
+view, simultaneous-talk refusal, generic race-loser text, the unneeded 33 s hold after a restart) are in
+[CLIENT_UNIFICATION_DESIGN.md](CLIENT_UNIFICATION_DESIGN.md) 3.15. Next for rendered acceptance: equip and inventory
+refusal, a scripted death/corpse recovery, spells, the quest loop and travel, a forced-kill restart, then the sustained mixed session.
+
 ### Current gameplay slice: caster character creation (T4C-0272)
 
 The online create form and authenticated server endpoint now offer Warrior, Paladin, Cleric,
