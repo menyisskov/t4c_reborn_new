@@ -6,29 +6,25 @@ import com.perso.T4C.online.model.OnlineProtocol;
 import com.perso.T4C.online.model.OnlineRoster;
 import java.io.IOException;
 import java.net.URI;
-import java.net.http.*;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.concurrent.*;
 
-/** Read-only account discovery. Call on a worker, never the render thread; acquires no character lease. */
+/** Account discovery/creation over one persistent game socket; call on a worker, never the render thread. */
 public final class OnlineAccountClient implements AutoCloseable {
   private static final Gson JSON=new Gson();
   private record Hello(int protocolVersion,boolean persistent) {}
   private final URI endpoint;
   private final String accountKey;
-  private final HttpClient client;
+  private final int configuredSocketPort;
+  private GameSocketClient socket;
   private volatile boolean closed;
 
   public static final class Rejected extends IOException {
     private final int statusCode;
     private final String code;
     Rejected(int statusCode,String code) {
-      super("Account request rejected (HTTP "+statusCode+")");this.statusCode=statusCode;this.code=code;
+      super("Account request rejected (status "+statusCode+")");this.statusCode=statusCode;this.code=code;
     }
     public int statusCode() { return statusCode; }
     /** The server's short refusal code (for example {@code name_taken}), or null when absent or not a plain code. */
@@ -36,17 +32,23 @@ public final class OnlineAccountClient implements AutoCloseable {
   }
 
   public OnlineAccountClient(URI endpoint,String accountKey) {
+    this(endpoint,accountKey,0);
+  }
+
+  OnlineAccountClient(URI endpoint,String accountKey,int socketPort) {
     this.endpoint=OnlineEndpoint.validate(endpoint);
     if(accountKey==null || !accountKey.matches("[0-9a-f]{64}"))
       throw new IllegalArgumentException("Invalid account key");
-    this.accountKey=accountKey;client=OnlineEndpoint.client();
+    if(socketPort<0 || socketPort>65535) throw new IllegalArgumentException("Invalid game socket port");
+    this.accountKey=accountKey;configuredSocketPort=socketPort;
   }
 
   /** Explicit bounded page; the caller chooses whether to request the next page. */
   public synchronized OnlineRoster page(UUID after) throws IOException,InterruptedException {
     if(closed) throw new IOException("Account client is closed");
     requirePersistentMap();
-    var roster=parse(read("/account/characters"+(after==null ? "" : "?after="+after),true,64*1024),OnlineRoster.class);
+    var roster=parse(request("GET","account/characters",after==null ? "" : "after="+after,
+        null,"Bearer "+accountKey),OnlineRoster.class);
     validatePage(roster,after);
     return roster;
   }
@@ -59,7 +61,8 @@ public final class OnlineAccountClient implements AutoCloseable {
     requirePersistentMap(); // Never disclose the key to an incompatible or preview-only endpoint.
     String body=JSON.toJson(request);
     if(body.getBytes(StandardCharsets.UTF_8).length>512) throw new IllegalArgumentException("Creation request is too large");
-    var received=parse(read("/account/characters",true,64*1024,body),OnlineCharacterCreation.Result.class);
+    var received=parse(request("POST","account/characters","",body,"Bearer "+accountKey),
+        OnlineCharacterCreation.Result.class);
     if(received==null || !request.requestId().equals(received.requestId()) || received.character()==null)
       throw new IOException("Invalid account server response");
     try {
@@ -74,7 +77,7 @@ public final class OnlineAccountClient implements AutoCloseable {
 
   private void requirePersistentMap() throws IOException,InterruptedException {
     // Recheck before each account operation. The anonymous gate never carries the key.
-    var hello=parse(read("/map",false,1024*1024),Hello.class);
+    var hello=parse(request("GET","map","",null,null),Hello.class);
     if(hello==null || hello.protocolVersion()!=OnlineProtocol.VERSION || !hello.persistent())
       throw new IOException("Incompatible account server; update client and server together");
   }
@@ -98,26 +101,27 @@ public final class OnlineAccountClient implements AutoCloseable {
     catch(RuntimeException invalid) { throw new IOException("Invalid account server response"); }
   }
 
-  private String read(String path,boolean authenticated,int limit) throws IOException,InterruptedException {
-    return read(path,authenticated,limit,null);
-  }
-  private String read(String path,boolean authenticated,int limit,String body) throws IOException,InterruptedException {
+  private String request(String method,String command,String query,String body,String authorization) throws IOException {
     if(closed) throw new IOException("Account client is closed");
-    var request=HttpRequest.newBuilder(endpoint.resolve(path)).timeout(Duration.ofSeconds(2));
-    if(authenticated) request.header("Authorization","Bearer "+accountKey)
-        .header(OnlineProtocol.VERSION_HEADER,Integer.toString(OnlineProtocol.VERSION));
-    if(body!=null) request.header("Origin",endpoint.toString()).header("Content-Type","application/json")
-        .POST(HttpRequest.BodyPublishers.ofString(body,StandardCharsets.UTF_8));
-    CompletableFuture<HttpResponse<byte[]>> pending;
-    try { pending=client.sendAsync(request.build(),ignored->new BoundedBody(limit)); }
-    catch(RuntimeException failed) { throw new IOException("Account request unavailable"); }
-    HttpResponse<byte[]> response;
-    try { response=pending.get(2,TimeUnit.SECONDS); }
-    catch(InterruptedException interrupted) { pending.cancel(true);throw interrupted; }
-    catch(TimeoutException timeout) { pending.cancel(true);throw new IOException("Account request timed out"); }
-    catch(ExecutionException|CancellationException failed) { throw new IOException("Account request unavailable"); }
-    if(response.statusCode()!=200) throw new Rejected(response.statusCode(),refusalCode(response.body()));
-    return new String(response.body(),StandardCharsets.UTF_8);
+    GameSocketProtocolReply received;
+    try {
+      if(socket==null) socket=GameSocketClient.connect(endpoint,
+          configuredSocketPort==0 ? GameSocketClient.defaultPort(endpoint) : configuredSocketPort);
+      var reply=socket.request(method,command,query,authorization,body);
+      received=new GameSocketProtocolReply(reply.status(),reply.body());
+    } catch(IOException | RuntimeException failed) {
+      closeSocket();
+      throw new IOException("Account request unavailable");
+    }
+    if(received.status()!=200) throw new Rejected(received.status(),refusalCode(received.body().getBytes(StandardCharsets.UTF_8)));
+    return received.body();
+  }
+
+  private record GameSocketProtocolReply(int status,String body) {}
+
+  private void closeSocket() {
+    if(socket!=null) try { socket.close(); } catch(IOException ignored) { }
+    socket=null;
   }
 
   private static final java.util.regex.Pattern REFUSAL=java.util.regex.Pattern.compile("\\{\"error\":\"([a-z_]{1,32})\"}");
@@ -128,23 +132,5 @@ public final class OnlineAccountClient implements AutoCloseable {
     return matcher.matches() ? matcher.group(1) : null;
   }
 
-  /** Bound streaming replies before allocating the entire body, including malformed/error bodies. */
-  private static final class BoundedBody implements HttpResponse.BodySubscriber<byte[]> {
-    private final int limit;
-    private final HttpResponse.BodySubscriber<byte[]> delegate=HttpResponse.BodySubscribers.ofByteArray();
-    private Flow.Subscription subscription;
-    private long received;
-    BoundedBody(int limit) { this.limit=limit; }
-    @Override public CompletionStage<byte[]> getBody() { return delegate.getBody(); }
-    @Override public void onSubscribe(Flow.Subscription subscription) { this.subscription=subscription;delegate.onSubscribe(subscription); }
-    @Override public void onNext(List<ByteBuffer> buffers) {
-      for(var buffer:buffers) received+=buffer.remaining();
-      if(received>limit) { subscription.cancel();delegate.onError(new IOException("Account response exceeds limit")); }
-      else delegate.onNext(buffers);
-    }
-    @Override public void onError(Throwable failure) { delegate.onError(failure); }
-    @Override public void onComplete() { delegate.onComplete(); }
-  }
-
-  @Override public void close() { closed=true;client.shutdownNow(); }
+  @Override public synchronized void close() { closed=true;closeSocket(); }
 }

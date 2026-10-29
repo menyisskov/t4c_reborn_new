@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 /** The shop commands of the native adapter against a local fake server: bodies, replies, refusals, no replay. */
 class OnlineShopConnectionTest {
   private static final java.util.Map<HttpServer,LoopbackGameSocket> SOCKETS=new ConcurrentHashMap<>();
+  private static final java.util.Map<HttpServer,Integer> SOCKET_PORTS=new ConcurrentHashMap<>();
   private static final String TOKEN = "a".repeat(64);
   private static final String REGION = "{\"world\":0,\"key\":\"start\",\"locationEpoch\":0,\"originX\":2904,"
       + "\"originY\":1029,\"width\":80,\"height\":60}";
@@ -65,12 +66,13 @@ class OnlineShopConnectionTest {
       exchange.getResponseBody().write(bytes);
       exchange.close();
     });
-    var bridge=new LoopbackGameSocket(server);socketPort.set(bridge.port());server.start();SOCKETS.put(server,bridge);
+    var bridge=new LoopbackGameSocket(server);socketPort.set(bridge.port());server.start();SOCKETS.put(server,bridge);SOCKET_PORTS.put(server,bridge.port());
     return server;
   }
 
   private static void stop(HttpServer server) {
     var bridge=SOCKETS.remove(server);
+    SOCKET_PORTS.remove(server);
     if(bridge!=null) bridge.close();
     server.stop(0);
   }
@@ -84,7 +86,7 @@ class OnlineShopConnectionTest {
     var status = new AtomicInteger(200);
     var server = server(credentials, revision, calls, reply, status);
     try (var connection = new OnlineConnection(
-        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials)) {
+        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials, SOCKET_PORTS.get(server))) {
       awaitTrue(() -> connection.view() != null && connection.view().character() != null);
 
       reply.set("{\"revision\":1,\"gold\":500,\"npc\":\"Sigfried\",\"buy\":[{\"key\":\"item.rusted_short_sword\","
@@ -124,7 +126,7 @@ class OnlineShopConnectionTest {
     var status = new AtomicInteger(409);
     var server = server(credentials, new AtomicLong(1), calls, reply, status);
     try (var connection = new OnlineConnection(
-        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials)) {
+        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials, SOCKET_PORTS.get(server))) {
       awaitTrue(() -> connection.view() != null && connection.view().character() != null);
       for (var refusal : List.of("insufficient_gold:online.shop.not_enough_gold", "too_heavy:online.shop.too_heavy",
           "item_unavailable:online.shop.not_enough_items", "not_a_shop:online.shop.not_a_shop",
@@ -153,7 +155,7 @@ class OnlineShopConnectionTest {
     var status = new AtomicInteger(503);
     var server = server(credentials, new AtomicLong(1), calls, new AtomicReference<>("{\"error\":\"busy\"}"), status);
     try (var connection = new OnlineConnection(
-        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials)) {
+        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials, SOCKET_PORTS.get(server))) {
       awaitTrue(() -> connection.view() != null && connection.view().character() != null);
       var uncertain = connection.shopSell("Sigfried", "item.torch", 1).toCompletableFuture();
       assertThrows(java.util.concurrent.ExecutionException.class, () -> uncertain.get(4, TimeUnit.SECONDS));
@@ -168,7 +170,7 @@ class OnlineShopConnectionTest {
     var calls = new CopyOnWriteArrayList<Call>();
     var server = server(credentials, new AtomicLong(1), calls, new AtomicReference<>("{}"), new AtomicInteger(200));
     try (var connection = new OnlineConnection(
-        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials)) {
+        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials, SOCKET_PORTS.get(server))) {
       awaitTrue(() -> connection.view() != null && connection.view().character() != null);
       assertThrows(IllegalArgumentException.class, () -> connection.shopOffers("bad npc"));
       assertThrows(IllegalArgumentException.class, () -> connection.shopBuy("Sigfried", "rusted_short_sword", 1));

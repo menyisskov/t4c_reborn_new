@@ -54,6 +54,7 @@ class OnlineBusyBackoffTest {
   void busyMapReadIsRetriedAndOtherFailuresAreNot() throws Exception {
     var maps = new AtomicInteger();
     var server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+    var socketPort = new AtomicInteger();
     server.createContext("/", exchange -> {
       if (exchange.getRequestURI().getPath().equals("/map")) {
         int call = maps.incrementAndGet();
@@ -63,14 +64,18 @@ class OnlineBusyBackoffTest {
       } else exchange.sendResponseHeaders(404, -1);
       exchange.close();
     });
+    var socketBridge = new LoopbackGameSocket(server);
+    socketPort.set(socketBridge.port());
     server.start();
-    try (var connection = new OnlineConnection(URI.create("http://127.0.0.1:" + server.getAddress().getPort()))) {
+    try (socketBridge; var connection = new OnlineConnection(
+        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), null, socketPort.get())) {
       long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(5);
       while (maps.get() < 2 && System.nanoTime() < deadline) Thread.sleep(20);
       Thread.sleep(400);
       assertEquals(2, maps.get());
       assertEquals("disconnected", connection.status());
     } finally {
+      socketBridge.close();
       server.stop(0);
     }
   }

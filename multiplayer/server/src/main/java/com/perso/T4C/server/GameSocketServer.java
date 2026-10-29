@@ -2,7 +2,6 @@ package com.perso.T4C.server;
 
 import com.google.gson.Gson;
 import com.perso.T4C.online.model.GameSocketProtocol;
-import com.perso.T4C.online.model.OnlineProtocol;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -19,7 +18,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 final class GameSocketServer implements AutoCloseable {
   private static final Gson JSON = new Gson();
   private static final int MAX_CONNECTIONS = 32;
-  private static final int SOCKET_IDLE_TIMEOUT_MILLIS = 10_000;
+  private static final int SOCKET_IDLE_TIMEOUT_MILLIS = 20_000;
 
   record Result(int status, String body, String sessionToken, boolean close) {
     Result {
@@ -88,9 +87,9 @@ final class GameSocketServer implements AutoCloseable {
       String first = GameSocketProtocol.readFrame(input);
       if (first == null) return;
       GameSocketProtocol.Hello hello = JSON.fromJson(first, GameSocketProtocol.Hello.class);
-      boolean compatible = hello != null && hello.protocolVersion() == OnlineProtocol.VERSION;
+      boolean compatible = hello != null && hello.protocolVersion() == GameSocketProtocol.VERSION;
       GameSocketProtocol.writeFrame(output,
-          JSON.toJson(new GameSocketProtocol.HelloReply(OnlineProtocol.VERSION, compatible)));
+          JSON.toJson(new GameSocketProtocol.HelloReply(GameSocketProtocol.VERSION, compatible)));
       if (!compatible) return; // Version negotiation always precedes credentials.
 
       long previousId = 0;
@@ -101,12 +100,24 @@ final class GameSocketServer implements AutoCloseable {
         if (!valid(request, previousId)) return;
         previousId = request.id();
         boolean join = request.method().equals("POST") && request.command().equals("join");
-        if (sessionToken == null && !join) {
+        boolean mapBootstrap = sessionToken == null && request.method().equals("GET")
+            && request.command().equals("map") && request.authorization() == null;
+        boolean keepalive = request.method().equals("GET") && request.command().equals("ping")
+            && request.authorization() == null && request.query().isEmpty() && request.body().isEmpty();
+        boolean accountRequest = sessionToken == null && request.command().equals("account/characters")
+            && request.authorization() != null;
+        if (sessionToken == null && !join && !mapBootstrap && !accountRequest && !keepalive) {
           var reply = new GameSocketProtocol.Reply(request.id(), 401, "{\"error\":\"session\"}");
           GameSocketProtocol.writeFrame(output, JSON.toJson(reply));
           return;
         }
-        if (sessionToken != null && join) {
+        if (keepalive) {
+          GameSocketProtocol.writeFrame(output,
+              JSON.toJson(new GameSocketProtocol.Reply(request.id(), 200, "{}")));
+          continue;
+        }
+        if (sessionToken != null && (join || request.command().equals("account/characters")
+            || request.authorization() != null)) {
           var reply = new GameSocketProtocol.Reply(request.id(), 409, "{\"error\":\"session\"}");
           GameSocketProtocol.writeFrame(output, JSON.toJson(reply));
           return;
@@ -139,7 +150,13 @@ final class GameSocketServer implements AutoCloseable {
   private static boolean valid(GameSocketProtocol.Request request, long previousId) {
     return request != null && request.id() > previousId && request.method() != null
         && (request.method().equals("GET") || request.method().equals("POST"))
-        && request.command() != null && request.command().matches("[a-z][a-z0-9-]{0,31}")
+        && request.command() != null && (request.command().matches("[a-z][a-z0-9-]{0,31}")
+            || request.command().equals("account/characters"))
+        && (request.authorization() == null || request.authorization().matches("Bearer [0-9a-f]{64}")
+            && request.command().equals("account/characters"))
+        && request.query() != null && request.query().length() <= 64
+        && (request.query().isEmpty() || request.command().equals("account/characters")
+            && request.method().equals("GET") && request.query().matches("after=[0-9a-fA-F-]{36}"))
         && request.body() != null && request.body().length() <= GameSocketProtocol.MAX_FRAME_BYTES;
   }
 

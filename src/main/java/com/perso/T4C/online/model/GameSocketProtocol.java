@@ -13,17 +13,25 @@ import java.nio.charset.StandardCharsets;
 
 /** Bounded, length-prefixed UTF-8 framing for the native online game socket. */
 public final class GameSocketProtocol {
-  public static final int VERSION = 1;
+  public static final int VERSION = 2;
   public static final int MAX_FRAME_BYTES = 1_048_576;
 
   private GameSocketProtocol() {}
 
   public record Hello(int protocolVersion) {}
   public record HelloReply(int protocolVersion, boolean accepted) {}
-  public record Request(long id, String method, String command, String body) {
+  public record Request(long id, String method, String command, String query, String authorization, String body) {
+    public Request(long id, String method, String command, String body) {
+      this(id, method, command, "", null, body);
+    }
+
     public Request {
       if (id <= 0 || !("GET".equals(method) || "POST".equals(method)) || command == null
-          || !command.matches("[a-z][a-z0-9-]{0,31}") || body == null)
+          || !(command.matches("[a-z][a-z0-9-]{0,31}") || command.equals("account/characters"))
+          || query == null || query.length() > 64
+          || !(query.isEmpty() || command.equals("account/characters")
+              && query.matches("after=[0-9a-fA-F-]{36}"))
+          || authorization != null && !authorization.matches("Bearer [0-9a-f]{64}") || body == null)
         throw new IllegalArgumentException("Invalid game socket request");
     }
   }
