@@ -55,7 +55,7 @@ import java.util.function.Predicate;
  *   <li>screenshots are the real back buffer.
  * </ul>
  *
- * Since T4C-0311 the inventory ({@code I}), spell ({@code C}) and potion ({@code U}) lists, the digit
+ * Since T4C-0312 the inventory ({@code I}), spell ({@code C}) and potion ({@code U}) lists, the digit
  * keys, {@code Tab} and {@code T} of the shop panel are delivered the same way (key events to the
  * screen's input processor), and the committed state is read from the connection's view. The one
  * thing sent around the screen is the quest offer (topic 0), because the screen has no topic
@@ -750,7 +750,7 @@ public final class OnlineLiveRunDriver extends MyGame {
         });
   }
 
-  // ---------------------------------------------------------------- wares scene (T4C-0311)
+  // ---------------------------------------------------------------- wares scene (T4C-0312)
 
   private void press(int key) {
     var processor = Gdx.input.getInputProcessor();
@@ -1118,7 +1118,7 @@ public final class OnlineLiveRunDriver extends MyGame {
         });
   }
 
-  // ---------------------------------------------------------------- quest scene (T4C-0311)
+  // ---------------------------------------------------------------- quest scene (T4C-0312)
 
   private static final String QUEST_KILLS = "quest.renewed_wards.kills", QUEST_STATUS = "quest.renewed_wards.status";
 

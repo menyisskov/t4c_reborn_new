@@ -187,7 +187,7 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
   /**
    * One greeting. A greeting refused as busy or stale was rejected before any change, and the connection has already
    * refreshed the committed character when that answer arrives (a position or regeneration checkpoint had just moved
-   * the revision: the live runs of T4C-0311 saw it on the first click on a shopkeeper after walking up). So it is sent
+   * the revision: the live runs of T4C-0312 saw it on the first click on a shopkeeper after walking up). So it is sent
    * once more with the fresh revision, which is the click the player would otherwise have to repeat; a second refusal
    * is shown. Nothing that was accepted is ever sent again.
    */

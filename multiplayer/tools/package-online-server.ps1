@@ -20,7 +20,9 @@ if ((& git -C $repo cat-file -t "$revision^{commit}").Trim() -ne 'commit' -or $L
 if ((& git -C $repo rev-parse "$revision^{commit}").Trim() -ne $revision -or $LASTEXITCODE -ne 0) {
     throw 'SourceRevision must be the full SHA-1 of a commit.'
 }
-if ((& $java -version 2>&1 | Select-Object -First 1) -notmatch 'version "(21|2[2-9]|[3-9][0-9])') {
+# `java -version` writes to stderr; under Windows PowerShell 5.1 with -Stop that 2>&1 becomes a terminating NativeCommandError.
+$javaVersionLine = & { $ErrorActionPreference = 'Continue'; (& $java -version 2>&1 | ForEach-Object { "$_" } | Select-Object -First 1) }
+if ($javaVersionLine -notmatch 'version "(21|2[2-9]|[3-9][0-9])') {
     throw 'Builder requires an installed Java 21 or newer JDK.'
 }
 $build = Join-Path $env:TEMP ('t4c-online-server-package-build-' + $Name + '-' + [guid]::NewGuid().ToString('N'))

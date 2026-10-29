@@ -618,7 +618,7 @@ operator creates `server-restarted` in the sync directory after the restart.
 8. Other players' legs: these runs used a build from before PR #266 (walk hold for other players), and the screenshots are single frames, so whether the other player's legs animate while walking was not observed and is not claimed. A later run on a build with #266 would show it.
 7. A game run rewrites the tracked `t4c-chat.log`; it must be reverted before committing.
 
-### 3.16 Live rendered gameplay panels: inventory, spells, potions, shop, walking frames, quest (T4C-0311)
+### 3.16 Live rendered gameplay panels: inventory, spells, potions, shop, walking frames, quest (T4C-0312)
 
 **Evidence class: rendered clients, local only, same harness and limits as 3.15.** Disposable PostgreSQL 16 cluster
 `t4c_acc_c5f1ec67edd1` (loopback 57721), one `ServerMain --online` (HTTP 18881, game socket 18882), protocol 7, `main`

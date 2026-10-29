@@ -34,7 +34,7 @@ import java.util.UUID;
  * {@code renewed_wards} circle, found the same way {@code NativeLootProbe} finds it. Level 8 is the
  * probe's headroom choice (twice the Skeleton level), reached through the server's own XP award path.
  *
- * <p>Scene {@code wares} (T4C-0311) puts a badly wounded, low-mana level-1 Healer (a heal spell, healing and mana potions, a staff and a
+ * <p>Scene {@code wares} (T4C-0312) puts a badly wounded, low-mana level-1 Healer (a heal spell, healing and mana potions, a staff and a
  * robe) and a level-1 Warrior carrying an over-weight stack within talking distance of the hosted shopkeeper Sigfried,
  * for the inventory, spell, potion, shop and walking-animation runs.
  *
@@ -86,7 +86,7 @@ public final class LiveRunProvision {
   }
 
   /**
-   * T4C-0311 scene {@code wares}: a Healer at half health (so a heal and a healing potion visibly do something)
+   * T4C-0312 scene {@code wares}: a Healer at half health (so a heal and a healing potion visibly do something)
    * and a Warrior carrying one over-weight stack, both within talking distance of Sigfried's shop.
    */
   private static void waresScene(HostedRegionPlan plan, Path out, String suffix) throws Exception {

@@ -123,7 +123,7 @@ exactly one claimant and one receipt, the loser refused on screen. Equip, an inv
 owner window, corpse recovery and reload-from-PostgreSQL of the final items were not driven, so every M2 bullet stays
 open. Also found: the public view's owner-window countdown never advances (see CLIENT_UNIFICATION_DESIGN.md 3.15).
 
-T4C-0311 (2026-10-29, local rendered): the inventory panel (`I`) equipped and unequipped a staff and a robe through the
+T4C-0312 (2026-10-29, local rendered): the inventory panel (`I`) equipped and unequipped a staff and a robe through the
 screen's own handlers, each commit visible in the connection's committed state, and a server restart plus rejoin kept the
 robe off and the inventory identical; the Sigfried shop bought, sold and refused (too expensive, over-weight) with no
 change on a refusal. The panels are drawn upside down at the bottom right, the own character's equipped appearance was not
@@ -164,7 +164,7 @@ Required behavior:
 - [ ] Logout/rejoin and server restart preserve objective state, rewards and destination; delayed
   intents from a prior region cannot act on a new region's local entity IDs.
 
-T4C-0311 (2026-10-29, local rendered, one quester, not the two-player policy): the `renewed_wards` offer was accepted
+T4C-0312 (2026-10-29, local rendered, one quester, not the two-player policy): the `renewed_wards` offer was accepted
 through the connection (the screen has no topic control), the screen's own monster clicks credited 12 Skeleton kills, and
 a greeting turned the quest in once: status 2, +500 gold, +400 experience and `spell.renew_armor` in one commit, with a
 repeat greeting changing nothing. The giver and the ground are 160 tiles apart, so the operator moved the character between
@@ -206,7 +206,7 @@ monster click handler and both gained committed experience; one player died once
 the temple. That death was incidental, not a scripted death/respawn, targeting-contention, costs/cooldown or other-role
 scenario, so no M4 bullet is ticked.
 
-T4C-0311 (2026-10-29, local rendered, Healer and Warrior): Light Heal cast through `C` (HP 5 to 21 of 28, mana -2,
+T4C-0312 (2026-10-29, local rendered, Healer and Warrior): Light Heal cast through `C` (HP 5 to 21 of 28, mana -2,
 exhaustion cooldowns committed) and a Light Healing Potion used through `U` (HP 21 to 28, stack three to two). The Potion
 of Mana is not offered, no starter spell is a buff, creature-target casting was not driven and other players show no
 appearance, so the "required skills/spells, mana, charges, buffs, cooldowns ... native controls, persisted" bullet stays
@@ -331,6 +331,36 @@ are not real packet-loss or rendered-client evidence. See [BACKUP.md](BACKUP.md)
 ## M6 — Distribute and accept the real game
 
 T4C-0215 supplies a checked, create-only **local loopback server QA package** alongside the earlier client package. Its generated operator scripts passed preview and persistent schema-10 start/health/private graceful stop on a fresh isolated database, including a copied path with spaces and PowerShell 5/7 checks. This is partial operational evidence; clean-machine, trusted remote deployment, full rendered playthrough and owner acceptance remain unchecked.
+
+**Clean-machine rehearsal on one machine (T4C-0311, 2026-10-29, source `f3d4ed62`).** Both QA packages were rebuilt from that commit
+and passed their headless integrity checks and fixture negatives (tamper, private file, duplicate and traversal paths). Each was zipped,
+extracted to a new empty directory with spaces outside the repository, and run from a scrubbed process environment (no repository on `PATH`
+or working directory, no inherited `T4C_*`, JDK-only `PATH`, fresh profile and `TEMP`) against a disposable PostgreSQL 16 cluster. The packaged
+server reached persistent health and a graceful exit 0; two private profiles were provisioned with the packaged JAR; the packaged client
+launcher started the real client, which connected to the game socket and closed with exit 0; the package directories were unchanged apart
+from the client's `logs/`; no credentials or developer paths were found in either package. **No second physical machine, other user
+account, other Windows build, antivirus/SmartScreen, firewall prompt, GPU or remote HTTPS endpoint was involved**, so no M6 bullet is
+ticked. It found and fixed four Windows PowerShell 5.1 defects (builder `GetRelativePath`, `java -version` stderr, negative-test stderr and the
+client launcher dying on the client's first stderr line, which made `launch-online.bat` unable to start the client); the 5.1 shell is the only one
+on a stock Windows machine. Details: [CLIENT_DISTRIBUTION.md](CLIENT_DISTRIBUTION.md) and [SERVER_DISTRIBUTION.md](SERVER_DISTRIBUTION.md).
+
+**What a real clean-machine delivery still needs (unchecked, for the second-machine pass):**
+
+- [ ] Java: the packages bundle no JRE. Either bundle one (jlink or a vendor runtime, with its licence and update path) or document the Java 21 x64
+  requirement and a verified install step, and have the launcher print a plain message when `java` is missing or older than 21.
+- [ ] Execution policy / Mark of the Web: stock Windows refuses unsigned `.ps1` files (observed: "running scripts is disabled"). Docs now give
+  the `-ExecutionPolicy Bypass` and `Unblock-File` forms; a `.bat` wrapper for the server and a code-signing decision are still open.
+- [ ] SmartScreen and antivirus: the client ships unsigned scripts and a large tree including `assets/origin/` (original-game `.exe`/`.dll` files,
+  about 290 MB, observed unused by the online client). Decide whether to stop shipping that folder, and test on a machine with Defender real-time protection.
+- [ ] Size and transfer: about 640 MB extracted client; choose a download/update channel and verify the manifest after transfer.
+- [ ] Firewall and loopback: only the local-loopback launcher is rehearsed. A second machine needs the server bound to a reachable address,
+  HTTP port plus the game socket (HTTP port + 1) allowed, and no Windows Firewall prompt left unanswered.
+- [ ] Remote HTTPS trust: a publicly trusted certificate and matching host name per [TLS.md](TLS.md), the client reaching it from another network,
+  and a clear client error for an untrusted or mismatched certificate.
+- [ ] GPU and drivers: the client needs OpenGL 3.x; behavior on integrated/older GPUs and remote-desktop sessions is unknown.
+- [ ] Per-launch residue: the pinned GLFW extraction directory under `TEMP` is not removed on exit.
+- [ ] Repeat all of the above on a second physical machine (or a clean VM) with a different user account, record screenshots/logs without credentials,
+  and obtain owner acceptance.
 
 Required behavior:
 
