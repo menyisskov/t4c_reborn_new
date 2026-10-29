@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-29 — The skeleton cave is open in online play (T4C-0300)
+
+### Added
+- In online play, the cave mouths beside the Skeleton hunting ground now work as they do in single-player: step onto one to enter the cave below, hunt its roughly thirty residents, and use the cave's only exit to come back out at the same spot.
+
 ## 2026-10-29 — Online quests can no longer be added without a reachable quest giver and kill ground (T4C-0299)
 
 ### Changed

@@ -12,9 +12,9 @@ re-measure before relying on a number.
 
 | Area | Single-player | Online today |
 |---|---|---|
-| Hosted map | all worlds | two crops (world 0 249x117, Lighthaven interior 80x60) |
-| Monster spawns | 14,393 across worlds 0/1/2 | about 50 |
-| Portals | 1,118 | 2 (16/17); all others refused |
+| Hosted map | all worlds | three crops (world 0 249x117, Lighthaven interior 80x60, skeleton cave 111x111) |
+| Monster spawns | 14,393 across worlds 0/1/2 | about 80 |
+| Portals | 1,118 | 6 (12/13/14/15 skeleton cave, 16/17 Lighthaven door); all others refused |
 | NPCs | about 2,574 placed spawns | 2 (Kilhiam, Warden Aelric) |
 | Shops | 21 | 0 |
 | Quests | 35 | 1 (renewed_wards); rules generic, the rest wait on hosting their givers and kill grounds |
@@ -94,11 +94,12 @@ Each is a gap to close, never a decision to keep:
 - Melee only; bows, stun blow and companions refuse as unsupported combat.
 - Combat fails closed while a world-event flag is active, or while a buff the server does not model (an older record without stored amounts, or an attribute outside `BuffAttributes.MODELLED`) is running. The 25 stage-2 buffs are modelled and fold into melee, retaliation, carry weight and spell numbers.
 - Other quests' flags block combat (quest-flag allowlist).
+- Hosting reach (T4C-0300): no further quest can be hosted by growing the starter crop. The other 34 quests sit on other islands or 900+ tiles away on the same continent; the portal graph from the starter crop reaches only 15 walkable areas (none holds a quest giver) and one region is capped at 256 tiles per axis. A quest zone needs an owner-approved transit design (see HOSTED_STARTER_ROUTE_DESIGN.md "Hosting reach audit"), not more rectangle. The skeleton cave behind the authored cave mouths is the one self-contained area that is hosted.
 - Quest generalisation status (T4C-0299): the quest rules (accept, lethal-claimant kill credit, normalized `item.<key>` requirements, once-only atomic turn-in, flag allowlist) already run over every catalog entry, so the allowlist grows with the catalog. The catalog now refuses quests the rules do not run (shared activation flag, no kill objective, a second quest for the same giver), and `HostedQuestCompletableTest` fails the build if a catalog quest lacks a hosted giver or enough hosted targets inside its circle. The other 34 quests are blocked on hosting, not on rules: their givers (for example TideWardenBryn, SentinelCorwin) and kill grounds are outside the two hosted crops. Still open: several quests per giver and campaign chains (Maelin, Vael, Tholvenn, Ophira, Kaelis: topic selection plus greeting turn-in of several quests), quests with an unlock-zone reward, item-only quests (no kill objective), the journal and kill log display, and a quest-by-quest `OnlineQuestContentExporter` allowlist extension as each region is hosted.
 - Goblins do not attack the Wild Horse (clan combat not simulated).
 - Monsters with spell attacks, scripts or unique loot are excluded from combat.
 - Multi-charge items are refused; no player ground drop.
-- Hosted crops only; every portal except 16/17 refused; NPC-owned spawns (Sundial) filtered out.
+- Hosted crops only; every portal except 12-17 refused; NPC-owned spawns (Sundial) filtered out.
 - Ground-loot owner window (60 s) and expiry (15 min) have no single-player equivalent;
   they are a multiplayer rule, kept unless the owner removes them.
 - Movement: the server now steps players with single-player's grid-reservation rule through the shared `MovementRules` (T4C-0277): whole-tile reservation that is finished after the key is released, slide order -1,+1,-2,+2, the single-player diagonal corner rule, 300 px/s = 0.2757 tiles per tick, rest on tile centres (wire and database keep tile-centre doubles; fixed offset of half a tile to the rule's anchors). Open-ground speed and cardinal collision decisions equal the old loop (`ServerMovementParityTest`); `-Dt4c.server.movement=swept` is the rollback. Remaining debt: no dynamic blockers (monsters, NPCs, other players), no speed buffs or GM speed (the server has no player speed state), no stun/exhaust/attack gates beyond the existing frozen/dead stop, portal source tiles only on hosted regions, the hosted-crop loaders differ on the wall-foot rule (`PreviewMap.load` applies it, `RegionMapLoader` does not), and online client prediction (`MovementReconciler`) is still unused. Details and impact analysis: `CLIENT_UNIFICATION_DESIGN.md` 3.10.1.

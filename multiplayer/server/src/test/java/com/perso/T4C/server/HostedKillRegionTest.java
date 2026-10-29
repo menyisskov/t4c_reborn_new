@@ -4,6 +4,7 @@ import static com.perso.T4C.config.GameConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.perso.T4C.online.model.MonsterContent;
+import com.perso.T4C.quest.QuestRules;
 import java.nio.file.Path;
 import java.util.*;
 import org.junit.jupiter.api.Test;
@@ -60,7 +61,7 @@ class HostedKillRegionTest {
 
   @Test void disabledPortalsInsideTheRegionAreRefusedAndNeverTransfer() throws Exception {
     var plan=HostedRegionPlan.startingSlice(WORLD);
-    assertEquals(Set.of(12,13,14,947),plan.refusedPortals.stream().map(p->p.id()).collect(java.util.stream.Collectors.toSet()));
+    assertEquals(Set.of(947),plan.refusedPortals.stream().map(p->p.id()).collect(java.util.stream.Collectors.toSet()));
     for(var portal:plan.refusedPortals) {
       double x=portal.sourceX()+.5,y=portal.sourceY()+.5;
       assertTrue(plan.isRefusedPortalSource(portal.sourceWorld(),x,y));
@@ -72,6 +73,58 @@ class HostedKillRegionTest {
     var door=plan.portals.resolve(0,2931.5,1056.5,plan::canStand).orElseThrow();
     assertEquals(16,door.portalId(),"The real lighthaven door still works");
     assertFalse(plan.isRefusedPortalSource(0,2931.5,1056.5));
+  }
+
+  @Test void skeletonCaveIsAClosedChamberHostedWholeBehindTheCaveMouths() throws Exception {
+    var plan=HostedRegionPlan.startingSlice(WORLD);
+    var cave=plan.regions().stream().filter(r->HostedRegionPlan.CAVE_KEY.equals(r.spec().key())).findFirst().orElseThrow();
+    var spec=cave.spec();
+    assertEquals(1,spec.world());
+    assertTrue(spec.width()<=256 && spec.height()<=256);
+    // Flood the whole authored dungeon map from the landing tile: nothing walkable may lie outside the region.
+    var dungeon=WORLD.getParent().getParent().resolve("dungeon/DungeonMap.colbin");
+    try(var in=new java.io.DataInputStream(com.perso.T4C.helper.BinaryIOUtils.openInputStream(dungeon.toFile(),1<<16))) {
+      int w=com.perso.T4C.helper.BinaryIOUtils.readIntLE(in),h=com.perso.T4C.helper.BinaryIOUtils.readIntLE(in);
+      var data=in.readNBytes(w*h);
+      var seen=new boolean[w*h];var queue=new ArrayDeque<Integer>();
+      int start=spec.spawnY()*w+spec.spawnX();queue.add(start);seen[start]=true;int cells=0;
+      while(!queue.isEmpty()) {
+        int c=queue.remove();cells++;int x=c%w,y=c/w;
+        assertTrue(spec.contains(1,x+.5,y+.5),"Walkable chamber tile "+x+","+y+" outside the hosted region");
+        for(int dy=-1;dy<=1;dy++) for(int dx=-1;dx<=1;dx++) {
+          int nx=x+dx,ny=y+dy;if((dx==0&&dy==0)||nx<0||ny<0||nx>=w||ny>=h||seen[ny*w+nx]) continue;
+          if(com.perso.T4C.world.CollisionRules.blocksMovement(data[ny*w+nx]&255)) continue;
+          if(dx!=0&&dy!=0&&(com.perso.T4C.world.CollisionRules.blocksMovement(data[y*w+nx]&255)
+              ||com.perso.T4C.world.CollisionRules.blocksMovement(data[ny*w+x]&255))) continue;
+          seen[ny*w+nx]=true;queue.add(ny*w+nx);
+        }
+      }
+      assertTrue(cells>1000,"The chamber is a real cave, not a pocket");
+    }
+    // Every enabled mouth enters it and the single exit returns to the same cave mouth in the kill circle.
+    for(int mouth:new int[]{12,13,14}) {
+      var p=authored().stream().filter(a->a.id()==mouth).findFirst().orElseThrow();
+      var hop=plan.portals.resolve(p.sourceWorld(),p.sourceX()+.5,p.sourceY()+.5,plan::canStand).orElseThrow();
+      assertEquals(mouth,hop.portalId());
+      assertSame(cave.spec(),plan.require(p.targetWorld(),p.targetX()+.5,p.targetY()+.5).spec());
+    }
+    var exit=plan.portals.resolve(1,136.5,665.5,plan::canStand).orElseThrow();
+    assertEquals(15,exit.portalId());
+    var quest=QuestCatalog.bundled().definition("renewed_wards");
+    assertTrue(QuestRules.inObjectiveArea(quest,0,2772,1096),"The exit lands inside the kill circle");
+    assertEquals(Set.of(15),authored().stream().filter(p->p.sourceWorld()==1).filter(p->spec.contains(p.sourceWorld(),p.sourceX(),p.sourceY()))
+        .map(p->p.id()).collect(java.util.stream.Collectors.toSet()),"The cave has exactly one exit");
+  }
+
+  @Test void skeletonCaveHostsItsAuthoredResidentsWithoutLosingStartup() throws Exception {
+    var plan=HostedRegionPlan.startingSlice(WORLD);
+    try(var hosted=new HostedWorlds(plan,null,ItemCatalog.loadBundled(),MonsterCatalog.loadBundled())) {
+      var cave=hosted.regions.stream().filter(r->HostedRegionPlan.CAVE_KEY.equals(r.spec.key())).findFirst().orElseThrow();
+      var expected=MonsterCatalog.loadBundled().region(1,cave.spec.originX(),cave.spec.originY(),cave.spec.width(),cave.spec.height());
+      assertEquals(expected.size(),cave.world.creatureSpawns().size(),"Every authored cave resident is hosted");
+      assertTrue(cave.world.creatureSpawns().size()>=20);
+      assertTrue(cave.world.creatureSpawns().stream().allMatch(s->s.definition()!=null));
+    }
   }
 
   @Test void temple_aelric_and_kill_circle_are_mutually_walkable_inside_the_region() throws Exception {
@@ -100,6 +153,13 @@ class HostedKillRegionTest {
     assertTrue(near(map,back,aelric.x()-map.originX,aelric.y()-map.originY));
     assertTrue(back[(int)map.spawnY][(int)map.spawnX],"Temple spawn reachable from the kill circle");
     assertTrue(back[1056-map.originY][2931-map.originX],"Portal 16 source reachable from the kill circle");
+  }
+
+  private static List<com.perso.T4C.online.model.PortalContent.Portal> authored() throws Exception {
+    try(var in=HostedRegionPlan.class.getResourceAsStream("/content/portals-v1.json")) {
+      return new com.google.gson.Gson().fromJson(new String(in.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8),
+          com.perso.T4C.online.model.PortalContent.class).portals();
+    }
   }
 
   /** Legal melee approach: standable, reachable, within the player's reach with sight to the target. */

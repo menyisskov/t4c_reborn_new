@@ -271,6 +271,37 @@ return through16/17, die/recover and reconnect with exact committed global posit
 offline save/preferences regression and remote/two-machine/full20-player gates. No tests/builds or
 those acceptance scenarios were executed by T4C-0214, and no core ownership or QA window is claimed.
 
+## Hosting reach audit and skeleton cave — T4C-0300, 2026-10-29
+
+Measured from the real collision maps and the 1,118 authored portals (walkable-component graph;
+8-neighbour movement without corner cutting; a portal joins the component of its source tile to the
+component of its target tile). Result for "what is the next hosting slice that unlocks the most quests":
+
+- **No adjacent crop reaches another quest.** The 34 unhosted quests have givers 900 to 3,000+ tiles
+  from the temple. Only `windhowl_borderwatch` shares the starter continent (1.29 M walkable tiles,
+  x 1395..3046); its kill circle (radius 230) alone needs 461 tiles per axis, above the 256-per-axis
+  `OnlineRegion` bound, and the giver is about 1,100 land tiles away. All others are on different
+  walkable components (separate islands) with no authored portal path from the starter crop.
+- **Portal reach from the starter crop** is 15 walkable areas (BFS over the authored graph): the
+  Lighthaven interior, ten more dungeon chambers and four small world-0 pockets. None holds a quest
+  giver or a quest target circle. Hosting any of them would add hunting ground, not quests.
+- **Quest content therefore needs a transit decision, not more map.** Options for the owner: (a) hosted
+  per-quest regions (giver plus the portion of the circle that holds the kill count) joined by authored
+  ferry/teleport NPC routes ported from single-player, (b) raising the region axis bound with
+  area-of-interest streaming, (c) an explicit non-authored hub. This design previously ruled out
+  artificial portals; none was added.
+- **Shipped instead: the skeleton cave.** Portals 12/13/14 (cave mouths at 2770..2771,1094..1095, inside the
+  renewed_wards kill circle) lead to a closed 111 x 111 chamber (38..148 x 582..692 of world 1, 4,113
+  walkable tiles, 30 authored residents) whose only exit is portal 15 back to 2772,1096. It is the only
+  zone reachable from the starter crop that needs no further hosting, so it is now region `skeleton-cave`
+  with portals 12-15 enabled. `HostedKillRegionTest` floods the real dungeon map from the landing tile and
+  proves nothing walkable lies outside the crop and that portal 15 is its sole exit;
+  `HostedTransferTest` walks mouth to cave and back through the real session transfer path.
+- **Cost.** +30 creature spawns (about 50 to about 80 hosted). Idle region step on a disposable PostgreSQL
+  cluster: 0.003 ms for the cave, 1.04 ms for the whole three-region tick (budget 29.4 ms). The 20-adapter
+  soak was not re-run for this change; pursuit cost scales with players near monsters, so re-measure
+  before the next Beta soak.
+
 ## Implemented — T4C-0231 (Q10), 2026-10-27
 
 `HostedRegionPlan.startingSlice` now hosts the world-0 `start` region at
