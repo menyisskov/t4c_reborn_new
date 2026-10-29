@@ -43,6 +43,16 @@ public final class HostedRegionPlan {
    * cannot be walked between, so the circle must live in the same region as the temple.
    */
   static final int START_X=2735,START_Y=1029,START_WIDTH=249,START_HEIGHT=117;
+  /**
+   * The skeleton cave: the closed 111 x 111 dungeon chamber behind the three authored cave mouths
+   * (portals 12, 13, 14) at 2770,1094, inside the renewed_wards kill circle. Its only exit is
+   * portal 15 back to the same spot, so the tight bounding box of its walkable tiles is the whole
+   * chamber (HostedKillRegionTest proves nothing walkable leaves it).
+   */
+  static final String CAVE_KEY="skeleton-cave";
+  static final int CAVE_X=38,CAVE_Y=582,CAVE_SIZE=111;
+  /** Lighthaven door pair (16/17) and the skeleton cave mouths and exit (12/13/14/15). */
+  static final Set<Integer> ENABLED_PORTALS=Set.of(12,13,14,15,16,17);
   public static HostedRegionPlan startingSlice(Path worldCollision) throws IOException {
     PortalContent content;
     try(var in=HostedRegionPlan.class.getResourceAsStream("/content/portals-v1.json")) {
@@ -52,10 +62,11 @@ public final class HostedRegionPlan {
       catch(RuntimeException invalid) { throw new IOException("Invalid portal content",invalid); }
     }
     if(content==null) throw new IOException("Empty portal content");
-    var enabled=content.portals().stream().filter(p->p.id()==16 || p.id()==17).toList();
-    if(enabled.size()!=2) throw new IOException("Missing initial portal route");
+    var enabled=content.portals().stream().filter(p->ENABLED_PORTALS.contains(p.id())).toList();
+    if(enabled.size()!=ENABLED_PORTALS.size()) throw new IOException("Missing initial portal route");
     var specs=List.of(new RegionMapLoader.Spec(0,"start",START_X,START_Y,START_WIDTH,START_HEIGHT,2944,1059),
-        new RegionMapLoader.Spec(1,"lighthaven-interior",264,353,80,60,304,383));
+        new RegionMapLoader.Spec(1,"lighthaven-interior",264,353,80,60,304,383),
+        new RegionMapLoader.Spec(1,CAVE_KEY,CAVE_X,CAVE_Y,CAVE_SIZE,CAVE_SIZE,134,667));
     var primary=worldCollision.toAbsolutePath().normalize();
     var maps=Map.of(0,primary,1,primary.getParent().getParent().resolve("dungeon/DungeonMap.colbin"));
     var destinations=PortalDestinations.load(maps);

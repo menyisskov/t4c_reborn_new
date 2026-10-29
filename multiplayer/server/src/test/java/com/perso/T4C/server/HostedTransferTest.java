@@ -82,6 +82,32 @@ class HostedTransferTest {
     }
   }
 
+  @Test void caveMouthLeadsIntoTheSkeletonCaveAndItsOnlyExitReturnsToTheKillCircle() throws Exception {
+    var store=OnlineStore.fromEnvironment();store.migrate();var account=store.provisionAccount();
+    var p=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(2)).progress();
+    var created=store.create(account.accountId(),"Cave walker",0,2944.5,1059.5,p,0);
+    var plan=HostedRegionPlan.startingSlice(Path.of("../../assets/maps/worldmap/worldmap.colbin"));
+    try(var hosted=new HostedWorlds(plan,store,ItemCatalog.loadBundled(),MonsterCatalog.loadBundled())) {
+      var joined=hosted.sessions.join(store.acquire(account.secret(),created.id()),System.nanoTime());
+      hosted.sessions.regionReady(joined.token(),0);
+      var start=hosted.actor(joined.token());
+      start.world.relocate(joined.token(),2770.5-start.map.originX,1094.5-start.map.originY);
+      await(hosted,()->hosted.sessions.region(joined.token()).world()==1);
+      assertEquals(HostedRegionPlan.CAVE_KEY,hosted.sessions.region(joined.token()).key());
+      assertEquals(1,hosted.sessions.region(joined.token()).locationEpoch());
+      hosted.sessions.regionReady(joined.token(),1);
+      var cave=hosted.actor(joined.token());
+      var at=cave.world.position(joined.token());
+      assertEquals(134,Math.floor(at.x()+cave.map.originX),"Lands on the authored cave tile");assertEquals(667,Math.floor(at.y()+cave.map.originY));
+      cave.world.relocate(joined.token(),136.5-cave.map.originX,665.5-cave.map.originY);
+      await(hosted,()->hosted.sessions.region(joined.token()).world()==0);
+      assertEquals(2,hosted.sessions.region(joined.token()).locationEpoch());
+      var back=hosted.actor(joined.token()).world.position(joined.token());
+      assertEquals(2772,Math.floor(back.x()+hosted.actor(joined.token()).map.originX));
+      var left=hosted.sessions.leave(joined.token());await(hosted,left::isDone);left.get();
+    }
+  }
+
   @Test void walkingOntoARefusedKillCirclePortalKeepsTheSessionAndPositionInTheStartRegion() throws Exception {
     var store=OnlineStore.fromEnvironment();store.migrate();var account=store.provisionAccount();
     var p=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(2)).progress();
