@@ -221,6 +221,31 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
   }
 
   @Override
+  public boolean cast(String spellKey) {
+    if (spellKey == null) return false;
+    return send(() -> link.cast(spellKey), "online.spell.refused");
+  }
+
+  @Override
+  public boolean cast(String spellKey, BaseMonster target) {
+    if (spellKey == null || target == null || target.isDead()) return false;
+    long id = creatureIds.applyAsLong(target);
+    if (id <= 0) return false;
+    OnlineConnection.View view = link.view();
+    if (view == null || view.snapshot() == null || view.snapshot().creatures() == null) return false;
+    boolean liveInSnapshot =
+        view.snapshot().creatures().stream().anyMatch(creature -> creature.id() == id && creature.health() > 0);
+    if (!liveInSnapshot) return false;
+    return send(() -> link.cast(spellKey, id), "online.spell.refused");
+  }
+
+  @Override
+  public boolean useItem(UUID itemInstance) {
+    if (itemInstance == null) return false;
+    return send(() -> link.useItem(itemInstance), "online.item.use.refused");
+  }
+
+  @Override
   public void closeShop() {
     shopGeneration.incrementAndGet();
   }

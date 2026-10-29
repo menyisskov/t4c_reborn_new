@@ -95,6 +95,21 @@ class RemotePlayerCommandsTest {
     }
 
     @Override
+    public CompletionStage<OnlineConnection.CommandResult> cast(String spellKey) {
+      return reply("cast " + spellKey);
+    }
+
+    @Override
+    public CompletionStage<OnlineConnection.CommandResult> cast(String spellKey, long creature) {
+      return reply("cast " + spellKey + " " + creature);
+    }
+
+    @Override
+    public CompletionStage<OnlineConnection.CommandResult> useItem(UUID itemInstance) {
+      return reply("use " + itemInstance);
+    }
+
+    @Override
     public CompletionStage<OnlineConnection.CommandResult> shopOffers(String npc) {
       calls.add("shopOffers " + npc);
       return offers;
@@ -144,6 +159,25 @@ class RemotePlayerCommandsTest {
     assertEquals(List.of("equip " + item + " WEAPON", "unequip WEAPON"), link.calls);
     assertEquals(beforeInventory, player.getInventory());
     assertEquals(beforeEquipment, player.getEquippedItems());
+  }
+
+  @Test
+  void castAndPotionUseAreSentToServerWithoutLocalCostOrInventoryChanges() {
+    UUID potion = UUID.fromString("00000000-0000-0000-0000-000000000043");
+    Player player = playerAtTile(100, 205);
+    var beforeInventory = new ArrayList<>(player.getInventory());
+    int beforeMana = player.getMana();
+    int beforeHealth = player.getCurrentHp();
+    FakeLink link = new FakeLink();
+    var commands = new RemoteGameSession(link, new GroundItemManager()).commands();
+    commands.bind(new TestHost(player));
+
+    assertTrue(commands.cast("spell.light"));
+    assertTrue(commands.useItem(potion));
+    assertEquals(List.of("cast spell.light", "use " + potion), link.calls);
+    assertEquals(beforeInventory, player.getInventory());
+    assertEquals(beforeMana, player.getMana());
+    assertEquals(beforeHealth, player.getCurrentHp());
   }
 
   private static final class TestHost implements RemotePlayerCommands.Host {

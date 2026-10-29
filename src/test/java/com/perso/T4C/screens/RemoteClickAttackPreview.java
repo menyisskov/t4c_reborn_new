@@ -176,6 +176,21 @@ public final class RemoteClickAttackPreview extends MyGame {
     }
 
     @Override
+    public CompletionStage<OnlineConnection.CommandResult> cast(String spellKey) {
+      throw new IllegalStateException("Spell routes are outside this preview");
+    }
+
+    @Override
+    public CompletionStage<OnlineConnection.CommandResult> cast(String spellKey, long creature) {
+      throw new IllegalStateException("Spell routes are outside this preview");
+    }
+
+    @Override
+    public CompletionStage<OnlineConnection.CommandResult> useItem(java.util.UUID itemInstance) {
+      throw new IllegalStateException("Item-use routes are outside this preview");
+    }
+
+    @Override
     public CompletionStage<OnlineConnection.CommandResult> shopOffers(String npc) {
       throw new IllegalStateException("Shop routes are outside this preview");
     }

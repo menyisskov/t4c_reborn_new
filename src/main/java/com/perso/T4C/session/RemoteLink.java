@@ -32,6 +32,12 @@ public interface RemoteLink {
 
   CompletionStage<OnlineConnection.CommandResult> shopSell(String npc, String itemKey, int quantity);
 
+  CompletionStage<OnlineConnection.CommandResult> cast(String spellKey);
+
+  CompletionStage<OnlineConnection.CommandResult> cast(String spellKey, long creature);
+
+  CompletionStage<OnlineConnection.CommandResult> useItem(UUID itemInstance);
+
   /** Holds a direction (each component -1..1); {@code frame} names the predicted client input. */
   void direction(int dx, int dy, long frame);
 
