@@ -147,8 +147,8 @@ public class MainGameScreen implements Screen {
   private boolean disposed;
   private boolean playerStateSaved;
   private float secondsSinceAutosave;
-  private final com.perso.T4C.session.GameSession session =
-      new com.perso.T4C.session.LocalGameSession();
+  private final com.perso.T4C.session.GameSession session;
+  private final com.perso.T4C.online.OnlineConnection remoteConnection;
   private boolean displayInitialized;
   private int loadingStep;
   private GameInputHandler inputHandler;
@@ -190,6 +190,8 @@ public class MainGameScreen implements Screen {
   private int renderStartX, renderEndX, renderStartY, renderEndY;
   private int decorRenderStartX, decorRenderEndX, decorRenderStartY, decorRenderEndY;
   private MapDefinition currentMap;
+  private boolean collisionReady;
+  private long confirmedRemoteEpoch=-1;
   private com.perso.T4C.helper.PlayerStateDto initialPlayerState;
   private XpCurve xpCurve;
   private final SpellRenderer spellRenderer = new SpellRenderer(spriteLoader);
@@ -210,7 +212,7 @@ public class MainGameScreen implements Screen {
   private String lastClickedBuffSpellName;
   private long lastBuffClickMillis;
   private final ShapeRenderer debugShapeRenderer = new ShapeRenderer();
-  private final com.perso.T4C.world.DayNightCycle dayNightCycle = loadDayNightCycle();
+  private final com.perso.T4C.world.DayNightCycle dayNightCycle;
   private boolean collisionDebugVisible = false;
   private boolean teleportOverlayVisible = false;
   private boolean coordsHudVisible = false;
@@ -257,12 +259,21 @@ public class MainGameScreen implements Screen {
   private boolean seraphArrivalPlaying;
 
   public MainGameScreen(MyGame game) throws GameException {
-    this(game, false);
+    this(game,false,null);
     while (advanceLoading()) {}
   }
 
-  private MainGameScreen(MyGame game, boolean progressive) {
+  public MainGameScreen(MyGame game,com.perso.T4C.online.OnlineConnection connection) throws GameException {
+    this(game,false,java.util.Objects.requireNonNull(connection));
+    while (advanceLoading()) {}
+  }
+
+  private MainGameScreen(MyGame game, boolean progressive,com.perso.T4C.online.OnlineConnection connection) {
     this.game = game;
+    remoteConnection=connection;
+    session=connection==null ? new com.perso.T4C.session.LocalGameSession()
+        : new com.perso.T4C.session.RemoteGameSession(connection,groundItemManager);
+    dayNightCycle=connection==null ? loadDayNightCycle() : new com.perso.T4C.world.DayNightCycle();
     this.batch = game.batch;
     this.batchSol = new SpriteBatch();
     this.batchDecor = new SpriteBatch();
@@ -275,8 +286,10 @@ public class MainGameScreen implements Screen {
   }
 
   static MainGameScreen createProgressive(MyGame game) {
-    return new MainGameScreen(game, true);
+    return new MainGameScreen(game,true,null);
   }
+
+  public boolean isRemoteSession() { return session.kind()==com.perso.T4C.session.SessionKind.REMOTE; }
 
   boolean advanceLoading() throws GameException {
     if (loadingStep >= loadingStepCount()) return false;
@@ -328,10 +341,17 @@ public class MainGameScreen implements Screen {
 
   private void initializePlayerAndServices() throws GameException {
     initializePlayer();
-    questService = new QuestService(xpCurve, this::savePlayerState, this::showSystemMessage);
-    worldEvents =
-        new com.perso.T4C.adventure.WorldEventRuntime(
-            player, questService, this::savePlayerState, this::showSystemMessage);
+    if (isRemoteSession()) {
+      var commands=(com.perso.T4C.session.RemotePlayerCommands)session.commands();
+      commands.bind(new com.perso.T4C.session.RemotePlayerCommands.Host() {
+        @Override public Player player() { return MainGameScreen.this.player; }
+        @Override public void showMessage(String text) { showSystemMessage(text); }
+      });
+    } else {
+      questService = new QuestService(xpCurve, this::savePlayerState, this::showSystemMessage);
+      worldEvents = new com.perso.T4C.adventure.WorldEventRuntime(
+          player, questService, this::savePlayerState, this::showSystemMessage);
+    }
   }
 
   private void initializeMapRendering() throws GameException {
@@ -355,6 +375,10 @@ public class MainGameScreen implements Screen {
   }
 
   private void initializeCompanionAndCallbacks() throws GameException {
+    if (isRemoteSession()) {
+      PlayerStateStore.clearCompanionSupplier();
+      return;
+    }
     companionManager = new CompanionManager(npcManager);
     companionManager.setXpCurve(xpCurve);
     companionManager.setMonsterSupplier(
@@ -379,7 +403,7 @@ public class MainGameScreen implements Screen {
         INITIAL_WARMUP_DECOR_BUDGET);
     game.startMapPreloadAsync();
     displayInitialized = true;
-    String mirrorWhisper = com.perso.T4C.mirror.MirrorTrials.takeLoginWhisper(player);
+    String mirrorWhisper = isRemoteSession() ? null : com.perso.T4C.mirror.MirrorTrials.takeLoginWhisper(player);
     if (mirrorWhisper != null) {
       showSystemMessage(mirrorWhisper);
       savePlayerState();
@@ -423,6 +447,7 @@ public class MainGameScreen implements Screen {
 
   private void savePlayerState() {
     secondsSinceAutosave = 0f;
+    if (isRemoteSession()) return;
     session.persistence().save(player, dayNightCycle.getHour());
   }
 
@@ -450,6 +475,27 @@ public class MainGameScreen implements Screen {
 
   private void loadMap(MapDefinition map) throws GameException {
     reader = game.getOrLoadMapReader(map);
+  }
+
+  private void synchronizeRemoteRegion() {
+    if (remoteConnection==null || !displayInitialized) return;
+    var view=remoteConnection.view();
+    if (view==null || view.map()==null || view.snapshot()==null || !view.map().persistent()
+        || !view.map().region().equals(view.snapshot().region())) return;
+    MapDefinition target=MapDefinition.fromZ(view.map().world());
+    if (target!=currentMap && !switchMapForZ(view.map().world())) return;
+    if (target!=currentMap || reader==null || !collisionReady) return;
+    var region=view.map().region();
+    if (region.world()!=currentMap.getZ() || region.originX()+region.width()>reader.getWidth()
+        || region.originY()+region.height()>reader.getHeight()) return;
+    if (confirmedRemoteEpoch==region.locationEpoch()) return;
+    var position=player.getPositionVector();
+    if (player.getCoordinates().getZ()!=region.world())
+      player.setWorldPosition(position.x,position.y,region.world());
+    session.world().tickEntities(new com.perso.T4C.session.EntityTick(npcManager,monsterManager,player,
+        position,0,renderStartX,renderEndX,renderStartY,renderEndY,5));
+    remoteConnection.confirmRegionReady(region.locationEpoch());
+    confirmedRemoteEpoch=region.locationEpoch();
   }
 
   private void loadMusicZones(MapDefinition map) {
@@ -584,7 +630,7 @@ public class MainGameScreen implements Screen {
   }
 
   private void updateTeleportForPlayer() {
-    if (player == null || teleports.isEmpty()) {
+    if (isRemoteSession() || player == null || teleports.isEmpty()) {
       return;
     }
     long now = System.currentTimeMillis();
@@ -692,8 +738,10 @@ public class MainGameScreen implements Screen {
   }
 
   private void loadCollisionMap(MapDefinition map) {
+    collisionReady=false;
     if (map.getCollisionPath() == null) {
       CollisionManager.getInstance().clear();
+      collisionReady=true;
       log.info("No collision map for Z={} ({})", map.getZ(), map.name());
       return;
     }
@@ -701,6 +749,7 @@ public class MainGameScreen implements Screen {
       String collisionFile = Gdx.files.internal(map.getCollisionPath()).file().getAbsolutePath();
       CollisionReader collisionReader = new CollisionReader(new File(collisionFile));
       CollisionManager.getInstance().initialize(collisionReader);
+      collisionReady=true;
       log.info("Collision map loaded successfully");
     } catch (Exception e) {
       log.warn("Could not load collision map: {}. Collision detection disabled.", e.getMessage());
@@ -1358,23 +1407,29 @@ public class MainGameScreen implements Screen {
     player.setPositionCallback(
         (x, y, z) -> {
           clearCurrentAttackTarget();
-          switchMapForZ(z);
+          if (!switchMapForZ(z)) {
+            player.setWorldPosition(x,y,currentMap.getZ());
+            return;
+          }
           camera.position.set(x, y, 0);
           camera.update();
           log.info("Player teleported to ({}, {}, {})", (int) (x / GRID_W), (int) (y / GRID_H), z);
         });
   }
 
-  private void switchMapForZ(int z) {
+  private boolean switchMapForZ(int z) {
     MapDefinition targetMap = MapDefinition.fromZ(z);
     if (targetMap == currentMap) {
-      return;
+      return true;
     }
+    MapDefinition previousMap=currentMap;
+    MapReader previousReader=reader;
+    collisionReady=false;
     try {
+      loadMap(targetMap);
       currentMap = targetMap;
-      loadMap(currentMap);
-      loadMusicZones(currentMap);
-      loadCollisionMap(currentMap);
+      loadMusicZones(targetMap);
+      loadCollisionMap(targetMap);
       CollisionManager.getInstance().setPlayerPassabilityProvider(this::isTeleportSourceTile);
       CollisionManager.getInstance().setTalkVisibilityProvider((tileX, tileY) -> false);
       if (mapRenderer != null) {
@@ -1419,9 +1474,14 @@ public class MainGameScreen implements Screen {
       lastMapZoneId = Integer.MIN_VALUE;
       updateAmbientMusicForPlayer();
       updateMapZoneDisplay();
+      return true;
     } catch (Exception e) {
       log.error("Failed to switch map for Z={}", z, e);
+      currentMap=previousMap;
+      reader=previousReader;
+      collisionReady=false;
       showSystemMessage(I18n.message("message.map_load_failed", z));
+      return false;
     }
   }
 
@@ -1473,7 +1533,9 @@ public class MainGameScreen implements Screen {
     section(
         "input",
         () -> {
-          if (seraphArrivalBlocksMovement()) {
+          synchronizeRemoteRegion();
+          if (seraphArrivalBlocksMovement()
+              || remoteConnection!=null && !"connected".equals(remoteConnection.status())) {
             return;
           }
           inputHandler.handleInput(delta, player);
@@ -1481,7 +1543,7 @@ public class MainGameScreen implements Screen {
     section("autosave", () -> updateAutosave(delta));
     section("teleport", this::updateTeleportForPlayer);
     section("entities", () -> updateEntities(delta));
-    if (worldEvents != null) worldEvents.tick(monsterManager);
+    if (worldEvents != null && !isRemoteSession()) worldEvents.tick(monsterManager);
     section(
         "camera",
         () -> {
@@ -1539,7 +1601,7 @@ public class MainGameScreen implements Screen {
           batchDecor.begin();
           spellRenderer.render(batchDecor);
           renderNameOverlay(batchDecor);
-          if (worldEvents != null) worldEvents.renderWorld(batchDecor);
+          if (worldEvents != null && !isRemoteSession()) worldEvents.renderWorld(batchDecor);
           floatingDamage.render(batchDecor);
           batchDecor.end();
         });
@@ -1561,7 +1623,7 @@ public class MainGameScreen implements Screen {
           batch.begin();
           if (gameChat != null) gameChat.render(batch, hudCamera);
           hud.render(batch, 20, 20);
-          if (worldEvents != null && !GuiManager.isOpen()) {
+          if (worldEvents != null && !isRemoteSession() && !GuiManager.isOpen()) {
             String eventText = worldEvents.hudText();
             if (!eventText.isEmpty())
               com.perso
@@ -1589,6 +1651,18 @@ public class MainGameScreen implements Screen {
           GuiManager.render(batch);
           batch.end();
         });
+    if (remoteConnection!=null) {
+      batch.setProjectionMatrix(hudCamera.combined);batch.begin();
+      String status=remoteConnection.status();
+      String text=switch(status) {
+        case "connected" -> I18n.key("online.lobby.status.ready");
+        case "disconnected" -> I18n.key("online.client.disconnected");
+        default -> I18n.key("online.client.connecting");
+      };
+      com.perso.T4C.ui.FontManager.getInstance().getTahomaFont(13,com.badlogic.gdx.graphics.Color.WHITE,false)
+          .draw(batch,text,20,hudCamera.viewportHeight-18);
+      batch.end();
+    }
     stage.act(delta);
     stage.draw();
     if (systemMessage != null) {
@@ -4107,10 +4181,10 @@ public class MainGameScreen implements Screen {
     delta = simulationStep;
     floatingDamage.update(delta);
     if (player != null) {
-      if (SeraphAuraService.synchronize(player)) {
+      if (!isRemoteSession() && SeraphAuraService.synchronize(player)) {
         savePlayerState();
       }
-      player.update(delta);
+      if (!isRemoteSession()) player.update(delta);
       playerPositionTemp.set(player.getPositionVector());
       int margin = 5;
       session
@@ -4127,6 +4201,7 @@ public class MainGameScreen implements Screen {
                   renderStartY,
                   renderEndY,
                   margin));
+      if (isRemoteSession()) return;
       pruneSelectedMonster();
       performAttackTick();
       spellEffectManager.update(this::applyPeriodicSpellImpact);
@@ -4234,7 +4309,7 @@ public class MainGameScreen implements Screen {
   }
 
   private void startSeraphArrivalIfNeeded() {
-    if (seraphArrivalPlaying || player == null) {
+    if (isRemoteSession() || seraphArrivalPlaying || player == null) {
       return;
     }
     if (!GamePreferencesStore.get().isSeraphAnimation()) {
@@ -4555,6 +4630,10 @@ public class MainGameScreen implements Screen {
   }
 
   private void initializeInputHandlers() {
+    if (isRemoteSession()) {
+      initializeRemoteInputHandlers();
+      return;
+    }
     ObjectClickHandler objectClickHandler =
         new ObjectClickHandler(
             mapRenderer.getObjectRenderer(),
@@ -4867,6 +4946,39 @@ public class MainGameScreen implements Screen {
     multiplexer.addProcessor(mouseMovementHandler);
     multiplexer.addProcessor(new TileClickHandler(reader, camera));
     Gdx.input.setInputProcessor(multiplexer);
+  }
+
+  private void initializeRemoteInputHandlers() {
+    inputHandler=new GameInputHandler(log,mapRenderer,player,session.commands()) {
+      @Override public void handleGlobalKeys() {}
+    };
+    MonsterInputHandler monsters=new MonsterInputHandler(camera,monsterManager,player,null,null,systemMessage);
+    monsters.setOnAttackTargetSelected(session.commands()::attack);
+    com.badlogic.gdx.InputAdapter npcClicks=new com.badlogic.gdx.InputAdapter() {
+      private final Vector3 at=new Vector3();
+      private Vector2 point(int x,int y) { at.set(x,y,0);camera.unproject(at);return new Vector2(at.x,at.y); }
+      @Override public boolean mouseMoved(int x,int y) { var p=point(x,y);npcManager.onMouseMove(p.x,p.y);return false; }
+      @Override public boolean touchDown(int x,int y,int pointer,int button) {
+        var p=point(x,y);
+        if(button==Input.Buttons.LEFT) return npcManager.onClick(p.x,p.y,player);
+        if(button==Input.Buttons.RIGHT) return npcManager.onRightClick(p.x,p.y);
+        return false;
+      }
+    };
+    GroundItemClickHandler lootClicks=new GroundItemClickHandler(camera,groundItemManager,player,systemMessage);
+    InputMultiplexer remote=new InputMultiplexer();
+    remote.addProcessor(new com.badlogic.gdx.InputAdapter() {
+      private boolean returnQueued;
+      @Override public boolean keyDown(int keycode) {
+        if (keycode!=Input.Keys.R || !"disconnected".equals(remoteConnection.status()) || returnQueued)
+          return false;
+        returnQueued=true;
+        Gdx.app.postRunnable(() -> game.returnToOnlineLobby(MainGameScreen.this));
+        return true;
+      }
+    });
+    remote.addProcessor(monsters);remote.addProcessor(npcClicks);remote.addProcessor(lootClicks);
+    Gdx.input.setInputProcessor(remote);
   }
 
   @Override
