@@ -1,6 +1,7 @@
 package com.perso.T4C.server;
 
 import com.perso.T4C.combat.RegenerationRules;
+import com.perso.T4C.combat.SkillBonusRules;
 import com.perso.T4C.online.model.CharacterProgress;
 import com.perso.T4C.online.model.ItemContent;
 import java.util.HashMap;
@@ -43,10 +44,13 @@ final class OnlineRegeneration {
     boolean bounded = elapsed > MAX_TICKS;
     int ticks = (int) Math.min(elapsed, MAX_TICKS);
     var attributes = progress.attributes();
-    int endurance = attributes.endurance() + bonuses.getOrDefault(2, 0);
-    int intelligence = attributes.intelligence() + bonuses.getOrDefault(1, 0);
-    int wisdom = attributes.wisdom() + bonuses.getOrDefault(4, 0);
-    int rapidHealing = progress.skills().getOrDefault("rapid_healing", 0);
+    var buffs = OnlineBuffs.totals(progress, now);
+    int endurance = attributes.endurance() + buffs.getOrDefault("end", 0) + bonuses.getOrDefault(2, 0);
+    int intelligence = attributes.intelligence() + buffs.getOrDefault("int", 0) + bonuses.getOrDefault(1, 0);
+    int wisdom = attributes.wisdom() + buffs.getOrDefault("wis", 0) + bonuses.getOrDefault(4, 0);
+    int rapidHealing = SkillBonusRules.effective("rapid_healing",
+        progress.skills().getOrDefault("rapid_healing", 0), buffs.getOrDefault("skill:rapid_healing", 0),
+        stat -> bonuses.getOrDefault(stat, 0));
     int hp = vitals.hp();
     int mana = vitals.mana();
     for (int i = 0; i < ticks && (hp < vitals.maxHp() || mana < vitals.maxMana()); i++) {
