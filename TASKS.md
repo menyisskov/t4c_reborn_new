@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0316`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0318`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,8 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0317 | Preserve authored monster spell attacks in persistent hostile clan combat | Multiplayer / M4 | Done (PR #278; local validation) | PR #278, backend persistence test 1/1 | [CHANGELOG.md](CHANGELOG.md#2026-10-30--monster-clan-fights-use-authored-damage-spells-online-t4c-0317) |
+| T4C-0316 | Raise baseline player movement to 75, shared by offline and online play | Multiplayer / Cross-cutting/GA | Done | PR #277, merge 7249c3d4 | [CHANGELOG.md](CHANGELOG.md#2026-10-30--player-walking-speed-tuned-to-75-t4c-0316) |
 | T4C-0315 | Two-hour twenty-adapter mixed soak (8 portal walkers) on the current build and the defect it found: a character who logged out resting on a tile the movement rule allows but the stricter standing check refuses could not rejoin; joins now accept any tile the grid rule can rest on, the soak's walkability guard checks the server's own glide lattice, and the soak gained an optional steadier reconnect interval (default unchanged); results recorded against the earlier baselines | Process/Tooling | Done (PR open) | pending | none (no player-visible change) |
 | T4C-0314 | Other online players look like single-player characters: the server's snapshot now carries each player's public look (name, gender, visible worn items, derived from committed state only), the client dresses them through the same appearance pipeline as the own character, and a hovered player gets the single-player health-colour outline and name. Additive wire fields, protocol stays 7 | Systems/Online | Done | this PR | [2026-10-29](CHANGELOG.md#2026-10-29--other-players-wear-their-gear-and-show-their-name-online-t4c-0314) |
 | T4C-0313 | Online client lists and windows follow single-player: the I, C and U lists and the shop draw in the same centred journal window single-player uses (right way up, clear of the radar), the shop title shows the shopkeeper's name, a greeting offers the NPC's topics so a quest can be asked for and accepted, and overlapping NPC click boxes resolve to the figure under the cursor in both modes | Content/Systems (online client) | Done (PR open) | pending | [2026-10-29](CHANGELOG.md) |

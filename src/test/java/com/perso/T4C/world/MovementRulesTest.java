@@ -198,7 +198,7 @@ class MovementRulesTest {
 
   @Test
   void inOpenGroundBothRulesCoverTheSameDistancePerSecond() {
-    // Grid: 300 px/s horizontally = 9.375 tiles/s. Swept: 34 ticks of 0.2757 tiles.
+    // Each rule consumes the same configured PLAYER_SPEED movement budget.
     var terrain = terrain();
     var step = MovementRules.Grid.reserve(terrain, 0, 100 * GRID_H, 1, 0, true, 99999, 99999);
     float x = 0;
