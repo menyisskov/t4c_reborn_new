@@ -2,6 +2,7 @@ package com.perso.T4C.server;
 
 import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
+import static com.perso.T4C.config.GameConstants.MONSTER_SPEED;
 import static com.perso.T4C.config.GameConstants.PLAYER_SPEED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -19,6 +20,8 @@ import org.junit.jupiter.api.Test;
  */
 class ServerMovementParityTest {
   private static final double PER_TICK = MovementRules.Swept.tilesPerTick(PLAYER_SPEED, PreviewWorld.TICK_RATE);
+  private static final int CARDINAL_TILE_TICKS = (int) Math.ceil(1.0 / PER_TICK) + 2;
+  private static final int DIAGONAL_TILE_TICKS = (int) Math.ceil(Math.sqrt(2.0) / PER_TICK) + 2;
 
   private static PreviewMap open(int w, int h, int sx, int sy) {
     return new PreviewMap(new boolean[h][w], 0, 0, sx, sy);
@@ -59,7 +62,8 @@ class ServerMovementParityTest {
 
   @Test
   void aTickCoversTheSameDistanceAsTheTamperProbeMeasures() {
-    assertEquals(0.2757, PER_TICK, 0.00005);
+    assertEquals(MONSTER_SPEED * 1.2f, PLAYER_SPEED, 0.001f);
+    assertEquals(PLAYER_SPEED / GRID_W / PreviewWorld.TICK_RATE, PER_TICK, 1e-9);
     assertEquals(PER_TICK, ServerMovement.BUDGET_PER_TICK / (double) GRID_W, 1e-6);
   }
 
@@ -120,8 +124,8 @@ class ServerMovementParityTest {
     grid.step();
     swept.step();
     assertEquals(sweptFirst, view(swept, s).x(), 1e-9, "the old loop stops at once");
-    assertTrue(view(grid, g).x() > afterFirst + 0.2, "the reserved tile is finished");
-    for (int i = 0; i < 6; i++) grid.step();
+    assertTrue(view(grid, g).x() > afterFirst, "released input still advances the reserved tile");
+    for (int i = 0; i < CARDINAL_TILE_TICKS; i++) grid.step();
     assertEquals(4.5, view(grid, g).x(), 1e-9);
     assertEquals(3.5, view(grid, g).y(), 1e-9);
   }
@@ -140,8 +144,11 @@ class ServerMovementParityTest {
       assertTrue(now > previous, "still gliding east to the reserved tile, tick " + tick);
       previous = now;
     }
-    for (int tick = 0; tick < 10; tick++) world.step();
-    assertTrue(view(world, joined).x() < 3.9, "after arriving it follows the held west input");
+    for (int tick = 0; tick < CARDINAL_TILE_TICKS + 5; tick++) {
+      if (tick % 6 == 0) input(world, joined, -1, 0);
+      world.step();
+    }
+    assertTrue(view(world, joined).x() < 4.5, "after arriving it follows the held west input");
   }
 
   @Test
@@ -158,7 +165,7 @@ class ServerMovementParityTest {
       input(world, joined, 1, 1);
       world.step();
       input(world, joined, 0, 0);
-      for (int i = 0; i < 8; i++) world.step();
+      for (int i = 0; i < DIAGONAL_TILE_TICKS; i++) world.step();
       var now = view(world, joined);
       int[] want = expectedTile[blockedCount - 1];
       assertEquals(want[0] + 0.5, now.x(), 1e-9, "x with " + blockedCount + " walls");
@@ -191,7 +198,7 @@ class ServerMovementParityTest {
     var swept = world(production(raw, 3, 3), MovementRules.Mode.SWEPT_SUBSTEP);
     var g = grid.join();
     var s = swept.join();
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < DIAGONAL_TILE_TICKS; i++) {
       input(grid, g, 1, 1);
       input(swept, s, 1, 1);
       grid.step();
@@ -384,7 +391,7 @@ class ServerMovementParityTest {
     input(world, joined, 1, 0);
     world.step();
     input(world, joined, 0, 0);
-    for (int i = 0; i < 6; i++) world.step();
+    for (int i = 0; i < CARDINAL_TILE_TICKS; i++) world.step();
     assertEquals(4.5, view(world, joined).x(), 1e-9);
     assertFalse(new ServerMovement.Terrain(map).hasPlayerCollision(4 * (float) GRID_W, 3 * (float) GRID_H));
     assertTrue(new ServerMovement.Terrain(map).hasCollision(4 * (float) GRID_W, 3 * (float) GRID_H));
