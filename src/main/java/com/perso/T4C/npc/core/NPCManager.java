@@ -37,6 +37,8 @@ public class NPCManager {
 
   // Online puppet mode (T4C-0289): the registry only holds snapshot-driven puppets. Default false.
   private boolean puppetMode;
+  /** Online sessions only: takes a click on an NPC as an intent for the server. */
+  private java.util.function.Predicate<BaseNPC> remoteInteract;
 
   @Setter private CompanionManager companionManager;
 
@@ -50,6 +52,11 @@ public class NPCManager {
     this.outlineShader = outlineShader;
 
     this.questService = questService;
+  }
+
+  /** Online sessions only (puppet mode): the hook receives the clicked NPC; null ignores clicks. */
+  public void setRemoteInteract(java.util.function.Predicate<BaseNPC> remoteInteract) {
+    this.remoteInteract = remoteInteract;
   }
 
   /**
@@ -358,7 +365,14 @@ public class NPCManager {
 
   public boolean onClick(float mouseX, float mouseY, Player player) {
 
-    if (puppetMode) return false;
+    if (puppetMode) {
+      // Online: a click on an NPC is only an intent for the server; nothing starts here.
+      if (remoteInteract == null) return false;
+      for (BaseNPC npc : npcs) {
+        if (npc.isMouseOver(mouseX, mouseY)) return remoteInteract.test(npc);
+      }
+      return false;
+    }
 
     for (BaseNPC npc : npcs) {
 

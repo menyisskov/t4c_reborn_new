@@ -79,6 +79,9 @@ public class GroundItemClickHandler extends InputAdapter {
       case UNIQUE_ITEM:
         if (systemMessage != null) systemMessage.show(I18n.message("message.unique_item_owned"));
         return true;
+      case REQUESTED:
+        // Online: the server answers later and its message is shown then.
+        return true;
       case NONE:
       default:
         return false;

@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.IntConsumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,7 +26,9 @@ public class GroundItemManager {
     TOO_FAR,
     TOO_HEAVY,
     UNIQUE_ITEM,
-    PICKED_UP
+    PICKED_UP,
+    /** Online only: the click was sent to the server, which decides; nothing changed locally. */
+    REQUESTED
   }
 
   public static final class PickupResult {
@@ -47,6 +50,8 @@ public class GroundItemManager {
   private final Set<CorpseDrop> claimedCorpseGold = new HashSet<>();
   private int activeWorldZ = 0;
   private final Random random = new Random();
+  /** Online sessions only; null (the default) keeps the click pickup entirely local. */
+  private Predicate<GroundItem> remotePickup;
 
   public record CorpseDrop(
       float x, float y, int gold, List<String> itemNames, long createdAtMillis) {}
@@ -119,6 +124,15 @@ public class GroundItemManager {
 
   public boolean removeRemoteItem(GroundItem item) {
     return items.remove(item);
+  }
+
+  /**
+   * Online sessions only: a click on an item is sent to the server instead of being resolved here.
+   * The hook returns whether it took the intent; nothing is added to the inventory or removed from
+   * the ground locally (the next snapshot does that). {@code null} restores the local pickup.
+   */
+  public void setRemotePickup(Predicate<GroundItem> remotePickup) {
+    this.remotePickup = remotePickup;
   }
 
   public void dropItem(String itemKey, int remainingCharges, float x, float y) {
@@ -202,6 +216,12 @@ public class GroundItemManager {
     for (int i = items.size() - 1; i >= 0; i--) {
       GroundItem groundItem = items.get(i);
       if (!groundItem.isMouseOver(worldX, worldY)) {
+        continue;
+      }
+      if (remotePickup != null) {
+        if (remotePickup.test(groundItem)) {
+          return new PickupResult(PickupStatus.REQUESTED, groundItem.describe());
+        }
         continue;
       }
       if (tileDistance > maxTileDistance) {
