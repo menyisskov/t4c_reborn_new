@@ -11,8 +11,26 @@ and acknowledges each location epoch only after the matching map/snapshot metada
 Corpse recovery considers only corpses in the current world and crop. Tick/movement baselines reset
 across committed location epochs; character revisions remain monotonic. Local map paths come from
 the trusted hosted plan, never from network strings. Keep the world and dungeon collision files in
-their normal sibling layout. It does not deliberately navigate a portal tour; use the dedicated
-door probe to establish transitions, and inspect `worldTransfers` before claiming soak transfer coverage.
+their normal sibling layout. By default it does not navigate portals, so `worldTransfers` stays 0 and
+nothing is claimed about transfers; set `T4C_SOAK_PORTAL_WALKERS` (below) for a mixed load with region transfers.
+
+### Optional paced portal walking (T4C-0308)
+
+`T4C_SOAK_PORTAL_WALKERS=N` (0 to 20, default 0 = off) makes N evenly spread adapters take periodic portal trips
+while everyone else, and the walkers between trips, keep attacking, recovering and reconnecting as before. A trip is:
+walk to an authored portal source tile in the current region, transfer, spend `T4C_SOAK_PORTAL_DWELL_SECONDS`
+(default 20) in the destination, optionally go one or two levels deeper (up to three hops, so the sewer stairs are
+used), then walk back through the paired portals to the starting region. A walker rests
+`T4C_SOAK_PORTAL_INTERVAL_SECONDS` (default 60) between trips and abandons a leg after
+`T4C_SOAK_PORTAL_LEG_TIMEOUT_SECONDS` (default 150). The first trips are staggered from 30 s in. The routes are derived
+from the trusted hosted plan (a portal is walked when both its source and target are in hosted regions and it has a
+way back), never from network strings, and walking uses the same arriving-tile planning as the combat walker, to the
+exact portal source tile. Every guard is unchanged: a region change without an epoch change, an epoch regression, a
+position outside the shared collision map and so on still count as adapter failures. A trip that is surprised (for
+example a death respawn elsewhere) is counted as aborted, a stalled leg as a leg timeout; both are reported, neither is
+an adapter failure. The report adds a `portalWalk` section (routes, trips started/completed/aborted, leg timeouts,
+outbound/inbound transfers), per-adapter `regionTransfers` and `portalTrip`, and bounded `errorDetails` (region and
+position beside an error name). Unit checks run with `NativeAdapterSoak.java --self-test`.
 
 Already-running protocol 3 baselines use immutable copies of their original harness and runtime.
 Do not replace those copies with this source or combine their results with protocol 4 evidence.
@@ -333,3 +351,70 @@ Limits. The soak tool never walks a portal (`worldTransfers` 0), so the adapters
 cave was loaded and its creatures simulated, but no adapter entered it. This run therefore shows that hosting the extra region does not
 degrade the existing twenty-player load; it says nothing about players inside the cave. The 56% at twenty remains the tool's reconnect-churn
 ceiling. Local PG16 evidence only; this does **not** pass the soak gate, M5 or Beta. No server code was changed.
+
+### Mixed load with region transfers (T4C-0308, 2026-10-29): two server defects found and fixed, final run passed the tool's zero-error criterion
+
+T4C-0300/0304 host the skeleton cave, the Lighthaven interior and three sewer levels (portals 0-5 and 12-17), but the soak never walked
+a portal. With `T4C_SOAK_PORTAL_WALKERS=8` (8 of the 20 adapters walk; trips every 60 s, 20 s dwell, up to three hops) the same
+twelve-minute, paced-open, twenty-adapter soak now exercises transfers, location epochs and lease fencing alongside attacks, deaths
+and the scheduled 120 s reconnects. Setup as before: fresh disposable PostgreSQL 16 cluster per run on loopback 57043, one
+`ServerMain --online` on 18831 from the worktree jar, private control file, `/admin/shutdown` (200), cluster destroyed after. Local PG16
+evidence only. Runs, in order (B to E ran the full 720 s and finished):
+
+| Run | Build | Result |
+| --- | --- | --- |
+| A | tool on main `ad623ac8` | aborted at 137 s by the **wrapper**, not the server: one adapter printed its single stopped-connection line to stderr and Windows PowerShell 5.1 (`$ErrorActionPreference = 'Stop'`) turned it into a terminating error. The wrapper now keeps stderr visible and judges by exit code. |
+| B | main + walkers | persistence failures, see below; first `position_not_walkable` |
+| C | main, no walkers (control) | the same persistence failures **without any transfer** |
+| D | + due-check deferral fix | 0 persistence failures; 18 `position_not_walkable` on three walkers |
+| E | + arrival-centering fix (this PR) | passed: 0 failures |
+
+| Metric (12 minutes) | T4C-0301 (PR #260, no hosted sewers, no walking) | C: main, no walking | B: main + 8 walkers | D: + deferral fix | E: + centred arrivals (this PR) |
+| --- | --- | --- | --- | --- | --- |
+| Time at 20 adapters | 403.0 s (56.0%) | 317.2 s (44.1%) | 328.8 s (45.7%) | 403.2 s (56.0%) | 403.0 s (56.0%) |
+| Time at 19 or more | 97.4% | 84.8% | 91.2% | 97.4% | 97.3% |
+| Adapter failures | 0 | 61 | 46 | 18 | 0 |
+| Reconnects (96 scheduled) | 96 | 152 | 133 | 96 | 96 |
+| Database rollbacks / deadlocks | 0 / 0 | 60 / 0 | 40 / 0 | 0 / 0 | 0 / 0 |
+| "Online persistence failed" lines | 0 | 6 (`monster_attack` Conflict) | 4 (`monster_attack` Conflict) | 0 | 0 |
+| Transfer failures (`operation=transfer`) | n/a | n/a | 0 | 0 | 0 |
+| `/health` tick rate / mean | 33.999 Hz / 1.55 ms | 34.001 Hz / 3.88 ms | 34.002 Hz / 3.37 ms | 34.000 Hz / 1.19 ms | 34.000 Hz / 1.18 ms |
+| Server ticks (mean / max / over budget) | 2.26 / 23.9 ms / 0 | 5.99 / 36.1 ms / 15 | 5.39 / 38.4 ms / 24 | 2.51 / 18.3 ms / 0 | 2.57 / 18.7 ms / 0 |
+| Process CPU (about 775 s uptime) | 281.6 s | 575 s | 499 s | 301 s | 286 s |
+| Trips started / completed / aborted / leg timeouts | 0 | 0 | 29 / 21 / 0 / 2 | 29 / 22 / 0 / 1 | 28 / 22 / 0 / 1 |
+| Region transfers out / in (all adapters) | 0 | 0 | 26 / 23 (49 seen) | 30 / 25 (55 seen) | 25 / 24 (49 seen) |
+| World changes / epoch changes (all adapters) | 0 / 0 | 0 / 4 | 44 / 56 | 48 / 61 | 45 / 54 |
+| Attacks / recoveries | 1,402 / 16 | 369 / 2 | 342 / 1 | 359 / 0 | 446 / 0 |
+| HTTP non-2xx | `/attack` 409 x503, `/input` 409 x27, `/recover` 409 x4 | `/join` 409 x54, `/attack` 409 x122, 401s | `/join` 409 x36, `/attack` 409 x98, `/input` 409 x55 | `/attack` 409 x129, `/input` 409 x54 | `/attack` 409 x190, `/input` 409 x48 |
+
+Attack counts fall in the sewer-capable builds because the 1,402 of T4C-0301 is not comparable (older hosted ground, and adapters here spend time
+walking and dying in other regions); they are not a regression signal. "Seen" transfers count the adapters' observed epoch changes that changed region, which
+include a transfer's arrival after a reconnect.
+
+Defect 1, persistence Conflict on `monster_attack` (present on main **without walking**, run C). The T4C-0298 deferral (PR #252) decided
+"the attack was not yet due" by reading the database clock a second time after the guarded UPDATE had missed. A diagnostic build (not committed) showed
+every other field of the locked row equal to the attack's (same life, revision, target, deadline, health) and the second clock reading 1 to 2 ms
+past the deadline the UPDATE had seen as not yet due, so the deferral said "due" and the code threw the Conflict that disconnects the target and holds its
+lease (the `409` reconnect storm that cut time at twenty to 44-46%). The UPDATE has exactly the compared predicates plus the due check, so a miss with
+all others matching can only be the due check; the second reading is dropped (`OnlineStore.attackDeadlineNotDue`, pure rule `onlyDueCheckMissed`
+covered by `AttackDeadlineMissTest`). The CPU and tick-time growth against T4C-0301 (575 s and 6 ms in run C) disappears with it, so it was the reconnect
+storm, not the extra hosted regions. The rate was 4 to 6 disconnects in 12 minutes whether or not adapters walked, so it needs no transfer to appear. The
+T4C-0298 result stands for its run (a larger clock skew then); the race remains whenever the two readings straddle the deadline.
+
+Defect 2, `position_not_walkable` after leaving the skeleton cave (run D, 18 failures on adapters 10, 13 and 18 only; run B had the same six on one
+adapter). Authored portal targets (for example portal 15 to 2772,1096) and the respawn point (2951,1038) are whole tile numbers and were stored as the player
+position, so players arrived on a tile **corner**. Grid movement keeps the half-tile offset, so the player then walked along the row boundary (observed at
+2785.0 to 2786.0, 1096.0) through tiles the shared collision map calls blocked, which the soak's unchanged walkability guard reported. A database read after
+run D showed a character stored at exactly 2932,1059. Portal transfers and respawns now land on the centre of the authored tile
+(`PersistentSessions.arrivalAtTileCentre`, covered by `ArrivalAtTileCentreTest` and the updated `HostedTransferTest` arrival assertion). Existing saves are
+unchanged (no cap or limit involved): a character already saved on a corner keeps it until its next transfer or death.
+
+Not fixed, reported. (1) About one walker leg per run times out in the start region near the cave mouths (last seen at 2777.7,1099.5); the walker is a
+cardinal breadth-first router over the collision map and the server uses grid reservations, so a corner slide or a body-blocking creature can stall it. It is
+reported as a leg timeout, never an adapter failure, and the next trip proceeds. (2) `HostedTransferTest.caveMouth...` failed once in this environment with a
+`transfer` persistence Conflict and once with Windows ephemeral-port exhaustion during a ten-class run, and passed in three isolated reruns. The guarded transfer
+UPDATE uses the same database-clock pattern (`portal_cooldown_until<=clock_timestamp()`), the likely cause, but it was not reproduced under a diagnostic build, so
+that is a hypothesis. (3) The Codex-claimed retaliation, shop and UI files were not touched.
+
+Limits. 8 of 20 adapters walk; the 56% at twenty is still the tool's reconnect-churn ceiling (96 scheduled closes); no steady plateau at twenty was measured.
+Twelve minutes and one run per configuration. This does **not** pass the two-hour soak, the M5 gate or Beta.

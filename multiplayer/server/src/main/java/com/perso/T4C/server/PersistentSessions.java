@@ -578,7 +578,16 @@ final class PersistentSessions {
   }
   CharacterProgress.Respawn respawnDestination(CharacterProgress.Respawn destination) {
     if(destination==null || !hosted.canStand(destination)) throw new PreviewWorld.Rejected(409,"unavailable_respawn");
-    return destination;
+    return arrivalAtTileCentre(destination);
+  }
+  /**
+   * Authored portal targets and respawn points are whole tile numbers. Placing a player exactly on that number puts
+   * them on a tile corner; movement keeps the half-tile offset, so they later walk along a row boundary through
+   * tiles the shared collision map calls blocked (the T4C-0308 soak caught three adapters at 2785.x,1096.0 after
+   * leaving the skeleton cave). Arrivals use the centre of the authored tile, like every join and spawn.
+   */
+  static CharacterProgress.Respawn arrivalAtTileCentre(CharacterProgress.Respawn authored) {
+    return new CharacterProgress.Respawn(authored.world(),Math.floor(authored.x())+.5,Math.floor(authored.y())+.5);
   }
   private void maybeTransfer(Binding binding) {
     if(!hosted.plan.transitions || binding.closing || binding.event!=null || binding.awaitingRegionReady
@@ -589,7 +598,7 @@ final class PersistentSessions {
     if(selected.isEmpty()) return;
     var portal=selected.get();var target=hosted.require(portal.destination().world(),portal.destination().x(),portal.destination().y());
     var draft=new com.perso.T4C.server.persistence.PortalTransfer(portal.portalId(),binding.region.spec.key(),target.spec.key(),
-        portal.source(),portal.destination(),binding.saved.locationEpoch(),Math.addExact(System.currentTimeMillis(),350));
+        portal.source(),arrivalAtTileCentre(portal.destination()),binding.saved.locationEpoch(),Math.addExact(System.currentTimeMillis(),350));
     binding.position=position;binding.region.world.freeze(binding.token,true);
     binding.event=new GameplayEvent(UUID.randomUUID(),0,0,binding.saved.progress(),false,null,null,null,null,null,null,draft,null,List.of(),List.of(),new CompletableFuture<>());
   }

@@ -37,5 +37,8 @@ $soakClasspath = (Join-Path $soakRoot 'target/classes') + ';' +
     (Join-Path $soakRoot 'multiplayer/server/target/lib/*') + ';' +
     (Get-Content -LiteralPath $soakClasspathFile -Raw).Trim()
 Write-Host "Starting twenty native network adapters, without renderers. Report: $Report"
+# An adapter that stops prints one line to stderr; under 'Stop' Windows PowerShell 5.1 would turn that into a
+# terminating error and abort the whole soak. Keep stderr visible, judge the run by the exit code.
+$ErrorActionPreference = 'Continue'
 & java '-Djava.awt.headless=true' -cp $soakClasspath (Join-Path $PSScriptRoot 'NativeAdapterSoak.java') "http://127.0.0.1:$Port" $Profiles $Seconds $soakCollision $Report $ServerProcessId
 if ($LASTEXITCODE -ne 0) { throw 'Adapter soak failed; inspect its sanitized report if present.' }
