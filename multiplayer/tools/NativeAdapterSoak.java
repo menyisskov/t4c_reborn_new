@@ -264,6 +264,7 @@ class NativeAdapterSoak {
   static long ms() { return System.nanoTime()/1_000_000; }
   /** Report section for the optional portal walk; null (omitted) when it is off. */
   static Map<String,Object> portalConfig;
+  static int reconnectSeconds=120;
   static int envInt(String name,int fallback,int min,int max) {
     String text=System.getenv(name); if(text==null || text.isBlank()) return fallback;
     int value; try { value=Integer.parseInt(text.trim()); } catch(NumberFormatException bad) { throw new IllegalArgumentException(name+" must be an integer"); }
@@ -314,6 +315,9 @@ class NativeAdapterSoak {
     long tripIntervalMillis=envInt("T4C_SOAK_PORTAL_INTERVAL_SECONDS",60,5,3600)*1000L;
     long tripDwellMillis=envInt("T4C_SOAK_PORTAL_DWELL_SECONDS",20,1,600)*1000L;
     long tripLegTimeoutMillis=envInt("T4C_SOAK_PORTAL_LEG_TIMEOUT_SECONDS",DEFAULT_LEG_TIMEOUT_SECONDS,30,900)*1000L;
+    // Optional steadier mode: seconds between each adapter's scheduled reconnects (default 120 = the original churn).
+    reconnectSeconds=envInt("T4C_SOAK_RECONNECT_INTERVAL_SECONDS",120,30,86400);
+    long reconnectMillis=reconnectSeconds*1000L;
     List<PortalRoute> routes=List.of();
     if(walkers>0) {
       try(var in=NativeAdapterSoak.class.getResourceAsStream("/content/portals-v1.json")) {
@@ -357,7 +361,7 @@ class NativeAdapterSoak {
             // Never opened yet: open through the gate, in profile order.
             if(gate.mayOpen(joining,now)) {
               p.connection=new OnlineConnection(endpoint,p.credentials); gate.opened(now); joining++;
-              p.openedAt=now; p.connectedSinceOpen=false; p.lastFresh=now; p.reconnectAt=now+120_000+i*6_000L;
+              p.openedAt=now; p.connectedSinceOpen=false; p.lastFresh=now; p.reconnectAt=now+reconnectMillis+i*6_000L;
             }
             continue;
           }
@@ -373,7 +377,7 @@ class NativeAdapterSoak {
           if(p.expectedReconnect) {
             if(now-p.reconnectStarted<3000 || !gate.mayOpen(joining,now)) continue;
             p.connection=new OnlineConnection(endpoint,p.credentials); p.expectedReconnect=false; gate.opened(now); joining++;
-            p.lastTick=-1; p.lastFresh=now; p.reconnectAt=now+120_000; p.reconnects++;
+            p.lastTick=-1; p.lastFresh=now; p.reconnectAt=now+reconnectMillis; p.reconnects++;
             p.openedAt=now; p.connectedSinceOpen=false;
             continue;
           }
@@ -429,7 +433,10 @@ class NativeAdapterSoak {
           if(view.character().revision()<p.lastRevision) error(p,"character_revision_regressed");
           p.lastRevision=view.character().revision();
           var self=snapshot.players().stream().filter(a -> a.id()==view.ownId()).findFirst().orElseThrow();
-          if(!map.canStand(self.x(),self.y())) {
+          // The server steps players with single-player's grid rule: positions are tile centres or points on a straight glide
+          // between two adjacent tile centres (diagonals too) that the rule lets a player rest on. canStand's stricter
+          // above-foot fold is not that rule (T4C-0315); this check still refuses anything off the lattice or in a wall.
+          if(!map.onGridPath(self.x(),self.y())) {
             error(p,"position_not_walkable");
             if(p.errorDetails.size()<5) p.errorDetails.add("position_not_walkable@"+region.key()+" epoch "+region.locationEpoch()
                 +" abs "+(map.originX+self.x())+","+(map.originY+self.y())+" last "+p.lastDx+","+p.lastDy
@@ -574,6 +581,7 @@ class NativeAdapterSoak {
     report.put("observedTickRate",lastTime>firstTime?(last-first)*1000.0/(lastTime-firstTime):0);
     report.put("tickDeficitProxy",lastTime>firstTime?Math.max(0,(lastTime-firstTime)*34.0/1000-(last-first)):0);
     report.put("serverCpuNanos",cpuStart>=0 && cpuEnd>=cpuStart?cpuEnd-cpuStart:-1);
+    report.put("reconnectIntervalSeconds",reconnectSeconds);
     report.put("openPacing",Map.of("maxConcurrentJoins",MAX_JOINING,"minGapMillis",OPEN_GAP_MILLIS));
     report.put("databaseBefore",dbBefore); report.put("databaseAfter",dbAfter);
     report.put("serverRuntime",runtimeSamples.report());
