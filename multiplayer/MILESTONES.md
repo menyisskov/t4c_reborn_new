@@ -312,6 +312,36 @@ are not real packet-loss or rendered-client evidence. See [BACKUP.md](BACKUP.md)
 
 T4C-0215 supplies a checked, create-only **local loopback server QA package** alongside the earlier client package. Its generated operator scripts passed preview and persistent schema-10 start/health/private graceful stop on a fresh isolated database, including a copied path with spaces and PowerShell 5/7 checks. This is partial operational evidence; clean-machine, trusted remote deployment, full rendered playthrough and owner acceptance remain unchecked.
 
+**Clean-machine rehearsal on one machine (T4C-0311, 2026-10-29, source `f3d4ed62`).** Both QA packages were rebuilt from that commit
+and passed their headless integrity checks and fixture negatives (tamper, private file, duplicate and traversal paths). Each was zipped,
+extracted to a new empty directory with spaces outside the repository, and run from a scrubbed process environment (no repository on `PATH`
+or working directory, no inherited `T4C_*`, JDK-only `PATH`, fresh profile and `TEMP`) against a disposable PostgreSQL 16 cluster. The packaged
+server reached persistent health and a graceful exit 0; two private profiles were provisioned with the packaged JAR; the packaged client
+launcher started the real client, which connected to the game socket and closed with exit 0; the package directories were unchanged apart
+from the client's `logs/`; no credentials or developer paths were found in either package. **No second physical machine, other user
+account, other Windows build, antivirus/SmartScreen, firewall prompt, GPU or remote HTTPS endpoint was involved**, so no M6 bullet is
+ticked. It found and fixed four Windows PowerShell 5.1 defects (builder `GetRelativePath`, `java -version` stderr, negative-test stderr and the
+client launcher dying on the client's first stderr line, which made `launch-online.bat` unable to start the client); the 5.1 shell is the only one
+on a stock Windows machine. Details: [CLIENT_DISTRIBUTION.md](CLIENT_DISTRIBUTION.md) and [SERVER_DISTRIBUTION.md](SERVER_DISTRIBUTION.md).
+
+**What a real clean-machine delivery still needs (unchecked, for the second-machine pass):**
+
+- [ ] Java: the packages bundle no JRE. Either bundle one (jlink or a vendor runtime, with its licence and update path) or document the Java 21 x64
+  requirement and a verified install step, and have the launcher print a plain message when `java` is missing or older than 21.
+- [ ] Execution policy / Mark of the Web: stock Windows refuses unsigned `.ps1` files (observed: "running scripts is disabled"). Docs now give
+  the `-ExecutionPolicy Bypass` and `Unblock-File` forms; a `.bat` wrapper for the server and a code-signing decision are still open.
+- [ ] SmartScreen and antivirus: the client ships unsigned scripts and a large tree including `assets/origin/` (original-game `.exe`/`.dll` files,
+  about 290 MB, observed unused by the online client). Decide whether to stop shipping that folder, and test on a machine with Defender real-time protection.
+- [ ] Size and transfer: about 640 MB extracted client; choose a download/update channel and verify the manifest after transfer.
+- [ ] Firewall and loopback: only the local-loopback launcher is rehearsed. A second machine needs the server bound to a reachable address,
+  HTTP port plus the game socket (HTTP port + 1) allowed, and no Windows Firewall prompt left unanswered.
+- [ ] Remote HTTPS trust: a publicly trusted certificate and matching host name per [TLS.md](TLS.md), the client reaching it from another network,
+  and a clear client error for an untrusted or mismatched certificate.
+- [ ] GPU and drivers: the client needs OpenGL 3.x; behavior on integrated/older GPUs and remote-desktop sessions is unknown.
+- [ ] Per-launch residue: the pinned GLFW extraction directory under `TEMP` is not removed on exit.
+- [ ] Repeat all of the above on a second physical machine (or a clean VM) with a different user account, record screenshots/logs without credentials,
+  and obtain owner acceptance.
+
 Required behavior:
 
 - [ ] A clean-machine client package contains required runtime dependencies/assets, online native

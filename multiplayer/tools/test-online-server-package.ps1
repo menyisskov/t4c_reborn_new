@@ -35,7 +35,8 @@ function Write-Manifest {
     [IO.File]::WriteAllLines((Join-Path $fixture 'SHA256SUMS.tsv'),$lines,[Text.UTF8Encoding]::new($false))
 }
 function Invoke-Check([bool]$expectedSuccess) {
-    & java -cp $checker ServerPackageCheck $fixture 2>&1 | Out-Null
+    # The checker reports failures on stderr; Windows PowerShell 5.1 turns 2>&1 into a terminating error under -Stop.
+    & { $ErrorActionPreference = 'Continue'; & java -cp $checker ServerPackageCheck $fixture 2>&1 | Out-Null }
     if (($LASTEXITCODE -eq 0) -ne $expectedSuccess) {
         throw "Unexpected checker result; expected success: $expectedSuccess"
     }
