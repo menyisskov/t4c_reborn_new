@@ -109,6 +109,18 @@ public class GroundItemManager {
     return corpse;
   }
 
+  /**
+   * Online sessions only: adds an item the server reports on the ground. The caller keeps the
+   * handle and removes the item again when the server no longer lists it.
+   */
+  public void addRemoteItem(GroundItem item) {
+    if (item != null) items.add(item);
+  }
+
+  public boolean removeRemoteItem(GroundItem item) {
+    return items.remove(item);
+  }
+
   public void dropItem(String itemKey, int remainingCharges, float x, float y) {
     if (itemKey != null) items.add(GroundItem.ofItem(itemKey, x, y, remainingCharges));
   }
