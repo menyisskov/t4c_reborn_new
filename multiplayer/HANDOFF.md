@@ -4,6 +4,15 @@ Last reviewed: 2026-10-27, Asia/Jerusalem. This file is the restart point for a 
 
 ## Read first
 
+### Authored monster self-heal (T4C-0319, 2026-10-30)
+
+Implemented on branch `codex/monster-heal-0318` from main `bc179a76`. Online retaliation now
+supports authored 10616 Heal Serious, caps it at authored maximum HP, and atomically persists health,
+cooldown, target/life checks and event receipt. A focused PostgreSQL 16 test passed 1/1; the server
+package and `git diff --check` passed. Disposable cluster `t4c_acc_d11855a0c9f1` on 56921 was
+destroyed. This is server-only evidence, not rendered parity; no M4 or Beta completion is claimed.
+Next: open and merge the reviewed PR after local checks.
+
 ### Hostile clan spell damage (T4C-0317, 2026-10-30)
 
 On branch `codex/clan-spell-0317` based on main `7249c3d4`, online clan combat now filters

@@ -29,6 +29,14 @@ The cluster was destroyed. Two failed fixture attempts are retained in `%TEMP%` 
 existing pursuit controller grants clan attacks only at adjacent range. This evidence is backend
 only: no rendered client was used, and M4/Beta remain incomplete.
 
+T4C-0319 adds authored monster Heal Serious (10616) parity online. A disposable PostgreSQL 16
+integration test damaged a hostile monster through the real player-melee path, then verified the
+monster self-healed only to authored maximum HP, advanced its persisted cooldown/life revision,
+left player HP unchanged, and retained the healed state after creature-cache reload. The exact
+test passed 1/1; the server package built and `git diff --check` passed. Cluster
+`t4c_acc_d11855a0c9f1` on loopback port 56921 was destroyed. This is server-only evidence: no
+rendered client was used, and M4/Beta remain incomplete.
+
 ## Verified foundation (updated 2026-10-27)
 
 T4C-0227 adds `httpTraffic` to the existing loopback/private-token
