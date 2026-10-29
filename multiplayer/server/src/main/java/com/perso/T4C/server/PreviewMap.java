@@ -131,6 +131,48 @@ public final class PreviewMap {
     return contains(x, y) && !blocked[(int) y][(int) x];
   }
 
+  /**
+   * Grid rule (single-player's): a player may rest on any tile the movement rule lets them enter, which looks at the static
+   * foot collision (or an authored portal source), not at the stricter above-foot fold {@link #canStand} applies. The
+   * wall-slide step can enter a tile whose tile above is blocked when the departure tile had the same block.
+   */
+  public boolean canRestOnGrid(double x, double y) {
+    return contains(x, y) && restTile((int) x, (int) y);
+  }
+
+  private boolean restTile(int tileX, int tileY) {
+    return tileX >= 0 && tileY >= 0 && tileX < width && tileY < height
+        && (!footBlocked[tileY][tileX] || portalPassable(tileX, tileY));
+  }
+
+  private static final double LATTICE_EPSILON = 2e-3;
+
+  /**
+   * True when a position (local tile units) lies where the grid rule can put a player: at the centre of a tile it may rest
+   * on, or on the straight glide between the centres of two adjacent tiles (diagonals included) that it may rest on.
+   * Anything else, for example walking along a row boundary or through a blocked tile, is not reachable by the rule.
+   */
+  public boolean onGridPath(double x, double y) {
+    if (!contains(x, y)) return false;
+    double ex = x - .5, ey = y - .5;
+    int bx = (int) Math.floor(ex), by = (int) Math.floor(ey);
+    double fx = ex - bx, fy = ey - by;
+    boolean atX0 = fx < LATTICE_EPSILON, atX1 = fx > 1 - LATTICE_EPSILON;
+    boolean atY0 = fy < LATTICE_EPSILON, atY1 = fy > 1 - LATTICE_EPSILON;
+    if ((atX0 || atX1) && (atY0 || atY1)) return restTile(bx + (atX1 ? 1 : 0), by + (atY1 ? 1 : 0));
+    if (atX0 || atX1) {
+      int tx = bx + (atX1 ? 1 : 0);
+      return restTile(tx, by) && restTile(tx, by + 1);
+    }
+    if (atY0 || atY1) {
+      int ty = by + (atY1 ? 1 : 0);
+      return restTile(bx, ty) && restTile(bx + 1, ty);
+    }
+    // The midpoint of a diagonal lies on both diagonals of the square between four tile centres.
+    if (Math.abs(fx - fy) < LATTICE_EPSILON && restTile(bx, by) && restTile(bx + 1, by + 1)) return true;
+    return Math.abs(fx - (1 - fy)) < LATTICE_EPSILON && restTile(bx + 1, by) && restTile(bx, by + 1);
+  }
+
   private boolean contains(double x, double y) {
     return Double.isFinite(x) && Double.isFinite(y)
         && x >= 0 && y >= 0 && x < width && y < height;

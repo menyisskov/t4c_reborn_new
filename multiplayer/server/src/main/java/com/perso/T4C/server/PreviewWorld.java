@@ -132,7 +132,10 @@ public final class PreviewWorld {
     // Positions saved before grid movement (or mid-glide) may sit between tiles: rest on the centre
     // of the tile they stand on, which was legal when it was saved.
     if (movement == MovementRules.Mode.GRID_RESERVATION) { x = ServerMovement.anchor(x); y = ServerMovement.anchor(y); }
-    if (!map.canStand(x,y)) throw new Rejected(409,"position");
+    // Grid rule: any tile the movement rule lets a player rest on is a legal place to rejoin. Its wall-slide step can end on
+    // a tile the stricter above-foot fold (canStand) refuses, and refusing it would lock that character out (T4C-0314).
+    boolean legal = movement == MovementRules.Mode.GRID_RESERVATION ? map.canRestOnGrid(x,y) : map.canStand(x,y);
+    if (!legal) throw new Rejected(409,"position");
     byte[] secret = new byte[32];
     random.nextBytes(secret);
     String token = HexFormat.of().formatHex(secret);

@@ -32,6 +32,19 @@ an adapter failure. The report adds a `portalWalk` section (routes, trips starte
 outbound/inbound transfers), per-adapter `regionTransfers` and `portalTrip`, and bounded `errorDetails` (region and
 position beside an error name). Unit checks run with `NativeAdapterSoak.java --self-test`.
 
+### Optional steadier mode (T4C-0314)
+
+`T4C_SOAK_RECONNECT_INTERVAL_SECONDS=N` (30 to 86400, default 120 = unchanged) sets the time between each adapter's scheduled
+reconnects. At the default every adapter closes and reopens every two minutes, and the one-at-a-time paced opens plus the
+three-second reopen delay cap the time spent at twenty adapters near 50 to 56%, whatever the server does. A larger interval
+(for example 900) lets the soak measure a plateau at twenty; the report states the value used (`reconnectIntervalSeconds`).
+Reconnect coverage shrinks accordingly, so use the default when reconnects are what is being exercised.
+
+The walkability guard checks the snapshot position against the server's own movement rule (`PreviewMap.onGridPath`): a tile
+centre the grid rule lets a player rest on, or a point on the straight glide between two adjacent such centres (diagonals too).
+Anything off that lattice or inside a foot-blocked tile still counts as `position_not_walkable`. It replaced `canStand`, which
+folds the tile above the foot into the block and is stricter than the rule that moves players (see the T4C-0314 section).
+
 Already-running protocol 3 baselines use immutable copies of their original harness and runtime.
 Do not replace those copies with this source or combine their results with protocol 4 evidence.
 
@@ -440,3 +453,84 @@ stored cooldown is the value the server already saw expire and only the two cloc
 unchanged and still in the database), the walker is unfrozen and the server proposes the hop again a quarter second later. `HostedTransferTest` gained a test with the
 server clock ahead (the hop commits only once the database agrees, the session survives) and a test that a transfer inside a stored cooldown is refused and writes
 nothing. Full server suite on a disposable PG16 cluster: 324 tests, 0 failures. No soak run was repeated for this change.
+
+### Two-hour mixed soak (T4C-0314, 2026-10-29): the run itself failed the zero-error criterion on a guard/rule mismatch, which exposed a rejoin lockout; fixed and re-run for 30 minutes
+
+The M5 two-hour, twenty-adapter soak on `origin/main` `b19beb34` (protocol 7, schema 13; includes movement parity, the hosted skeleton cave,
+Lighthaven interior and three sewer levels, the `monster_attack` deferral fix, centred arrivals, the portal-cooldown retry and the loot countdown) with
+`T4C_SOAK_PORTAL_WALKERS=8` and the default 120 s reconnect schedule. Fresh disposable PostgreSQL 16 cluster on loopback 57211 (acceptance-cluster
+tooling), one `ServerMain --online` on 18847 from the worktree jar copied to a scratch runtime, private control file, side sampler reading the report's
+`serverRuntime.latest` and the server process every 300 s. Wrapper exit 0, `/admin/shutdown` 200, server exit 0, cluster destroyed, ports free. A second,
+30-minute run on the fixed build used `T4C_SOAK_RECONNECT_INTERVAL_SECONDS=900`. Local PG16 evidence only; native adapters, not rendered clients.
+
+| Metric | T4C-0198 (2 h, protocol 4, no walking, old build) | T4C-0308 E (12 min, 8 walkers) | **T4C-0314 two-hour run (this build)** | T4C-0314 30-min steady run (fixed build, 900 s reconnects) |
+| --- | --- | --- | --- | --- |
+| Duration | 7,200.0 s | 720 s | 7,200.1 s | 1,800.1 s |
+| Time at 20 adapters | 3,492.8 s (48.5%) | 403.0 s (56.0%) | **3,567.8 s (49.6%)** | **1,724.0 s (95.8%)** |
+| Time at 19 or more | 7,198.9 s (about 100%) | 97.3% | 7,068.1 s (98.2%) | 1,789.9 s (99.4%) |
+| Time at 18 / 17 or fewer | n/a | n/a | 122.4 s / about 9 s (startup) | 0.6 s / about 9 s (startup) |
+| Adapter failures | 0 | 0 | **2** (`position_not_walkable`, players 3 and 9) | 0 |
+| Reconnects | 1,151 | 96 | 1,150 | 20 |
+| Database rollbacks / deadlocks | 56 / 0 | 0 / 0 | 0 / 0 | 0 / 0 (delta; the cluster counter also holds a server test run) |
+| "Online persistence failed" lines | n/a | 0 | 0 | 0 |
+| `/health` failures / mean | 0 / 5.990 ms | 0 / 1.18 ms | 0 / 0.647 ms | 0 / 0.981 ms |
+| Tick rate (wall-clock proxy) | 33.999 Hz | 34.000 Hz | 34.000 Hz | 34.000 Hz |
+| Ticks completed / failed | 244,720 / 0 | n/a | 244,928 / 0 | 61,504 / 0 |
+| Tick time mean / max / over budget | 0.555 ms / 147.5 ms / 2 | 2.57 ms / 18.7 ms / 0 | 2.48 ms / 35.9 ms / 1 | 2.70 ms / 19.1 ms / 0 |
+| Max deadline debt / deadline resets | 134.8 ms / 1 | n/a | 17.4 ms / 0 | n/a / 0 |
+| Operator samples (ok / failed) | 1,428 / 0 | n/a | 1,425 / 0 | n/a / 0 |
+| Peak heap used (JVM pools) | 612 MiB | n/a | 654 MiB (maximum over 1,425 operator samples) | 624 MiB (358 samples) |
+| Process CPU | 10.9% of a core | 36.9% | 2,645.7 s over 7,205 s = 36.7% of a core | 766 s over 1,815 s |
+| Trips started / completed / aborted / leg timeouts | n/a | 28 / 22 / 0 / 1 | 296 / 286 / 2 / **0** (8 in flight at the end) | 72 / 69 / 0 / 0 |
+| Region transfers out / in (walkers); observed by all adapters | 0 | 25 / 24; 49 | 314 / 311; 625 | 78 / 76; 154 |
+| Location epoch changes (all adapters) | n/a | 54 | 666 | n/a |
+| Attacks / recoveries | 6,428 / 41 | 446 / 0 | 2,767 / 20 | 779 / 2 |
+| Commands accepted / rejected | 4,461 / 2,008 | n/a | 1,867 / 920 (cooldown, contention, stale revision) | 528 / 253 |
+| HP changes | 1,785 | n/a | 8,514 | 1,854 |
+| Command latency buckets (`<=50`, `100`, `250`, `500`, `1000` ms; none slower) | 0, 0, 1,573, 4,877, 19 | n/a | 0, 0, 289, 2,476, 22 | 0, 0, 70, 707, 4 |
+| HTTP non-2xx | n/a | `/attack` 409 x190, `/input` 409 x48 | `/attack` 409 x920, `/input` 409 x538 (no `/join` 409, no 401) | `/attack` 409 x253, `/input` 409 x143 |
+| Application response bytes (not wire) | n/a | n/a | about 17.6 GB, 2.44 MB/s total, 122 KB/s per adapter (`/state` is 97%) | n/a |
+| First connect per adapter | n/a | n/a | at most 447 ms after open | n/a |
+
+Heap and CPU over time (side sampler every 300 s, 24 samples, two-hour run): used heap is a sawtooth between collections (52 to 620 MiB at the 300 s samples, 654 MiB peak over all operator samples);
+the per-window minimum stays 52 to 78 MiB from the first hour to the second, and the mean is 273 MiB in the first hour against 325 MiB in the
+second (collection timing, no trend). Non-heap grew 42.2 to 49.0 MiB (+1 MiB in the second hour). Process working set went 842 to 879 MiB
+(+37 MiB overall). CPU per 300 s was 84.8 s in the first sample (start-up) then 89 to 123 s, averaging
+108.9 s in the first hour and 112.1 s in the second (36 to 37% of a core). No growing queues or resources were found, and the old T4C-0198 tick maximum of
+147 ms and 56 rollbacks did not recur.
+
+**Result against the tool's own criterion: the two-hour run FAILED it (2 adapter failures).** Everything else was clean (0 server errors, 0 rollbacks, 0
+persistence lines, 0 transfer failures, 0 leg timeouts, server and wrapper exit 0). The two failures were `position_not_walkable` on two different
+adapters (player 3 on a portal trip at epoch 77: abs 2866.99997,1080.99999; player 9 with no transfers: abs 2797.00003,1104.0000076), one observation each.
+
+Root cause (not a data race, no guard weakened in spirit, but one latent server defect found by it). Both positions are the exact **midpoint of a diagonal
+glide** between two adjacent tile centres. The server moves players with single-player's grid rule, which tests the static foot collision (plus an
+authored portal source) of the tile being entered; its wall-slide step may enter a tile whose tile *above* is blocked when the departure tile had the same
+block. The guard asked `PreviewMap.canStand`, which folds the above-foot tile into the block and so is stricter than the rule that moved the player.
+The two tiles involved are 2866,1080 (foot free, tile above 2866,1079 blocked) and the diagonal 2797,1103 to 2796,1104 beside foot-blocked 2797,1104.
+So the guard disagreed with the authoritative rule on tiles the rule lets players cross, and with four players crossing them rarely it fired twice in 2 h
+(never in the earlier 12-minute runs). The disagreement is not only cosmetic: **`PreviewWorld.joinAt` used the same `canStand` check, so a character
+that logged out resting on such a tile was refused on rejoin (409 `position`) and stayed locked out.** A sweep over every tile of the starting crop with
+eight directions found reachable rest positions the old join refused (the first was 2932.5,1056.5, a few tiles from the Lighthaven door arrival).
+
+Fix (`T4C-0314`): in grid mode `joinAt` accepts any position the movement rule can rest on (`PreviewMap.canRestOnGrid`; the swept mode keeps `canStand`);
+the soak's guard now checks the server's own lattice (`PreviewMap.onGridPath`: tile centres the rule can rest on or the straight glide between two
+adjacent such centres, diagonals included) and still fails a position off the lattice or in a foot-blocked tile. `GridRestPositionTest` pins both: every
+reachable rest in the starting crop is rejoinable and on the lattice (the sweep covers over 100,000 rests and reaches a rest `canStand` refuses), the two
+observed positions are accepted, and the T4C-0308 row-boundary walk (2785.3 or 2785.7 with y on a whole number) and a foot-blocked tile centre are
+still rejected. Existing saves need no clamp or migration (the check only became more permissive for positions the rule itself produces). Full server
+suite on a disposable PG16 cluster: 325 tests, 0 failures.
+
+The 30-minute steady run on the fixed build had **0 adapter failures**, 0 rollbacks, 0 persistence lines, 69 completed portal trips and 154 observed
+transfers; it is the first measurement of a plateau at twenty: 1,724.0 s at twenty (95.8%), only the opening minute and the single scheduled
+reconnect round below it. It was not repeated for two hours.
+
+What this does and does not prove against the M5 bullets. It shows, on one 2 h run and one 30 min run on local PG16: 20 native adapters with 8 of them
+taking paced portal trips through the cave, Lighthaven door and sewer stairs keep the tick loop inside budget (1 over-budget callback in 244,928, max
+35.9 ms), the server process flat in CPU and heap (no leak signal), no database rollbacks or deadlocks, no persistence failures with a named operation,
+and zero transfer failures over 625 observed transfers. It does **not** prove: (1) a 2 h run with zero adapter failures (the 2 h run had 2, now explained
+and fixed, validated for 30 minutes only); (2) a 2 h plateau at twenty (49.6% at twenty is the reconnect-churn ceiling of the default mode, and the
+steady mode ran only 30 minutes); (3) wire bandwidth or database operation/pool-wait latency (only application body bytes and adapter-inclusive command
+latency were recorded); (4) anything about rendered clients, quests, loot pickup, shops or NPC topics (the soak does none of these); (5) TLS/remote. The
+current M5 mixed-session bullet requires two real rendered clients with no duration minimum, so no M5 or ACCEPTANCE box was ticked from this evidence.
+Not touched: `OnlineRetaliation`, shop and UI wiring.
