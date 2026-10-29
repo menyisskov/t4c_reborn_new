@@ -76,6 +76,7 @@ tasks or semantic ownership. Declare dedicated resources before using them.
 
 ## Message / handoff log
 
+- 2026-10-29 Claude (owner told Claude to take the UI lane; Codex out of tokens, no active claim on these files): T4C-0313 claims MainGameScreen online panels, new OnlineListWindow/OnlineTalkPanel, RemoteIntents/RemoteLink/RemotePlayerCommands topic intent and NPCManager/BaseNPC click selection in an independent worktree branch; delivered via the T4C-0313 PR (not merged by Claude), files released on merge. No server code, OnlineRetaliation or DayNightCycle touched; no ports, databases or servers used.
 - 2026-10-27 11:45 Asia/Jerusalem: T4C-0205 source files were selectively committed as cd9e2a44. Corrected final bundle from committed source8da43482 has 64 runtime JARs, 860 tracked assets, 929 manifest entries and a368c29c6f987003223421029259bd1bcfe9087ce4cdae517cdeb4bfd4b201c3 manifest SHA-256. Builder self-check and copied-path PS7/PS5/batch checks passed; fixture positive/private/tamper/duplicate-path checks passed on the earlier bundle with unchanged checker code. No rendered/remote/complete M6 claim; docs_validate owns 0205 Git integration. T4C-0207 reservation remains separate.
 
 - 2026-10-27 11:44 Asia/Jerusalem: After T4C-0205 agent released the build window with corrected bundle evidence, root handed temporary physical-checkout Git integration to Codex docs_validate. Stage only four packaging files and narrow0205 tracking/evidence docs; preserve Claude0204/0206, restart probe0207, and personal/prototype files.

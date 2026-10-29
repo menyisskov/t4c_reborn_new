@@ -155,6 +155,15 @@ public class MainGameScreen implements Screen {
       new com.perso.T4C.online.OnlineInventoryPanel();
   private final com.perso.T4C.online.OnlineAbilityMenu remoteAbilityMenu =
       new com.perso.T4C.online.OnlineAbilityMenu();
+  private final com.perso.T4C.online.OnlineTalkPanel remoteTalkPanel =
+      new com.perso.T4C.online.OnlineTalkPanel();
+  /** Online lists share one journal window, the chrome single-player's service screens use. */
+  private com.perso.T4C.gui.screen.OnlineListWindow remoteListWindow;
+  private int remoteListWindowWidth;
+  private int remoteListWindowHeight;
+  private java.util.List<String> remoteListLines = java.util.List.of();
+  private float remoteTalkTileX;
+  private float remoteTalkTileY;
   private boolean displayInitialized;
   private int loadingStep;
   private GameInputHandler inputHandler;
@@ -357,6 +366,7 @@ public class MainGameScreen implements Screen {
             String npc, com.perso.T4C.online.model.ShopOffersReply offers) {
           remoteInventoryPanel.close();
           remoteAbilityMenu.close();
+          remoteTalkPanel.close();
           if (remoteShopPanel.isOpen() && npc.equals(remoteShopPanel.npc())) {
             remoteShopPanel.refresh(offers);
             return;
@@ -371,7 +381,27 @@ public class MainGameScreen implements Screen {
                 .findFirst()
                 .orElse(npc);
           }
-          remoteShopPanel.open(npc, name, offers);
+          remoteShopPanel.open(npc, I18n.resolve(name), offers);
+        }
+        @Override public void showTalk(String npc) {
+          if (remoteShopPanel.isOpen()) return;
+          String name = npc;
+          var view = remoteConnection == null ? null : remoteConnection.view();
+          var snapshot = view == null ? null : view.snapshot();
+          if (snapshot != null) {
+            name = snapshot.npcs().stream()
+                .filter(actor -> npc.equals(actor.id()))
+                .map(com.perso.T4C.online.model.NpcView::displayName)
+                .findFirst()
+                .orElse(npc);
+          }
+          remoteInventoryPanel.close();
+          remoteAbilityMenu.close();
+          remoteTalkPanel.open(npc, I18n.resolve(name));
+          if (player != null) {
+            remoteTalkTileX = player.getCoordinates().getX();
+            remoteTalkTileY = player.getCoordinates().getY();
+          }
         }
       });
     } else {
@@ -1584,6 +1614,10 @@ public class MainGameScreen implements Screen {
               && (remoteConnection == null || !"connected".equals(remoteConnection.status()))) {
             remoteAbilityMenu.close();
           }
+          if (remoteTalkPanel.isOpen()
+              && (remoteConnection == null || !"connected".equals(remoteConnection.status()))) {
+            remoteTalkPanel.close();
+          }
           if (seraphArrivalBlocksMovement()
               || remoteConnection!=null && !"connected".equals(remoteConnection.status())) {
             return;
@@ -1715,32 +1749,7 @@ public class MainGameScreen implements Screen {
           .getTahomaFont(13,com.badlogic.gdx.graphics.Color.WHITE,false);
       font
           .draw(batch,text,20,hudCamera.viewportHeight-18);
-      if (remoteShopPanel.isOpen()) {
-        var lines = remoteShopPanel.lines(MainGameScreen::onlineShopItemName);
-        float y = hudCamera.viewportHeight - 16;
-        for (int i = 0; i < lines.size(); i++) {
-          if (i > 0) y -= i == 1 ? font.getLineHeight() * 1.5f : font.getLineHeight();
-          font.draw(batch, lines.get(i), hudCamera.viewportWidth - 420, y);
-        }
-      } else if (remoteInventoryPanel.isOpen()) {
-        var view = remoteConnection.view();
-        var progress = view == null || view.character() == null ? null : view.character().progress();
-        var lines = remoteInventoryPanel.lines(progress, MainGameScreen::onlineShopItemName);
-        float y = hudCamera.viewportHeight - 16;
-        for (int i = 0; i < lines.size(); i++) {
-          if (i > 0) y -= i == 1 ? font.getLineHeight() * 1.5f : font.getLineHeight();
-          font.draw(batch, lines.get(i), hudCamera.viewportWidth - 360, y);
-        }
-      } else if (remoteAbilityMenu.isOpen()) {
-        var view = remoteConnection.view();
-        var progress = view == null || view.character() == null ? null : view.character().progress();
-        var lines = remoteAbilityMenu.lines(progress);
-        float y = hudCamera.viewportHeight - 16;
-        for (int i = 0; i < lines.size(); i++) {
-          if (i > 0) y -= i == 1 ? font.getLineHeight() * 1.5f : font.getLineHeight();
-          font.draw(batch, lines.get(i), hudCamera.viewportWidth - 360, y);
-        }
-      }
+      renderRemoteListWindow();
       batch.end();
     }
     stage.act(delta);
@@ -5068,6 +5077,24 @@ public class MainGameScreen implements Screen {
     InputMultiplexer remote=new InputMultiplexer();
     remote.addProcessor(new com.badlogic.gdx.InputAdapter() {
       @Override public boolean keyDown(int keycode) {
+        if (remoteTalkPanel.isOpen()) {
+          if (keycode == Input.Keys.ESCAPE) {
+            remoteTalkPanel.close();
+            return true;
+          }
+          if (keycode == Input.Keys.C || keycode == Input.Keys.U || keycode == Input.Keys.I) {
+            remoteTalkPanel.close();
+          } else {
+            int topicDigit = keycode >= Input.Keys.NUM_1 && keycode <= Input.Keys.NUM_9
+                ? keycode - Input.Keys.NUM_1 + 1 : 0;
+            if (topicDigit == 0) return false;
+            var topic = remoteTalkPanel.choose(topicDigit);
+            if (topic.isPresent())
+              ((com.perso.T4C.session.RemotePlayerCommands) session.commands())
+                  .interact(remoteTalkPanel.npc(), topic.getAsInt());
+            return true;
+          }
+        }
         if (remoteAbilityMenu.isOpen()) {
           if (keycode == Input.Keys.ESCAPE) {
             remoteAbilityMenu.close();
@@ -5199,8 +5226,68 @@ public class MainGameScreen implements Screen {
         return true;
       }
     });
+    remote.addProcessor(new com.badlogic.gdx.InputAdapter() {
+      @Override public boolean touchDown(int x,int y,int pointer,int button) {
+        if (!remoteListWindowHit(x, y)) return false;
+        remoteListWindow.onTouchDown(x, y, button);
+        return true;
+      }
+      @Override public boolean touchUp(int x,int y,int pointer,int button) {
+        if (!remoteListWindowHit(x, y)) return false;
+        remoteListWindow.onTouchUp(x, y);
+        return true;
+      }
+    });
     remote.addProcessor(monsters);remote.addProcessor(npcClicks);remote.addProcessor(lootClicks);
     Gdx.input.setInputProcessor(remote);
+  }
+
+  /** The lines of whichever online panel is open, top to bottom; empty when none is. */
+  private java.util.List<String> remotePanelLines() {
+    var view = remoteConnection == null ? null : remoteConnection.view();
+    var progress = view == null || view.character() == null ? null : view.character().progress();
+    if (remoteShopPanel.isOpen()) return remoteShopPanel.lines(MainGameScreen::onlineShopItemName);
+    if (remoteInventoryPanel.isOpen())
+      return remoteInventoryPanel.lines(progress, MainGameScreen::onlineShopItemName);
+    if (remoteAbilityMenu.isOpen()) return remoteAbilityMenu.lines(progress);
+    if (remoteTalkPanel.isOpen()) return remoteTalkPanel.lines();
+    return java.util.List.of();
+  }
+
+  private void closeRemotePanels() {
+    closeRemoteShop();
+    remoteInventoryPanel.close();
+    remoteAbilityMenu.close();
+    remoteTalkPanel.close();
+  }
+
+  /** Draws the open online list in the centred journal window, as single-player draws its screens. */
+  private void renderRemoteListWindow() {
+    if (remoteTalkPanel.isOpen() && player != null
+        && (player.getCoordinates().getX() != remoteTalkTileX
+            || player.getCoordinates().getY() != remoteTalkTileY)) {
+      remoteTalkPanel.close();
+    }
+    remoteListLines = remotePanelLines();
+    if (remoteListLines.isEmpty()) return;
+    int width = Gdx.graphics.getWidth();
+    int height = Gdx.graphics.getHeight();
+    if (remoteListWindow != null && (remoteListWindowWidth != width || remoteListWindowHeight != height)) {
+      remoteListWindow.dispose();
+      remoteListWindow = null;
+    }
+    if (remoteListWindow == null) {
+      remoteListWindow =
+          new com.perso.T4C.gui.screen.OnlineListWindow(() -> remoteListLines, this::closeRemotePanels);
+      remoteListWindowWidth = width;
+      remoteListWindowHeight = height;
+    }
+    remoteListWindow.render(batch);
+  }
+
+  private boolean remoteListWindowHit(float screenX, float screenY) {
+    return remoteListWindow != null && !remoteListLines.isEmpty()
+        && remoteListWindow.isPointerOver(screenX, screenY);
   }
 
   private void closeRemoteShop() {
@@ -5254,6 +5341,10 @@ public class MainGameScreen implements Screen {
       playerStateSaved = true;
     }
     GuiManager.close();
+    if (remoteListWindow != null) {
+      remoteListWindow.dispose();
+      remoteListWindow = null;
+    }
     if (Gdx.input.getInputProcessor() != null) {
       Gdx.input.setInputProcessor(null);
     }

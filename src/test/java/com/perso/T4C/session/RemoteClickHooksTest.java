@@ -126,4 +126,63 @@ class RemoteClickHooksTest {
     assertFalse(manager.onClick(5000f, 5000f, player));
     assertEquals(0, calls[0]);
   }
+
+  @Test
+  void whenTwoNpcClickBoxesOverlapTheClickGoesToTheFigureUnderTheCursor() {
+    NPCManager manager = new NPCManager(null);
+    manager.setPuppetMode(true);
+    BaseNPC behind = samaritan(manager);
+    BaseNPC front = new LighthavenSamaritan(new NpcContext(null));
+    manager.addNPC(front);
+    front.puppetPlace(640f, 368f);
+    List<BaseNPC> asked = new ArrayList<>();
+    manager.setRemoteInteract(
+        clicked -> {
+          asked.add(clicked);
+          return true;
+        });
+    Player player = new Player();
+    boolean sawOverlap = false;
+    boolean behindWon = false;
+    boolean frontWon = false;
+    for (float y = 200f; y <= 440f; y += 1f) {
+      boolean overBehind = behind.isMouseOver(640f, y);
+      boolean overFront = front.isMouseOver(640f, y);
+      if (!overBehind && !overFront) continue;
+      asked.clear();
+      assertTrue(manager.onClick(640f, y, player));
+      BaseNPC expected;
+      if (overBehind && overFront) {
+        sawOverlap = true;
+        float db = behind.mouseOverDistanceSquared(640f, y);
+        float df = front.mouseOverDistanceSquared(640f, y);
+        expected = db < df ? behind : df < db ? front : front;
+      } else {
+        expected = overBehind ? behind : front;
+      }
+      assertSame(expected, asked.get(0), "click at y=" + y);
+      assertSame(expected, manager.findNpcAt(640f, y));
+      if (expected == behind) behindWon = true; else frontWon = true;
+    }
+    assertTrue(sawOverlap, "the two boxes overlap on some rows");
+    assertTrue(behindWon && frontWon, "each figure can be clicked, including the one behind");
+  }
+
+  @Test
+  void singlePlayerKeepsPickingTheFirstNpcWhenBoxesOverlap() {
+    NPCManager manager = new NPCManager(null);
+    BaseNPC first = samaritan(manager);
+    BaseNPC second = new LighthavenSamaritan(new NpcContext(null));
+    manager.addNPC(second);
+    second.puppetPlace(640f, 368f);
+    boolean sawOverlap = false;
+    for (float y = 200f; y <= 440f; y += 1f) {
+      boolean overFirst = first.isMouseOver(640f, y);
+      boolean overSecond = second.isMouseOver(640f, y);
+      if (overFirst && overSecond) sawOverlap = true;
+      if (overFirst) assertSame(first, manager.findNpcAt(640f, y), "y=" + y);
+      else if (overSecond) assertSame(second, manager.findNpcAt(640f, y), "y=" + y);
+    }
+    assertTrue(sawOverlap);
+  }
 }

@@ -654,11 +654,11 @@ Reproduce as in 3.15 with `LiveRunProvision COLLISION wares|quest OUT [SUFFIX]` 
 
 **Findings.**
 
-1. **Not edited, Codex UI lane: the online lists and the shop panel are drawn upside down in the real screen** (`live3-04`,
+1. **Fixed by T4C-0313 (see below): the online lists and the shop panel were drawn upside down in the real screen** (`live3-04`,
    `live3-06`, `live3-08`, `live3-10`): the title is the lowest line, rows run 9 up to 1 and the block sits at the bottom
    right on top of the radar. Repro: online window, press `I`, `C` or `U`, or click a shopkeeper. `MainGameScreen` draws
    them from `hudCamera.viewportHeight - 16` downwards, which is the top edge only on a y-up camera.
-2. **Not edited, Codex UI lane: the shop title shows the raw NPC key** (`${npc.sigfried}: buying`): `showShop` passes
+2. **Fixed by T4C-0313: the shop title showed the raw NPC key** (`${npc.sigfried}: buying`): `showShop` passes
    `NpcView.displayName` unresolved to the panel; `I18n.resolve` is not applied.
 3. **Fixed here (Claude lane, tests `RemotePlayerCommandsTest`): the first click on a shopkeeper after walking up was
    often refused** with "They are busy for a moment. Try again." (refused as busy or stale revision: a position or
@@ -674,15 +674,35 @@ Reproduce as in 3.15 with `LiveRunProvision COLLISION wares|quest OUT [SUFFIX]` 
    at the stop, 22 of 22 after) and the exhaustion cooldowns were present and consistent.
 5. **Gap: other players have no appearance parts, no name and no health bar** (the snapshot carries none; the puppet uses
    the default naked parts; `renderNameOverlay` covers monsters, NPCs and objects only).
-6. **Gap, Codex UI lane: the screen has no NPC topic control.** A click sends the greeting only; the quest offer is topic 0.
+6. **Fixed by T4C-0313: the screen had no NPC topic control.** A click sends the greeting only; the quest offer is topic 0.
    A greeting turns a finished quest in but never offers it.
 7. The committed revision rises constantly (regeneration and position checkpoints), which is why a command can race one.
-8. **Not edited, shared NPC click code: overlapping NPC click boxes.** Moonrock stands in front of WardenAelric; a click
+8. **Fixed by T4C-0313: overlapping NPC click boxes.** Moonrock stands in front of WardenAelric; a click
    where both boxes overlap goes to the first NPC under the cursor and is refused ("That person cannot talk to you right now."),
    both at the first greeting and at the first turn-in attempt (`live3-16`). The driver now aims at a point where only the
    wanted NPC is under the cursor. A player has to click the visible part of the Warden.
 9. **Known, owner-accepted: the Skeleton ground is lethal** (T4C-0248): the quest was only completable at level 30 with the
    three starter healing potions; a level-12 warrior died away at 10 of 119 HP after three kills.
+
+**T4C-0313 follow-up (Claude, owner rule: online looks and plays exactly like single-player).** The four defects above are
+fixed in the screen, not in the legacy text client:
+
+- *Lists and shop:* the I, C, U and shop lists draw in `OnlineListWindow`, a `JournalWindow` (the chrome and centring
+  every single-player service screen uses): title in the gold display font, body rows top to bottom in a well, key hint at
+  the foot, X button. `OnlineListWindowLayoutTest` pins top-to-bottom row order and that the window never covers the radar
+  disc on 1280x720 to 2560x1440. The full graphical single-player `Inventory`, `SpellBook` and `ShopScreen` are not reused:
+  they mutate a local `Player` and basket; online equip/cast/trade still go through the server intents (design stage 3
+  and 5 replace the lists with those screens). Evidence: `multiplayer/design/online-list-*.png` (preview with sample
+  lines, `OnlineListWindowPreview`; not a live run).
+- *Shop title:* the panel is opened with `I18n.resolve(displayName)`.
+- *Topics:* single-player has no topic list, the player types a highlighted keyword. Online sends a topic index, so a
+  greeting that opens no shop now opens the same window listing the NPC's authored keywords (`npc.topic_keyword.*.0`);
+  digit keys send `interact(npc, topic)`, Esc, I, C, U, walking a tile or a disconnect close it. A reply to a topic never
+  reopens the list.
+- *Overlapping boxes:* in puppet (online) mode `NPCManager.findNpcAt` picks, among the boxes under the
+  cursor, the one whose box centre is nearest, the one lower on screen on a tie. Single-player keeps the first NPC in
+  list order, unchanged (pinned by `RemoteClickHooksTest`).
+- *Not verified:* a live two-window run on a server; the changes are covered by unit tests and the rendered preview only.
 
 ## 4. Staged plan
 
