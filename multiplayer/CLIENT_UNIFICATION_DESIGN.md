@@ -434,7 +434,7 @@ the witness player nothing.
 | NPC stationary, idle, health, hostility | `NpcView` has id, name, position, sprite | stationary NPCs do not play their idle loop; no NPC combat |
 | Corpses | `View.corpses` is not applied | no corpse sprite or recover target yet |
 | Loot owner window, charges | `ownerRemainingMs` exists; charges absent | no owner tooltip; charges unknown |
-| Other players: name, class, appearance parts, equipment, stealth, actions | only an opaque `appearance` id and hp | default look; no name; no walk animation (the player movement object has no puppet switch); not drawn by `MainGameScreen` yet, exposed by `RemoteWorldDriver.otherPlayers()` |
+| Other players: name, class, appearance parts, equipment, stealth, actions | only an opaque `appearance` id and hp | default look; no name; no walk animation, not drawn by `MainGameScreen` (both added in R3, 3.13); exposed by `RemoteWorldDriver.otherPlayers()` |
 | Interpolation buffer (render 100 ms behind) | n/a | puppets ease 60 ms toward the newest snapshot instead |
 | Server id to object | held by the driver (`creatureId`, `npcId`) | step R3 sends intents by these ids |
 
@@ -442,6 +442,61 @@ Preview image (a real `MainGameScreen` drawing the puppets of a hand-made snapsh
 `multiplayer/design/remote-world-puppets.png`, produced by `RemoteWorldPuppetsPreview`.
 Next, R3: `PlayerCommands` over the connection (attack, move, pick up, interact) with tickets, using
 the ids above.
+
+### 3.13 Remote session, step R3: the commands (T4C-0292)
+
+`RemoteGameSession.commands()` is `RemotePlayerCommands` (headless, not wired to the launcher).
+The screen binds it once with a `Host` (the player, and where a message goes: the same
+`SystemMessage` single-player uses); the click hooks added in `GroundItemManager` and `NPCManager`
+are installed by the driver (`bindIntents`) and are inert unless it does.
+
+| Intent | Entry point (unchanged) | Request | Locally |
+|---|---|---|---|
+| attack the clicked monster | `PlayerCommands.attack` from `MonsterInputHandler` | `/attack <rev> <epoch> <creature id>` (`RemoteWorldDriver.creatureId`) | nothing: no target flag, swing, cooldown or damage |
+| walk | `PlayerCommands.move` every frame from `GameInputHandler` | `/input <epoch> <seq> <dx> <dy>`, the connection's own sequence, tagged with the client frame | `Player.move` at once (shared rule), then reconciled |
+| pick up loot | `GroundItemManager.pickUpAt` with a hook: status `REQUESTED` | `/pickup <rev> <epoch> <loot uuid>` (`lootId`) | nothing: no inventory change, the item stays until a snapshot drops it |
+| talk to an NPC | `NPCManager.onClick` in puppet mode with a hook | `/interact <rev> <epoch> <public id>` (`npcId`) | nothing: no conversation, quest or script starts |
+
+Single-player is the same code: with no hook set, `pickUpAt` and `onClick` are byte-for-byte what
+they were (`GroundItemPickupCharacterizationTest`, `PuppetSwitchCharacterizationTest`,
+`MainGameScreenGoldenTest`). A reply (accepted or refused) is queued on the network thread and
+shown on the next frame through the host: the refusal key from `OnlineCommandRefusals`, or the
+reply's own message key with its arguments. The routine swing-cooldown refusal is silent. A second
+click while one is in flight, or a link that is down, says "busy" (the keys the refusal table
+already has) instead of dropping the click without a word.
+
+**Prediction and reconciliation.** `OnlineConnection.direction(dx, dy, frame)` holds the direction
+as before and remembers the client frame; each `/input` it sends stores which frame was newest, and
+`acknowledgedFrame(sequence)` maps the snapshot's last applied sequence back to a frame. The
+commands record every frame in a `MovementReconciler` whose rule is the shared grid rule
+(`RemoteMovementRule`, stateless: a glide cut at a frame boundary re-reserves from mid-tile, the
+same target in the held direction). On each new snapshot: drop acknowledged frames, replay the rest
+on the server position, compare with the player. Tolerance: under 0.5 tile nothing happens (the
+replay also counts the time the server already spent on the last input, so a steady error of about
+speed times snapshot age, 9.4 tiles per second, is normal); 0.5 to 1 tile eases over 0.1 s; one tile
+or more snaps (a wall the server saw, a teleport, a stop the server crossed a tile boundary on
+first); a new region epoch restarts from the server. The sent direction is the input's sign, so
+both sides finish a reserved tile after a released key; while stunned, exhausted or mid-swing it is
+none (the local gates, which the server does not know yet); with only a click path moving it is the
+direction the path step took. At 100 ms round trip the steady error approaches half a tile, the
+reason for the dead zone; a streamed snapshot channel or a server-side sequence echo would
+tighten it (not needed at loopback).
+
+**Not available online yet** (no `PlayerCommands` member, so no throwing stub either): equip,
+unequip, use item, cast (the connection already has `equip`, `unequip`, `useItem` and `cast`),
+corpse recovery, shop and storage windows (`shopOffers`, `shopBuy`, `shopSell`), training, dropping
+items, chat, the repeating auto-attack and the hotbar. Their screens still act locally and must be
+routed one by one (each with its characterization test first) in the later stages.
+
+Other players are drawn by the screen's own render slot for a `RemoteWorldDriver` world and walk
+(`PlayerMovement.puppetMoving`); a local session draws nothing extra. Preview image (the real
+`MainGameScreen` on a scripted link: the click on a far Skeleton goes out as `/attack`, the scripted
+refusal shows as "Your target is out of reach." in the real chat window, the other players stand
+in the world): `multiplayer/design/remote-click-attack-refusal.png`, produced by
+`RemoteClickAttackPreview` (the attack callback is invoked directly, not through a mouse event).
+Next, R4: the launcher opens the real screen from the lobby with a `RemoteGameSession`; the screen
+builds `GameInputHandler` with the session's commands, binds the host, calls `confirmRegionReady`
+after each map load and shows the reconnect banner.
 
 ## 4. Staged plan
 

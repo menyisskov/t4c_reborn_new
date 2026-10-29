@@ -46,9 +46,21 @@ re-measure before relying on a number.
   hit, cast or miss animation for creatures (the snapshot carries no events), no damage numbers,
   sounds or spell effects (stage 7), NPCs without a stationary or idle flag, health or hostility,
   corpses and ground-loot owner windows not drawn, other players only with the default look
-  (appearance is an opaque id), no walk animation for them (the player movement object has no puppet
-  switch) and no slot for them in the game screen yet, and puppets glide with a 60 ms ease instead of
+  (appearance is an opaque id), no walk animation for them and no slot for them in the game screen
+  (both added in R3), and puppets glide with a 60 ms ease instead of
   the planned 100 ms-behind interpolation buffer. Full table: `CLIENT_UNIFICATION_DESIGN.md` 3.12.
+  Progress (T4C-0292, remote session R3, headless and unwired): `RemoteGameSession.commands()` is
+  `RemotePlayerCommands` over the existing connection: attack (server creature id), own movement
+  (predicted with the shared rule, sequenced, reconciled with snapshots), pickup by loot id and NPC
+  interaction by id, with refusals shown as the single-player system messages; the screen draws
+  the other players and walks them. Parity debt it records: no repeating auto-attack online (one
+  click is one swing), the armed-spell and combat-mode NPC click paths still run locally,
+  equipment, item use, spells, shops, corpse recovery and chat have no command member yet (the
+  connection can carry some; the screens are not routed), no dead or stunned state from the server
+  (the local gates are mirrored by sending no direction), no dynamic blockers or teleport tiles in
+  the server's step, other players have no name or health bar, and the screen must confirm the
+  region to the connection before any input is sent (launcher step). Full table:
+  `CLIENT_UNIFICATION_DESIGN.md` 3.13.
 - [ ] **Characters:** all 7 classes, creation screen and preview identical to single-player,
   stat and skill allocation, training, rebirth.
 - [ ] **Combat:** melee, archery, two weapons, stun blow, stealth, armor class and auras.

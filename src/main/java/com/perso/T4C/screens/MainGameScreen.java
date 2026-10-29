@@ -3860,8 +3860,23 @@ public class MainGameScreen implements Screen {
         entityItems, this::obtainRenderItem, batchDecor, outlineShader);
     addNpcRenderItems(entityItems);
     addMonsterRenderItems(entityItems);
+    addRemotePlayerRenderItems(entityItems);
     addPlayerRenderItem(entityItems);
     return entityItems;
+  }
+
+  /** Online sessions only: the other players of the server's world; nothing for a local session. */
+  private void addRemotePlayerRenderItems(List<ObjectRenderer.RenderItem> entityItems) {
+    if (!(session.world() instanceof com.perso.T4C.session.RemoteWorldDriver remote)) {
+      return;
+    }
+    for (Player other : remote.otherPlayers()) {
+      Vector2 pos = other.getPositionVector();
+      addEntityRenderItem(
+          entityItems,
+          playerRenderDepth(pos.y),
+          () -> other.render(batchDecor, outlineShader, false));
+    }
   }
 
   private void addNpcRenderItems(List<ObjectRenderer.RenderItem> entityItems) {

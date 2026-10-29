@@ -61,6 +61,14 @@ public class PlayerMovement {
     path.clear();
   }
 
+  /**
+   * Online puppets only: shows the walk or the rest pose of a player another client controls.
+   * Nothing in single-player calls it.
+   */
+  public void puppetMoving(boolean moving) {
+    this.moving = moving;
+  }
+
   public void stop() {
     moving = false;
     path.clear();
