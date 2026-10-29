@@ -84,7 +84,8 @@ final class PersistentSessions {
     }
   }
   private record Completion(Binding binding, OnlineStore.CharacterState saved, boolean finalSave,
-      long allowedUntil, OnlineStore.RewardResult reward, String refusal, Exception error) {}
+      long allowedUntil, OnlineStore.RewardResult reward, String refusal, Exception error,
+      com.perso.T4C.server.persistence.PersistenceFailure.Operation operation) {}
 
   PersistentSessions(OnlineStore store, PreviewMap map, PreviewWorld world) throws SQLException {
     this(store,new HostedWorlds(map,world));
@@ -639,6 +640,7 @@ final class PersistentSessions {
     // Frequent rewards must not postpone movement checkpoints indefinitely. Logout drains its
     // accepted event first, then performs one final checkpoint using the latest position.
     var event=!binding.closing && tick-binding.checkpointSubmitted>=CHECKPOINT_TICKS ? null : binding.event;
+    var operation=persistenceOperation(event);
     if (event==null) binding.checkpointSubmitted=tick;
     boolean finalSave=binding.closing && event==null;
     var content=hosted.items;
@@ -708,11 +710,24 @@ final class PersistentSessions {
           }
           if (finalSave) store.release(binding.session);
         } catch (Exception error) { failure=error; }
-        completions.add(new Completion(binding,saved,finalSave,allowedUntil,reward,refusal,failure));
+        completions.add(new Completion(binding,saved,finalSave,allowedUntil,reward,refusal,failure,operation));
       });
     } catch (RejectedExecutionException error) {
-      completions.add(new Completion(binding,null,finalSave,0,null,null,error));
+      completions.add(new Completion(binding,null,finalSave,0,null,null,error,operation));
     }
+  }
+
+  private static com.perso.T4C.server.persistence.PersistenceFailure.Operation persistenceOperation(GameplayEvent event) {
+    if (event==null) return com.perso.T4C.server.persistence.PersistenceFailure.Operation.CHECKPOINT;
+    if (event.loot()!=null) return com.perso.T4C.server.persistence.PersistenceFailure.Operation.LOOT_CLAIM;
+    if (event.shop()!=null) return com.perso.T4C.server.persistence.PersistenceFailure.Operation.SHOP;
+    if (event.corpse()!=null) return com.perso.T4C.server.persistence.PersistenceFailure.Operation.CORPSE;
+    if (event.transfer()!=null) return com.perso.T4C.server.persistence.PersistenceFailure.Operation.TRANSFER;
+    if (event.monsterAttack()!=null) return com.perso.T4C.server.persistence.PersistenceFailure.Operation.MONSTER_ATTACK;
+    if (!event.spellStrikes().isEmpty() || event.strike()!=null)
+      return com.perso.T4C.server.persistence.PersistenceFailure.Operation.SPELL_CREATURE_STRIKE;
+    if (event.worldReward()) return com.perso.T4C.server.persistence.PersistenceFailure.Operation.WORLD_REWARD;
+    return com.perso.T4C.server.persistence.PersistenceFailure.Operation.GENERIC_EVENT;
   }
 
   private void drain() {
@@ -732,7 +747,7 @@ final class PersistentSessions {
         if(binding.event!=null && (binding.event.loot()!=null || !binding.event.drops().isEmpty())) refreshLoot(binding.region);
         if (binding.event!=null) binding.event.result().completeExceptionally(new IllegalStateException("Persistence unavailable"));
         binding.closed.completeExceptionally(new IllegalStateException("Persistence unavailable"));
-        System.err.println("Online persistence failed ("+com.perso.T4C.server.persistence.PersistenceFailure.describe(completed.error())+"); character disconnected. Recover after lease expiry.");
+        System.err.println("Online persistence failed ("+com.perso.T4C.server.persistence.PersistenceFailure.format(completed.operation(),completed.error())+"); character disconnected. Recover after lease expiry.");
       } else if (completed.refusal()!=null) {
         // A definite refusal rolled back before any write, so the character stays connected.
         binding.allowedUntil=completed.allowedUntil();
