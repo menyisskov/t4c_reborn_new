@@ -21,7 +21,10 @@ class OnlineCommandRefusalsTest {
     assertEquals("online.loot.out_of_range", OnlineCommandRefusals.messageKey("/pickup", "out_of_range"));
     assertEquals("online.loot.refused", OnlineCommandRefusals.messageKey("/pickup", null));
     assertEquals("online.npc.unavailable", OnlineCommandRefusals.messageKey("/interact", "npc_unavailable"));
-    assertEquals("online.npc.refused", OnlineCommandRefusals.messageKey("/interact", "busy"));
+    assertEquals("online.npc.busy", OnlineCommandRefusals.messageKey("/interact", "busy"));
+    assertEquals("online.npc.busy", OnlineCommandRefusals.messageKey("/interact", "revision"));
+    assertEquals("online.npc.refused", OnlineCommandRefusals.messageKey("/interact", "anything-unknown"));
+    assertEquals("online.loot.taken", OnlineCommandRefusals.messageKey("/pickup", "loot_taken"));
   }
 
   @Test

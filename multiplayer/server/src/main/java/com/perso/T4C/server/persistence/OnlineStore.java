@@ -1461,7 +1461,7 @@ public final class OnlineStore implements AutoCloseable {
         // Character lock precedes loot lock. Times are read in the same statement as the locked row.
         String key; int quantity, charges; UUID owner; long ownerUntil, expiresAt, now;
         try (var q=c.prepareStatement("""
-            SELECT item_key,quantity,charges,world,x,y,owner_character,state,
+            SELECT item_key,quantity,charges,world,x,y,owner_character,state,claimed_by,
               floor(extract(epoch FROM owner_until)*1000)::bigint AS owner_until_ms,
               floor(extract(epoch FROM expires_at)*1000)::bigint AS expires_ms,
               floor(extract(epoch FROM clock_timestamp())*1000)::bigint AS now_ms
@@ -1469,7 +1469,13 @@ public final class OnlineStore implements AutoCloseable {
             """)) {
           q.setObject(1,lootId);
           try (var rows=q.executeQuery()) {
-            if (!rows.next() || !"ON_GROUND".equals(rows.getString("state"))) throw new Conflict(OnlinePickupRules.Refusal.LOOT_UNAVAILABLE.code());
+            if (!rows.next()) throw new Conflict(OnlinePickupRules.Refusal.LOOT_UNAVAILABLE.code());
+            if (!"ON_GROUND".equals(rows.getString("state"))) {
+              // Only a claim by someone else is reported as such; expiry and the character's own claim stay "unavailable".
+              var claimedBy=rows.getObject("claimed_by",UUID.class);
+              throw new Conflict("CLAIMED".equals(rows.getString("state")) && claimedBy!=null && !claimedBy.equals(session.characterId())
+                  ? OnlinePickupRules.LOOT_TAKEN : OnlinePickupRules.Refusal.LOOT_UNAVAILABLE.code());
+            }
             key=rows.getString("item_key"); quantity=rows.getInt("quantity"); charges=rows.getInt("charges");
             owner=rows.getObject("owner_character",UUID.class); ownerUntil=rows.getLong("owner_until_ms");
             expiresAt=rows.getLong("expires_ms"); now=rows.getLong("now_ms");

@@ -609,9 +609,9 @@ operator creates `server-restarted` in the sync directory after the restart.
 3. **Not edited, for the loot/server lane: the public loot view never counts the owner window down.**
    `ownerRemainingMs` stayed at 60000 for the 90 s the drop sat there (`RegionGroundLoot` keeps the value read at
    publication); `ownerPlayerId` stays set. The claim itself uses database time and was correct (the race above).
-   A client cannot show when a drop becomes free.
+   A client cannot show when a drop becomes free. *Fixed in T4C-0307:* the public view now counts the window down from the monotonic time the figure was read and clears the owner when it ends (claims unchanged).
 4. **Not edited: simultaneous talk to one NPC** refused one player with the generic "conversation was refused" (the retry
-   worked). Probably single-flight on the NPC; the key does not say "busy".
+   worked). Probably single-flight on the NPC; the key does not say "busy". *Resolved in T4C-0307:* NPC talk is single-flight per character (a pending event or a revision change), not per NPC; `busy` and `revision` now map to `online.npc.busy`. The pickup race loser now gets `loot_taken` / `online.loot.taken` when the claim row shows another character took it.
 5. **Not edited: the pickup-race loser sees the generic refusal text** (`online.loot.refused`), not "someone else took it".
 6. After a server restart the lobby still holds the client 33 s (the 35 s lease hold is applied by the client whatever
    the cause). Safe, but a restart needs no hold; a UX point for the owner.

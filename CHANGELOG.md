@@ -6,6 +6,13 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-29 — Online loot countdown and clearer messages (T4C-0307)
+
+### Fixed
+- In online play, a monster drop reserved for the player who earned it now shows its remaining time counting down, and stops being reserved once that time is up, instead of staying frozen at a full minute.
+- In online play, if another player picks up an item a moment before you, you are now told that another player picked it up first, instead of a vague refusal.
+- In online play, if two players talk to the same person at the very same moment, the one who has to wait is told the person is busy and to try again, instead of a vague refusal.
+
 ## 2026-10-29 — Online greetings use your character's name (T4C-0306)
 
 ### Fixed

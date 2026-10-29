@@ -14,6 +14,8 @@ public final class OnlinePickupRules {
   /** Matches the offline OBJECT_MAX_INTERACTION_DISTANCE, in tiles (Chebyshev). */
   public static final double MAX_TILE_DISTANCE = 8d;
   private static final int STRENGTH_STAT_ID = 3;
+  /** Refusal code when another character already claimed the drop. Reveals that fact and nothing else. */
+  public static final String LOOT_TAKEN = "loot_taken";
 
   private OnlinePickupRules() {}
 

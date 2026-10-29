@@ -288,7 +288,7 @@ class PersistentSessionsTest {
       assertTrue(sessions.groundLootPublished(looterToken,second.id()),"The stale cache entry is still there until the database answers");
       await(sessions,refused);
       var failure=assertThrows(ExecutionException.class,refused::get);
-      assertEquals("loot_unavailable",((PreviewWorld.Rejected)failure.getCause()).getMessage());
+      assertEquals("loot_taken",((PreviewWorld.Rejected)failure.getCause()).getMessage());
       assertNotNull(region.world.position(looterToken),"A definite refusal never disconnects the actor");
       assertFalse(sessions.groundLootPublished(looterToken,second.id()),"A refusal that proves the cache stale removes the drop");
 

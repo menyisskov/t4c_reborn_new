@@ -180,7 +180,7 @@ diagnostic client's version must match.
   the ground row is public and the private inventory shows charges after pickup.
 - `POST /pickup` with body `REVISION EPOCH LOOT_UUID`, a cap of 96 bytes and the same parser rules
   as `/recover`. Responses: `200` with `{revision}` after commit. `409` with one of
-  `revision`, `busy`, `dead`, `loot_unavailable`, `loot_reserved`, `out_of_range`, `too_heavy`,
+  `revision`, `busy`, `dead`, `loot_unavailable`, `loot_taken` (another character claimed it), `loot_reserved`, `out_of_range`, `too_heavy`,
   `unsupported_item`. `429` for the rate limit. `503 busy` when the queue is full.
 - `OnlineCharacterView` needs no change. The new inventory instance arrives through the normal
   revision-advanced private refresh.

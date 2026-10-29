@@ -32,7 +32,11 @@ final class OnlineCommandRefusals {
         default -> "online.equip.refused";
       };
       case "/unequip" -> "item_not_equipped".equals(code) ? "online.unequip.not_equipped" : "online.equip.refused";
-      case "/interact" -> "npc_unavailable".equals(code) ? "online.npc.unavailable" : "online.npc.refused";
+      case "/interact" -> switch (code) {
+        case "npc_unavailable" -> "online.npc.unavailable";
+        case "busy", "revision" -> "online.npc.busy";
+        default -> "online.npc.refused";
+      };
       case "/shop-offers", "/shop-buy", "/shop-sell" -> shop(code);
       case "/cast" -> ability(code, true);
       case "/use" -> ability(code, false);
@@ -109,6 +113,7 @@ final class OnlineCommandRefusals {
     return switch (code) {
       case "loot_unavailable" -> "online.loot.unavailable";
       case "loot_reserved" -> "online.loot.reserved";
+      case "loot_taken" -> "online.loot.taken";
       case "out_of_range" -> "online.loot.out_of_range";
       case "too_heavy" -> "online.loot.too_heavy";
       case "unsupported_item" -> "online.loot.unsupported_item";

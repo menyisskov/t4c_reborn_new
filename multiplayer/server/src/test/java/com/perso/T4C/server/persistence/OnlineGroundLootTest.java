@@ -123,6 +123,9 @@ class OnlineGroundLootTest {
     assertThrows(OnlineStore.Conflict.class, () -> store.claimGroundLoot(fixture.ownerSession(),
         claimed.character().revision(), claimEvent, UUID.randomUUID(), fixture.world(), 10, 20, content),
         "a reused event for different loot conflicts");
+    var again = assertThrows(OnlineStore.Conflict.class, () -> store.claimGroundLoot(fixture.ownerSession(),
+        claimed.character().revision(), UUID.randomUUID(), fixture.drop().id(), fixture.world(), 10, 20, content));
+    assertEquals("loot_unavailable", again.getMessage(), "the claimant's own earlier claim is not 'taken by someone else'");
     assertEquals(claimed.character(), store.load(fixture.key().accountId(), owner.id()));
   }
 
@@ -179,7 +182,8 @@ class OnlineGroundLootTest {
       for (var attempt : attempts) outcomes.add(attempt.get());
     }
     assertEquals(1, outcomes.stream().filter("won"::equals).count(), "exactly one character wins: " + outcomes);
-    assertEquals(List.of("loot_unavailable"), outcomes.stream().filter(outcome -> !outcome.equals("won")).toList());
+    assertEquals(List.of("loot_taken"), outcomes.stream().filter(outcome -> !outcome.equals("won")).toList(),
+        "the loser is told another character took it");
     assertTrue(store.listGroundLoot(fixture.world(), WHOLE_REGION).isEmpty());
     int holders = 0;
     for (var character : List.of(first.character(), second.character())) {
