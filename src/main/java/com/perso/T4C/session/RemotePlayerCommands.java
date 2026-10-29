@@ -179,6 +179,33 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
     return send(() -> link.pickUp(loot), "online.loot.refused");
   }
 
+  /** Message shown when the server accepted the recovery (the belongings arrive with the next state). */
+  static final String RECOVERED_KEY = "online.recover.done";
+
+  @Override
+  public boolean recover(UUID corpse) {
+    if (corpse == null) return false;
+    try {
+      link.recover(corpse)
+          .whenComplete(
+              (result, failure) ->
+                  outcomes.add(
+                      failure != null || result == null
+                          ? Outcome.message("online.recover.refused", List.of())
+                          : Outcome.message(
+                              result.accepted() && result.messageKey() == null
+                                  ? RECOVERED_KEY
+                                  : result.messageKey(),
+                              result.args())));
+      return true;
+    } catch (IllegalStateException pendingOrOffline) {
+      outcomes.add(Outcome.message("online.recover.busy", List.of()));
+      return true;
+    } catch (IllegalArgumentException invalidIdentity) {
+      return false;
+    }
+  }
+
   @Override
   public boolean interact(String npc) {
     if (npc == null) return false;

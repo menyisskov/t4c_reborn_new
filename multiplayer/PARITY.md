@@ -61,6 +61,21 @@ re-measure before relying on a number.
   the server's step, other players have no name or health bar, and the screen must confirm the
   region to the connection before any input is sent (launcher step). Full table:
   `CLIENT_UNIFICATION_DESIGN.md` 3.13.
+  Progress (T4C-0321, potions and corpse on the real screen): the potion list now offers every
+  drink the offline game resolves into a plain health or mana restore (Light Healing, Healing,
+  Potion of Healing, Critical Healing and Potion of Mana). The server allowlist is computed from the
+  single-player spell definitions by the exporter, so no number is retyped; one unit leaves the
+  stack in the same commit, a full pool is refused as offline, and potions add no exhaustion, exactly
+  as `ItemUseService`. Potions whose spell is a buff, a cure or does not exist in the offline spell
+  data (Serious, Deific and Greater Healing, Mana Elixir) are refused online as they are offline
+  ("cannot use"). The live-run finding that 19 Healing Potions were not offered was the live-run
+  provisioner giving the stack zero charges (a server loot drop carries the item's one charge and
+  is offered; a zero-charge instance stays unusable, pinned by `OnlineAbilityChoicesTest`). The
+  screen also draws the character's own corpse where it fell, with the same "Corpse" name
+  single-player draws (single-player has no corpse sprite or key) and a click on it asks the server
+  to recover it; the server's range, weight and busy refusals are shown. Parity debt: individual
+  single-stack recovery from the screen (the offline game picks each dropped item one by one; the
+  screen recovers the whole corpse), and corpse contents are not scattered on the ground.
   Progress (T4C-0297, R4 live run): the first live rendered online run (real window, lobby, real
   game screen, own movement, a second connected player, Switch character back to the lobby with the
   rejoin hold) worked against a disposable server; images in `multiplayer/design/live-*.png`.

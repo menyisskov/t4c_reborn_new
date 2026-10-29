@@ -124,6 +124,54 @@ class OnlineAbilityChoicesTest {
     assertTrue(worn.isEmpty(), "An equipped instance is refused by the server");
   }
 
+  /** What the offline game does for a drink: the spell resolves and only restores health or mana. */
+  private static boolean offlineRestoreOnly(ItemDefinition item) {
+    if (item.getBodyPart() != null || item.getNbCharges() != 1 || item.isUnlimitedUse() || item.getSpells().isEmpty())
+      return false;
+    return item.getSpells().stream().allMatch(itemSpell -> {
+      var spell = com.perso.T4C.spell.SpellRegistry.findById(itemSpell.getSpellId());
+      var effects = spell == null ? null : spell.getT4cEffects();
+      return effects != null && !effects.isEmpty() && effects.stream().allMatch(effect -> effect.getEffectType() == 1
+          || (effect.getEffectType() == 2 && effect.getParameters().stream()
+              .anyMatch(param -> param.getParamId() == 2 && "MANA".equalsIgnoreCase(param.getExpression()))));
+    });
+  }
+
+  @Test
+  void everyOfflineRestorePotionIsOfferedAndNothingElseIs() {
+    var inventory = new ArrayList<Item>();
+    var expected = new java.util.TreeSet<String>();
+    for (var definition : ItemRegistry.allByKey().values()) {
+      if (definition.getBodyPart() != null || definition.getSpells().isEmpty()) continue;
+      var key = inventoryKey(definition);
+      inventory.add(new Item(UUID.randomUUID(), key, 2, 1));
+      if (offlineRestoreOnly(definition)) expected.add(key);
+    }
+    assertTrue(expected.containsAll(List.of("item.light_healing_potion", "item.healing_potion",
+        "item.potion_of_healing", "item.critical_healing_potion", "item.potion_of_mana")), expected.toString());
+    var offered = new java.util.TreeSet<String>();
+    OnlineAbilityChoices.usablePotions(progress(Set.of(), inventory, Map.of()), ALLOWLIST)
+        .forEach(row -> offered.add(row.itemKey()));
+    assertEquals(expected, offered);
+    // The bundled client copy is what the screen really reads; it must agree with the exporter.
+    var bundled = new java.util.TreeSet<String>();
+    OnlineAbilityChoices.usablePotions(progress(Set.of(), inventory, Map.of()), OnlineSpellAllowlist.bundled())
+        .forEach(row -> bundled.add(row.itemKey()));
+    assertEquals(expected, bundled);
+  }
+
+  @Test
+  void aDroppedPotionStackIsOfferedWithTheChargeTheServerGivesDrops() {
+    // The server's loot draft gives a one-charge consumable one charge (OnlineLootDrafts.charges), so
+    // a Skeleton's Healing Potion is offered; an instance provisioned with zero charges is not usable.
+    var dropped = new Item(UUID.randomUUID(), "item.healing_potion", 19, 1);
+    var zeroCharge = new Item(UUID.randomUUID(), "item.healing_potion", 19, 0);
+    assertEquals(1, OnlineAbilityChoices.usablePotions(progress(Set.of(), List.of(dropped), Map.of()),
+        OnlineSpellAllowlist.bundled()).size());
+    assertTrue(OnlineAbilityChoices.usablePotions(progress(Set.of(), List.of(zeroCharge), Map.of()),
+        OnlineSpellAllowlist.bundled()).isEmpty());
+  }
+
   @Test
   void gearIsNotAPotion() {
     var gear = ItemRegistry.allByKey().values().stream().filter(i -> i.getBodyPart() != null).findFirst().orElseThrow();

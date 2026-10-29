@@ -731,6 +731,57 @@ class PreviewServerTest {
     }
   }
 
+  /** T4C-0319: every plain restore potion the offline game lets a player drink works over HTTP, one item per drink. */
+  @Test @EnabledIfEnvironmentVariable(named="T4C_DB_URL",matches=".+")
+  void restorePotionsHealAndRestoreManaConsumeOneAndRefuseAtFullOverHttp() throws Exception {
+    var store=OnlineStore.fromEnvironment(); store.migrate();
+    var owner=store.provisionAccount();
+    var base=OnlineCharacterCreator.prepare(com.perso.T4C.helper.CharacterClass.WARRIOR,"male",false,new java.util.Random(7)).progress();
+    var healing=new com.perso.T4C.online.model.CharacterProgress.Item(java.util.UUID.randomUUID(),"item.healing_potion",3,1);
+    var mana=new com.perso.T4C.online.model.CharacterProgress.Item(java.util.UUID.randomUUID(),"item.potion_of_mana",2,1);
+    var buff=new com.perso.T4C.online.model.CharacterProgress.Item(java.util.UUID.randomUUID(),"item.potion_of_fortitude",1,1);
+    var hurt=ProgressEdits.withInventory(ProgressEdits.withVitals(base,
+        new com.perso.T4C.online.model.CharacterProgress.Vitals(10,500,5,100)),
+        java.util.stream.Stream.concat(base.inventory().stream(),java.util.stream.Stream.of(healing,mana,buff)).toList());
+    var drinker=store.create(owner.accountId(),"HTTP drinker",0,30.5,30.5,hurt,0);
+    var fullOwner=store.provisionAccount();
+    var spare=new com.perso.T4C.online.model.CharacterProgress.Item(java.util.UUID.randomUUID(),"item.potion_of_mana",1,1);
+    var fullMana=ProgressEdits.withInventory(ProgressEdits.withVitals(base,
+        new com.perso.T4C.online.model.CharacterProgress.Vitals(500,500,100,100)),
+        java.util.stream.Stream.concat(base.inventory().stream(),java.util.stream.Stream.of(spare)).toList());
+    var topped=store.create(fullOwner.accountId(),"HTTP topped",0,30.5,30.5,fullMana,0);
+    String current=Integer.toString(com.perso.T4C.online.model.OnlineProtocol.VERSION);
+    try (var server=new PreviewServer(new PreviewMap(new boolean[60][80],0,0,30,30),0,store); var client=HttpClient.newHttpClient()) {
+      server.start(); String url=server.url();
+      String token=login(client,url,owner,drinker.id());
+      long revision=object(client.send(request(url,"/character",token,null),HttpResponse.BodyHandlers.ofString())).get("revision").getAsLong();
+      // Healing Potion: its authored 50 points, exactly one unit of the stack, no exhaustion afterwards.
+      var drunk=client.send(abilityRequest(url,"/use",token,current,revision+" 0 "+healing.id()),HttpResponse.BodyHandlers.ofString());
+      assertEquals(200,drunk.statusCode(),drunk.body());
+      assertEquals(50,object(drunk).get("healthGained").getAsInt());
+      var afterHeal=store.load(owner.accountId(),drinker.id());
+      assertEquals(2,afterHeal.progress().inventory().stream().filter(i->i.id().equals(healing.id())).findFirst().orElseThrow().quantity());
+      assertTrue(afterHeal.progress().vitals().hp()>=60);
+      // Potion of Mana: the authored 25 mana, one unit, straight after the heal (potions carry no exhaustion).
+      var restored=client.send(abilityRequest(url,"/use",token,current,afterHeal.revision()+" 0 "+mana.id()),HttpResponse.BodyHandlers.ofString());
+      assertEquals(200,restored.statusCode(),restored.body());
+      assertEquals(25,object(restored).get("manaGained").getAsInt());
+      var afterMana=store.load(owner.accountId(),drinker.id());
+      assertEquals(1,afterMana.progress().inventory().stream().filter(i->i.id().equals(mana.id())).findFirst().orElseThrow().quantity());
+      assertTrue(afterMana.progress().vitals().mana()>=30);
+      // A buff potion has no server-side rule: refused with a definite code, nothing consumed.
+      var refusedBuff=client.send(abilityRequest(url,"/use",token,current,afterMana.revision()+" 0 "+buff.id()),HttpResponse.BodyHandlers.ofString());
+      assertEquals(409,refusedBuff.statusCode()); assertTrue(refusedBuff.body().contains("unsupported_item")||refusedBuff.body().contains("no_effect"),refusedBuff.body());
+      assertEquals(1,store.load(owner.accountId(),drinker.id()).progress().inventory().stream().filter(i->i.id().equals(buff.id())).findFirst().orElseThrow().quantity());
+      // A full mana pool: the potion is refused as offline and keeps its unit.
+      String toppedToken=login(client,url,fullOwner,topped.id());
+      long toppedRevision=object(client.send(request(url,"/character",toppedToken,null),HttpResponse.BodyHandlers.ofString())).get("revision").getAsLong();
+      var refusedFull=client.send(abilityRequest(url,"/use",toppedToken,current,toppedRevision+" 0 "+spare.id()),HttpResponse.BodyHandlers.ofString());
+      assertEquals(409,refusedFull.statusCode()); assertTrue(refusedFull.body().contains("no_mana_needed"),refusedFull.body());
+      assertEquals(1,store.load(fullOwner.accountId(),topped.id()).progress().inventory().stream().filter(i->i.id().equals(spare.id())).findFirst().orElseThrow().quantity());
+    }
+  }
+
   /** A character that died at the map centre: its droppable items wait on a corpse right beside it. */
   private record Corpse(OnlineStore.CharacterState dead,java.util.UUID id,java.util.List<com.perso.T4C.online.model.CharacterProgress.Item> items) {}
 

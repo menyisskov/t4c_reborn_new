@@ -12,6 +12,15 @@ commit links, and finer-grained notes.
 - In online play, putting on or taking off gear could answer "The equipment change was refused." when the game had just saved your character, so the same click had to be repeated. The game now tries once more by itself, and only says "Your character is busy. Try again in a moment." if the second try is refused as well.
 - In online play, roughly one attack click in five was answered with "Your character is busy" in the chat even though nothing was wrong. The attack is now tried once more silently before that message appears.
 
+## 2026-10-30 — Potion of Mana works online and your corpse can be recovered from the screen (T4C-0321)
+
+### Added
+- In online play the Potion of Mana can now be drunk from the potion list, restoring its mana exactly as it does offline. It is refused when your mana is already full, and only one potion is used up each time.
+- If you die online, a "Corpse" marker now appears where you fell, the same way it does in single-player. Click it to gather your belongings; if you are too far away, too heavy or the corpse is gone, the game tells you why.
+
+### Changed
+- The online potion list now offers every potion that restores health or mana, the same ones you can drink offline; potions that give other effects are still refused with a clear message.
+
 ## 2026-10-30 — Authored monster heal persists online (T4C-0319)
 
 ### Fixed

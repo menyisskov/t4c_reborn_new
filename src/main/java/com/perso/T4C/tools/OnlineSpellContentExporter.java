@@ -13,7 +13,7 @@ import java.util.TreeMap;
 
 /**
  * Build-time bridge that exports only the spells the online server may run or grant: the castable
- * self heal, grant-only quest spells, and plain-heal spells carried by consumable items.
+ * self heal, grant-only quest spells, and plain health or mana restore spells carried by consumable items.
  */
 public final class OnlineSpellContentExporter {
   static final String HEAL_LIGHT = "spell.heal_light";
@@ -33,7 +33,7 @@ public final class OnlineSpellContentExporter {
       for (var itemSpell : item.getSpells()) {
         // Unresolved or non-heal consumable spells are out of online scope and fail closed by omission.
         var spell = SpellRegistry.findById(itemSpell.getSpellId());
-        if (spell != null && isPlainHeal(spell)) spells.putIfAbsent(spell.getKey(), export(spell, SpellContent.Use.ITEM));
+        if (spell != null && isPlainRestore(spell)) spells.putIfAbsent(spell.getKey(), export(spell, SpellContent.Use.ITEM));
       }
     }
     return new SpellContent(SpellContent.VERSION, spells);
@@ -45,10 +45,20 @@ public final class OnlineSpellContentExporter {
     return spell;
   }
 
-  private static boolean isPlainHeal(SpellData spell) {
+  /**
+   * A health restore (effect 1) or a mana restore (effect 2 on MANA), the only consumable effects the
+   * shared rules resolve server-side. Buffs, cures and teleports stay out and are refused online.
+   */
+  private static boolean isPlainRestore(SpellData spell) {
     var effects = spell.getT4cEffects();
     return effects != null && !effects.isEmpty()
-        && effects.stream().allMatch(effect -> effect != null && effect.getEffectType() == 1);
+        && effects.stream().allMatch(effect -> effect != null
+            && (effect.getEffectType() == 1 || (effect.getEffectType() == 2 && restoresMana(effect))));
+  }
+
+  private static boolean restoresMana(SpellData.T4cEffect effect) {
+    return effect.getParameters().stream()
+        .anyMatch(param -> param.getParamId() == 2 && "MANA".equalsIgnoreCase(param.getExpression()));
   }
 
   static SpellContent.Spell export(SpellData spell, SpellContent.Use use) {

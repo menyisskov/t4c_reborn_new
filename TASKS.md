@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0321`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0322`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -19,6 +19,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
 | T4C-0318 | Live two-window rendered evidence on current main: NPC topic panel accepting the quest, equipment seen by the other window (name and outline), claim races inside and after the owner window with a weight refusal and the taken-by-another message, a corpse recovery after a death, portal trips watched from both windows (Lighthaven door, skeleton cave), and a 39-minute mixed session (19 minutes of timed fight, idle and loot); driver and provisioning scenes extended. Defect fixed: an equipment change or an attack refused as busy (a checkpoint had just moved the revision) is now tried once more instead of failing with a generic text | Multiplayer / M2-M3-M5 evidence | Done (PR open) | this PR | [CHANGELOG.md](CHANGELOG.md#2026-10-30--equipping-and-attacking-retry-when-the-game-is-busy-online-t4c-0318) |
+| T4C-0321 | Online: every restore potion is usable (Potion of Mana added) and the character's own corpse is drawn and recoverable on the real screen | Multiplayer / M2 | In Progress (PR open; not merged) | branch worktree-agent-a8a1bbccd184866ed | [CHANGELOG.md](CHANGELOG.md#2026-10-30--potion-of-mana-works-online-and-your-corpse-can-be-recovered-from-the-screen-t4c-0321) |
 | T4C-0319 | Persist authored monster self-healing spell behavior online | Multiplayer / M4 | Done (PR pending) | 3a46ba5 | [CHANGELOG.md](CHANGELOG.md#2026-10-30--authored-monster-heal-persists-online-t4c-0319) |
 | T4C-0320 | Honor authored ranged attacks during online monster pursuit and hostile-clan combat | Multiplayer / M4 | In Progress (local tests pass; PR pending) | pending | [CHANGELOG.md](CHANGELOG.md#2026-10-30--online-monsters-use-authored-attack-ranges-t4c-0320) |
 | T4C-0317 | Preserve authored monster spell attacks in persistent hostile clan combat | Multiplayer / M4 | Done (PR #278; local validation) | PR #278, backend persistence test 1/1 | [CHANGELOG.md](CHANGELOG.md#2026-10-30--monster-clan-fights-use-authored-damage-spells-online-t4c-0317) |

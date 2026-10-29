@@ -38,6 +38,18 @@ class SpellCatalogTest {
     assertThrows(IOException.class, () -> SpellCatalog.read(bytes(json.toString())));
   }
 
+  @Test void manaPotionIsAConsumableButOnlyAsAManaRestore() throws Exception {
+    var catalog = SpellCatalog.loadBundled();
+    assertEquals(SpellContent.Use.ITEM, catalog.require("spell.item_potion_of_mana").use());
+    assertThrows(IllegalArgumentException.class, () -> catalog.castable("spell.item_potion_of_mana"));
+    // The same effect type aimed at any other attribute is a buff the server cannot run.
+    var json = new Gson().fromJson(bundledJson(), JsonObject.class);
+    var params = json.getAsJsonObject("spells").getAsJsonObject("spell.item_potion_of_mana")
+        .getAsJsonArray("effects").get(0).getAsJsonObject().getAsJsonArray("params");
+    params.get(1).getAsJsonObject().addProperty("expression", "Strength");
+    assertThrows(IOException.class, () -> SpellCatalog.read(bytes(json.toString())));
+  }
+
   private static String bundledJson() throws IOException {
     try (var input = SpellCatalog.class.getResourceAsStream("/content/spells-v1.json")) {
       assertNotNull(input, "Missing bundled spell content");

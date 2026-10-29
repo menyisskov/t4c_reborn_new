@@ -70,6 +70,9 @@ public final class RemoteWorldDriver implements WorldDriver {
   private Long lastTick;
   private OnlineRegion lastRegion;
   private RemoteIntents intents;
+  /** The corpse list last drawn (identity), so an unchanged view costs nothing per frame. */
+  private List<OnlineConnection.Corpse> lastCorpses;
+  private OnlineConnection.MapInfo lastCorpseMap;
 
   private record NpcEntry(BaseNPC npc, String appearance) {}
 
@@ -110,6 +113,7 @@ public final class RemoteWorldDriver implements WorldDriver {
     if (view != null && view.snapshot() != null && view.map() != null) {
       apply(view);
     }
+    applyCorpses(view);
     return new WorldEntities(monsterRegistry, npcRegistry);
   }
 
@@ -131,6 +135,7 @@ public final class RemoteWorldDriver implements WorldDriver {
         apply(view);
       }
     }
+    applyCorpses(view);
     advance(tick.delta());
   }
 
@@ -183,6 +188,9 @@ public final class RemoteWorldDriver implements WorldDriver {
             return id != null && intents.pickUp(id);
           });
     }
+    if (ground != null) {
+      ground.setRemoteRecover(id -> id != null && intents.recover(id));
+    }
     if (npcRegistry != null) {
       npcRegistry.setRemoteInteract(
           npc -> {
@@ -208,7 +216,10 @@ public final class RemoteWorldDriver implements WorldDriver {
     }
     if (ground != null) {
       for (GroundItem item : loot.values()) ground.removeRemoteItem(item);
+      ground.setRemoteCorpses(List.of());
     }
+    lastCorpses = null;
+    lastCorpseMap = null;
     monsters.clear();
     npcs.clear();
     loot.clear();
@@ -325,6 +336,35 @@ public final class RemoteWorldDriver implements WorldDriver {
       log.warn("Could not build online NPC {}", view.id(), failure);
       return null;
     }
+  }
+
+  /**
+   * The character's own corpses in the region it stands in, drawn where it fell. The connection
+   * lists only this character's corpses; positions are absolute tiles like the legacy client's
+   * recovery marker, and the pixel anchor is the player's (tile centre minus half a tile).
+   */
+  private void applyCorpses(OnlineConnection.View view) {
+    if (ground == null) return;
+    List<OnlineConnection.Corpse> corpses = view == null ? null : view.corpses();
+    OnlineConnection.MapInfo map = view == null ? null : view.map();
+    if (corpses == lastCorpses && map == lastCorpseMap) return;
+    lastCorpses = corpses;
+    lastCorpseMap = map;
+    if (corpses == null || map == null) {
+      ground.setRemoteCorpses(List.of());
+      return;
+    }
+    List<GroundItemManager.RemoteCorpse> drawn = new ArrayList<>();
+    for (OnlineConnection.Corpse corpse : corpses) {
+      if (corpse.world() != map.world()) continue;
+      drawn.add(
+          new GroundItemManager.RemoteCorpse(
+              corpse.id(),
+              (float) (corpse.x() - 0.5) * GRID_W,
+              (float) (corpse.y() - 0.5) * GRID_H,
+              corpse.itemCount() > 0 || corpse.gold() > 0));
+    }
+    ground.setRemoteCorpses(drawn);
   }
 
   private void applyLoot(List<GroundLootView> views, int originX, int originY) {

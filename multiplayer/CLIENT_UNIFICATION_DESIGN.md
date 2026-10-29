@@ -746,12 +746,17 @@ prints `skeletonGround=`); `-Dbeta.scale`, `-Dbeta.from=ground|death` and `-Dbet
    routine swing-cooldown refusal stays silent as before.
 3. **Gap: the screen draws nothing for the owner window** (only the refusal text when someone else clicks); the countdown that
    T4C-0307 made correct is visible in the connection's view only.
-4. **Gap, M2: the screen has no corpse.** A server corpse is neither drawn nor offered for recovery (the view lists it; the legacy
-   text client has a `recover` command). The recovery above went through the connection. A player cannot recover items in the
-   rendered client today.
-5. **Gap: the Healing Potion is not usable online.** With 19 in the bag the `U` list said "You carry nothing you can use online"
-   (only the Light Healing Potion is offered, as with the Potion of Mana in 3.16), so the Skeleton's own Healing Potion drop cannot be
-   used; the level-30 characters came within 2 and 9 hit points of dying on the known lethal ground (T4C-0248).
+4. **Gap, M2: the screen has no corpse. Fixed in T4C-0321 (not re-run live).** At the time of the run a server corpse was neither
+   drawn nor offered for recovery (the view lists it; the legacy text client has a `recover` command), so the recovery above went
+   through the connection. The screen now draws the single-player corpse marker (the name "Corpse" where the character fell;
+   single-player has no corpse sprite or key) from the connection's own corpse list, and a click on it sends `/recover` and shows the
+   server's refusal texts. Still open: individual single-stack recovery from the screen.
+5. **Not a game gap: the Healing Potion list was empty because the provisioner gave the stack zero charges.** With 19 in the bag the
+   `U` list said "You carry nothing you can use online". `LiveRunProvision beta` created that stack with zero charges, which the
+   server refuses by design (single-charge consumables only); a real Skeleton drop carries the item's one charge and is offered
+   (pinned by `OnlineAbilityChoicesTest`). The Healing Potion spell was already allowlisted. The genuine gap was the Potion of Mana
+   (3.16), fixed in T4C-0321: the allowlist now admits every offline consumable that only restores health or mana. The level-30
+   characters came within 2 and 9 hit points of dying on the known lethal ground (T4C-0248).
 6. **Driver, not game:** the route search oscillated (A, S, A, S) for minutes at the temple respawn tile in three runs while the
    keys alone moved freely in all four directions (`mortal` diagnostic scene); the script now walks south out of the room first.
    Whether a human can get stuck there was not established. The earlier diagonal walk into the Lighthaven exit door corner is also

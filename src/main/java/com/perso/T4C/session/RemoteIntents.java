@@ -14,6 +14,11 @@ public interface RemoteIntents {
 
   boolean interact(String npc);
 
+  /** Asks the server to recover the player's own corpse; the server decides range and contents. */
+  default boolean recover(UUID corpse) {
+    return false;
+  }
+
   /** Asks the NPC about one authored topic (the server validates it); the quest offer is topic 0. */
   default boolean interact(String npc, int topic) {
     return false;

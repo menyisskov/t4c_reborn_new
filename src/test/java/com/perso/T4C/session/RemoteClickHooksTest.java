@@ -169,6 +169,29 @@ class RemoteClickHooksTest {
   }
 
   @Test
+  void aRemoteCorpseNeedsItsHookAndAnEmptiedOneIsNotClickable() {
+    GroundItemManager ground = new GroundItemManager();
+    java.util.UUID id = java.util.UUID.randomUUID();
+    ground.setRemoteCorpses(List.of(new GroundItemManager.RemoteCorpse(id, 200f, 300f, true)));
+    Player player = new Player();
+    assertEquals(
+        GroundItemManager.PickupStatus.NONE,
+        ground.pickUpAt(200f, 300f, player, 0, 3).status,
+        "no hook: single-player behaviour, nothing happens");
+    List<java.util.UUID> asked = new ArrayList<>();
+    ground.setRemoteRecover(
+        corpse -> {
+          asked.add(corpse);
+          return true;
+        });
+    assertEquals(GroundItemManager.PickupStatus.REQUESTED, ground.pickUpAt(210f, 310f, player, 99, 3).status);
+    assertEquals(List.of(id), asked);
+    assertEquals(GroundItemManager.PickupStatus.NONE, ground.pickUpAt(400f, 300f, player, 0, 3).status);
+    ground.setRemoteCorpses(List.of(new GroundItemManager.RemoteCorpse(id, 200f, 300f, false)));
+    assertEquals(GroundItemManager.PickupStatus.NONE, ground.pickUpAt(200f, 300f, player, 0, 3).status);
+  }
+
+  @Test
   void singlePlayerKeepsPickingTheFirstNpcWhenBoxesOverlap() {
     NPCManager manager = new NPCManager(null);
     BaseNPC first = samaritan(manager);

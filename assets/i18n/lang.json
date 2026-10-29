@@ -64,6 +64,7 @@
   "online.recover.dead": "You cannot recover a corpse while you are dead.",
   "online.recover.busy": "The server is busy. Try recovering again.",
   "online.recover.refused": "The recovery was refused. The corpse may have changed.",
+  "online.recover.done": "You gather your belongings from your corpse.",
   "online.client.progress": "HP %d / %d | Mana %d / %d | Level %d | Total XP %d | Gold %d",
   "online.client.corpse": "Owned corpse: %d px away | Items %d | Gold %d | E: recover nearby",
   "online.client.target_health": "Target HP %d / %d",
