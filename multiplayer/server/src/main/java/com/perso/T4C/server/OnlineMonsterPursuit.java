@@ -262,10 +262,10 @@ final class OnlineMonsterPursuit {
       patrolPause=MONSTER_PATROL_PAUSE_MIN+patrolRandom.nextDouble()*(MONSTER_PATROL_PAUSE_MAX-MONSTER_PATROL_PAUSE_MIN);
       clearNavigation();return decision(false,false,false);
     }
-    // An in-range physical actor waits for cooldown; the old two-tile preview guard is not used.
-    if (followed != null && inPhysicalReach(followed) && map.allowsCombat(x, y, goalX, goalY, false))
+    // An in-range actor waits for its authored cooldown rather than closing to melee distance.
+    if (followed != null && inAttackRange(followed) && map.allowsCombat(x, y, goalX, goalY, false))
       return decision(false, false, false);
-    if (clanFollowed!=null && inPhysicalReach(clanFollowed)
+    if (clanFollowed!=null && inAttackRange(clanFollowed)
         && map.hasLineOfSight(x,y,goalX,goalY)) return decision(false,false,false);
     if(retryDelay>0) retryDelay=Math.max(0,retryDelay-seconds);
     boolean needsReplan = navigationGoalChanged(goalX, goalY) || pathFailed;
@@ -329,25 +329,29 @@ final class OnlineMonsterPursuit {
         && region.equals(view.region()) && map.canStand(view.x(), view.y());
   }
 
-  private boolean inPhysicalReach(TargetView view) {
-    float pixels = (float) distance(view.x(), view.y());
-    return MonsterPursuitRules.withinAttackReach(pixels, definition.getAttacks())
-        && MonsterPursuitRules.tileRange(pixels) < 2;
+  private boolean inAttackRange(TargetView view) {
+    return inAttackRange((float) distance(view.x(), view.y()));
   }
 
-  private boolean inPhysicalReach(ClanView view) {
-    float pixels=(float)distance(view.x(),view.y());
-    return MonsterPursuitRules.withinAttackReach(pixels,definition.getAttacks())
-        && MonsterPursuitRules.tileRange(pixels)<2;
+  private boolean inAttackRange(ClanView view) {
+    return inAttackRange((float) distance(view.x(),view.y()));
+  }
+
+  private boolean inAttackRange(float pixels) {
+    var attacks=definition.getAttacks();
+    int tiles=MonsterPursuitRules.tileRange(pixels);
+    if(attacks==null || attacks.isEmpty()) return tiles<2;
+    return MonsterPursuitRules.withinAttackReach(pixels,attacks)
+        && attacks.stream().anyMatch(attack -> attack!=null && attack.isInRange(tiles));
   }
 
   private boolean attackAllowed(TargetView view) {
-    return definition.isCanAttack() && inPhysicalReach(view)
+    return definition.isCanAttack() && inAttackRange(view)
         && map.allowsCombat(x, y, view.x(), view.y(), false);
   }
 
   private boolean attackAllowed(ClanView view) {
-    return canClanAttack && inPhysicalReach(view)
+    return canClanAttack && inAttackRange(view)
         && map.hasLineOfSight(x,y,view.x(),view.y());
   }
 
