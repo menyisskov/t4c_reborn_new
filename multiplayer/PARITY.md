@@ -28,7 +28,7 @@ re-measure before relying on a number.
 
 - [ ] **Client unification.** The online client runs the real single-player screens against a
   remote backend (intents out, server snapshots in) instead of growing a second GUI.
-  Progress (T4C-0286, remote session R1, headless and unwired): `RemoteGameSession` builds the
+  Progress (T4C-0287, remote session R1, headless and unwired): `RemoteGameSession` builds the
   real `Player` from the server's committed character through `ProgressMirror` and the existing
   `PlayerStateMapper`, marks it remote and saves nothing. Parity debt it records (single-player
   defaults are used, nothing invented): character class (the `Player` has no class field),

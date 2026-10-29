@@ -376,7 +376,7 @@ speed (the server holds no player speed state), the stun/exhausted/attacking gat
 tiles beyond hosted portal sources, the wall-foot difference between `PreviewMap.load` (applies it)
 and `RegionMapLoader` (does not), and client-side prediction on top of the now shared rule.
 
-### 3.11 Remote session, step R1: the character (T4C-0286)
+### 3.11 Remote session, step R1: the character (T4C-0287)
 
 `RemoteGameSession` (kind `REMOTE`, headless, not wired to any screen) exists with
 `RemoteCharacterSource`, a persistence that writes nothing, and placeholders for the world driver
