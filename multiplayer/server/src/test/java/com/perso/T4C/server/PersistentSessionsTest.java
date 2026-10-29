@@ -25,6 +25,33 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 /** Consequential join between the tick-owned state and the real PostgreSQL transaction queue. */
 @EnabledIfEnvironmentVariable(named="T4C_DB_URL", matches=".+")
 class PersistentSessionsTest {
+  @Test void expiredNonMaxHpBuffIsPersistedBeforeTheFirstRegenTick() throws Exception {
+    var store=OnlineStore.fromEnvironment(); store.migrate(); var key=store.provisionAccount();
+    long joinedAt=1_000_000L; var now=new java.util.concurrent.atomic.AtomicLong(joinedAt);
+    var prepared=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(31));
+    var p=prepared.progress();
+    var buff=new CharacterProgress.Buff("spell.temporary_endurance",joinedAt+1_000,0,0,Map.of("end",80),joinedAt);
+    var withBuff=new CharacterProgress(Math.max(2,p.version()),p.characterClass(),p.gender(),p.attributes(),p.vitals(),
+        p.advancement(),p.inventory(),p.equipment(),p.skills(),p.spells(),p.questFlags(),p.storage(),p.storageGold(),
+        p.respawn(),List.of(buff),Map.of(OnlineRegeneration.ANCHOR,joinedAt),p.hiddenUntil(),p.companion());
+    var created=store.create(key.accountId(),"Expired buff checkpoint",0,3.5,3.5,withBuff,prepared.gold());
+    var map=new PreviewMap(new boolean[8][8],0,0,3,3);
+    var sessions=new PersistentSessions(store,map,new PreviewWorld(map)); sessions.wallClock=now::get;
+    try {
+      String token=sessions.join(store.acquire(key.secret(),created.id()),System.nanoTime()).token();
+      now.set(joinedAt+1_000); // Expiry occurs before the first two-second regeneration tick.
+      assertTrue(sessions.character(token).progress().buffs().isEmpty());
+      var closed=sessions.leave(token); await(sessions,closed); closed.get();
+      assertTrue(store.load(key.accountId(),created.id()).progress().buffs().isEmpty(),
+          "An idle/full checkpoint must not discard the expired-buff update");
+
+      String rejoined=sessions.join(store.acquire(key.secret(),created.id()),System.nanoTime()).token();
+      assertTrue(sessions.character(rejoined).progress().buffs().isEmpty(),
+          "A later join must not shift or resurrect an already expired buff");
+      var reclosed=sessions.leave(rejoined); await(sessions,reclosed); reclosed.get();
+    } finally { sessions.shutdown(); }
+  }
+
   @Test void blockedCorpseLookupsCannotStarveTwentyCharacterWrites() throws Exception {
     var pause=new AtomicBoolean();var entered=new CountDownLatch(2);var release=new CountDownLatch(1);
     var store=new OnlineStore(() -> {

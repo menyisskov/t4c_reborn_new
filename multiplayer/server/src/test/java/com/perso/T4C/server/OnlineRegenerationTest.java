@@ -99,6 +99,41 @@ class OnlineRegenerationTest {
     assertEquals(3, afterTick.vitals().hp(), "Combined skill buff and equipped boost double the one point base regen");
   }
 
+  @Test void buffExpiryChangesLaterTicksAndClampsHealthBeforeRegeneration() {
+    var base = progress(new CharacterProgress.Vitals(150, 200, 1, 50), T0);
+    var p = withBuffs(base, List.of(
+        new CharacterProgress.Buff("spell.endurance", T0 + 2L * OnlineRegeneration.TICK_MILLIS,
+            0, 0, Map.of("end", 160, "maxHp", 100), T0),
+        new CharacterProgress.Buff("spell.mana", T0 + 3 * OnlineRegeneration.TICK_MILLIS,
+            0, 0, Map.of("int", 160, "wis", 160), T0)));
+    var settled = OnlineRegeneration.settle(p, T0 + 3 * OnlineRegeneration.TICK_MILLIS,
+        new Random(17) {
+          @Override public int nextInt(int origin, int bound) { return origin; }
+        }, NONE);
+    assertEquals(100, settled.vitals().maxHp());
+    assertEquals(100, settled.vitals().hp(), "Expiry clamps health to the base maximum before the final natural tick");
+    assertEquals(8, settled.vitals().mana(), "Mana ticks only receive the buff while it remains active");
+    assertTrue(settled.buffs().isEmpty());
+  }
+
+  @Test void expiredMaxHpBuffIsRemovedBeforeTheFirstRegenTick() {
+    var base = progress(new CharacterProgress.Vitals(80, 200, 1, 50), T0);
+    var p = withBuffs(base, List.of(new CharacterProgress.Buff("spell.max_health",
+        T0 + OnlineRegeneration.TICK_MILLIS / 2, 0, 0, Map.of("maxHp", 100), T0)));
+    var settled = OnlineRegeneration.settle(p, T0 + OnlineRegeneration.TICK_MILLIS / 2,
+        new Random(18), NONE);
+    assertEquals(80, settled.vitals().hp());
+    assertEquals(100, settled.vitals().maxHp());
+    assertTrue(settled.buffs().isEmpty());
+    assertEquals(T0, settled.cooldowns().get(OnlineRegeneration.ANCHOR));
+  }
+
+  private static CharacterProgress withBuffs(CharacterProgress p, List<CharacterProgress.Buff> buffs) {
+    return new CharacterProgress(p.version(), p.characterClass(), p.gender(), p.attributes(), p.vitals(),
+        p.advancement(), p.inventory(), p.equipment(), p.skills(), p.spells(), p.questFlags(), p.storage(),
+        p.storageGold(), p.respawn(), buffs, p.cooldowns(), p.hiddenUntil(), p.companion());
+  }
+
   private static CharacterProgress progress(CharacterProgress.Vitals vitals, long anchor) {
     var base = OnlineCharacterCreator.prepare(CharacterClass.WARRIOR, "male", false, new Random(3)).progress();
     Map<String, Long> cooldowns = anchor < 0 ? Map.of() : Map.of(OnlineRegeneration.ANCHOR, anchor);

@@ -152,7 +152,7 @@ final class PersistentSessions {
     if(progress==null) return;
     long now=wallClock.getAsLong();
     // Logged-out time never runs a buff down (shifted at join); expired buffs give their maximum health back.
-    var effects=OnlineBuffs.expire(OnlineBuffs.shiftForJoin(progress,binding.joinedAt),now);
+    var effects=OnlineBuffs.shiftForJoin(progress,binding.joinedAt);
     boolean effectsChanged=effects!=progress;
     var base=effects.cooldowns().getOrDefault(OnlineRegeneration.ANCHOR,-1L)<binding.joinedAt
         ? OnlineRegeneration.reanchor(effects,binding.joinedAt) : effects;
@@ -161,6 +161,7 @@ final class PersistentSessions {
       settled=hosted.items==null ? OnlineRegeneration.settle(base,now,ThreadLocalRandom.current(),Map.of())
           : OnlineRegeneration.settle(base,now,ThreadLocalRandom.current(),hosted.items);
     } catch (IllegalArgumentException unknownEquipment) { return; }
+    effectsChanged|=!settled.buffs().equals(progress.buffs());
     var vitals=settled.vitals();
     boolean changed=!vitals.equals(progress.vitals());
     boolean idle=vitals.hp()==0 || (vitals.hp()==vitals.maxHp() && vitals.mana()==vitals.maxMana());
