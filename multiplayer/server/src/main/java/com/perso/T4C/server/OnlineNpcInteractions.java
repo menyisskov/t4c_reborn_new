@@ -91,6 +91,26 @@ public final class OnlineNpcInteractions {
       throw new IllegalArgumentException("NPC is not reachable");
   }
 
+  /** Generic authored vendors have no script entry; their anchor comes from the hosted view. */
+  void requireShopkeeperReachable(OnlineStore.CharacterState saved,int world,double x,double y,String npcId,
+      int npcWorld,double npcX,double npcY,boolean hasLineOfSight) {
+    if(!shopkeepers.test(npcId)) throw new IllegalArgumentException("NPC interaction unavailable");
+    var progress=Objects.requireNonNull(saved.progress());
+    double dx=x-npcX,dy=y-npcY;
+    if(progress.vitals().hp()<=0 || world!=npcWorld || !Double.isFinite(x) || !Double.isFinite(y)
+        || !Double.isFinite(npcX) || !Double.isFinite(npcY)
+        || dx*dx+dy*dy>=GameConstants.NPC_INTERACTION_RANGE_TILES_SQUARED || !hasLineOfSight)
+      throw new IllegalArgumentException("NPC is not reachable");
+  }
+
+  Result prepareShopkeeper(OnlineStore.CharacterState saved,int world,double x,double y,String npcId,
+      int npcWorld,double npcX,double npcY,boolean hasLineOfSight,OptionalInt topic) {
+    Objects.requireNonNull(saved); Objects.requireNonNull(topic);
+    requireShopkeeperReachable(saved,world,x,y,npcId,npcWorld,npcX,npcY,hasLineOfSight);
+    if(topic.isPresent()) throw new IllegalArgumentException("NPC has no topics");
+    return new Result(saved.progress(),"npc.welcome."+npcId.toLowerCase(Locale.ROOT),false);
+  }
+
   /** A quest giver: a greeting turns in a ready quest atomically; a topic reads the offer or progress line. */
   private Result questInteraction(OnlineStore.CharacterState saved,String npcId,OptionalInt topic,
       Supplier<UUID> instanceId,long now,RandomGenerator random) {

@@ -138,6 +138,38 @@ class RegionNpcsTest {
     assertEquals("npc.kilhiam.letter",talk(npcs,progress,map,interactive.id()).messageKey());
   }
 
+  @Test void authoredLighthavenVendorsCanGreetAndTradeWithoutGrantingDialogueTopics() throws Exception {
+    var spec=new RegionMapLoader.Spec(0,"start",2735,1029,249,117,2944,1059);
+    var appearances=NpcAppearanceCatalog.loadBundled();
+    var items=ItemCatalog.loadBundled();
+    var npcs=new RegionNpcs(NpcInteractionCatalog.loadBundled(),items,spec,appearances);
+    var map=new PreviewMap(new boolean[spec.height()][spec.width()],spec.originX(),spec.originY(),
+        2944-spec.originX(),1059-spec.originY());
+    var progress=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(1)).progress();
+    var saved=new com.perso.T4C.server.persistence.OnlineStore.CharacterState(java.util.UUID.randomUUID(),
+        java.util.UUID.randomUUID(),"Tester",0,2944,1059,0,0,0,progress);
+
+    for(String id:List.of("Fali","Rolph")) {
+      var spawn=appearances.inRegion(spec).stream().filter(s->s.canonicalNpcId().equals(id))
+          .findFirst().orElseThrow();
+      assertFalse(spawn.interactionSupported(),"the vendor has no authored online dialogue script");
+      String viewId=NpcAppearanceCatalog.viewId(spawn);
+      var view=npcs.views().stream().filter(n->n.id().equals(viewId)).findFirst().orElseThrow();
+      assertTrue(npcs.shops().content().vendors().stream().anyMatch(v->v.npcId().equals(id)
+          && !v.offers().isEmpty()));
+      var greeting=npcs.prepare(saved,map,view.x()+0.5,view.y()+0.5,viewId,
+          java.util.OptionalInt.empty(),100,new Random(1));
+      assertEquals("npc.welcome."+id.toLowerCase(java.util.Locale.ROOT),greeting.messageKey());
+      assertFalse(greeting.changed());
+      assertEquals(java.util.Optional.of(id),npcs.reachableShopkeeper(saved,map,
+          view.x()+0.5,view.y()+0.5,viewId));
+      assertThrows(IllegalArgumentException.class,()->npcs.reachableShopkeeper(saved,map,
+          0.5,0.5,viewId));
+      assertThrows(IllegalArgumentException.class,()->npcs.prepare(saved,map,view.x()+0.5,view.y()+0.5,
+          viewId,java.util.OptionalInt.of(0),100,new Random(1)));
+    }
+  }
+
   @Test void hostedMissingFrameAndExcessViewsFailRatherThanDisappear() throws Exception {
     var region=new RegionMapLoader.Spec(0,"sundial",2878,1067,8,8,2881,1070);
     var source=NpcAppearanceCatalog.loadBundled().inRegion(region).stream()
