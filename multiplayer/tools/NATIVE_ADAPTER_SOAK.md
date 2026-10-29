@@ -252,3 +252,47 @@ stun commits that now write the character; not bisected here). The soak's own wa
 movement observations and attacks continue as before. This run therefore does not show the movement rule's effect on
 sustained occupancy; a clean comparison needs the persistence Conflict fixed first. The result does **not** pass the two-hour
 soak, the M5 gate or Beta. No server code was changed.
+
+### Root cause of the T4C-0288 persistence Conflicts and 12-minute rerun on fixed main (T4C-0298, 2026-10-29): passed the tool's zero-error criterion
+
+Cause. All of the "Online persistence failed (classes=Conflict)" disconnects were one operation: the retaliation commit
+(`operation=monster_attack`, the safe attribution added by PR #250). A diagnostic build that read the creature row back inside the
+failing transaction showed the row matched the attack in every field (life, revision, target, due time, alive). Only the database-clock
+due check refused: the guarded UPDATE requires `next_attack_at <= clock_timestamp()` (T4C-0190). The server fires a retaliation on the
+first 34 Hz tick where its own clock reaches the due time, but the WSL PostgreSQL clock runs about 5 to 15 ms behind the Windows JVM,
+so the commit arrived while the database still said "not due". The transaction had written nothing, so the refusal was definite, yet it
+was handled like an ambiguous commit: the character was disconnected, its lease stayed held and every reconnect got `409` on `/join`
+until the lease expired. It was not a revision race. Checkpoint, shop, spell and melee writers are single-flight per character and
+none of them failed. It is not a regression from one merged change: a 4-minute soak of the PR #203 tree (the one that passed 12 minutes
+on 2026-10-28) also showed 4 such disconnects today, and main before the fix showed 15 to 18 in 4 minutes, so the guard is old and the
+rate follows clock skew and retaliation volume (more monsters retaliate since the monster spell attack changes).
+
+Fix. Codex's PR #252 (merged at `d92d265c`) turns a due-time miss, only while every other precondition still matches, into a deferred
+unapplied result instead of a failure. An independent fix written in this session (a definite `attack_not_due` refusal) was dropped in
+favor of it; both give the same behaviour.
+
+Runs (PostgreSQL 16 WSL, disposable clusters, `ServerMain --online`, twenty paced adapters; six soaks in total):
+
+| Build | Length | Persistence Conflict disconnects | Adapter failures |
+| --- | --- | --- | --- |
+| main `9461ce4c` (before the fix) | 4 min | 15, then 18 (all `monster_attack`) | about 20 per 4 minutes (reconnect storm; 860 in 12 minutes) |
+| PR #203 tree `4bcb72b4` | 4 min | 4 | 0 reported |
+| main `9461ce4c` plus the local equivalent fix | 4 min, then 12 min | 0, 0 | 0, 0 |
+| main `f7f8c26f` plus T4C-0298 docs (includes #252) | 12 min | 0 | 0 |
+
+| Metric (12 minutes) | Paced rerun (T4C-0250, PR #203) | After movement parity, before the fix (T4C-0288) | Fixed main (this run) |
+| --- | --- | --- | --- |
+| Time at 20 adapters | 406.5 s (56.5%) | 23.4 s (3.2%) | 403.3 s (56.0%) |
+| Time at 19 or more | 97.5% | 7.7% | 97.3% |
+| Adapter failures | 0 | 860 | 0 |
+| Reconnects | 96 | 873 | 96 |
+| Attacks / recoveries | 932 / 14 | 1,181 / 8 | 1,575 / 18 |
+| Commands accepted / rejected | 600 / 346 | 758 / 398 | 999 / 593 |
+| Command latency (ms, all adapters) | `<=250` 279, `<=500` 665, `<=1000` 2 | `<=250` 111, `<=500` 1,052, `<=1000` 25 | `<=250` 159, `<=500` 1,402, `<=1000` 31 |
+| `/health` | 34.001 Hz | 34.000 Hz | 34.000 Hz, mean 1.12 ms |
+| Database rollbacks | 0 | 828 | 0 |
+
+Limits. The 12-minute length and the paced reconnect churn are unchanged, so the 56% at twenty is the tool's own ceiling, not a plateau.
+The skew was inferred from the logged JVM time against the database time inside the failing transaction (a few milliseconds each);
+production hosts with a different clock offset see the same race, which is why the deferral matters beyond this machine.
+Local PG16 evidence only. This does **not** pass the soak gate, M5 or Beta.
