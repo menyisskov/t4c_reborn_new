@@ -14,6 +14,7 @@ final class PersistentCreatures implements AutoCloseable {
     OnlineStore.SpawnState saved;
     OnlineMonsterPursuit controller;
     boolean pending,recovering,reserved,reloadAfterPending,dirty,needsReplan,attackReady;
+    long stunnedUntilMillis;
     long lastCheckpointTick;
     long lastRecoveryAttemptNanos;
     long cacheGeneration;
@@ -112,6 +113,15 @@ final class PersistentCreatures implements AutoCloseable {
   void release(long id) { var entry=entries.get(id);if(entry!=null) entry.reserved=false; }
   void rewardCommitted(long id) { reload(id,true); }
   void damageCommitted(long id) { reload(id,false); }
+  boolean stunned(long id,long now) {
+    var entry=entries.get(id);
+    return entry!=null && entry.stunnedUntilMillis>now;
+  }
+  void stunCommitted(long id,long now,long durationMillis) {
+    var entry=entries.get(id);
+    if(entry!=null && durationMillis>0)
+      entry.stunnedUntilMillis=Math.max(entry.stunnedUntilMillis,Math.addExact(now,durationMillis));
+  }
 
   void characterDied(UUID character) {
     for(var entry:entries.values()) {
@@ -143,7 +153,7 @@ final class PersistentCreatures implements AutoCloseable {
     for(var entry:entries.values()) {
       entry.attackReady=false;
       if(entry.controller==null || entry.pending || entry.recovering || entry.reserved
-          || entry.saved.diedAt()!=null) continue;
+          || entry.saved.diedAt()!=null || entry.stunnedUntilMillis>System.currentTimeMillis()) continue;
       var before=entry.controller.current();
       var decision=entry.controller.step(targets,clanTargets,1.0/PreviewWorld.TICK_RATE,
           permittedId!=null && permittedId==entry.spawn.id(),false);
@@ -249,6 +259,7 @@ final class PersistentCreatures implements AutoCloseable {
         entry.recovering=true;entry.dirty=false;world.creatureActive(result.id(),false);
         continue; // SQL ambiguity: no guessed success or automatic replay.
       }
+      if(!entry.saved.eventId().equals(result.saved().eventId())) entry.stunnedUntilMillis=0;
       entry.saved=result.saved();entry.recovering=false;
       publish(entry,true);
     }
