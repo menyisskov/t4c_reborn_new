@@ -1,6 +1,7 @@
 package com.perso.T4C.session;
 
 import com.perso.T4C.online.OnlineConnection;
+import com.perso.T4C.player.BodyPart;
 import java.util.UUID;
 import java.util.concurrent.CompletionStage;
 
@@ -20,6 +21,10 @@ public interface RemoteLink {
   CompletionStage<OnlineConnection.CommandResult> pickUp(UUID loot);
 
   CompletionStage<OnlineConnection.CommandResult> interact(String npc);
+
+  CompletionStage<OnlineConnection.CommandResult> equip(UUID instance, BodyPart slot);
+
+  CompletionStage<OnlineConnection.CommandResult> unequip(BodyPart slot);
 
   CompletionStage<OnlineConnection.CommandResult> shopOffers(String npc);
 

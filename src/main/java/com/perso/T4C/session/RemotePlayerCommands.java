@@ -7,6 +7,7 @@ import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.monster.core.BaseMonster;
 import com.perso.T4C.online.OnlineConnection;
 import com.perso.T4C.online.model.ShopOffersReply;
+import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.world.MovementReconciler;
 import com.perso.T4C.world.MovementRules;
@@ -31,6 +32,10 @@ import java.util.function.ToLongFunction;
  * {@link #move} (the screen calls it every frame) or {@link #pump()} shows its message through the
  * host, the way single-player shows its own failure text. A routine swing-cooldown refusal stays
  * silent, as the text client already does.
+ *
+ * <p><b>Equipment</b> sends the committed item identity and requested body slot, or the body slot to
+ * clear. The server validates both operations; this client never predicts the resulting inventory
+ * or bonuses locally.
  *
  * <p><b>Movement</b> follows CLIENT_UNIFICATION_DESIGN 3.10 and 3.4:
  *
@@ -185,6 +190,18 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
     } catch (IllegalArgumentException invalidIdentity) {
       return false;
     }
+  }
+
+  @Override
+  public boolean equip(UUID instance, BodyPart slot) {
+    if (instance == null || slot == null) return false;
+    return send(() -> link.equip(instance, slot), "online.equip.refused");
+  }
+
+  @Override
+  public boolean unequip(BodyPart slot) {
+    if (slot == null) return false;
+    return send(() -> link.unequip(slot), "online.equip.refused");
   }
 
   @Override

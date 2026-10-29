@@ -20,6 +20,7 @@ import com.perso.T4C.online.model.CreatureView;
 import com.perso.T4C.online.model.GroundLootView;
 import com.perso.T4C.online.model.NpcView;
 import com.perso.T4C.online.model.ShopOffersReply;
+import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.player.Player;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,6 +85,16 @@ class RemotePlayerCommandsTest {
     }
 
     @Override
+    public CompletionStage<OnlineConnection.CommandResult> equip(UUID instance, BodyPart slot) {
+      return reply("equip " + instance + " " + slot);
+    }
+
+    @Override
+    public CompletionStage<OnlineConnection.CommandResult> unequip(BodyPart slot) {
+      return reply("unequip " + slot);
+    }
+
+    @Override
     public CompletionStage<OnlineConnection.CommandResult> shopOffers(String npc) {
       calls.add("shopOffers " + npc);
       return offers;
@@ -115,6 +126,24 @@ class RemotePlayerCommandsTest {
     void answer(String key) {
       next.complete(new OnlineConnection.CommandResult(key == null, null, key));
     }
+  }
+
+  @Test
+  void equipAndUnequipAreSentToServerWithoutChangingLocalPlayer() {
+    UUID item = UUID.fromString("00000000-0000-0000-0000-000000000042");
+    Player player = playerAtTile(100, 205);
+    var beforeInventory = new ArrayList<>(player.getInventory());
+    var beforeEquipment = new HashMap<>(player.getEquippedItems());
+    FakeLink link = new FakeLink();
+    var commands = new RemoteGameSession(link, new GroundItemManager()).commands();
+    commands.bind(new TestHost(player));
+
+    assertTrue(commands.equip(item, BodyPart.WEAPON));
+    assertEquals(List.of("equip " + item + " WEAPON"), link.calls);
+    assertTrue(commands.unequip(BodyPart.WEAPON));
+    assertEquals(List.of("equip " + item + " WEAPON", "unequip WEAPON"), link.calls);
+    assertEquals(beforeInventory, player.getInventory());
+    assertEquals(beforeEquipment, player.getEquippedItems());
   }
 
   private static final class TestHost implements RemotePlayerCommands.Host {

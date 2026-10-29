@@ -1,6 +1,7 @@
 package com.perso.T4C.session;
 
 import com.perso.T4C.online.OnlineConnection;
+import com.perso.T4C.player.BodyPart;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletionStage;
@@ -31,6 +32,16 @@ public final class OnlineConnectionLink implements RemoteLink {
   @Override
   public CompletionStage<OnlineConnection.CommandResult> interact(String npc) {
     return connection.interact(npc);
+  }
+
+  @Override
+  public CompletionStage<OnlineConnection.CommandResult> equip(UUID instance, BodyPart slot) {
+    return connection.equip(instance, slot);
+  }
+
+  @Override
+  public CompletionStage<OnlineConnection.CommandResult> unequip(BodyPart slot) {
+    return connection.unequip(slot);
   }
 
   @Override

@@ -151,6 +151,8 @@ public class MainGameScreen implements Screen {
   private final com.perso.T4C.online.OnlineConnection remoteConnection;
   private final com.perso.T4C.online.OnlineShopPanel remoteShopPanel =
       new com.perso.T4C.online.OnlineShopPanel();
+  private final com.perso.T4C.online.OnlineInventoryPanel remoteInventoryPanel =
+      new com.perso.T4C.online.OnlineInventoryPanel();
   private boolean displayInitialized;
   private int loadingStep;
   private GameInputHandler inputHandler;
@@ -1558,11 +1560,16 @@ public class MainGameScreen implements Screen {
               && (remoteConnection == null || !"connected".equals(remoteConnection.status()))) {
             closeRemoteShop();
           }
+          if (remoteInventoryPanel.isOpen()
+              && (remoteConnection == null || !"connected".equals(remoteConnection.status()))) {
+            remoteInventoryPanel.close();
+          }
           if (seraphArrivalBlocksMovement()
               || remoteConnection!=null && !"connected".equals(remoteConnection.status())) {
             return;
           }
-          if (remoteShopPanel.isOpen()) session.commands().move(0, 0, delta);
+          if (remoteShopPanel.isOpen() || remoteInventoryPanel.isOpen())
+            session.commands().move(0, 0, delta);
           else inputHandler.handleInput(delta, player);
         });
     section("autosave", () -> updateAutosave(delta));
@@ -1694,6 +1701,15 @@ public class MainGameScreen implements Screen {
         for (int i = 0; i < lines.size(); i++) {
           if (i > 0) y -= i == 1 ? font.getLineHeight() * 1.5f : font.getLineHeight();
           font.draw(batch, lines.get(i), hudCamera.viewportWidth - 420, y);
+        }
+      } else if (remoteInventoryPanel.isOpen()) {
+        var view = remoteConnection.view();
+        var progress = view == null || view.character() == null ? null : view.character().progress();
+        var lines = remoteInventoryPanel.lines(progress, MainGameScreen::onlineShopItemName);
+        float y = hudCamera.viewportHeight - 16;
+        for (int i = 0; i < lines.size(); i++) {
+          if (i > 0) y -= i == 1 ? font.getLineHeight() * 1.5f : font.getLineHeight();
+          font.draw(batch, lines.get(i), hudCamera.viewportWidth - 360, y);
         }
       }
       batch.end();
@@ -5004,30 +5020,68 @@ public class MainGameScreen implements Screen {
     InputMultiplexer remote=new InputMultiplexer();
     remote.addProcessor(new com.badlogic.gdx.InputAdapter() {
       @Override public boolean keyDown(int keycode) {
-        if (!remoteShopPanel.isOpen()) return false;
-        if (keycode == Input.Keys.T || keycode == Input.Keys.ESCAPE) {
-          closeRemoteShop();
-          return true;
-        }
-        if (keycode == Input.Keys.TAB) { remoteShopPanel.toggleMode(); return true; }
-        if (keycode == Input.Keys.Q) { remoteShopPanel.cycleQuantity(); return true; }
-        if (keycode == Input.Keys.LEFT || keycode == Input.Keys.RIGHT) {
-          remoteShopPanel.turnPage(keycode == Input.Keys.RIGHT ? 1 : -1);
-          return true;
-        }
-        int digit = keycode >= Input.Keys.NUM_1 && keycode <= Input.Keys.NUM_9
-            ? keycode - Input.Keys.NUM_1 + 1 : 0;
-        if (digit == 0) return false;
-        var action = remoteShopPanel.choose(digit).orElse(null);
-        if (action != null) {
-          var commands = (com.perso.T4C.session.RemotePlayerCommands) session.commands();
-          if (action.mode() == com.perso.T4C.online.OnlineShopPanel.Mode.BUY) {
-            commands.shopBuy(action.npc(), action.itemKey(), action.quantity());
-          } else {
-            commands.shopSell(action.npc(), action.itemKey(), action.quantity());
+        if (remoteInventoryPanel.isOpen()) {
+          if (keycode == Input.Keys.I || keycode == Input.Keys.ESCAPE) {
+            remoteInventoryPanel.close();
+            return true;
           }
+          var view = remoteConnection == null ? null : remoteConnection.view();
+          var progress = view == null || view.character() == null ? null : view.character().progress();
+          if (keycode == Input.Keys.LEFT || keycode == Input.Keys.RIGHT) {
+            remoteInventoryPanel.turnPage(keycode == Input.Keys.RIGHT ? 1 : -1, progress);
+            return true;
+          }
+          int digit = keycode >= Input.Keys.NUM_1 && keycode <= Input.Keys.NUM_9
+              ? keycode - Input.Keys.NUM_1 + 1 : 0;
+          if (digit == 0) return false;
+          var action = remoteInventoryPanel.choose(digit, progress).orElse(null);
+          if (action != null) {
+            var commands = (com.perso.T4C.session.RemotePlayerCommands) session.commands();
+            if (action.slot() != null) {
+              commands.unequip(action.slot());
+            } else {
+              var definition = com.perso.T4C.item.ItemRegistry.findByKey(
+                  progress.inventory().stream().filter(item -> item.id().equals(action.item()))
+                      .map(com.perso.T4C.online.model.CharacterProgress.Item::key).findFirst().orElse(null));
+              if (definition == null || definition.getBodyPart() == null) {
+                showSystemMessage(I18n.key("online.equip.no_slot"));
+              } else {
+                commands.equip(action.item(), definition.getBodyPart());
+              }
+            }
+          }
+          return true;
         }
-        return true;
+        if (remoteShopPanel.isOpen()) {
+          if (keycode == Input.Keys.T || keycode == Input.Keys.ESCAPE) {
+            closeRemoteShop();
+            return true;
+          }
+          if (keycode == Input.Keys.TAB) { remoteShopPanel.toggleMode(); return true; }
+          if (keycode == Input.Keys.Q) { remoteShopPanel.cycleQuantity(); return true; }
+          if (keycode == Input.Keys.LEFT || keycode == Input.Keys.RIGHT) {
+            remoteShopPanel.turnPage(keycode == Input.Keys.RIGHT ? 1 : -1);
+            return true;
+          }
+          int digit = keycode >= Input.Keys.NUM_1 && keycode <= Input.Keys.NUM_9
+              ? keycode - Input.Keys.NUM_1 + 1 : 0;
+          if (digit == 0) return false;
+          var action = remoteShopPanel.choose(digit).orElse(null);
+          if (action != null) {
+            var commands = (com.perso.T4C.session.RemotePlayerCommands) session.commands();
+            if (action.mode() == com.perso.T4C.online.OnlineShopPanel.Mode.BUY) {
+              commands.shopBuy(action.npc(), action.itemKey(), action.quantity());
+            } else {
+              commands.shopSell(action.npc(), action.itemKey(), action.quantity());
+            }
+          }
+          return true;
+        }
+        if (keycode == Input.Keys.I) {
+          remoteInventoryPanel.open();
+          return true;
+        }
+        return false;
       }
     });
     remote.addProcessor(new com.badlogic.gdx.InputAdapter() {
