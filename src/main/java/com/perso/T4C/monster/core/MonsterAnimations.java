@@ -42,6 +42,7 @@ public class MonsterAnimations extends EntityAnimationsBase {
   private boolean holdAfterAttack = true;
   private boolean isDying = false;
   private boolean isDeadComplete = false;
+  private boolean muted = false;
   private float attackDuration = MIN_ATTACK_DURATION;
 
   public MonsterAnimations(
@@ -96,7 +97,7 @@ public class MonsterAnimations extends EntityAnimationsBase {
     holdAfterAttack = true;
     holdingAttackPose = false;
     attackTimer = 0f;
-    if (soundAttack != null && !soundAttack.isEmpty()) {
+    if (!muted && soundAttack != null && !soundAttack.isEmpty()) {
       SoundManager.animateSound(soundAttack);
     }
   }
@@ -131,13 +132,18 @@ public class MonsterAnimations extends EntityAnimationsBase {
     return false;
   }
 
+  /** Online puppets are muted: their sounds are played from server events, not state changes. */
+  public void setMuted(boolean muted) {
+    this.muted = muted;
+  }
+
   public void startDeath() {
     if (isDying) return;
     isDying = true;
     deathTimer = 0f;
     isAttacking = false;
     holdingAttackPose = false;
-    if (soundDeath != null && !soundDeath.isEmpty()) {
+    if (!muted && soundDeath != null && !soundDeath.isEmpty()) {
       SoundManager.animateSound(soundDeath);
     }
   }

@@ -109,6 +109,9 @@ public abstract class ScriptedNpc extends BaseNPC {
 
   private NpcBehavior resolvedBehavior() {
 
+    // An online puppet has no scripts: the server owns every conversation and lifecycle event.
+    if (isPuppet()) return null;
+
     NpcBehavior b = javaBehavior();
 
     if (b instanceof TrainingBehavior

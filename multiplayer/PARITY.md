@@ -38,6 +38,17 @@ re-measure before relying on a number.
   (the snapshot's live hp is not applied yet), day/night hour (default), appearance of other
   players (snapshot carries only an opaque id), and the storage and companion fields only as far
   as the server stores them.
+  Progress (T4C-0289, remote session R2, headless and unwired): `RemoteGameSession.world()` is
+  `RemoteWorldDriver`, which applies each server snapshot to the real `BaseMonster`, `BaseNPC` and
+  `GroundItem` objects (puppet mode: no AI, loot, experience, quest, sound, respawn or script of
+  their own) and to remote `Player` puppets for other players; a sweep test applies a death to all
+  484 monster and 504 NPC classes and asserts nothing fires. Parity debt it records: no attack,
+  hit, cast or miss animation for creatures (the snapshot carries no events), no damage numbers,
+  sounds or spell effects (stage 7), NPCs without a stationary or idle flag, health or hostility,
+  corpses and ground-loot owner windows not drawn, other players only with the default look
+  (appearance is an opaque id), no walk animation for them (the player movement object has no puppet
+  switch) and no slot for them in the game screen yet, and puppets glide with a 60 ms ease instead of
+  the planned 100 ms-behind interpolation buffer. Full table: `CLIENT_UNIFICATION_DESIGN.md` 3.12.
 - [ ] **Characters:** all 7 classes, creation screen and preview identical to single-player,
   stat and skill allocation, training, rebirth.
 - [ ] **Combat:** melee, archery, two weapons, stun blow, stealth, armor class and auras.

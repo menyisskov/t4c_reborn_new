@@ -392,6 +392,57 @@ instance ids are kept beside the state for the later `ItemInstanceIndex`. A view
 fails with `IllegalStateException` rather than starting a new character. Parity debt list: PARITY.md.
 Next, R2: the world driver applies snapshots to the monster, NPC and ground-item objects.
 
+### 3.12 Remote session, step R2: the world as puppets (T4C-0289)
+
+`RemoteGameSession.world()` is now `RemoteWorldDriver` (headless, not wired to any screen).
+`loadEntities` builds a `MonsterManager` and an `NPCManager` in **puppet mode**: no spawn is queued
+from the local map files, and they hold only what the snapshot says. `tickEntities` applies the
+newest `OnlineConnection.View` (only when its tick or region changed, and never a snapshot of
+another region epoch than the map's) and then eases and animates the puppets; no local AI starts.
+Creatures are built with `MonsterRegistry.create` from the definition name, NPCs with
+`NpcFactoryRegistry.create` from the public id (an id with no class, an appearance-only NPC, becomes
+a `PuppetNpc` from the published sprite or parts), loot as `GroundItem` in the screen's own
+`GroundItemManager` (`addRemoteItem` / `removeRemoteItem`), and every other actor as a remote
+`Player`. Positions: creatures, NPCs and loot are authored tile anchors (`(origin + x) * tile`);
+players are tile centres (half a tile less, like the own player in `ProgressMirror`).
+
+**Puppet switch points** (every one defaults to off, so single-player is unchanged;
+`PuppetSwitchCharacterizationTest` pins the default behaviour, `PuppetSwitchTest` the puppet one):
+
+| Class | Switch | Inert in puppet mode |
+|---|---|---|
+| `BaseMonster` | `setPuppet` | `update` (AI, pathing, aggro, attacks, patrol), `takeDamage`, `heal`, `applyPlayerDamage` (experience), `applyClanDamage`, `aggroOn`, `aggroOnCompanion`, `die` (death callback), `respawn`, `shouldRespawn`, `shouldRemoveAfterDeath`; state arrives through `puppetPlace` and `puppetHealth` |
+| `MonsterAnimations` | `setMuted` (set by `setPuppet`) | the attack and death sounds that a state change would play |
+| `MonsterManager` | `setPuppetMode` | `addMonster` (script spawn event, hunting respawn, callbacks), `update`, `updateVisible`, `attackMonster`, `notifyKilledByPlayer` (loot and quest credit), script events, `spawnMonster` (summons) |
+| `BaseNPC` | `setPuppet` | `update` (patrol, hostility), `onClick` (conversation), `onAttacked`/`onHit`/`onDeath` sounds, `provoke`, `fleeFrom`; state arrives through `puppetPlace` |
+| `ScriptedNpc` | via `BaseNPC.isPuppet` | `resolvedBehavior()` returns nothing, so every script hook (initialise, popup, attack, death, destroy, conversation, shop, training) is skipped |
+| `NPCManager` | `setPuppetMode` | `addNPC` flags puppets, `triggerPopupEvents`, `spawnNPC`, `update`, `updateVisible`, `onClick`, `attackNpc`, `damageNpc`, `onNpcAttacked`, `talkToActiveNpc` |
+
+**Sweep test** (`PuppetSweepTest`, section 5 of this design): a death snapshot on every registered
+monster class (484 definitions, Java classes plus the JSON monsters) and the combat, conversation
+and removal paths on every registered NPC class (503 of 504 ids are publishable; one id breaks the
+public id rule) fire no death, loot, kill, script, damage, quest, save or sound callback and give
+the witness player nothing.
+
+**What the snapshot lacks** (parity debt; each is a server or later-step item, none is invented here):
+
+| Needed to look and play like single-player | Snapshot today | Effect now |
+|---|---|---|
+| Creature attack, cast, hit and miss events | none (`CreatureView` has health and position only) | creatures never swing or flinch; no damage numbers, no hit or miss feedback |
+| Sounds and spell effects | none (stage 7 `events` feed) | puppets are silent by design |
+| Creature stun, status, aggro | none | not shown |
+| NPC stationary, idle, health, hostility | `NpcView` has id, name, position, sprite | stationary NPCs do not play their idle loop; no NPC combat |
+| Corpses | `View.corpses` is not applied | no corpse sprite or recover target yet |
+| Loot owner window, charges | `ownerRemainingMs` exists; charges absent | no owner tooltip; charges unknown |
+| Other players: name, class, appearance parts, equipment, stealth, actions | only an opaque `appearance` id and hp | default look; no name; no walk animation (the player movement object has no puppet switch); not drawn by `MainGameScreen` yet, exposed by `RemoteWorldDriver.otherPlayers()` |
+| Interpolation buffer (render 100 ms behind) | n/a | puppets ease 60 ms toward the newest snapshot instead |
+| Server id to object | held by the driver (`creatureId`, `npcId`) | step R3 sends intents by these ids |
+
+Preview image (a real `MainGameScreen` drawing the puppets of a hand-made snapshot, not a golden):
+`multiplayer/design/remote-world-puppets.png`, produced by `RemoteWorldPuppetsPreview`.
+Next, R3: `PlayerCommands` over the connection (attack, move, pick up, interact) with tickets, using
+the ids above.
+
 ## 4. Staged plan
 
 Sizes: S under a day, M a few days, L about a week, XL more. Every stage ends with the full

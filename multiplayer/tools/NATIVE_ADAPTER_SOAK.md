@@ -214,3 +214,41 @@ and the retry schedule spreads the rest across a few seconds. An unpaced simulta
 see 503s for the first seconds (not re-measured here), and a real client without the new retry would have failed; with it the worst case
 is a login that takes up to roughly ten seconds before giving up. Re-measure with an unpaced burst (open gate set to
 twenty) if the owner wants a hard number before raising `MAX_PUBLIC`.
+
+### Rerun after server movement parity, PG16 WSL, 12 minutes (T4C-0288, 2026-10-29): FAILED, with a server-side persistence finding
+
+Same setup as the paced rerun (fresh disposable PostgreSQL 16 cluster on loopback 56982, TEMP runtime snapshot, one
+`ServerMain --online` child on 18797 with a private control file, twenty adapters, 720 s, one-at-a-time paced opens), but
+on `origin/main` 0a6622f9 plus later main (server movement now follows single-player's grid-reservation rule, PR #234;
+also the shop, spell-engine and regeneration changes merged since the previous run), with the soak's walker changed to plan
+from the tile the player is arriving on. The report ran to completion (`finished: true`, 720.045 s); the cluster was
+destroyed and the TEMP runtime and profiles removed. Local PG16 evidence only.
+
+| Metric | Paced rerun (T4C-0250) | After movement parity (T4C-0288) |
+| --- | --- | --- |
+| Time at 20 adapters | 406.5 s (56.5%) | 23.4 s (3.2%) |
+| Time at 19 or more | 702.0 s (97.5%) | 55.5 s (7.7%); most time at 13 to 17 |
+| Adapter failures | 0 | 860 (`adapter_stopped_after_connect`, `adapter_stopped_before_connect`, `gameplay_result_unavailable`) |
+| Reconnects | 96 (scheduled) | 873 |
+| Attacks / recoveries | 932 / 14 | 1,181 / 8 |
+| Commands accepted / rejected | 600 / 346 | 758 / 398 |
+| HP changes / movement observations | 1,582 / 93,786 | 1,969 / 78,616 |
+| Command latency (ms, all adapters) | `<=250` 279, `<=500` 665, `<=1000` 2 | `<=250` 111, `<=500` 1,052, `<=1000` 25 |
+| `/health` | mean 0.494 ms, 34.001 Hz, 0 failures | mean 1.272 ms, 34.000 Hz, 0 failures |
+| Ticks | 24,742 ok, 0 failed, max callback 39.0 ms, 2 over budget | 24,446 ok, 0 failed, mean 2.29 ms, max callback 22.3 ms, 0 over budget, 0 deadline resets, max debt 4.8 ms |
+| Peak heap used / CPU | 645.5 MiB / 175.2 s | 596.6 MiB / 178.3 s |
+| Database (database-wide) | commits 569 to 55,117; rollbacks 0 | commits 403 to 54,536; **rollbacks 0 to 828**; deadlocks 0 |
+| HTTP non-2xx | only 409 (`/attack` 340, `/input` 23, `/recover` 3) | `/join` 409 x739, `/attack` 409 x407, `/input` 409 x17, 401 on stale-session calls, `/corpses` 503 x7 |
+
+Finding (server, not fixed here). The server log shows 89 times `Online persistence failed (classes=Conflict, sqlstate=unavailable);
+character disconnected. Recover after lease expiry.` That is a commit that lost a revision conflict; the character is dropped and
+its lease stays held, so the adapter's reconnects are answered `409` on `/join` (739 of them) until the lease expires, which
+explains the failures, the reconnect count and the low time at 20. The tick loop itself was healthy (no failed tick, 34.0 Hz).
+Isolation, one 4-minute soak each on the same cluster: the same code with the swept movement rule
+(`-Dt4c.server.movement=swept`) still produced 24 Conflict disconnects (229 failures), and the previous, unmodified soak walker
+against the new grid rule produced 32 (297 failures). So the Conflicts are **not caused by the movement rule or by the walker
+change**; they come from something else merged since the paced rerun (candidates are the shop, spell-engine, regeneration or
+stun commits that now write the character; not bisected here). The soak's own walker change was checked to be harmless:
+movement observations and attacks continue as before. This run therefore does not show the movement rule's effect on
+sustained occupancy; a clean comparison needs the persistence Conflict fixed first. The result does **not** pass the two-hour
+soak, the M5 gate or Beta. No server code was changed.
