@@ -111,6 +111,18 @@ class PreviewServerTest {
     return bytes.toString(StandardCharsets.US_ASCII);
   }
 
+  /**
+   * Reads the status line, then the rest of the response up to the server closing the connection
+   * (these requests send {@code Connection: close}). Closing the client socket after only the
+   * status line races the server still writing its body: a failed write makes the handler send
+   * a 503 and re-label the request, so the metrics rows the test then reads would be nondeterministic.
+   */
+  private static String fullResponseLine(Socket socket) throws Exception {
+    String line=responseLine(socket);
+    try { socket.getInputStream().readAllBytes(); } catch(java.io.IOException closedOrSlow) { /* the server closed first */ }
+    return line;
+  }
+
   @Test void operatorMetricsRequirePrivateLocalControlAndReportBoundedUnits() throws Exception {
     var map = new PreviewMap(new boolean[8][8],0,0,3,3);
     String admin = "a".repeat(64);
@@ -140,9 +152,9 @@ class PreviewServerTest {
       try(var unknown=slowBody(port,url,"/"+marker,null);
           var forged=slowBody(port,url,"/input","f".repeat(64));
           var oversized=slowBody(port,url,"/join",null,1000)) {
-        assertTrue(responseLine(unknown).contains(" 404 "));
-        assertTrue(responseLine(forged).contains(" 401 "));
-        assertTrue(responseLine(oversized).contains(" 413 "));
+        assertTrue(fullResponseLine(unknown).contains(" 404 "));
+        assertTrue(fullResponseLine(forged).contains(" 401 "));
+        assertTrue(fullResponseLine(oversized).contains(" 413 "));
       }
       JsonObject traffic=null;
       long deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(5);
@@ -185,8 +197,8 @@ class PreviewServerTest {
         heldInput.getOutputStream().flush();
         heldJoin.getOutputStream().write('x');
         heldJoin.getOutputStream().flush();
-        assertTrue(responseLine(heldInput).contains(" 200 "));
-        assertTrue(responseLine(heldJoin).contains(" 400 "));
+        assertTrue(fullResponseLine(heldInput).contains(" 200 "));
+        assertTrue(fullResponseLine(heldJoin).contains(" 400 "));
       }
       long completedDeadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(3);
       do {
@@ -269,7 +281,7 @@ class PreviewServerTest {
         assertEquals(400, client.send(request(url, "/input", token, "1 1 0 9999 9999"), HttpResponse.BodyHandlers.ofString()).statusCode());
         assertEquals(413, client.send(request(url, "/input", token, "x".repeat(65)), HttpResponse.BodyHandlers.ofString()).statusCode());
       }
-      try (var restarted = new PreviewServer(map, port)) {
+      try (var restarted = PreviewServerRestarts.onSamePort(map, port, null)) {
         restarted.start();
         assertEquals(200, client.send(request(restarted.url(), "/health", null, null), HttpResponse.BodyHandlers.ofString()).statusCode());
       }
@@ -407,7 +419,7 @@ class PreviewServerTest {
         assertEquals(200,client.send(request(url,"/admin/shutdown",admin,""),HttpResponse.BodyHandlers.ofString()).statusCode());
         server.await();
       }
-      try (var restarted=new PreviewServer(map,port,store)) {
+      try (var restarted=PreviewServerRestarts.onSamePort(map,port,store)) {
         restarted.start();
         String token=login(client,restarted.url(),key,character.id());
         login(client,restarted.url(),other,second.id()); // Shutdown released the second player's lease.

@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-29 — The automatic checks became more reliable (T4C-0303)
+
+### Changed
+- The automatic checks that run on every change no longer fail at random in a few restart, traffic-counting and door-walking tests; no game behavior changed.
+
 ## 2026-10-29 — Player movement is only slightly quicker than monsters (T4C-0302)
 
 ### Changed
