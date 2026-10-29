@@ -108,12 +108,12 @@ Required behavior:
 - [ ] Native inventory shows committed item identities, quantities, charges and equipped slots.
 - [ ] Equip/unequip updates authoritative bonuses and the required appearance; shared attribute
   requirements, occupancy, weight, uniqueness and other applicable item rules remain intact.
-- [ ] Supported monsters produce their authored drops through a server-owned persistent loot path.
-- [ ] Pickup uses server position/range, current region and the declared ownership/claim policy.
+- [x] Supported monsters produce their authored drops through a server-owned persistent loot path.
+- [x] Pickup uses server position/range, current region and the declared ownership/claim policy.
   Two simultaneous claimants cannot both receive the same item or currency.
-- [ ] Capacity or eligibility refusal preserves the loot and original inventory; partial stack
+- [x] Capacity or eligibility refusal preserves the loot and original inventory; partial stack
   operations conserve quantity and preserve appropriate identities/charges.
-- [ ] Death/corpse recovery conserves protected equipment and dropped contents under shared rules.
+- [x] Death/corpse recovery conserves protected equipment and dropped contents under shared rules.
   No alternate pickup path bypasses corpse ownership or duplicates recovered contents.
 - [ ] Reconnect, restart and a lost pickup acknowledgement retain exactly the committed outcome.
 
@@ -130,6 +130,22 @@ change on a refusal. The panels are drawn upside down at the bottom right, the o
 inspected and other players have no appearance parts, so the first two M2 bullets stay open
 (see CLIENT_UNIFICATION_DESIGN.md 3.16).
 
+T4C-0318 (2026-10-29, local rendered, two level-30 warriors, `d4eff350` plus this branch, details in
+CLIENT_UNIFICATION_DESIGN.md 3.17): Skeleton drops (Light Healing Potion, Leather Gloves, Healing Potion) appeared in both
+windows with the owner window counting down in both committed views; a claim race inside the window (owner took it, the other
+window got "Another player has the first claim"), a second after the window (one took the gloves, the other was refused "You cannot
+carry that much weight" with loot and inventory unchanged), a third that lost to a committed claim ("Another player picked that up
+first"); the database holds one receipt per claimed drop and none twice. A death left a corpse and a recovery sent through the
+connection returned its three stacks exactly (counts conserved, worn gear unchanged, corpse row emptied). The one window took its
+legs armour off and on and the other window's snapshot and drawn model followed, name and outline shown on hover. **Ticked from
+this and the existing server tests:** supported monsters' authored drops through the persistent loot path; pickup position, range
+and ownership with a simultaneous claim; capacity refusal preserving loot and inventory (partial-stack conservation stays the
+server tests'); corpse recovery conserving contents and gear. **Still open, precisely:** the native inventory bullet (the new inventory
+window was driven but no screenshot of it was kept), equip bonuses and the equipped appearance on the *own* screen were not
+inspected, the screen has no corpse control (the recovery went through the connection) and no owner-window display, a restart or lost
+acknowledgement during a claim or recovery was not run, so the reconnect/restart bullet and the Done evidence's "reload from PostgreSQL"
+step remain unmet.
+
 Done evidence: player A earns/picks up/equips loot while player B observes the shared world;
 repeat with a simultaneous claim and an inventory refusal. Reload from PostgreSQL and verify
 the final items/currency exist in exactly one permitted place. General loot is distinct from
@@ -141,7 +157,7 @@ Required behavior:
 
 - [ ] Freeze the actual quest/content scope above; export/validate its references from existing
   definitions instead of inventing a shorter online version.
-- [ ] Native dialogue can accept the quest, show its objectives/progress and turn it in.
+- [x] Native dialogue can accept the quest, show its objectives/progress and turn it in.
 - [ ] Server combat supplies authoritative kill credit under the declared two-player policy.
   Replayed kills, old creature lives and unrelated players do not corrupt progress.
 - [ ] Required quest items and turn-in consumption resolve by real item identity/key. Item,
@@ -170,6 +186,16 @@ a greeting turned the quest in once: status 2, +500 gold, +400 experience and `s
 repeat greeting changing nothing. The giver and the ground are 160 tiles apart, so the operator moved the character between
 two server restarts (travel was not driven), the quest has no required item, and only one player did it; no M3 bullet is
 ticked (see CLIENT_UNIFICATION_DESIGN.md 3.16).
+
+T4C-0318 (2026-10-29, local rendered, two windows): both windows accepted `renewed_wards` through the screen's own NPC topic window
+(click the Warden, digit 1; status 0 to 1 committed, the objective text "Put down twelve of the skeletons ..." shown), both walked
+165 tiles to the Skeleton ground on foot (no operator relocation this time), and each character took Lighthaven door 16 and 17 and
+the cave mouth and exit with the other window watching: the map switched, the walker vanished from the other's view and reappeared in
+the new region with the right look; 8 hops, 0 timeouts. **Ticked:** "Native dialogue can accept the quest, show its objectives/progress
+and turn it in" (accept and progress now through the screen, the turn-in through the screen's greeting click in T4C-0312). **Still open,
+precisely:** kill credit and turn-in for the second window, a repeat turn-in and a restart/lost-response check in the same run, the
+unhosted-route refusal, and targeting, damage or recovery across a region boundary (only mutual invisibility was observed), so the
+travel, map-switch, both-players and restart bullets stay unticked.
 
 Done evidence: two rendered clients follow the declared quest from acceptance through travel,
 combat and turn-in; both progress and reconnect with their own exact rewards. Include one
@@ -211,6 +237,12 @@ exhaustion cooldowns committed) and a Light Healing Potion used through `U` (HP 
 of Mana is not offered, no starter spell is a buff, creature-target casting was not driven and other players show no
 appearance, so the "required skills/spells, mana, charges, buffs, cooldowns ... native controls, persisted" bullet stays
 open (see CLIENT_UNIFICATION_DESIGN.md 3.16).
+
+T4C-0318 (2026-10-29, local rendered, warriors only): two windows fought Skeletons for 19 minutes (about 750 attack clicks each)
+with idle stretches, one player stood among them until it died and respawned in the temple, and the other window's player list
+stayed consistent; the Healing Potion (not only the Mana Potion) is not offered by `U` online, so the potion part of the bullet is
+further from met. No M4 bullet is ticked: no other role, no contention for one target, no leaving reach/sight scenario, and the
+death was not shown from the other window.
 
 Done evidence: a native combat scenario for each declared starter role, including two players
 contending for a target, leaving reach/sight, death/recovery and reconnect with costs/cooldowns intact.
@@ -309,6 +341,14 @@ Required behavior:
   progress. Record its duration; there is no fixed minimum. Ending a session alone does not pass
   this gate: the required scenarios and evidence must be complete and satisfy the criteria.
   Include combat, loot, quests, travel and intentional reconnects rather than idle connections.
+  T4C-0318 (2026-10-29, local, `d4eff350` plus this branch, development build not the package) ran two real rendered windows for
+  39.4 minutes with the topic window and quest acceptance, equipment seen by the other window, a walk to the Skeleton ground, portal
+  trips, 19.0 minutes of timed fight, idle and loot segments with three claim races, and (a later, separate run) a death with a corpse
+  recovery: 0 disconnects, 0 client `ERROR`, `WARN` or exceptions, 0 server stderr lines and 0 "persistence failed" lines, clean
+  graceful stop, heap in a 2.4 to 3.9 GB sawtooth without drift. The gate stays **unticked**: the candidate package was not
+  used, no intentional reconnect or restart was part of the session, the quest kills and turn-in were not done by both windows, the
+  death and recovery ran in a separate shorter session after a driver fix, the recovery bypassed the screen, and two
+  Claude-lane refusals (busy equipment change, busy attack) were found and fixed in it (see CLIENT_UNIFICATION_DESIGN.md 3.17).
 - [ ] Record actual tick duration/debt, CPU/memory, bandwidth, database/command latency, occupancy
   and every error/recovery. Investigate stalls and growing queues/resources; do not count a failed
   run as passed merely because it ended. T4C-0198 recorded a two-hour native-adapter baseline,

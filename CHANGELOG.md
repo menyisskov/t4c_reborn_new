@@ -6,6 +6,12 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-30 — Equipping and attacking retry when the game is busy online (T4C-0318)
+
+### Fixed
+- In online play, putting on or taking off gear could answer "The equipment change was refused." when the game had just saved your character, so the same click had to be repeated. The game now tries once more by itself, and only says "Your character is busy. Try again in a moment." if the second try is refused as well.
+- In online play, roughly one attack click in five was answered with "Your character is busy" in the chat even though nothing was wrong. The attack is now tried once more silently before that message appears.
+
 ## 2026-10-30 — Monster clan fights use authored damage spells online (T4C-0317)
 
 ### Fixed
