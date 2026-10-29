@@ -38,35 +38,56 @@ final class OnlineRegeneration {
       Map<Integer, Integer> bonuses) {
     long anchor = progress.cooldowns().getOrDefault(ANCHOR, -1L);
     var vitals = progress.vitals();
-    if (anchor < 0 || anchor > now || vitals.hp() == 0) return reanchor(progress, now);
+    var effectsAtNow = OnlineBuffs.expire(progress, now);
+    if (anchor < 0 || anchor > now || vitals.hp() == 0) return reanchor(effectsAtNow, now);
     long elapsed = (now - anchor) / TICK_MILLIS;
-    if (elapsed == 0) return progress;
+    if (elapsed == 0) return effectsAtNow;
     boolean bounded = elapsed > MAX_TICKS;
     int ticks = (int) Math.min(elapsed, MAX_TICKS);
     var attributes = progress.attributes();
-    var buffs = OnlineBuffs.totals(progress, now);
-    int endurance = attributes.endurance() + buffs.getOrDefault("end", 0) + bonuses.getOrDefault(2, 0);
-    int intelligence = attributes.intelligence() + buffs.getOrDefault("int", 0) + bonuses.getOrDefault(1, 0);
-    int wisdom = attributes.wisdom() + buffs.getOrDefault("wis", 0) + bonuses.getOrDefault(4, 0);
-    int rapidHealing = SkillBonusRules.effective("rapid_healing",
-        progress.skills().getOrDefault("rapid_healing", 0), buffs.getOrDefault("skill:rapid_healing", 0),
-        stat -> bonuses.getOrDefault(stat, 0));
     int hp = vitals.hp();
     int mana = vitals.mana();
-    for (int i = 0; i < ticks && (hp < vitals.maxHp() || mana < vitals.maxMana()); i++) {
-      hp = RegenerationRules.regenerateHp(hp, vitals.maxHp(), endurance, rapidHealing, random);
-      mana = RegenerationRules.regenerateMana(mana, vitals.maxMana(), intelligence, wisdom, random);
+    var effects = progress;
+    for (int i = 0; i < ticks; i++) {
+      long tickAt = Math.addExact(anchor, (long) (i + 1) * TICK_MILLIS);
+      effects = OnlineBuffs.expire(effects, tickAt);
+      var tickVitals = effects.vitals();
+      if (tickVitals.hp() == 0 || (hp >= tickVitals.maxHp() && mana >= tickVitals.maxMana())) break;
+      var buffs = OnlineBuffs.totals(effects, tickAt);
+      int endurance = attributes.endurance() + buffs.getOrDefault("end", 0) + bonuses.getOrDefault(2, 0);
+      int intelligence = attributes.intelligence() + buffs.getOrDefault("int", 0) + bonuses.getOrDefault(1, 0);
+      int wisdom = attributes.wisdom() + buffs.getOrDefault("wis", 0) + bonuses.getOrDefault(4, 0);
+      int rapidHealing = SkillBonusRules.effective("rapid_healing",
+          progress.skills().getOrDefault("rapid_healing", 0), buffs.getOrDefault("skill:rapid_healing", 0),
+          stat -> bonuses.getOrDefault(stat, 0));
+      hp = Math.min(tickVitals.maxHp(), RegenerationRules.regenerateHp(hp, tickVitals.maxHp(), endurance, rapidHealing, random));
+      int meditate = SkillBonusRules.effective("meditate", progress.skills().getOrDefault("meditate", 0),
+          buffs.getOrDefault("skill:meditate", 0), stat -> bonuses.getOrDefault(stat, 0));
+      mana = Math.min(tickVitals.maxMana(), RegenerationRules.regenerateMana(mana, tickVitals.maxMana(), intelligence, wisdom, meditate, random));
     }
+    effects = OnlineBuffs.expire(effects, now);
     var settled = progress;
-    if (hp != vitals.hp() || mana != vitals.mana()) {
-      settled = ProgressEdits.withVitals(settled, new CharacterProgress.Vitals(hp, vitals.maxHp(), mana, vitals.maxMana()));
+    if (hp != vitals.hp() || mana != vitals.mana() || !effects.vitals().equals(vitals)) {
+      var finalVitals = effects.vitals();
+      settled = ProgressEdits.withVitals(settled,
+          new CharacterProgress.Vitals(Math.min(hp, finalVitals.maxHp()), finalVitals.maxHp(),
+              Math.min(mana, finalVitals.maxMana()), finalVitals.maxMana()));
     }
+    if (effects != progress) settled = withEffects(settled, effects);
     return withAnchor(settled, bounded ? now : Math.addExact(anchor, ticks * TICK_MILLIS));
   }
 
   /** Starts a fresh anchor without regenerating: used for dead characters and, by default, at join. */
   static CharacterProgress reanchor(CharacterProgress progress, long now) {
     return progress.cooldowns().getOrDefault(ANCHOR, -1L) == now ? progress : withAnchor(progress, now);
+  }
+
+  /** Copies only the buff timeline onto the progress whose vitals were settled above. */
+  private static CharacterProgress withEffects(CharacterProgress target, CharacterProgress effects) {
+    return new CharacterProgress(Math.max(target.version(), effects.version()), target.characterClass(), target.gender(),
+        target.attributes(), target.vitals(), target.advancement(), target.inventory(), target.equipment(),
+        target.skills(), target.spells(), target.questFlags(), target.storage(), target.storageGold(), target.respawn(),
+        effects.buffs(), effects.cooldowns(), target.hiddenUntil(), target.companion());
   }
 
   private static CharacterProgress withAnchor(CharacterProgress progress, long anchor) {
