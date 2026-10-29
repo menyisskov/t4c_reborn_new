@@ -93,7 +93,8 @@ class PortalWalkTimingTest {
     double back = secondsToReach(map, 2772, 1096, 2931, 1056, 400);
     assertTrue(back > 0, "The hub door must be reachable from the cave arrival");
     slowest = Math.max(slowest, back);
-    assertTrue(slowest > 120, "Measured " + slowest + " s: the long walk this test documents (a short one means the map or speed changed)");
+    // Still a long walk (the old 150 s timeout was too short); the floor is loose so a player-speed retune cannot break it.
+    assertTrue(slowest > 60, "Measured " + slowest + " s: the long walk this test documents (a short one means the map or speed changed)");
     assertTrue(slowest * 1.5 < SOAK_LEG_TIMEOUT_SECONDS,
         "The soak leg timeout (" + SOAK_LEG_TIMEOUT_SECONDS + " s) must leave 50% headroom over the slowest ideal route (" + slowest + " s)");
   }

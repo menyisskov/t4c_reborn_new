@@ -17,12 +17,17 @@ final class OnlineMonsterSpellAttacks {
     return OnlineMonsterSpellCatalog.bundled().damageSpell(spellId);
   }
 
+  static MonsterSpellContent.Spell supportedHeal(int spellId) {
+    return OnlineMonsterSpellCatalog.bundled().selfHealSpell(spellId);
+  }
+
   static boolean supported(MonsterDef definition) {
     if (!definition.isCanAttack()) return true;
     List<MonsterDef.Attack> attacks = definition.getAttacks();
     if (attacks == null) return false;
     return attacks.stream().allMatch(attack -> attack != null && (attack.isSpell()
-        ? supportedSpell(attack.getSpellId()) != null
+        ? supportedSpell(attack.getSpellId()) != null || attack.getSpellId()==10616
+            && supportedHeal(attack.getSpellId()) != null
         : attack.getName() != null && attack.getName().matches("(?i)[1-9][0-9]*d[1-9][0-9]*([+-][0-9]+)?")));
   }
 

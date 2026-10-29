@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-30 — Authored monster heal persists online (T4C-0319)
+
+### Fixed
+- Online monsters can now use authored Heal Serious (10616) to heal themselves, capped at their authored maximum HP; the heal and next-attack deadline commit together, without damaging the player they were retaliating against.
+
 ## 2026-10-30 — Monster clan fights use authored damage spells online (T4C-0317)
 
 ### Fixed

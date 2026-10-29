@@ -23,6 +23,8 @@ class OnlineMonsterSpellCatalogTest {
     assertEquals(Behavior.ARMOR_DAMAGE, catalog.damageSpell(10092).behavior());
     assertNull(catalog.damageSpell(10596));
     assertNull(catalog.damageSpell(10616));
+    assertEquals(Behavior.SELF_HEAL, catalog.selfHealSpell(10616).behavior());
+    assertNull(catalog.selfHealSpell(10091));
     assertNull(catalog.damageSpell(18200));
     assertNull(catalog.damageSpell(19999));
     assertNull(catalog.damageSpell(99999));
@@ -35,6 +37,7 @@ class OnlineMonsterSpellCatalogTest {
     assertNotNull(catalog.damageSpell(10086), "Authored spell without a registry row uses its offline fallback element");
     assertNull(catalog.damageSpell(10596));
     assertNull(catalog.damageSpell(10616));
+    assertNotNull(catalog.selfHealSpell(10616));
     assertNull(catalog.damageSpell(18100));
     assertNull(catalog.damageSpell(18200));
   }
