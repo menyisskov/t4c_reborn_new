@@ -111,6 +111,7 @@
   "online.inventory.page": "Page %d of %d | Left/Right: change page",
   "online.inventory.close": "I or Esc: close | 1-9: equip or unequip",
   "online.equip.refused": "The equipment change was refused.",
+  "online.equip.busy": "Your character is busy. Try again in a moment.",
   "online.equip.requirements": "You do not meet the requirements for that item.",
   "online.equip.conflict": "Another equipped item is in the way.",
   "online.equip.wrong_slot": "That item does not fit that slot.",

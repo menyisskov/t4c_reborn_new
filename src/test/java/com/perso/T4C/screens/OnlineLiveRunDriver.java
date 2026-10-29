@@ -31,6 +31,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.BooleanSupplier;
 import java.util.function.Predicate;
 
@@ -91,6 +92,9 @@ public final class OnlineLiveRunDriver extends MyGame {
   private long lastDaylight;
   private int attacksSent;
   private int shots;
+  private volatile int hoverX = -1, hoverY = -1;
+  /** Tile the beta scene walks to for the Skeleton fights (operator argument); MIN_VALUE when unknown. */
+  private int goalTx = Integer.MIN_VALUE, goalTy;
 
   private interface Step {
     /** @return true when the step has finished. */
@@ -137,9 +141,12 @@ public final class OnlineLiveRunDriver extends MyGame {
     config.setResizable(false);
     config.useVsync(true);
     config.disableAudio(true);
-    new Lwjgl3Application(
-        new OnlineLiveRunDriver(endpoint, profile.secret(), profile.lobbyModel(), out, args[3], args[4], sync),
-        config);
+    var driver = new OnlineLiveRunDriver(endpoint, profile.secret(), profile.lobbyModel(), out, args[3], args[4], sync);
+    if (args.length > 9) {
+      driver.goalTx = Integer.parseInt(args[8]);
+      driver.goalTy = Integer.parseInt(args[9]);
+    }
+    new Lwjgl3Application(driver, config);
   }
 
   // ---------------------------------------------------------------- plumbing
@@ -159,6 +166,10 @@ public final class OnlineLiveRunDriver extends MyGame {
                 new Class<?>[] {Input.class},
                 (proxy, method, a) -> {
                   if (method.getName().equals("isKeyPressed") && held.contains((Integer) a[0])) return true;
+                  // T4C-0316: a pointer position injected for the screen's own hover code (outline and name of another
+                  // player); everything else about the pointer stays the real one.
+                  if (hoverX >= 0 && method.getName().equals("getX") && (a == null || a.length <= 1)) return hoverX;
+                  if (hoverX >= 0 && method.getName().equals("getY") && (a == null || a.length <= 1)) return hoverY;
                   try {
                     return method.invoke(real, a);
                   } catch (java.lang.reflect.InvocationTargetException e) {
@@ -305,13 +316,25 @@ public final class OnlineLiveRunDriver extends MyGame {
   private int routeGoalX = Integer.MIN_VALUE;
   private int routeGoalY;
 
+  /** Authored portal source tiles of the hosted route: a long walk must not cross one by accident (T4C-0316). */
+  private static final Set<Long> PORTAL_TILES =
+      Set.of(tileKey(2770, 1094), tileKey(2770, 1095), tileKey(2771, 1094), tileKey(2931, 1056), tileKey(2964, 1038),
+          tileKey(306, 381), tileKey(136, 665));
+  private static volatile long allowTile = Long.MIN_VALUE;
+
+  private static long tileKey(int x, int y) {
+    return ((long) x << 32) | (y & 0xffffffffL);
+  }
+
   private static boolean walkable(int tx, int ty) {
+    long key = tileKey(tx, ty);
+    if (PORTAL_TILES.contains(key) && key != allowTile) return false;
     return !com.perso.T4C.helper.CollisionManager.getInstance().hasCollision(tx * TILE_W + TILE_W / 2f, ty * TILE_H + TILE_H / 2f);
   }
 
   /** Breadth-first search over free tiles (4 directions, the client's own collision map). */
   private static List<int[]> search(int sx, int sy, int gx, int gy) {
-    int radius = 70;
+    int radius = 200;
     int size = radius * 2 + 1;
     int[][] from = new int[size * size][];
     java.util.ArrayDeque<int[]> queue = new java.util.ArrayDeque<>();
@@ -367,11 +390,16 @@ public final class OnlineLiveRunDriver extends MyGame {
     }
     float dx = next.x - p.getX();
     float dy = next.y - p.getY();
-    if (dx > 5) held.add(Input.Keys.D);
-    if (dx < -5) held.add(Input.Keys.A);
+    // One axis at a time (the larger error in tiles first): a diagonal step into a doorway corner is blocked by the
+    // wall beside it (T4C-0316: the Lighthaven exit door), an axis-aligned step is not.
+    boolean needX = Math.abs(dx) > 5, needY = Math.abs(dy) > 3;
+    if (needX && needY) {
+      if (Math.abs(dx) / TILE_W >= Math.abs(dy) / TILE_H) needY = false;
+      else needX = false;
+    }
+    if (needX) held.add(dx > 0 ? Input.Keys.D : Input.Keys.A);
     // The world's y axis points down the screen: S increases y, W decreases it.
-    if (dy > 3) held.add(Input.Keys.S);
-    if (dy < -3) held.add(Input.Keys.W);
+    if (needY) held.add(dy > 0 ? Input.Keys.S : Input.Keys.W);
   }
 
   private double distance(MainGameScreen s, Vector2 goal) {
@@ -473,7 +501,7 @@ public final class OnlineLiveRunDriver extends MyGame {
     // 2. Each rendered client sees the other.
     until(
         "sees the other rendered player",
-        scene.equals("turnin") ? 1 : 45_000,
+        solo() ? 1: 45_000,
         () -> {
           var s = game();
           return s != null && !others(s).isEmpty();
@@ -486,18 +514,20 @@ public final class OnlineLiveRunDriver extends MyGame {
           shot("sees-other-player");
           signal(tag + ".saw-other");
         });
-    until("peer also saw me", scene.equals("turnin") ? 1 : 60_000, () -> signaled(peer() + ".saw-other"));
+    until("peer also saw me", solo() ? 1: 60_000, () -> signaled(peer() + ".saw-other"));
     if (scene.equals("temple")) templeScene();
     else if (scene.equals("wares")) waresScene();
     else if (scene.equals("quest")) questScene();
     else if (scene.equals("turnin")) turnInScene();
+    else if (scene.equals("beta")) betaScene();
+    else if (scene.equals("mortal")) mortalScene();
     else skeletonScene();
     action(
         () -> {
           signal(tag + ".done");
           log("script finished");
         });
-    until("peer finished", scene.equals("turnin") ? 1 : 120_000, () -> signaled(peer() + ".done"));
+    until("peer finished", solo() ? 1: 120_000, () -> signaled(peer() + ".done"));
     action(
         () -> {
           held.clear();
@@ -632,6 +662,7 @@ public final class OnlineLiveRunDriver extends MyGame {
     double bestDistance = Double.MAX_VALUE;
     for (BaseMonster m : monsters(s)) {
       if (m.isDead() || m.getHealth() <= 0) continue;
+      if (skeletonsOnly && !isSkeleton(m)) continue;
       double d = distance(s, m.getPosition());
       if (d < bestDistance) {
         bestDistance = d;
@@ -639,6 +670,13 @@ public final class OnlineLiveRunDriver extends MyGame {
       }
     }
     return best;
+  }
+
+  /** The beta scene fights Skeletons only: a harmless monster near the temple must not hold a respawned player there. */
+  private boolean skeletonsOnly;
+
+  private static boolean isSkeleton(BaseMonster m) {
+    return m.getName() != null && m.getName().toLowerCase(Locale.ROOT).contains("skeleton");
   }
 
   private void skeletonScene() {
@@ -1299,13 +1337,913 @@ public final class OnlineLiveRunDriver extends MyGame {
     action(() -> log("TURN-IN repeat result (no second reward expected): " + questState()));
   }
 
+  // ---------------------------------------------------------------- beta scene (T4C-0316)
+  //
+  // One long, two-window script on the real screens: the NPC topic panel, equipment seen by the other window, portal
+  // trips watched from both sides, a walk to the Skeleton ground, a mixed fight/idle/loot session with claim races, a
+  // death and an individual corpse recovery. Everything goes through the screens' own input handlers except where a
+  // line says "through the connection" (the screen has no control for it); those are logged as such.
+
+  private final List<Long> messageAt = new ArrayList<>();
+  private final List<String> messageText = new ArrayList<>();
+  private String lastMessage;
+
+  /** Logs every new on-screen system message (the screen's own SystemMessage, read by reflection). */
+  private void pollMessage() {
+    var s = game();
+    if (s == null) return;
+    try {
+      // System messages go to the chat log (the screen registers the chat as the message sink): read its entries.
+      Object chat = field(s, MainGameScreen.class, "gameChat");
+      if (chat == null) return;
+      @SuppressWarnings("unchecked")
+      List<Object> entries = (List<Object>) field(chat, chat.getClass(), "entries");
+      if (entries.size() < chatSeen) chatSeen = 0;
+      while (chatSeen < entries.size()) {
+        Object entry = entries.get(chatSeen++);
+        var accessor = entry.getClass().getDeclaredMethod("segments");
+        accessor.setAccessible(true);
+        StringBuilder text = new StringBuilder();
+        for (Object segment : (List<?>) accessor.invoke(entry)) {
+          var t = segment.getClass().getDeclaredMethod("text");
+          t.setAccessible(true);
+          text.append(t.invoke(segment));
+        }
+        messageAt.add(System.currentTimeMillis());
+        messageText.add(text.toString());
+        log("MSG: " + text);
+      }
+    } catch (ReflectiveOperationException | RuntimeException ignored) {
+      // the screen is being rebuilt
+    }
+  }
+
+  private int chatSeen;
+
+  private List<String> messagesSince(long t) {
+    List<String> found = new ArrayList<>();
+    for (int i = 0; i < messageAt.size(); i++) if (messageAt.get(i) >= t) found.add(messageText.get(i));
+    return found;
+  }
+
+  private com.perso.T4C.online.OnlineTalkPanel talkPanel() {
+    return (com.perso.T4C.online.OnlineTalkPanel) field(game(), MainGameScreen.class, "remoteTalkPanel");
+  }
+
+  private void hoverOver(MainGameScreen s, Vector2 world) {
+    Vector3 p = camera(s).project(new Vector3(world.x, world.y, 0));
+    hoverX = Math.round(p.x);
+    hoverY = Gdx.graphics.getHeight() - Math.round(p.y) - 1;
+    Gdx.input.getInputProcessor().mouseMoved(hoverX, hoverY);
+  }
+
+  /** A small picture around a world point from the real back buffer. */
+  private void cropOf(String name, Vector2 world, int w, int h) {
+    var s = game();
+    if (s == null) return;
+    Vector3 p = camera(s).project(new Vector3(world.x, world.y, 0));
+    int bw = Gdx.graphics.getBackBufferWidth(), bh = Gdx.graphics.getBackBufferHeight();
+    int x0 = Math.max(0, Math.min(bw - w, Math.round(p.x) - w / 2));
+    int y0 = Math.max(0, Math.min(bh - h, Math.round(p.y) - 50));
+    byte[] pixels = ScreenUtils.getFrameBufferPixels(x0, y0, w, h, true);
+    for (int i = 3; i < pixels.length; i += 4) pixels[i] = (byte) 255;
+    Pixmap crop = new Pixmap(w, h, Pixmap.Format.RGBA8888);
+    BufferUtils.copy(pixels, 0, crop.getPixels(), pixels.length);
+    String file = tag + "-" + String.format("%02d", ++shots) + "-" + name + ".png";
+    PixmapIO.writePNG(new com.badlogic.gdx.files.FileHandle(out.resolve(file).toFile()), crop);
+    crop.dispose();
+    log("saved " + file);
+  }
+
+  private OnlineConnection.Actor ownActor() {
+    var v = view();
+    for (var a : v.snapshot().players()) if (a.id() == v.ownId()) return a;
+    return null;
+  }
+
+  private OnlineConnection.Actor otherActor() {
+    var v = view();
+    for (var a : v.snapshot().players()) if (a.id() != v.ownId()) return a;
+    return null;
+  }
+
+  private static String lookOf(OnlineConnection.Actor a) {
+    if (a == null) return "none";
+    return "name=" + a.name() + " gender=" + a.gender() + " equipment="
+        + new java.util.TreeMap<>(a.equipment() == null ? java.util.Map.<String, String>of() : a.equipment());
+  }
+
+  private String drawnOther(MainGameScreen s) {
+    var list = others(s);
+    if (list.isEmpty()) return "no other player drawn";
+    var p = list.get(0);
+    return "drawn name=" + p.getName() + " equippedItems=" + new java.util.TreeMap<>(p.getEquippedItems()) + " at " + p.getPositionVector();
+  }
+
+  private Vector2 tileCenter(int tx, int ty) {
+    return new Vector2(tx * TILE_W + TILE_W / 2f, ty * TILE_H + TILE_H / 2f);
+  }
+
+  /** Runs {@code body} each frame for {@code ms}, then logs the end of the segment. */
+  private void segment(String what, long ms, Runnable body) {
+    final long[] start = {-1};
+    add(
+        () -> {
+          long now = System.currentTimeMillis();
+          if (start[0] < 0) {
+            start[0] = now;
+            log("SEGMENT start: " + what + " | " + state());
+          }
+          if (now - start[0] >= ms) {
+            held.clear();
+            log("SEGMENT end: " + what + " after " + (now - start[0]) / 1000 + " s | " + state());
+            return true;
+          }
+          body.run();
+          return false;
+        });
+  }
+
+  // ---- chapter 1: the NPC topic panel
+
+  private void topicChapter() {
+    if (tag.endsWith("B")) until("Alpha finished the topic panel", 240_000, () -> signaled(peer() + ".topic-done"));
+    talkTo("aelric", "topic-greeting");
+    action(
+        () -> {
+          var panel = talkPanel();
+          log("TOPIC PANEL open=" + panel.isOpen() + " lines=" + panel.lines() + "; " + questState());
+          shot("topic-panel");
+        });
+    action(
+        () -> {
+          if (talkPanel().isOpen()) {
+            log("TOPIC: digit 1 (topic 0) pressed on the screen's own key handler");
+            press(Input.Keys.NUM_1);
+          } else log("TOPIC: the panel did not open after the greeting");
+        });
+    waitMs(3500);
+    action(
+        () -> {
+          log("TOPIC after topic 0: " + questState() + " panel open " + talkPanel().isOpen());
+          shot("topic-accepted");
+          signal(tag + ".topic-done");
+        });
+    until("the other window finished the topic panel", 240_000, () -> signaled(peer() + ".topic-done"));
+    // The panel stays open after a topic; a player closes it with Esc (the screen's own key handler).
+    action(() -> press(Input.Keys.ESCAPE));
+  }
+
+  // ---- chapter 2: equipment seen by the other window
+
+  /** Presses the digit of the first inventory row matching {@code match}, turning pages first when it is past nine. */
+  private void inventoryPickRow(Predicate<com.perso.T4C.online.OnlineInventoryPanel.Row> match, String label, String[] pickedKey) {
+    final int[] digit = {-1};
+    final String[] before = {null};
+    action(
+        () -> {
+          before[0] = state();
+          var rows = inventoryPanel().rows(view().character().progress());
+          int idx = -1;
+          for (int i = 0; i < rows.size(); i++) if (match.test(rows.get(i))) { idx = i; break; }
+          if (idx < 0) {
+            log("INVENTORY " + label + ": no matching row");
+            return;
+          }
+          if (pickedKey != null && pickedKey[0] == null) pickedKey[0] = rows.get(idx).item().key();
+          for (int p = 0; p < idx / 9; p++) press(Input.Keys.RIGHT);
+          digit[0] = idx % 9 + 1;
+          log("INVENTORY " + label + ": row " + (idx + 1) + " item " + rows.get(idx).item().key() + " slot " + rows.get(idx).slot());
+        });
+    waitMs(700);
+    action(
+        () -> {
+          if (digit[0] > 0) press(digitKey(digit[0]));
+        });
+    waitMs(2500);
+    action(
+        () -> {
+          log("INVENTORY " + label + ": after:  " + state() + " (changed: " + !state().equals(before[0]) + ")");
+          hud("inventory-" + label);
+        });
+  }
+
+  private void equipRound(String actor) {
+    boolean acting = tag.endsWith(actor);
+    String r = "equip-" + actor;
+    final String[] picked = {null};
+    if (acting) {
+      action(
+          () -> {
+            log("EQUIP(" + actor + ") start, own public look: " + lookOf(ownActor()) + "; " + state());
+            press(Input.Keys.I);
+          });
+      waitMs(900);
+      inventoryPickRowVisible(picked);
+      // placeholder: the unequip happens in inventoryPickRowVisible's last step
+      action(() -> signal(r + ".ready"));
+      until("observer looked at the unchanged look", 60_000, () -> signaled(r + ".before"));
+      inventoryPickRow(row -> row.kind() == com.perso.T4C.online.OnlineInventoryPanel.Kind.EQUIPPED
+          && row.item().key().equals(picked[0]), "unequip-" + actor, null);
+      action(() -> log("EQUIP(" + actor + ") after unequip, own public look: " + lookOf(ownActor())));
+      action(() -> signal(r + ".off"));
+      until("observer looked at the changed look", 60_000, () -> signaled(r + ".after-off"));
+      inventoryPickRow(row -> row.kind() == com.perso.T4C.online.OnlineInventoryPanel.Kind.CARRIED
+          && row.item().key().equals(picked[0]), "re-equip-" + actor, null);
+      action(() -> log("EQUIP(" + actor + ") after re-equip, own public look: " + lookOf(ownActor())));
+      action(() -> signal(r + ".on"));
+      until("observer looked at the restored look", 60_000, () -> signaled(r + ".after-on"));
+      action(() -> press(Input.Keys.I));
+    } else {
+      until("the other player is ready", 120_000, () -> signaled(r + ".ready"));
+      observeOther(r + "-before");
+      action(() -> signal(r + ".before"));
+      until("the other player unequipped", 60_000, () -> signaled(r + ".off"));
+      waitMs(1500);
+      observeOther(r + "-after-unequip");
+      action(() -> signal(r + ".after-off"));
+      until("the other player re-equipped", 60_000, () -> signaled(r + ".on"));
+      waitMs(1500);
+      observeOther(r + "-after-reequip");
+      action(
+          () -> {
+            hoverX = -1;
+            signal(r + ".after-on");
+          });
+    }
+    until("round finished on both sides", 60_000, () -> signaled(r + ".after-on"));
+  }
+
+  /** Unequips nothing yet: only records which visible worn item the acting player will take off (armor before weapon). */
+  private void inventoryPickRowVisible(String[] picked) {
+    action(
+        () -> {
+          var own = ownActor();
+          var rows = inventoryPanel().rows(view().character().progress());
+          String first = null, armor = null;
+          for (var r : rows) {
+            if (r.kind() != com.perso.T4C.online.OnlineInventoryPanel.Kind.EQUIPPED || r.slot() == null) continue;
+            boolean visible = own != null && own.equipment() != null && own.equipment().containsKey(r.slot().name());
+            if (!visible) continue;
+            if (first == null) first = r.item().key();
+            if (armor == null && !r.slot().name().contains("WEAPON") && !r.slot().name().contains("SHIELD")) armor = r.item().key();
+          }
+          picked[0] = armor != null ? armor : first;
+          log("EQUIP: chosen visible worn item " + picked[0] + "; rows " + rows.stream().map(x -> x.kind() + ":" + x.slot() + ":" + x.item().key()).toList());
+        });
+  }
+
+  private void observeOther(String label) {
+    action(
+        () -> {
+          var s = game();
+          var list = others(s);
+          if (list.isEmpty()) {
+            log("OBSERVE " + label + ": no other player drawn");
+            return;
+          }
+          var p = list.get(0);
+          Vector2 at = aim(p.getPositionVector(), q -> p.isMouseOver(q.x, q.y));
+          if (at != null) hoverOver(s, at);
+          log("OBSERVE " + label + ": pointer on the figure at " + at + "; snapshot actor " + lookOf(otherActor()) + " | " + drawnOther(s));
+        });
+    waitMs(800);
+    action(
+        () -> {
+          var s = game();
+          var list = others(s);
+          if (!list.isEmpty()) cropOf("observe-" + label, list.get(0).getPositionVector(), 220, 260);
+        });
+  }
+
+  // ---- chapter 3: portal hops watched from both windows
+
+  /**
+   * One character walks onto an authored portal tile; the other window watches. {@code observerInFrom} says whether the
+   * observer stands in the region being left (it should see the walker disappear) or in the destination (it should
+   * see the walker arrive).
+   */
+  private void portalHop(String walker, int tx, int ty, String fromKey, String toKey, boolean observerInFrom, String label) {
+    boolean walking = tag.endsWith(walker);
+    String go = "hop-" + label + ".go", arrived = "hop-" + label + ".arrived", seen = "hop-" + label + ".seen";
+    if (walking) {
+      action(
+          () -> {
+            var v = view();
+            log("HOP " + label + " (walker): region " + v.map().key() + " epoch " + v.map().locationEpoch() + " others drawn " + others(game()).size());
+            signal(go);
+          });
+      repeat(
+          "walked onto the portal " + label,
+          150_000,
+          () -> {
+            var s = game();
+            if (s == null) return false;
+            if (!view().map().key().equals(fromKey)) return true;
+            allowTile = tileKey(tx, ty);
+            walkToward(s, tileCenter(tx, ty), 3f);
+            long now = System.currentTimeMillis();
+            if (now - lastMessageLog > 4000) {
+              lastMessageLog = now;
+              var p = me(s).getCoordinates();
+              log("HOP " + label + " walking: at (" + Math.round(p.getX()) + "," + Math.round(p.getY()) + ") tile (" + (int) (p.getX() / TILE_W) + "," + (int) (p.getY() / TILE_H)
+                  + ") goal tile (" + tx + "," + ty + ") keys " + held + " route " + route.size());
+            }
+            return false;
+          });
+      action(() -> held.clear());
+      until("the character is in region " + toKey + " with the new map applied", 40_000, () -> {
+        var v = view();
+        return game() != null && v.map().key().equals(toKey) && v.snapshot() != null && v.snapshot().region() != null
+            && v.snapshot().region().key().equals(toKey);
+      });
+      waitMs(2500);
+      action(
+          () -> {
+            var v = view();
+            var p = me(game()).getCoordinates();
+            log("HOP " + label + " (walker) arrived: region " + v.map().key() + " epoch " + v.map().locationEpoch() + " position (" + Math.round(p.getX())
+                + "," + Math.round(p.getY()) + ") tile (" + (int) (p.getX() / TILE_W) + "," + (int) (p.getY() / TILE_H) + ") others drawn " + others(game()).size());
+            shot("walker-arrived-" + label);
+            signal(arrived);
+          });
+      until("observer saw it", 90_000, () -> signaled(seen));
+    } else {
+      until("walker started " + label, 150_000, () -> signaled(go));
+      final long[] began = {0};
+      action(() -> began[0] = System.currentTimeMillis());
+      if (observerInFrom) {
+        repeat(
+            "the walker disappeared from my region",
+            150_000,
+            () -> {
+              var s = game();
+              return s != null && others(s).isEmpty() && view().snapshot().players().stream().noneMatch(a -> a.id() != view().ownId());
+            });
+        action(
+            () -> {
+              log("OBSERVE " + label + ": the walker left my region " + view().map().key() + " after " + (System.currentTimeMillis() - began[0]) / 1000.0
+                  + " s; drawn others " + others(game()).size() + ", snapshot players " + view().snapshot().players().size());
+              shot("observer-sees-leave-" + label);
+            });
+        until("walker arrived", 90_000, () -> signaled(arrived));
+      } else {
+        until("walker arrived", 150_000, () -> signaled(arrived));
+        repeat("the walker is drawn in my region", 60_000, () -> game() != null && !others(game()).isEmpty());
+        waitMs(1500);
+        action(
+            () -> {
+              var s = game();
+              log("OBSERVE " + label + ": the walker is drawn in my region " + view().map().key() + "; " + lookOf(otherActor()) + " | " + drawnOther(s));
+              shot("observer-sees-arrive-" + label);
+              cropOf("observer-crop-arrive-" + label, others(s).get(0).getPositionVector(), 220, 260);
+            });
+      }
+      action(() -> signal(seen));
+    }
+  }
+
+  // ---- chapter 4: walk to the hunting ground
+
+  private void walkToGround() {
+    repeat(
+        "reached the Skeleton ground",
+        420_000,
+        () -> {
+          var s = game();
+          if (s == null || goalTx == Integer.MIN_VALUE) return true;
+          for (BaseMonster m : monsters(s))
+            if (!m.isDead() && m.getHealth() > 0 && m.getName() != null && m.getName().toLowerCase(Locale.ROOT).contains("skeleton")
+                && distance(s, m.getPosition()) < 10 * TILE_W) return true;
+          walkToward(s, tileCenter(goalTx, goalTy), 40f);
+          if (System.currentTimeMillis() - lastMessageLog > 20_000) {
+            lastMessageLog = System.currentTimeMillis();
+            var p = me(s).getCoordinates();
+            log("WALK to the ground: at tile (" + (int) (p.getX() / TILE_W) + "," + (int) (p.getY() / TILE_H) + "), goal (" + goalTx + "," + goalTy + "), live monsters drawn " + monsters(s).size());
+          }
+          return false;
+        });
+    action(
+        () -> {
+          held.clear();
+          var p = me(game()).getCoordinates();
+          log("WALK done at tile (" + (int) (p.getX() / TILE_W) + "," + (int) (p.getY() / TILE_H) + "); " + state());
+          shot("at-skeleton-ground");
+        });
+  }
+
+  // ---- chapter 5: the mixed session with loot races
+
+  private final long[] potionAt = {0};
+  private int potionStage;
+  private boolean noPotions;
+  private int minHp = Integer.MAX_VALUE;
+  private long lastSoakLog;
+  private long lastDropLog;
+  private final Set<UUID> raced = new HashSet<>();
+  private final Set<UUID> dropsSeen = new HashSet<>();
+
+  private static final class Race {
+    UUID id;
+    int number;
+    long at;
+    String type;
+    String key;
+    boolean clicked;
+    long clickedAt;
+    int carriedBefore;
+    String ownerBefore;
+    long remainingBefore;
+    boolean reported;
+    Vector2 position;
+  }
+
+  private Race race;
+  private int racesDone;
+  private long lastRaceEnd;
+
+  private BaseMonster nearestLiveTo(MainGameScreen s, Vector2 point) {
+    BaseMonster best = null;
+    double bestDistance = Double.MAX_VALUE;
+    for (BaseMonster m : monsters(s)) {
+      if (m.isDead() || m.getHealth() <= 0) continue;
+      if (skeletonsOnly && !isSkeleton(m)) continue;
+      double d = Math.hypot(point.x - m.getPosition().x, point.y - m.getPosition().y);
+      if (d < bestDistance) {
+        bestDistance = d;
+        best = m;
+      }
+    }
+    return best;
+  }
+
+  private void drinkIfHurt(OnlineConnection.View v, long now) {
+    var vit = v.character().progress().vitals();
+    minHp = Math.min(minHp, vit.hp());
+    if (noPotions) return;
+    if (potionStage == 0 && vit.hp() > 0 && vit.hp() * 100 < vit.maxHp() * 60 && now - potionAt[0] > 3000) {
+      press(Input.Keys.U);
+      potionStage = 1;
+      potionAt[0] = now;
+    } else if (potionStage == 1 && now - potionAt[0] > 350) {
+      boolean listed = abilityMenu().isOpen() && abilityMenu().lines(v.character().progress()).size() > 2;
+      press(listed ? Input.Keys.NUM_1 : Input.Keys.U);
+      if (!listed) log("potion at hp " + vit.hp() + "/" + vit.maxHp() + ": no potion left");
+      potionStage = 0;
+      potionAt[0] = now;
+    }
+  }
+
+  /** One frame of fighting through the monster click handler; with {@code focus} the nearest monster to that point. */
+  private void combatFrame(MainGameScreen s, boolean attack, Vector2 focus) {
+    long now = System.currentTimeMillis();
+    var v = view();
+    drinkIfHurt(v, now);
+    if (v.character().progress().vitals().hp() <= 0 || !attack) {
+      held.clear();
+      return;
+    }
+    BaseMonster target = focus == null ? nearestLive(s) : nearestLiveTo(s, focus);
+    if (target == null || distance(s, target.getPosition()) > 25 * TILE_W) {
+      if (goalTx != Integer.MIN_VALUE) walkToward(s, tileCenter(goalTx, goalTy), 40f);
+      else held.clear();
+      return;
+    }
+    double d = distance(s, target.getPosition());
+    float reach = GameConstants.PLAYER_MELEE_ATTACK_RANGE - 14f;
+    if (d > reach) walkToward(s, target.getPosition(), reach);
+    else held.clear();
+    if (d <= reach + 8 && now - lastClick > 650) {
+      Vector2 at = aim(target.getPosition(), p -> target.isMouseOver(p.x, p.y));
+      if (at != null) {
+        click(s, at.x, at.y);
+        attacksSent++;
+      }
+    }
+  }
+
+  private GroundItem groundItemOf(MainGameScreen s, UUID id) {
+    var world = ((com.perso.T4C.session.GameSession) field(s, MainGameScreen.class, "session")).world();
+    if (!(world instanceof com.perso.T4C.session.RemoteWorldDriver r)) return null;
+    for (GroundItem item : groundItems(s)) if (id.equals(r.lootId(item))) return item;
+    return null;
+  }
+
+  private com.perso.T4C.online.model.GroundLootView lootView(UUID id) {
+    for (var loot : view().snapshot().loot()) if (loot.id().equals(id)) return loot;
+    return null;
+  }
+
+  private String ownIdText() {
+    return String.valueOf(view().ownId());
+  }
+
+  /** Leader (A): plan the next claim race once the previous one is over; both windows then follow the marker file. */
+  private void planRace(long now) {
+    if (race != null || !tag.endsWith("A") || now - lastRaceEnd < 15_000) return;
+    int next = racesDone + 1;
+    if (signaled("race-" + next)) return;
+    var v = view();
+    var other = otherActor();
+    var mine = ownActor();
+    if (other == null || mine == null) return;
+    for (var loot : v.snapshot().loot()) {
+      if (raced.contains(loot.id())) continue;
+      if (Math.max(Math.abs(loot.x() - other.x()), Math.abs(loot.y() - other.y())) > 40
+          || Math.max(Math.abs(loot.x() - mine.x()), Math.abs(loot.y() - mine.y())) > 40) continue;
+      boolean inWindow = (next == 1 || next == 3) && loot.ownerRemainingMs() > 20_000;
+      long at = inWindow ? now + 7_000 : now + Math.min(70_000, loot.ownerRemainingMs() + 2_000) + (loot.ownerRemainingMs() > 0 ? 0 : 5_000);
+      String body = loot.id() + "|" + at + "|" + (inWindow ? "IN_WINDOW" : "AFTER_WINDOW") + "|" + loot.key();
+      try {
+        Files.writeString(sync.resolve("race-" + next), body);
+      } catch (java.io.IOException e) {
+        throw new IllegalStateException(e);
+      }
+      raced.add(loot.id());
+      log("RACE " + next + " planned by the leader: " + body + " owner " + loot.ownerPlayerId() + " remaining " + loot.ownerRemainingMs());
+      return;
+    }
+  }
+
+  private void followRace(MainGameScreen s, long now) {
+    if (race == null) {
+      int next = racesDone + 1;
+      Path marker = sync.resolve("race-" + next);
+      if (!Files.exists(marker)) return;
+      try {
+        String[] part = Files.readString(marker).split("\\|");
+        if (part.length < 4) return;
+        race = new Race();
+        race.number = next;
+        race.id = UUID.fromString(part[0]);
+        race.at = Long.parseLong(part[1]);
+        race.type = part[2];
+        race.key = part[3];
+        raced.add(race.id);
+      } catch (java.io.IOException | RuntimeException e) {
+        race = null;
+        return;
+      }
+    }
+    var item = groundItemOf(s, race.id);
+    if (item != null) race.position = new Vector2(item.getPosition());
+    if (!race.clicked && now >= race.at) {
+      race.clicked = true;
+      race.clickedAt = now;
+      var view = lootView(race.id);
+      race.carriedBefore = count(view().character().progress(), race.key.replace("item.", ""));
+      race.ownerBefore = view == null ? "gone" : String.valueOf(view.ownerPlayerId());
+      race.remainingBefore = view == null ? -1 : view.ownerRemainingMs();
+      Vector2 at = item == null ? null : aim(item.getPosition(), p -> item.isMouseOver(p.x, p.y));
+      log("RACE " + race.number + " " + race.type + " CLICK at " + now + ": " + race.key + " own id " + ownIdText() + " owner " + race.ownerBefore
+          + " remainingMs " + race.remainingBefore + " distance " + (item == null ? "n/a" : Math.round(distance(s, item.getPosition())) + " px")
+          + " point " + at + " | " + state());
+      if (at != null) click(s, at.x, at.y);
+    }
+    if (race.clicked && !race.reported && now - race.clickedAt > 3500) {
+      race.reported = true;
+      int after = count(view().character().progress(), race.key.replace("item.", ""));
+      log("RACE " + race.number + " " + race.type + " RESULT: I now carry " + after + " of " + race.key + " (was " + race.carriedBefore + "); messages "
+          + messagesSince(race.clickedAt) + "; drop still on the ground: " + (lootView(race.id) != null) + " | " + state());
+      hud("race-" + race.number + "-" + tag.charAt(tag.length() - 1));
+      signal("race-" + race.number + ".done-" + tag.charAt(tag.length() - 1));
+    }
+    if (race.reported && signaled("race-" + race.number + ".done-A") && signaled("race-" + race.number + ".done-B")) {
+      racesDone++;
+      lastRaceEnd = now;
+      race = null;
+    }
+  }
+
+  private void watchDrops(long now) {
+    var v = view();
+    for (var loot : v.snapshot().loot()) {
+      if (dropsSeen.add(loot.id()))
+        log("DROP seen: " + loot.key() + " id " + loot.id().toString().substring(0, 8) + " owner " + loot.ownerPlayerId() + " (own id " + ownIdText()
+            + ") ownerRemainingMs " + loot.ownerRemainingMs());
+    }
+    if (now - lastDropLog > 10_000 && dropsSeen.size() <= 4) {
+      lastDropLog = now;
+      for (var loot : v.snapshot().loot())
+        log("DROP countdown: " + loot.id().toString().substring(0, 8) + " " + loot.key() + " owner " + loot.ownerPlayerId() + " ownerRemainingMs " + loot.ownerRemainingMs());
+    }
+  }
+
+  private long sessionStart;
+  private long xpAtStart;
+
+  private void soakLog(long now) {
+    if (now - lastSoakLog < 60_000) return;
+    lastSoakLog = now;
+    var v = view();
+    var rt = Runtime.getRuntime();
+    log("SOAK t=" + (now - sessionStart) / 1000 + "s hp " + v.character().progress().vitals().hp() + "/" + v.character().progress().vitals().maxHp()
+        + " minHp " + minHp + " xp+" + (v.character().experience() - xpAtStart) + " gold " + v.character().gold() + " attacks " + attacksSent
+        + " drops " + dropsSeen.size() + " races " + racesDone + " connection " + connection().status() + " others " + others(game()).size()
+        + " heapMB " + (rt.totalMemory() - rt.freeMemory()) / 1_000_000 + " revision " + v.character().revision());
+  }
+
+  /** Fight, idle and loot for {@code ms}; idle for 40 s of every 300 s, claim races whenever the leader plans one. */
+  private void mixedSegment(String what, long ms) {
+    // -Dbeta.scale shortens the session for a smoke test of the other chapters; the evidence run uses 1.
+    double scale = Double.parseDouble(System.getProperty("beta.scale", "1"));
+    segment(
+        what,
+        Math.round(ms * scale),
+        () -> {
+          var s = game();
+          if (s == null) return;
+          long now = System.currentTimeMillis();
+          if (sessionStart == 0) {
+            sessionStart = now;
+            xpAtStart = view().character().experience();
+          }
+          watchDrops(now);
+          soakLog(now);
+          planRace(now);
+          followRace(s, now);
+          var vit = view().character().progress().vitals();
+          boolean idle = race == null && (now - sessionStart) % 300_000 >= 260_000 && vit.hp() * 100 >= vit.maxHp() * 50;
+          if (race != null && race.position != null && !race.clicked && now >= race.at - 15_000 && distance(s, race.position) > 50f) {
+            // Stand beside the drop before the agreed instant (drinking when hurt, no swings in the last seconds).
+            drinkIfHurt(view(), now);
+            walkToward(s, race.position, 40f);
+          } else if (race != null && race.position != null && !race.clicked && now >= race.at - 15_000) {
+            held.clear();
+            drinkIfHurt(view(), now);
+          } else {
+            combatFrame(s, !idle, race == null ? null : race.position);
+          }
+        });
+  }
+
+  // ---- chapter 6: death and individual corpse recovery
+
+  private void deathChapter() {
+    if (tag.endsWith("A")) {
+      // Alpha keeps fighting near the corpse spot so the recovering player can reach it.
+      final long[] began = {0};
+      add(
+          () -> {
+            long now = System.currentTimeMillis();
+            if (began[0] == 0) {
+              began[0] = now;
+              log("SEGMENT start: Alpha guards while Bravo dies and recovers | " + state());
+            }
+            var s = game();
+            if (signaled("B.recovered") || now - began[0] > 900_000) {
+              held.clear();
+              log("SEGMENT end: Alpha guard after " + (now - began[0]) / 1000 + " s | " + state());
+              return true;
+            }
+            if (s != null) {
+              soakLog(now);
+              combatFrame(s, true, null);
+            }
+            return false;
+          });
+      return;
+    }
+    final UUID[] corpse = {null};
+    final Vector2[] corpsePoint = {null};
+    final long[] diedAt = {0};
+    action(
+        () -> {
+          noPotions = true;
+          log("DEATH: Bravo stops fighting and drinking and waits among the Skeletons; " + state());
+        });
+    final int[] corpsesBefore = {0};
+    action(() -> corpsesBefore[0] = view().corpses().size());
+    repeat(
+        "Bravo died (a new corpse is listed; the server respawns the character at once)",
+        600_000,
+        () -> {
+          var s = game();
+          held.clear();
+          // Stand beside the nearest live monster and do nothing (no swings, no potions).
+          if (s != null) {
+            BaseMonster m = nearestLive(s);
+            if (m != null && distance(s, m.getPosition()) > 40f) walkToward(s, m.getPosition(), 30f);
+          }
+          return view().character().progress().vitals().hp() <= 0 || view().corpses().size() > corpsesBefore[0];
+        });
+    waitMs(2500);
+    action(
+        () -> {
+          diedAt[0] = System.currentTimeMillis();
+          var v = view();
+          log("DEATH happened: hp " + v.character().progress().vitals().hp() + " corpses in view " + v.corpses() + "; " + state());
+          shot("after-death");
+          for (var c : v.corpses()) if (c.world() == v.map().world()) { corpse[0] = c.id(); corpsePoint[0] = new Vector2((float) ((c.x() - 0.5) * TILE_W), (float) ((c.y() - 0.5) * TILE_H)); log("CORPSE " + c); }
+        });
+    repeat(
+        "respawned alive",
+        60_000,
+        () -> view().character().progress().vitals().hp() > 0 && game() != null);
+    waitMs(3000);
+    action(
+        () -> {
+          var v = view();
+          var p = me(game()).getCoordinates();
+          noPotions = false;
+          potionStage = 0;
+          // A player closes any panel left open (here the potion list) before walking on.
+          press(Input.Keys.ESCAPE);
+          for (var c : v.corpses()) if (c.world() == v.map().world() && corpse[0] == null) { corpse[0] = c.id(); corpsePoint[0] = new Vector2((float) ((c.x() - 0.5) * TILE_W), (float) ((c.y() - 0.5) * TILE_H)); }
+          log("RESPAWNED: region " + v.map().key() + " at tile (" + (int) (p.getX() / TILE_W) + "," + (int) (p.getY() / TILE_H) + ") corpses " + v.corpses() + "; " + state());
+          shot("respawned");
+        });
+    final long[] leaving = {0};
+    final boolean[] recoverAccepted = {false};
+    final int[] recoverTries = {0};
+    final long[] recoverAt = {0};
+    repeat(
+        "walked back near the corpse (fighting on the way)",
+        420_000,
+        () -> {
+          var s = game();
+          if (s == null || corpsePoint[0] == null) return true;
+          // The respawn spot in the temple: the route search oscillates there (A, S, A, S for minutes, seen in two runs), while
+          // the keys on their own move freely (mortal diagnostic run), so a player first walks south out of the room.
+          if (leaving[0] == 0) leaving[0] = System.currentTimeMillis();
+          if (System.currentTimeMillis() - leaving[0] < 4000) {
+            held.clear();
+            held.add(Input.Keys.S);
+            return false;
+          }
+          long now = System.currentTimeMillis();
+          if (distance(s, corpsePoint[0]) < 44f) {
+            // Within the server's recovery reach (two tiles of walking range): ask, and ask again if it says out of range.
+            held.clear();
+            if (recoverAccepted[0] || recoverTries[0] >= 6) return true;
+            if (now - recoverAt[0] > 3500 && corpse[0] != null) {
+              recoverAt[0] = now;
+              recoverTries[0]++;
+              before = view().character().progress();
+              log("RECOVER try " + recoverTries[0] + ": /recover through the connection (the screen has no corpse control) for " + corpse[0] + "; distance "
+                  + Math.round(distance(s, corpsePoint[0])) + " px; " + state());
+              connection().recover(corpse[0]).whenComplete((r, f) -> {
+                if (r != null && r.accepted()) recoverAccepted[0] = true;
+                log("RECOVER reply: " + (f != null ? "failure " + f : "accepted=" + (r != null && r.accepted()) + " key=" + (r == null ? null : r.messageKey())));
+              });
+            }
+            return false;
+          }
+          BaseMonster m = nearestLive(s);
+          boolean threatened = m != null && distance(s, m.getPosition()) < 3 * TILE_W;
+          if (threatened) combatFrame(s, true, null);
+          else {
+            drinkIfHurt(view(), now);
+            // Far away: walk to the known walkable hunting-ground tile; close by: straight to the corpse.
+            if (distance(s, corpsePoint[0]) > 14 * TILE_W && goalTx != Integer.MIN_VALUE) walkToward(s, tileCenter(goalTx, goalTy), 40f);
+            else walkToward(s, corpsePoint[0], 20f);
+          }
+          if (now - lastMessageLog > 20_000) {
+            lastMessageLog = now;
+            log("RETURN to the corpse: distance " + Math.round(distance(s, corpsePoint[0])) + " px; hp " + view().character().progress().vitals().hp()
+                + "; threatened " + threatened + " nearest monster " + (m == null ? "none" : m.getName() + " at " + Math.round(distance(s, m.getPosition())) + " px")
+                + "; route " + route.size() + "; " + movementDiagnostics());
+          }
+          return false;
+        });
+    action(
+        () -> {
+          held.clear();
+          log("RECOVER finished after " + recoverTries[0] + " tries, accepted " + recoverAccepted[0]);
+        });
+    waitMs(4000);
+    action(
+        () -> {
+          var v = view();
+          log("RECOVER after: " + state() + "; corpses still listed " + v.corpses() + "; carried before " + inventorySummary(before));
+          shot("after-recover");
+          signal("B.recovered");
+        });
+  }
+
+  private boolean solo() {
+    return scene.equals("turnin") || scene.equals("mortal");
+  }
+
+  /** What the screen knows about its own movement after a respawn (diagnostics for the death chapter). */
+  private String movementDiagnostics() {
+    var s = game();
+    if (s == null) return "no screen";
+    var v = view();
+    var p = me(s).getCoordinates();
+    long confirmed = -1;
+    try {
+      var f = MainGameScreen.class.getDeclaredField("confirmedRemoteEpoch");
+      f.setAccessible(true);
+      confirmed = f.getLong(s);
+    } catch (ReflectiveOperationException ignored) {
+    }
+    var own = ownActor();
+    return "tile (" + (int) (p.getX() / TILE_W) + "," + (int) (p.getY() / TILE_H) + ") keys " + held + " map epoch " + v.map().locationEpoch()
+        + " snapshot epoch " + (v.snapshot().region() == null ? "none" : v.snapshot().region().locationEpoch()) + " confirmed epoch " + confirmed
+        + " status " + connection().status() + " server actor " + (own == null ? "none" : own.x() + "," + own.y()) + " hp " + v.character().progress().vitals().hp();
+  }
+
+  /** Solo diagnostic scene: die, then try to walk after the respawn. */
+  private void mortalScene() {
+    final int[] corpsesBefore = {0};
+    action(() -> {
+      corpsesBefore[0] = view().corpses().size();
+      log("MORTAL start: " + movementDiagnostics());
+    });
+    repeat("died", 120_000, () -> view().corpses().size() > corpsesBefore[0] || view().character().progress().vitals().hp() <= 0 && view().corpses().size() > 0);
+    waitMs(3000);
+    action(() -> {
+      log("MORTAL after death: " + movementDiagnostics() + " corpses " + view().corpses());
+      shot("mortal-after-death");
+    });
+    final long[] began = {0};
+    final int[] keys = {Input.Keys.S, Input.Keys.A, Input.Keys.W, Input.Keys.D, Input.Keys.S};
+    repeat("walk attempt after the respawn (each direction for 5 s)", 26_000, () -> {
+      var s = game();
+      if (s == null) return false;
+      long now = System.currentTimeMillis();
+      if (began[0] == 0) began[0] = now;
+      int phase = (int) Math.min(keys.length - 1, (now - began[0]) / 5200);
+      held.clear();
+      held.add(keys[phase]);
+      if (now - lastMessageLog > 1000) {
+        lastMessageLog = now;
+        log("MORTAL walking key " + Input.Keys.toString(keys[phase]) + ": " + movementDiagnostics());
+      }
+      return false;
+    });
+    action(() -> {
+      held.clear();
+      log("MORTAL end: " + movementDiagnostics());
+    });
+  }
+
+  // ---- the scene
+
+  private void betaScene() {
+    final long[] t = {0};
+    skeletonsOnly = true;
+    action(
+        () -> {
+          var s = game();
+          t[0] = System.currentTimeMillis();
+          log("CENSUS: monsters drawn " + monsters(s).size() + ", npcs " + npcs(s).size() + ", ground items " + groundItems(s).size() + ", own look " + lookOf(ownActor())
+              + ", other look " + lookOf(otherActor()) + " | " + drawnOther(s));
+        });
+    // -Dbeta.from=ground skips the first three chapters (a smoke test of the later ones only).
+    if (!"ground".equals(System.getProperty("beta.from", "")) && !"death".equals(System.getProperty("beta.from", ""))) {
+      topicChapter();
+      equipRound("A");
+      equipRound("B");
+      if ("equip".equals(System.getProperty("beta.until", ""))) return; // a short run of the first two chapters only
+      // Portals: the Lighthaven door pair, each character in turn, the other window watching.
+      portalHop("A", 2931, 1056, "start", "lighthaven-interior", true, "1-A-into-Lighthaven");
+      portalHop("B", 2931, 1056, "start", "lighthaven-interior", false, "2-B-into-Lighthaven");
+      action(
+          () -> {
+            log("BOTH in Lighthaven: region " + view().map().key() + " others drawn " + others(game()).size() + " " + drawnOther(game()));
+            shot("both-in-lighthaven");
+          });
+      waitMs(4000);
+      portalHop("A", 306, 381, "lighthaven-interior", "start", true, "3-A-out-of-Lighthaven");
+      portalHop("B", 306, 381, "lighthaven-interior", "start", false, "4-B-out-of-Lighthaven");
+    }
+    walkToGround();
+    action(() -> signal(tag + ".at-ground"));
+    until("peer at the ground", 240_000, () -> signaled(peer() + ".at-ground"));
+    if (!"death".equals(System.getProperty("beta.from", ""))) {
+      mixedSegment("mixed session part 1 (fight, idle, loot races)", 540_000);
+      // Cave mouth: both walk to the mouth, Alpha goes in first.
+      portalHop("A", 2770, 1095, "start", "skeleton-cave", true, "5-A-into-the-cave");
+      portalHop("B", 2770, 1095, "start", "skeleton-cave", false, "6-B-into-the-cave");
+      action(
+          () -> {
+            log("BOTH in the cave: region " + view().map().key() + " others drawn " + others(game()).size() + " " + drawnOther(game()));
+            shot("both-in-cave");
+          });
+      waitMs(6000);
+      portalHop("A", 136, 665, "skeleton-cave", "start", true, "7-A-out-of-the-cave");
+      portalHop("B", 136, 665, "skeleton-cave", "start", false, "8-B-out-of-the-cave");
+      mixedSegment("mixed session part 2 (fight, idle, loot races)", 600_000);
+    }
+    deathChapter();
+    action(
+        () -> {
+          log("BETA SESSION SUMMARY: " + state() + " minHp " + minHp + " attacks " + attacksSent + " drops seen " + dropsSeen.size() + " races " + racesDone
+              + " connection " + connection().status() + " elapsed " + (System.currentTimeMillis() - t0) / 1000 + " s");
+          shot("final");
+        });
+  }
+
   // ---------------------------------------------------------------- frame loop
 
   @Override
   public void render() {
     super.render();
     long now = System.currentTimeMillis();
-    if (now > (scene.equals("quest") ? t0 + 1_500_000 : deadline)) {
+    if (scene.equals("beta")) pollMessage();
+    if (now > (scene.equals("quest") ? t0 + 1_500_000 : scene.equals("beta") ? t0 + 4_800_000 : deadline)) {
       log("DRIVER TIMEOUT at step " + index);
       Gdx.app.exit();
       return;
