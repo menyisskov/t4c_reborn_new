@@ -4,8 +4,8 @@ if ($GameSocketPort -eq 0) {
     if ($Port -ge 65535) { throw 'Use -GameSocketPort when the HTTP port is 65535.' }
     $GameSocketPort = $Port + 1
 }
-if ($GameSocketPort -lt 1024 -or $GameSocketPort -gt 65535 -or $GameSocketPort -eq $Port) {
-    throw 'Game socket port must be a distinct port from 1024 through 65535.'
+if ($GameSocketPort -lt 1024 -or $GameSocketPort -gt 65535 -or $GameSocketPort -ne ($Port + 1)) {
+    throw 'Native clients require the game socket on HTTP port + 1.'
 }
 if ($env:T4C_TLS_KEYSTORE -or $env:T4C_TLS_PASSWORD_FILE -or $env:T4C_PUBLIC_ORIGIN -or
     ($env:T4C_BIND_ADDRESS -and $env:T4C_BIND_ADDRESS -ne '127.0.0.1')) {

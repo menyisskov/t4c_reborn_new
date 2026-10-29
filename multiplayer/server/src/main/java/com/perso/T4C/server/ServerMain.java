@@ -61,6 +61,8 @@ public final class ServerMain {
       int gameSocketPort=configuredGamePort==null || configuredGamePort.isBlank()
           ? defaultGameSocketPort(httpPort) : Integer.parseInt(configuredGamePort);
       if(gameSocketPort<0 || gameSocketPort>65535) throw new IllegalArgumentException("Invalid game socket port");
+      if(httpPort>0 && gameSocketPort!=defaultGameSocketPort(httpPort))
+        throw new IllegalArgumentException("Native clients require the game socket on HTTP port + 1");
       var store="--online".equals(args[0]) ? com.perso.T4C.server.persistence.OnlineStore.pooledFromEnvironment() : null;
       boolean serverOwnsStore=false;
       try {

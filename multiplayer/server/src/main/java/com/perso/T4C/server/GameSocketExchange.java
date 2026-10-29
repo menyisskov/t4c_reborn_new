@@ -31,20 +31,23 @@ final class GameSocketExchange extends HttpExchange {
 
   GameSocketExchange(GameSocketProtocol.Request request, String token, InetSocketAddress remote,
       InetSocketAddress local, String origin) {
-    this.requestUri = URI.create("/" + request.command());
+    this.requestUri = URI.create("/" + request.command() + (request.query().isEmpty() ? "" : "?" + request.query()));
     this.method = request.method();
     this.remote = remote;
     this.local = local;
-    if(request.body().chars().anyMatch(character -> character > 0x7f))
+    boolean accountCreation=method.equals("POST") && request.command().equals("account/characters");
+    if(!accountCreation && request.body().chars().anyMatch(character -> character > 0x7f))
       throw new IllegalArgumentException("Game action body must use the existing ASCII protocol");
-    byte[] bytes = request.body().getBytes(java.nio.charset.StandardCharsets.US_ASCII);
+    byte[] bytes = request.body().getBytes(accountCreation
+        ? java.nio.charset.StandardCharsets.UTF_8 : java.nio.charset.StandardCharsets.US_ASCII);
     body = new ByteArrayInputStream(bytes);
     requestHeaders.set("Host", URI.create(origin).getRawAuthority());
     requestHeaders.set(OnlineProtocol.VERSION_HEADER, Integer.toString(OnlineProtocol.VERSION));
-    if (token != null) requestHeaders.set("Authorization", "Bearer " + token);
+    String authorization=token==null ? request.authorization() : "Bearer "+token;
+    if (authorization != null) requestHeaders.set("Authorization", authorization);
     if (method.equals("POST")) {
       requestHeaders.set("Origin", origin);
-      requestHeaders.set("Content-Type", "text/plain");
+      requestHeaders.set("Content-Type", accountCreation ? "application/json" : "text/plain");
       requestHeaders.set("Content-Length", Integer.toString(bytes.length));
     }
   }

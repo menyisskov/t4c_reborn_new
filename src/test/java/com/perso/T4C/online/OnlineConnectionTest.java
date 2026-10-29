@@ -119,7 +119,7 @@ class OnlineConnectionTest {
       try (socketBridge; var connection =
           new OnlineConnection(
               URI.create("http://127.0.0.1:" + server.getAddress().getPort()),
-              persistent ? credentials : null)) {
+              persistent ? credentials : null, socketPort.get())) {
         connection.direction(1, -1);
         long deadline = System.nanoTime() + Duration.ofSeconds(5).toNanos();
         while (connection.view() == null
@@ -303,7 +303,7 @@ class OnlineConnectionTest {
     });
     var socketBridge=new LoopbackGameSocket(server);socketPort.set(socketBridge.port());server.start();
     try (socketBridge; var connection = new OnlineConnection(
-        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials)) {
+        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials, socketPort.get())) {
       awaitTrue(() -> connection.view() != null && connection.view().snapshot().loot().size() == 1);
       var seen = connection.view().snapshot().loot().getFirst();
       assertEquals(lootA, seen.id());
@@ -390,7 +390,7 @@ class OnlineConnectionTest {
     });
     var socketBridge=new LoopbackGameSocket(server);socketPort.set(socketBridge.port());server.start();
     try (socketBridge; var connection = new OnlineConnection(
-        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials)) {
+        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials, socketPort.get())) {
       awaitTrue(() -> connection.view() != null && !connection.view().snapshot().loot().isEmpty());
       var uncertain = connection.pickUp(lootA).toCompletableFuture();
       assertThrows(java.util.concurrent.ExecutionException.class, () -> uncertain.get(6, TimeUnit.SECONDS));
@@ -454,7 +454,7 @@ class OnlineConnectionTest {
     });
     var socketBridge=new LoopbackGameSocket(server);socketPort.set(socketBridge.port());server.start();
     try (socketBridge; var connection = new OnlineConnection(
-        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials)) {
+        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials, socketPort.get())) {
       awaitTrue(() -> connection.view() != null && connection.view().character() != null);
       assertThrows(IllegalArgumentException.class, () -> connection.cast("heal_light"));
       assertThrows(IllegalArgumentException.class, () -> connection.cast("spell.Bad Key"));
@@ -520,7 +520,7 @@ class OnlineConnectionTest {
     });
     var socketBridge=new LoopbackGameSocket(server);socketPort.set(socketBridge.port());server.start();
     try (socketBridge; var connection = new OnlineConnection(
-        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials)) {
+        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials, socketPort.get())) {
       awaitTrue(() -> connection.view() != null && connection.view().character() != null);
       var uncertain = connection.cast("spell.heal_light").toCompletableFuture();
       assertThrows(java.util.concurrent.ExecutionException.class, () -> uncertain.get(6, TimeUnit.SECONDS));
@@ -555,9 +555,10 @@ class OnlineConnectionTest {
       exchange.getResponseBody().write(reply);
       exchange.close();
     });
+    var socketBridge = new LoopbackGameSocket(server);
     server.start();
     var credentials = new OnlineConnection.Credentials("b".repeat(64), java.util.UUID.randomUUID());
-    try (var connection = new OnlineConnection(URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials)) {
+    try (socketBridge; var connection = new OnlineConnection(URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials, socketBridge.port())) {
       long deadline = System.nanoTime() + Duration.ofSeconds(3).toNanos();
       while (!connection.status().equals("disconnected") && System.nanoTime() < deadline) Thread.sleep(10);
       assertEquals("disconnected", connection.status());
@@ -575,11 +576,12 @@ class OnlineConnectionTest {
         exchange.sendResponseHeaders(200, oversized.length);
         exchange.getResponseBody().write(oversized);
       } catch (java.io.IOException expectedDisconnect) {
-        // The receiver is expected to cancel as soon as its bound is exceeded.
+        // The receiver is expected to cancel as soon as the socket frame exceeds its bound.
       } finally { exchange.close(); }
     });
+    var socketBridge = new LoopbackGameSocket(server);
     server.start();
-    try (var connection = new OnlineConnection(URI.create("http://127.0.0.1:" + server.getAddress().getPort()))) {
+    try (socketBridge; var connection = new OnlineConnection(URI.create("http://127.0.0.1:" + server.getAddress().getPort()), null, socketBridge.port())) {
       long deadline = System.nanoTime() + Duration.ofSeconds(4).toNanos();
       while (!connection.status().equals("disconnected") && System.nanoTime() < deadline) Thread.sleep(10);
       assertEquals("disconnected", connection.status());
@@ -588,7 +590,7 @@ class OnlineConnectionTest {
   }
 
   @Test
-  void stalledBodyCannotKeepTheNetworkWorkerConnectedIndefinitely() throws Exception {
+  void stalledResponseCannotKeepTheNetworkWorkerConnectedIndefinitely() throws Exception {
     var release = new CountDownLatch(1);
     var server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
     server.createContext("/", exchange -> {
@@ -601,8 +603,9 @@ class OnlineConnectionTest {
         // Test shutdown can interrupt or close the deliberately unfinished response.
       } finally { exchange.close(); }
     });
+    var socketBridge = new LoopbackGameSocket(server);
     server.start();
-    try (var connection = new OnlineConnection(URI.create("http://127.0.0.1:" + server.getAddress().getPort()))) {
+    try (socketBridge; var connection = new OnlineConnection(URI.create("http://127.0.0.1:" + server.getAddress().getPort()), null, socketBridge.port())) {
       long deadline = System.nanoTime() + Duration.ofSeconds(4).toNanos();
       while (!connection.status().equals("disconnected") && System.nanoTime() < deadline) Thread.sleep(10);
       assertEquals("disconnected", connection.status());

@@ -1,8 +1,6 @@
 package com.perso.T4C.online;
 
 import java.net.URI;
-import java.net.http.HttpClient;
-import java.time.Duration;
 
 /** Origin-only endpoints; credentials must never travel over remote plaintext. */
 public final class OnlineEndpoint {
@@ -20,11 +18,5 @@ public final class OnlineEndpoint {
     if (!secure && !local)
       throw new IllegalArgumentException("Remote online connections require HTTPS");
     return URI.create((secure ? "https" : "http") + "://" + endpoint.getRawAuthority());
-  }
-
-  /** Uses JSSE's standard truststore and hostname verification; never follows redirects. */
-  public static HttpClient client() {
-    return HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2))
-        .followRedirects(HttpClient.Redirect.NEVER).build();
   }
 }

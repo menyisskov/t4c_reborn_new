@@ -19,7 +19,7 @@ class OnlineAccountClientTest {
   private static final String KEY="a".repeat(64);
 
   @Test void readsBoundedPagesInPostgresUuidOrderAndRechecksProtocolBeforeCredentials() throws Exception {
-    try(var fixture=new Fixture();var client=new OnlineAccountClient(fixture.uri(),KEY)) {
+    try(var fixture=new Fixture();var client=fixture.client()) {
       var page=client.page(null);
       assertEquals(20,page.characters().size());
       assertEquals(new UUID(Long.MIN_VALUE,0),page.nextAfter(),"Unsigned PostgreSQL order crosses Java's signed UUID boundary");
@@ -37,7 +37,7 @@ class OnlineAccountClientTest {
   }
 
   @Test void rejectsRedirectsOversizedBodiesAndNonAdvancingPagesWithoutEchoingServerSecrets() throws Exception {
-    try(var fixture=new Fixture();var client=new OnlineAccountClient(fixture.uri(),KEY)) {
+    try(var fixture=new Fixture();var client=fixture.client()) {
       fixture.mode="redirect";
       assertEquals(302,assertThrows(OnlineAccountClient.Rejected.class,()->client.page(null)).statusCode());
       assertEquals(0,fixture.redirectRequests.get());
@@ -57,14 +57,14 @@ class OnlineAccountClientTest {
   @Test void rejectsPlaintextRemoteEndpointsAndDoesNotRequestAfterClose() throws Exception {
     assertThrows(IllegalArgumentException.class,()->new OnlineAccountClient(URI.create("http://example.org"),KEY));
     try(var fixture=new Fixture()) {
-      var client=new OnlineAccountClient(fixture.uri(),KEY);client.close();
+      var client=fixture.client();client.close();
       assertThrows(IOException.class,()->client.page(null));assertEquals(0,fixture.accountRequests.get());
     }
   }
 
   @Test void createsWithAuthenticatedJsonAfterAnonymousGateAndValidatesReply() throws Exception {
     var request=new OnlineCharacterCreation.Request(UUID.randomUUID(),"Paladin","paladin","female",false);
-    try(var fixture=new Fixture();var client=new OnlineAccountClient(fixture.uri(),KEY)) {
+    try(var fixture=new Fixture();var client=fixture.client()) {
       fixture.version=999;
       assertThrows(IOException.class,()->client.create(request));
       assertEquals(0,fixture.creationRequests.get(),"Incompatible map must not receive the account key or mutation");
@@ -102,7 +102,7 @@ class OnlineAccountClientTest {
 
   @Test void uncertainCreateNeverRetriesUntilCallerReusesTheSameRequest() throws Exception {
     var request=new OnlineCharacterCreation.Request(UUID.randomUUID(),"Warrior","warrior","male",false);
-    try(var fixture=new Fixture();var client=new OnlineAccountClient(fixture.uri(),KEY)) {
+    try(var fixture=new Fixture();var client=fixture.client()) {
       fixture.createMode="lost";
       assertTimeoutPreemptively(java.time.Duration.ofSeconds(5),
           ()->assertThrows(IOException.class,()->client.create(request)));
@@ -118,6 +118,7 @@ class OnlineAccountClientTest {
 
   private static final class Fixture implements AutoCloseable {
     final HttpServer server;
+    final LoopbackGameSocket gameSocket;
     final AtomicInteger accountRequests=new AtomicInteger(),credentialedHandshakes=new AtomicInteger(),
         unexpectedPaths=new AtomicInteger(),redirectRequests=new AtomicInteger(),creationRequests=new AtomicInteger();
     final List<String> queries=new CopyOnWriteArrayList<>(),creationBodies=new CopyOnWriteArrayList<>();
@@ -191,11 +192,13 @@ class OnlineAccountClientTest {
         try(var output=exchange.getResponseBody()) { if(bytes.length>0) output.write(bytes); }
       });
       server.start();
+      gameSocket=new LoopbackGameSocket(server);
     }
     private static OnlineRoster.CharacterSummary summary(UUID id) {
       return new OnlineRoster.CharacterSummary(id,"Account character","WARRIOR","male",1,0,"ready");
     }
     URI uri() { return URI.create("http://127.0.0.1:"+server.getAddress().getPort()); }
-    @Override public void close() { server.stop(0); }
+    OnlineAccountClient client() { return new OnlineAccountClient(uri(),KEY,gameSocket.port()); }
+    @Override public void close() { gameSocket.close();server.stop(0); }
   }
 }

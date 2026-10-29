@@ -106,8 +106,8 @@ if ($GameSocketPort -eq 0) {
     if ($Port -ge 65535) { throw 'Set -GameSocketPort when the HTTP port is 65535.' }
     $GameSocketPort = $Port + 1
 }
-if ($GameSocketPort -lt 1024 -or $GameSocketPort -gt 65535 -or $GameSocketPort -eq $Port) {
-    throw 'Game socket port must be a distinct port from 1024 through 65535.'
+if ($GameSocketPort -lt 1024 -or $GameSocketPort -gt 65535 -or $GameSocketPort -ne ($Port + 1)) {
+    throw 'Native clients require the game socket on HTTP port + 1.'
 }
 foreach ($name in @('T4C_TLS_KEYSTORE','T4C_TLS_PASSWORD_FILE','T4C_PUBLIC_ORIGIN')) {
     if (Test-Path -LiteralPath ('Env:' + $name)) { throw 'Local QA launcher refuses inherited TLS/origin settings. See multiplayer/TLS.md for a separate foreground TLS deployment.' }

@@ -10,10 +10,6 @@ import com.perso.T4C.online.model.NpcView;
 import com.perso.T4C.online.model.NpcInteractionReply;
 import com.perso.T4C.online.model.ShopOffersReply;
 import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -80,6 +76,7 @@ public final class OnlineConnection implements AutoCloseable {
   private static final int MAX_GROUND_LOOT = 128;
   private static final Gson JSON = new Gson();
   private final URI endpoint;
+  private final int configuredSocketPort;
   private volatile GameSocketClient gameSocket;
   private final Credentials credentials;
   private final AtomicInteger direction = new AtomicInteger(4);
@@ -98,7 +95,13 @@ public final class OnlineConnection implements AutoCloseable {
   }
 
   public OnlineConnection(URI endpoint, Credentials credentials) {
+    this(endpoint,credentials,0);
+  }
+
+  OnlineConnection(URI endpoint, Credentials credentials, int socketPort) {
     this.endpoint = OnlineEndpoint.validate(endpoint);
+    if(socketPort<0 || socketPort>65535) throw new IllegalArgumentException("Invalid game socket port");
+    configuredSocketPort=socketPort;
     this.credentials = credentials;
     worker = new Thread(this::run, "online-client-network");
     // Keep the process alive for the bounded logout request after the render window closes.
@@ -261,25 +264,26 @@ public final class OnlineConnection implements AutoCloseable {
 
   private void run() {
     boolean sessionJoined = false;
-    try (var client = OnlineEndpoint.client()) {
+    try {
       try {
-        MapInfo map = JSON.fromJson(sendRetryingBusy(client, "/map", null), MapInfo.class);
+        gameSocket = GameSocketClient.connect(endpoint,
+            configuredSocketPort==0 ? GameSocketClient.defaultPort(endpoint) : configuredSocketPort);
+        MapInfo map = JSON.fromJson(sendRetryingBusy("/map", null), MapInfo.class);
         if (map == null || map.protocolVersion() != OnlineProtocol.VERSION)
           throw new IllegalStateException("Incompatible online protocol; update client and server together");
         if (map.width() <= 0 || map.height() <= 0 || map.width() > 1024 || map.height() > 1024)
           throw new IllegalStateException("Invalid server map");
         if (map.persistent() != (credentials != null))
           throw new IllegalStateException("Profile and server mode do not match");
-        if (map.gameSocketPort() < 1 || map.gameSocketPort() > 65535)
-          throw new IllegalStateException("Server did not advertise its game socket");
+        if (map.gameSocketPort() != gameSocket.port())
+          throw new IllegalStateException("Server socket endpoint does not match this connection");
         map.region();
-        gameSocket = GameSocketClient.connect(endpoint,map.gameSocketPort());
         String login = credentials == null ? "" : credentials.secret() + " " + credentials.characterId();
-        Joined joined = JSON.fromJson(sendRetryingBusy(client, "/join", login), Joined.class);
+        Joined joined = JSON.fromJson(sendRetryingBusy("/join", login), Joined.class);
         if (joined == null || joined.id() <= 0 || joined.region()==null)
           throw new IllegalStateException("Invalid server session");
         sessionJoined = true;
-        map=readMap(client,map.persistent());
+        map=readMap(map.persistent());
         if (!map.region().equals(joined.region())) throw new IllegalStateException("Joined map changed unexpectedly");
         long sequence = 0;
         OnlineCharacterView character = null;
@@ -349,7 +353,7 @@ public final class OnlineConnection implements AutoCloseable {
           if (snapshot==null || snapshot.region()==null) throw new IllegalStateException("Missing region state");
           if (!map.region().equals(snapshot.region())) {
             stopInput(); acknowledgedRegion=-1; readyRegion.set(-1);
-            map=readMap(client,map.persistent());
+            map=readMap(map.persistent());
             snapshot=JSON.fromJson(sendSession("GET","/state",null),Snapshot.class);
             if (snapshot==null || !map.region().equals(snapshot.region()))
               throw new IllegalStateException("Region state did not stabilize");
@@ -416,7 +420,7 @@ public final class OnlineConnection implements AutoCloseable {
             }
             if (character.locationEpoch()!=map.locationEpoch()) {
               stopInput(); acknowledgedRegion=-1; readyRegion.set(-1);
-              map=readMap(client,map.persistent()); character=null; corpses=List.of();
+              map=readMap(map.persistent()); character=null; corpses=List.of();
               if (++regionRetries>=3) throw new IllegalStateException("Private region state did not stabilize");
               continue; // Refresh reads only. Never replay the gameplay mutation already sent above.
             }
@@ -462,7 +466,7 @@ public final class OnlineConnection implements AutoCloseable {
     }
   }
 
-  private MapInfo readMap(HttpClient client,boolean persistent) throws Exception {
+  private MapInfo readMap(boolean persistent) throws Exception {
     var loaded=JSON.fromJson(sendSession("GET","/map",null),MapInfo.class);
     if (loaded==null || loaded.protocolVersion()!=OnlineProtocol.VERSION || loaded.persistent()!=persistent)
       throw new IllegalStateException("Invalid region map");
@@ -477,11 +481,10 @@ public final class OnlineConnection implements AutoCloseable {
    * bounded number of times with jittered exponential backoff. Every other status, timeout or
    * transport failure is thrown at once, and no gameplay command or poll is ever retried here.
    */
-  private String sendRetryingBusy(HttpClient client, String path, String body) throws Exception {
+  private String sendRetryingBusy(String path, String body) throws Exception {
     for (int retry = 0; ; retry++) {
       try {
-        return gameSocket == null ? send(client, path, body)
-            : sendSession(body == null ? "GET" : "POST",path,body);
+        return sendSession(body == null ? "GET" : "POST",path,body);
       } catch (Rejected rejected) {
         if (!OnlineBusyBackoff.isBusy(rejected.code, rejected.reason) || retry >= OnlineBusyBackoff.MAX_RETRIES
             || closed)
@@ -509,51 +512,6 @@ public final class OnlineConnection implements AutoCloseable {
     } catch (RuntimeException malformed) {
       return null;
     }
-  }
-
-  private String send(HttpClient client, String path, String body) throws Exception {
-    var request = HttpRequest.newBuilder(endpoint.resolve(path)).timeout(Duration.ofSeconds(2));
-    request.header(OnlineProtocol.VERSION_HEADER, Integer.toString(OnlineProtocol.VERSION));
-    if (body != null)
-      request
-          .header("Origin", endpoint.toString())
-          .header("Content-Type", "text/plain")
-          .POST(HttpRequest.BodyPublishers.ofString(body));
-    var pending = client.sendAsync(request.build(), ignored -> new BoundedBody());
-    HttpResponse<byte[]> response;
-    try {
-      // Bound the whole body transfer too; a headers-only timeout is insufficient for streamed data.
-      response = pending.get(2, java.util.concurrent.TimeUnit.SECONDS);
-    } catch (java.util.concurrent.TimeoutException | InterruptedException error) {
-      pending.cancel(true);
-      throw error;
-    }
-    if (response.statusCode() != 200)
-      throw new Rejected(response.statusCode(), refusalReason(response.body()));
-    return new String(response.body(), java.nio.charset.StandardCharsets.UTF_8);
-  }
-
-  /** Bound bytes while receiving, before allocating the complete response. */
-  private static final class BoundedBody implements HttpResponse.BodySubscriber<byte[]> {
-    // The store caps gameplay JSON at 1 MiB. Allow its envelope without unbounded buffering.
-    private static final int LIMIT = 2 * 1024 * 1024;
-    private final HttpResponse.BodySubscriber<byte[]> delegate = HttpResponse.BodySubscribers.ofByteArray();
-    private java.util.concurrent.Flow.Subscription subscription;
-    private long received;
-
-    @Override public java.util.concurrent.CompletionStage<byte[]> getBody() { return delegate.getBody(); }
-    @Override public void onSubscribe(java.util.concurrent.Flow.Subscription value) {
-      subscription = value; delegate.onSubscribe(value);
-    }
-    @Override public void onNext(List<java.nio.ByteBuffer> buffers) {
-      for (var buffer : buffers) received += buffer.remaining();
-      if (received > LIMIT) {
-        subscription.cancel();
-        delegate.onError(new java.io.IOException("Server response exceeds limit"));
-      } else delegate.onNext(buffers);
-    }
-    @Override public void onError(Throwable error) { delegate.onError(error); }
-    @Override public void onComplete() { delegate.onComplete(); }
   }
 
   @Override

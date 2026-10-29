@@ -808,12 +808,16 @@ public final class PreviewServer implements AutoCloseable {
       String sessionToken, InetSocketAddress remote) throws Exception {
     String path="/"+request.command();
     boolean routeAllowed = request.method().equals("GET") ? GET_ROUTES.contains(path) : POST_ROUTES.contains(path);
-    if (!routeAllowed || path.equals("/account/characters") || path.equals("/admin/shutdown")
+    if (!routeAllowed || path.equals("/admin/shutdown")
         || path.equals("/admin/metrics") || path.equals("/health") || path.equals("/")
         || path.equals("/client.js") || path.equals("/style.css") || path.equals("/strings"))
       return new GameSocketServer.Result(404,"{\"error\":\"route\"}",null,false);
-    boolean methodMatches = request.method().equals("POST") == POST_ROUTES.contains(path);
+    boolean methodMatches = request.method().equals("POST")
+        ? POST_ROUTES.contains(path) : GET_ROUTES.contains(path);
     if (!methodMatches) return new GameSocketServer.Result(405,"{\"error\":\"method\"}",null,false);
+    if (!request.query().isEmpty() && !(request.method().equals("GET")
+        && path.equals("/account/characters") && request.query().matches("after=[0-9a-fA-F-]{36}")))
+      return new GameSocketServer.Result(400,"{\"error\":\"input\"}",null,false);
     var exchange=new GameSocketExchange(request,sessionToken,remote,
         new InetSocketAddress(http.getAddress().getAddress(),http.getAddress().getPort()),url());
     handle(exchange);

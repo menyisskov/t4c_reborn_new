@@ -95,7 +95,7 @@ class ServerTransportTest {
           var output=new java.io.DataOutputStream(gameSocket.getOutputStream());
           com.perso.T4C.online.model.GameSocketProtocol.writeFrame(output,
               new com.google.gson.Gson().toJson(new com.perso.T4C.online.model.GameSocketProtocol.Hello(
-                  com.perso.T4C.online.model.OnlineProtocol.VERSION)));
+                  com.perso.T4C.online.model.GameSocketProtocol.VERSION)));
           var hello=com.google.gson.JsonParser.parseString(
               com.perso.T4C.online.model.GameSocketProtocol.readFrame(input)).getAsJsonObject();
           assertTrue(hello.get("accepted").getAsBoolean());

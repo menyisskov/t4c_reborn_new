@@ -65,9 +65,9 @@ final class LoopbackGameSocket implements AutoCloseable {
       String helloFrame = GameSocketProtocol.readFrame(input);
       if (helloFrame == null) return;
       var hello = JSON.fromJson(helloFrame, GameSocketProtocol.Hello.class);
-      boolean compatible = hello != null && hello.protocolVersion() == OnlineProtocol.VERSION;
+      boolean compatible = hello != null && hello.protocolVersion() == GameSocketProtocol.VERSION;
       GameSocketProtocol.writeFrame(output,
-          JSON.toJson(new GameSocketProtocol.HelloReply(OnlineProtocol.VERSION, compatible)));
+          JSON.toJson(new GameSocketProtocol.HelloReply(GameSocketProtocol.VERSION, compatible)));
       if (!compatible) return;
       long previousId = 0;
       while (!closed.get()) {
@@ -76,11 +76,15 @@ final class LoopbackGameSocket implements AutoCloseable {
         var request = JSON.fromJson(frame, GameSocketProtocol.Request.class);
         if (request == null || request.id() <= previousId) return;
         previousId = request.id();
-        var builder = HttpRequest.newBuilder(httpOrigin.resolve("/" + request.command()))
+        String route="/"+request.command()+(request.query().isEmpty() ? "" : "?"+request.query());
+        var builder = HttpRequest.newBuilder(httpOrigin.resolve(route))
             .timeout(Duration.ofSeconds(3)).header(OnlineProtocol.VERSION_HEADER, Integer.toString(OnlineProtocol.VERSION));
-        if (token != null) builder.header("Authorization", "Bearer " + token);
+        if (request.authorization()!=null) builder.header("Authorization",request.authorization());
+        else if (token != null) builder.header("Authorization", "Bearer " + token);
         if (request.method().equals("POST")) {
-          builder.header("Origin", httpOrigin.toString()).header("Content-Type", "text/plain")
+          String contentType=request.command().equals("account/characters")
+              ? "application/json" : "text/plain";
+          builder.header("Origin", httpOrigin.toString()).header("Content-Type", contentType)
               .POST(HttpRequest.BodyPublishers.ofString(request.body()));
         }
         HttpResponse<String> response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
