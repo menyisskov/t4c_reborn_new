@@ -1,5 +1,6 @@
 package com.perso.T4C.session;
 
+import com.perso.T4C.monster.core.BaseMonster;
 import com.perso.T4C.player.BodyPart;
 import java.util.UUID;
 
@@ -22,6 +23,12 @@ public interface RemoteIntents {
   boolean shopBuy(String npc, String itemKey, int quantity);
 
   boolean shopSell(String npc, String itemKey, int quantity);
+
+  boolean cast(String spellKey);
+
+  boolean cast(String spellKey, BaseMonster target);
+
+  boolean useItem(UUID itemInstance);
 
   /** Cancels pending listing UI replies, for example when the player closes the shop panel. */
   void closeShop();

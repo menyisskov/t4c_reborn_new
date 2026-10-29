@@ -153,6 +153,8 @@ public class MainGameScreen implements Screen {
       new com.perso.T4C.online.OnlineShopPanel();
   private final com.perso.T4C.online.OnlineInventoryPanel remoteInventoryPanel =
       new com.perso.T4C.online.OnlineInventoryPanel();
+  private final com.perso.T4C.online.OnlineAbilityMenu remoteAbilityMenu =
+      new com.perso.T4C.online.OnlineAbilityMenu();
   private boolean displayInitialized;
   private int loadingStep;
   private GameInputHandler inputHandler;
@@ -232,6 +234,7 @@ public class MainGameScreen implements Screen {
   private long nextAutoWeaponTargetAtMs;
   private static final long AUTO_WEAPON_TARGET_INTERVAL_MS = 250L;
   private BaseMonster selectedMonster = null;
+  private long lastRemoteVitalsRevision = Long.MIN_VALUE;
   private java.util.function.BooleanSupplier textInputActiveSupplier;
   private static final float TAB_TARGET_RANGE_TILES = 12f;
 
@@ -352,6 +355,8 @@ public class MainGameScreen implements Screen {
         @Override public void showMessage(String text) { showSystemMessage(text); }
         @Override public void showShop(
             String npc, com.perso.T4C.online.model.ShopOffersReply offers) {
+          remoteInventoryPanel.close();
+          remoteAbilityMenu.close();
           if (remoteShopPanel.isOpen() && npc.equals(remoteShopPanel.npc())) {
             remoteShopPanel.refresh(offers);
             return;
@@ -1556,6 +1561,7 @@ public class MainGameScreen implements Screen {
         "input",
         () -> {
           synchronizeRemoteRegion();
+          synchronizeRemoteVitals();
           if (remoteShopPanel.isOpen()
               && (remoteConnection == null || !"connected".equals(remoteConnection.status()))) {
             closeRemoteShop();
@@ -1564,11 +1570,15 @@ public class MainGameScreen implements Screen {
               && (remoteConnection == null || !"connected".equals(remoteConnection.status()))) {
             remoteInventoryPanel.close();
           }
+          if (remoteAbilityMenu.isOpen()
+              && (remoteConnection == null || !"connected".equals(remoteConnection.status()))) {
+            remoteAbilityMenu.close();
+          }
           if (seraphArrivalBlocksMovement()
               || remoteConnection!=null && !"connected".equals(remoteConnection.status())) {
             return;
           }
-          if (remoteShopPanel.isOpen() || remoteInventoryPanel.isOpen())
+          if (remoteShopPanel.isOpen() || remoteInventoryPanel.isOpen() || remoteAbilityMenu.isOpen())
             session.commands().move(0, 0, delta);
           else inputHandler.handleInput(delta, player);
         });
@@ -1711,6 +1721,15 @@ public class MainGameScreen implements Screen {
           if (i > 0) y -= i == 1 ? font.getLineHeight() * 1.5f : font.getLineHeight();
           font.draw(batch, lines.get(i), hudCamera.viewportWidth - 360, y);
         }
+      } else if (remoteAbilityMenu.isOpen()) {
+        var view = remoteConnection.view();
+        var progress = view == null || view.character() == null ? null : view.character().progress();
+        var lines = remoteAbilityMenu.lines(progress);
+        float y = hudCamera.viewportHeight - 16;
+        for (int i = 0; i < lines.size(); i++) {
+          if (i > 0) y -= i == 1 ? font.getLineHeight() * 1.5f : font.getLineHeight();
+          font.draw(batch, lines.get(i), hudCamera.viewportWidth - 360, y);
+        }
       }
       batch.end();
     }
@@ -1733,6 +1752,21 @@ public class MainGameScreen implements Screen {
       frameEvent.commit();
     }
     profilerFrameIndex++;
+  }
+
+  /** Keep the ordinary HUD's displayed health and mana on the latest committed server values. */
+  private void synchronizeRemoteVitals() {
+    if (remoteConnection == null || player == null) return;
+    var view = remoteConnection.view();
+    var character = view == null ? null : view.character();
+    if (character == null || character.progress() == null
+        || character.revision() == lastRemoteVitalsRevision) return;
+    var vitals = character.progress().vitals();
+    player.setMaxHp(Math.max(1, vitals.maxHp()));
+    player.setCurrentHp(Math.min(vitals.hp(), player.getMaxHp()));
+    player.setMaxMana(Math.max(0, vitals.maxMana()));
+    player.setMana(Math.min(vitals.mana(), player.getMaxMana()));
+    lastRemoteVitalsRevision = character.revision();
   }
 
   private void section(String name, Runnable body) {
@@ -5004,7 +5038,11 @@ public class MainGameScreen implements Screen {
       @Override public void handleGlobalKeys() {}
     };
     MonsterInputHandler monsters=new MonsterInputHandler(camera,monsterManager,player,null,null,systemMessage);
-    monsters.setOnAttackTargetSelected(session.commands()::attack);
+    monsters.setOnAttackTargetSelected(monster -> {
+      setSelectedMonster(monster);
+      session.commands().attack(monster);
+    });
+    monsters.setOnClickedElsewhere(() -> setSelectedMonster(null));
     com.badlogic.gdx.InputAdapter npcClicks=new com.badlogic.gdx.InputAdapter() {
       private final Vector3 at=new Vector3();
       private Vector2 point(int x,int y) { at.set(x,y,0);camera.unproject(at);return new Vector2(at.x,at.y); }
@@ -5020,6 +5058,61 @@ public class MainGameScreen implements Screen {
     InputMultiplexer remote=new InputMultiplexer();
     remote.addProcessor(new com.badlogic.gdx.InputAdapter() {
       @Override public boolean keyDown(int keycode) {
+        if (remoteAbilityMenu.isOpen()) {
+          if (keycode == Input.Keys.ESCAPE) {
+            remoteAbilityMenu.close();
+            return true;
+          }
+          if (keycode == Input.Keys.C || keycode == Input.Keys.U) {
+            var view = remoteConnection == null ? null : remoteConnection.view();
+            var progress = view == null || view.character() == null ? null : view.character().progress();
+            var kind = keycode == Input.Keys.C
+                ? com.perso.T4C.online.OnlineAbilityMenu.Kind.SPELLS
+                : com.perso.T4C.online.OnlineAbilityMenu.Kind.POTIONS;
+            remoteAbilityMenu.toggle(
+                kind, com.perso.T4C.online.OnlineAbilityMenu.available(remoteConnection.status(), progress));
+            return true;
+          }
+          int digit = keycode >= Input.Keys.NUM_1 && keycode <= Input.Keys.NUM_9
+              ? keycode - Input.Keys.NUM_1 + 1 : 0;
+          if (digit == 0) return false;
+          var view = remoteConnection == null ? null : remoteConnection.view();
+          var progress = view == null || view.character() == null ? null : view.character().progress();
+          boolean available = com.perso.T4C.online.OnlineAbilityMenu.available(
+              remoteConnection == null ? "disconnected" : remoteConnection.status(), progress);
+          var action = remoteAbilityMenu.choose(digit, progress, available).orElse(null);
+          if (action != null) {
+            var commands = (com.perso.T4C.session.RemotePlayerCommands) session.commands();
+            if (action.kind() == com.perso.T4C.online.OnlineAbilityMenu.Kind.POTIONS) {
+              commands.useItem(action.item());
+            } else if (action.requiresCreatureTarget()) {
+              if (selectedMonster == null || !commands.cast(action.spellKey(), selectedMonster))
+                showSystemMessage(I18n.key("online.cast.no_target"));
+            } else {
+              commands.cast(action.spellKey());
+            }
+          }
+          return true;
+        }
+        if (keycode == Input.Keys.C || keycode == Input.Keys.U) {
+          closeRemoteShop();
+          remoteInventoryPanel.close();
+          var view = remoteConnection == null ? null : remoteConnection.view();
+          var progress = view == null || view.character() == null ? null : view.character().progress();
+          var kind = keycode == Input.Keys.C
+              ? com.perso.T4C.online.OnlineAbilityMenu.Kind.SPELLS
+              : com.perso.T4C.online.OnlineAbilityMenu.Kind.POTIONS;
+          remoteAbilityMenu.toggle(
+              kind, com.perso.T4C.online.OnlineAbilityMenu.available(
+                  remoteConnection == null ? "disconnected" : remoteConnection.status(), progress));
+          return true;
+        }
+        if (keycode == Input.Keys.I && (remoteAbilityMenu.isOpen() || remoteShopPanel.isOpen())) {
+          closeRemoteShop();
+          remoteAbilityMenu.close();
+          remoteInventoryPanel.open();
+          return true;
+        }
         if (remoteInventoryPanel.isOpen()) {
           if (keycode == Input.Keys.I || keycode == Input.Keys.ESCAPE) {
             remoteInventoryPanel.close();
@@ -5078,6 +5171,8 @@ public class MainGameScreen implements Screen {
           return true;
         }
         if (keycode == Input.Keys.I) {
+          closeRemoteShop();
+          remoteAbilityMenu.close();
           remoteInventoryPanel.open();
           return true;
         }

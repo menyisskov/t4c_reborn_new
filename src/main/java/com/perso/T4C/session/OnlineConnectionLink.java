@@ -60,6 +60,21 @@ public final class OnlineConnectionLink implements RemoteLink {
   }
 
   @Override
+  public CompletionStage<OnlineConnection.CommandResult> cast(String spellKey) {
+    return connection.cast(spellKey);
+  }
+
+  @Override
+  public CompletionStage<OnlineConnection.CommandResult> cast(String spellKey, long creature) {
+    return connection.cast(spellKey, creature);
+  }
+
+  @Override
+  public CompletionStage<OnlineConnection.CommandResult> useItem(UUID itemInstance) {
+    return connection.useItem(itemInstance);
+  }
+
+  @Override
   public void direction(int dx, int dy, long frame) {
     connection.direction(dx, dy, frame);
   }
