@@ -56,6 +56,11 @@ public final class ServerMain {
       System.setProperty("sun.net.httpserver.maxReqTime", "5");
       System.setProperty("sun.net.httpserver.maxRspTime", "5");
       var transport=ServerTransport.fromEnvironment(System.getenv());
+      int httpPort=Integer.parseInt(args[2]);
+      String configuredGamePort=System.getenv("T4C_GAME_SOCKET_PORT");
+      int gameSocketPort=configuredGamePort==null || configuredGamePort.isBlank()
+          ? defaultGameSocketPort(httpPort) : Integer.parseInt(configuredGamePort);
+      if(gameSocketPort<0 || gameSocketPort>65535) throw new IllegalArgumentException("Invalid game socket port");
       var store="--online".equals(args[0]) ? com.perso.T4C.server.persistence.OnlineStore.pooledFromEnvironment() : null;
       boolean serverOwnsStore=false;
       try {
@@ -65,7 +70,7 @@ public final class ServerMain {
           ? OnlineProvisioner.controlToken(java.nio.file.Path.of(controlFile)) : null;
       var plan=store==null ? HostedRegionPlan.single(PreviewMap.load(java.nio.file.Path.of(args[1])))
           : HostedRegionPlan.startingSlice(java.nio.file.Path.of(args[1]));
-      try (var server = new PreviewServer(plan, Integer.parseInt(args[2]),store,controlToken,transport,store!=null)) {
+      try (var server = new PreviewServer(plan,httpPort,gameSocketPort,store,controlToken,transport,store!=null)) {
         serverOwnsStore=true;
         Thread shutdown = new Thread(server::close, "preview-shutdown");
         Runtime.getRuntime().addShutdownHook(shutdown);
@@ -91,6 +96,7 @@ public final class ServerMain {
       System.out.println("       java -jar t4c-server.jar --provision-online-account PRIVATE_PROFILE_FILE");
       System.out.println("       java -jar t4c-server.jar --migrate-online (T4C_DB_URL, T4C_DB_USER, T4C_DB_PASSWORD)");
       System.out.println("       java -jar t4c-server.jar --check-content");
+      System.out.println("       Optional: T4C_GAME_SOCKET_PORT (defaults to HTTP port + 1; 0 selects an ephemeral port for local testing)");
       return;
     }
     long maximumTicks = Long.MAX_VALUE;
@@ -129,5 +135,11 @@ public final class ServerMain {
         }
       }
     }
+  }
+
+  private static int defaultGameSocketPort(int httpPort) {
+    if(httpPort==0) return 0;
+    if(httpPort<0 || httpPort>=65535) throw new IllegalArgumentException("Set T4C_GAME_SOCKET_PORT when the HTTP listener uses 65535");
+    return httpPort+1;
   }
 }

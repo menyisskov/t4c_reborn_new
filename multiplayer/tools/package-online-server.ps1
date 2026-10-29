@@ -95,12 +95,20 @@ try {
 $startScript = @'
 param(
     [ValidateRange(1024,65535)][int]$Port = 18773,
+    [int]$GameSocketPort = 0,
     [switch]$Preview,
     [string]$StateDirectory
 )
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 $root = [IO.Path]::GetFullPath($PSScriptRoot)
+if ($GameSocketPort -eq 0) {
+    if ($Port -ge 65535) { throw 'Set -GameSocketPort when the HTTP port is 65535.' }
+    $GameSocketPort = $Port + 1
+}
+if ($GameSocketPort -lt 1024 -or $GameSocketPort -gt 65535 -or $GameSocketPort -eq $Port) {
+    throw 'Game socket port must be a distinct port from 1024 through 65535.'
+}
 foreach ($name in @('T4C_TLS_KEYSTORE','T4C_TLS_PASSWORD_FILE','T4C_PUBLIC_ORIGIN')) {
     if (Test-Path -LiteralPath ('Env:' + $name)) { throw 'Local QA launcher refuses inherited TLS/origin settings. See multiplayer/TLS.md for a separate foreground TLS deployment.' }
 }
@@ -115,6 +123,8 @@ if (!$Preview) {
 }
 $listener = Get-NetTCPConnection -State Listen -LocalPort $Port -ErrorAction SilentlyContinue
 if ($listener) { throw "Port $Port is occupied; no process was started." }
+$socketListener = Get-NetTCPConnection -State Listen -LocalPort $GameSocketPort -ErrorAction SilentlyContinue
+if ($socketListener) { throw "Game socket port $GameSocketPort is occupied; no process was started." }
 & (Join-Path $root 'check-server.ps1')
 if ($StateDirectory) {
     $state = [IO.Path]::GetFullPath($StateDirectory)
@@ -140,13 +150,16 @@ $stderr = Join-Path $state 'stderr.log'
 $java = (Get-Command java -ErrorAction Stop).Source
 $oldControl = [Environment]::GetEnvironmentVariable('T4C_CONTROL_FILE','Process')
 $oldBind = [Environment]::GetEnvironmentVariable('T4C_BIND_ADDRESS','Process')
+$oldGameSocketPort = [Environment]::GetEnvironmentVariable('T4C_GAME_SOCKET_PORT','Process')
 try {
     [Environment]::SetEnvironmentVariable('T4C_CONTROL_FILE',$control,'Process')
     [Environment]::SetEnvironmentVariable('T4C_BIND_ADDRESS','127.0.0.1','Process')
+    [Environment]::SetEnvironmentVariable('T4C_GAME_SOCKET_PORT',[string]$GameSocketPort,'Process')
     $process = Start-Process -FilePath $java -ArgumentList @('-Djava.awt.headless=true','-jar',('"' + $jar + '"'),$mode,('"' + $map + '"'),$Port) -WorkingDirectory $root -WindowStyle Hidden -PassThru -RedirectStandardOutput $stdout -RedirectStandardError $stderr
 } finally {
     [Environment]::SetEnvironmentVariable('T4C_CONTROL_FILE',$oldControl,'Process')
     [Environment]::SetEnvironmentVariable('T4C_BIND_ADDRESS',$oldBind,'Process')
+    [Environment]::SetEnvironmentVariable('T4C_GAME_SOCKET_PORT',$oldGameSocketPort,'Process')
 }
 $manifest = Get-Content -LiteralPath (Join-Path $root 'SHA256SUMS.tsv') | Where-Object { $_ -like "fact`tsourceRevision`t*" }
 $revision = ($manifest -split "`t")[2]
@@ -154,6 +167,7 @@ $session = @{
     processId = $process.Id
     startedUtc = $process.StartTime.ToUniversalTime().ToString('o')
     port = $Port
+    gameSocketPort = $GameSocketPort
     mode = $mode
     jarPath = $jar
     jarSha256 = (Get-FileHash -LiteralPath $jar -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -166,7 +180,13 @@ for ($attempt=0; $attempt -lt 40; $attempt++) {
     try {
         $health = Invoke-RestMethod "http://127.0.0.1:$Port/health" -TimeoutSec 1
         if ($health.mode -eq $expectedMode) {
+            $map = Invoke-RestMethod "http://127.0.0.1:$Port/map" -TimeoutSec 1
+            if ($map.gameSocketPort -ne $GameSocketPort) { throw 'Server advertised an unexpected game socket port.' }
+            $socket = [System.Net.Sockets.TcpClient]::new()
+            try { $connect = $socket.ConnectAsync('127.0.0.1',$GameSocketPort); if (!$connect.Wait(1000)) { continue }; $connect.GetAwaiter().GetResult() }
+            finally { $socket.Dispose() }
             Write-Host "Server ready: http://127.0.0.1:$Port"
+            Write-Host "Native game socket ready: 127.0.0.1:$GameSocketPort"
             Write-Host "Private state: $state"
             Write-Host "Stop: & '$root/stop-server.ps1' -StateDirectory '$state'"
             return

@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -19,6 +20,7 @@ import org.junit.jupiter.api.Test;
 
 /** The shop commands of the native adapter against a local fake server: bodies, replies, refusals, no replay. */
 class OnlineShopConnectionTest {
+  private static final java.util.Map<HttpServer,LoopbackGameSocket> SOCKETS=new ConcurrentHashMap<>();
   private static final String TOKEN = "a".repeat(64);
   private static final String REGION = "{\"world\":0,\"key\":\"start\",\"locationEpoch\":0,\"originX\":2904,"
       + "\"originY\":1029,\"width\":80,\"height\":60}";
@@ -34,6 +36,7 @@ class OnlineShopConnectionTest {
   private static HttpServer server(OnlineConnection.Credentials credentials, AtomicLong revision,
       CopyOnWriteArrayList<Call> calls, AtomicReference<String> shopReply, AtomicInteger shopStatus) throws Exception {
     var server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+    var socketPort=new AtomicInteger();
     server.createContext("/", exchange -> {
       String path = exchange.getRequestURI().getPath();
       String request = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
@@ -41,7 +44,7 @@ class OnlineShopConnectionTest {
       String reply = "{}";
       switch (path) {
         case "/map" -> reply = "{\"protocolVersion\":" + com.perso.T4C.online.model.OnlineProtocol.VERSION
-            + ",\"persistent\":true," + REGION.substring(1);
+            + ",\"gameSocketPort\":"+socketPort.get()+",\"persistent\":true," + REGION.substring(1);
         case "/join" -> reply = "{\"token\":\"" + TOKEN + "\",\"id\":7,\"region\":" + REGION + "}";
         case "/state" -> reply = "{\"tick\":8,\"region\":" + REGION + ",\"characterRevision\":" + revision.get()
             + ",\"players\":[{\"id\":7,\"x\":40.5,\"y\":30.5,\"sequence\":0,\"hp\":27,\"maxHp\":40}]}";
@@ -62,8 +65,14 @@ class OnlineShopConnectionTest {
       exchange.getResponseBody().write(bytes);
       exchange.close();
     });
-    server.start();
+    var bridge=new LoopbackGameSocket(server);socketPort.set(bridge.port());server.start();SOCKETS.put(server,bridge);
     return server;
+  }
+
+  private static void stop(HttpServer server) {
+    var bridge=SOCKETS.remove(server);
+    if(bridge!=null) bridge.close();
+    server.stop(0);
   }
 
   @Test
@@ -104,7 +113,7 @@ class OnlineShopConnectionTest {
       assertEquals("online.shop.sold", sold.messageKey());
       assertEquals(List.of(1, 4), sold.args());
       assertEquals(3, sold.character().revision());
-    } finally { server.stop(0); }
+    } finally { stop(server); }
   }
 
   @Test
@@ -134,7 +143,7 @@ class OnlineShopConnectionTest {
           "online.shop.hint_buy", "online.shop.hint_sell", "online.shop.not_for_sale", "online.shop.not_sellable",
           "online.shop.unsupported_item", "online.shop.dead"))
         assertTrue(com.perso.T4C.i18n.I18n.has(key), key);
-    } finally { server.stop(0); }
+    } finally { stop(server); }
   }
 
   @Test
@@ -150,7 +159,7 @@ class OnlineShopConnectionTest {
       assertThrows(java.util.concurrent.ExecutionException.class, () -> uncertain.get(4, TimeUnit.SECONDS));
       awaitTrue(() -> "disconnected".equals(connection.status()));
       assertEquals(1, calls.size(), "An ambiguous trade must never be automatically replayed");
-    } finally { server.stop(0); }
+    } finally { stop(server); }
   }
 
   @Test
@@ -166,6 +175,6 @@ class OnlineShopConnectionTest {
       assertThrows(IllegalArgumentException.class, () -> connection.shopBuy("Sigfried", "item.torch", 0));
       assertThrows(IllegalArgumentException.class, () -> connection.shopSell("Sigfried", "item.torch", 100));
       assertTrue(calls.isEmpty());
-    } finally { server.stop(0); }
+    } finally { stop(server); }
   }
 }
