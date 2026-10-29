@@ -2,6 +2,7 @@ package com.perso.T4C.tools;
 
 import com.google.gson.Gson;
 import com.perso.T4C.npc.Kilhiam;
+import com.perso.T4C.npc.Sigfried;
 import com.perso.T4C.npc.WardenAelric;
 import com.perso.T4C.npc.core.NpcSpec;
 import com.perso.T4C.online.model.NpcInteractionContent;
@@ -14,7 +15,9 @@ public final class OnlineNpcContentExporter {
   private OnlineNpcContentExporter() {}
   public static NpcInteractionContent snapshot() {
     return new NpcInteractionContent(NpcInteractionContent.VERSION, List.of(
-        npc(Kilhiam.class, Kilhiam.spec()), npc(WardenAelric.class, WardenAelric.spec())));
+        npc(Kilhiam.class, Kilhiam.spec()), npc(WardenAelric.class, WardenAelric.spec()),
+        // Sigfried keeps his authored shop; online he only greets and trades (stock in npc-shops-v2).
+        npc(Sigfried.class, Sigfried.spec())));
   }
   private static NpcInteractionContent.Npc npc(Class<?> type, NpcSpec spec) {
     var spawn = type.getAnnotation(Spawn.class);

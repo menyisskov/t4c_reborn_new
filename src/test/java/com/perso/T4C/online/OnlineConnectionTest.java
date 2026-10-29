@@ -49,6 +49,7 @@ class OnlineConnectionTest {
     var tapReceived = new CountDownLatch(1);
     var stoppedAfterTap = new CountDownLatch(1);
     var server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+    var socketPort = new AtomicInteger();
     String token = "a".repeat(64);
     server.createContext(
         "/",
@@ -92,7 +93,7 @@ class OnlineConnectionTest {
               switch (path) {
                 case "/map" ->
                     "{\"protocolVersion\":" + com.perso.T4C.online.model.OnlineProtocol.VERSION
-                        + ",\"persistent\":"+persistent+","+region.substring(1);
+                        + ",\"gameSocketPort\":"+socketPort.get()+",\"persistent\":"+persistent+","+region.substring(1);
                 case "/join" -> "{\"token\":\"" + token + "\",\"id\":7,\"region\":"+region+"}";
                 case "/state" ->
                     "{\"tick\":8,\"region\":"+region+",\"characterRevision\":" + revision.get()
@@ -113,12 +114,12 @@ class OnlineConnectionTest {
           exchange.getResponseBody().write(bytes);
           exchange.close();
         });
-    server.start();
+    var socketBridge=new LoopbackGameSocket(server);socketPort.set(socketBridge.port());server.start();
     try {
-      try (var connection =
+      try (socketBridge; var connection =
           new OnlineConnection(
               URI.create("http://127.0.0.1:" + server.getAddress().getPort()),
-              persistent ? credentials : null)) {
+              persistent ? credentials : null, socketPort.get())) {
         connection.direction(1, -1);
         long deadline = System.nanoTime() + Duration.ofSeconds(5).toNanos();
         while (connection.view() == null
@@ -258,6 +259,7 @@ class OnlineConnectionTest {
     var lootA = UUID.randomUUID();
     var lootB = UUID.randomUUID();
     var server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+    var socketPort = new AtomicInteger();
     server.createContext("/", exchange -> {
       String path = exchange.getRequestURI().getPath();
       String request = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
@@ -271,7 +273,7 @@ class OnlineConnectionTest {
       String reply = "{}";
       switch (path) {
         case "/map" -> reply = "{\"protocolVersion\":" + com.perso.T4C.online.model.OnlineProtocol.VERSION
-            + ",\"persistent\":true," + regionJson(regionEpoch.get()).substring(1);
+            + ",\"gameSocketPort\":"+socketPort.get()+",\"persistent\":true," + regionJson(regionEpoch.get()).substring(1);
         case "/join" -> reply = "{\"token\":\"" + LOOT_TOKEN + "\",\"id\":7,\"region\":" + regionJson(0) + "}";
         case "/state" -> reply = "{\"tick\":8,\"region\":" + regionJson(regionEpoch.get())
             + ",\"characterRevision\":" + revision.get()
@@ -299,9 +301,9 @@ class OnlineConnectionTest {
       exchange.getResponseBody().write(bytes);
       exchange.close();
     });
-    server.start();
-    try (var connection = new OnlineConnection(
-        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials)) {
+    var socketBridge=new LoopbackGameSocket(server);socketPort.set(socketBridge.port());server.start();
+    try (socketBridge; var connection = new OnlineConnection(
+        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials, socketPort.get())) {
       awaitTrue(() -> connection.view() != null && connection.view().snapshot().loot().size() == 1);
       var seen = connection.view().snapshot().loot().getFirst();
       assertEquals(lootA, seen.id());
@@ -356,6 +358,7 @@ class OnlineConnectionTest {
     var pickupCalls = new AtomicInteger();
     var release = new CountDownLatch(1);
     var server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+    var socketPort = new AtomicInteger();
     server.createContext("/", exchange -> {
       String path = exchange.getRequestURI().getPath();
       exchange.getRequestBody().readAllBytes();
@@ -369,7 +372,7 @@ class OnlineConnectionTest {
       }
       String reply = switch (path) {
         case "/map" -> "{\"protocolVersion\":" + com.perso.T4C.online.model.OnlineProtocol.VERSION
-            + ",\"persistent\":true," + regionJson(0).substring(1);
+            + ",\"gameSocketPort\":"+socketPort.get()+",\"persistent\":true," + regionJson(0).substring(1);
         case "/join" -> "{\"token\":\"" + LOOT_TOKEN + "\",\"id\":7,\"region\":" + regionJson(0) + "}";
         case "/state" -> "{\"tick\":8,\"region\":" + regionJson(0) + ",\"characterRevision\":1,"
             + "\"players\":[{\"id\":7,\"x\":40.5,\"y\":30.5,\"sequence\":0,\"hp\":27,\"maxHp\":40}],"
@@ -385,9 +388,9 @@ class OnlineConnectionTest {
       exchange.getResponseBody().write(bytes);
       exchange.close();
     });
-    server.start();
-    try (var connection = new OnlineConnection(
-        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials)) {
+    var socketBridge=new LoopbackGameSocket(server);socketPort.set(socketBridge.port());server.start();
+    try (socketBridge; var connection = new OnlineConnection(
+        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials, socketPort.get())) {
       awaitTrue(() -> connection.view() != null && !connection.view().snapshot().loot().isEmpty());
       var uncertain = connection.pickUp(lootA).toCompletableFuture();
       assertThrows(java.util.concurrent.ExecutionException.class, () -> uncertain.get(6, TimeUnit.SECONDS));
@@ -408,6 +411,7 @@ class OnlineConnectionTest {
     var bodies = new CopyOnWriteArrayList<String>();
     var potion = UUID.randomUUID();
     var server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+    var socketPort = new AtomicInteger();
     server.createContext("/", exchange -> {
       String path = exchange.getRequestURI().getPath();
       String request = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
@@ -420,7 +424,7 @@ class OnlineConnectionTest {
         reply = "{\"error\":\"protocol\"}";
       } else switch (path) {
         case "/map" -> reply = "{\"protocolVersion\":" + com.perso.T4C.online.model.OnlineProtocol.VERSION
-            + ",\"persistent\":true," + regionJson(0).substring(1);
+            + ",\"gameSocketPort\":"+socketPort.get()+",\"persistent\":true," + regionJson(0).substring(1);
         case "/join" -> reply = "{\"token\":\"" + LOOT_TOKEN + "\",\"id\":7,\"region\":" + regionJson(0) + "}";
         case "/state" -> reply = "{\"tick\":8,\"region\":" + regionJson(0) + ",\"characterRevision\":" + revision.get()
             + ",\"players\":[{\"id\":7,\"x\":40.5,\"y\":30.5,\"sequence\":0,\"hp\":27,\"maxHp\":40}],\"loot\":[]}";
@@ -448,9 +452,9 @@ class OnlineConnectionTest {
       exchange.getResponseBody().write(bytes);
       exchange.close();
     });
-    server.start();
-    try (var connection = new OnlineConnection(
-        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials)) {
+    var socketBridge=new LoopbackGameSocket(server);socketPort.set(socketBridge.port());server.start();
+    try (socketBridge; var connection = new OnlineConnection(
+        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials, socketPort.get())) {
       awaitTrue(() -> connection.view() != null && connection.view().character() != null);
       assertThrows(IllegalArgumentException.class, () -> connection.cast("heal_light"));
       assertThrows(IllegalArgumentException.class, () -> connection.cast("spell.Bad Key"));
@@ -487,6 +491,7 @@ class OnlineConnectionTest {
     var castCalls = new AtomicInteger();
     var release = new CountDownLatch(1);
     var server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+    var socketPort = new AtomicInteger();
     server.createContext("/", exchange -> {
       String path = exchange.getRequestURI().getPath();
       exchange.getRequestBody().readAllBytes();
@@ -499,7 +504,7 @@ class OnlineConnectionTest {
       }
       String reply = switch (path) {
         case "/map" -> "{\"protocolVersion\":" + com.perso.T4C.online.model.OnlineProtocol.VERSION
-            + ",\"persistent\":true," + regionJson(0).substring(1);
+            + ",\"gameSocketPort\":"+socketPort.get()+",\"persistent\":true," + regionJson(0).substring(1);
         case "/join" -> "{\"token\":\"" + LOOT_TOKEN + "\",\"id\":7,\"region\":" + regionJson(0) + "}";
         case "/state" -> "{\"tick\":8,\"region\":" + regionJson(0) + ",\"characterRevision\":1,"
             + "\"players\":[{\"id\":7,\"x\":40.5,\"y\":30.5,\"sequence\":0,\"hp\":27,\"maxHp\":40}],\"loot\":[]}";
@@ -513,9 +518,9 @@ class OnlineConnectionTest {
       exchange.getResponseBody().write(bytes);
       exchange.close();
     });
-    server.start();
-    try (var connection = new OnlineConnection(
-        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials)) {
+    var socketBridge=new LoopbackGameSocket(server);socketPort.set(socketBridge.port());server.start();
+    try (socketBridge; var connection = new OnlineConnection(
+        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials, socketPort.get())) {
       awaitTrue(() -> connection.view() != null && connection.view().character() != null);
       var uncertain = connection.cast("spell.heal_light").toCompletableFuture();
       assertThrows(java.util.concurrent.ExecutionException.class, () -> uncertain.get(6, TimeUnit.SECONDS));
@@ -550,9 +555,10 @@ class OnlineConnectionTest {
       exchange.getResponseBody().write(reply);
       exchange.close();
     });
+    var socketBridge = new LoopbackGameSocket(server);
     server.start();
     var credentials = new OnlineConnection.Credentials("b".repeat(64), java.util.UUID.randomUUID());
-    try (var connection = new OnlineConnection(URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials)) {
+    try (socketBridge; var connection = new OnlineConnection(URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials, socketBridge.port())) {
       long deadline = System.nanoTime() + Duration.ofSeconds(3).toNanos();
       while (!connection.status().equals("disconnected") && System.nanoTime() < deadline) Thread.sleep(10);
       assertEquals("disconnected", connection.status());
@@ -570,11 +576,12 @@ class OnlineConnectionTest {
         exchange.sendResponseHeaders(200, oversized.length);
         exchange.getResponseBody().write(oversized);
       } catch (java.io.IOException expectedDisconnect) {
-        // The receiver is expected to cancel as soon as its bound is exceeded.
+        // The receiver is expected to cancel as soon as the socket frame exceeds its bound.
       } finally { exchange.close(); }
     });
+    var socketBridge = new LoopbackGameSocket(server);
     server.start();
-    try (var connection = new OnlineConnection(URI.create("http://127.0.0.1:" + server.getAddress().getPort()))) {
+    try (socketBridge; var connection = new OnlineConnection(URI.create("http://127.0.0.1:" + server.getAddress().getPort()), null, socketBridge.port())) {
       long deadline = System.nanoTime() + Duration.ofSeconds(4).toNanos();
       while (!connection.status().equals("disconnected") && System.nanoTime() < deadline) Thread.sleep(10);
       assertEquals("disconnected", connection.status());
@@ -583,7 +590,7 @@ class OnlineConnectionTest {
   }
 
   @Test
-  void stalledBodyCannotKeepTheNetworkWorkerConnectedIndefinitely() throws Exception {
+  void stalledResponseCannotKeepTheNetworkWorkerConnectedIndefinitely() throws Exception {
     var release = new CountDownLatch(1);
     var server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
     server.createContext("/", exchange -> {
@@ -596,8 +603,9 @@ class OnlineConnectionTest {
         // Test shutdown can interrupt or close the deliberately unfinished response.
       } finally { exchange.close(); }
     });
+    var socketBridge = new LoopbackGameSocket(server);
     server.start();
-    try (var connection = new OnlineConnection(URI.create("http://127.0.0.1:" + server.getAddress().getPort()))) {
+    try (socketBridge; var connection = new OnlineConnection(URI.create("http://127.0.0.1:" + server.getAddress().getPort()), null, socketBridge.port())) {
       long deadline = System.nanoTime() + Duration.ofSeconds(4).toNanos();
       while (!connection.status().equals("disconnected") && System.nanoTime() < deadline) Thread.sleep(10);
       assertEquals("disconnected", connection.status());

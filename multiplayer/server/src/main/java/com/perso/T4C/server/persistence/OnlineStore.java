@@ -1475,6 +1475,54 @@ public final class OnlineStore implements AutoCloseable {
     }
   }
 
+  /** Definite shop refusals raised before any write; every other failure leaves the outcome uncertain. */
+  public static final java.util.Set<String> SHOP_REFUSALS = java.util.Set.of("revision",
+      "insufficient_gold", "too_heavy", "item_unavailable", "unsupported_item", "not_sellable");
+
+  /**
+   * One atomic vendor trade: gold is debited or credited and the inventory changes in the same
+   * revision-fenced write, bound to a receipt. The trade (with the server-computed price) is
+   * re-validated here on the locked row, so a stale cache can never overspend or oversell. A replay
+   * of the same event returns the committed result before the revision check; every refusal raises
+   * before any write.
+   */
+  public RewardResult commitShopTrade(Session session, long revision, UUID event,
+      com.perso.T4C.server.OnlineShopTrades.Trade trade, ItemContent content, CarryRules rules) throws SQLException {
+    Objects.requireNonNull(session); Objects.requireNonNull(event); Objects.requireNonNull(trade);
+    Objects.requireNonNull(content); Objects.requireNonNull(rules);
+    if (revision<0) throw new IllegalArgumentException("Invalid revision");
+    String digest=fingerprint("shop-trade-v1\n"+trade.canonical());
+    try (var c=connections.open()) {
+      c.setAutoCommit(false);
+      try {
+        var state=lockSession(c,session);
+        try (var q=c.prepareStatement("SELECT payload_hash FROM online_rewards WHERE character_id=? AND event_id=?")) {
+          q.setObject(1,session.characterId()); q.setObject(2,event);
+          try (var rows=q.executeQuery()) { if (rows.next()) {
+            if (!digest.equals(rows.getString(1))) throw new Conflict("Shop receipt payload mismatch");
+            c.commit(); return new RewardResult(false,state);
+          } }
+        }
+        if (state.revision()!=revision) throw new Conflict("revision");
+        var progress=state.progress();
+        if (progress==null) throw new Conflict("unsupported_item");
+        com.perso.T4C.server.OnlineShopTrades.Outcome outcome;
+        try {
+          outcome=com.perso.T4C.server.OnlineShopTrades.apply(progress,state.gold(),trade,content,
+              rules.maximumWeight(progress),event);
+        } catch (com.perso.T4C.server.OnlineShopTrades.Refused refused) { throw new Conflict(refused.refusal().code()); }
+        try (var q=c.prepareStatement("INSERT INTO online_rewards(character_id,event_id,gold,experience,payload_hash) VALUES (?,?,0,0,?)")) {
+          q.setObject(1,session.characterId()); q.setObject(2,event); q.setString(3,digest); q.executeUpdate();
+        }
+        try (var q=c.prepareStatement("UPDATE online_characters SET gold=?, progress=?::jsonb, revision=revision+1, updated_at=now() WHERE id=?")) {
+          q.setLong(1,outcome.gold()); q.setString(2,encodeProgress(outcome.progress())); q.setObject(3,session.characterId()); q.executeUpdate();
+        }
+        state=load(c,session.accountId(),session.characterId(),false);
+        c.commit(); return new RewardResult(true,state);
+      } catch (SQLException|RuntimeException failure) { c.rollback(); throw failure; }
+    }
+  }
+
   /** Live drops in a rectangle of one region, oldest first. Expired or claimed rows never appear. */
   public java.util.List<GroundLoot> listGroundLoot(int world, TileRect area) throws SQLException {
     if (world<0) throw new IllegalArgumentException("Invalid loot world");

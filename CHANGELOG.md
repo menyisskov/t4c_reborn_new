@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-28 — Online shopkeepers can trade with players (T4C-0281)
+
+### Added
+- In online play, Sigfried can buy and sell goods using the same item prices and gold limits as single-player.
+
 ## 2026-10-28 — Online character creation lists all seven classes (T4C-0280)
 
 ### Fixed

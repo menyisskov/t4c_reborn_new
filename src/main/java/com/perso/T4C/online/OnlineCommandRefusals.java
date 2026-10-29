@@ -33,6 +33,7 @@ final class OnlineCommandRefusals {
       };
       case "/unequip" -> "item_not_equipped".equals(code) ? "online.unequip.not_equipped" : "online.equip.refused";
       case "/interact" -> "npc_unavailable".equals(code) ? "online.npc.unavailable" : "online.npc.refused";
+      case "/shop-offers", "/shop-buy", "/shop-sell" -> shop(code);
       case "/cast" -> ability(code, true);
       case "/use" -> ability(code, false);
       case "/attack" -> attack(code);
@@ -84,6 +85,23 @@ final class OnlineCommandRefusals {
       case "unsupported_combat" -> "online.attack.unsupported";
       case "busy", "revision", "region", "uninitialized_character" -> "online.attack.busy";
       default -> "online.attack.refused";
+    };
+  }
+
+  /** Vendor refusals as the server's shop routes and its trade transaction report them. */
+  private static String shop(String code) {
+    return switch (code) {
+      case "npc_unavailable" -> "online.shop.unavailable";
+      case "not_a_shop" -> "online.shop.not_a_shop";
+      case "not_for_sale" -> "online.shop.not_for_sale";
+      case "insufficient_gold" -> "online.shop.not_enough_gold";
+      case "too_heavy" -> "online.shop.too_heavy";
+      case "item_unavailable" -> "online.shop.not_enough_items";
+      case "not_sellable" -> "online.shop.not_sellable";
+      case "unsupported_item" -> "online.shop.unsupported_item";
+      case "dead" -> "online.shop.dead";
+      case "busy", "revision", "region_epoch" -> "online.shop.busy";
+      default -> "online.shop.refused";
     };
   }
 

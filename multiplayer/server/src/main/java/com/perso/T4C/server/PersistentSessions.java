@@ -21,6 +21,7 @@ final class PersistentSessions {
   private static final long AUTHORITY_NANOS = TimeUnit.SECONDS.toNanos(20);
   /** Definite refusals from the claim transaction: nothing was written, so the actor stays connected. */
   private static final Set<String> CORPSE_REFUSALS=Set.of(OnlineStore.CORPSE_TOO_HEAVY,OnlineStore.CORPSE_ITEM_UNAVAILABLE);
+  private static final Set<String> SHOP_REFUSALS=OnlineStore.SHOP_REFUSALS;
   private static final Set<String> PICKUP_REFUSALS=Set.of("revision","loot_unavailable","loot_reserved",
       "out_of_range","too_heavy","unsupported_item","unsupported_pickup");
   private final OnlineStore store;
@@ -71,8 +72,16 @@ final class PersistentSessions {
       OnlineStore.MonsterAttack monsterAttack, OnlineStore.DeathTransition death, UUID corpse, UUID corpseItem,
       com.perso.T4C.server.persistence.PortalTransfer transfer, UUID loot, List<LootDropDraft> drops,
       List<OnlineStore.SpellStrike> spellStrikes,
-      CompletableFuture<OnlineStore.RewardResult> result) {
+      CompletableFuture<OnlineStore.RewardResult> result, OnlineShopTrades.Trade shop) {
     GameplayEvent { drops=List.copyOf(drops); spellStrikes=spellStrikes==null ? List.of() : List.copyOf(spellStrikes); }
+    GameplayEvent(UUID id, long gold, long experience, CharacterProgress progress, boolean worldReward,
+        OnlineStore.CreatureStrike strike, OnlineStore.CreatureProvocation provocation,
+        OnlineStore.MonsterAttack monsterAttack, OnlineStore.DeathTransition death, UUID corpse, UUID corpseItem,
+        com.perso.T4C.server.persistence.PortalTransfer transfer, UUID loot, List<LootDropDraft> drops,
+        List<OnlineStore.SpellStrike> spellStrikes, CompletableFuture<OnlineStore.RewardResult> result) {
+      this(id,gold,experience,progress,worldReward,strike,provocation,monsterAttack,death,corpse,corpseItem,transfer,
+          loot,drops,spellStrikes,result,null);
+    }
   }
   private record Completion(Binding binding, OnlineStore.CharacterState saved, boolean finalSave,
       long allowedUntil, OnlineStore.RewardResult reward, String refusal, Exception error) {}
@@ -450,6 +459,72 @@ final class PersistentSessions {
     return result.minimalCompletionStage();
   }
 
+  /** The shopkeeper's listing and this character's sellable goods. A read: nothing is committed. */
+  com.perso.T4C.online.model.ShopOffersReply shopOffers(String token,long epoch,String npcId) {
+    var binding=active(token);
+    requireEpoch(token,epoch);
+    var vendor=shopkeeper(binding,token,npcId);
+    return OnlineShops.offers(binding.saved.revision(),binding.saved.gold(),npcId,vendor,binding.saved.progress(),hosted.items);
+  }
+
+  /** What a committed trade did, from the server's own numbers. */
+  record ShopReceipt(long revision,int quantity,long total) {}
+
+  /**
+   * Single-flight vendor trade. The server prices it from its own catalog, pre-checks it against the
+   * committed state, then commits gold and inventory together in one revision-fenced, receipt-bound
+   * transaction that re-validates it. An uncertain outcome disconnects the actor; nothing replays it.
+   */
+  CompletionStage<ShopReceipt> shopTrade(String token,long revision,long epoch,String npcId,
+      OnlineShopTrades.Side side,String itemKey,int quantity) {
+    var binding=active(token);
+    requireEpoch(token,epoch);
+    if (binding.event!=null || binding.awaitingRegionReady) throw new PreviewWorld.Rejected(409,"busy");
+    if (binding.saved.revision()!=revision) throw new PreviewWorld.Rejected(409,"revision");
+    var vendor=shopkeeper(binding,token,npcId);
+    var definition=hosted.items.items().get(itemKey);
+    if (definition==null) throw new PreviewWorld.Rejected(409,"unsupported_item");
+    long price;
+    if (side==OnlineShopTrades.Side.BUY) {
+      price=OnlineShops.buyPrice(vendor,itemKey).orElseThrow(()->new PreviewWorld.Rejected(409,"not_for_sale"));
+    } else {
+      price=OnlineShops.sellPrice(definition);
+      if (!com.perso.T4C.item.ShopRules.sellable(price)) throw new PreviewWorld.Rejected(409,"not_sellable");
+    }
+    OnlineShopTrades.Trade trade;
+    try { trade=new OnlineShopTrades.Trade(side,itemKey,quantity,price); }
+    catch (IllegalArgumentException invalid) { throw new PreviewWorld.Rejected(400,"input"); }
+    var progress=binding.saved.progress();
+    long goldBefore=binding.saved.gold();
+    try { OnlineShopTrades.apply(progress,goldBefore,trade,hosted.items,carryRules(hosted.items).maximumWeight(progress),UUID.randomUUID()); }
+    catch (OnlineShopTrades.Refused refused) { throw new PreviewWorld.Rejected(409,refused.refusal().code()); }
+    var result=new CompletableFuture<OnlineStore.RewardResult>();
+    binding.event=new GameplayEvent(UUID.randomUUID(),0,0,progress,false,null,null,null,null,null,null,null,null,
+        List.of(),List.of(),result,trade);
+    if (!binding.pending) submit(binding);
+    return result.minimalCompletionStage().thenApply(committed->new ShopReceipt(committed.character().revision(),
+        quantity,Math.abs(committed.character().gold()-goldBefore)));
+  }
+
+  /**
+   * The vendor this character may trade with right now. Position and sight come from the simulation
+   * and use the same conversation rule as {@link #interact}; a reachable NPC without a shop is refused.
+   */
+  private com.perso.T4C.online.model.NpcShopContent.Vendor shopkeeper(Binding binding,String token,String npcId) {
+    if (binding.awaitingRegionReady) throw new PreviewWorld.Rejected(409,"busy");
+    var progress=binding.saved.progress();
+    if (progress==null) throw new PreviewWorld.Rejected(409,"uninitialized_character");
+    if (progress.vitals().hp()<=0) throw new PreviewWorld.Rejected(409,"dead");
+    if (hosted.items==null || binding.region.npcs==null) throw new PreviewWorld.Rejected(409,"npc_unavailable");
+    var position=binding.region.world.position(token);
+    binding.position=position;
+    java.util.Optional<String> canonical;
+    try { canonical=binding.region.npcs.reachableShopkeeper(binding.saved,binding.region.map,position.x(),position.y(),npcId); }
+    catch (IllegalArgumentException unavailable) { throw new PreviewWorld.Rejected(409,"npc_unavailable"); }
+    if (canonical.isEmpty()) throw new PreviewWorld.Rejected(409,"not_a_shop");
+    return OnlineShops.vendor(canonical.get()).orElseThrow(()->new PreviewWorld.Rejected(409,"not_a_shop"));
+  }
+
   CompletionStage<OnlineStore.RewardResult> commitMonsterAttack(String token,long revision,UUID event,
       CharacterProgress progress,OnlineStore.MonsterAttack attack,OnlineStore.DeathTransition death) {
     return commitEvent(token,revision,event,0,0,progress,false,null,null,Objects.requireNonNull(attack),death,null);
@@ -595,6 +670,15 @@ final class PersistentSessions {
             } catch (OnlineStore.Conflict conflict) {
               // Only the claim's own refusals are definite. Lease loss or a payload mismatch fails closed.
               if (!PICKUP_REFUSALS.contains(conflict.getMessage())) throw conflict;
+              refusal=conflict.getMessage();
+            }
+          } else if (event.shop()!=null) {
+            try {
+              reward=store.commitShopTrade(binding.session,revision,event.id(),event.shop(),content,carryRules(content));
+              saved=reward.character();
+            } catch (OnlineStore.Conflict conflict) {
+              // The trade was re-validated on the locked row and refused before any write. Anything else fails closed.
+              if (!SHOP_REFUSALS.contains(conflict.getMessage())) throw conflict;
               refusal=conflict.getMessage();
             }
           } else if (event.corpse()!=null) {

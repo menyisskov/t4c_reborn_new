@@ -30,7 +30,13 @@ public final class OnlineNpcInteractions {
   private final ItemContent.Definition letter;
   private final ItemContent items;
   private final QuestCatalog quests;
+  /** Hosted NPCs that sell and buy goods; they greet with their authored welcome and keep no quest script. */
+  private final java.util.function.Predicate<String> shopkeepers;
   public OnlineNpcInteractions(NpcInteractionCatalog catalog,ItemContent items) {
+    this(catalog,items,id->false);
+  }
+  public OnlineNpcInteractions(NpcInteractionCatalog catalog,ItemContent items,java.util.function.Predicate<String> shopkeepers) {
+    this.shopkeepers=Objects.requireNonNull(shopkeepers);
     this.catalog=Objects.requireNonNull(catalog);
     this.items=Objects.requireNonNull(items);
     this.quests=QuestCatalog.bundled();
@@ -50,11 +56,11 @@ public final class OnlineNpcInteractions {
     Objects.requireNonNull(saved); Objects.requireNonNull(topic); Objects.requireNonNull(instanceId);
     Objects.requireNonNull(random);
     var progress=Objects.requireNonNull(saved.progress());
-    var npc=catalog.require(npcId);
-    double dx=x-npc.x(),dy=y-npc.y();
-    if(progress.vitals().hp()<=0 || world!=npc.world() || !Double.isFinite(x) || !Double.isFinite(y)
-        || dx*dx+dy*dy>=GameConstants.NPC_INTERACTION_RANGE_TILES_SQUARED || !hasLineOfSight)
-      throw new IllegalArgumentException("NPC is not reachable");
+    requireReachable(saved,world,x,y,npcId,hasLineOfSight);
+    if(!CrimsonscaleLetterRules.NPC.equals(npcId) && shopkeepers.test(npcId)) {
+      if(topic.isPresent()) throw new IllegalArgumentException("NPC has no topics");
+      return new Result(progress,"npc.welcome."+npcId.toLowerCase(java.util.Locale.ROOT),false);
+    }
     if(!CrimsonscaleLetterRules.NPC.equals(npcId)) return questInteraction(saved,npcId,topic,instanceId,now,random);
     if(topic.isPresent()) throw new IllegalArgumentException("NPC has no topics");
     int flag=progress.questFlags().getOrDefault(CrimsonscaleLetterRules.LETTER_FLAG,0);
@@ -69,6 +75,20 @@ public final class OnlineNpcInteractions {
         progress.skills(),progress.spells(),flags,progress.storage(),progress.storageGold(),progress.respawn(),
         progress.buffs(),progress.cooldowns(),progress.hiddenUntil(),progress.companion());
     return new Result(updated,message,true);
+  }
+
+  /**
+   * The one conversation-range rule: alive, same world, inside the interaction radius and in sight.
+   * Dialogue and shop trading both use it so neither can be reached from where the other cannot.
+   */
+  public void requireReachable(OnlineStore.CharacterState saved,int world,double x,double y,String npcId,
+      boolean hasLineOfSight) {
+    var progress=Objects.requireNonNull(saved.progress());
+    var npc=catalog.require(npcId);
+    double dx=x-npc.x(),dy=y-npc.y();
+    if(progress.vitals().hp()<=0 || world!=npc.world() || !Double.isFinite(x) || !Double.isFinite(y)
+        || dx*dx+dy*dy>=GameConstants.NPC_INTERACTION_RANGE_TILES_SQUARED || !hasLineOfSight)
+      throw new IllegalArgumentException("NPC is not reachable");
   }
 
   /** A quest giver: a greeting turns in a ready quest atomically; a topic reads the offer or progress line. */

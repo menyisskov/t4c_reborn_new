@@ -7,6 +7,8 @@ import com.sun.net.httpserver.HttpsServer;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import javax.net.ssl.SSLServerSocket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.GeneralSecurityException;
@@ -101,6 +103,20 @@ public final class ServerTransport {
     return uri.getPort() < 0 ? ("https".equals(uri.getScheme()) ? 443 : 80) : uri.getPort();
   }
 
+  /** Binds the persistent native session socket with the same TLS identity as the HTTPS API. */
+  public ServerSocket createGameSocket(int port) throws IOException {
+    ServerSocket socket = tls == null ? new ServerSocket() : tls.getServerSocketFactory().createServerSocket();
+    try {
+      socket.setReuseAddress(false);
+      socket.bind(new InetSocketAddress(address, port), 32);
+      if (socket instanceof SSLServerSocket secure)
+        secure.setEnabledProtocols(new String[] {"TLSv1.3", "TLSv1.2"});
+      return socket;
+    } catch (IOException | RuntimeException failure) {
+      try { socket.close(); } catch (IOException ignored) { }
+      throw failure;
+    }
+  }
   public HttpServer create(int port) throws IOException {
     if (publicOrigin != null && effectivePort(publicOrigin) != port)
       throw new IllegalArgumentException("Public origin port must match listener port");

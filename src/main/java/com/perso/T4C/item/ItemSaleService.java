@@ -15,8 +15,7 @@ public final class ItemSaleService {
     long before = player.getGold();
     for (int i = 0; i < count; i++) {
       if (!InventoryService.destroyOne(player, item.getKey()).success()) break;
-      long room = (long) Integer.MAX_VALUE - player.getGold();
-      player.setGold((int) (player.getGold() + Math.min(room, price)));
+      player.setGold((int) ShopRules.creditOneUnit(player.getGold(), price));
     }
     return player.getGold() - before;
   }

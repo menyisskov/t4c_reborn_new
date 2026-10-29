@@ -15,6 +15,7 @@ import com.perso.T4C.item.ItemIconRegistry;
 import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.item.ItemSalePricing;
 import com.perso.T4C.item.ItemSaleService;
+import com.perso.T4C.item.ShopRules;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.ui.FontManager;
 import com.perso.T4C.ui.SystemMessage;
@@ -209,7 +210,7 @@ public class ShopScreen extends GuiListScreen {
       rebuildList();
       return;
     }
-    if (basketCost() + entry.effectivePrice > player.getGold()) {
+    if (!ShopRules.canAfford(player.getGold(), basketCost() + entry.effectivePrice)) {
       return;
     }
     entry.count++;
@@ -236,7 +237,7 @@ public class ShopScreen extends GuiListScreen {
     if (basketCount() == 0) {
       return;
     }
-    if (!selling && player.getGold() < cost) {
+    if (!selling && !ShopRules.canAfford(player.getGold(), cost)) {
       SystemMessage.showShared(I18n.message("message.not_enough_gold"));
       return;
     }
@@ -248,7 +249,7 @@ public class ShopScreen extends GuiListScreen {
       rebuildList();
       return;
     }
-    player.setGold((int) (player.getGold() - cost));
+    player.setGold((int) ShopRules.balanceAfterPurchase(player.getGold(), cost));
     List<String> inv = player.getInventory();
     if (inv == null) {
       inv = new ArrayList<>();

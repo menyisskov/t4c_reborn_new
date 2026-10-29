@@ -81,6 +81,30 @@ class ServerTransportTest {
       try (var preview=new PreviewServer(new PreviewMap(new boolean[8][8],0,0,3,3),port,null,null,configured);
            var client=HttpClient.newBuilder().sslContext(context).build()) {
         preview.start(); assertEquals(origin,preview.url());
+        var mapReply=client.send(HttpRequest.newBuilder(URI.create(origin+"/map")).timeout(Duration.ofSeconds(5)).GET().build(),
+            HttpResponse.BodyHandlers.ofString());
+        assertEquals(200,mapReply.statusCode());
+        int gameSocketPort=com.google.gson.JsonParser.parseString(mapReply.body()).getAsJsonObject()
+            .get("gameSocketPort").getAsInt();
+        try(var gameSocket=(javax.net.ssl.SSLSocket)context.getSocketFactory().createSocket("localhost",gameSocketPort)) {
+          gameSocket.setSoTimeout(5000);
+          var parameters=gameSocket.getSSLParameters();parameters.setEndpointIdentificationAlgorithm("HTTPS");
+          parameters.setProtocols(new String[] {"TLSv1.3","TLSv1.2"});gameSocket.setSSLParameters(parameters);
+          gameSocket.startHandshake();
+          var input=new java.io.DataInputStream(gameSocket.getInputStream());
+          var output=new java.io.DataOutputStream(gameSocket.getOutputStream());
+          com.perso.T4C.online.model.GameSocketProtocol.writeFrame(output,
+              new com.google.gson.Gson().toJson(new com.perso.T4C.online.model.GameSocketProtocol.Hello(
+                  com.perso.T4C.online.model.GameSocketProtocol.VERSION)));
+          var hello=com.google.gson.JsonParser.parseString(
+              com.perso.T4C.online.model.GameSocketProtocol.readFrame(input)).getAsJsonObject();
+          assertTrue(hello.get("accepted").getAsBoolean());
+        }
+        assertThrows(SSLHandshakeException.class,()->{
+          try(var wrongHost=(javax.net.ssl.SSLSocket)context.getSocketFactory().createSocket("127.0.0.1",gameSocketPort)) {
+            wrongHost.setSSLParameters(parametersForHttps());wrongHost.startHandshake();
+          }
+        });
         var join=HttpRequest.newBuilder(URI.create(origin+"/join"))
             .header("Origin",origin).header("Content-Type","text/plain")
             .header(com.perso.T4C.online.model.OnlineProtocol.VERSION_HEADER,
@@ -93,5 +117,12 @@ class ServerTransportTest {
         assertEquals(403,client.send(crossOrigin,HttpResponse.BodyHandlers.ofString()).statusCode());
       }
     } finally { server.stop(0); }
+  }
+
+  private static javax.net.ssl.SSLParameters parametersForHttps() {
+    var parameters=new javax.net.ssl.SSLParameters();
+    parameters.setEndpointIdentificationAlgorithm("HTTPS");
+    parameters.setProtocols(new String[] {"TLSv1.3","TLSv1.2"});
+    return parameters;
   }
 }

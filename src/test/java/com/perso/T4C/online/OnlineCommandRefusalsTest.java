@@ -93,4 +93,21 @@ class OnlineCommandRefusalsTest {
       }
     }
   }
+
+  @Test
+  void mapsShopRefusalsAndEveryShopKeyExistsInTheEnglishCatalogue() {
+    assertEquals("online.shop.not_enough_gold", OnlineCommandRefusals.messageKey("/shop-buy", "insufficient_gold"));
+    assertEquals("online.shop.too_heavy", OnlineCommandRefusals.messageKey("/shop-buy", "too_heavy"));
+    assertEquals("online.shop.not_enough_items", OnlineCommandRefusals.messageKey("/shop-sell", "item_unavailable"));
+    assertEquals("online.shop.not_a_shop", OnlineCommandRefusals.messageKey("/shop-offers", "not_a_shop"));
+    assertEquals("online.shop.refused", OnlineCommandRefusals.messageKey("/shop-sell", "something_new"));
+    for (var path : List.of("/shop-offers", "/shop-buy", "/shop-sell")) {
+      for (var reason : List.of("npc_unavailable", "not_a_shop", "not_for_sale", "insufficient_gold", "too_heavy",
+          "item_unavailable", "not_sellable", "unsupported_item", "dead", "busy", "revision", "region_epoch",
+          "anything-unknown")) {
+        var key = OnlineCommandRefusals.messageKey(path, reason);
+        assertTrue(I18n.has(key), key);
+      }
+    }
+  }
 }

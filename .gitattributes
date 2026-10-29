@@ -6,3 +6,6 @@
 
 # Shell scripts run inside WSL/Linux; CRLF would break them.
 *.sh text eol=lf
+
+# Exported content is compared byte for byte by freshness tests; keep LF on Windows checkouts.
+multiplayer/server/src/main/resources/content/*.json text eol=lf
