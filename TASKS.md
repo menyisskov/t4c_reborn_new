@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0290`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0291`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0290 | Client unification remote session R3: `RemoteGameSession.commands()` becomes `RemotePlayerCommands` over the existing connection (attack by server creature id, sequenced input with prediction and reconciliation, pickup by loot id, NPC interact by id); single-player pickup and NPC click route to it only in an online session; other players are drawn by the real screen; headless tests and a real-screen preview; no launcher, server or protocol change | Multiplayer / parity | In Progress (PR open) | pending | none (no player-visible change yet) |
 | T4C-0287 | Client unification remote session R1: a headless `RemoteGameSession` (kind remote, saves nothing) whose character source builds the real `Player` from the server's committed character state through the existing state mapper and marks it remote; world driver and commands are explicit "not available online yet" placeholders; no UI, launcher, server or protocol change | Multiplayer / parity | In Progress (PR open) | pending | none (no player-visible change yet) |
 | T4C-0289 | Client unification remote session R2: `RemoteGameSession.world()` becomes a snapshot-driven world driver; the server snapshot is applied to the real monster, NPC and ground-item objects (puppet mode: no AI, loot, XP, quest, sound, respawn or script side effects); sweep test over every registered monster and NPC class; headless only, no launcher, server or protocol change | Multiplayer / parity | In Progress (PR open) | pending | none (no player-visible change yet) |
 | T4C-0282 | Spell engine stage 3: area spells, damage over time, shields and gateways | Multiplayer / parity | Open PR #237 (queued) | PR #237 | deferred |
