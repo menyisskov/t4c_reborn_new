@@ -34,7 +34,11 @@ import java.util.UUID;
  * {@code renewed_wards} circle, found the same way {@code NativeLootProbe} finds it. Level 8 is the
  * probe's headroom choice (twice the Skeleton level), reached through the server's own XP award path.
  *
- * <p>Usage: {@code LiveRunProvision COLLISION_FILE temple|skeletons OUT_DIR [NAME_SUFFIX]}.
+ * <p>Scene {@code wares} (T4C-0312) puts a badly wounded, low-mana level-1 Healer (a heal spell, healing and mana potions, a staff and a
+ * robe) and a level-1 Warrior carrying an over-weight stack within talking distance of the hosted shopkeeper Sigfried,
+ * for the inventory, spell, potion, shop and walking-animation runs.
+ *
+ * <p>Usage: {@code LiveRunProvision COLLISION_FILE temple|skeletons|wares OUT_DIR [NAME_SUFFIX]}.
  */
 public final class LiveRunProvision {
   private static final int WORLD = 0;
@@ -51,6 +55,18 @@ public final class LiveRunProvision {
     PreviewMap map = plan.regions().stream().filter(r -> r.spec().world() == WORLD).findFirst().orElseThrow().map();
     Spot a, b;
     int level;
+    if ("quest".equals(scene)) {
+      questScene(plan, out, args.length > 3 ? args[3] : "");
+      return;
+    }
+    if ("move-skeletons".equals(scene) || "move-giver".equals(scene)) {
+      move(plan, map, out, scene);
+      return;
+    }
+    if ("wares".equals(scene)) {
+      waresScene(plan, out, args.length > 3 ? args[3] : "");
+      return;
+    }
     if ("temple".equals(scene)) {
       a = new Spot(map.originX + map.spawnX, map.originY + map.spawnY);
       level = 1;
@@ -67,6 +83,96 @@ public final class LiveRunProvision {
       make(store, out.resolve("player-b.json"), "Live Bravo" + suffix, b, level);
     }
     System.out.println("PROVISION_OK");
+  }
+
+  /**
+   * T4C-0312 scene {@code wares}: a Healer at half health (so a heal and a healing potion visibly do something)
+   * and a Warrior carrying one over-weight stack, both within talking distance of Sigfried's shop.
+   */
+  private static void waresScene(HostedRegionPlan plan, Path out, String suffix) throws Exception {
+    var npc = NpcInteractionCatalog.loadBundled().require("Sigfried");
+    var region = plan.require(npc.world(), npc.x(), npc.y());
+    var map = region.map();
+    Spot a = null;
+    search:
+    for (int d = 1; d <= 3; d++)
+      for (int dx = -d; dx <= d; dx++)
+        for (int dy = -d; dy <= d; dy++) {
+          double x = npc.x() + dx + 0.5, y = npc.y() + dy + 0.5;
+          if (standable(plan, x, y) && map.canStand(x - map.originX, y - map.originY)) {
+            a = new Spot(x, y);
+            break search;
+          }
+        }
+    if (a == null) throw new IllegalStateException("no standable tile beside Sigfried");
+    Spot b = nearby(plan, a, 2, 1);
+    System.out.println("scene=wares healer=(" + a.x() + "," + a.y() + ") warrior=(" + b.x() + "," + b.y() + ") sigfried=(" + npc.x() + "," + npc.y() + ")");
+    var items = ItemCatalog.loadBundled();
+    try (var store = OnlineStore.fromEnvironment()) {
+      var healer = OnlineCharacterCreator.prepare(CharacterClass.HEALER, "female", false, new Random(11));
+      var hp = healer.progress().vitals();
+      var wounded = ProgressEdits.withVitals(healer.progress(),
+          new CharacterProgress.Vitals(Math.min(3, hp.maxHp()), hp.maxHp(), Math.min(5, hp.maxMana()), hp.maxMana()));
+      makeFrom(store, out.resolve("player-a.json"), "Live Healer" + suffix, a, wounded, healer.gold(), 0);
+      var warrior = OnlineCharacterCreator.prepare(CharacterClass.WARRIOR, "male", false, new Random(12));
+      var heavy = OnlineOverweightFixture.apply(warrior.progress(), OnlineOverweightFixture.size(warrior.progress(), items));
+      makeFrom(store, out.resolve("player-b.json"), "Live Walker" + suffix, b, heavy, warrior.gold(), 0);
+    }
+    System.out.println("PROVISION_OK");
+  }
+
+  /** A standable tile within three tiles of the authored NPC (talking distance). */
+  private static Spot besideNpc(HostedRegionPlan plan, String id) throws Exception {
+    var npc = NpcInteractionCatalog.loadBundled().require(id);
+    var map = plan.require(npc.world(), npc.x(), npc.y()).map();
+    for (int d = 1; d <= 3; d++)
+      for (int dx = -d; dx <= d; dx++)
+        for (int dy = -d; dy <= d; dy++) {
+          double x = npc.x() + dx + 0.5, y = npc.y() + dy + 0.5;
+          if (standable(plan, x, y) && map.canStand(x - map.originX, y - map.originY)) return new Spot(x, y);
+        }
+    throw new IllegalStateException("no standable tile beside " + id);
+  }
+
+  /**
+   * Scene {@code quest}: a level-30 warrior (the quester; a level-12 one lost 100 of its 119 HP killing three Skeletons) and a level-1 warrior (an observer) beside WardenAelric.
+   * Scenes {@code move-skeletons} and {@code move-giver} relocate the quester's saved position while the server is
+   * stopped, because the Skeleton ground is about 160 tiles from the giver behind cave mouths (walking that is the
+   * soak's job). The move is a plain position update on the character row; nothing else is touched.
+   */
+  private static void questScene(HostedRegionPlan plan, Path out, String suffix) throws Exception {
+    Spot a = besideNpc(plan, "WardenAelric");
+    Spot b = nearby(plan, a, 2, 1);
+    System.out.println("scene=quest quester=(" + a.x() + "," + a.y() + ") observer=(" + b.x() + "," + b.y() + ")");
+    try (var store = OnlineStore.fromEnvironment()) {
+      make(store, out.resolve("player-a.json"), "Live Quester" + suffix, a, 30);
+      make(store, out.resolve("player-b.json"), "Live Observer" + suffix, b, 1);
+    }
+    System.out.println("PROVISION_OK");
+  }
+
+  private static void move(HostedRegionPlan plan, PreviewMap map, Path out, String scene) throws Exception {
+    Spot to = "move-skeletons".equals(scene) ? skeletonStart(plan, map) : besideNpc(plan, "WardenAelric");
+    var profile = com.google.gson.JsonParser.parseString(Files.readString(out.resolve("player-a.json"))).getAsJsonObject();
+    try (var db = DriverManager.getConnection(System.getenv("T4C_DB_URL"), System.getenv("T4C_DB_USER"), System.getenv("T4C_DB_PASSWORD"));
+        var ps = db.prepareStatement("UPDATE online_characters SET x=?, y=?, revision=revision+1 WHERE id=?::uuid")) {
+      ps.setDouble(1, to.x());
+      ps.setDouble(2, to.y());
+      ps.setString(3, profile.get("characterId").getAsString());
+      if (ps.executeUpdate() != 1) throw new IllegalStateException("relocation did not apply");
+    }
+    System.out.println("relocated the quester to (" + to.x() + "," + to.y() + ") for " + scene);
+    System.out.println("PROVISION_OK");
+  }
+
+  private static void makeFrom(OnlineStore store, Path profile, String name, Spot at, CharacterProgress progress, long gold, long experience)
+      throws Exception {
+    privateFile(profile);
+    var key = store.provisionAccount();
+    var created = store.create(key.accountId(), name, WORLD, at.x(), at.y(), progress, gold);
+    String json = new Gson().toJson(Map.of("accountId", key.accountId(), "characterId", created.id(), "secret", key.secret()));
+    Files.writeString(profile, json, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
+    System.out.println("provisioned " + name + " class " + progress.characterClass() + " gold " + gold);
   }
 
   private static void make(OnlineStore store, Path profile, String name, Spot at, int level) throws Exception {

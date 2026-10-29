@@ -618,6 +618,72 @@ operator creates `server-restarted` in the sync directory after the restart.
 8. Other players' legs: these runs used a build from before PR #266 (walk hold for other players), and the screenshots are single frames, so whether the other player's legs animate while walking was not observed and is not claimed. A later run on a build with #266 would show it.
 7. A game run rewrites the tracked `t4c-chat.log`; it must be reverted before committing.
 
+### 3.16 Live rendered gameplay panels: inventory, spells, potions, shop, walking frames, quest (T4C-0312)
+
+**Evidence class: rendered clients, local only, same harness and limits as 3.15.** Disposable PostgreSQL 16 cluster
+`t4c_acc_c5f1ec67edd1` (loopback 57721), one `ServerMain --online` (HTTP 18881, game socket 18882), protocol 7, `main`
+f3d4ed62 plus this branch; the cluster was destroyed and the server stopped afterwards, no protected port, QA process or
+owner window was touched. Two real `MainGameScreen` windows per scene (separate processes, `OnlineLiveRunDriver`).
+
+**How the new controls are driven.** Only through the screen's own input processor: `I` (inventory), `C` (spells), `U`
+(potions), the digit keys, `Tab` and `T` (shop), and left clicks on the shopkeeper. The driver reads the screen's panels by
+reflection only to decide which digit to press and to log the list, and it reads the *committed* state from the connection
+(`OnlineConnection.view().character()`: revision, gold, vitals, worn slots, inventory, cooldowns). Not real OS key or mouse
+events. Operator tool `LiveRunProvision` gained scenes `wares` (a badly wounded level-1 Healer and a level-1 Warrior
+carrying an over-weight stack, both beside Sigfried), `quest` (a level-30 warrior and a level-1 observer beside
+WardenAelric) and `move-skeletons` / `move-giver` (a plain position update on the quester's row while the server is
+stopped: the Skeleton ground is about 160 tiles from the giver behind cave mouths, and walking it is the soak's job).
+Reproduce as in 3.15 with `LiveRunProvision COLLISION wares|quest OUT [SUFFIX]` and the driver's scene argument
+`wares` or `quest`; the operator stops and restarts the server at each `stop-ready` marker (the quest scene has two cycles,
+`to-skeletons` and `to-giver`).
+
+| Scene and result (images `multiplayer/design/live3-*`) | Observed |
+|---|---|
+| Inventory panel, `live3-03`, `live3-04`, `live3-05` | `I` opened the panel on the committed items (worn slots first, then carried). Digit 2 unequipped the staff, digit 2 equipped it again, digit 1 unequipped the robe; after each press the committed worn slots changed as expected (revisions 10 to 12, 12 to 13, 13 to 15; the revision also moves on background regeneration checkpoints). |
+| Equipment after a server restart, `live3-15` | with the robe off and the server stopped and restarted, the character rejoined (33 s hold) with the robe still off and identical inventory; digit 2 equipped the robe again and the commit showed it worn. |
+| Spell, `live3-06`, `live3-07` | `C` listed the two learned spells the server can resolve (Heal Light, Stone Shard, each Mana 2); digit 1 cast Light Heal on the wounded Healer: HP 5 to 21 of 28 and the log line "Health +14 \| Mana -2"; the mental, attack and physical exhaustion cooldowns appeared in the committed state. |
+| Potion, `live3-08`, `live3-09` | `U` listed only the three Light Healing Potions; the Potion of Mana the character also carries is **not offered** (not in the server's item-effect list). Digit 1 used one: HP 21 to 28, the stack went from three to two, committed. |
+| Shop, `live3-10` to `live3-13` | a click on Sigfried opened the buy list with the server's prices and "Your gold: 212"; digit 1 bought a Rusted Short Sword (212 to 203 gold, the item in the inventory); digit 3 (Rusted Hand Axe, 787 gold) was refused with "You do not have enough gold." and gold and inventory were unchanged; Tab then digit 2 sold a Torch (203 to 205). |
+| Over-weight refusal, `live3-14` | the Warrior carrying an over-weight stack pressed digit 1 (a Rusted Short Sword, 9 gold): "You cannot carry that much."; gold 207 and the inventory unchanged. |
+| Other player: appearance, `live3-01` | drawn at once in the other window, in the **default naked look** (not the warrior's equipment), with **no name and no health bar** above the figure. |
+| Other player: walking frames, `live3-02` | the Warrior walked about eight tiles out and back; a strip of 12 crops (still, then walking) taken from the Healer's real back buffer shows the legs change from frame to frame, and the puppet's own walking flag and animation timer were logged for 148 samples. The animation runs, but it restarts about every third sample (about 0.35 s): 51 of the 148 samples show the standing pose while the position advances (in the earlier run, over a straight stretch, the timer ran continuously up to 2.6 s). Cause not isolated; the driver's stair-stepped route is a candidate. |
+| Quest accept, `live3-16`, `live3-17` | the first greeting click on WardenAelric landed on **Moonrock**, an NPC drawn in front of him (the screen's click handler takes the first NPC under the cursor): "That person cannot talk to you right now." The screen has no topic control in any case, so the offer (topic 0) was sent through the same `OnlineConnection` the screen uses and **logged as not driven through the screen**: reply accepted, the committed quest status went from 0 to 1. |
+| Server stop, move, restart (operator) | the operator stopped the server, moved the quester's saved position 160 tiles to the Skeleton ground (plain row update), restarted; the client returned to the lobby, waited the 33 s hold and rejoined at the Skeleton anchor with the quest status 1 and kills 0. The same again in the other direction later. Walking the route was not tested here. |
+| 12 Skeleton kills, `live3-18` | the level-30 warrior clicked Skeletons through the monster click handler: 230 attack clicks in about 200 s; the committed kill counter rose from 0 to 12 (status 1), experience +3072 and gold +171 from the monsters. HP fell to 57 of 259 at the worst; the driver drank the three Light Healing Potions through `U` and did not die. A first attempt with a level-12 warrior (119 HP) was aborted at 10 HP after only three kills: the known lethal starter ground (T4C-0248, owner decision: unchanged). |
+| Turn-in, `live3-19`, `live3-20` | back at the Warden (kills 12, status 1 still committed after the second restart) the first click on the Warden alone turned the quest in: status 2, gold 391 to 891 (+500), experience +400, `spell.renew_armor` learned, one commit (revision 257 to 259); the message reads "...here's how to renew your own wards in a single breath." A second greeting changed nothing (gold, experience, spells and status the same). The quest has no required item (`requiredItemKey` is null), so the required-item path was not exercised. |
+
+**Findings.**
+
+1. **Not edited, Codex UI lane: the online lists and the shop panel are drawn upside down in the real screen** (`live3-04`,
+   `live3-06`, `live3-08`, `live3-10`): the title is the lowest line, rows run 9 up to 1 and the block sits at the bottom
+   right on top of the radar. Repro: online window, press `I`, `C` or `U`, or click a shopkeeper. `MainGameScreen` draws
+   them from `hudCamera.viewportHeight - 16` downwards, which is the top edge only on a y-up camera.
+2. **Not edited, Codex UI lane: the shop title shows the raw NPC key** (`${npc.sigfried}: buying`): `showShop` passes
+   `NpcView.displayName` unresolved to the panel; `I18n.resolve` is not applied.
+3. **Fixed here (Claude lane, tests `RemotePlayerCommandsTest`): the first click on a shopkeeper after walking up was
+   often refused** with "They are busy for a moment. Try again." (refused as busy or stale revision: a position or
+   regeneration checkpoint had just moved the committed revision; this is the likely cause, the server's reason was not
+   logged). It happened on three of the four first clicks in the first two runs and once for a trade ("The shop is busy.
+   Try again." instead of the too-poor refusal). A greeting or a
+   trade refused with the busy text is now sent once more with the refreshed revision (a refusal changed nothing, so
+   nothing is ever sent twice); any other refusal is shown at once. In the final run both clients opened the shop on the
+   first click and the too-poor refusal showed its own text.
+4. **Gap: no mana potion online.** The U list holds only healing potions; Potion of Mana carries an item effect the server
+   does not yet allow. Also only Light Heal and Stone Shard (needs a creature target, not driven) are castable by the
+   starters, and no starter spell is a buff, so **buff persistence across a rejoin was not exercised**; mana (21 of 22
+   at the stop, 22 of 22 after) and the exhaustion cooldowns were present and consistent.
+5. **Gap: other players have no appearance parts, no name and no health bar** (the snapshot carries none; the puppet uses
+   the default naked parts; `renderNameOverlay` covers monsters, NPCs and objects only).
+6. **Gap, Codex UI lane: the screen has no NPC topic control.** A click sends the greeting only; the quest offer is topic 0.
+   A greeting turns a finished quest in but never offers it.
+7. The committed revision rises constantly (regeneration and position checkpoints), which is why a command can race one.
+8. **Not edited, shared NPC click code: overlapping NPC click boxes.** Moonrock stands in front of WardenAelric; a click
+   where both boxes overlap goes to the first NPC under the cursor and is refused ("That person cannot talk to you right now."),
+   both at the first greeting and at the first turn-in attempt (`live3-16`). The driver now aims at a point where only the
+   wanted NPC is under the cursor. A player has to click the visible part of the Warden.
+9. **Known, owner-accepted: the Skeleton ground is lethal** (T4C-0248): the quest was only completable at level 30 with the
+   three starter healing potions; a level-12 warrior died away at 10 of 119 HP after three kills.
+
 ## 4. Staged plan
 
 Sizes: S under a day, M a few days, L about a week, XL more. Every stage ends with the full

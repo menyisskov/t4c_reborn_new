@@ -184,18 +184,7 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
     if (npc == null) return false;
     long generation = shopGeneration.incrementAndGet();
     try {
-      link.interact(npc)
-          .whenComplete(
-              (result, failure) -> {
-                if (failure != null || result == null) {
-                  outcomes.add(Outcome.message("online.npc.refused", List.of()));
-                } else if (result.accepted()) {
-                  // The socket is single-flight. Queue offers only after interaction has completed.
-                  requestShopAfter(npc, result, generation);
-                } else {
-                  outcomes.add(Outcome.message(result.messageKey(), result.args()));
-                }
-              });
+      sendInteract(npc, generation, true);
       return true;
     } catch (IllegalStateException pendingOrOffline) {
       outcomes.add(Outcome.message("online.npc.refused", List.of()));
@@ -203,6 +192,39 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
     } catch (IllegalArgumentException invalidIdentity) {
       return false;
     }
+  }
+
+  /** The server's "busy / revision changed" refusal of a greeting (see {@code OnlineCommandRefusals}). */
+  static final String NPC_BUSY_KEY = "online.npc.busy";
+
+  /**
+   * One greeting. A greeting refused as busy or stale was rejected before any change, and the connection has already
+   * refreshed the committed character when that answer arrives (a position or regeneration checkpoint had just moved
+   * the revision: the live runs of T4C-0312 saw it on the first click on a shopkeeper after walking up). So it is sent
+   * once more with the fresh revision, which is the click the player would otherwise have to repeat; a second refusal
+   * is shown. Nothing that was accepted is ever sent again.
+   */
+  private void sendInteract(String npc, long generation, boolean mayRetry) {
+    link.interact(npc)
+        .whenComplete(
+            (result, failure) -> {
+              if (failure != null || result == null) {
+                outcomes.add(Outcome.message("online.npc.refused", List.of()));
+              } else if (result.accepted()) {
+                // The socket is single-flight. Queue offers only after interaction has completed.
+                requestShopAfter(npc, result, generation);
+              } else if (mayRetry
+                  && NPC_BUSY_KEY.equals(result.messageKey())
+                  && shopGeneration.get() == generation) {
+                try {
+                  sendInteract(npc, generation, false);
+                } catch (IllegalStateException | IllegalArgumentException unavailable) {
+                  outcomes.add(Outcome.message(result.messageKey(), result.args()));
+                }
+              } else {
+                outcomes.add(Outcome.message(result.messageKey(), result.args()));
+              }
+            });
   }
 
   @Override
@@ -287,17 +309,7 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
     if (npc == null || itemKey == null) return false;
     long generation = shopGeneration.get();
     try {
-      var action = buying ? link.shopBuy(npc, itemKey, quantity) : link.shopSell(npc, itemKey, quantity);
-      action.whenComplete(
-          (result, failure) -> {
-            if (failure != null || result == null) {
-              outcomes.add(Outcome.message("online.shop.refused", List.of()));
-              return;
-            }
-            outcomes.add(Outcome.message(result.messageKey(), result.args()));
-            if (shopGeneration.get() == generation)
-              requestOffers(npc, "online.shop.busy", true, generation);
-          });
+      sendTrade(npc, itemKey, quantity, buying, generation, true);
       return true;
     } catch (IllegalStateException pendingOrOffline) {
       outcomes.add(Outcome.message("online.shop.busy", List.of()));
@@ -305,6 +317,39 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
     } catch (IllegalArgumentException invalidRequest) {
       return false;
     }
+  }
+
+  /** The server's "busy / revision changed / region epoch" refusal of a trade (see {@code OnlineCommandRefusals}). */
+  static final String SHOP_BUSY_KEY = "online.shop.busy";
+
+  /**
+   * One trade request. A trade refused as busy or stale changed nothing (a checkpoint had just moved the revision),
+   * so, like a greeting, it is sent once more with the refreshed revision; a second refusal is shown. A trade that
+   * was accepted, or refused for any other reason (gold, weight, stock), is never sent again.
+   */
+  private void sendTrade(String npc, String itemKey, int quantity, boolean buying, long generation, boolean mayRetry) {
+    var action = buying ? link.shopBuy(npc, itemKey, quantity) : link.shopSell(npc, itemKey, quantity);
+    action.whenComplete(
+        (result, failure) -> {
+          if (failure != null || result == null) {
+            outcomes.add(Outcome.message("online.shop.refused", List.of()));
+            return;
+          }
+          if (!result.accepted()
+              && mayRetry
+              && SHOP_BUSY_KEY.equals(result.messageKey())
+              && shopGeneration.get() == generation) {
+            try {
+              sendTrade(npc, itemKey, quantity, buying, generation, false);
+              return;
+            } catch (IllegalStateException | IllegalArgumentException unavailable) {
+              // fall through: show the refusal
+            }
+          }
+          outcomes.add(Outcome.message(result.messageKey(), result.args()));
+          if (shopGeneration.get() == generation)
+            requestOffers(npc, "online.shop.busy", true, generation);
+        });
   }
 
   private void requestShopAfter(String npc, OnlineConnection.CommandResult interaction, long generation) {

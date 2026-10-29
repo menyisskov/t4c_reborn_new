@@ -123,6 +123,13 @@ exactly one claimant and one receipt, the loser refused on screen. Equip, an inv
 owner window, corpse recovery and reload-from-PostgreSQL of the final items were not driven, so every M2 bullet stays
 open. Also found: the public view's owner-window countdown never advances (see CLIENT_UNIFICATION_DESIGN.md 3.15).
 
+T4C-0312 (2026-10-29, local rendered): the inventory panel (`I`) equipped and unequipped a staff and a robe through the
+screen's own handlers, each commit visible in the connection's committed state, and a server restart plus rejoin kept the
+robe off and the inventory identical; the Sigfried shop bought, sold and refused (too expensive, over-weight) with no
+change on a refusal. The panels are drawn upside down at the bottom right, the own character's equipped appearance was not
+inspected and other players have no appearance parts, so the first two M2 bullets stay open
+(see CLIENT_UNIFICATION_DESIGN.md 3.16).
+
 Done evidence: player A earns/picks up/equips loot while player B observes the shared world;
 repeat with a simultaneous claim and an inventory refusal. Reload from PostgreSQL and verify
 the final items/currency exist in exactly one permitted place. General loot is distinct from
@@ -156,6 +163,13 @@ Required behavior:
   target, damage or recover items from one another across that boundary.
 - [ ] Logout/rejoin and server restart preserve objective state, rewards and destination; delayed
   intents from a prior region cannot act on a new region's local entity IDs.
+
+T4C-0312 (2026-10-29, local rendered, one quester, not the two-player policy): the `renewed_wards` offer was accepted
+through the connection (the screen has no topic control), the screen's own monster clicks credited 12 Skeleton kills, and
+a greeting turned the quest in once: status 2, +500 gold, +400 experience and `spell.renew_armor` in one commit, with a
+repeat greeting changing nothing. The giver and the ground are 160 tiles apart, so the operator moved the character between
+two server restarts (travel was not driven), the quest has no required item, and only one player did it; no M3 bullet is
+ticked (see CLIENT_UNIFICATION_DESIGN.md 3.16).
 
 Done evidence: two rendered clients follow the declared quest from acceptance through travel,
 combat and turn-in; both progress and reconnect with their own exact rewards. Include one
@@ -191,6 +205,12 @@ T4C-0306 (2026-10-29, local rendered, warrior only): both windows fought Skeleto
 monster click handler and both gained committed experience; one player died once (a corpse row exists) and respawned in
 the temple. That death was incidental, not a scripted death/respawn, targeting-contention, costs/cooldown or other-role
 scenario, so no M4 bullet is ticked.
+
+T4C-0312 (2026-10-29, local rendered, Healer and Warrior): Light Heal cast through `C` (HP 5 to 21 of 28, mana -2,
+exhaustion cooldowns committed) and a Light Healing Potion used through `U` (HP 21 to 28, stack three to two). The Potion
+of Mana is not offered, no starter spell is a buff, creature-target casting was not driven and other players show no
+appearance, so the "required skills/spells, mana, charges, buffs, cooldowns ... native controls, persisted" bullet stays
+open (see CLIENT_UNIFICATION_DESIGN.md 3.16).
 
 Done evidence: a native combat scenario for each declared starter role, including two players
 contending for a target, leaving reach/sight, death/recovery and reconnect with costs/cooldowns intact.

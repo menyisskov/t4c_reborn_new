@@ -462,6 +462,63 @@ class RemotePlayerCommandsTest {
     assertEquals(List.of(I18n.key("online.npc.unavailable")), host.messages);
   }
 
+  private void viewWithNpc() {
+    link.view =
+        view(
+            1,
+            4,
+            actor(localX(100), localY(205), 0),
+            List.of(),
+            List.of(new NpcView(LighthavenSamaritan.ID, "Samaritan", 3, 4, LighthavenSamaritan.SPRITE_BASE, Map.of())),
+            List.of());
+    tickWorld();
+  }
+
+  @Test
+  void aGreetingRefusedAsBusyIsSentOnceMoreWithTheFreshRevisionAndOnlyThenShown() {
+    viewWithNpc();
+    assertTrue(session.commands().interact(LighthavenSamaritan.ID));
+    var first = link.next;
+    link.next = new CompletableFuture<>();
+
+    first.complete(new OnlineConnection.CommandResult(false, null, RemotePlayerCommands.NPC_BUSY_KEY));
+    session.commands().pump();
+
+    assertEquals(List.of("interact " + LighthavenSamaritan.ID, "interact " + LighthavenSamaritan.ID), link.calls);
+    assertTrue(host.messages.isEmpty(), "the first refusal is not shown; the retry stands for it");
+
+    link.answer("online.npc.unavailable");
+    session.commands().pump();
+    assertEquals(List.of(I18n.key("online.npc.unavailable")), host.messages);
+    assertEquals(2, link.calls.size(), "an answered greeting is never sent a third time");
+  }
+
+  @Test
+  void aSecondBusyRefusalIsShownAndNotRetriedAgain() {
+    viewWithNpc();
+    assertTrue(session.commands().interact(LighthavenSamaritan.ID));
+    var first = link.next;
+    link.next = new CompletableFuture<>();
+    first.complete(new OnlineConnection.CommandResult(false, null, RemotePlayerCommands.NPC_BUSY_KEY));
+
+    link.answer(RemotePlayerCommands.NPC_BUSY_KEY);
+    session.commands().pump();
+
+    assertEquals(2, link.calls.size());
+    assertEquals(List.of(I18n.key(RemotePlayerCommands.NPC_BUSY_KEY)), host.messages);
+  }
+
+  @Test
+  void otherGreetingRefusalsAreShownAtOnceAndNeverRetried() {
+    viewWithNpc();
+    assertTrue(session.commands().interact(LighthavenSamaritan.ID));
+    link.answer("online.npc.unavailable");
+    session.commands().pump();
+
+    assertEquals(List.of("interact " + LighthavenSamaritan.ID), link.calls);
+    assertEquals(List.of(I18n.key("online.npc.unavailable")), host.messages);
+  }
+
   @Test
   void anNpcLineThatGreetsByNameShowsTheOwnCharacterNameNotALiteralPlaceholder() {
     player.setName("Live Alpha");
@@ -548,6 +605,41 @@ class RemotePlayerCommandsTest {
     assertEquals(2, host.messages.size());
     assertFalse(session.commands().interact(npc, 100), "the server only knows topics 0-99");
     assertFalse(session.commands().interact(null, 0));
+  }
+
+  @Test
+  void aTradeRefusedAsBusyIsSentOnceMoreAndAnyOtherRefusalIsNotRetried() {
+    String npc = LighthavenSamaritan.ID;
+    var first = new CompletableFuture<OnlineConnection.CommandResult>();
+    link.trade = first;
+    assertTrue(session.commands().shopBuy(npc, "item.dagger", 1));
+    var second = new CompletableFuture<OnlineConnection.CommandResult>();
+    link.trade = second;
+    first.complete(new OnlineConnection.CommandResult(false, null, RemotePlayerCommands.SHOP_BUSY_KEY));
+    assertEquals(
+        List.of("shopBuy " + npc + " item.dagger 1", "shopBuy " + npc + " item.dagger 1"), link.calls);
+    session.commands().pump();
+    assertTrue(host.messages.isEmpty(), "the first busy refusal is not shown; the retry stands for it");
+
+    second.complete(new OnlineConnection.CommandResult(false, null, "online.shop.too_poor"));
+    session.commands().pump();
+    assertEquals(List.of(I18n.key("online.shop.too_poor")), host.messages, "the real refusal is shown");
+    assertEquals(2, link.calls.stream().filter(c -> c.startsWith("shopBuy")).count(), "never a third attempt");
+  }
+
+  @Test
+  void aTradeRefusedAsBusyTwiceShowsTheBusyTextOnce() {
+    String npc = LighthavenSamaritan.ID;
+    var first = new CompletableFuture<OnlineConnection.CommandResult>();
+    link.trade = first;
+    assertTrue(session.commands().shopSell(npc, "item.dagger", 1));
+    var second = new CompletableFuture<OnlineConnection.CommandResult>();
+    link.trade = second;
+    first.complete(new OnlineConnection.CommandResult(false, null, RemotePlayerCommands.SHOP_BUSY_KEY));
+    second.complete(new OnlineConnection.CommandResult(false, null, RemotePlayerCommands.SHOP_BUSY_KEY));
+    session.commands().pump();
+    assertEquals(List.of(I18n.key(RemotePlayerCommands.SHOP_BUSY_KEY)), host.messages);
+    assertEquals(2, link.calls.stream().filter(c -> c.startsWith("shopSell")).count());
   }
 
   // --- movement ---
