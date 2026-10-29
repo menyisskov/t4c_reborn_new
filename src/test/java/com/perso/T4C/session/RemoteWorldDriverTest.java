@@ -377,6 +377,33 @@ class RemoteWorldDriverTest {
     assertFalse(other.getMovement().isMoving(), "arrived");
   }
 
+  @Test
+  void anotherPlayerKeepsWalkingWhenEachServerStepIsOnlyAFewPixels() {
+    // At the single-player walking pace (54 px/s at 34 Hz) a step is about 1.6 px: the eased
+    // position is within half a pixel of the target, which used to read as "standing".
+    double x = 10.5;
+    long serverTick = 1;
+    view =
+        view(serverTick, MAP.region(), List.of(actor(OWN, 3.5, 5.5, 100, 100), actor(9, x, 12.5, 40, 80)),
+            List.of(), List.of(), List.of());
+    tick(0.03f);
+    Player other = driver.otherPlayers().get(0);
+    for (int i = 0; i < 40; i++) {
+      x += 1.6 / 32.0;
+      view =
+          view(++serverTick, MAP.region(),
+              List.of(actor(OWN, 3.5, 5.5, 100, 100), actor(9, x, 12.5, 40, 80)),
+              List.of(), List.of(), List.of());
+      // Two 60 fps frames per 34 Hz server tick: the walk must hold on every frame.
+      tick(0.0147f);
+      assertTrue(other.getMovement().isMoving(), "walking on frame A of step " + i);
+      tick(0.0147f);
+      assertTrue(other.getMovement().isMoving(), "walking on frame B of step " + i);
+    }
+    for (int i = 0; i < 20; i++) tick(0.03f);
+    assertFalse(other.getMovement().isMoving(), "rests once the server stops moving it");
+  }
+
   // --- the session ---
 
   @Test

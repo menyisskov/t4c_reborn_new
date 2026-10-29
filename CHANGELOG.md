@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-29 — Other players walk instead of floating in online play (T4C-0305)
+
+### Fixed
+- In online play, other players now show their walking animation while they move, instead of sliding along in a standing pose.
+
 ## 2026-10-29 — The Lighthaven sewers are open in online play (T4C-0304)
 
 ### Added
