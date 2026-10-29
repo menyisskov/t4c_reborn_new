@@ -12,7 +12,10 @@ class OnlineCommandRefusalsTest {
     assertEquals("online.equip.requirements", OnlineCommandRefusals.messageKey("/equip", "requirements"));
     assertEquals("online.equip.conflict", OnlineCommandRefusals.messageKey("/equip", "equipment_conflict"));
     assertEquals("online.unequip.not_equipped", OnlineCommandRefusals.messageKey("/unequip", "item_not_equipped"));
-    assertEquals("online.equip.refused", OnlineCommandRefusals.messageKey("/equip", "revision"));
+    assertEquals("online.equip.busy", OnlineCommandRefusals.messageKey("/equip", "revision"));
+    assertEquals("online.equip.busy", OnlineCommandRefusals.messageKey("/equip", "busy"));
+    assertEquals("online.equip.busy", OnlineCommandRefusals.messageKey("/unequip", "revision"));
+    assertEquals("online.equip.refused", OnlineCommandRefusals.messageKey("/equip", "anything-unknown"));
     assertEquals("online.equip.refused", OnlineCommandRefusals.messageKey("/unequip", null));
   }
 

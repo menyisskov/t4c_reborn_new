@@ -170,7 +170,7 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
     if (target == null) return;
     long id = creatureIds.applyAsLong(target);
     if (id <= 0) return;
-    send(() -> link.attack(id), "online.attack.busy");
+    sendRetrying(() -> link.attack(id), "online.attack.busy", "online.attack.busy", true);
   }
 
   @Override
@@ -274,16 +274,59 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
     }
   }
 
+  /** The server's "busy / revision changed" refusal of an equipment change (see {@code OnlineCommandRefusals}). */
+  static final String EQUIP_BUSY_KEY = "online.equip.busy";
+
   @Override
   public boolean equip(UUID instance, BodyPart slot) {
     if (instance == null || slot == null) return false;
-    return send(() -> link.equip(instance, slot), "online.equip.refused");
+    return sendRetrying(() -> link.equip(instance, slot), EQUIP_BUSY_KEY, "online.equip.refused", true);
   }
 
   @Override
   public boolean unequip(BodyPart slot) {
     if (slot == null) return false;
-    return send(() -> link.unequip(slot), "online.equip.refused");
+    return sendRetrying(() -> link.unequip(slot), EQUIP_BUSY_KEY, "online.equip.refused", true);
+  }
+
+  /**
+   * One command that the server may refuse as busy or stale. Such a refusal changed nothing (a regeneration or position
+   * checkpoint had just moved the committed revision: the T4C-0316 live run lost the second window's first unequip to it,
+   * with only the generic refusal text, and about one attack click in five was answered "busy"), and the connection has
+   * refreshed the character by the time that answer arrives, so the command is sent once more; a second refusal is shown.
+   * A command that was accepted, or refused for any other reason (requirements, conflict, cooldown), is never sent again.
+   */
+  private boolean sendRetrying(
+      Supplier<CompletionStage<OnlineConnection.CommandResult>> command,
+      String busyKey,
+      String failureKey,
+      boolean mayRetry) {
+    try {
+      command
+          .get()
+          .whenComplete(
+              (result, failure) -> {
+                if (failure != null || result == null) {
+                  outcomes.add(Outcome.message(failureKey, List.of()));
+                  return;
+                }
+                if (!result.accepted() && mayRetry && busyKey.equals(result.messageKey())) {
+                  try {
+                    sendRetrying(command, busyKey, failureKey, false);
+                    return;
+                  } catch (IllegalStateException | IllegalArgumentException unavailable) {
+                    // fall through: show the refusal
+                  }
+                }
+                outcomes.add(Outcome.message(result.messageKey(), result.args()));
+              });
+      return true;
+    } catch (IllegalStateException pendingOrOffline) {
+      outcomes.add(Outcome.message(failureKey, List.of()));
+      return true;
+    } catch (IllegalArgumentException invalidIdentity) {
+      return false;
+    }
   }
 
   @Override

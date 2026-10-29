@@ -704,6 +704,72 @@ fixed in the screen, not in the legacy text client:
   list order, unchanged (pinned by `RemoteClickHooksTest`).
 - *Not verified:* a live two-window run on a server; the changes are covered by unit tests and the rendered preview only.
 
+### 3.17 Live rendered session: topic panel, equipment seen by the other window, loot races, portals, corpse recovery, 39 minutes (T4C-0318)
+
+**Evidence class: rendered clients, local only, same harness and limits as 3.15 and 3.16, but nothing relocated by the operator.**
+Base `d4eff350` (main at the time) plus this branch; protocol 7; disposable PostgreSQL 16 cluster `t4c_acc_d53a6def51e0`
+(loopback 57901) and one `ServerMain --online` (HTTP 18931, game socket 18932), all destroyed or stopped afterwards (cluster
+`DESTROY_OK`, server `/admin/shutdown` HTTP 200 and exit); no protected port, owner window or peer process was touched. Two level-30
+warriors (`LiveRunProvision beta`) start beside WardenAelric; the second carries a filler stack that leaves exactly 2 weight units
+free. Driven only through the screens' own handlers (keys and clicks delivered to the input processor, walking by scripted key state
+over the client's own collision map, 165 tiles from the temple to the Skeleton ground included); the pointer for the hover outline is
+injected through the driver's `Gdx.input` wrapper (the screen's own hover code runs); **through the connection instead of the screen:
+only the corpse recovery** (the screen has no corpse control, see finding 4). Reproduce as in 3.15 with scene `beta`
+(`LiveRunProvision COLLISION beta OUT [SUFFIX]`, driver arguments `... beta <sync> <x> 20 <goalTileX> <goalTileY>`; the provisioner
+prints `skeletonGround=`); `-Dbeta.scale`, `-Dbeta.from=ground|death` and `-Dbeta.until=equip` shorten or split the script.
+
+| Scene and result | Observed |
+|---|---|
+| NPC topic panel, `live4-01` | a click on Warden Aelric opened the topic window ("1. Quest, 2. Grave"); digit 1 (topic 0) on the screen's own key handler accepted `renewed_wards` in both windows (committed status 0 to 1, revision 2 to 4 and 4 to 5); the chat showed "Put down twelve of the skeletons ...". The window stays open after a topic; Esc was pressed afterwards. Nothing was sent around the screen (3.16 sent the offer through the connection). |
+| Equipment seen by the other window, `live4-02` | one window pressed `I`, took the leather pants off and put them on again; the other window's snapshot actor and drawn model changed with it (LEGS leaves the equipped map and returns) and, with the pointer on the figure, drew the name above it and the green health-colour outline (T4C-0314 live). Then the roles swapped. The strip shows before, legs off, legs on. |
+| Portal trips, `live4-04` | Lighthaven door 16 and return door 17, then cave mouth 13 and exit 15, each character in turn with the other window watching: the observer's drawn players and snapshot players dropped to 0 within 2.6 to 39.8 s of the walker starting (the walk is part of that time), the walker's screen switched region (`start` to `lighthaven-interior` to `start`, `skeleton-cave`; location epoch 1 to 4) and the other window drew the arrival in the new region with the right name and gear; both windows were then in the same region and saw each other (8 hops, 0 timeouts). Players in separate regions saw nothing of each other. Targeting, damage or recovery across the boundary was not tried. |
+| Owner-window countdown | for all three drops both windows' committed views held the owner window and counted it down in real time (for example 57441, 47351, 37379, 27318, 17325 ms at 10 s steps); only the owner's view carries its own player id as owner (by design), the other window sees `null` and the same remaining time. The screen draws no countdown (finding 3). |
+| Claim race inside the window, `live4-03` | drop 1 (Light Healing Potion, killed by Alpha): both clicked at the same instant, 52.9 s left: Alpha's carried count 3 to 4, Bravo "Another player has the first claim on that item for now." and 3 to 3. |
+| Claim race after the window, carry weight, `live4-03` | drop 2 (Leather Gloves, weight 3, both windows past the window, `ownerRemainingMs` 0): Alpha 1 to 2 gloves; Bravo, with 2 units free, "You cannot carry that much weight." and 1 to 1, the drop stayed on the ground until Alpha's claim (the capacity refusal preserved loot and inventory). |
+| Race that lost to a committed claim, `live4-03` | drop 3 (Healing Potion, inside the window): Alpha 24 to 25; Bravo's request arrived after the commit and got "Another player picked that up first." (`loot_taken`, T4C-0307) with 23 to 23. In an earlier run of this session a click 167 px away got "That item is too far away to pick up." |
+| Database after all runs | `online_ground_loot`: 3 CLAIMED, 6 EXPIRED, 3 ON_GROUND; no loot id with two receipts; every CLAIMED row has exactly one receipt and the claimant equals the receipt's character. |
+| Death and corpse recovery, `live4-05` | Bravo stood among the Skeletons without swinging or drinking until a corpse was listed (the server respawns the character in the temple at once), walked back through the temple door and 165 tiles to the Skeleton ground with the keys (fighting on the way) and, within reach, `/recover` through the connection was accepted on the first try: the corpse's three stacks (3 permits, 1 Healing Potion, 1 Torch) returned to the inventory (permits 45 to 48, Healing Potions 19 to 20, Torches 2 to 3), worn equipment unchanged, the corpse row recovered with its item list empty. Out-of-range at 96 px was refused first in an earlier run (the reach is the melee range, 64 px). Individual single-stack recovery (the fourth `/recover` token) and a second recovery of the same corpse were not driven. |
+| 39-minute session, run `beta1` | 39.4 min (2363 s) from lobby to the last script step, of which 19.0 min were timed fight, idle (40 s of every 300 s) and loot segments (540 s and 600 s, with the cave trip between) and about 1.6 min the walk to the ground: Alpha 727 attack clicks, +8,862 experience and Bravo 776 clicks, +6,365 experience in the logged part, lowest hit points 9 and 2 of about 270, both still connected at the end. Client logs: 0 `ERROR`, 0 `WARN`, 0 exceptions in 500 and 565 lines; server: nothing on stderr, 0 "Online persistence failed" lines, graceful stop with HTTP 200. Client heap (no `-Xmx`) swung between 2.4 and 3.9 GB in a sawtooth with no upward drift over the 19 minutes. No server restart, forced kill, lost response or reconnect was part of it. |
+
+**Findings.**
+
+1. **Fixed here (Claude lane, tests `RemotePlayerCommandsTest`, `OnlineCommandRefusalsTest`): an equipment change refused as busy or
+   stale failed with only "The equipment change was refused."** The second window's first unequip was lost this way in two
+   equipment passes (a regeneration or position checkpoint had just moved the committed revision, the same race as the shop and greeting
+   refusals of 3.16). The equip and unequip refusals now map `busy` and `revision` to their own key (`online.equip.busy`), and the
+   command is sent once more with the refreshed revision; any other refusal (requirements, conflict) is shown at once and never
+   repeated. Live: the new code ran in the later equipment pass (accepted first time; the refusal itself did not recur, so the retry
+   path is covered by the tests only).
+2. **Fixed here, not re-measured live: about one attack click in five was answered "Your character is busy. Try again in a moment."**
+   in the chat (148 of 727 clicks for Alpha, 147 of 776 for Bravo in `beta1`, `live4-03` shows the chat). The same single retry is
+   now applied to attacks (the first busy refusal is silent, a second one is shown); `RemotePlayerCommandsTest` pins it. The
+   routine swing-cooldown refusal stays silent as before.
+3. **Gap: the screen draws nothing for the owner window** (only the refusal text when someone else clicks); the countdown that
+   T4C-0307 made correct is visible in the connection's view only.
+4. **Gap, M2: the screen has no corpse. Fixed in T4C-0321 (not re-run live).** At the time of the run a server corpse was neither
+   drawn nor offered for recovery (the view lists it; the legacy text client has a `recover` command), so the recovery above went
+   through the connection. The screen now draws the single-player corpse marker (the name "Corpse" where the character fell;
+   single-player has no corpse sprite or key) from the connection's own corpse list, and a click on it sends `/recover` and shows the
+   server's refusal texts. Still open: individual single-stack recovery from the screen.
+5. **Not a game gap: the Healing Potion list was empty because the provisioner gave the stack zero charges.** With 19 in the bag the
+   `U` list said "You carry nothing you can use online". `LiveRunProvision beta` created that stack with zero charges, which the
+   server refuses by design (single-charge consumables only); a real Skeleton drop carries the item's one charge and is offered
+   (pinned by `OnlineAbilityChoicesTest`). The Healing Potion spell was already allowlisted. The genuine gap was the Potion of Mana
+   (3.16), fixed in T4C-0321: the allowlist now admits every offline consumable that only restores health or mana. The level-30
+   characters came within 2 and 9 hit points of dying on the known lethal ground (T4C-0248).
+6. **Driver, not game:** the route search oscillated (A, S, A, S) for minutes at the temple respawn tile in three runs while the
+   keys alone moved freely in all four directions (`mortal` diagnostic scene); the script now walks south out of the room first.
+   Whether a human can get stuck there was not established. The earlier diagonal walk into the Lighthaven exit door corner is also
+   fixed in the driver (one axis at a time).
+7. The Lighthaven interior and the skeleton cave stay almost black whatever the driver does with the hour (`DayNightCycle` untouched,
+   owner decision pending): the arrival screenshots of those regions are unusable, the logs are the evidence.
+8. A live check of the new T4C-0313 windows: the topic window, the inventory list and the weight and refusal texts rendered and
+   worked on the real screen. No screenshot of the inventory window itself was kept.
+
+**Not driven:** the lost-response and forced-kill cases, a server restart in the session, the quest kills and turn-in for the second
+window, mana potion, creature-target casting, spell merchants, character creation, the Options button, targeting or damage across
+a region boundary, individual single-stack corpse recovery, and a mixed session on the packaged candidate.
+
 ## 4. Staged plan
 
 Sizes: S under a day, M a few days, L about a week, XL more. Every stage ends with the full

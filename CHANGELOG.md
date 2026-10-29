@@ -6,7 +6,13 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
-## 2026-10-30 — Potion of Mana works online and your corpse can be recovered from the screen (T4C-0320)
+## 2026-10-30 — Equipping and attacking retry when the game is busy online (T4C-0318)
+
+### Fixed
+- In online play, putting on or taking off gear could answer "The equipment change was refused." when the game had just saved your character, so the same click had to be repeated. The game now tries once more by itself, and only says "Your character is busy. Try again in a moment." if the second try is refused as well.
+- In online play, roughly one attack click in five was answered with "Your character is busy" in the chat even though nothing was wrong. The attack is now tried once more silently before that message appears.
+
+## 2026-10-30 — Potion of Mana works online and your corpse can be recovered from the screen (T4C-0321)
 
 ### Added
 - In online play the Potion of Mana can now be drunk from the potion list, restoring its mana exactly as it does offline. It is refused when your mana is already full, and only one potion is used up each time.
@@ -20,7 +26,7 @@ commit links, and finer-grained notes.
 ### Fixed
 - Online monsters can now use authored Heal Serious (10616) to heal themselves, capped at their authored maximum HP; the heal and next-attack deadline commit together, without damaging the player they were retaliating against.
 
-## 2026-10-30 — Monster clan fights use authored damage spells online (T4C-0317)
+## 2026-10-30 — Online monsters use authored attack ranges (T4C-0320)  ### Changed - Online monsters with authored ranged attacks now stop and attack at their authored range; hostile-clan combat honors the same range while preserving line-of-sight and the existing melee fallback. Offline behavior is unchanged.  ## 2026-10-30 — Monster clan fights use authored damage spells online (T4C-0317)
 
 ### Fixed
 - In close-range hostile monster-clan fights online, supported authored elemental and armor-damage spells now resolve instead of producing zero damage from empty dice text; committed outcomes keep the existing durable life and restart behavior.

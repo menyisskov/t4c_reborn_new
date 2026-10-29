@@ -172,6 +172,54 @@ class RemotePlayerCommandsTest {
   }
 
   @Test
+  void anEquipmentChangeRefusedAsBusyIsSentOnceMoreAndAnyOtherRefusalIsNotRetried() {
+    UUID item = UUID.fromString("00000000-0000-0000-0000-000000000044");
+    FakeLink link = new FakeLink();
+    var host = new TestHost(playerAtTile(100, 205));
+    var commands = new RemoteGameSession(link, new GroundItemManager()).commands();
+    commands.bind(host);
+
+    var first = link.next;
+    assertTrue(commands.unequip(BodyPart.LEGS));
+    var second = new CompletableFuture<OnlineConnection.CommandResult>();
+    link.next = second;
+    first.complete(new OnlineConnection.CommandResult(false, null, RemotePlayerCommands.EQUIP_BUSY_KEY));
+    assertEquals(List.of("unequip LEGS", "unequip LEGS"), link.calls);
+    commands.pump();
+    assertTrue(host.messages.isEmpty(), "the first busy refusal is not shown; the retry stands for it");
+    second.complete(new OnlineConnection.CommandResult(true, null));
+    commands.pump();
+    assertEquals(2, link.calls.size(), "an accepted retry is never sent a third time");
+
+    // A refusal for a real reason is shown at once and never retried.
+    var third = new CompletableFuture<OnlineConnection.CommandResult>();
+    link.next = third;
+    assertTrue(commands.equip(item, BodyPart.HEAD));
+    third.complete(new OnlineConnection.CommandResult(false, null, "online.equip.requirements"));
+    commands.pump();
+    assertEquals(3, link.calls.size());
+    assertTrue(host.messages.contains(I18n.key("online.equip.requirements")));
+  }
+
+  @Test
+  void anEquipmentChangeRefusedAsBusyTwiceShowsTheBusyTextOnce() {
+    FakeLink link = new FakeLink();
+    var host = new TestHost(playerAtTile(100, 205));
+    var commands = new RemoteGameSession(link, new GroundItemManager()).commands();
+    commands.bind(host);
+
+    var first = link.next;
+    assertTrue(commands.unequip(BodyPart.LEGS));
+    var second = new CompletableFuture<OnlineConnection.CommandResult>();
+    link.next = second;
+    first.complete(new OnlineConnection.CommandResult(false, null, RemotePlayerCommands.EQUIP_BUSY_KEY));
+    second.complete(new OnlineConnection.CommandResult(false, null, RemotePlayerCommands.EQUIP_BUSY_KEY));
+    commands.pump();
+    assertEquals(List.of(I18n.key(RemotePlayerCommands.EQUIP_BUSY_KEY)), host.messages);
+    assertEquals(2, link.calls.size());
+  }
+
+  @Test
   void castAndPotionUseAreSentToServerWithoutLocalCostOrInventoryChanges() {
     UUID potion = UUID.fromString("00000000-0000-0000-0000-000000000043");
     Player player = playerAtTile(100, 205);
@@ -360,6 +408,26 @@ class RemotePlayerCommandsTest {
     session.commands().pump();
 
     assertEquals(List.of(I18n.key("online.attack.out_of_reach")), host.messages);
+  }
+
+  @Test
+  void anAttackRefusedAsBusyIsSentOnceMoreAndShownOnlyWhenTheRetryIsRefusedToo() {
+    showSkeleton(41);
+    var first = link.next;
+    session.commands().attack(skeleton());
+    var second = new CompletableFuture<OnlineConnection.CommandResult>();
+    link.next = second;
+    first.complete(new OnlineConnection.CommandResult(false, null, "online.attack.busy"));
+    assertEquals(List.of("attack 41", "attack 41"), link.calls, "the refusal changed nothing: one more try");
+    session.commands().pump();
+    assertTrue(host.messages.isEmpty(), "the first busy refusal is not shown");
+
+    var third = new CompletableFuture<OnlineConnection.CommandResult>();
+    link.next = third;
+    second.complete(new OnlineConnection.CommandResult(false, null, "online.attack.busy"));
+    session.commands().pump();
+    assertEquals(List.of(I18n.key("online.attack.busy")), host.messages, "a second busy refusal is said");
+    assertEquals(2, link.calls.size(), "never a third attempt");
   }
 
   @Test

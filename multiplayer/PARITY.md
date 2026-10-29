@@ -61,7 +61,7 @@ re-measure before relying on a number.
   the server's step, other players have no name or health bar, and the screen must confirm the
   region to the connection before any input is sent (launcher step). Full table:
   `CLIENT_UNIFICATION_DESIGN.md` 3.13.
-  Progress (T4C-0320, potions and corpse on the real screen): the potion list now offers every
+  Progress (T4C-0321, potions and corpse on the real screen): the potion list now offers every
   drink the offline game resolves into a plain health or mana restore (Light Healing, Healing,
   Potion of Healing, Critical Healing and Potion of Mana). The server allowlist is computed from the
   single-player spell definitions by the exporter, so no number is retyped; one unit leaves the

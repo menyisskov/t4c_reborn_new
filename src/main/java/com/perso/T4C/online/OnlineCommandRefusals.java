@@ -29,9 +29,14 @@ final class OnlineCommandRefusals {
         case "requirements" -> "online.equip.requirements";
         case "equipment_conflict" -> "online.equip.conflict";
         case "wrong_slot" -> "online.equip.wrong_slot";
+        case "busy", "revision" -> "online.equip.busy";
         default -> "online.equip.refused";
       };
-      case "/unequip" -> "item_not_equipped".equals(code) ? "online.unequip.not_equipped" : "online.equip.refused";
+      case "/unequip" -> switch (code) {
+        case "item_not_equipped" -> "online.unequip.not_equipped";
+        case "busy", "revision" -> "online.equip.busy";
+        default -> "online.equip.refused";
+      };
       case "/interact" -> switch (code) {
         case "npc_unavailable" -> "online.npc.unavailable";
         case "busy", "revision" -> "online.npc.busy";
