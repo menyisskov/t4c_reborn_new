@@ -43,6 +43,7 @@ public final class PreviewServer implements AutoCloseable {
   private static final Gson JSON = new Gson();
   private final com.perso.T4C.online.model.ItemContent items;
   private final HttpServer http;
+  private final GameSocketServer gameSocket;
   private final ServerTransport transport;
   private final HttpRequestAdmission admission = new HttpRequestAdmission();
   private final HttpRequestAdmission.ExchangeExecutor requests = new HttpRequestAdmission.ExchangeExecutor();
@@ -91,6 +92,10 @@ public final class PreviewServer implements AutoCloseable {
   }
 
   PreviewServer(HostedRegionPlan plan,int port,OnlineStore store,String controlToken,ServerTransport transport,boolean ownsStore) throws IOException {
+    this(plan,port,defaultGameSocketPort(port),store,controlToken,transport,ownsStore);
+  }
+
+  PreviewServer(HostedRegionPlan plan,int port,int gameSocketPort,OnlineStore store,String controlToken,ServerTransport transport,boolean ownsStore) throws IOException {
     this.ownsStore=ownsStore;
     this.transport=java.util.Objects.requireNonNull(transport);
     if (controlToken!=null && !controlToken.matches("[0-9a-f]{64}")) throw new IllegalArgumentException("Invalid control token");
@@ -103,9 +108,23 @@ public final class PreviewServer implements AutoCloseable {
     accounts=store==null ? null : new AccountRosterService(store,plan);
     var initial=hosted.regions.getFirst();world=initial.world;persistent=hosted.sessions;
     persistentCreatures=initial.creatures;melee=initial.melee;retaliation=initial.retaliation;
-    mapJson=mapJson(initial,0);
     try { http = transport.create(port); }
     catch(IOException|RuntimeException failure) { if(accounts!=null) accounts.close();hosted.close();throw failure; }
+    try {
+      gameSocket = new GameSocketServer(transport.createGameSocket(gameSocketPort), new GameSocketServer.Handler() {
+        @Override public GameSocketServer.Result request(com.perso.T4C.online.model.GameSocketProtocol.Request request,
+            String sessionToken, InetSocketAddress remote) throws Exception {
+          return socketRequest(request,sessionToken,remote);
+        }
+        @Override public void disconnected(String sessionToken) { socketDisconnected(sessionToken); }
+      });
+    } catch(IOException|RuntimeException failure) {
+      http.stop(0);
+      if(accounts!=null) accounts.close();
+      hosted.close();
+      throw failure;
+    }
+    mapJson=mapJson(initial,0);
     loop = new SimulationLoop(PreviewWorld.TICK_RATE, tick -> {
       for (int i = 0; i < 128; i++) {
         Runnable command = commands.poll();
@@ -164,16 +183,21 @@ public final class PreviewServer implements AutoCloseable {
     var values=new java.util.LinkedHashMap<String,Object>();var map=region.map;
     values.put("width",map.width);values.put("height",map.height);values.put("originX",map.originX);values.put("originY",map.originY);
     values.put("blocked",map.cells());values.put("maxPlayers",PreviewWorld.MAX_PLAYERS);values.put("persistent",store!=null);
-    values.put("protocolVersion",OnlineProtocol.VERSION);values.put("world",region.spec.world());values.put("key",region.spec.key());values.put("locationEpoch",epoch);
+    values.put("protocolVersion",OnlineProtocol.VERSION);values.put("gameSocketPort",gameSocket.port());values.put("world",region.spec.world());values.put("key",region.spec.key());values.put("locationEpoch",epoch);
     return JSON.toJson(values);
   }
 
+  private static int defaultGameSocketPort(int httpPort) {
+    if (httpPort == 0) return 0;
+    if (httpPort >= 65535) throw new IllegalArgumentException("Set a game socket port when the HTTP listener uses 65535");
+    return httpPort + 1;
+  }
   public String url() { return transport.origin(http.getAddress().getPort()); }
 
   public void start() {
     synchronized(lifecycle) {
       if(started || closed.get()) throw new IllegalStateException("Server already started or stopped");
-      try { http.start();simulation.start();started=true; }
+      try { simulation.start();http.start();gameSocket.start();started=true; }
       catch(RuntimeException failure) { requestStop();throw failure; }
     }
   }
@@ -780,10 +804,44 @@ public final class PreviewServer implements AutoCloseable {
     }
   }
 
+  private GameSocketServer.Result socketRequest(com.perso.T4C.online.model.GameSocketProtocol.Request request,
+      String sessionToken, InetSocketAddress remote) throws Exception {
+    String path="/"+request.command();
+    boolean routeAllowed = request.method().equals("GET") ? GET_ROUTES.contains(path) : POST_ROUTES.contains(path);
+    if (!routeAllowed || path.equals("/account/characters") || path.equals("/admin/shutdown")
+        || path.equals("/admin/metrics") || path.equals("/health") || path.equals("/")
+        || path.equals("/client.js") || path.equals("/style.css") || path.equals("/strings"))
+      return new GameSocketServer.Result(404,"{\"error\":\"route\"}",null,false);
+    boolean methodMatches = request.method().equals("POST") == POST_ROUTES.contains(path);
+    if (!methodMatches) return new GameSocketServer.Result(405,"{\"error\":\"method\"}",null,false);
+    var exchange=new GameSocketExchange(request,sessionToken,remote,
+        new InetSocketAddress(http.getAddress().getAddress(),http.getAddress().getPort()),url());
+    handle(exchange);
+    int status=exchange.responseCode();
+    String body=new String(exchange.responseBytes(),StandardCharsets.UTF_8);
+    if (path.equals("/join") && status==200) {
+      var joined=JSON.fromJson(body,RegionJoined.class);
+      if(joined==null || joined.token()==null || !joined.token().matches("[0-9a-f]{64}")
+          || joined.id()<=0 || joined.region()==null)
+        throw new IOException("Invalid joined game session");
+      return new GameSocketServer.Result(200,JSON.toJson(Map.of("id",joined.id(),"region",joined.region())),joined.token(),false);
+    }
+    return new GameSocketServer.Result(status,body,null,path.equals("/leave") && status==200);
+  }
+
+  private void socketDisconnected(String token) {
+    if(closed.get()) return;
+    try {
+      if(persistent==null) onWorld(() -> { world.leave(token); return null; });
+      else onWorld(() -> persistent.leave(token)).get(2,TimeUnit.SECONDS);
+    } catch(Exception ignored) {
+      // The normal shutdown path drains persistent sessions through HostedWorlds.close().
+    }
+  }
   private void requestStop() {
     boolean withoutSimulation;
     synchronized(lifecycle) {
-      if(closed.compareAndSet(false,true)) { loop.close();http.stop(0);requests.shutdownNow(); }
+      if(closed.compareAndSet(false,true)) { loop.close();gameSocket.close();http.stop(0);requests.shutdownNow(); }
       withoutSimulation=!started;
     }
     if(withoutSimulation) finishShutdown();
