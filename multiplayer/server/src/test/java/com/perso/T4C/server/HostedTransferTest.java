@@ -32,6 +32,52 @@ class HostedTransferTest {
     assertEquals(moved,restarted.load(account.accountId(),created.id()));restarted.release(recovered);
   }
 
+  /** The guard stays in the database: a transfer inside the stored cooldown is refused with the definite portal_cooldown conflict and writes nothing. */
+  @Test void transferInsideTheStoredCooldownIsRefusedDefinitelyAndWritesNothing() throws Exception {
+    var store=OnlineStore.fromEnvironment();store.migrate();var account=store.provisionAccount();
+    var p=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(2)).progress();
+    var created=store.create(account.accountId(),"Cooldown guard",0,2931.5,1056.5,p,10);
+    var session=store.acquire(account.secret(),created.id());
+    var first=new PortalTransfer(16,"start","lighthaven-interior",new CharacterProgress.Respawn(0,2931.5,1056.5),
+        new CharacterProgress.Respawn(1,304.5,383.5),0,System.currentTimeMillis()+60_000);
+    var moved=store.commitTransfer(session,0,UUID.randomUUID(),first).character();
+    var again=new PortalTransfer(17,"lighthaven-interior","start",new CharacterProgress.Respawn(1,306.5,381.5),
+        new CharacterProgress.Respawn(0,2932.5,1059.5),1,System.currentTimeMillis()+350);
+    var refused=assertThrows(OnlineStore.Conflict.class,()->store.commitTransfer(session,moved.revision(),UUID.randomUUID(),again));
+    assertEquals(OnlineStore.PORTAL_COOLDOWN,refused.getMessage());
+    assertEquals(moved,store.load(account.accountId(),created.id()),"A refused transfer changes nothing");
+    store.release(session);
+  }
+
+  /**
+   * T4C-0309: the server decides a cooldown has elapsed on its own clock while the guarded UPDATE reads the database clock. With
+   * the server clock 1.5 s ahead, the second hop is proposed while the database still says the cooldown is running. It is
+   * refused, the walker keeps its session and its place, and the hop commits as soon as the database clock agrees.
+   */
+  @Test void aTransferProposedAheadOfTheDatabaseClockIsRetriedWithoutDisconnecting() throws Exception {
+    var store=OnlineStore.fromEnvironment();store.migrate();var account=store.provisionAccount();
+    var p=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(2)).progress();
+    var created=store.create(account.accountId(),"Clock ahead walker",0,2944.5,1059.5,p,0);
+    var plan=HostedRegionPlan.startingSlice(Path.of("../../assets/maps/worldmap/worldmap.colbin"));
+    try(var hosted=new HostedWorlds(plan,store,ItemCatalog.loadBundled(),MonsterCatalog.loadBundled())) {
+      hosted.sessions.wallClock=()->System.currentTimeMillis()+1_500;
+      var joined=hosted.sessions.join(store.acquire(account.secret(),created.id()),System.nanoTime());
+      hosted.sessions.regionReady(joined.token(),0);
+      var start=hosted.actor(joined.token());
+      start.world.relocate(joined.token(),2931.5-start.map.originX,1056.5-start.map.originY);
+      await(hosted,()->hosted.sessions.region(joined.token()).locationEpoch()==1);
+      hosted.sessions.regionReady(joined.token(),1);
+      long arrived=System.nanoTime();
+      var interior=hosted.actor(joined.token());
+      interior.world.relocate(joined.token(),306.5-interior.map.originX,381.5-interior.map.originY);
+      await(hosted,()->hosted.sessions.region(joined.token()).locationEpoch()==2);
+      assertEquals(0,hosted.sessions.region(joined.token()).world(),"The hop home committed after the retry");
+      assertTrue(System.nanoTime()-arrived>java.util.concurrent.TimeUnit.MILLISECONDS.toNanos(900),
+          "The database cooldown still held the hop back until its own clock agreed");
+      var left=hosted.sessions.leave(joined.token());await(hosted,left::isDone);left.get();
+    }
+  }
+
   @Test void twoPlayersTransferIndependentlyKeepIdentityRequireAcknowledgementAndReconnectAtDestination() throws Exception {
     var store=OnlineStore.fromEnvironment();store.migrate();var account=store.provisionAccount();
     var p=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(2)).progress();

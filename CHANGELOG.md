@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-29 — Portals no longer drop you when you hop twice in a row (T4C-0309)
+
+### Fixed
+- In online play, taking a portal again right after arriving (for example down the sewer stairs, one after another) could rarely disconnect you at the moment the short portal pause ended. The game now simply tries again a moment later and you keep your place.
+
 ## 2026-10-29 — Online loot countdown and clearer messages (T4C-0307)
 
 ### Fixed

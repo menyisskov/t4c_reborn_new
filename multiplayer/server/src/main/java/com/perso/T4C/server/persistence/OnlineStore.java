@@ -1327,7 +1327,7 @@ public final class OnlineStore implements AutoCloseable {
         if(state.revision()!=revision || state.locationEpoch()!=transfer.expectedEpoch() || state.world()!=transfer.source().world())
           throw new Conflict("Stale transfer");
         try(var q=c.prepareStatement("SELECT portal_cooldown_until<=floor(extract(epoch FROM clock_timestamp())*1000) FROM online_characters WHERE id=?")) {
-          q.setObject(1,state.id());try(var rows=q.executeQuery()) { rows.next();if(!rows.getBoolean(1)) throw new Conflict("Portal cooldown"); }
+          q.setObject(1,state.id());try(var rows=q.executeQuery()) { rows.next();if(!rows.getBoolean(1)) throw new Conflict(PORTAL_COOLDOWN); }
         }
         Math.addExact(state.locationEpoch(),1);
         try(var q=c.prepareStatement("INSERT INTO online_transfer_events(event_id,character_id,payload_hash) VALUES(?,?,?)")) {
@@ -1389,6 +1389,12 @@ public final class OnlineStore implements AutoCloseable {
     long maximumWeight(CharacterProgress progress);
     long unitWeight(String key);
   }
+  /**
+   * Definite refusal of a transfer whose cooldown the database clock has not yet reached. The revision, epoch and world
+   * checks just passed under the row lock, so the stored cooldown is the one the server saw expire on its own clock:
+   * what remains is the few milliseconds the two clocks can differ. Nothing was written; the server retries.
+   */
+  public static final String PORTAL_COOLDOWN="portal_cooldown";
   public static final String CORPSE_TOO_HEAVY="too_heavy";
   public static final String CORPSE_ITEM_UNAVAILABLE="item_unavailable";
 

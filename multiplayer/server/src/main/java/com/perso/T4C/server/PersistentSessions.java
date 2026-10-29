@@ -51,6 +51,8 @@ final class PersistentSessions {
     long checkpointSubmitted, allowedUntil;
     boolean pending, closing;
     boolean awaitingRegionReady;
+    /** Earliest tick a portal transfer refused for a cooldown the database clock has not reached may be proposed again. */
+    long transferRetryTick;
     /** In-memory progress (regeneration, join anchor) the next checkpoint must persist. */
     boolean progressUnsaved;
     /** Wall-clock join time: the earliest instant natural regeneration may count from. */
@@ -591,14 +593,14 @@ final class PersistentSessions {
   }
   private void maybeTransfer(Binding binding) {
     if(!hosted.plan.transitions || binding.closing || binding.event!=null || binding.awaitingRegionReady
-        || binding.saved.portalCooldownUntil()>System.currentTimeMillis()) return;
+        || tick<binding.transferRetryTick || binding.saved.portalCooldownUntil()>wallClock.getAsLong()) return;
     var position=binding.region.world.position(binding.token);if(position==null) return;
     var map=binding.region.map;
     var selected=hosted.plan.portals.resolve(binding.region.spec.world(),map.originX+position.x(),map.originY+position.y(),hosted::canStand);
     if(selected.isEmpty()) return;
     var portal=selected.get();var target=hosted.require(portal.destination().world(),portal.destination().x(),portal.destination().y());
     var draft=new com.perso.T4C.server.persistence.PortalTransfer(portal.portalId(),binding.region.spec.key(),target.spec.key(),
-        portal.source(),arrivalAtTileCentre(portal.destination()),binding.saved.locationEpoch(),Math.addExact(System.currentTimeMillis(),350));
+        portal.source(),arrivalAtTileCentre(portal.destination()),binding.saved.locationEpoch(),Math.addExact(wallClock.getAsLong(),350));
     binding.position=position;binding.region.world.freeze(binding.token,true);
     binding.event=new GameplayEvent(UUID.randomUUID(),0,0,binding.saved.progress(),false,null,null,null,null,null,null,draft,null,List.of(),List.of(),new CompletableFuture<>());
   }
@@ -705,9 +707,17 @@ final class PersistentSessions {
               refusal=conflict.getMessage();
             }
           } else {
-            reward=event.transfer()!=null
-                ? store.commitTransfer(binding.session,revision,event.id(),event.transfer())
-                : event.monsterAttack()!=null
+            if (event.transfer()!=null) {
+              try {
+                reward=store.commitTransfer(binding.session,revision,event.id(),event.transfer());
+                saved=reward.character();
+              } catch (OnlineStore.Conflict conflict) {
+                // Rolled back before any write; only the database clock disagreed. Anything else fails closed.
+                if (!OnlineStore.PORTAL_COOLDOWN.equals(conflict.getMessage())) throw conflict;
+                refusal=conflict.getMessage();
+              }
+            } else {
+            reward=event.monsterAttack()!=null
                 ? store.commitMonsterAttack(binding.session,revision,event.id(),event.progress(),event.monsterAttack(),event.death())
                 : !event.spellStrikes().isEmpty()
                 ? store.commitSpellStrikes(binding.session,revision,event.id(),event.gold(),event.experience(),event.progress(),event.spellStrikes())
@@ -717,6 +727,7 @@ final class PersistentSessions {
                 ? store.commitWorldReward(binding.session,revision,event.id(),event.gold(),event.experience(),event.progress())
                 : store.commitGameplayEvent(binding.session,revision,event.id(),event.gold(),event.experience(),event.progress(),event.provocation());
             saved=reward.character();
+            }
           }
           if (finalSave) store.release(binding.session);
         } catch (Exception error) { failure=error; }
@@ -770,6 +781,11 @@ final class PersistentSessions {
         }
         // Corpse recovery froze the actor for the write; a refusal ends that freeze.
         if (refused.corpse()!=null) binding.region.world.freeze(binding.token,false);
+        // A portal transfer froze the actor too; a cooldown the database clock has not reached is retried shortly.
+        if (refused.transfer()!=null) {
+          binding.region.world.freeze(binding.token,false);
+          binding.transferRetryTick=tick+PreviewWorld.TICK_RATE/4;
+        }
         refused.result().completeExceptionally(new PreviewWorld.Rejected(409,completed.refusal()));
       } else {
         binding.saved=completed.saved();
