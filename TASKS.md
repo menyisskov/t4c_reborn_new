@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0320`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0321`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -20,6 +20,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 |---|---|---|---|---|---|
 | T4C-0318 | Live two-window rendered evidence on current main: NPC topic panel accepting the quest, equipment seen by the other window (name and outline), claim races inside and after the owner window with a weight refusal and the taken-by-another message, a corpse recovery after a death, portal trips watched from both windows (Lighthaven door, skeleton cave), and a 39-minute mixed session (19 minutes of timed fight, idle and loot); driver and provisioning scenes extended. Defect fixed: an equipment change or an attack refused as busy (a checkpoint had just moved the revision) is now tried once more instead of failing with a generic text | Multiplayer / M2-M3-M5 evidence | Done (PR open) | this PR | [CHANGELOG.md](CHANGELOG.md#2026-10-30--equipping-and-attacking-retry-when-the-game-is-busy-online-t4c-0318) |
 | T4C-0319 | Persist authored monster self-healing spell behavior online | Multiplayer / M4 | Done (PR pending) | 3a46ba5 | [CHANGELOG.md](CHANGELOG.md#2026-10-30--authored-monster-heal-persists-online-t4c-0319) |
+| T4C-0320 | Honor authored ranged attacks during online monster pursuit and hostile-clan combat | Multiplayer / M4 | In Progress (local tests pass; PR pending) | pending | [CHANGELOG.md](CHANGELOG.md#2026-10-30--online-monsters-use-authored-attack-ranges-t4c-0320) |
 | T4C-0317 | Preserve authored monster spell attacks in persistent hostile clan combat | Multiplayer / M4 | Done (PR #278; local validation) | PR #278, backend persistence test 1/1 | [CHANGELOG.md](CHANGELOG.md#2026-10-30--monster-clan-fights-use-authored-damage-spells-online-t4c-0317) |
 | T4C-0316 | Raise baseline player movement to 75, shared by offline and online play | Multiplayer / Cross-cutting/GA | Done | PR #277, merge 7249c3d4 | [CHANGELOG.md](CHANGELOG.md#2026-10-30--player-walking-speed-tuned-to-75-t4c-0316) |
 | T4C-0315 | Two-hour twenty-adapter mixed soak (8 portal walkers) on the current build and the defect it found: a character who logged out resting on a tile the movement rule allows but the stricter standing check refuses could not rejoin; joins now accept any tile the grid rule can rest on, the soak's walkability guard checks the server's own glide lattice, and the soak gained an optional steadier reconnect interval (default unchanged); results recorded against the earlier baselines | Process/Tooling | Done (PR open) | pending | none (no player-visible change) |

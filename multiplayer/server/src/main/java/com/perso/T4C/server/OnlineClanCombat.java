@@ -74,7 +74,8 @@ final class OnlineClanCombat {
     var eligible=attacks==null ? List.<MonsterDef.Attack>of()
         : attacks.stream().filter(a->a!=null && a.isInRange(tiles) && damagingAttack(a)).toList();
     boolean authoredAttacks=attacks!=null && !attacks.isEmpty();
-    if((authoredAttacks && eligible.isEmpty()) || tiles>=2
+    boolean outOfRangePhysicalFallback=!authoredAttacks && tiles>=2;
+    if((authoredAttacks && eligible.isEmpty()) || outOfRangePhysicalFallback
         || !MonsterPursuitRules.withinAttackReach(pixels,sourceSpawn.definition().getAttacks())
         || !map.hasLineOfSight(sx,sy,tx,ty)) return;
     int before=targetLife.health()==null ? targetSpawn.definition().getHealth() : targetLife.health();

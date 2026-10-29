@@ -53,8 +53,8 @@ class OnlineClanCombatTest {
         targetStats.profile(false,expectedRolls),raw,0,false),expectedRolls).damage();
     assertTrue(expectedDamage>0,"The authored spell damage must land this fixed combat roll");
     var hunter=new MonsterContent.Spawn("Goblin Bomberman","Goblin Bomberman",3,3,0,false,true);
-    // Adjacent engagement keeps the established clan attack cadence while choosing its spell.
-    var prey=new MonsterContent.Spawn("Horse","Wild Horse",4,3,0,false,false);
+    // The authored spell range must let this fight resolve without walking into melee.
+    var prey=new MonsterContent.Spawn("Horse","Wild Horse",6,3,0,false,false);
     var content=new MonsterContent(MonsterContent.VERSION,
         Map.of(bomber.getName(),bomber,horse.getName(),horse),List.of(hunter,prey));
     var map=new PreviewMap(new boolean[10][10],0,0,3,3);
@@ -74,7 +74,10 @@ class OnlineClanCombatTest {
       assertEquals("CLAN",saved.deathKind());assertNull(saved.recipient());assertNull(saved.claimedAt());
       assertEquals(Math.max(0,horse.getHealth()-expectedDamage),saved.health());
       assertEquals(preyLife,saved.eventId());
-      assertEquals(hunterLife,store.loadOrCreateSpawn(hunter.persistenceKey()).eventId());
+      var savedHunter=store.loadOrCreateSpawn(hunter.persistenceKey());
+      assertEquals(hunterLife,savedHunter.eventId());
+      assertEquals(3.0,savedHunter.currentX(),1e-8,
+          "The ranged clan attacker should resolve the fight without closing from its spawn tile");
       creatures.step(List.of(),null);
       assertEquals(1,world.snapshot(world.join().token()).creatures().size(),
           "Only the committed living goblin remains visible");

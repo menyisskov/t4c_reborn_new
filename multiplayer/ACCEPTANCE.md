@@ -37,6 +37,7 @@ test passed 1/1; the server package built and `git diff --check` passed. Cluster
 `t4c_acc_d11855a0c9f1` on loopback port 56921 was destroyed. This is server-only evidence: no
 rendered client was used, and M4/Beta remain incomplete.
 
+T4C-0320 verifies authored monster attack range online. `OnlineMonsterPursuitTest` passed 8/8, including an authored Goblin Bomberman spell attacking at three tiles without movement and refusing beyond maximum range. The PostgreSQL 16 `OnlineClanCombatTest` passed 1/1 with the attacker remaining on its spawn tile while its authored ranged spell committed the target death. Disposable cluster `t4c_acc_83451ad0017b` on loopback port 58123 was destroyed. Line of sight and attack eligibility remain checked. This is local server evidence only: no rendered-client run, no schema/protocol change, and M4/Beta remain incomplete.
 ## Verified foundation (updated 2026-10-27)
 
 T4C-0227 adds `httpTraffic` to the existing loopback/private-token
