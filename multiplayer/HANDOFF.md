@@ -4,6 +4,14 @@ Last reviewed: 2026-10-27, Asia/Jerusalem. This file is the restart point for a 
 
 ## Read first
 
+### Live rendered gameplay panels (T4C-0311, 2026-10-29)
+
+A second rendered pass drove the inventory (equip/unequip with a restart and rejoin), Light Heal and a healing potion
+through C and U, the Sigfried shop (buy, too poor, over-weight, sell), the other player's walking frames and appearance,
+and the `renewed_wards` quest kills and turn-in. Results, the unscripted list and nine findings (upside-down panels, raw
+NPC key in the shop title, no mana potion, no player appearance/name/health bar, no NPC topic control, overlapping NPC click boxes, the busy-click retry
+fixed here) are in [CLIENT_UNIFICATION_DESIGN.md](CLIENT_UNIFICATION_DESIGN.md) 3.16.
+
 ### Latest live rendered evidence (T4C-0306, 2026-10-29)
 
 Two real rendered windows were run against a real server on a disposable PostgreSQL cluster with the test-scope

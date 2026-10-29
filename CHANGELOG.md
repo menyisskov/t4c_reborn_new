@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-29 — Shopkeepers no longer say they are busy right after you walk up (T4C-0311)
+
+### Fixed
+- In online play, clicking a shopkeeper (or any other person) just after walking up to them could answer "They are busy for a moment. Try again.", and a purchase or sale could answer "The shop is busy. Try again.", so the same click had to be repeated. The game now tries once more by itself before it tells you.
+
 ## 2026-10-29 — Portals no longer drop you when you hop twice in a row (T4C-0309)
 
 ### Fixed

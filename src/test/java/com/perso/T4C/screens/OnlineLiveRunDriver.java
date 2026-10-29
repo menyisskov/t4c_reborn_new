@@ -55,12 +55,19 @@ import java.util.function.Predicate;
  *   <li>screenshots are the real back buffer.
  * </ul>
  *
- * Not scripted (a real mouse or OS key event, the Options button, character creation, spell
- * casting, equipping). Two processes coordinate through marker files in a shared directory;
- * the orchestrating operator creates {@code server-restarted} after restarting the server.
+ * Since T4C-0311 the inventory ({@code I}), spell ({@code C}) and potion ({@code U}) lists, the digit
+ * keys, {@code Tab} and {@code T} of the shop panel are delivered the same way (key events to the
+ * screen's input processor), and the committed state is read from the connection's view. The one
+ * thing sent around the screen is the quest offer (topic 0), because the screen has no topic
+ * control; it goes through the same connection object and is logged as such.
+ *
+ * <p>Not scripted (a real mouse or OS key event, the Options button, character creation).
+ * Two processes coordinate through marker files in a shared directory; the orchestrating operator
+ * creates {@code server-restarted} (or {@code server-restarted-<cycle>}) after restarting the server.
  *
  * <p>Arguments: endpoint, profile file, output directory, tag (for file names), scene
- * ({@code temple} or {@code skeletons}), sync directory, window x, window y.
+ * ({@code temple}, {@code skeletons}, {@code wares}, {@code quest} or the solo {@code turnin}), sync
+ * directory, window x, window y.
  */
 public final class OnlineLiveRunDriver extends MyGame {
   private final Path out;
@@ -172,6 +179,27 @@ public final class OnlineLiveRunDriver extends MyGame {
     BufferUtils.copy(pixels, 0, target, pixels.length);
     PixmapIO.writePNG(new com.badlogic.gdx.files.FileHandle(out.resolve(file).toFile()), pixmap);
     pixmap.dispose();
+    log("saved " + file);
+  }
+
+  /**
+   * A small picture of just the HUD: the message log (bottom left, 450x200) beside the bottom-right block where the
+   * online lists and the shop are drawn (440x368). Same real back buffer, a fraction of the file size.
+   */
+  private void hud(String name) {
+    String file = tag + "-" + String.format("%02d", ++shots) + "-" + name + ".png";
+    int w = Gdx.graphics.getBackBufferWidth();
+    int h = Gdx.graphics.getBackBufferHeight();
+    byte[] pixels = ScreenUtils.getFrameBufferPixels(0, 0, w, h, true);
+    for (int i = 3; i < pixels.length; i += 4) pixels[i] = (byte) 255;
+    Pixmap full = new Pixmap(w, h, Pixmap.Format.RGBA8888);
+    BufferUtils.copy(pixels, 0, full.getPixels(), pixels.length);
+    Pixmap crop = new Pixmap(890, 368, Pixmap.Format.RGBA8888);
+    crop.drawPixmap(full, 0, 168, 0, h - 200, 450, 200);
+    crop.drawPixmap(full, 450, 0, w - 440, h - 368, 440, 368);
+    PixmapIO.writePNG(new com.badlogic.gdx.files.FileHandle(out.resolve(file).toFile()), crop);
+    crop.dispose();
+    full.dispose();
     log("saved " + file);
   }
 
@@ -445,7 +473,7 @@ public final class OnlineLiveRunDriver extends MyGame {
     // 2. Each rendered client sees the other.
     until(
         "sees the other rendered player",
-        45_000,
+        scene.equals("turnin") ? 1 : 45_000,
         () -> {
           var s = game();
           return s != null && !others(s).isEmpty();
@@ -458,15 +486,18 @@ public final class OnlineLiveRunDriver extends MyGame {
           shot("sees-other-player");
           signal(tag + ".saw-other");
         });
-    until("peer also saw me", 60_000, () -> signaled(peer() + ".saw-other"));
+    until("peer also saw me", scene.equals("turnin") ? 1 : 60_000, () -> signaled(peer() + ".saw-other"));
     if (scene.equals("temple")) templeScene();
+    else if (scene.equals("wares")) waresScene();
+    else if (scene.equals("quest")) questScene();
+    else if (scene.equals("turnin")) turnInScene();
     else skeletonScene();
     action(
         () -> {
           signal(tag + ".done");
           log("script finished");
         });
-    until("peer finished", 120_000, () -> signaled(peer() + ".done"));
+    until("peer finished", scene.equals("turnin") ? 1 : 120_000, () -> signaled(peer() + ".done"));
     action(
         () -> {
           held.clear();
@@ -526,6 +557,21 @@ public final class OnlineLiveRunDriver extends MyGame {
     waitMs(800);
     talkOnce("first-greeting");
     talkOnce("repeat-greeting");
+    restartCycle("", null);
+    talkOnce("greeting-after-restart");
+  }
+
+  /**
+   * Server stop and restart (the operator does it between the markers), then the screen's own return to the lobby and
+   * the rejoin. {@code afterRejoin} (optional) runs once the world is back, before the final frame is saved.
+   */
+  private void restartCycle(Runnable afterRejoin) {
+    restartCycle("", afterRejoin);
+  }
+
+  /** {@code cycle} names the markers when a scene restarts the server more than once ({@code stop-ready-<cycle>}, {@code server-restarted-<cycle>}). */
+  private void restartCycle(String cycle, Runnable afterRejoin) {
+    String suffix = cycle.isEmpty() ? "" : "-" + cycle;
     // 4. Server stop and restart (the operator does it between these markers).
     action(
         () -> {
@@ -534,12 +580,13 @@ public final class OnlineLiveRunDriver extends MyGame {
           before = view().character().progress();
           log("BEFORE RESTART: position " + positionBeforeRestart + " inventory " + inventorySummary(before) + " status " + connection().status());
           shot("before-server-stop");
-          signal(tag + ".stop-ready");
+          signal(tag + ".stop-ready" + suffix);
         });
-    until("operator stopped the server (connection shows disconnected)", 180_000, () -> "disconnected".equals(connection().status()));
+    long patience = scene.equals("quest") ? 1_200_000 : 180_000;
+    until("operator stopped the server (connection shows disconnected)", patience, () -> "disconnected".equals(connection().status()));
     waitMs(2000);
     action(() -> shot("server-stopped-disconnected-text"));
-    until("operator restarted the server", 240_000, () -> signaled("server-restarted"));
+    until("operator restarted the server", patience, () -> signaled("server-restarted" + suffix));
     // 5. The screen's own return-to-lobby shortcut, then the lobby again.
     action(
         () -> {
@@ -576,8 +623,8 @@ public final class OnlineLiveRunDriver extends MyGame {
               + " (same as before: " + inventorySummary(after).equals(inventorySummary(before)) + "); other players drawn " + others(s).size());
           daylight = true;
           shot("rejoined-after-restart");
+          if (afterRejoin != null) afterRejoin.run();
         });
-    talkOnce("greeting-after-restart");
   }
 
   private BaseMonster nearestLive(MainGameScreen s) {
@@ -703,13 +750,562 @@ public final class OnlineLiveRunDriver extends MyGame {
         });
   }
 
+  // ---------------------------------------------------------------- wares scene (T4C-0311)
+
+  private void press(int key) {
+    var processor = Gdx.input.getInputProcessor();
+    processor.keyDown(key);
+    processor.keyUp(key);
+  }
+
+  private static int digitKey(int digit) {
+    return Input.Keys.NUM_1 + digit - 1;
+  }
+
+  private com.perso.T4C.online.OnlineShopPanel shopPanel() {
+    return (com.perso.T4C.online.OnlineShopPanel) field(game(), MainGameScreen.class, "remoteShopPanel");
+  }
+
+  private com.perso.T4C.online.OnlineInventoryPanel inventoryPanel() {
+    return (com.perso.T4C.online.OnlineInventoryPanel) field(game(), MainGameScreen.class, "remoteInventoryPanel");
+  }
+
+  private com.perso.T4C.online.OnlineAbilityMenu abilityMenu() {
+    return (com.perso.T4C.online.OnlineAbilityMenu) field(game(), MainGameScreen.class, "remoteAbilityMenu");
+  }
+
+  /** One line of committed state: revision, gold, vitals, what is worn, what is carried, buffs and cooldowns. */
+  private String state() {
+    var c = view().character();
+    var p = c.progress();
+    java.util.Map<java.util.UUID, String> keys = new java.util.HashMap<>();
+    p.inventory().forEach(i -> keys.put(i.id(), i.key().replace("item.", "")));
+    StringBuilder worn = new StringBuilder();
+    new java.util.TreeMap<>(p.equipment()).forEach((slot, id) -> worn.append(slot).append('=').append(keys.getOrDefault(id, "?")).append(' '));
+    return "rev " + c.revision() + " gold " + c.gold() + " hp " + p.vitals().hp() + "/" + p.vitals().maxHp()
+        + " mana " + p.vitals().mana() + "/" + p.vitals().maxMana() + " | worn: " + worn.toString().trim()
+        + " | carried: " + inventorySummary(p) + " | buffs " + p.buffs().stream().map(b -> b.spell()).toList()
+        + " cooldowns " + p.cooldowns().keySet();
+  }
+
+  private BaseNPC npcByName(MainGameScreen s, String fragment) {
+    for (BaseNPC npc : npcs(s)) if (npc.getName() != null && npc.getName().toLowerCase(Locale.ROOT).contains(fragment)) return npc;
+    return null;
+  }
+
+  /** Walks to the shopkeeper and clicks him through the screen's own NPC click handler; the shop panel opens on the listing. */
+  private void openShopOf(String fragment, String label) {
+    repeat(
+        "within talking distance of " + fragment,
+        40_000,
+        () -> {
+          var s = game();
+          var npc = s == null ? null : npcByName(s, fragment);
+          if (npc == null) return false;
+          walkToward(s, npc.getPosition(), 60f);
+          return distance(s, npc.getPosition()) <= 60f;
+        });
+    action(() -> held.clear());
+    waitMs(600);
+    action(
+        () -> {
+          var s = game();
+          var npc = npcByName(s, fragment);
+          Vector2 at = aim(npc.getPosition(), p -> npc.isMouseOver(p.x, p.y));
+          log("SHOP " + label + ": clicking " + fragment + " at " + at + ", distance " + Math.round(distance(s, npc.getPosition())) + " px; state " + state());
+          if (at != null) click(s, at.x, at.y);
+        });
+    waitMs(3000);
+    action(
+        () -> {
+          if (shopPanel().isOpen()) return;
+          log("SHOP " + label + ": the first click did not open the shop; state " + state());
+          hud("shop-first-click-not-open-" + label);
+          var s = game();
+          var npc = npcByName(s, fragment);
+          Vector2 at = aim(npc.getPosition(), p -> npc.isMouseOver(p.x, p.y));
+          if (at != null) click(s, at.x, at.y);
+        });
+    waitMs(3000);
+    action(
+        () -> {
+          log("SHOP " + label + ": panel open " + shopPanel().isOpen() + (shopPanel().isOpen() ? ", server gold shown " + shopPanel().gold() + ", buy rows " + shopPanel().rows().size() : ""));
+          hud("shop-open-" + label);
+        });
+  }
+
+  /** Presses the digit of the row with this item key on the shop panel's current page, then reports committed state. */
+  private void shopRow(String itemKey, String label) {
+    final String[] before = {null};
+    action(
+        () -> {
+          var panel = shopPanel();
+          before[0] = state();
+          int digit = -1;
+          var visible = panel.visible();
+          for (int i = 0; i < visible.size(); i++) if (visible.get(i).key().equals(itemKey)) digit = i + 1;
+          log("SHOP " + label + ": " + panel.mode() + " " + itemKey + " digit " + digit + " quantity " + panel.quantity() + "; before: " + before[0]);
+          if (digit < 0) {
+            log("SHOP " + label + ": row not on this page");
+            return;
+          }
+          press(digitKey(digit));
+        });
+    waitMs(2500);
+    action(
+        () -> {
+          log("SHOP " + label + ": after:  " + state() + " (changed: " + !state().equals(before[0]) + ")");
+          hud("shop-" + label);
+        });
+  }
+
+  // Frame capture of the other player (appearance and walking), taken from the real back buffer.
+  private static final int CROP = 160;
+  private long lastCrop;
+  private final List<Pixmap> crops = new ArrayList<>();
+  private final List<String> cropLog = new ArrayList<>();
+  private final int maxCrops = 12;
+
+  private Object animationField(com.perso.T4C.player.Player other, String name) {
+    return field(other.getAnimations(), com.perso.T4C.player.PlayerAnimations.class, name);
+  }
+
+  private void sampleOther(boolean keepPixels) {
+    var s = game();
+    if (s == null) return;
+    var list = others(s);
+    if (list.isEmpty()) {
+      cropLog.add("no other player");
+      return;
+    }
+    var other = list.get(0);
+    Vector3 p = camera(s).project(new Vector3(other.getPositionVector().x, other.getPositionVector().y, 0));
+    int w = Gdx.graphics.getBackBufferWidth(), h = Gdx.graphics.getBackBufferHeight();
+    int x0 = Math.max(0, Math.min(w - CROP, Math.round(p.x) - CROP / 2));
+    int y0 = Math.max(0, Math.min(h - CROP, Math.round(p.y) - 40));
+    boolean moving = (Boolean) field(other.getMovement(), com.perso.T4C.player.PlayerMovement.class, "moving");
+    cropLog.add(String.format("t=%.2fs moving=%b animTimer=%.3f pos=(%.0f,%.0f)", (System.currentTimeMillis() - t0) / 1000.0, moving,
+        (Float) animationField(other, "animTimer"), other.getPositionVector().x, other.getPositionVector().y));
+    if (!keepPixels || crops.size() >= maxCrops) return;
+    byte[] pixels = ScreenUtils.getFrameBufferPixels(x0, y0, CROP, CROP, true);
+    for (int i = 3; i < pixels.length; i += 4) pixels[i] = (byte) 255;
+    Pixmap crop = new Pixmap(CROP, CROP, Pixmap.Format.RGBA8888);
+    BufferUtils.copy(pixels, 0, crop.getPixels(), pixels.length);
+    crops.add(crop);
+  }
+
+  private void saveStrip(String name) {
+    if (crops.isEmpty()) return;
+    Pixmap strip = new Pixmap(CROP * crops.size(), CROP, Pixmap.Format.RGBA8888);
+    for (int i = 0; i < crops.size(); i++) {
+      strip.drawPixmap(crops.get(i), i * CROP, 0);
+      crops.get(i).dispose();
+    }
+    crops.clear();
+    String file = tag + "-" + name + ".png";
+    PixmapIO.writePNG(new com.badlogic.gdx.files.FileHandle(out.resolve(file).toFile()), strip);
+    strip.dispose();
+    log("saved " + file);
+  }
+
+  private void waresScene() {
+    if (tag.endsWith("A")) waresHealer();
+    else waresWalker();
+  }
+
+  /** The walker (B): stands still, then walks a short way out and back while the healer (A) captures frames. */
+  private void waresWalker() {
+    until("healer is ready to watch", 90_000, () -> signaled("A.watch"));
+    waitMs(3500);
+    action(() -> signal("B.still-done"));
+    final Vector2[] goal = {null};
+    final Vector2[] home = {null};
+    action(
+        () -> {
+          var s = game();
+          var p = me(s).getCoordinates();
+          home[0] = new Vector2(p.getX(), p.getY());
+          int ptx = (int) (p.getX() / TILE_W), pty = (int) (p.getY() / TILE_H);
+          for (int d = 8; d >= 5 && goal[0] == null; d--)
+            for (int dx = -d; dx <= d && goal[0] == null; dx++)
+              for (int dy = -d; dy <= d && goal[0] == null; dy++) {
+                if (Math.max(Math.abs(dx), Math.abs(dy)) != d || !walkable(ptx + dx, pty + dy)) continue;
+                var path = search(ptx, pty, ptx + dx, pty + dy);
+                if (path.size() >= d) goal[0] = new Vector2((ptx + dx) * TILE_W + TILE_W / 2f, (pty + dy) * TILE_H + TILE_H / 2f);
+              }
+          log("WALK: home " + home[0] + " goal " + goal[0]);
+          signal("B.walking");
+        });
+    repeat("walked out", 20_000, () -> {
+      var s = game();
+      if (goal[0] == null) return true;
+      walkToward(s, goal[0], 12f);
+      return distance(s, goal[0]) <= 12f;
+    });
+    repeat("walked back", 20_000, () -> {
+      var s = game();
+      walkToward(s, home[0], 12f);
+      return distance(s, home[0]) <= 12f;
+    });
+    action(
+        () -> {
+          held.clear();
+          signal("B.walk-done");
+        });
+    // The Warrior carries an over-weight stack: a purchase must be refused by the server.
+    openShopOf("sigfried", "walker");
+    shopRow("item.rusted_short_sword", "walker-overweight-buy");
+    action(() -> signal("B.shop-done"));
+    until("healer finished", 240_000, () -> signaled("A.pre-stop"));
+    action(() -> shopPanel().close());
+    restartCycle(() -> log("AFTER RESTART (walker): " + state()));
+  }
+
+  /** The healer (A): watches the walker, then drives the inventory, spell, potion and shop controls, then restarts. */
+  private void waresHealer() {
+    // 5. First, while the provisioned wounds are still there: Light Heal through C, a healing potion through U.
+    action(
+        () -> {
+          log("SPELL before: " + state());
+          shot("wounded-before-spell");
+          press(Input.Keys.C);
+        });
+    waitMs(900);
+    action(
+        () -> {
+          log("SPELL list: " + abilityMenu().lines(view().character().progress()));
+          hud("spell-list");
+          press(Input.Keys.NUM_1);
+        });
+    waitMs(3000);
+    action(
+        () -> {
+          log("SPELL after Light Heal: " + state());
+          hud("spell-cast");
+        });
+    // 6. The potion list (U) as the server allows it, then a healing potion; a mana potion should be absent.
+    potion("healing");
+    // 3. The other player's appearance and the walking animation, from the real frames.
+    action(() -> signal("A.watch"));
+    until("walker held still", 60_000, () -> signaled("B.still-done"));
+    action(
+        () -> {
+          sampleOther(true);
+          sampleOther(false);
+          shot("walker-standing");
+          log("STILL samples: " + cropLog);
+          cropLog.clear();
+        });
+    until("walker started walking", 30_000, () -> signaled("B.walking"));
+    repeat(
+        "walker walked out and back",
+        30_000,
+        () -> {
+          long now = System.currentTimeMillis();
+          if (now - lastCrop >= 110) {
+            lastCrop = now;
+            sampleOther(true);
+          }
+          return signaled("B.walk-done");
+        });
+    action(
+        () -> {
+          log("WALK samples (" + cropLog.size() + "): " + cropLog);
+          saveStrip("walk-strip-still-then-walking");
+          cropLog.clear();
+        });
+    // 4. Inventory panel: unequip, re-equip, then leave the robe off for the restart check.
+    action(
+        () -> {
+          log("INVENTORY start: " + state());
+          press(Input.Keys.I);
+        });
+    waitMs(900);
+    action(
+        () -> {
+          var rows = inventoryPanel().rows(view().character().progress());
+          StringBuilder b = new StringBuilder();
+          for (int i = 0; i < rows.size(); i++) b.append(i + 1).append(':').append(rows.get(i).kind()).append(':').append(rows.get(i).item().key()).append(' ');
+          log("INVENTORY open=" + inventoryPanel().isOpen() + " rows " + b);
+          shot("inventory-open");
+        });
+    inventoryPick("staff", true, "unequip-staff");
+    inventoryPick("staff", false, "re-equip-staff");
+    inventoryPick("robe", true, "unequip-robe");
+    action(() -> press(Input.Keys.I));
+    // 7. Shop: buy, a purchase the character cannot afford, sell.
+    openShopOf("sigfried", "healer");
+    shopRow("item.rusted_short_sword", "buy-short-sword");
+    shopRow("item.rusted_hand_axe", "buy-too-poor");
+    action(() -> press(Input.Keys.TAB));
+    waitMs(700);
+    shopRow("item.torch", "sell-torch");
+    action(() -> press(Input.Keys.T));
+    waitMs(500);
+    action(() -> log("SHOP closed: panel open " + shopPanel().isOpen()));
+    until("walker finished its shop attempt", 90_000, () -> signaled("B.shop-done"));
+    action(
+        () -> {
+          before = view().character().progress();
+          log("BEFORE STOP (healer): " + state());
+          signal("A.pre-stop");
+        });
+    restartCycle(
+        () -> {
+          log("AFTER RESTART (healer): " + state());
+          log("AFTER RESTART same inventory and equipment as before the stop: "
+              + (inventorySummary(view().character().progress()).equals(inventorySummary(before))
+                  && view().character().progress().equipment().equals(before.equipment())));
+          press(Input.Keys.I);
+        });
+    waitMs(900);
+    action(() -> hud("inventory-after-restart"));
+    inventoryPick("robe", false, "re-equip-robe-after-restart");
+    action(() -> press(Input.Keys.I));
+  }
+
+  /** Presses the digit of the first inventory-panel row (worn or carried) whose item key contains the fragment. */
+  private void inventoryPick(String fragment, boolean worn, String label) {
+    final String[] before = {null};
+    action(
+        () -> {
+          before[0] = state();
+          var rows = inventoryPanel().rows(view().character().progress());
+          int digit = -1;
+          for (int i = 0; i < rows.size() && i < 9; i++) {
+            var r = rows.get(i);
+            boolean isWorn = r.kind() == com.perso.T4C.online.OnlineInventoryPanel.Kind.EQUIPPED;
+            if (isWorn == worn && r.item().key().contains(fragment)) {
+              digit = i + 1;
+              break;
+            }
+          }
+          log("INVENTORY " + label + ": digit " + digit + "; before: " + before[0]);
+          if (digit > 0) press(digitKey(digit));
+        });
+    waitMs(2500);
+    action(
+        () -> {
+          log("INVENTORY " + label + ": after:  " + state() + " (changed: " + !state().equals(before[0]) + ")");
+          hud("inventory-" + label);
+        });
+  }
+
+  private void potion(String fragment) {
+    final String[] before = {null};
+    action(
+        () -> {
+          before[0] = state();
+          press(Input.Keys.U);
+        });
+    waitMs(900);
+    action(
+        () -> {
+          var lines = abilityMenu().lines(view().character().progress());
+          int digit = -1;
+          for (int i = 1; i < lines.size() - 1; i++) if (lines.get(i).toLowerCase(Locale.ROOT).contains(fragment)) { digit = i; break; }
+          log("POTION " + fragment + ": list " + lines + " digit " + digit + "; mana potion offered: "
+              + lines.stream().anyMatch(l -> l.toLowerCase(Locale.ROOT).contains("mana")) + "; before: " + before[0]);
+          hud("potion-list");
+          if (digit > 0) press(digitKey(digit));
+          else press(Input.Keys.U);
+        });
+    waitMs(2800);
+    action(
+        () -> {
+          log("POTION " + fragment + ": after:  " + state() + " (changed: " + !state().equals(before[0]) + ")");
+          hud("potion-used");
+        });
+  }
+
+  // ---------------------------------------------------------------- quest scene (T4C-0311)
+
+  private static final String QUEST_KILLS = "quest.renewed_wards.kills", QUEST_STATUS = "quest.renewed_wards.status";
+
+  private String questState() {
+    var c = view().character();
+    var flags = c.progress().questFlags();
+    return "status " + flags.getOrDefault(QUEST_STATUS, 0) + " kills " + flags.getOrDefault(QUEST_KILLS, 0) + " gold " + c.gold() + " xp "
+        + c.experience() + " level " + c.progress().advancement().level() + " spells " + new java.util.TreeSet<>(c.progress().spells())
+        + " rev " + c.revision() + " hp " + c.progress().vitals().hp() + "/" + c.progress().vitals().maxHp();
+  }
+
+  /** Clicks the giver through the screen's own NPC click handler, walking up to him first. */
+  private void talkTo(String fragment, String label) {
+    repeat(
+        "within talking distance of " + fragment,
+        60_000,
+        () -> {
+          var s = game();
+          var npc = s == null ? null : npcByName(s, fragment);
+          if (npc == null) return false;
+          walkToward(s, npc.getPosition(), 60f);
+          return distance(s, npc.getPosition()) <= 60f;
+        });
+    action(() -> held.clear());
+    waitMs(600);
+    action(
+        () -> {
+          var s = game();
+          var npc = npcByName(s, fragment);
+          // The screen's click handler takes the first NPC under the cursor (Moonrock stands in front of the
+          // Warden), so aim where only this NPC is.
+          Vector2 at = aim(npc.getPosition(), p -> npc.isMouseOver(p.x, p.y)
+              && npcs(s).stream().noneMatch(o -> o != npc && o.isMouseOver(p.x, p.y)));
+          log("TALK " + label + ": click on " + fragment + " at " + at + "; before: " + questState() + "; " + npcDebug(s, at));
+          if (at != null) click(s, at.x, at.y);
+        });
+    waitMs(3500);
+    action(
+        () -> {
+          log("TALK " + label + ": after:  " + questState());
+          hud("talk-" + label);
+        });
+  }
+
+  /** Fights the nearest live monster through the monster click handler until {@code done} holds or the time runs out. */
+  private void fightUntil(String what, long timeoutMs, Predicate<OnlineConnection.View> done) {
+    final BaseMonster[] last = {null};
+    final long[] potionAt = {0};
+    final int[] potionStage = {0};
+    repeat(
+        what,
+        timeoutMs,
+        () -> {
+          var s = game();
+          if (s == null) return false;
+          long now = System.currentTimeMillis();
+          var v = view();
+          if (done.test(v)) {
+            held.clear();
+            return true;
+          }
+          // A player drinks a healing potion through the U control when badly hurt: U opens the list, 1 uses the first.
+          var vit = v.character().progress().vitals();
+          if (potionStage[0] == 0 && vit.hp() > 0 && vit.hp() * 100 < vit.maxHp() * 40 && now - potionAt[0] > 5000) {
+            press(Input.Keys.U);
+            potionStage[0] = 1;
+            potionAt[0] = now;
+          } else if (potionStage[0] == 1 && now - potionAt[0] > 350) {
+            boolean listed = abilityMenu().isOpen() && abilityMenu().lines(v.character().progress()).size() > 2;
+            press(listed ? Input.Keys.NUM_1 : Input.Keys.U);
+            log("potion at hp " + vit.hp() + "/" + vit.maxHp() + ": " + (listed ? "used the first listed potion" : "no potion left"));
+            potionStage[0] = 0;
+            potionAt[0] = now;
+          }
+          if (v.character().progress().vitals().hp() <= 0) {
+            held.clear();
+            return false;
+          }
+          BaseMonster target = nearestLive(s);
+          if (target == null) {
+            held.clear();
+            return false;
+          }
+          if (last[0] != target) last[0] = target;
+          double d = distance(s, target.getPosition());
+          float reach = GameConstants.PLAYER_MELEE_ATTACK_RANGE - 14f;
+          if (d > reach) walkToward(s, target.getPosition(), reach);
+          else held.clear();
+          if (d <= reach + 8 && now - lastClick > 650) {
+            Vector2 at = aim(target.getPosition(), p -> target.isMouseOver(p.x, p.y));
+            if (at != null) {
+              click(s, at.x, at.y);
+              attacksSent++;
+            }
+          }
+          if (now - lastMessageLog > 15_000) {
+            lastMessageLog = now;
+            log("fight: " + questState() + " attacks " + attacksSent);
+          }
+          return false;
+        });
+  }
+
+  /**
+   * The quest giver's greeting is the only quest control the rendered screen has: it turns a finished quest in, but
+   * offers none (acceptance is topic 0 and the screen sends no topic). So the accept is sent through the same
+   * connection object the screen uses, and logged as such. The operator relocates the character between the temple and
+   * the Skeleton ground while the server is stopped (the ground is about 160 tiles away behind cave mouths; walking
+   * it is the soak's job, not this script's).
+   */
+  private void questScene() {
+    if (!tag.endsWith("A")) {
+      // The second window stays in the temple as an observer; it only follows the two server restarts.
+      restartCycle("to-skeletons", null);
+      restartCycle("to-giver", null);
+      until("quester finished", 900_000, () -> signaled(peer() + ".quest-done"));
+      return;
+    }
+    talkTo("aelric", "greeting-before-accept");
+    action(
+        () -> {
+          log("ACCEPT: sending topic 0 through the connection (the screen has no topic control); before: " + questState());
+          connection().interact("WardenAelric", java.util.OptionalInt.of(0)).whenComplete((r, f) ->
+              log("ACCEPT reply: " + (f != null ? "failure " + f : "accepted=" + (r != null && r.accepted()) + " key=" + (r == null ? null : r.messageKey()))));
+        });
+    waitMs(3500);
+    action(
+        () -> {
+          log("ACCEPT after: " + questState());
+          hud("quest-accepted-via-connection");
+        });
+    talkTo("aelric", "greeting-after-accept-not-ready");
+    action(() -> before = view().character().progress());
+    restartCycle("to-skeletons", () -> log("AT SKELETONS: " + questState()));
+    action(
+        () -> {
+          shot("at-skeleton-ground");
+          experienceBefore = view().character().experience();
+        });
+    fightUntil("12 Skeleton kills credited", 600_000, v -> v.character().progress().questFlags().getOrDefault(QUEST_KILLS, 0) >= 12);
+    action(
+        () -> {
+          held.clear();
+          log("KILLS DONE: " + questState() + " attacks " + attacksSent);
+          shot("kills-done");
+        });
+    // Let any drop sit; the quest asks for no item.
+    restartCycle("to-giver", () -> log("BACK AT THE GIVER: " + questState()));
+    talkTo("aelric", "turn-in");
+    action(() -> log("TURN-IN result: " + questState()));
+    talkTo("aelric", "turn-in-repeat");
+    action(
+        () -> {
+          log("TURN-IN repeat result (no second reward expected): " + questState());
+          signal(tag + ".quest-done");
+        });
+  }
+
+  private long experienceBefore;
+
+  /** Which drawn NPCs are under the click point, and where the server says the player and the giver are. */
+  private String npcDebug(MainGameScreen s, Vector2 at) {
+    StringBuilder b = new StringBuilder("under the click:");
+    for (BaseNPC npc : npcs(s)) if (at != null && npc.isMouseOver(at.x, at.y)) b.append(" ").append(npc.getName());
+    var v = view();
+    var me = me(s).getCoordinates();
+    b.append(" | own (").append(Math.round(me.getX())).append(",").append(Math.round(me.getY())).append(") server actors ");
+    for (var p : v.snapshot().players()) b.append("(").append(p.x()).append(",").append(p.y()).append(") ");
+    for (var n : v.snapshot().npcs()) if (n.id().equals("WardenAelric")) b.append("| Aelric (").append(n.x()).append(",").append(n.y()).append(") origin (").append(v.map().originX()).append(",").append(v.map().originY()).append(")");
+    return b.toString();
+  }
+
+  /** Solo scene: only the turn-in at the giver for a quester whose kills are already credited (the previous pass could not reach him). */
+  private void turnInScene() {
+    talkTo("aelric", "turn-in-first");
+    action(() -> log("TURN-IN result: " + questState()));
+    talkTo("aelric", "turn-in-repeat");
+    action(() -> log("TURN-IN repeat result (no second reward expected): " + questState()));
+  }
+
   // ---------------------------------------------------------------- frame loop
 
   @Override
   public void render() {
     super.render();
     long now = System.currentTimeMillis();
-    if (now > deadline) {
+    if (now > (scene.equals("quest") ? t0 + 1_500_000 : deadline)) {
       log("DRIVER TIMEOUT at step " + index);
       Gdx.app.exit();
       return;
