@@ -76,6 +76,19 @@ class OnlineMonsterPursuitWorldStepTest {
       return Math.hypot((p.x()-c.x())*com.perso.T4C.config.GameConstants.GRID_W,
           (p.y()-c.y())*com.perso.T4C.config.GameConstants.GRID_H)/com.perso.T4C.config.GameConstants.GRID_W;
     }
+    /**
+     * The persisted life of creature 1. {@code creature_unavailable} is the production answer while a patrol checkpoint,
+     * reload or reservation is in flight (clients simply ask again), so wait it out in world-step ticks, bounded.
+     */
+    OnlineStore.SpawnState life() throws InterruptedException {
+      for(int i=0;;i++) {
+        try { return region.creatures.life(1); }
+        catch(PreviewWorld.Rejected transientRejection) {
+          if(!"creature_unavailable".equals(transientRejection.getMessage()) || i>=500) throw transientRejection;
+          tick();
+        }
+      }
+    }
     OnlineMonsterPursuit.Mode mode() {
       try { return OnlineMonsterPursuit.Mode.valueOf(region.creatures.capture(1).mode()); }
       catch(PreviewWorld.Rejected reloading) { return null; }
@@ -89,7 +102,14 @@ class OnlineMonsterPursuitWorldStepTest {
   private static void provoke(Field f,String token) throws Exception {
     f.lastToken=token;
     long revision=f.hosted.sessions.character(token).revision();
-    CompletionStage<?> hit=f.region.melee.attack(token,revision,1);
+    CompletionStage<?> hit=null;
+    for(int i=0;hit==null;i++) {
+      try { hit=f.region.melee.attack(token,revision,1); }
+      catch(PreviewWorld.Rejected busy) { // the same transient a real client retries on its next click
+        if(!"creature_unavailable".equals(busy.getMessage()) || i>=500) throw busy;
+        f.tick();
+      }
+    }
     var done=hit.toCompletableFuture();
     assertTrue(f.run(1000,done::isDone),"the provoking hit commits");
     done.get();
@@ -103,7 +123,7 @@ class OnlineMonsterPursuitWorldStepTest {
     try(var f=new Field(false,120)) {
       String token=f.join("Walker",HOME_X+.5,HOME_Y+.5);
       provoke(f,token);
-      var life=f.region.creatures.life(1);
+      var life=f.life();
       assertEquals("RETALIATION",life.mode());
       f.walk(token,1,0,160); // about 11 tiles at the player's speed, faster than the creature's
       double gap=f.tilesBetween(token);
@@ -117,13 +137,13 @@ class OnlineMonsterPursuitWorldStepTest {
 
   @Test void unprovokedPlayerInsideAggroRangeIsNoticedAndReachedAndLeavingPastTheLeashResetsWithoutHealing() throws Exception {
     try(var f=new Field(true,0)) {
-      // 12 tiles out: beyond MONSTER_AGGRO_RANGE (8 tiles), so nothing happens.
-      String token=f.join("Visitor",HOME_X+12.5,HOME_Y+.5);f.lastToken=token;
+      // The Skeleton patrols up to MONSTER_PATROL_RADIUS (6 tiles) from home on a random walk that cannot be steered
+      // from here, so "outside the aggro range" must hold for every patrol position: 6 + 8 tiles, plus margin.
+      String token=f.join("Visitor",HOME_X+17.5,HOME_Y+.5);f.lastToken=token;
       assertTrue(MonsterPursuitRules.inNaturalAcquisitionRange(true,(float)(8*32),false));
       assertFalse(MonsterPursuitRules.inNaturalAcquisitionRange(true,(float)(12*32),false));
-      f.run(120,() -> false);
-      assertNotEquals(OnlineMonsterPursuit.Mode.NATURAL,f.mode(),"a player outside the aggro range is not acquired");
-      assertNull(f.region.creatures.life(1).targetCharacter());
+      assertFalse(f.run(120,() -> f.mode()==OnlineMonsterPursuit.Mode.NATURAL),"a player outside the aggro range is not acquired");
+      assertNull(f.life().targetCharacter());
       // Walk inside the 8-tile range: the Skeleton notices without being hit.
       for(int i=0;i<400 && f.tilesBetween(token)>7;i++) f.walk(token,-1,0,1);
       assertTrue(f.tilesBetween(token)<=7.2 && f.tilesBetween(token)>4,"inside the range: "+f.tilesBetween(token));
@@ -132,7 +152,7 @@ class OnlineMonsterPursuitWorldStepTest {
       assertTrue(f.run(300,() -> {
         try { return persisted.life(1).targetCharacter()!=null; } catch(PreviewWorld.Rejected reloading) { return false; }
       }),"the acquisition is persisted");
-      int healthBefore=Optional.ofNullable(persisted.life(1).health()).orElse(f.skeleton.getHealth());
+      int healthBefore=Optional.ofNullable(f.life().health()).orElse(f.skeleton.getHealth());
       // Run east: the natural leash is 30 tiles (retaliation's would be 60). The creature is slower than the player.
       f.walk(token,1,0,1100);
       assertTrue(f.tilesBetween(token)>=30,"the player is beyond the natural leash: "+f.tilesBetween(token));
@@ -144,7 +164,7 @@ class OnlineMonsterPursuitWorldStepTest {
       assertTrue(f.run(300,() -> {
         try { return persisted.life(1).targetCharacter()==null; } catch(PreviewWorld.Rejected reloading) { return false; }
       }),"the reset clears the persisted target");
-      assertEquals(healthBefore,Optional.ofNullable(persisted.life(1).health()).orElse(f.skeleton.getHealth()),
+      assertEquals(healthBefore,Optional.ofNullable(f.life().health()).orElse(f.skeleton.getHealth()),
           "single-player's return home does not heal");
     }
   }
