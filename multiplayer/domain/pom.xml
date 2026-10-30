@@ -20,6 +20,11 @@
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
     </dependencies>
     <build>
         <!-- Transitional boundary: compile the same source and tests as offline play, without
@@ -50,6 +55,9 @@
                         <include>com/perso/T4C/combat/WeaponTimingRules.java</include>
                         <include>com/perso/T4C/combat/EquipmentBoostRules.java</include>
                         <include>com/perso/T4C/combat/EquipmentEligibilityRules.java</include>
+                        <include>com/perso/T4C/combat/QuiverSplash.java</include>
+                        <include>com/perso/T4C/spell/SpellAreaTargeting.java</include>
+                        <include>com/perso/T4C/spell/SpellData.java</include>
                         <include>com/perso/T4C/combat/SkillBonusRules.java</include>
                         <include>com/perso/T4C/combat/RegenerationRules.java</include>
                         <include>com/perso/T4C/helper/DiceFormula.java</include>
@@ -101,6 +109,7 @@
                         <testInclude>com/perso/T4C/combat/WeaponTimingRulesTest.java</testInclude>
                         <testInclude>com/perso/T4C/combat/EquipmentBoostRulesTest.java</testInclude>
                         <testInclude>com/perso/T4C/combat/RegenerationRulesTest.java</testInclude>
+                        <testInclude>com/perso/T4C/combat/QuiverSplashTest.java</testInclude>
                         <testInclude>com/perso/T4C/helper/DiceFormulaTest.java</testInclude>
                         <testInclude>com/perso/T4C/helper/CharacterCreationRulesTest.java</testInclude>
                         <testInclude>com/perso/T4C/world/WorldCollisionTest.java</testInclude>

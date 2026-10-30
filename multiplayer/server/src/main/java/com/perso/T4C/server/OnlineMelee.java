@@ -2,6 +2,7 @@ package com.perso.T4C.server;
 
 import static com.perso.T4C.config.GameConstants.*;
 import com.perso.T4C.combat.*;
+import com.perso.T4C.player.BodyPart;
 import com.perso.T4C.monster.core.MonsterExperience;
 import com.perso.T4C.online.model.CharacterProgress;
 import com.perso.T4C.online.model.ItemContent;
@@ -78,55 +79,117 @@ final class OnlineMelee {
     if (before<=0) throw rejected("creature_unavailable");
     int damage=Math.min(before,resolved.damage()),after=before-damage;
     long stunDuration=resolved.hit() ? resolved.stunDurationMillis() : 0;
+    var splashItem=OnlineEquipmentBonuses.equipment(p,items).get(BodyPart.WEAPON2);
+    var splash=splashItem==null || splashItem.quiverSplash()==null ? null
+        : new QuiverSplash(splashItem.quiverSplash().radius(),splashItem.quiverSplash().targets(),
+            splashItem.quiverSplash().damagePercent());
+    var targets=new ArrayList<StrikeTarget>();
+    targets.add(new StrikeTarget(spawn,life,captured,definition,before,damage,after));
+    if (ranged && splash!=null && resolved.hit() && damage>0) {
+      var candidates=world.creatureSpawns();
+      var selected=splash.select(true,damage,candidates,spawn, candidate -> {
+        var candidateDefinition=candidate.definition();
+        if (candidate.spawn().stationary()
+            || candidateDefinition.getSourceEvents()!=null && !candidateDefinition.getSourceEvents().isEmpty()
+            || !OnlineLootDrafts.supports(candidateDefinition,items)
+            || !OnlineRetaliation.supported(candidateDefinition)) return false;
+        try {
+          var candidateLife=creatures.life(candidate.id());
+          int health=candidateLife.health()==null ? candidate.definition().getHealth() : candidateLife.health();
+          var point=world.creaturePosition(candidate.id());
+          double armor=MonsterCombatRules.resolve(candidateDefinition).profile(
+              creatures.stunned(candidate.id(),now),random).armorClass();
+          return candidateLife.diedAt()==null && health>0
+              && !CombatResolver.isInvulnerableArmor(armor)
+              && map.combatEndpointsSafe(position.x(),position.y(),point.x(),point.y(),false)
+              && map.hasSpellLineOfSight(captured.x(),captured.y(),point.x(),point.y());
+        } catch (PreviewWorld.Rejected unavailable) { return false; }
+      },candidate -> {
+        var point=world.creaturePosition(candidate.id());
+        return Math.hypot(point.x()-captured.x(),point.y()-captured.y());
+      });
+      for (var candidate:selected) {
+        var candidateLife=creatures.life(candidate.id());
+        var candidateMotion=creatures.capture(candidate.id());
+        int candidateBefore=candidateLife.health()==null ? candidate.definition().getHealth() : candidateLife.health();
+        int candidateDamage=Math.min(candidateBefore,splash.damage(damage));
+        targets.add(new StrikeTarget(candidate,candidateLife,candidateMotion,candidate.definition(),candidateBefore,
+            candidateDamage,candidateBefore-candidateDamage));
+      }
+    }
     var progression=OnlineProgression.award(saved,MonsterExperience.damageReward(definition.getXpPerHit(),damage),now,random);
     long experience=progression.experience(),gold=0;
-    List<LootDropDraft> drops=List.of();
-    if (after==0) {
-      var intermediate=new OnlineStore.CharacterState(saved.id(),saved.accountId(),saved.name(),saved.world(),saved.x(),saved.y(),
-          saved.gold(),saved.experience()+experience,saved.revision(),progression.progress());
-      progression=OnlineProgression.award(intermediate,MonsterExperience.reward(definition.getXpOnDeath()),now,random);
-      experience=Math.addExact(experience,progression.experience());
-      // One roll supplies both gold and drops, exactly as the offline kill does. Drops sit on the creature's tile.
-      try {
-        var roll=OnlineLootDrafts.roll(definition,items,random,sessions.region(token).world(),captured.x(),captured.y());
-        gold=roll.gold();
-        drops=roll.drops();
-      } catch (IllegalArgumentException unsupported) { throw rejected("unsupported_combat"); }
+    var strikes=new ArrayList<OnlineStore.SpellStrike>();
+    for (var hit:targets) {
+      var targetSpawn=hit.spawn(); var targetLife=hit.life(); var targetMotion=hit.motion();
+      var targetDefinition=hit.definition(); boolean lethal=hit.after()==0;
+      if (hit.damage()<=0) continue;
+      if (hit.damage()>0) {
+        if (targetSpawn.id()!=target) {
+          var award=OnlineProgression.award(state(saved,progression.progress(),experience),
+              MonsterExperience.damageReward(targetDefinition.getXpPerHit(),hit.damage()),now,random);
+          progression=award; experience=Math.addExact(experience,award.experience());
+        }
+      }
+      List<LootDropDraft> drops=List.of();
+      if (lethal) {
+        var award=OnlineProgression.award(state(saved,progression.progress(),experience),
+            MonsterExperience.reward(targetDefinition.getXpOnDeath()),now,random);
+        progression=award; experience=Math.addExact(experience,award.experience());
+        try {
+          var roll=OnlineLootDrafts.roll(targetDefinition,items,random,sessions.region(token).world(),targetMotion.x(),targetMotion.y());
+          gold=Math.addExact(gold,roll.gold()); drops=roll.drops();
+        } catch (IllegalArgumentException unsupported) { throw rejected("unsupported_combat"); }
+        progression=new OnlineProgression.Result(progression.experience(),withLethalQuestCredit(progression.progress(),
+            targetDefinition.getName(),sessions.region(token).world(),targetMotion.x(),targetMotion.y()));
+      }
+      var targetMotionUpdate=lethal
+          ? new OnlineStore.SpawnMotion(targetMotion.key(),targetMotion.life(),targetMotion.revision(),targetMotion.x(),targetMotion.y(),"IDLE",null,null)
+          : targetDefinition.isCanAttack()
+          ? new OnlineStore.SpawnMotion(targetMotion.key(),targetMotion.life(),targetMotion.revision(),targetMotion.x(),targetMotion.y(),"RETALIATION",saved.id(),saved.locationEpoch())
+          : targetMotion;
+      var targetProvocation=!lethal && targetDefinition.isCanAttack()
+          ? new OnlineStore.CreatureProvocation(targetLife.key(),targetLife.eventId(),saved.id(),
+              targetLife.targetCharacter()==null ? Math.addExact(now,OnlineRetaliation.COOLDOWN_MILLIS) : targetLife.nextAttackAt(),targetMotionUpdate) : null;
+      strikes.add(new OnlineStore.SpellStrike(new OnlineStore.CreatureStrike(targetLife.key(),targetLife.eventId(),
+          targetDefinition.getHealth(),hit.before(),hit.after(),targetMotionUpdate),targetProvocation,drops));
     }
     var cooldowns=new HashMap<>(progression.progress().cooldowns());
     cooldowns.put("attack",Math.addExact(now,Math.max(1,loadout.attackCooldownMillis())));
-    var credited=after==0
-        ? withLethalQuestCredit(progression.progress(),definition.getName(),sessions.region(token).world(),captured.x(),captured.y())
-        : progression.progress();
-    var draft=withAttackState(credited,cooldowns);
-    var motion=after==0
-        ? new OnlineStore.SpawnMotion(captured.key(),captured.life(),captured.revision(),captured.x(),captured.y(),
-            "IDLE",null,null)
-        : definition.isCanAttack()
+    var draft=withAttackState(progression.progress(),cooldowns);
+    var missedMotion=definition.isCanAttack()
         ? new OnlineStore.SpawnMotion(captured.key(),captured.life(),captured.revision(),captured.x(),captured.y(),
             "RETALIATION",saved.id(),saved.locationEpoch()) : captured;
-    var provocation=after>0 && definition.isCanAttack()
+    var missedProvocation=after>0 && definition.isCanAttack()
         ? new OnlineStore.CreatureProvocation(life.key(),life.eventId(),saved.id(),
-            life.targetCharacter()==null ? Math.addExact(now,OnlineRetaliation.COOLDOWN_MILLIS) : life.nextAttackAt(),motion) : null;
-    creatures.reserve(target);
-    pendingTargets.add(target);
+            life.targetCharacter()==null ? Math.addExact(now,OnlineRetaliation.COOLDOWN_MILLIS) : life.nextAttackAt(),missedMotion) : null;
+    var reserved=new ArrayList<Long>();
     try {
-      CompletionStage<OnlineStore.RewardResult> pending=damage==0
-          ? sessions.commitGameplayEvent(token,revision,UUID.randomUUID(),0,0,draft,provocation)
-          : sessions.commitCreatureStrike(token,revision,after==0 ? life.eventId() : UUID.randomUUID(),gold,experience,draft,
-              new OnlineStore.CreatureStrike(life.key(),life.eventId(),definition.getHealth(),before,after,motion),provocation,drops);
+      for (var hit:targets) { creatures.reserve(hit.spawn().id()); reserved.add(hit.spawn().id()); }
+      pendingTargets.addAll(reserved);
+      CompletionStage<OnlineStore.RewardResult> pending=strikes.isEmpty()
+          ? sessions.commitGameplayEvent(token,revision,UUID.randomUUID(),0,0,draft,missedProvocation)
+          : sessions.commitSpellStrikes(token,revision,UUID.randomUUID(),gold,experience,draft,strikes);
       return pending.whenComplete((result,error) -> {
         // Session completions run on the simulation owner, including its shutdown drain.
-        pendingTargets.remove(target);
-        creatures.release(target);
-        if (error==null && result!=null && stunDuration>0) creatures.stunCommitted(target,clock.getAsLong(),stunDuration);
-        if (damage>0 || provocation!=null) {
-          if (error!=null || after==0) creatures.rewardCommitted(target); // Hide uncertain outcomes until reload.
-          else creatures.damageCommitted(target);
+        for (var hit:targets) {
+          long id=hit.spawn().id(); pendingTargets.remove(id); creatures.release(id);
+          if (id==target && error==null && result!=null && stunDuration>0) creatures.stunCommitted(id,clock.getAsLong(),stunDuration);
+          if (hit.damage()>0 || hit.after()==0) {
+            if (error!=null || hit.after()==0) creatures.rewardCommitted(id); // Hide uncertain outcomes until reload.
+            else creatures.damageCommitted(id);
+          }
         }
       });
-    } catch (RuntimeException failure) { pendingTargets.remove(target); creatures.release(target); throw failure; }
+    } catch (RuntimeException failure) { for(long id:reserved){pendingTargets.remove(id);creatures.release(id);} throw failure; }
   }
+
+  private static OnlineStore.CharacterState state(OnlineStore.CharacterState original,CharacterProgress progress,long experience) {
+    return new OnlineStore.CharacterState(original.id(),original.accountId(),original.name(),original.world(),original.x(),original.y(),
+        original.gold(),original.experience()+experience,original.revision(),progress);
+  }
+  private record StrikeTarget(PreviewWorld.CreatureSpawn spawn,OnlineStore.SpawnState life,OnlineStore.SpawnMotion motion,
+      com.perso.T4C.monster.core.MonsterDef definition,int before,int damage,int after) {}
 
   private static CharacterProgress withAttackState(CharacterProgress p,Map<String,Long> cooldowns) {
     return new CharacterProgress(p.version(),p.characterClass(),p.gender(),p.attributes(),p.vitals(),p.advancement(),

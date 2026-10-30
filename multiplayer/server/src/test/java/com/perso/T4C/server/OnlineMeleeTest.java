@@ -241,6 +241,60 @@ class OnlineMeleeTest {
     } finally { sessions.shutdown(); }
   }
 
+  @Test void damagingBowHitAppliesNearestQuiverSplashInSameCommitWithoutConsumingArrows() throws Exception {
+    var store=OnlineStore.fromEnvironment();store.migrate();
+    var gson=new Gson();
+    var json=gson.toJsonTree(MonsterCatalog.loadBundled().monsters().get("Olin Haad Guard 3")).getAsJsonObject();
+    json.addProperty("health",1000);json.addProperty("acMin",0);json.addProperty("acMax",0);
+    json.addProperty("dodge",1);json.addProperty("agi",1);
+    var definition=gson.fromJson(json,MonsterDef.class);
+    var invulnerableJson=gson.toJsonTree(definition).getAsJsonObject();
+    invulnerableJson.addProperty("name","Invulnerable splash guard");
+    invulnerableJson.addProperty("acMin",Float.floatToIntBits(100000f));
+    invulnerableJson.addProperty("acMax",Float.floatToIntBits(100000f));
+    var invulnerable=gson.fromJson(invulnerableJson,MonsterDef.class);
+    var primary=new MonsterContent.Spawn("splash-primary-"+UUID.randomUUID(),definition.getName(),8,3,0,false,false);
+    var nearest=new MonsterContent.Spawn("splash-nearest-"+UUID.randomUUID(),invulnerable.getName(),8,4,0,false,false);
+    var farther=new MonsterContent.Spawn("splash-farther-"+UUID.randomUUID(),definition.getName(),9,3,0,false,false);
+    var map=new PreviewMap(new boolean[12][12],0,0,3,3);
+    var world=new PreviewWorld(map,new MonsterContent(MonsterContent.VERSION,
+        Map.of(definition.getName(),definition,invulnerable.getName(),invulnerable),List.of(primary,nearest,farther)));
+    long primaryId=id(world,primary),nearestId=id(world,nearest),fartherId=id(world,farther);
+    var sessions=new PersistentSessions(store,map,world);
+    var prepared=OnlineCharacterCreator.prepare(CharacterClass.ARCHER,"male",false,new Random(17));
+    var key=store.provisionAccount();
+    var player=store.create(key.accountId(),"Splash Archer",0,3.5,3.5,prepared.progress(),prepared.gold());
+    String token=sessions.join(store.acquire(key.secret(),player.id()),System.nanoTime()).token();
+    long now=System.currentTimeMillis();
+    try(var creatures=new PersistentCreatures(store,world)) {
+      var bundled=ItemCatalog.loadBundled(); var defs=new HashMap<>(bundled.items());
+      var quiver=defs.get("item.recruits_quiver");
+      defs.put(quiver.key(),new com.perso.T4C.online.model.ItemContent.Definition(quiver.key(),quiver.name(),quiver.bodyPart(),
+          quiver.secondaryBodyPart(),quiver.appearanceEquippedPrimary(),quiver.appearanceEquippedSecondary(),quiver.appearanceInventory(),
+          quiver.price(),quiver.weight(),quiver.armorClass(),quiver.dodgeLost(),quiver.minEnd(),quiver.reqAttack(),quiver.reqStr(),
+          quiver.reqAgi(),quiver.minInt(),quiver.minWis(),quiver.attackSpeed(),quiver.unique(),quiver.isBow(),quiver.unlimitedUse(),
+          quiver.numId(),quiver.structure(),quiver.dmgFormula(),quiver.atkDelay(),quiver.nbCharges(),quiver.undroppable(),quiver.boosts(),
+          quiver.spells(),quiver.rarityPriced(),new com.perso.T4C.online.model.ItemContent.Splash(1.5,2,50)));
+      var items=new com.perso.T4C.online.model.ItemContent(com.perso.T4C.online.model.ItemContent.VERSION,defs);
+      var rolls=new Random(1) { @Override public int nextInt(int bound) { return bound-1; } };
+      var melee=new OnlineMelee(map,world,sessions,creatures,items,rolls,()->now);
+      var result=melee.attack(token,player.revision(),primaryId).toCompletableFuture();
+      await(sessions,creatures,result);
+      var saved=result.get().character();
+      assertTrue(saved.experience()>player.experience());
+      assertEquals(player.progress().inventory(),saved.progress().inventory());
+      assertNull(store.loadOrCreateSpawn(nearest.persistenceKey()).health(),
+          "Invulnerable armor excludes a secondary target");
+      assertTrue(store.loadOrCreateSpawn(farther.persistenceKey()).health()<definition.getHealth(),
+          "The nearest eligible neighbour receives splash damage in the primary strike transaction");
+    } finally { sessions.shutdown(); }
+  }
+
+  private static long id(PreviewWorld world,MonsterContent.Spawn wanted) {
+    return world.creatureSpawns().stream().filter(candidate->candidate.spawn().persistenceKey().equals(wanted.persistenceKey()))
+        .findFirst().orElseThrow().id();
+  }
+
   private static void await(PersistentSessions sessions,PersistentCreatures creatures,CompletableFuture<?> result) throws Exception {
     long deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(5);
     while(!result.isDone() && System.nanoTime()<deadline) { sessions.step(); creatures.step(); Thread.sleep(5); }
