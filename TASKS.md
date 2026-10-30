@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0373`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0397`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0396 | Drive the player's walk animation by distance travelled (one walk frame per original-game stride of 8 px) instead of the clock, for the local player and for other players in online play, so the legs keep pace with the ground at any walking speed and stop with the body; monsters, NPCs and walking speed untouched | Gameplay feel / movement | In Progress (branch claude/walk-anim-0396; focused tests 41/41 and package pass; rendered check pending) | this PR | [CHANGELOG.md](CHANGELOG.md#2026-10-30--walking-no-longer-looks-like-gliding-t4c-0396) |
 | T4C-0362 | Route player chat through the persistent game socket with server-authored speaker identity and per-region broadcast; preserve local NPC/GM chat offline | Multiplayer / M6 parity | Done (PR #331 merged; rendered verification pending) | PR #331 merge 66744905; source 8e06aa5d; server tests 4/4, client tests 15/15, package and diff check passed | [CHANGELOG.md](CHANGELOG.md#2026-10-30--player-chat-now-works-online-t4c-0362) |
 | T4C-0360 | Raise shared player walking speed from 75 to 80 for offline and online play; keep collision-safe movement and parity | Multiplayer / movement parity | Done (PR #327 merged; rendered verification pending) | PR #327 merge 8514f07c; source fabcc3cc, tracking 00d67c61; focused movement 49/49 and server parity 19/19; root/server packages and diff check passed on 510356da | deferred until GA |
 | T4C-0361 | Restore automatic repeat casting for targeted hostile spells online, matching single-player target retention and stopping on movement, death, cooldown or terminal refusal | Multiplayer / M4 parity | Done (PR #329 merged; rendered verification pending) | PR #329 merge 73e31073; source 863bfa5d, tracking adc6e953; focused tests 45/45, package and diff check passed | deferred until GA |
