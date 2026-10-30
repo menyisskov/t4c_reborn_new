@@ -41,6 +41,19 @@ public final class PreviewServer implements AutoCloseable {
       "/account/characters","/map","/state","/character","/corpses","/health","/admin/metrics");
   private record RegionJoined(String token,long id,com.perso.T4C.online.model.OnlineRegion region) {}
   private static final Gson JSON = new Gson();
+
+  /** A body-part name as the player enum spells it: capital letters, digits and underscores (WEAPON2 is a real slot). */
+  private static final String SLOT = "[A-Z][A-Z0-9_]{0,15}";
+  private static final String UUID_TEXT = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
+
+  /**
+   * Shape of an /equip ("revision epoch item slot") or /unequip ("revision epoch slot") body. A live two-window run (T4C-0331)
+   * unequipped an Archer's quiver, worn in WEAPON2, and the old pattern ([A-Z_] only) answered 400 for the digit: the client
+   * treats a 400 as fatal and dropped the whole connection.
+   */
+  static boolean equipmentBodyValid(boolean equip, String body) {
+    return body != null && body.matches(equip ? "[0-9]{1,19} [0-9]{1,19} " + UUID_TEXT + " " + SLOT : "[0-9]{1,19} [0-9]{1,19} " + SLOT);
+  }
   private final com.perso.T4C.online.model.ItemContent items;
   private final HttpServer http;
   private final GameSocketServer gameSocket;
@@ -450,9 +463,7 @@ public final class PreviewServer implements AutoCloseable {
             if (persistent == null) throw new PreviewWorld.Rejected(404, "route");
             String token = token(exchange);
             boolean equip = "/equip".equals(path);
-            String pattern = equip ? "[0-9]{1,19} [0-9]{1,19} [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12} [A-Z_]{1,16}"
-                : "[0-9]{1,19} [0-9]{1,19} [A-Z_]{1,16}";
-            if (!body.matches(pattern)) throw new PreviewWorld.Rejected(400, "input");
+            if (!equipmentBodyValid(equip, body)) throw new PreviewWorld.Rejected(400, "input");
             String[] parts = body.split(" ");
             long revision,epoch;
             com.perso.T4C.player.BodyPart slot;

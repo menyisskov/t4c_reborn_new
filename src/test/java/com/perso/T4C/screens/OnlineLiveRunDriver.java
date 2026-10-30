@@ -521,6 +521,7 @@ public final class OnlineLiveRunDriver extends MyGame {
     else if (scene.equals("turnin")) turnInScene();
     else if (scene.equals("beta")) betaScene();
     else if (scene.equals("mortal")) mortalScene();
+    else if (scene.equals("m4")) m4Scene();
     else skeletonScene();
     action(
         () -> {
@@ -2236,14 +2237,1072 @@ public final class OnlineLiveRunDriver extends MyGame {
         });
   }
 
+  // ---------------------------------------------------------------- m4 scene (T4C-0331)
+  //
+  // Two DIFFERENT roles (tag ending A: the melee role, tag ending B: the caster) fight the Skeleton ground together through the
+  // screens' own handlers: both contend for one creature life at a time (damage and experience attribution, loot ownership),
+  // the caster casts a creature-target spell through C / digit after a click selected the creature, heals itself, lays a
+  // timed buff, the melee role is refused with a bow, a provoked creature is left behind through a portal, the server
+  // is restarted (buff persistence), one character leaves while its target lives on, and one dies in front of the other.
+  // Everything is a key or a click on the screen's input processor; the few logged exceptions say so.
+
+  private long m4Target = -1;
+  private int m4TargetHp = -2;
+  private boolean m4Seen;
+  private long m4LifeXp0;
+  private long m4LifeStart;
+  private long m4LastCast;
+  private long m4LastSelect;
+  private long m4LastHeal;
+  private long healPendingAt;
+  private int healHp0, healMana0;
+  private int castStage;
+  private long castAt;
+  private String castFragment;
+  private int monHp = -1;
+  private int hitsTaken;
+  private long lastHitAt;
+  private long damageTaken;
+  private int castsPressed;
+  private final Set<Long> m4Done = new HashSet<>();
+  private final Set<Integer> m4ShotLives = new HashSet<>();
+  private boolean retaliationCropTaken;
+
+  private int creatureHp(long id) {
+    var v = view();
+    if (v == null || v.snapshot() == null) return -1;
+    for (var c : v.snapshot().creatures()) if (c.id() == id) return c.health();
+    return -1;
+  }
+
+  private com.perso.T4C.session.RemoteWorldDriver remoteWorld(MainGameScreen s) {
+    var world = ((com.perso.T4C.session.GameSession) field(s, MainGameScreen.class, "session")).world();
+    return world instanceof com.perso.T4C.session.RemoteWorldDriver r ? r : null;
+  }
+
+  private BaseMonster monsterById(MainGameScreen s, long id) {
+    var r = remoteWorld(s);
+    if (r == null) return null;
+    for (BaseMonster m : monsters(s)) if (r.creatureId(m) == id) return m;
+    return null;
+  }
+
+  private String buffDetail() {
+    var p = view().character().progress();
+    long now = System.currentTimeMillis();
+    StringBuilder b = new StringBuilder();
+    for (var buff : p.buffs()) b.append(buff.spell()).append(" expiresIn=").append(buff.expiresAt() - now).append("ms ");
+    p.cooldowns().forEach((k, v) -> b.append(k).append('=').append(v - now).append("ms "));
+    return b.length() == 0 ? "(no buffs, no cooldowns)" : b.toString().trim();
+  }
+
+  /** Non-blocking cast through the screen's own C list: opens it, then presses the digit of the row containing the fragment. */
+  private boolean castStep(String fragment, long now) {
+    if (castStage == 0) {
+      if (abilityMenu().isOpen()) {
+        press(Input.Keys.ESCAPE);
+        return false;
+      }
+      press(Input.Keys.C);
+      castStage = 1;
+      castAt = now;
+      castFragment = fragment;
+      return false;
+    }
+    if (castStage == 1 && now - castAt > 450) {
+      var lines = abilityMenu().lines(view().character().progress());
+      int digit = -1;
+      for (int i = 1; i < lines.size() - 1; i++)
+        if (lines.get(i).toLowerCase(Locale.ROOT).contains(castFragment)) {
+          digit = i;
+          break;
+        }
+      castStage = 0;
+      castAt = now;
+      if (digit > 0 && abilityMenu().isOpen()) {
+        press(digitKey(digit));
+        castsPressed++;
+        return true;
+      }
+      log("CAST " + castFragment + ": not offered by the list " + lines);
+      press(Input.Keys.ESCAPE);
+    }
+    return false;
+  }
+
+  /** Per-frame monitor of the committed hit points: every drop (a creature's retaliation) and rise is logged. */
+  private void m4Monitor() {
+    var v = view();
+    if (v == null || v.character() == null || game() == null) return;
+    int hp = v.character().progress().vitals().hp();
+    int max = v.character().progress().vitals().maxHp();
+    if (monHp >= 0 && hp < monHp) {
+      hitsTaken++;
+      lastHitAt = System.currentTimeMillis();
+      damageTaken += monHp - hp;
+      var s = game();
+      BaseMonster near = nearestLive(s);
+      String who = near == null ? "none" : near.getName() + " at " + Math.round(distance(s, near.getPosition())) + " px";
+      log("HP DOWN " + monHp + " -> " + hp + "/" + max + " (committed); nearest creature " + who + "; hits so far " + hitsTaken + " total " + damageTaken);
+      if (!retaliationCropTaken && near != null && distance(s, near.getPosition()) < 90 && hp > 0) {
+        retaliationCropTaken = true;
+        cropOf("retaliation", me(s).getPositionVector(), 360, 280);
+      }
+    } else if (monHp >= 0 && hp > monHp && hp - monHp >= Math.max(3, max / 25)) {
+      log("HP UP " + monHp + " -> " + hp + "/" + max + " (committed)");
+    }
+    monHp = hp;
+    if (watchId > 0 && System.currentTimeMillis() - watchAt > 2000) {
+      watchAt = System.currentTimeMillis();
+      var s = game();
+      var t = monsterById(s, watchId);
+      log("WATCH creature " + watchId + " hp " + creatureHp(watchId) + (t == null ? " not drawn" : " at (" + Math.round(t.getPosition().x) + "," + Math.round(t.getPosition().y)
+          + ") distance to me " + Math.round(distance(s, t.getPosition()))) + " region " + v.map().key());
+    }
+  }
+
+  private long watchId = -1;
+  private long watchAt;
+
+  private void m4Census() {
+    action(
+        () -> {
+          var p = view().character().progress();
+          log("M4 ROLE " + p.characterClass() + " level " + p.advancement().level() + " attributes " + p.attributes() + " spells " + p.spells()
+              + " | " + state());
+          press(Input.Keys.C);
+        });
+    waitMs(800);
+    action(
+        () -> {
+          log("M4 SPELL LIST " + abilityMenu().lines(view().character().progress()));
+          hud("spell-list-" + tag.charAt(tag.length() - 1));
+          press(Input.Keys.U);
+        });
+    waitMs(800);
+    action(
+        () -> {
+          log("M4 POTION LIST " + abilityMenu().lines(view().character().progress()));
+          press(Input.Keys.ESCAPE);
+        });
+  }
+
+  /** The caster lays a timed buff on itself (a different role from the melee role, which has no spell). */
+  private void m4Buff() {
+    if (!tag.endsWith("B")) {
+      until("the caster laid its buff", 120_000, () -> signaled("m4.buff-done"));
+      return;
+    }
+    final String[] before = {null};
+    // Heal on self first: the provisioned Healer starts wounded, so the heal visibly restores health and spends mana.
+    action(
+        () -> {
+          var vit = view().character().progress().vitals();
+          healHp0 = vit.hp();
+          healMana0 = vit.mana();
+          log("HEAL (explicit): before hp " + vit.hp() + "/" + vit.maxHp() + " mana " + vit.mana() + "/" + vit.maxMana() + " | " + buffDetail());
+          press(Input.Keys.C);
+        });
+    waitMs(800);
+    action(
+        () -> {
+          var lines = abilityMenu().lines(view().character().progress());
+          int digit = -1;
+          for (int i = 1; i < lines.size() - 1; i++) if (lines.get(i).toLowerCase(Locale.ROOT).contains("heal")) digit = i;
+          log("HEAL: spell list " + lines + " -> digit " + digit);
+          if (digit > 0) press(digitKey(digit));
+        });
+    waitMs(3000);
+    action(
+        () -> {
+          var vit = view().character().progress().vitals();
+          log("HEAL (explicit): after hp " + healHp0 + " -> " + vit.hp() + "/" + vit.maxHp() + ", mana " + healMana0 + " -> " + vit.mana() + " | " + buffDetail());
+          hud("heal-cast");
+        });
+    action(
+        () -> {
+          before[0] = state();
+          log("BUFF before: " + buffDetail() + " | " + before[0]);
+          press(Input.Keys.C);
+        });
+    waitMs(800);
+    action(
+        () -> {
+          var lines = abilityMenu().lines(view().character().progress());
+          int digit = -1;
+          for (int i = 1; i < lines.size() - 1; i++) if (lines.get(i).toLowerCase(Locale.ROOT).contains("protect")) digit = i;
+          log("BUFF: spell list " + lines + " -> digit " + digit);
+          if (digit > 0) press(digitKey(digit));
+        });
+    waitMs(3000);
+    action(
+        () -> {
+          log("BUFF after:  " + buffDetail() + " | " + state());
+          hud("buff-cast");
+          signal("m4.buff-done");
+        });
+  }
+
+  private void m4Pick(int life) {
+    repeat(
+        "announce target " + life,
+        90_000,
+        () -> {
+          if (!tag.endsWith("A")) return Files.exists(sync.resolve("m4-target-" + life));
+          var s = game();
+          var r = s == null ? null : remoteWorld(s);
+          if (r == null) return false;
+          held.clear();
+          BaseMonster best = null;
+          double bestDistance = Double.MAX_VALUE;
+          for (BaseMonster m : monsters(s)) {
+            if (m.isDead() || m.getHealth() <= 0 || !isSkeleton(m)) continue;
+            long id = r.creatureId(m);
+            if (id <= 0 || m4Done.contains(id) || creatureHp(id) <= 0) continue;
+            double d = distance(s, m.getPosition());
+            if (d < bestDistance) {
+              bestDistance = d;
+              best = m;
+            }
+          }
+          if (best == null) return false;
+          try {
+            Files.writeString(sync.resolve("m4-target-" + life), String.valueOf(r.creatureId(best)));
+          } catch (java.io.IOException e) {
+            throw new IllegalStateException(e);
+          }
+          return true;
+        });
+    action(
+        () -> {
+          try {
+            m4Target = Long.parseLong(Files.readString(sync.resolve("m4-target-" + life)).trim());
+          } catch (java.io.IOException | RuntimeException e) {
+            m4Target = -1;
+          }
+          m4Seen = false;
+          m4TargetHp = -2;
+          m4LifeStart = System.currentTimeMillis();
+          m4LifeXp0 = view().character().experience();
+          log("LIFE " + life + " START: creature " + m4Target + " hp " + creatureHp(m4Target) + " | my xp " + m4LifeXp0 + " hp "
+              + view().character().progress().vitals().hp() + " | " + state());
+        });
+  }
+
+  /** One frame of the caster against the shared target: stay at spell distance, select, cast, heal itself when hurt, drink when low. */
+  private void casterFrame(MainGameScreen s, BaseMonster t, long now) {
+    var v = view();
+    var vit = v.character().progress().vitals();
+    if (healPendingAt > 0 && now - healPendingAt > 2800) {
+      log("HEAL result: hp " + healHp0 + " -> " + vit.hp() + "/" + vit.maxHp() + ", mana " + healMana0 + " -> " + vit.mana() + "/" + vit.maxMana() + " | " + buffDetail());
+      healPendingAt = 0;
+    }
+    if (castStage != 0) {
+      castStep(castFragment, now);
+      return;
+    }
+    if (potionStage != 0) {
+      drinkIfHurt(v, now);
+      return;
+    }
+    if (vit.hp() > 0 && vit.hp() * 100 < vit.maxHp() * 35 && now - m4LastHeal > 2500) {
+      drinkIfHurt(v, now);
+      return;
+    }
+    double d = distance(s, t.getPosition());
+    float stand = 3.5f * TILE_W;
+    if (d > stand) walkToward(s, t.getPosition(), stand);
+    else held.clear();
+    if (vit.hp() > 0 && vit.hp() * 100 < vit.maxHp() * 65 && now - m4LastHeal > 5000 && vit.mana() >= 2) {
+      m4LastHeal = now;
+      healPendingAt = now;
+      healHp0 = vit.hp();
+      healMana0 = vit.mana();
+      log("HEAL: casting the self heal through C / digit at hp " + vit.hp() + "/" + vit.maxHp() + " mana " + vit.mana());
+      castStep("heal", now);
+      return;
+    }
+    Object selected = field(s, MainGameScreen.class, "selectedMonster");
+    if (selected != t && now - m4LastSelect > 3500 && d <= 8 * TILE_W) {
+      m4LastSelect = now;
+      Vector2 at = aim(t.getPosition(), p -> t.isMouseOver(p.x, p.y));
+      if (at != null) {
+        click(s, at.x, at.y);
+        log("SELECT: clicked the creature (monster click handler: selects it and sends the melee attack, refused out of reach)");
+      }
+      return;
+    }
+    if (selected == t && d <= 8 * TILE_W && now - m4LastCast > 3300 && vit.mana() >= 2) {
+      m4LastCast = now;
+      log("CAST: attack spell on the selected creature at " + Math.round(d) + " px, creature hp " + creatureHp(m4Target) + " | mana " + vit.mana());
+      castStep(System.getProperty("m4.spell", "stone"), now);
+    }
+  }
+
+  /** The caster (a Mage with Fireball written into its spells by the operator) casts an area attack at a creature with others beside it. */
+  private void m4Area() {
+    if (!tag.endsWith("B")) {
+      repeat("the caster finished the area check", 240_000, () -> {
+        if (game() != null) drinkIfHurt(view(), System.currentTimeMillis());
+        return signaled("m4.area-done");
+      });
+      return;
+    }
+    final int[] casts = {0};
+    final long[] began = {0};
+    final long[] castTime = {0};
+    final java.util.Map<Long, Integer> hpBefore = new java.util.HashMap<>();
+    repeat(
+        "area spell cast twice",
+        200_000,
+        () -> {
+          var s = game();
+          if (s == null) return false;
+          long now = System.currentTimeMillis();
+          if (began[0] == 0) began[0] = now;
+          if (castStage != 0) {
+            castStep(castFragment, now);
+            return false;
+          }
+          if (castTime[0] > 0 && now - castTime[0] > 3500) {
+            StringBuilder sb = new StringBuilder();
+            for (var c : view().snapshot().creatures()) {
+              Integer before = hpBefore.get(c.id());
+              if (before != null) sb.append(c.id()).append(':').append(before).append("->").append(c.health()).append("/").append(c.maxHealth()).append(' ');
+            }
+            log("AREA result " + casts[0] + ": creatures near the target (id:before->after) " + sb + "| " + state());
+            hud("area-cast-" + casts[0]);
+            castTime[0] = 0;
+            hpBefore.clear();
+            if (casts[0] >= 2) return true;
+          }
+          if (castTime[0] > 0) return false;
+          var vit = view().character().progress().vitals();
+          if (vit.hp() * 100 < vit.maxHp() * 40) {
+            drinkIfHurt(view(), now);
+            return false;
+          }
+          BaseMonster t = nearestLive(s);
+          if (t == null) return now - began[0] > 150_000;
+          double d = distance(s, t.getPosition());
+          if (d > 4.5f * TILE_W) {
+            walkToward(s, t.getPosition(), 4f * TILE_W);
+            return false;
+          }
+          held.clear();
+          Object selected = field(s, MainGameScreen.class, "selectedMonster");
+          if (selected != t) {
+            Vector2 at = aim(t.getPosition(), p -> t.isMouseOver(p.x, p.y));
+            if (at != null) click(s, at.x, at.y);
+            return false;
+          }
+          if (now - m4LastCast < 3500 || vit.mana() < 10) return false;
+          m4LastCast = now;
+          long id = remoteWorld(s).creatureId(t);
+          double tx = 0, ty = 0;
+          for (var c : view().snapshot().creatures()) if (c.id() == id) { tx = c.x(); ty = c.y(); }
+          hpBefore.clear();
+          int near = 0;
+          for (var c : view().snapshot().creatures())
+            if (Math.max(Math.abs(c.x() - tx), Math.abs(c.y() - ty)) <= 7 && c.health() > 0) { hpBefore.put(c.id(), c.health()); near++; }
+          casts[0]++;
+          castTime[0] = now;
+          log("AREA cast " + casts[0] + ": fireball with the creature " + id + " selected, " + near + " live creatures within 7 tiles of it");
+          castStep("fireball", now);
+          return false;
+        });
+    action(() -> {
+      held.clear();
+      signal("m4.area-done");
+    });
+  }
+
+  /** A melee role that knows a heal (the Paladin) heals itself through the C list when hurt; true when the frame was used for that. */
+  private boolean meleeHealStep(long now) {
+    var p = view().character().progress();
+    if (p.spells().isEmpty()) return false;
+    var vit = p.vitals();
+    if (healPendingAt > 0 && now - healPendingAt > 2800) {
+      log("HEAL result: hp " + healHp0 + " -> " + vit.hp() + "/" + vit.maxHp() + ", mana " + healMana0 + " -> " + vit.mana() + "/" + vit.maxMana() + " | " + buffDetail());
+      healPendingAt = 0;
+    }
+    if (castStage != 0) {
+      castStep(castFragment, now);
+      return true;
+    }
+    if (vit.hp() > 0 && vit.hp() * 100 < vit.maxHp() * 65 && now - m4LastHeal > 5000 && vit.mana() >= 2) {
+      m4LastHeal = now;
+      healPendingAt = now;
+      healHp0 = vit.hp();
+      healMana0 = vit.mana();
+      held.clear();
+      log("HEAL: the melee role casts its self heal through C / digit at hp " + vit.hp() + "/" + vit.maxHp() + " mana " + vit.mana());
+      castStep("heal", now);
+      return true;
+    }
+    return false;
+  }
+
+  private long resetCreature = -1;
+
+  private void m4Contention(int lives) {
+    for (int n = 1; n <= lives; n++) {
+      final int life = n;
+      m4Pick(life);
+      repeat(
+          "life " + life + " ended",
+          240_000,
+          () -> {
+            var s = game();
+            if (s == null) return false;
+            long now = System.currentTimeMillis();
+            int hp = creatureHp(m4Target);
+            if (hp > 0) m4Seen = true;
+            if (hp != m4TargetHp) {
+              log("LIFE " + life + ": creature " + m4Target + " hp " + m4TargetHp + " -> " + hp + " | my xp +" + (view().character().experience() - m4LifeXp0)
+                  + " my hp " + view().character().progress().vitals().hp());
+              m4TargetHp = hp;
+            }
+            if ((m4Seen && hp <= 0) || (!m4Seen && now - m4LifeStart > 6000)) {
+              held.clear();
+              return true;
+            }
+            BaseMonster t = monsterById(s, m4Target);
+            if (t == null) {
+              held.clear();
+              return false;
+            }
+            if (tag.endsWith("A")) {
+              if (!meleeHealStep(now)) combatFrame(s, true, t.getPosition());
+            } else casterFrame(s, t, now);
+            return false;
+          });
+      action(
+          () -> {
+            held.clear();
+            m4Done.add(m4Target);
+            var v = view();
+            StringBuilder loot = new StringBuilder();
+            for (var l : v.snapshot().loot())
+              loot.append(l.key()).append(" owner=").append(l.ownerPlayerId() == null ? "null" : l.ownerPlayerId().equals(v.ownId()) ? "ME" : "other")
+                  .append(" remainingMs=").append(l.ownerRemainingMs()).append("; ");
+            log("LIFE " + life + " END: creature " + m4Target + " | my xp gained this life +" + (v.character().experience() - m4LifeXp0) + " gold "
+                + v.character().gold() + " | drops in view: " + (loot.length() == 0 ? "none" : loot) + "| hits taken so far " + hitsTaken + " dmg " + damageTaken
+                + " | " + state());
+            signal(tag + ".life-" + life);
+          });
+      until("peer finished life " + life, 60_000, () -> signaled(peer() + ".life-" + life));
+      waitMs(2500);
+      action(() -> log("LIFE " + life + " AFTER: my xp +" + (view().character().experience() - m4LifeXp0) + " | drops in view " + view().snapshot().loot().size()));
+    }
+  }
+
+  /** The melee role equips the bow it carries (it has no quiver) and swings at a creature: the server must refuse, clearly. */
+  private void m4Refusal() {
+    boolean archer = System.getProperty("m4.pair", "").startsWith("archer");
+    if (tag.endsWith("A")) {
+      action(() -> press(Input.Keys.I));
+      waitMs(900);
+      if (archer) {
+        // The Archer wears its bow and quiver; taking the quiver off leaves a bow with no arrows holder: not a supported attack.
+        inventoryPickRow(row -> row.kind() == com.perso.T4C.online.OnlineInventoryPanel.Kind.EQUIPPED && row.item().key().contains("quiver"), "unequip-quiver", null);
+      } else {
+        // The Warrior cannot wear the Archer's bow (agility requirement): the equip itself is refused with its own text.
+        inventoryPickRow(row -> row.kind() == com.perso.T4C.online.OnlineInventoryPanel.Kind.CARRIED && row.item().key().contains("bow"), "equip-bow", null);
+      }
+      action(() -> press(Input.Keys.ESCAPE));
+      waitMs(600);
+      final long[] began = {0};
+      repeat(
+          "attacked with the bow equipped",
+          40_000,
+          () -> {
+            var s = game();
+            if (s == null) return false;
+            long now = System.currentTimeMillis();
+            if (began[0] == 0) {
+              began[0] = now;
+              log("REFUSAL: bow equipped, no quiver | " + state());
+            }
+            BaseMonster t = nearestLive(s);
+            if (t == null) return now - began[0] > 30_000;
+            double d = distance(s, t.getPosition());
+            float reach = GameConstants.PLAYER_MELEE_ATTACK_RANGE - 14f;
+            if (d > reach) walkToward(s, t.getPosition(), reach);
+            else held.clear();
+            if (d <= reach + 8 && now - lastClick > 900) {
+              Vector2 at = aim(t.getPosition(), p -> t.isMouseOver(p.x, p.y));
+              if (at != null) {
+                click(s, at.x, at.y);
+                log("REFUSAL: clicked " + t.getName() + " at " + Math.round(d) + " px with the bow equipped");
+              }
+            }
+            return messagesSince(began[0]).stream().filter(m -> m.toLowerCase(Locale.ROOT).contains("cannot") || m.toLowerCase(Locale.ROOT).contains("unsupported")
+                || m.toLowerCase(Locale.ROOT).contains("not supported")).count() >= 2 || now - began[0] > 30_000;
+          });
+      action(
+          () -> {
+            held.clear();
+            log("REFUSAL messages: " + messagesSince(0).stream().filter(m -> !m.startsWith("HP")).toList());
+            hud("refusal-bow");
+            press(Input.Keys.I);
+          });
+      waitMs(900);
+      if (archer) {
+        inventoryPickRow(row -> row.kind() == com.perso.T4C.online.OnlineInventoryPanel.Kind.CARRIED && row.item().key().contains("quiver"), "re-equip-quiver", null);
+        action(() -> press(Input.Keys.ESCAPE));
+        waitMs(800);
+        // With the quiver back the same swing is a supported bow attack: the creature loses health and the Archer gains experience.
+        final long[] again = {0};
+        final long[] xp0 = {0};
+        final int[] hpSeen = {0};
+        repeat(
+            "bow attack with the quiver back on",
+            30_000,
+            () -> {
+              var s = game();
+              if (s == null) return false;
+              long now = System.currentTimeMillis();
+              if (again[0] == 0) {
+                again[0] = now;
+                xp0[0] = view().character().experience();
+                log("REFUSAL: quiver worn again | " + state());
+              }
+              BaseMonster t = nearestLive(s);
+              if (t == null) return now - again[0] > 25_000;
+              double d = distance(s, t.getPosition());
+              if (d > 6 * TILE_W) walkToward(s, t.getPosition(), 5 * TILE_W);
+              else held.clear();
+              if (d <= 8 * TILE_W && now - lastClick > 900) {
+                Vector2 at = aim(t.getPosition(), p -> t.isMouseOver(p.x, p.y));
+                if (at != null) click(s, at.x, at.y);
+              }
+              return view().character().experience() > xp0[0] + 5 || now - again[0] > 25_000;
+            });
+        action(
+            () -> {
+              held.clear();
+              log("REFUSAL with the quiver: experience gained " + (view().character().experience()) + " | messages " + messagesSince(0).stream().filter(m -> !m.startsWith("HP")).toList() + " | " + state());
+            });
+      } else {
+        inventoryPickRow(row -> row.kind() == com.perso.T4C.online.OnlineInventoryPanel.Kind.CARRIED && row.item().key().contains("greatsword"), "re-equip-greatsword", null);
+      }
+      action(
+          () -> {
+            press(Input.Keys.ESCAPE);
+            signal("m4.refusal-done");
+          });
+    } else if (archer) {
+      // The Healer carries a flag of a quest the online game does not run: its attack and its cast at a creature must be refused.
+      final long[] began = {0};
+      final boolean[] sent = {false};
+      repeat(
+          "attacked and cast with an unsupported quest flag",
+          60_000,
+          () -> {
+            var s = game();
+            if (s == null) return false;
+            long now = System.currentTimeMillis();
+            if (began[0] == 0) {
+              began[0] = now;
+              log("FLAG REFUSAL: quest flags " + view().character().progress().questFlags());
+            }
+            BaseMonster t = nearestLive(s);
+            if (t == null) return now - began[0] > 50_000;
+            double d = distance(s, t.getPosition());
+            if (d > 3.5f * TILE_W) {
+              walkToward(s, t.getPosition(), 3f * TILE_W);
+              return false;
+            }
+            held.clear();
+            Object selected = field(s, MainGameScreen.class, "selectedMonster");
+            if (selected != t && now - m4LastSelect > 2500) {
+              m4LastSelect = now;
+              Vector2 at = aim(t.getPosition(), p -> t.isMouseOver(p.x, p.y));
+              if (at != null) {
+                click(s, at.x, at.y);
+                log("FLAG REFUSAL: clicked the creature (attack) at " + Math.round(d) + " px");
+              }
+              return false;
+            }
+            if (castStage != 0) {
+              castStep(castFragment, now);
+              return false;
+            }
+            if (!sent[0] && selected == t) {
+              sent[0] = true;
+              log("FLAG REFUSAL: casting the attack spell at the selected creature");
+              castStep("stone", now);
+            }
+            return sent[0] && castStage == 0 && now - m4LastSelect > 2500 && now - began[0] > 10_000 || now - began[0] > 50_000;
+          });
+      action(
+          () -> {
+            log("FLAG REFUSAL messages: " + messagesSince(0).stream().filter(m -> !m.startsWith("HP")).toList());
+            hud("refusal-flag");
+          });
+      until("the melee role finished the refusal check", 180_000, () -> signaled("m4.refusal-done"));
+    } else {
+      repeat("the melee role finished the refusal check", 180_000, () -> {
+        var s = game();
+        if (s != null) drinkIfHurt(view(), System.currentTimeMillis());
+        return signaled("m4.refusal-done");
+      });
+    }
+  }
+
+  /** The melee role provokes a creature, walks into the cave and back: the creature must reset (no heal, no new life). */
+  private void m4Reset() {
+    final long[] provoked = {-1};
+    final int[] hpAfterHit = {0};
+    final Vector2[] posAfterHit = {null};
+    if (tag.endsWith("A")) {
+      final long[] began = {0};
+      repeat(
+          "provoked and wounded a creature",
+          60_000,
+          () -> {
+            var s = game();
+            if (s == null) return false;
+            long now = System.currentTimeMillis();
+            if (began[0] == 0) began[0] = now;
+            if (provoked[0] < 0) {
+              var r = remoteWorld(s);
+              BaseMonster best = null;
+              double bd = Double.MAX_VALUE;
+              for (BaseMonster m : monsters(s)) {
+                if (m.isDead() || m.getHealth() <= 0 || !isSkeleton(m)) continue;
+                long id = r.creatureId(m);
+                if (id <= 0 || creatureHp(id) <= 0) continue;
+                double d = distance(s, m.getPosition());
+                if (d < bd) { bd = d; best = m; }
+              }
+              if (best == null) return now - began[0] > 50_000;
+              provoked[0] = r.creatureId(best);
+              watchId = provoked[0];
+              resetCreature = provoked[0];
+              log("RESET: provoking creature " + provoked[0] + " hp " + creatureHp(provoked[0]));
+            }
+            BaseMonster t = monsterById(s, provoked[0]);
+            int hp = creatureHp(provoked[0]);
+            if (t == null || hp <= 0) return true;
+            int max = 0;
+            for (var c : view().snapshot().creatures()) if (c.id() == provoked[0]) max = c.maxHealth();
+            if (hp < max && hp * 100 < max * 85) {
+              hpAfterHit[0] = hp;
+              posAfterHit[0] = new Vector2(t.getPosition());
+              return true;
+            }
+            combatFrame(s, true, t.getPosition());
+            return false;
+          });
+      action(
+          () -> {
+            held.clear();
+            log("RESET: creature " + provoked[0] + " wounded to hp " + hpAfterHit[0] + " at " + posAfterHit[0] + "; leaving through the cave mouth | " + state());
+            signal("m4.reset-provoked");
+          });
+      portalHop("A", 2770, 1095, "start", "skeleton-cave", true, "m4-A-into-cave");
+      waitMs(8000);
+      portalHop("A", 136, 665, "skeleton-cave", "start", true, "m4-A-out-of-cave");
+      repeat(
+          "observed the wounded creature after returning",
+          30_000,
+          () -> {
+            var s = game();
+            if (s == null) return false;
+            long now = System.currentTimeMillis();
+            if (now - lastMessageLog > 5000) {
+              lastMessageLog = now;
+              var t = monsterById(s, provoked[0]);
+              log("RESET: after returning, creature " + provoked[0] + " hp " + creatureHp(provoked[0]) + " (was " + hpAfterHit[0] + ") at "
+                  + (t == null ? "not drawn" : t.getPosition().toString()) + " (was " + posAfterHit[0] + "); distance to me "
+                  + (t == null ? "n/a" : String.valueOf(Math.round(distance(s, t.getPosition())))));
+            }
+            return false;
+          });
+      action(() -> {
+        watchId = -1;
+        signal("m4.reset-done");
+      });
+    } else {
+      portalHop("A", 2770, 1095, "start", "skeleton-cave", true, "m4-A-into-cave");
+      portalHop("A", 136, 665, "skeleton-cave", "start", true, "m4-A-out-of-cave");
+      repeat("the other window finished the reset check", 120_000, () -> {
+        if (game() != null) drinkIfHurt(view(), System.currentTimeMillis());
+        return signaled("m4.reset-done");
+      });
+    }
+  }
+
+  /** Restart cycle for both windows, with the buff, cooldowns and mana compared across the rejoin. */
+  private void m4Restart() {
+    action(() -> log("RESTART: before, committed state: " + buffDetail() + " | " + state() + " | wounded creature " + resetCreature + " hp " + creatureHp(resetCreature)));
+    restartCycle("m4", () -> log("RESTART: after the rejoin, committed state: " + buffDetail() + " | " + state()));
+    waitMs(2500);
+    action(() -> log("RESTART: 2.5 s later: " + buffDetail() + " | " + state() + " | wounded creature " + resetCreature + " hp " + creatureHp(resetCreature)));
+  }
+
+  /** The melee role leaves (return to lobby) while a wounded creature targets it; the caster must be able to kill that creature. */
+  private void m4Disconnect() {
+    final long[] victim = {-1};
+    if (tag.endsWith("A")) {
+      final long[] began = {0};
+      repeat(
+          "wounded a creature before leaving",
+          60_000,
+          () -> {
+            var s = game();
+            if (s == null) return false;
+            long now = System.currentTimeMillis();
+            if (began[0] == 0) began[0] = now;
+            if (victim[0] < 0) {
+              var r = remoteWorld(s);
+              BaseMonster best = null;
+              double bd = Double.MAX_VALUE;
+              for (BaseMonster m : monsters(s)) {
+                if (m.isDead() || m.getHealth() <= 0 || !isSkeleton(m)) continue;
+                long id = r.creatureId(m);
+                if (id <= 0 || creatureHp(id) <= 0 || m4Done.contains(id)) continue;
+                double d = distance(s, m.getPosition());
+                if (d < bd) { bd = d; best = m; }
+              }
+              if (best == null) return now - began[0] > 50_000;
+              victim[0] = r.creatureId(best);
+            }
+            BaseMonster t = monsterById(s, victim[0]);
+            int hp = creatureHp(victim[0]);
+            int max = 0;
+            for (var c : view().snapshot().creatures()) if (c.id() == victim[0]) max = c.maxHealth();
+            if (t == null || hp <= 0) return true;
+            if (hp < max) return now - began[0] > 3000;
+            combatFrame(s, true, t.getPosition());
+            return false;
+          });
+      action(
+          () -> {
+            held.clear();
+            try {
+              Files.writeString(sync.resolve("m4-victim"), String.valueOf(victim[0]));
+            } catch (java.io.IOException e) {
+              throw new IllegalStateException(e);
+            }
+            log("DISCONNECT: creature " + victim[0] + " hp " + creatureHp(victim[0]) + " targets me; leaving the world | " + state());
+            // The Options screen's "Switch character" button calls MainGameScreen.switchCharacter(); the Options button itself is not
+            // clicked here (no GUI click driver), the same callback is invoked by reflection. Logged as scripted around the screen.
+            try {
+              var m = MainGameScreen.class.getDeclaredMethod("switchCharacter");
+              m.setAccessible(true);
+              m.invoke(game());
+              log("DISCONNECT: MainGameScreen.switchCharacter() invoked by reflection (the Options button was not clicked)");
+            } catch (ReflectiveOperationException e) {
+              log("DISCONNECT: could not invoke switchCharacter: " + e);
+            }
+          });
+      until("back in the lobby", 30_000, () -> getScreen() instanceof OnlineLobbyScreen);
+      until("the other window killed the creature", 240_000, () -> signaled("m4.victim-dead"));
+      final long[] rejoinStart = {0};
+      repeat(
+          "rejoined after leaving",
+          180_000,
+          () -> {
+            long now = System.currentTimeMillis();
+            if (game() != null) return true;
+            if (getScreen() instanceof OnlineLobbyScreen && now - rejoinStart[0] > 2500) {
+              rejoinStart[0] = now;
+              Gdx.input.getInputProcessor().keyDown(Input.Keys.ENTER);
+            }
+            return false;
+          });
+      waitMs(3000);
+      action(() -> log("DISCONNECT: rejoined | " + state()));
+    } else {
+      until("the other window left", 120_000, () -> signaled("m4-victim"));
+      action(
+          () -> {
+            try {
+              m4Target = Long.parseLong(Files.readString(sync.resolve("m4-victim")).trim());
+            } catch (java.io.IOException | RuntimeException e) {
+              m4Target = -1;
+            }
+            m4Seen = false;
+            m4TargetHp = -2;
+            m4LifeStart = System.currentTimeMillis();
+            m4LifeXp0 = view().character().experience();
+            log("DISCONNECT: the other player left; I attack its target creature " + m4Target + " hp " + creatureHp(m4Target));
+          });
+      repeat(
+          "killed the abandoned creature",
+          240_000,
+          () -> {
+            var s = game();
+            if (s == null) return false;
+            long now = System.currentTimeMillis();
+            int hp = creatureHp(m4Target);
+            if (hp > 0) m4Seen = true;
+            if (hp != m4TargetHp) {
+              log("DISCONNECT: creature " + m4Target + " hp " + m4TargetHp + " -> " + hp + " | my xp +" + (view().character().experience() - m4LifeXp0));
+              m4TargetHp = hp;
+            }
+            if ((m4Seen && hp <= 0) || (!m4Seen && now - m4LifeStart > 8000)) {
+              held.clear();
+              return true;
+            }
+            BaseMonster t = monsterById(s, m4Target);
+            if (t == null) return false;
+            casterFrame(s, t, now);
+            return false;
+          });
+      action(
+          () -> {
+            held.clear();
+            log("DISCONNECT: the abandoned creature is dead; my xp +" + (view().character().experience() - m4LifeXp0) + " | " + state());
+            signal("m4.victim-dead");
+          });
+    }
+  }
+
+  /** The melee role stands among creatures until it dies; the caster watches from its own window (public hit points, then the figure vanishes). */
+  private void m4Death() {
+    final long[] diedAt = {0};
+    final int[] corpsesBefore = {0};
+    final boolean[] lowShot = {false};
+    final String[] carriedBefore = {null};
+    if (tag.endsWith("A")) {
+      action(
+          () -> {
+            noPotions = true;
+            corpsesBefore[0] = view().corpses().size();
+            carriedBefore[0] = inventorySummary(view().character().progress());
+            log("DEATH: the melee role stops fighting and drinking and stands among the creatures | " + state());
+            signal("m4.death-begin");
+          });
+      repeat(
+          "died (a corpse is listed)",
+          600_000,
+          () -> {
+            var s = game();
+            held.clear();
+            if (s != null) {
+              BaseMonster m = nearestLive(s);
+              if (m != null && distance(s, m.getPosition()) > 40f) walkToward(s, m.getPosition(), 30f);
+              long t = System.currentTimeMillis();
+              // A Skeleton does not attack an unprovoked player: one swing makes it retaliate, then the character does nothing.
+              if (m != null && !provokedForDeath && distance(s, m.getPosition()) <= 60f && t - lastClick > 1500) {
+                Vector2 at = aim(m.getPosition(), p -> m.isMouseOver(p.x, p.y));
+                if (at != null) {
+                  click(s, at.x, at.y);
+                  provokedForDeath = true;
+                  log("DEATH: one swing at " + m.getName() + " to provoke its retaliation; no further attack, no potion");
+                }
+              }
+              if (t - lastMessageLog > 5000) {
+                lastMessageLog = t;
+                log("DEATH waiting: nearest creature " + (m == null ? "none drawn (" + monsters(s).size() + " creatures drawn)" : m.getName() + " at " + Math.round(distance(s, m.getPosition())) + " px")
+                    + "; keys " + held + "; hp " + view().character().progress().vitals().hp());
+              }
+            }
+            return view().corpses().size() > corpsesBefore[0] || view().character().progress().vitals().hp() <= 0;
+          });
+      waitMs(2500);
+      action(
+          () -> {
+            diedAt[0] = System.currentTimeMillis();
+            var v = view();
+            log("DEATH happened: hp " + v.character().progress().vitals().hp() + " corpses " + v.corpses() + " | " + state());
+            log("DEATH: carried before: " + carriedBefore[0] + " | after: " + inventorySummary(v.character().progress()));
+            shot("after-death");
+            signal("m4.A-dead");
+          });
+      repeat("respawned alive", 60_000, () -> view().character().progress().vitals().hp() > 0 && game() != null);
+      waitMs(3000);
+      action(
+          () -> {
+            noPotions = false;
+            potionStage = 0;
+            press(Input.Keys.ESCAPE);
+            var p = me(game()).getCoordinates();
+            log("RESPAWNED: region " + view().map().key() + " tile (" + (int) (p.getX() / TILE_W) + "," + (int) (p.getY() / TILE_H) + ") | " + state());
+          });
+    } else {
+      action(() -> log("DEATH witness: the other player's public state: " + otherActor()));
+      repeat(
+          "the other player's hit points fell and it died",
+          700_000,
+          () -> {
+            var s = game();
+            if (s == null) return false;
+            long now = System.currentTimeMillis();
+            var o = otherActor();
+            if (now - lastMessageLog > 3000) {
+              lastMessageLog = now;
+              log("WITNESS: other actor " + (o == null ? "not in my snapshot" : "hp " + o.hp() + "/" + o.maxHp() + " at (" + Math.round(o.x()) + "," + Math.round(o.y()) + ")")
+                  + "; drawn others " + others(s).size() + "; my hp " + view().character().progress().vitals().hp());
+            }
+            if (o != null && o.maxHp() > 0 && o.hp() * 100 < o.maxHp() * 40 && !lowShot[0] && !others(s).isEmpty()) {
+              lowShot[0] = true;
+              cropOf("witness-other-low-hp", others(s).get(0).getPositionVector(), 300, 280);
+            }
+            drinkIfHurtOrHeal(s, now);
+            return signaled("m4.A-dead");
+          });
+      waitMs(3000);
+      action(
+          () -> {
+            var s = game();
+            var o = otherActor();
+            log("WITNESS after the death: other actor " + (o == null ? "no longer in my snapshot" : "hp " + o.hp() + "/" + o.maxHp() + " at (" + Math.round(o.x()) + "," + Math.round(o.y()) + ")")
+                + "; drawn others " + (s == null ? -1 : others(s).size()) + "; my corpses " + view().corpses().size());
+            shot("witness-after-death");
+          });
+    }
+  }
+
+  private boolean provokedForDeath;
+  private int sipStage;
+  private long sipAt;
+
+  /** The watcher keeps itself alive: heal spell first, then a Healing Potion picked by name (never the Potion of Mana). */
+  private void drinkIfHurtOrHeal(MainGameScreen s, long now) {
+    var v = view();
+    if (castStage != 0) {
+      castStep(castFragment, now);
+      return;
+    }
+    var vit = v.character().progress().vitals();
+    if (sipStage == 1 && now - sipAt > 450) {
+      var lines = abilityMenu().lines(v.character().progress());
+      int digit = -1;
+      for (int i = 1; i < lines.size() - 1; i++) {
+        String line = lines.get(i).toLowerCase(Locale.ROOT);
+        if (line.contains("healing") && !line.contains("light")) digit = i; // the strongest named Healing Potion
+      }
+      if (digit < 0)
+        for (int i = 1; i < lines.size() - 1; i++) if (lines.get(i).toLowerCase(Locale.ROOT).contains("healing")) digit = i;
+      if (digit > 0 && abilityMenu().isOpen()) press(digitKey(digit));
+      else press(Input.Keys.ESCAPE);
+      sipStage = 0;
+      sipAt = now;
+      return;
+    }
+    if (sipStage != 0) return;
+    if (vit.hp() > 0 && vit.hp() * 100 < vit.maxHp() * 45 && now - sipAt > 2500) {
+      if (abilityMenu().isOpen()) {
+        press(Input.Keys.ESCAPE);
+        return;
+      }
+      press(Input.Keys.U);
+      sipStage = 1;
+      sipAt = now;
+      return;
+    }
+    if (vit.hp() > 0 && vit.hp() * 100 < vit.maxHp() * 70 && now - m4LastHeal > 4000 && vit.mana() >= 2 && tag.endsWith("B")) {
+      m4LastHeal = now;
+      castStep("heal", now);
+    }
+  }
+
+  /** The dead role walks back and clicks its own corpse on the screen; the carried items must return exactly once. */
+  private void m4Corpse() {
+    if (!tag.endsWith("A")) {
+      repeat("the other window recovered its corpse", 480_000, () -> {
+        if (game() != null) drinkIfHurtOrHeal(game(), System.currentTimeMillis());
+        return signaled("m4.A-recovered");
+      });
+      return;
+    }
+    final Vector2[] corpsePoint = {null};
+    final UUID[] corpse = {null};
+    final long[] leaving = {0};
+    final boolean[] done = {false};
+    final int[] tries = {0};
+    final long[] clickAt = {0};
+    action(
+        () -> {
+          for (var c : view().corpses())
+            if (c.world() == view().map().world()) {
+              corpse[0] = c.id();
+              corpsePoint[0] = new Vector2((float) ((c.x() - 0.5) * TILE_W), (float) ((c.y() - 0.5) * TILE_H));
+              log("CORPSE: " + c);
+            }
+          before = view().character().progress();
+        });
+    repeat(
+        "walked back to the corpse and clicked it on the screen",
+        480_000,
+        () -> {
+          var s = game();
+          if (s == null || corpsePoint[0] == null) return true;
+          long now = System.currentTimeMillis();
+          if (leaving[0] == 0) leaving[0] = now;
+          if (now - leaving[0] < 4000) {
+            held.clear();
+            held.add(Input.Keys.S);
+            return false;
+          }
+          if (distance(s, corpsePoint[0]) < 44f) {
+            held.clear();
+            if (done[0] || tries[0] >= 6) return true;
+            if (now - clickAt[0] > 3500) {
+              clickAt[0] = now;
+              tries[0]++;
+              log("CORPSE: click " + tries[0] + " on the drawn corpse (GroundItemClickHandler), distance " + Math.round(distance(s, corpsePoint[0])) + " px");
+              click(s, corpsePoint[0].x, corpsePoint[0].y);
+            }
+            if (view().corpses().stream().noneMatch(c -> c.id().equals(corpse[0]) && (c.itemCount() > 0 || c.gold() > 0))) done[0] = true;
+            return false;
+          }
+          BaseMonster m = nearestLive(s);
+          boolean threatened = m != null && distance(s, m.getPosition()) < 3 * TILE_W && System.currentTimeMillis() - lastHitAt < 4000;
+          if (threatened) combatFrame(s, true, null);
+          else {
+            drinkIfHurt(view(), now);
+            if (distance(s, corpsePoint[0]) > 14 * TILE_W && goalTx != Integer.MIN_VALUE) walkToward(s, tileCenter(goalTx, goalTy), 40f);
+            else walkToward(s, corpsePoint[0], 20f);
+          }
+          if (now - lastMessageLog > 20_000) {
+            lastMessageLog = now;
+            log("CORPSE: returning, distance " + Math.round(distance(s, corpsePoint[0])) + " px; hp " + view().character().progress().vitals().hp());
+          }
+          return false;
+        });
+    waitMs(3500);
+    action(
+        () -> {
+          held.clear();
+          var v = view();
+          log("CORPSE: after the click(s): corpses " + v.corpses() + " | carried before death " + inventorySummary(before) + " | now " + inventorySummary(v.character().progress()));
+          shot("after-corpse-click");
+          signal("m4.A-recovered");
+        });
+  }
+
+  private void m4Scene() {
+    skeletonsOnly = true;
+    String only = System.getProperty("m4.chapters", "census,buff,contention,refusal,reset,disconnect,restart,death,corpse");
+    java.util.List<String> chapters = java.util.Arrays.asList(only.split(","));
+    if (chapters.contains("census")) m4Census();
+    if (chapters.contains("buff")) m4Buff();
+    if (chapters.contains("contention")) m4Contention(Integer.getInteger("m4.lives", 3));
+    if (chapters.contains("area")) m4Area();
+    if (chapters.contains("refusal")) m4Refusal();
+    if (chapters.contains("reset")) m4Reset();
+    if (chapters.contains("disconnect")) m4Disconnect();
+    if (chapters.contains("restart")) m4Restart();
+    if (chapters.contains("death")) m4Death();
+    if (chapters.contains("corpse")) m4Corpse();
+    action(() -> log("M4 SUMMARY: hits taken " + hitsTaken + " damage " + damageTaken + " casts pressed " + castsPressed + " | " + state()));
+  }
+
   // ---------------------------------------------------------------- frame loop
 
   @Override
   public void render() {
     super.render();
     long now = System.currentTimeMillis();
-    if (scene.equals("beta")) pollMessage();
-    if (now > (scene.equals("quest") ? t0 + 1_500_000 : scene.equals("beta") ? t0 + 4_800_000 : deadline)) {
+    if (scene.equals("beta") || scene.equals("m4")) pollMessage();
+    if (scene.equals("m4")) m4Monitor();
+    if (now > (scene.equals("quest") ? t0 + 1_500_000 : scene.equals("beta") ? t0 + 4_800_000 : scene.equals("m4") ? t0 + 3_000_000 : deadline)) {
       log("DRIVER TIMEOUT at step " + index);
       Gdx.app.exit();
       return;

@@ -244,6 +244,63 @@ class RemotePlayerCommandsTest {
   }
 
   @Test
+  void aCastOrPotionRefusedAsBusyIsSentOnceMoreAndOnlyASecondBusyRefusalIsShown() {
+    UUID potion = UUID.fromString("00000000-0000-0000-0000-000000000044");
+    Player player = playerAtTile(100, 205);
+    FakeLink link = new FakeLink();
+    var commands = new RemoteGameSession(link, new GroundItemManager()).commands();
+    var host = new TestHost(player);
+    commands.bind(host);
+
+    var first = link.next;
+    assertTrue(commands.cast("spell.protection"));
+    var second = new CompletableFuture<OnlineConnection.CommandResult>();
+    link.next = second;
+    first.complete(new OnlineConnection.CommandResult(false, null, RemotePlayerCommands.ABILITY_BUSY_KEY));
+    assertEquals(List.of("cast spell.protection", "cast spell.protection"), link.calls, "the refusal changed nothing: one more try");
+    commands.pump();
+    assertTrue(host.messages.isEmpty(), "the first busy refusal is not shown; the retry stands for it");
+    second.complete(new OnlineConnection.CommandResult(true, null, null));
+    commands.pump();
+    assertTrue(host.messages.isEmpty());
+
+    var third = new CompletableFuture<OnlineConnection.CommandResult>();
+    link.next = third;
+    assertTrue(commands.useItem(potion));
+    var fourth = new CompletableFuture<OnlineConnection.CommandResult>();
+    link.next = fourth;
+    third.complete(new OnlineConnection.CommandResult(false, null, RemotePlayerCommands.ABILITY_BUSY_KEY));
+    var fifth = new CompletableFuture<OnlineConnection.CommandResult>();
+    link.next = fifth;
+    fourth.complete(new OnlineConnection.CommandResult(false, null, RemotePlayerCommands.ABILITY_BUSY_KEY));
+    commands.pump();
+    assertEquals(List.of(I18n.key(RemotePlayerCommands.ABILITY_BUSY_KEY)), host.messages, "a second busy refusal is said");
+    assertEquals(4, link.calls.size(), "never a third attempt at the potion");
+
+    host.messages.clear();
+    link.next = new CompletableFuture<>();
+    assertTrue(commands.cast("spell.heal_light"));
+    link.next.complete(new OnlineConnection.CommandResult(false, null, "online.ability.not_enough_mana"));
+    commands.pump();
+    assertEquals(List.of(I18n.key("online.ability.not_enough_mana")), host.messages, "any other refusal is shown at once");
+    assertEquals(5, link.calls.size(), "and is never sent again");
+  }
+
+  @Test
+  void aCastPressedWhileTheLastCommandIsStillInFlightSaysBusyNotARawKey() {
+    Player player = playerAtTile(100, 205);
+    FakeLink link = new FakeLink();
+    var commands = new RemoteGameSession(link, new GroundItemManager()).commands();
+    var host = new TestHost(player);
+    commands.bind(host);
+    link.throwOnSend = new IllegalStateException("Gameplay command pending");
+    assertTrue(commands.cast("spell.heal_light"));
+    assertTrue(commands.useItem(UUID.fromString("00000000-0000-0000-0000-000000000045")));
+    commands.pump();
+    assertEquals(List.of(I18n.key("online.ability.busy"), I18n.key("online.ability.busy")), host.messages);
+  }
+
+  @Test
   void castToPlayerSendsOnlyALiveSnapshotActorId() {
     FakeLink link=new FakeLink();
     link.view=new OnlineConnection.View(OWN,MAP,

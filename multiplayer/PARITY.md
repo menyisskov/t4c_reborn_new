@@ -20,7 +20,7 @@ re-measure before relying on a number.
 | Quests | 35 | 1 (renewed_wards); rules generic, the rest wait on hosting their givers and kill grounds |
 | Player spells | 132 | Stage 1 and 2 (81 spells) plus Light Heal; starting spell kits are now offered to six online classes |
 | Classes | 7 | 6 (Warrior, Paladin, Cleric, Healer, Mage, Battle Mage); Archer awaits online ranged combat |
-| Combat | melee, bows, two weapons, stun blow, stealth, spells | melee and supported stage-1/2 spells; bows, dual wield, stun and stealth still unavailable |
+| Combat | melee, bows, two weapons, stun blow, stealth, spells | melee, bows with a quiver, a learned stun blow and the supported spell stages; two weapons and stealth not yet verified online (see the T4C-0331 correction below) |
 | Interface | full GUI (inventory, spell book, minimap, macros, options, journal) | plain text panels |
 | Audio and effects | on | audio off, no spell effects |
 
@@ -116,7 +116,7 @@ Each is a gap to close, never a decision to keep:
 
 - Archer remains excluded from online character creation until authoritative ranged combat is implemented; the other six classes now have online starter kits and the server-supported spell set.
 - Stage-1 and stage-2 spells (40 attack with splash, 4 drain, 4 heal; 25 timed buffs, the curse, invisibility and detection, 2 dispels, Renew Armor: 81 in all) are castable server-side (`spells-v2` stage gate, protocol 6); everything else stays refused. Casters cannot be created online yet, so only a character that already knows them can cast. Buffs are laid on the caster only; laying one on another player is resolved by the engine but not yet reachable (needs a two-character atomic commit).
-- Melee only; bows, stun blow and companions refuse as unsupported combat.
+- Corrected in T4C-0331 (this line used to say bows and stun blow refuse): the server accepts a bow attack when the quiver is worn and a learned stun blow (`OnlineMeleeTest.archerBowAttackUsesRangedReach...`, `learnedStunBlowAppliesOnlyAfterTheHitCommits...`). A bow without a quiver, a character with a companion or an unlisted quest flag, and scripted or unsupported monsters refuse as unsupported combat ("You cannot attack that yet."; live in `CLIENT_UNIFICATION_DESIGN.md` 3.18). Two-weapon fighting and stealth were not re-checked.
 - Combat fails closed while a world-event flag is active, or while a buff the server does not model (an older record without stored amounts, or an attribute outside `BuffAttributes.MODELLED`) is running. The 25 stage-2 buffs are modelled and fold into melee, retaliation, carry weight and spell numbers.
 - Other quests' flags block combat (quest-flag allowlist).
 - Hosting reach (T4C-0300): no further quest can be hosted by growing the starter crop. The other 34 quests sit on other islands or 900+ tiles away on the same continent; the portal graph from the starter crop reaches only 15 walkable areas (none holds a quest giver) and one region is capped at 256 tiles per axis. A quest zone needs an owner-approved transit design (see HOSTED_STARTER_ROUTE_DESIGN.md "Hosting reach audit"), not more rectangle. The skeleton cave behind the authored cave mouths is a self-contained area that is hosted. Correction (T4C-0304): the audit's "ten more dungeon chambers" were counted from the whole starter continent; only the Lighthaven interior and its three sewer levels are reachable by walking from the hosted crop, and those are now hosted too (see HOSTED_STARTER_ROUTE_DESIGN.md).

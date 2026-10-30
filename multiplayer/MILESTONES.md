@@ -63,7 +63,7 @@ playthrough and recovery criteria pass. Never infer Done from a task count or te
 | M1 — Enter and interact | Roster/NPC backend and actual adapter probes pass, including two local HTTPS adapters with trust/hostname refusal and a separate live account-key rotation check; selection and refusal messages verified rendered; creation bullet and remote HTTPS open | T4C-0192, 0195, 0196, 0216, 0219, 0232, 0233, 0234 | Native character select and its Create form are merged as an opt-in lobby (`-Lobby`, owner-approved look) and ran rendered against a live local server (T4C-0306 to T4C-0325; four of seven bullets ticked); in-client character creation is recorded here as out of Beta scope (characters are operator-provisioned) while the creation bullet still requires it: owner decision; remote deployment |
 | M2 — Inventory and loot | Server ground loot (drops, owner window, first-claim-wins, expiry, carry-weight rule), per-item corpse recovery within carry limits, native pickup/equip/inventory panels; all merged with CI evidence | Existing inventory/equipment work; T4C-0201, 0202, 0204, 0218, 0228 | The two-adapter loot probe now starts legitimately (T4C-0235) but has never run (needs a database and port window); rendered loot play against a live server |
 | M3 — Complete authored adventure | Quest service rules, flag allowlist, once-only turn-in rewards, native talk panel, and the Skeleton hunting ground hosted as one world-0 region with unhosted portals refused; merged | T4C-0193, 0194, 0195, 0206, 0218, 0231 | Kill credit played through end to end against a live server, the Goblin-to-Wild-Horse fight (owner accepted it as not simulated for Beta), rendered walkthrough |
-| M4 — Supported combat and abilities | Restricted melee/physical retaliation, server-authoritative patrol/pursuit with guarded persistence, two-native-adapter pursuit/restart proof, brief two-client pursuit/retaliation/reconnect check, local PostgreSQL proof of authored hostile-clan spell damage (T4C-0317), durable authored monster self-healing (T4C-0319) and ranged monster attacks (T4C-0320) | T4C-0189, 0190, 0209, 0210, 0211, 0212, 0229, 0230, 0236, 0237, 0317, 0319, 0320 | Remaining class abilities and spells, rendered clan-spell combat, longer rendered pursuit, reset/death and integrated M4/Beta acceptance remain open |
+| M4 — Supported combat and abilities | Restricted melee/physical retaliation, server-authoritative patrol/pursuit with guarded persistence, two-native-adapter pursuit/restart proof, brief two-client pursuit/retaliation/reconnect check, local PostgreSQL proof of authored hostile-clan spell damage (T4C-0317), durable authored monster self-healing (T4C-0319) and ranged monster attacks (T4C-0320) | T4C-0189, 0190, 0209, 0210, 0211, 0212, 0229, 0230, 0236, 0237, 0317, 0319, 0320, 0330 | T4C-0331 adds a rendered two-window run of different roles (contention, spells, buff and rejoin, refusals, death seen from the other window) and ticks three of the seven M4 bullets; pursuit of a fleeing player, sanctuary/interruption validation evidence, buff/cooldown HUD, tile-aimed area spells, stat allocation, rendered clan-spell combat and integrated M4/Beta acceptance remain open |
 | M5 — Reliability and anti-cheat | Pool/shutdown/fault probes, local HTTPS trust/hostname refusal and two-adapter reconnect, live two-account key-rotation fencing, historical two-hour native-adapter baseline with partial 20-player occupancy, isolated restart and database-crash probes, twenty-adapter forced-kill, PostgreSQL-crash and lost-acknowledgement drills (T4C-0310; database-recovery bullet ticked), brief rendered reconnect pass, and a 12-minute mixed twenty-adapter soak with eight adapters taking paced portal trips (49 region transfers, zero failures, 56.0% at twenty; T4C-0308), a two-hour twenty-adapter soak with eight portal walkers (625 observed transfers, flat CPU/heap, 2 adapter failures traced to a rejoin-lockout defect now fixed, 30-minute steady rerun clean; T4C-0315); full mixed recovery/load/abuse gates open (two-hour, two real clients, bandwidth, abuse) | T4C-0191, 0197, 0198, 0207, 0208, 0216, 0219, 0308, 0310, 0315 | Broader gameplay recovery, rendered restart, two-real-client mixed soak, bandwidth/DB latency and abuse checks |
 | M6 — Package and native acceptance | Create-only client and local-loopback server QA packages, headless integrity checks, isolated persistent server stop and brief two-window local client smoke pass; clean-machine, remote and full rendered playthrough open | T4C-0205, 0215 and cross-cutting work | Clean-machine delivery and complete two-rendered-client playthrough |
 
@@ -260,8 +260,10 @@ Current evidence (T4C-0323, PR #285 merged): learned single-target heal effects 
 
 Required behavior:
 
-- [ ] Declare classes and required abilities above. A melee-only networking preview cannot be
-  presented as a functional caster or as complete launch combat.
+- [x] Declare classes and required abilities above. A melee-only networking preview cannot be
+  presented as a functional caster or as complete launch combat. (T4C-0331: the approved
+  [SCOPE_PROPOSAL.md](SCOPE_PROPOSAL.md) section 1 declares Warrior and Paladin with Light Heal, and
+  [PARITY.md](PARITY.md) widens it to six online classes; casting is shown live by a Healer, a Mage and the Paladin's list, see the T4C-0331 note below. The per-role native scenario is the Done evidence, still open.)
 - [ ] Required monsters acquire valid targets, pursue where authored, attack/retaliate, lose or
   reset targets under the declared rules, die and respawn with durable life identities.
   [MONSTER_PURSUIT_DESIGN.md](MONSTER_PURSUIT_DESIGN.md) records the T4C-0209 architecture.
@@ -275,10 +277,12 @@ Required behavior:
   resource costs, attribute eligibility, effects and any applicable interruption rules.
 - [ ] Required skills/spells, mana, charges, buffs, cooldowns and advancement are usable through
   native controls, persisted appropriately and reflected by committed HUD/appearance state.
-- [ ] Both clients observe consistent combat, deaths and respawns. One player's action does not
+- [x] Both clients observe consistent combat, deaths and respawns. One player's action does not
   damage or award another player incorrectly, and disconnect cannot leave an immortal target.
-- [ ] Quest/story flags supported by M3 continue to work with combat; arbitrary unsupported
+  (T4C-0331 live, two windows: identical creature health sequences, the lethal blow's owner alone gets the death experience and the database agrees, a death seen from the other window, a leaving player's wounded target killed by the other; details below and in CLIENT_UNIFICATION_DESIGN.md 3.18.)
+- [x] Quest/story flags supported by M3 continue to work with combat; arbitrary unsupported
   scripts remain explicitly refused rather than bypassing authority checks.
+  (Quest kills and the turn-in with a level-30 warrior: T4C-0312 live; unlisted flags, scripted monsters and companions refused: `OnlineQuestFlagsTest`, `OnlineMeleeTest`; a character with an unlisted quest flag refused every attack live in T4C-0331.)
 - [ ] Level progression/stat allocation and required class behavior follow shared game rules.
   Single-player behavior and old save compatibility remain unchanged.
 
@@ -299,6 +303,28 @@ with idle stretches, one player stood among them until it died and respawned in 
 stayed consistent; the Healing Potion (not only the Mana Potion) is not offered by `U` online, so the potion part of the bullet is
 further from met. No M4 bullet is ticked: no other role, no contention for one target, no leaving reach/sight scenario, and the
 death was not shown from the other window.
+
+T4C-0331 (2026-10-30, local rendered, three role pairs: Warrior + Healer, Archer + Healer, Paladin + Mage; `main` 155c03a5 plus this branch,
+detail and exact limits in CLIENT_UNIFICATION_DESIGN.md 3.18): both windows contended for one creature life at a time (identical
+health sequences in both; the lethal blow's owner got the death experience, the other kept per-hit experience, the database's
+reward rows agree); the Healer cast Stone Shard at a selected creature, Light Heal on itself and a timed Protection buff through `C`; the
+buff kept its remaining time across a graceful server restart and rejoin (logged-out time did not run it down); the Mage cast Fireball
+(accepted after a fix); a Warrior was refused a bow it cannot wear, an Archer without its quiver and a character with an unlisted quest flag were
+refused "You cannot attack that yet."; a retaliating Skeleton hit a Warrior 28 times (103 points) and the figure was outlined beside it; a wounded Skeleton kept its
+hit points when the player left through a portal and across a restart; a Warrior who left the world left no immortal target (the Healer killed it);
+a Warrior's death was watched from the other window (public hit points falling, then the figure at the temple with half health), its one corpse
+was recovered by clicking the drawn corpse. Four defects were fixed with tests (taking off a quiver dropped the connection, raw message keys, casts and potions lost to a
+"busy" refusal, Fireball not castable from the list).
+Ticked: the declaration, the two-client consistency and the quest-flag bullets. **Not ticked, with the exact missing evidence:**
+- *Required monsters acquire, pursue, reset...*: the retaliating Skeleton did not follow a player walking away, so "pursue where authored" for the
+  Skeleton ground is unexplained (authored hunting-ground leash or a defect: the pursuit lane's RCA), and natural acquisition of an unprovoked player was
+  not shown on the screen (`OnlineMonsterPursuitTest` and the T4C-0212 probe cover both).
+- *Server validates movement, timing, range, sight, sanctuary, costs, eligibility, effects, interruption*: movement speed/collision (tamper battery, T4C-0288, 322 PASS), swing and
+  cast timing, range, sight, mana costs, equip requirements and effects have tests or live evidence, but no test pins a sanctuary refusal through the server's melee and spell path and no test
+  pins an online interruption (stun) of a player's attack or cast.
+- *Skills/spells, mana, charges, buffs, cooldowns and advancement*: spells, mana, cooldowns, a buff and its persistence are shown live, but there is no buff or cooldown display on the HUD, multi-charge items are refused, area spells aimed at a tile (20 spells) and area heals cannot be
+  cast from the spell list, and stat allocation has no online control.
+- *Level progression/stat allocation and class behavior*: progression is covered by `OnlineProgressionTest` and live experience gains, but unspent stat points cannot be spent online and no old-save/single-player-unchanged check was part of this pass.
 
 Done evidence: a native combat scenario for each declared starter role, including two players
 contending for a target, leaving reach/sight, death/recovery and reconnect with costs/cooldowns intact.

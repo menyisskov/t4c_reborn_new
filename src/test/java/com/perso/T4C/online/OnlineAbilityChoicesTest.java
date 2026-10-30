@@ -76,6 +76,24 @@ class OnlineAbilityChoicesTest {
   }
 
   @Test
+  void anAreaAroundACreatureNeedsACreatureTargetAndASelfCentredAreaDoesNot() {
+    var around = ENGINE_CATALOG.spells().values().stream()
+        .filter(s -> s.kind() == SpellContentV2.Kind.AREA_DAMAGE && s.targetType() == 17
+            && s.stage() <= OnlineSpellAllowlistV2.ENABLED_STAGE && SpellEngine.supported(s))
+        .map(SpellContentV2.Spell::key).sorted().findFirst().orElseThrow();
+    var centred = ENGINE_CATALOG.spells().values().stream()
+        .filter(s -> s.kind() == SpellContentV2.Kind.AREA_DAMAGE && s.selfCenteredAttack()
+            && s.stage() <= OnlineSpellAllowlistV2.ENABLED_STAGE && SpellEngine.supported(s))
+        .map(SpellContentV2.Spell::key).sorted().findFirst().orElseThrow();
+    var rows = OnlineAbilityChoices.castableSpells(progress(Set.of(around, centred), List.of(), Map.of()), ENGINE_CATALOG);
+    assertEquals(2, rows.size());
+    for (var row : rows) {
+      if (row.key().equals(around)) assertTrue(row.requiresCreatureTarget(), "an area around a creature is aimed at one: " + row.key());
+      else assertFalse(row.requiresCreatureTarget(), "a self-centred area is cast with no target: " + row.key());
+    }
+  }
+
+  @Test
   void unlearnedSpellsAreNotOffered() {
     assertTrue(OnlineAbilityChoices.castableSpells(progress(Set.of(), List.of(), Map.of()), ENGINE_CATALOG).isEmpty());
     assertTrue(OnlineAbilityChoices.castableSpells(null, ENGINE_CATALOG).isEmpty());

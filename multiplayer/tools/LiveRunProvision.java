@@ -76,6 +76,14 @@ public final class LiveRunProvision {
       betaScene(plan, out, args.length > 3 ? args[3] : "");
       return;
     }
+    if ("m4".equals(scene)) {
+      m4Scene(plan, map, out, args.length > 3 ? args[3] : "");
+      return;
+    }
+    if ("m4-report".equals(scene)) {
+      m4Report();
+      return;
+    }
     if ("lobby".equals(scene)) {
       lobbyScene(map, out, args.length > 3 ? args[3] : "");
       return;
@@ -278,6 +286,133 @@ public final class LiveRunProvision {
       makeWithHeadroom(store, out.resolve("player-b.json"), "Live Bravo" + suffix, b, 30, items, BRAVO_HEADROOM);
     }
     System.out.println("PROVISION_OK");
+  }
+
+  /**
+   * T4C-0331 scene {@code m4}: two characters of DIFFERENT roles beside a Skeleton anchor, for the combat-and-ability
+   * run. {@code -Dm4.pair=warrior-healer} (default) gives Alpha a level-25 Warrior (ten Healing Potions, an unequipped
+   * Ashwood Reflex Bow for the unsupported-combat refusal) and Bravo a level-25 Healer (Heal Light, Stone Shard, plus
+   * Protection, a timed buff, written into the known spells as an operator edit: the offline game teaches it at a
+   * spell merchant). {@code -Dm4.pair=paladin-mage} gives Alpha a Paladin and Bravo a Mage. Levels come through the
+   * server's own XP award path, exactly like the other scenes; nothing the server enforces is bypassed.
+   */
+  private static void m4Scene(HostedRegionPlan plan, PreviewMap map, Path out, String suffix) throws Exception {
+    String pair = System.getProperty("m4.pair", "warrior-healer");
+    CharacterClass first = pair.startsWith("paladin") ? CharacterClass.PALADIN
+        : pair.startsWith("archer") ? CharacterClass.ARCHER : CharacterClass.WARRIOR;
+    CharacterClass second = pair.endsWith("mage") ? CharacterClass.MAGE : CharacterClass.HEALER;
+    Spot a = skeletonStart(plan, map);
+    Spot b = nearby(plan, a, 4, 1);
+    System.out.println("scene=m4 pair=" + pair + " alpha=(" + a.x() + "," + a.y() + ") bravo=(" + b.x() + "," + b.y() + ")");
+    System.out.println("skeletonGround=" + (int) Math.floor(a.x()) + "," + (int) Math.floor(a.y()));
+    int level = Integer.getInteger("m4.level", 25);
+    try (var store = OnlineStore.fromEnvironment()) {
+      var alpha = levelled(first, "male", "Live " + first.id() + suffix, level);
+      var bravo = levelled(second, "female", "Live " + second.id() + suffix, level);
+      var alphaProgress = withPotions(alpha.progress(), first == CharacterClass.WARRIOR);
+      var bravoProgress = withPotions(bravo.progress(), false);
+      if (second == CharacterClass.HEALER) {
+        var spells = new java.util.HashSet<>(bravoProgress.spells());
+        spells.add("spell.protection");
+        bravoProgress = ProgressEdits.withSpells(bravoProgress, spells);
+        // The Healer starts at 40 percent health so the self heal visibly restores something.
+        var vit = bravoProgress.vitals();
+        bravoProgress = ProgressEdits.withVitals(bravoProgress,
+            new CharacterProgress.Vitals(Math.max(1, vit.maxHp() * 40 / 100), vit.maxHp(), vit.mana(), vit.maxMana()));
+      } else if (second == CharacterClass.MAGE) {
+        // Fireball (a stage-3 area attack) is written into the Mage's spells as an operator edit; the offline game teaches it at a merchant.
+        var spells = new java.util.HashSet<>(bravoProgress.spells());
+        spells.add("spell.fireball");
+        bravoProgress = ProgressEdits.withSpells(bravoProgress, spells);
+      }
+      Integer alphaHp = Integer.getInteger("m4.alphaHp");
+      if (alphaHp != null) {
+        // Death run only: the first character starts nearly dead and carries a big stack, so the death happens within seconds and
+        // the corpse certainly holds something (each stack drops a binomial share on death).
+        var vit = alphaProgress.vitals();
+        alphaProgress = ProgressEdits.withVitals(alphaProgress,
+            new CharacterProgress.Vitals(Math.min(alphaHp, vit.maxHp()), vit.maxHp(), vit.mana(), vit.maxMana()));
+        var inventory = new java.util.ArrayList<>(alphaProgress.inventory());
+        inventory.add(new CharacterProgress.Item(UUID.randomUUID(), "item.torch", Integer.getInteger("m4.alphaStack", 120), 0));
+        alphaProgress = ProgressEdits.withInventory(alphaProgress, inventory);
+      }
+      if (pair.startsWith("archer") && second == CharacterClass.HEALER) {
+        // A flag of a quest the online game does not run yet: combat for this character must be refused, never silently ignored.
+        var flags = new java.util.HashMap<>(bravoProgress.questFlags());
+        flags.put("unimplemented.quest", 1);
+        bravoProgress = ProgressEdits.withFlags(bravoProgress, flags);
+      }
+      System.out.println("alpha " + first.id() + " attributes " + alphaProgress.attributes() + " vitals " + alphaProgress.vitals()
+          + " spells " + alphaProgress.spells());
+      System.out.println("bravo " + second.id() + " attributes " + bravoProgress.attributes() + " vitals " + bravoProgress.vitals()
+          + " spells " + bravoProgress.spells());
+      finish(store, out.resolve("player-a.json"), "Live " + first.id() + suffix, a, alphaProgress, alpha.gold(), alpha.experience(), "role " + first.id());
+      finish(store, out.resolve("player-b.json"), "Live " + second.id() + suffix, b, bravoProgress, bravo.gold(), bravo.experience(), "role " + second.id());
+    }
+    System.out.println("PROVISION_OK");
+  }
+
+  private record Levelled(CharacterProgress progress, long experience, long gold) {}
+
+  private static Levelled levelled(CharacterClass role, String gender, String name, int level) {
+    var kit = OnlineCharacterCreator.prepare(role, gender, false, new Random(name.hashCode()));
+    CharacterProgress progress = kit.progress();
+    long experience = 0;
+    XpCurve curve = XpCurve.loadDefault();
+    double rate = PlayerProgression.scaledAward(1_000_000L, 0f, false) / 1_000_000d;
+    Random random = new Random(level * 7919L + name.hashCode());
+    for (int i = 0; i < 64 && progress.advancement().level() < level; i++) {
+      long remaining = curve.getTotalXp(level) - experience;
+      long base = Math.max(1L, (long) Math.ceil(remaining / rate));
+      var state = new OnlineStore.CharacterState(UUID.randomUUID(), UUID.randomUUID(), name, WORLD, 0, 0, 0, experience, 0, progress);
+      var award = OnlineProgression.award(state, base, 0, random);
+      if (award.experience() <= 0) break;
+      experience += award.experience();
+      progress = award.progress();
+    }
+    if (progress.advancement().level() < level) throw new IllegalStateException("could not reach level " + level);
+    return new Levelled(progress, experience, kit.gold());
+  }
+
+  /** Ten Healing Potions with the item's one charge (zero charges are refused by design) and, optionally, a spare bow. */
+  private static CharacterProgress withPotions(CharacterProgress progress, boolean bow) {
+    var inventory = new java.util.ArrayList<>(progress.inventory());
+    inventory.add(new CharacterProgress.Item(UUID.randomUUID(), "item.healing_potion", 10, 1));
+    if (bow) inventory.add(new CharacterProgress.Item(UUID.randomUUID(), "item.ashwood_reflex_bow_1", 1, 0));
+    return ProgressEdits.withInventory(progress, inventory);
+  }
+
+  /** Non-secret rows for the evidence notes: who was rewarded for which life, who owned and claimed which drop, the corpses. */
+  private static void m4Report() throws Exception {
+    try (var db = DriverManager.getConnection(System.getenv("T4C_DB_URL"), System.getenv("T4C_DB_USER"), System.getenv("T4C_DB_PASSWORD"))) {
+      report(db, "rewards (lethal claimant per creature life)",
+          "SELECT c.name, r.experience, r.gold, to_char(r.created_at,'HH24:MI:SS') FROM online_world_rewards w "
+              + "JOIN online_rewards r ON r.event_id=w.event_id AND r.character_id=w.character_id "
+              + "JOIN online_characters c ON c.id=w.character_id ORDER BY r.created_at");
+      report(db, "ground loot (item, state, owner, claimed by)",
+          "SELECT l.item_key, l.state, o.name, coalesce(cb.name,'-'), (SELECT count(*) FROM online_loot_claims k WHERE k.loot_id=l.id) "
+              + "FROM online_ground_loot l JOIN online_characters o ON o.id=l.owner_character "
+              + "LEFT JOIN online_characters cb ON cb.id=l.claimed_by ORDER BY l.created_at");
+      report(db, "corpses (character, stacks on it, recovered)",
+          "SELECT c.name, jsonb_array_length(k.items), k.recovered, to_char(k.created_at,'HH24:MI:SS') FROM online_corpses k "
+              + "JOIN online_characters c ON c.id=k.character_id ORDER BY k.created_at");
+      report(db, "creature lives with damage (spawn key tail, health, mode, target)",
+          "SELECT right(s.spawn_key,28), s.health, s.mode, coalesce(t.name,'-') FROM online_spawns s "
+              + "LEFT JOIN online_characters t ON t.id=s.target_character WHERE s.health IS NOT NULL ORDER BY s.spawn_key");
+      report(db, "characters (name, hp-bearing revision)", "SELECT name, revision, experience, gold FROM online_characters ORDER BY name");
+    }
+  }
+
+  private static void report(java.sql.Connection db, String title, String sql) throws Exception {
+    System.out.println("== " + title);
+    try (var st = db.createStatement(); var rs = st.executeQuery(sql)) {
+      int n = rs.getMetaData().getColumnCount();
+      while (rs.next()) {
+        var row = new StringBuilder("  ");
+        for (int i = 1; i <= n; i++) row.append(rs.getString(i)).append(i < n ? " | " : "");
+        System.out.println(row);
+      }
+    }
   }
 
   private static void makeWithHeadroom(OnlineStore store, Path profile, String name, Spot at, int level,
