@@ -15,6 +15,7 @@ import java.util.Optional;
 final class OnlineShops {
   private static NpcShopCatalog catalog;
   private static Map<String, Long> resale;
+  private static Map<String, Double> easiestDrops = Map.of();
 
   private OnlineShops() {}
 
@@ -27,6 +28,12 @@ final class OnlineShops {
       for (var vendor : loaded.content().vendors())
         for (var offer : vendor.offers()) prices.putIfAbsent(offer.itemKey(), offer.sellPrice());
       resale = Map.copyOf(prices);
+      try {
+        easiestDrops = ShopRules.indexDropChances(
+            java.util.List.copyOf(MonsterCatalog.loadBundled().monsters().values()));
+      } catch (IOException unavailable) {
+        throw new IllegalStateException("Monster content unavailable for shop resale pricing", unavailable);
+      }
       catalog = loaded;
     }
     return catalog;
@@ -44,8 +51,7 @@ final class OnlineShops {
 
   /**
    * Per-unit payout when the character sells an item to any shopkeeper. Items that appear in vendor
-   * stock use the exported single-player resale price; other items use the base rule shared with
-   * single-player. Items whose resale value comes from monster drop tables are not priced here (0).
+   * stock use the exported single-player resale price; other items use the shared drop pricing rule.
    */
   static long sellPrice(ItemContent.Definition item) {
     catalog();
@@ -53,7 +59,14 @@ final class OnlineShops {
     synchronized (OnlineShops.class) { exported = resale.get(item.key()); }
     if (exported != null) return exported;
     long base = ShopRules.baseSellPrice(item.price(), item.rarityPriced(), item.undroppable());
-    return base == ShopRules.NEEDS_DROP_TABLE ? 0L : base;
+    if (base != ShopRules.NEEDS_DROP_TABLE) return base;
+    return rarityDropPrice(item);
+  }
+
+  private static long rarityDropPrice(ItemContent.Definition item) {
+    double chance;
+    synchronized (OnlineShops.class) { chance = ShopRules.dropChance(easiestDrops, item.key()); }
+    return ShopRules.rarityDropPrice(item.key(), item.unique(), chance);
   }
 
   /** The listing for one shopkeeper: stock to buy and the character's unequipped goods to sell. */

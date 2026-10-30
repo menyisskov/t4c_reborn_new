@@ -2,6 +2,7 @@ package com.perso.T4C.server;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.perso.T4C.item.ShopRules;
 import com.perso.T4C.online.model.CharacterProgress;
 import com.perso.T4C.online.model.ItemContent;
 import com.perso.T4C.online.model.ShopOffersReply;
@@ -65,7 +66,22 @@ class OnlineShopsTest {
     var rare = items.items().values().stream()
         .filter(i -> i.rarityPriced() && i.price() == 0 && !i.undroppable() && !stocked.contains(i.key()))
         .findFirst().orElseThrow();
-    assertEquals(0L, OnlineShops.sellPrice(rare));
+    assertTrue(OnlineShops.sellPrice(rare) > 0);
+  }
+
+  @Test void bundledDropPricedItemHasEquivalentOfflineAndOnlineResaleFormula() throws IOException {
+    var monsterContent = MonsterCatalog.loadBundled();
+    var chances = ShopRules.indexDropChances(List.copyOf(monsterContent.monsters().values()));
+    var stocked = new java.util.HashSet<String>();
+    for (var vendor : OnlineShops.catalog().content().vendors())
+      for (var offer : vendor.offers()) stocked.add(offer.itemKey());
+    var rare = items.items().values().stream()
+        .filter(i -> i.rarityPriced() && i.price() == 0 && !i.undroppable() && !stocked.contains(i.key()))
+        .filter(i -> ShopRules.dropChance(chances, i.key()) > 0)
+        .findFirst().orElseThrow();
+    long sharedPrice = ShopRules.rarityDropPrice(rare.key(), rare.unique(), ShopRules.dropChance(chances, rare.key()));
+    assertEquals(sharedPrice, OnlineShops.sellPrice(rare));
+    assertTrue(sharedPrice > 0);
   }
 
   @Test void undroppableItemsAreNeverBought() {
