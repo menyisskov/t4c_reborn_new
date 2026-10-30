@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0356`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0357`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0356 | Forward keyboard events to open shared GUI screens in remote play before game shortcuts, preserving keyboard capture/modal behavior and offline input | Multiplayer / M1/M4 parity | PR #322 open; local validation passed; rendered check pending | head e95c177b on origin/main 1710e2c5; focused 4/4, package and diff check passed | deferred until GA |
 | T4C-0353 | M5 shutdown ownership, restored-database play, measured adapter load, tamper and key-rotation evidence | Multiplayer / M5 | Done (PR #319 merged; native-adapter evidence only, rendered gates remain) | PR #319 merge b2490b75, tested head 4f05db8b | deferred until GA |
 | T4C-0354 | Route the shared character journal Inventory tab to the authoritative online inventory panel; preserve local inventory offline | Multiplayer / M2 parity | Done (PR #320 merged; rendered verification pending) | PR #320 merge dbd7da1b, tested head cda1311e; task ID corrected from 0353 after PR #319 claimed it | deferred until GA |
 | T4C-0355 | Restore online recasting of the active player buff by double-clicking its buff-bar icon through the authoritative socket; preserve offline recasting | Multiplayer / M4 parity | Implementation complete; PR pending | commit f32f36bc, tested on origin/main b2490b75 | deferred until GA |
