@@ -228,7 +228,11 @@ class OnlineBuffsTest {
     // Spells limited to the caster, flags and attacks are never laid on someone else; the shared rules say why.
     assertEquals(SpellCastRules.Verdict.WRONG_TARGET, SpellEngine.cast(request.apply("spell.clear_thought"), world, new Random(1)).verdict());
     assertEquals(SpellCastRules.Verdict.WRONG_TARGET, SpellEngine.cast(request.apply("spell.invisibility"), world, new Random(1)).verdict());
-    assertEquals(SpellCastRules.Verdict.WRONG_TARGET, SpellEngine.cast(request.apply("spell.heal_light"), world, new Random(1)).verdict());
+    var friendHeal = SpellEngine.cast(request.apply("spell.heal_light"), world, new Random(1));
+    assertTrue(friendHeal.success());
+    var heal = (SpellEngine.Event.FriendHeal) friendHeal.events().get(0);
+    assertEquals(7L, heal.recipient());
+    assertTrue(heal.amount() > 0);
     assertEquals("friend_unavailable", SpellEngine.cast(new SpellEngine.CastRequest(content.spells().get("spell.barrier"), caster,
         7, 10, new SpellEngine.Target.Friend(8), true, 10_000, false, false, false), world, new Random(1)).refusal());
     assertEquals("friend_unavailable", SpellEngine.cast(new SpellEngine.CastRequest(content.spells().get("spell.barrier"), caster,
