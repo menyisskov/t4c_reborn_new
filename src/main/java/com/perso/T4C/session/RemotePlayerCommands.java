@@ -12,6 +12,7 @@ import com.perso.T4C.player.Player;
 import com.perso.T4C.world.MovementReconciler;
 import com.perso.T4C.world.MovementRules;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -19,6 +20,7 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.function.ToLongFunction;
 
@@ -97,17 +99,25 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
       String shopNpc,
       ShopOffersReply shop,
       long shopGeneration,
-      String talkNpc) {
+      String talkNpc,
+      Consumer<OnlineConnection.CommandResult> completion,
+      OnlineConnection.CommandResult commandResult) {
     static Outcome message(String key, List<Integer> args) {
-      return new Outcome(key, args, null, null, -1, null);
+      return new Outcome(key, args, null, null, -1, null, null, null);
     }
 
     static Outcome shop(String npc, ShopOffersReply listing, long generation) {
-      return new Outcome(null, List.of(), npc, listing, generation, null);
+      return new Outcome(null, List.of(), npc, listing, generation, null, null, null);
     }
 
     static Outcome talk(String npc) {
-      return new Outcome(null, List.of(), null, null, -1, npc);
+      return new Outcome(null, List.of(), null, null, -1, npc, null, null);
+    }
+
+    static Outcome completion(
+        String key, List<Integer> args, Consumer<OnlineConnection.CommandResult> callback,
+        OnlineConnection.CommandResult result) {
+      return new Outcome(key, args, null, null, -1, null, callback, result);
     }
   }
 
@@ -439,6 +449,49 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
     return sendRetrying(() -> link.useItem(itemInstance), ABILITY_BUSY_KEY, ABILITY_BUSY_KEY, true);
   }
 
+  static final String STAT_BUSY_KEY = "online.stats.busy";
+
+  @Override
+  public boolean allocateStats(
+      Map<String, Integer> allocation, Consumer<OnlineConnection.CommandResult> completion) {
+    if (allocation == null || allocation.isEmpty() || completion == null) return false;
+    final Map<String, Integer> request;
+    try {
+      request = Map.copyOf(allocation);
+    } catch (IllegalArgumentException | NullPointerException invalid) {
+      return false;
+    }
+    try {
+      allocateStatsWithRetry(request, true)
+          .whenComplete((result, failure) -> {
+            String key = failure != null || result == null ? "online.stats.refused" : result.messageKey();
+            List<Integer> args = failure != null || result == null ? List.of() : result.args();
+            outcomes.add(Outcome.completion(key, args, completion,
+                failure != null || result == null ? null : result));
+          });
+      return true;
+    } catch (IllegalStateException pendingOrOffline) {
+      outcomes.add(Outcome.completion(STAT_BUSY_KEY, List.of(), completion, null));
+      return true;
+    } catch (IllegalArgumentException invalid) {
+      return false;
+    }
+  }
+
+  private CompletionStage<OnlineConnection.CommandResult> allocateStatsWithRetry(
+      Map<String, Integer> allocation, boolean mayRetry) {
+    try {
+      return link.allocateStats(allocation)
+          .thenCompose(result -> {
+            if (mayRetry && result != null && !result.accepted() && STAT_BUSY_KEY.equals(result.messageKey()))
+              return allocateStatsWithRetry(allocation, false);
+            return CompletableFuture.completedFuture(result);
+          });
+    } catch (IllegalStateException | IllegalArgumentException unavailable) {
+      return CompletableFuture.failedFuture(unavailable);
+    }
+  }
+
   @Override
   public void closeShop() {
     shopGeneration.incrementAndGet();
@@ -565,6 +618,7 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
   public void pump() {
     Outcome outcome;
     while ((outcome = outcomes.poll()) != null) {
+      if (outcome.completion() != null) outcome.completion().accept(outcome.commandResult());
       if (outcome.talkNpc() != null) {
         if (host != null) host.showTalk(outcome.talkNpc());
         continue;

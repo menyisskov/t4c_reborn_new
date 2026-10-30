@@ -18,6 +18,19 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import com.perso.T4C.server.persistence.OnlineStore;
 
 class PreviewServerTest {
+  @Test void statAllocationParserRejectsMalformedAndDuplicateEntries() {
+    assertEquals(java.util.Map.of("strength", 2, "wisdom", 1),
+        PreviewServer.parseStatAllocation("strength:2,wisdom:1"));
+    for (String invalid : new String[] {"", "strength", "strength:-1", "strength:1,strength:2",
+        "strength:2147483648", "strength:1,endurance:1,dexterity:1,wisdom:1,intelligence:1,strength:1"}) {
+      assertThrows(PreviewWorld.Rejected.class, () -> PreviewServer.parseStatAllocation(invalid), invalid);
+    }
+    assertEquals(java.util.Map.of("unknown", 1), PreviewServer.parseStatAllocation("unknown:1"),
+        "Known stat names are validated by authoritative progression rules");
+    assertThrows(PreviewWorld.Rejected.class,
+        () -> PreviewServer.parseStatAllocation("null"));
+  }
+
   private HttpRequest request(String url, String path, String token, String body) {
     var builder = HttpRequest.newBuilder(URI.create(url + path)).timeout(Duration.ofSeconds(5));
     if (path.equals("/join")) builder.header(com.perso.T4C.online.model.OnlineProtocol.VERSION_HEADER,

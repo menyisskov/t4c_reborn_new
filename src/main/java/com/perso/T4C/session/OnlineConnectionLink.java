@@ -3,6 +3,7 @@ package com.perso.T4C.session;
 import com.perso.T4C.online.OnlineConnection;
 import com.perso.T4C.player.BodyPart;
 import java.util.Objects;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletionStage;
 
@@ -93,6 +94,11 @@ public final class OnlineConnectionLink implements RemoteLink {
   @Override
   public CompletionStage<OnlineConnection.CommandResult> useItem(UUID itemInstance) {
     return connection.useItem(itemInstance);
+  }
+
+  @Override
+  public CompletionStage<OnlineConnection.CommandResult> allocateStats(Map<String, Integer> allocation) {
+    return connection.allocateStats(allocation);
   }
 
   @Override

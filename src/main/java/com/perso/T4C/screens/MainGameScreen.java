@@ -2152,6 +2152,8 @@ public class MainGameScreen implements Screen {
     if (spellName == null || spellName.isEmpty()) {
       return false;
     }
+    // Online buff state is informational; recasting must go through an explicit server command.
+    if (isRemoteSession()) return true;
     long now = System.currentTimeMillis();
     if (spellName.equals(lastClickedBuffSpellName)
         && now - lastBuffClickMillis <= BUFF_DOUBLE_CLICK_MILLIS) {
@@ -4633,7 +4635,12 @@ public class MainGameScreen implements Screen {
 
   private void initializeHud() {
     hud = new PlayerHUD(player, spriteLoader);
+    if (remoteConnection != null)
+      hud.setRemoteHudStatus(() -> com.perso.T4C.ui.RemoteHudStatus.from(
+          remoteConnection.view(), System.currentTimeMillis()));
     hud.setPersistence(session.persistence());
+    if (session.commands() instanceof com.perso.T4C.session.RemotePlayerCommands remoteCommands)
+      hud.setRemotePlayerCommands(remoteCommands);
     hud.setBackpackAction(
         () -> {
           if (GuiManager.isCurrent(Inventory.class)) {
@@ -5418,7 +5425,8 @@ public class MainGameScreen implements Screen {
     remote.addProcessor(new com.badlogic.gdx.InputAdapter() {
       private boolean returnQueued;
       @Override public boolean keyDown(int keycode) {
-        if (keycode!=Input.Keys.R || !"disconnected".equals(remoteConnection.status()) || returnQueued)
+        if (keycode != Input.Keys.R
+            || !shouldQueueReturnToLobby(game.onlineLobbyLaunch(), remoteConnection.status(), returnQueued))
           return false;
         returnQueued=true;
         Gdx.app.postRunnable(() -> game.returnToOnlineLobby(MainGameScreen.this));
@@ -5439,6 +5447,12 @@ public class MainGameScreen implements Screen {
     });
     remote.addProcessor(monsters);remote.addProcessor(npcClicks);remote.addProcessor(lootClicks);
     Gdx.input.setInputProcessor(remote);
+  }
+
+  static boolean shouldQueueReturnToLobby(boolean lobbyCapable, String connectionStatus,
+      boolean returnQueued) {
+    return lobbyCapable && !returnQueued
+        && ("connected".equals(connectionStatus) || "disconnected".equals(connectionStatus));
   }
 
   /** The lines of whichever online panel is open, top to bottom; empty when none is. */

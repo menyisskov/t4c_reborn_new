@@ -26,6 +26,7 @@ import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.model.QuickSlotEntry;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.session.CharacterPersistence;
+import com.perso.T4C.session.RemotePlayerCommands;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellRegistry;
 import java.util.ArrayList;
@@ -104,6 +105,8 @@ public class PlayerHUD {
   private ChatBarButtonItem capturedChatBarButton;
   private ChatBarButtonItem draggedChatBarButton;
   private Player.ActiveBuff tooltipBuff;
+  private RemoteHudStatus.Buff tooltipRemoteBuff;
+  private java.util.function.Supplier<RemoteHudStatus> remoteHudStatus;
   private boolean hoveringBuff;
   private GuiBoxedText hpLabel;
   private GuiBoxedText mpLabel;
@@ -123,6 +126,25 @@ public class PlayerHUD {
   private final List<GuiElement> hudBoxedElements = new ArrayList<>();
 
   private CharacterPersistence persistence = CharacterPersistence.local();
+  private RemotePlayerCommands remotePlayerCommands;
+
+  /** Remote-only commands retained across the character panels' shared tab navigation. */
+  public void setRemotePlayerCommands(RemotePlayerCommands commands) {
+    remotePlayerCommands = commands;
+  }
+
+  public RemotePlayerCommands remotePlayerCommands() {
+    return remotePlayerCommands;
+  }
+
+  /** Supplies the current committed online character state; absent for the unchanged offline HUD. */
+  public void setRemoteHudStatus(java.util.function.Supplier<RemoteHudStatus> status) {
+    remoteHudStatus = status;
+  }
+
+  private RemoteHudStatus currentRemoteHudStatus() {
+    return remoteHudStatus == null ? null : remoteHudStatus.get();
+  }
 
   /** Where the windows and handlers that already hold this HUD store the character. */
   public void setPersistence(CharacterPersistence persistence) {
@@ -325,8 +347,13 @@ public class PlayerHUD {
   }
 
   private float buffY(int index) {
+    RemoteHudStatus remote = currentRemoteHudStatus();
+    return buffY(index, remote == null ? player.getActiveBuffs().size() : remote.buffs().size());
+  }
+
+  private float buffY(int index, int count) {
     int columns = buffColumns();
-    int rows = Math.max(1, (player.getActiveBuffs().size() + columns - 1) / columns);
+    int rows = Math.max(1, (count + columns - 1) / columns);
     float height = rows * BUFF_PITCH - 4;
     float top =
         Math.max(
@@ -338,6 +365,22 @@ public class PlayerHUD {
   }
 
   private void renderActiveBuffs(SpriteBatch batch) {
+    RemoteHudStatus remote = currentRemoteHudStatus();
+    if (remote != null) {
+      int index = 0;
+      long now = System.currentTimeMillis();
+      for (RemoteHudStatus.Buff buff : remote.buffs()) {
+        float bx = buffX(index), by = buffY(index++, remote.buffs().size());
+        journalTheme.well(batch, bx, by, 25, 25);
+        TextureRegion icon = resolveRemoteBuffIcon(buff);
+        if (icon != null) GuiDraw.drawRegionFlipped(batch, icon, bx + 2, by + 2, 21, 21);
+        float ratio = 1f;
+        if (buff.expiresAt() != Long.MAX_VALUE && buff.appliedAt() > 0 && buff.expiresAt() > buff.appliedAt())
+          ratio = CombatVitals.ratio(Math.max(0L, buff.expiresAt() - now), buff.expiresAt() - buff.appliedAt());
+        journalTheme.rect(batch, bx + 2, by + 23, 21 * ratio, 2, JournalTheme.ACCENT);
+      }
+      return;
+    }
     int index = 0;
     for (Player.ActiveBuff buff : player.getActiveBuffs()) {
       if (buff == null) continue;
@@ -401,7 +444,11 @@ public class PlayerHUD {
         float iconH = icon.getRegionHeight() * iconScale;
         float iconX = x + (slotWidth - iconW) * 0.5f;
         float iconY = y + (slotHeight - iconH) * 0.5f;
-        boolean onCooldown = spell != null && player.isSpellOnCooldown(spell.getName());
+        RemoteHudStatus remote = currentRemoteHudStatus();
+        float remoteRemaining = remote == null || spell == null ? 0f
+            : remote.remainingSeconds(spell.getKey(), System.currentTimeMillis());
+        boolean onCooldown = spell != null && (remote == null
+            ? player.isSpellOnCooldown(spell.getName()) : remoteRemaining > 0f);
         if (onCooldown) {
           Color previous = new Color(batch.getColor());
           batch.setColor(0.55f, 0.55f, 0.55f, 1f);
@@ -420,7 +467,8 @@ public class PlayerHUD {
           batch.setColor(0f, 0f, 0f, 0.45f);
           batch.draw(slot, x, y, slotWidth, slotHeight);
           batch.setColor(previous);
-          renderCooldownText(batch, x, y, slotSize, spell);
+          renderCooldownText(batch, x, y, slotSize, spell, remote == null
+              ? player.getSpellCooldownRemainingSeconds(spell.getName()) : remoteRemaining);
         } else {
           batch.draw(
               icon.getTexture(),
@@ -868,6 +916,13 @@ public class PlayerHUD {
   }
 
   public boolean showBuffTooltipAt(int screenX, int screenY) {
+    RemoteHudStatus.Buff remote = getRemoteBuffAt(screenX, screenY);
+    if (remote != null) {
+      tooltipRemoteBuff = remote;
+      tooltipBuff = null;
+      tooltip.show(buildRemoteBuffTooltipText(remote), screenX, screenY);
+      return true;
+    }
     Player.ActiveBuff buff = getBuffAt(screenX, screenY);
     if (buff == null) {
       return false;
@@ -878,6 +933,8 @@ public class PlayerHUD {
   }
 
   public String getBuffSpellNameAt(int screenX, int screenY) {
+    RemoteHudStatus.Buff remote = getRemoteBuffAt(screenX, screenY);
+    if (remote != null) return remote.name();
     Player.ActiveBuff buff = getBuffAt(screenX, screenY);
     return buff == null ? null : buff.getSpellName();
   }
@@ -897,11 +954,23 @@ public class PlayerHUD {
   }
 
   private Player.ActiveBuff getBuffAt(int screenX, int screenY) {
+    if (currentRemoteHudStatus() != null) return null;
     int index = 0;
     for (Player.ActiveBuff buff : player.getActiveBuffs()) {
       if (buff == null) continue;
       float bx = buffX(index), by = buffY(index++);
       if (screenX >= bx && screenX <= bx + 25 && screenY >= by && screenY <= by + 25) return buff;
+    }
+    return null;
+  }
+
+  private RemoteHudStatus.Buff getRemoteBuffAt(int screenX, int screenY) {
+    RemoteHudStatus remote = currentRemoteHudStatus();
+    if (remote == null) return null;
+    for (int index = 0; index < remote.buffs().size(); index++) {
+      float bx = buffX(index), by = buffY(index, remote.buffs().size());
+      if (screenX >= bx && screenX <= bx + 25 && screenY >= by && screenY <= by + 25)
+        return remote.buffs().get(index);
     }
     return null;
   }
@@ -958,6 +1027,15 @@ public class PlayerHUD {
     if (icon != null) {
       buffIcons.put(iconId, icon);
     }
+    return icon;
+  }
+
+  private TextureRegion resolveRemoteBuffIcon(RemoteHudStatus.Buff buff) {
+    if (buff.iconId() == null || buff.iconId().isEmpty()) return null;
+    TextureRegion cached = buffIcons.get(buff.iconId());
+    if (cached != null) return cached;
+    TextureRegion icon = spriteLoader.getRegionFromSpriteName(buff.iconId());
+    if (icon != null) buffIcons.put(buff.iconId(), icon);
     return icon;
   }
 
@@ -1037,6 +1115,12 @@ public class PlayerHUD {
       return;
     }
     float remaining = player.getSpellCooldownRemainingSeconds(spell.getName());
+    renderCooldownText(batch, slotX, slotY, size, spell, remaining);
+  }
+
+  private void renderCooldownText(
+      SpriteBatch batch, float slotX, float slotY, float size, SpellData spell, float remaining) {
+    if (spell == null) return;
     if (remaining <= 0f) {
       return;
     }
@@ -1053,6 +1137,27 @@ public class PlayerHUD {
 
   private void renderBuffTooltip(SpriteBatch batch) {
     int mx = Gdx.input.getX(), my = Gdx.input.getY();
+    RemoteHudStatus remote = currentRemoteHudStatus();
+    if (remote != null) {
+      RemoteHudStatus.Buff hovered =
+          com.perso.T4C.gui.core.GuiManager.isPointerOver(mx, my) ? null : getRemoteBuffAt(mx, my);
+      if (hovered != null) {
+        hoveringBuff = true;
+        tooltipRemoteBuff = hovered;
+        tooltipBuff = null;
+        tooltip.show(buildRemoteBuffTooltipText(hovered), mx, my);
+      } else if (hoveringBuff) {
+        hoveringBuff = false;
+        tooltipRemoteBuff = null;
+        tooltip.clear();
+      }
+      if (tooltipRemoteBuff == null) tooltip.render(batch);
+      else if (!tooltip.isVisible() || !remote.buffs().contains(tooltipRemoteBuff)) {
+        tooltipRemoteBuff = null;
+        tooltip.clear();
+      } else tooltip.render(batch, buildRemoteBuffTooltipText(tooltipRemoteBuff));
+      return;
+    }
     Player.ActiveBuff hovered =
         com.perso.T4C.gui.core.GuiManager.isPointerOver(mx, my) ? null : getBuffAt(mx, my);
     if (hovered != null) {
@@ -1079,6 +1184,16 @@ public class PlayerHUD {
 
   private String buildBuffTooltipText(Player.ActiveBuff buff) {
     return BuffTooltipText.build(buff, System.currentTimeMillis());
+  }
+
+  private String buildRemoteBuffTooltipText(RemoteHudStatus.Buff buff) {
+    String name = I18n.resolve(buff.name());
+    String description = I18n.resolve(buff.description());
+    StringBuilder text = new StringBuilder(name == null ? "" : name);
+    if (description != null && !description.isBlank() && !description.equals(name))
+      text.append('\n').append(description);
+    return text.append('\n').append(I18n.key("tooltip.time_remaining")).append(": ")
+        .append(BuffTooltipText.remaining(buff.expiresAt(), System.currentTimeMillis())).toString();
   }
 
   private void refreshRegions() {

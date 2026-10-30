@@ -3,6 +3,7 @@ package com.perso.T4C.session;
 import com.perso.T4C.online.OnlineConnection;
 import com.perso.T4C.player.BodyPart;
 import java.util.UUID;
+import java.util.Map;
 import java.util.concurrent.CompletionStage;
 
 /**
@@ -54,6 +55,10 @@ public interface RemoteLink {
   CompletionStage<OnlineConnection.CommandResult> castToPlayer(String spellKey,long actor);
 
   CompletionStage<OnlineConnection.CommandResult> useItem(UUID itemInstance);
+
+  default CompletionStage<OnlineConnection.CommandResult> allocateStats(Map<String, Integer> allocation) {
+    throw new IllegalStateException("Stat allocation is not available on this link");
+  }
 
   /** Holds a direction (each component -1..1); {@code frame} names the predicted client input. */
   void direction(int dx, int dy, long frame);

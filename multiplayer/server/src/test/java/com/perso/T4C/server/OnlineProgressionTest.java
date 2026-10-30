@@ -50,6 +50,32 @@ class OnlineProgressionTest {
         "Legacy ledger awards cannot silently roll retroactive level gains without migration");
   }
 
+  @Test void statAllocationValidatesAndDraftsAllFiveAttributesWithoutMutatingSource() {
+    var original = OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(3)).progress();
+    var progress = withStatPoints(original, 3);
+    var state = state(progress, 0);
+
+    var allocation = OnlineProgression.allocateStats(state, java.util.Map.of("strength", 2, "wisdom", 1));
+    assertEquals(3, allocation.pointsSpent());
+    assertEquals(progress.attributes().strength() + 2, allocation.progress().attributes().strength());
+    assertEquals(progress.attributes().wisdom() + 1, allocation.progress().attributes().wisdom());
+    assertEquals(0, allocation.progress().advancement().statPoints());
+    assertEquals(3, progress.advancement().statPoints(), "Drafting cannot mutate committed state");
+
+    assertAllocationRefused(state, java.util.Map.of(), "invalid_allocation");
+    assertAllocationRefused(state, java.util.Map.of("unknown", 1), "invalid_allocation");
+    assertAllocationRefused(state, java.util.Map.of("strength", 0), "invalid_allocation");
+    assertAllocationRefused(state, java.util.Map.of("strength", Integer.MAX_VALUE, "wisdom", 1), "invalid_allocation");
+    assertAllocationRefused(state, java.util.Map.of("strength", 4), "insufficient_stat_points");
+  }
+
+  private static void assertAllocationRefused(OnlineStore.CharacterState state, java.util.Map<String, Integer> allocation,
+      String reason) {
+    var rejected = assertThrows(PreviewWorld.Rejected.class,
+        () -> OnlineProgression.allocateStats(state, allocation));
+    assertEquals(reason, rejected.getMessage());
+  }
+
   @Test @EnabledIfEnvironmentVariable(named="T4C_DB_URL",matches=".+")
   void levelAndRefillPersistWithDamageAndRetryDoesNotRerollOrRegrant() throws Exception {
     var store=OnlineStore.fromEnvironment(); store.migrate(); var key=store.provisionAccount();
@@ -80,5 +106,13 @@ class OnlineProgressionTest {
         new CharacterProgress.Advancement(level,p.advancement().statPoints(),p.advancement().skillPoints(),0,0),
         p.inventory(),p.equipment(),p.skills(),p.spells(),p.questFlags(),p.storage(),p.storageGold(),p.respawn(),
         p.buffs(),p.cooldowns(),p.hiddenUntil(),p.companion());
+  }
+
+  private static CharacterProgress withStatPoints(CharacterProgress p, int statPoints) {
+    return new CharacterProgress(p.version(), p.characterClass(), p.gender(), p.attributes(), p.vitals(),
+        new CharacterProgress.Advancement(p.advancement().level(), statPoints, p.advancement().skillPoints(),
+            p.advancement().rebirths(), p.advancement().karma()), p.inventory(), p.equipment(), p.skills(), p.spells(),
+        p.questFlags(), p.storage(), p.storageGold(), p.respawn(), p.buffs(), p.cooldowns(), p.hiddenUntil(),
+        p.companion());
   }
 }

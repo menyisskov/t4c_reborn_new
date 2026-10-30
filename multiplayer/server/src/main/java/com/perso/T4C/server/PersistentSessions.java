@@ -199,6 +199,17 @@ final class PersistentSessions {
 
   /** What a committed self-cast or potion did, for the acknowledgement. */
   record AbilityReply(long revision,int healthGained,int manaSpent,int manaGained) {}
+  /** What a committed stat allocation did, based only on the server's committed progress. */
+  record StatAllocationReply(long revision, int pointsSpent) {}
+
+  CompletionStage<StatAllocationReply> allocateStats(
+      String token, long revision, Map<String, Integer> allocation) {
+    var saved = usableCharacter(token, revision, false);
+    var draft = OnlineProgression.allocateStats(saved, allocation);
+    return commitGameplayEvent(token, revision, UUID.randomUUID(), 0, 0, draft.progress())
+        .thenApply(committed -> new StatAllocationReply(
+            committed.character().revision(), draft.pointsSpent()));
+  }
 
   /**
    * Self-cast of a learned spell. The draft is rolled once from committed state and committed once through
