@@ -333,7 +333,7 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
   }
 
   /**
-   * One topic question. Like a greeting, a topic refused as busy or stale was rejected before any change (T4C-0353: a live
+   * One topic question. Like a greeting, a topic refused as busy or stale was rejected before any change (T4C-0362: a live
    * rendered run lost the second window's quest acceptance to a revision moved by a checkpoint), so it is sent once more
    * with the refreshed revision; a second refusal is shown, and nothing accepted is ever sent again.
    */
