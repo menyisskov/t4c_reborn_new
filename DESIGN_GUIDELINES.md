@@ -69,6 +69,12 @@
 - The agreed delivery milestones are Alpha (authoritative persistent gameplay), Beta (complete intended launch gameplay with two real rendered clients and sustained mixed-play evidence), GA (essential end-to-end gameplay, security and recovery), then Post-GA (optional additions, utilities and improvements). This 2026-10-27 owner concurrency decision supersedes the earlier 20-player Beta gate without changing the current server capacity. Anti-cheat and economic integrity are launch requirements, not optional later improvements.
 - Integration-test maintenance: Avalon canopy checks apply to the relocated Avalon footprint, while terrain/passability checks still cover all eastern encounters. Equipment migration tests retain representative formula checks; boost uniqueness and forbidden light resistance remain covered by ItemBalanceGuidelinesTest. Resale tests use controlled loot sources for rarity ordering because later regions may change the easiest real source.
 
+## Day/night clock default (T4C-0350)
+
+- A new world starts at 7:00 am: the single-player new game with no saved clock and the online screen (the server does not publish a time of day yet, so the client uses this default). Owner decision, 2026-10-30; the earlier midnight start was a bug (the default passed seconds into an hours parameter), not a design choice.
+- `DayNightCycle`'s constructor argument is hours. A saved `dayNightHour` is always honoured exactly, including 0 (midnight); only the no-saved-clock default changed.
+- Open gap: online players each run their own local clock; sharing the server's time of day would need a protocol addition and is not decided.
+
 ## Mythic monster encounters (T4C-0153)
 
 - The owner wants new monsters at level 1000 and above that feel substantially tougher than Arch Drake. They remain optional challenge content above the level-400 player cap; their level does not raise that cap.

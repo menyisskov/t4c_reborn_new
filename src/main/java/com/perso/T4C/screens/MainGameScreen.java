@@ -538,7 +538,7 @@ public class MainGameScreen implements Screen {
   private static com.perso.T4C.world.DayNightCycle loadDayNightCycle() {
     try {
       com.perso.T4C.helper.PlayerStateDto state = PlayerStateStore.load();
-      if (state != null && state.dayNightHour > 0f) {
+      if (state != null && state.dayNightHour >= 0f) {
         return new com.perso.T4C.world.DayNightCycle(state.dayNightHour);
       }
     } catch (Throwable ignored) {
