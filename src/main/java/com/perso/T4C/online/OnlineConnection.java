@@ -260,6 +260,16 @@ public final class OnlineConnection implements AutoCloseable {
     return gameplayCommand("/cast", spellKey + " u:" + creature);
   }
 
+  /** Casts a learned spell at a region-local tile position; all legality checks stay server-side. */
+  public java.util.concurrent.CompletionStage<CommandResult> castAtPosition(
+      String spellKey, int tileX, int tileY) {
+    if (spellKey == null || !spellKey.matches("spell\\.[a-z0-9_]{1,64}"))
+      throw new IllegalArgumentException("Invalid spell key");
+    if (Math.abs((long) tileX) > 999_999 || Math.abs((long) tileY) > 999_999)
+      throw new IllegalArgumentException("Invalid target position");
+    return gameplayCommand("/cast", spellKey + " p:" + tileX + "," + tileY);
+  }
+
   /** Casts a learned single-target spell at another online actor by snapshot id. */
   public java.util.concurrent.CompletionStage<CommandResult> castToPlayer(String spellKey,long actor) {
     if (spellKey == null || !spellKey.matches("spell\\.[a-z0-9_]{1,64}"))

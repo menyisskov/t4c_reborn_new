@@ -25,8 +25,13 @@ import java.util.function.Function;
 public final class OnlineAbilityMenu {
   public enum Kind { NONE, SPELLS, POTIONS }
 
-  /** A spell key or potion identity; creature-targeted engine spells also require a live target id. */
-  public record Action(Kind kind, String spellKey, UUID item, boolean requiresCreatureTarget) {}
+  /** A spell key or potion identity plus the target form needed by the selected cast. */
+  public record Action(
+      Kind kind,
+      String spellKey,
+      UUID item,
+      boolean requiresCreatureTarget,
+      boolean requiresPositionTarget) {}
 
   private final Function<String, ItemDefinition> items;
   private Kind open = Kind.NONE;
@@ -88,10 +93,17 @@ public final class OnlineAbilityMenu {
     Optional<Action> picked =
         open == Kind.SPELLS
             ? OnlineAbilityChoices.choose(OnlineAbilityChoices.castableSpells(progress, engineCatalog), digit)
-                .map(row -> new Action(Kind.SPELLS, row.key(), null, row.requiresCreatureTarget()))
+                .map(
+                    row ->
+                        new Action(
+                            Kind.SPELLS,
+                            row.key(),
+                            null,
+                            row.requiresCreatureTarget(),
+                            row.requiresPositionTarget()))
             : OnlineAbilityChoices.choose(
                     OnlineAbilityChoices.usablePotions(progress, potionAllowlist, items), digit)
-                .map(row -> new Action(Kind.POTIONS, null, row.instance(), false));
+                .map(row -> new Action(Kind.POTIONS, null, row.instance(), false, false));
     picked.ifPresent(action -> close());
     return picked;
   }

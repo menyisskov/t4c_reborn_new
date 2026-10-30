@@ -48,6 +48,14 @@ class OnlineAbilityMenuTest {
         .map(SpellContentV2.Spell::key).sorted().findFirst().orElseThrow();
   }
 
+  private static String positionTargetCastable() {
+    return ENGINE_CATALOG.spells().values().stream()
+        .filter(s -> s.kind() == SpellContentV2.Kind.AREA_DAMAGE && s.targetType() == 19
+            && !s.selfCenteredAttack() && s.stage() <= OnlineSpellAllowlistV2.ENABLED_STAGE
+            && SpellEngine.supported(s))
+        .map(SpellContentV2.Spell::key).sorted().findFirst().orElseThrow();
+  }
+
   private static Item potionItem() {
     var ids = ALLOWLIST.spells().values().stream().filter(s -> s.use() == SpellContent.Use.ITEM)
         .map(SpellContent.Spell::id).toList();
@@ -121,6 +129,19 @@ class OnlineAbilityMenuTest {
 
     assertEquals(key, action.spellKey());
     assertTrue(action.requiresCreatureTarget());
+  }
+
+  @Test
+  void tileAimedAreaSelectionCarriesPositionTargetRequirement() {
+    var key = positionTargetCastable();
+    var menu = new OnlineAbilityMenu();
+    menu.toggle(OnlineAbilityMenu.Kind.SPELLS, true);
+
+    var action = menu.choose(1, progress(10, Set.of(key), List.of()), ENGINE_CATALOG, ALLOWLIST, true).orElseThrow();
+
+    assertEquals(key, action.spellKey());
+    assertTrue(action.requiresPositionTarget());
+    assertFalse(action.requiresCreatureTarget());
   }
 
   @Test

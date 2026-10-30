@@ -414,6 +414,16 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
   }
 
   @Override
+  public boolean castAtPosition(String spellKey, int tileX, int tileY) {
+    if (spellKey == null) return false;
+    return sendRetrying(
+        () -> link.castAtPosition(spellKey, tileX, tileY),
+        ABILITY_BUSY_KEY,
+        ABILITY_BUSY_KEY,
+        true);
+  }
+
+  @Override
   public boolean castToPlayer(String spellKey,long actor) {
     if(spellKey==null || actor<=0) return false;
     OnlineConnection.View view=link.view();

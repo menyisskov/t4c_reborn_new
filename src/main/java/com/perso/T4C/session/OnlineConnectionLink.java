@@ -75,6 +75,12 @@ public final class OnlineConnectionLink implements RemoteLink {
   }
 
   @Override
+  public CompletionStage<OnlineConnection.CommandResult> castAtPosition(
+      String spellKey, int tileX, int tileY) {
+    return connection.castAtPosition(spellKey, tileX, tileY);
+  }
+
+  @Override
   public CompletionStage<OnlineConnection.CommandResult> castToPlayer(String spellKey,long actor) {
     return connection.castToPlayer(spellKey,actor);
   }

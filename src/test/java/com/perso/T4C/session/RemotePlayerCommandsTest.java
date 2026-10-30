@@ -115,6 +115,12 @@ class RemotePlayerCommandsTest {
     }
 
     @Override
+    public CompletionStage<OnlineConnection.CommandResult> castAtPosition(
+        String spellKey, int tileX, int tileY) {
+      return reply("cast " + spellKey + " p:" + tileX + "," + tileY);
+    }
+
+    @Override
     public CompletionStage<OnlineConnection.CommandResult> castToPlayer(String spellKey,long actor) {
       return reply("cast " + spellKey + " player " + actor);
     }
@@ -530,6 +536,15 @@ class RemotePlayerCommandsTest {
     session.commands().pump();
 
     assertEquals(List.of(I18n.key("online.attack.out_of_reach")), host.messages);
+  }
+
+  @Test
+  void tileTargetSpellSendsRegionLocalPositionThroughTheExistingCastIntent() {
+    boolean sent = ((RemotePlayerCommands) session.commands()).castAtPosition("spell.area_blast", 8, 9);
+
+    assertTrue(sent);
+    assertEquals(List.of("cast spell.area_blast p:8,9"), link.calls);
+    assertTrue(player.isAttackReady());
   }
 
   @Test

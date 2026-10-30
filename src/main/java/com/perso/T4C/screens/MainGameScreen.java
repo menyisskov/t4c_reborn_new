@@ -3566,6 +3566,10 @@ public class MainGameScreen implements Screen {
     if (hud != null && hud.isQuickBarHit(screenX, screenY)) return false;
     Vector3 target = camera.unproject(clickWorldCoordsTemp.set(screenX, screenY, 0f));
     Vector2 targetPosition = new Vector2(target.x, target.y);
+    if (isRemoteSession()) {
+      var view = remoteConnection == null ? null : remoteConnection.view();
+      return tryCastRemotePositionSpell(spell, targetPosition, view);
+    }
     if (spell.isAttack()
         && !SanctuaryCombatRules.canFight(player.getPositionVector(), targetPosition)) {
       showSystemMessage(SpellCastingService.message(SpellCastingService.Failure.SAFE_HAVEN));
@@ -3594,6 +3598,25 @@ public class MainGameScreen implements Screen {
       return true;
     }
     launchPositionSpell(spell, targetPosition);
+    return true;
+  }
+
+  private boolean tryCastRemotePositionSpell(
+      SpellData spell,
+      Vector2 targetPosition,
+      com.perso.T4C.online.OnlineConnection.View view) {
+    if (view == null || view.map() == null || targetPosition == null) {
+      showSystemMessage(I18n.key("online.cast.no_target"));
+      return true;
+    }
+    int tileX = (int) Math.floor(targetPosition.x / GRID_W) - view.map().originX();
+    int tileY = (int) Math.floor(targetPosition.y / GRID_H) - view.map().originY();
+    var commands = (com.perso.T4C.session.RemotePlayerCommands) session.commands();
+    if (!commands.castAtPosition(spell.getKey(), tileX, tileY)) {
+      showSystemMessage(I18n.key("online.cast.no_target"));
+      return true;
+    }
+    clearSelectedTargetedSpell(true);
     return true;
   }
 
@@ -5233,6 +5256,12 @@ public class MainGameScreen implements Screen {
     InputMultiplexer remote=new InputMultiplexer();
     remote.addProcessor(new com.badlogic.gdx.InputAdapter() {
       @Override public boolean keyDown(int keycode) {
+        if (keycode == Input.Keys.ESCAPE
+            && selectedTargetedSpell != null
+            && isPositionTargetSpell(selectedTargetedSpell)) {
+          clearSelectedTargetedSpell(true);
+          return true;
+        }
         if (remoteTalkPanel.isOpen()) {
           if (keycode == Input.Keys.ESCAPE) {
             remoteTalkPanel.close();
@@ -5278,6 +5307,15 @@ public class MainGameScreen implements Screen {
             var commands = (com.perso.T4C.session.RemotePlayerCommands) session.commands();
             if (action.kind() == com.perso.T4C.online.OnlineAbilityMenu.Kind.POTIONS) {
               commands.useItem(action.item());
+            } else if (action.requiresPositionTarget()) {
+              SpellData spell = SpellRegistry.findByName(action.spellKey());
+              if (spell == null) {
+                showSystemMessage(I18n.key("online.cast.no_target"));
+              } else {
+                selectedTargetedSpell = spell;
+                selectedTargetedSlot = 0;
+                showSystemMessage(I18n.key("online.ability.aim"));
+              }
             } else if (action.requiresCreatureTarget()) {
               if (selectedMonster == null || !commands.cast(action.spellKey(), selectedMonster))
                 showSystemMessage(I18n.key("online.cast.no_target"));
@@ -5370,6 +5408,11 @@ public class MainGameScreen implements Screen {
           return true;
         }
         return false;
+      }
+    });
+    remote.addProcessor(new com.badlogic.gdx.InputAdapter() {
+      @Override public boolean touchDown(int x, int y, int pointer, int button) {
+        return button == Input.Buttons.LEFT && tryCastPositionSpell(x, y);
       }
     });
     remote.addProcessor(new com.badlogic.gdx.InputAdapter() {

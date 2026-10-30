@@ -126,6 +126,7 @@
   "online.ability.spell_row": "%d. %s (%s)",
   "online.ability.spells_empty": "You have no spells you can cast online.",
   "online.ability.spells_close": "C or Esc: close | 1-9: cast",
+  "online.ability.aim": "Click a tile to aim this spell. Esc cancels.",
   "online.ability.potions_title": "Potions",
   "online.ability.potion_row": "%d. %s x%d",
   "online.ability.potions_empty": "You carry nothing you can use online.",

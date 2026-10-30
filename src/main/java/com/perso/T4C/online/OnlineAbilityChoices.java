@@ -25,7 +25,12 @@ final class OnlineAbilityChoices {
   static final int MAX_CHOICES = OnlineInventoryRows.MAX_CHOICES;
 
   /** {@code manaCostLabel} is the authored cost as the spell book shows it, never a retyped number. */
-  record SpellChoice(String key, String name, String manaCostLabel, boolean requiresCreatureTarget) {}
+  record SpellChoice(
+      String key,
+      String name,
+      String manaCostLabel,
+      boolean requiresCreatureTarget,
+      boolean requiresPositionTarget) {}
 
   /** {@code instance} is what {@link OnlineConnection#useItem} sends; {@code quantity} is for display. */
   record PotionChoice(UUID instance, String itemKey, String name, int quantity) {}
@@ -49,7 +54,13 @@ final class OnlineAbilityChoices {
         case AREA_DAMAGE -> spell.targetType() == AREA_AROUND_CREATURE;
         default -> false;
       };
-      rows.add(new SpellChoice(key, spellName(key), manaLabel(spell.manaCost()), creatureTarget));
+      boolean positionTarget =
+          spell.kind() == SpellContentV2.Kind.AREA_DAMAGE
+              && spell.targetType() == 19
+              && !spell.selfCenteredAttack();
+      rows.add(
+          new SpellChoice(
+              key, spellName(key), manaLabel(spell.manaCost()), creatureTarget, positionTarget));
     }
     return List.copyOf(rows);
   }
