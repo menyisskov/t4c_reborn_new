@@ -4,6 +4,10 @@ Last reviewed: 2026-10-27, Asia/Jerusalem. This file is the restart point for a 
 
 ## Read first
 
+### Online Sneak parity (T4C-0344)
+
+Implemented on `codex/online-sneak-0344` from `origin/main` 0dcdb164. Learned Sneak now uses the persistent online socket, server-committed concealment/cooldown, moving witness checks and melee/ranged/spell reveal. Focused client tests passed 49/49; focused server tests passed 19 total (0 failures/errors, 6 skipped including database-gated cases); root/server packages and `git diff --check` passed. The PostgreSQL persistence/observer test and rendered-client acceptance remain unverified; no DB, server, desktop or owner QA resources were used. Next: open/merge the locally validated PR, then schedule the rendered check without taking the owner's desktop. M4/Beta remain open.
+
 ### Online HUD and completed quest greeting (T4C-0343)
 
 Commit `398cfd25` on `codex/online-ui-quest-0343`, rebased onto main `3e147d8b`. Online clicks now route through the existing HUD actions; a repeated completed `renewed_wards` greeting returns the authored completed line without changing rewards or progress. Focused tests passed: HUD 1/1, offline Warden 2/2, online quest 6/6; root and server packages and diff check passed. No rendered-client test or owner QA resource was used. Next: open/merge the locally validated PR, then coordinate a rendered check without taking the owner's desktop; M1/M3 and Beta remain open.

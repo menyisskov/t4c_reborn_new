@@ -303,6 +303,8 @@ repeat turn-in and a lost-response/restart recovery check. See [MAP_TRANSFER_DES
 
 Current evidence (T4C-0323, PR #285 merged): learned single-target heal effects route to another live nearby player through the game socket; atomic caster/recipient persistence and the PostgreSQL-backed socket route pass focused tests. No rendered-client evidence yet; this does not complete M4.
 
+T4C-0344 implementation evidence: learned online Sneak now commits concealment and its cooldown; movement upkeep uses the authored skill/stat/witness checks, and melee, ranged attacks and spell casts reveal it. Focused server tests passed 19 total (0 failures/errors, 6 skipped, including database-gated cases), focused client tests passed 49/49, root and server package builds passed, and `git diff --check` passed. The PostgreSQL persistence/observer case and rendered-client verification were not run. M4 and Beta remain open.
+
 Required behavior:
 
 - [x] Declare classes and required abilities above. A melee-only networking preview cannot be
