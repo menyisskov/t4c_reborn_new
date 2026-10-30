@@ -230,6 +230,18 @@ class OnlineAbilityChoicesTest {
     expected.add("item.potion_of_clear_thought");
     expected.add("item.potion_of_fortitude");
     expected.add("item.potion_of_tranquility");
+    expected.add("item.hyper_potion_of_clear_thought");
+    expected.add("item.hyper_potion_of_fortitude");
+    expected.add("item.hyper_potion_of_tranquility");
+    expected.add("item.hyper_potion_of_fury");
+    for (var key : List.of("item.hyper_potion_of_clear_thought", "item.hyper_potion_of_fortitude",
+        "item.hyper_potion_of_tranquility", "item.hyper_potion_of_fury")) {
+      var definition = ItemRegistry.findByKey(key);
+      assertNotNull(definition, key);
+      assertEquals(1, definition.getNbCharges(), key);
+      assertTrue(ALLOWLIST.spells().values().stream().anyMatch(spell -> spell.use() == SpellContent.Use.ITEM
+          && definition.getSpells().stream().anyMatch(itemSpell -> itemSpell.getSpellId() == spell.id())), key);
+    }
     var offered = new java.util.TreeSet<String>();
     OnlineAbilityChoices.usablePotions(progress(Set.of(), inventory, Map.of()), ALLOWLIST)
         .forEach(row -> offered.add(row.itemKey()));

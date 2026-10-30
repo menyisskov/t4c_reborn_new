@@ -16,13 +16,13 @@ class OnlineSpellContentV2ExporterTest {
   @Test
   void everyPlayerSpellIsClassifiedAndTheCountsMatchTheDesign() {
     var content = OnlineSpellContentV2Exporter.snapshot();
-    assertEquals(SpellRegistry.playerCastableSpells().size() + 6, content.spells().size());
+    assertEquals(SpellRegistry.playerCastableSpells().size() + 10, content.spells().size());
     Map<Kind, Long> counts = new EnumMap<>(Kind.class);
     content.spells().values().forEach(spell -> counts.merge(spell.kind(), 1L, Long::sum));
     // These are the design's table; a content change that moves one is a deliberate decision.
     var expected = Map.ofEntries(Map.entry(Kind.NUKE, 40L), Map.entry(Kind.AREA_DAMAGE, 25L),
         Map.entry(Kind.DRAIN, 4L), Map.entry(Kind.HEAL, 4L), Map.entry(Kind.AREA_HEAL, 4L),
-        Map.entry(Kind.BUFF, 31L), Map.entry(Kind.DEBUFF, 1L), Map.entry(Kind.DOT, 4L),
+        Map.entry(Kind.BUFF, 35L), Map.entry(Kind.DEBUFF, 1L), Map.entry(Kind.DOT, 4L),
         Map.entry(Kind.SHIELD, 3L), Map.entry(Kind.GATEWAY, 7L), Map.entry(Kind.PORTAL, 6L),
         Map.entry(Kind.RECALL, 1L), Map.entry(Kind.DETECTION, 4L), Map.entry(Kind.DISPEL, 2L),
         Map.entry(Kind.SPECIAL, 2L));
@@ -82,6 +82,34 @@ class OnlineSpellContentV2ExporterTest {
           && effect.params().stream().anyMatch(param -> param.id() == 2 && entry.getValue().equals(param.expression()))
           && effect.params().stream().anyMatch(param -> param.id() == 3 && "10".equals(param.expression()))),
           entry.getKey());
+    }
+  }
+
+  @Test
+  void exportsTheFourHyperStatPotionsWithTheirAuthoredFormulasAndDuration() {
+    var formulas = Map.of(
+        "spell.item_hyper_potion_of_clear_thought",
+            Map.entry("Intelligence", "if(self.true_int/4<50?50:self.true_int/4)"),
+        "spell.item_hyper_potion_of_fortitude",
+            Map.entry("Endurance", "if(self.true_end/4<50?50:self.true_end/4)"),
+        "spell.item_hyper_potion_of_tranquility",
+            Map.entry("Wisdom", "if(self.true_wis/4<50?50:self.true_wis/4)"),
+        "spell.item_hyper_potion_of_fury", Map.entry("Strength", "if(self.true_str/4<50?50:self.true_str/4)"));
+    var content = OnlineSpellContentV2Exporter.snapshot();
+    var legacy = OnlineSpellContentExporter.snapshot();
+    for (var entry : formulas.entrySet()) {
+      var spell = content.spells().get(entry.getKey());
+      assertNotNull(spell, entry.getKey());
+      assertEquals(Kind.BUFF, spell.kind(), entry.getKey());
+      assertEquals(2, spell.stage(), entry.getKey());
+      assertEquals(300_000, Integer.parseInt(spell.duration()), entry.getKey());
+      assertTrue(spell.effects().stream().anyMatch(effect -> effect.type() == 2
+          && effect.params().stream().anyMatch(param ->
+              param.id() == 2 && entry.getValue().getKey().equals(param.expression()))
+          && effect.params().stream().anyMatch(param ->
+              param.id() == 3 && entry.getValue().getValue().equals(param.expression()))),
+          entry.getKey());
+      assertEquals(spell.effects(), legacy.spells().get(entry.getKey()).effects(), entry.getKey());
     }
   }
 
