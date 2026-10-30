@@ -33,7 +33,18 @@ public final class PreviewWorld {
       this(id,x,y,sequence,appearance,hp,maxHp,null,null,null);
     }
   }
-  public record Snapshot(long tick, List<PlayerView> players, List<CreatureView> creatures) {}
+  /**
+   * {@code window} is the region-local rectangle the lists are complete for and {@code truncated}
+   * says a cap cut a list inside it; both are null for a region that is not streamed (whole region).
+   */
+  public record Snapshot(long tick, List<PlayerView> players, List<CreatureView> creatures,
+      AreaOfInterest.Window window, Boolean truncated) {
+    public Snapshot(long tick, List<PlayerView> players, List<CreatureView> creatures) {
+      this(tick,players,creatures,null,null);
+    }
+  }
+  /** The adapter and client both accept at most this many creatures in one snapshot. */
+  static final int MAX_SNAPSHOT_CREATURES = 256;
   record CreaturePosition(double x, double y) {}
   public static final class Rejected extends RuntimeException {
     public final int status;
@@ -75,7 +86,10 @@ public final class PreviewWorld {
     var residents=new ArrayList<CreatureView>();
     var authored=new ArrayList<CreatureSpawn>();
     var keys=new java.util.HashSet<String>();
-    if (content!=null) {
+    // A streamed region hosts no resident creatures until activation exists (stage A part 2): the
+    // whole world's spawn list is dormant content, and the 256 cap below keeps guarding every
+    // region that still lists its creatures up front.
+    if (content!=null && !map.streamed()) {
       var spawns=content.region(worldId,map.originX,map.originY,map.width,map.height);
       if (spawns.size()>256) throw new IllegalArgumentException("Creature preview capacity exceeded");
       for (var spawn:spawns) {
@@ -204,19 +218,28 @@ public final class PreviewWorld {
     Player observer=players.get(token);
     boolean detectsInvisible=observer.detectInvisibleUntil>now;
     boolean detectsHidden=observer.detectHiddenUntil>now;
+    var window=map.streamed() ? AreaOfInterest.window(observer.x,observer.y,AreaOfInterest.SNAPSHOT_HALF_EXTENT,map.width,map.height) : null;
     for (Player p : players.values()) {
       boolean indefiniteHidden=p.hiddenUntil==Long.MAX_VALUE;
       boolean finiteInvisible=!indefiniteHidden && p.hiddenUntil>now;
+      if(window!=null && p!=observer && !window.contains(p.x,p.y)) continue;
       if(p==observer || !indefiniteHidden && !finiteInvisible
           || indefiniteHidden && detectsHidden || finiteInvisible && detectsInvisible) result.add(view(p));
     }
-    return new Snapshot(tick, List.copyOf(result),creatures.stream().filter(c -> !inactiveCreatures.contains(c.id()))
+    var visible=creatures.stream().filter(c -> !inactiveCreatures.contains(c.id()))
         .map(c -> {
           var position=creaturePosition(c.id());
           return new CreatureView(c.id(),c.definition(),position.x(),position.y(),
               creatureHealth.getOrDefault(c.id(),c.health()),c.maxHealth(),
               c.walkPattern(),c.attackPattern(),c.deathPattern());
-        }).toList());
+        });
+    if(window==null) return new Snapshot(tick, List.copyOf(result),visible.toList());
+    // Streamed: only what is inside the viewer's window, nearest first, id as the stable tie-break.
+    var inside=visible.filter(c->window.contains(c.x(),c.y()))
+        .sorted(java.util.Comparator.<CreatureView>comparingDouble(c->AreaOfInterest.distance(c.x(),c.y(),observer.x,observer.y))
+            .thenComparingLong(CreatureView::id)).toList();
+    boolean truncated=inside.size()>MAX_SNAPSHOT_CREATURES;
+    return new Snapshot(tick, List.copyOf(result),truncated ? inside.subList(0,MAX_SNAPSHOT_CREATURES) : inside,window,truncated);
   }
 
   public void leave(String token) { authenticate(token); players.remove(token); }

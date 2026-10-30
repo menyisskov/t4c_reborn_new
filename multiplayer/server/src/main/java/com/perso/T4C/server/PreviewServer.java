@@ -33,7 +33,8 @@ public final class PreviewServer implements AutoCloseable {
   private static final int MAX_CORPSE_ITEMS_PER_CORPSE = 256;
   private static final int MAX_CORPSE_ITEM_DETAILS = 2048;
   private record PersistentSnapshot(long tick, java.util.List<PreviewWorld.PlayerView> players,
-      long characterRevision, java.util.List<com.perso.T4C.online.model.CreatureView> creatures,com.perso.T4C.online.model.OnlineRegion region,java.util.List<com.perso.T4C.online.model.NpcView> npcs,JsonArray loot) {}
+      long characterRevision, java.util.List<com.perso.T4C.online.model.CreatureView> creatures,com.perso.T4C.online.model.OnlineRegion region,java.util.List<com.perso.T4C.online.model.NpcView> npcs,JsonArray loot,
+      AreaOfInterest.Window window,Boolean truncated) {}
   /** Ground loot shown in one snapshot: at most this many drops, nearest the viewer first. */
   static final int GROUND_LOOT_VIEW_LIMIT = 128;
   private static final Set<String> POST_ROUTES=Set.of("/join","/admin/shutdown","/input","/attack",
@@ -216,7 +217,9 @@ public final class PreviewServer implements AutoCloseable {
   private String mapJson(HostedWorlds.Region region,long epoch) {
     var values=new java.util.LinkedHashMap<String,Object>();var map=region.map;
     values.put("width",map.width);values.put("height",map.height);values.put("originX",map.originX);values.put("originY",map.originY);
-    values.put("blocked",map.cells());values.put("maxPlayers",PreviewWorld.MAX_PLAYERS);values.put("persistent",store!=null);
+    // A streamed region publishes no grid (108 MB for world 0): clients read the shipped collision asset.
+    if(region.spec.streamed()) values.put("streamed",true);else values.put("blocked",map.cells());
+    values.put("maxPlayers",PreviewWorld.MAX_PLAYERS);values.put("persistent",store!=null);
     values.put("protocolVersion",OnlineProtocol.VERSION);values.put("gameSocketPort",gameSocket.port());values.put("world",region.spec.world());values.put("key",region.spec.key());values.put("locationEpoch",epoch);
     return JSON.toJson(values);
   }
@@ -681,9 +684,18 @@ public final class PreviewServer implements AutoCloseable {
             String token = token(exchange);
             json(exchange,observation, 200, onWorld(() -> {
               var context=admit(token,null);var snapshot=context.world.snapshot(token);
-              return new PersistentSnapshot(snapshot.tick(),snapshot.players(),persistent==null ? 0 : persistent.character(token).revision(),
-                  snapshot.creatures(),context.descriptor(persistent==null ? 0 : persistent.region(token).locationEpoch()),context.npcs.views(),
-                  groundLoot(token,context));
+              var window=snapshot.window();
+              long revision=persistent==null ? 0 : persistent.character(token).revision();
+              var region=context.descriptor(persistent==null ? 0 : persistent.region(token).locationEpoch());
+              if(window==null)
+                return new PersistentSnapshot(snapshot.tick(),snapshot.players(),revision,snapshot.creatures(),region,
+                    context.npcs.views(),groundLoot(token,context,null).entries(),null,null);
+              // Streamed region: every list is limited to the viewer's window; a cut list sets truncated.
+              var self=context.world.position(token);
+              var npcs=context.npcs.views(window,self.x(),self.y());
+              var loot=groundLoot(token,context,window);
+              return new PersistentSnapshot(snapshot.tick(),snapshot.players(),revision,snapshot.creatures(),region,
+                  npcs.views(),loot.entries(),window,snapshot.truncated() || npcs.truncated() || loot.cut());
             }));
           }
           case "/character" -> {
@@ -741,15 +753,19 @@ public final class PreviewServer implements AutoCloseable {
    * never cross regions. The owner is the viewer's own public player ID while the viewer holds the owner
    * window; other owners are reported as null. No character or account ID leaves the server.
    */
-  private JsonArray groundLoot(String token,HostedWorlds.Region region) {
+  private record LootView(JsonArray entries,boolean cut) {}
+  private LootView groundLoot(String token,HostedWorlds.Region region,AreaOfInterest.Window window) {
     var result=new JsonArray();
-    if (persistent==null) return result;
+    if (persistent==null) return new LootView(result,false);
     var self=region.world.position(token);
     var character=persistent.character(token).id();
     double viewerX=region.map.originX+self.x(),viewerY=region.map.originY+self.y();
-    var nearest=region.loot.view().stream()
+    var inside=region.loot.view().stream()
+        .filter(loot -> window==null || window.contains(loot.x()-region.map.originX,loot.y()-region.map.originY))
         .sorted(java.util.Comparator.comparingDouble(loot -> Math.max(Math.abs(loot.x()-viewerX),Math.abs(loot.y()-viewerY))))
-        .limit(GROUND_LOOT_VIEW_LIMIT).toList();
+        .toList();
+    boolean cut=inside.size()>GROUND_LOOT_VIEW_LIMIT;
+    var nearest=cut ? inside.subList(0,GROUND_LOOT_VIEW_LIMIT) : inside;
     for (var loot : nearest) {
       var entry=new JsonObject();
       boolean owned=character.equals(loot.ownerCharacter()) && loot.ownerRemainingMillis()>0;
@@ -761,7 +777,7 @@ public final class PreviewServer implements AutoCloseable {
       entry.addProperty("ownerRemainingMs",Math.max(0,loot.ownerRemainingMillis()));
       result.add(entry);
     }
-    return result;
+    return new LootView(result,cut);
   }
 
   private String token(HttpExchange exchange) {
