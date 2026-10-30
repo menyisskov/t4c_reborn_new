@@ -53,7 +53,7 @@ public final class OnlinePickupRules {
     double distance = Math.max(Math.abs(pickup.x() - loot.x()), Math.abs(pickup.y() - loot.y()));
     if (!(distance <= MAX_TILE_DISTANCE)) return Optional.of(Refusal.OUT_OF_RANGE);
     ItemContent.Definition item = content.items().get(loot.key());
-    if (item == null || item.unique()) return Optional.of(Refusal.UNSUPPORTED_ITEM);
+    if (item == null) return Optional.of(Refusal.UNSUPPORTED_ITEM);
     long maximum = CarryCapacityRules.maximumWeight(effectiveStrength(progress, content, pickup.now()));
     if (!CarryCapacityRules.canAdd(carriedWeight(progress, content), item.weight(), maximum)) {
       return Optional.of(Refusal.TOO_HEAVY);

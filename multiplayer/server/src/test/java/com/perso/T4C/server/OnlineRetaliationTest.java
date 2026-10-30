@@ -102,7 +102,7 @@ class OnlineRetaliationTest {
       Thread.sleep(OnlineRetaliation.COOLDOWN_MILLIS+30);
       retaliation.step(); retaliation.step();
       assertEquals(1500,world.position(token).hp(),"Predicted health is not published before commit completion");
-      await(sessions,creatures,() -> sessions.character(token).revision()>1);
+      await(sessions,creatures,() -> sessions.character(token).progress().vitals().hp()<1500);
 
       int raw=OnlineMonsterSpellAttacks.rawDamage(definition,10086,new Random(1) {
         @Override public int nextInt(int bound) { return bound-1; }

@@ -11,7 +11,8 @@ import java.util.random.RandomGenerator;
 
 /**
  * Server-side consumable drafts. The named instance must be a loose inventory copy of this
- * character; the draft applies the item's spell, then spends one charge of that instance.
+ * character; the draft applies the item's spell, then spends one charge of that instance. A stack's
+ * quantity falls only when its current physical item runs out of charges.
  */
 final class OnlineItemUse {
   private OnlineItemUse() {}
@@ -23,9 +24,14 @@ final class OnlineItemUse {
         .findFirst().orElseThrow(() -> OnlineCasting.rejected("item_not_owned"));
     if (progress.equipment().containsValue(instanceId)) throw OnlineCasting.rejected("item_equipped");
     var definition = items.items().get(instance.key());
-    if (definition == null || definition.nbCharges() > 1) throw OnlineCasting.rejected("unsupported_item");
-    // Per-instance charges are only proven for one charge or unlimited use; anything else fails closed.
-    if (!definition.unlimitedUse() && instance.charges() != 1) throw OnlineCasting.rejected("unsupported_item");
+    if (definition == null) throw OnlineCasting.rejected("unsupported_item");
+    if (definition.nbCharges() > 1) {
+      if (definition.unlimitedUse() || instance.charges() < 1 || instance.charges() > definition.nbCharges())
+        throw OnlineCasting.rejected("unsupported_item");
+    } else if (!definition.unlimitedUse() && instance.charges() != 1) {
+      // Other per-instance charge shapes remain unsupported.
+      throw OnlineCasting.rejected("unsupported_item");
+    }
     if (definition.spells().isEmpty()) throw OnlineCasting.rejected("no_effect");
     var selected = selectSpell(definition.spells(), random);
     if (selected == null) throw OnlineCasting.rejected("chance_failed");
@@ -37,7 +43,8 @@ final class OnlineItemUse {
       throw OnlineCasting.rejected("no_mana_needed");
     var outcome = OnlineCasting.outcome(progress, spell, false, now, random, items);
     var applied = OnlineCasting.apply(progress, spell, effects, outcome, now);
-    var inventory = spend(progress.inventory(), instance, definition.unlimitedUse());
+    var inventory = spend(progress.inventory(), instance, definition.unlimitedUse(),
+        Math.max(1, definition.nbCharges()));
     return new OnlineCasting.Result(ProgressEdits.withInventory(applied.progress(), inventory),
         applied.healthGained(), applied.manaSpent(), applied.manaGained());
   }
@@ -60,12 +67,15 @@ final class OnlineItemUse {
 
   /** One unit leaves a stack; the last unit removes the instance. Unlimited items keep their copy. */
   private static List<CharacterProgress.Item> spend(List<CharacterProgress.Item> inventory,
-      CharacterProgress.Item instance, boolean unlimited) {
+      CharacterProgress.Item instance, boolean unlimited, int fullCharges) {
     if (unlimited) return inventory;
     var next = new ArrayList<CharacterProgress.Item>(inventory.size());
     for (var item : inventory) {
       if (!item.id().equals(instance.id())) next.add(item);
-      else if (item.quantity() > 1) next.add(new CharacterProgress.Item(item.id(), item.key(), item.quantity() - 1, item.charges()));
+      else if (item.charges() > 1)
+        next.add(new CharacterProgress.Item(item.id(), item.key(), item.quantity(), item.charges() - 1));
+      else if (item.quantity() > 1)
+        next.add(new CharacterProgress.Item(item.id(), item.key(), item.quantity() - 1, fullCharges));
     }
     return next;
   }

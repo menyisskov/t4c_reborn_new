@@ -168,6 +168,37 @@ class OnlineAbilityChoicesTest {
     assertTrue(worn.isEmpty(), "An equipped instance is refused by the server");
   }
 
+  @Test
+  void offersFiniteMultiChargeRestorativesOnlyWhileTheirCurrentItemHasCharges() {
+    var base = potion();
+    var multi = withCharges(base, 3, false);
+    var key = inventoryKey(base);
+    var charged = new Item(UUID.randomUUID(), key, 2, 2);
+    var lastCharge = new Item(UUID.randomUUID(), key, 1, 1);
+    var depleted = new Item(UUID.randomUUID(), key, 2, 0);
+    var overcharged = new Item(UUID.randomUUID(), key, 2, 4);
+    var definitions = Map.of(key, multi);
+
+    var rows = OnlineAbilityChoices.usablePotions(
+        progress(Set.of(), List.of(charged, lastCharge, depleted, overcharged), Map.of()), ALLOWLIST,
+        itemKey -> definitions.get(itemKey));
+
+    assertEquals(List.of(charged.id(), lastCharge.id()),
+        rows.stream().map(OnlineAbilityChoices.PotionChoice::instance).toList());
+  }
+
+  private static ItemDefinition withCharges(ItemDefinition item, int charges, boolean unlimited) {
+    return new ItemDefinition(item.getKey(), item.getName(), item.getBodyPart(),
+        item.getAppearanceEquippedPrimary(), item.getSecondaryBodyPart(), item.getAppearanceEquippedSecondary(),
+        item.getAppearanceInventory(), item.getPrice(), item.getWeight(), item.getArmorClass(), item.getDodgeLost(),
+        item.getMinEnd(), item.getReqAttack(), item.getReqStr(), item.getReqAgi(), item.getMinInt(), item.getMinWis(),
+        item.getAttackSpeed(), item.isUnique(), item.isBow(), unlimited, item.getNumId(), item.getStructure(),
+        item.getAppearanceId(), item.getDmgFormula(), item.getAtkDelay(), item.getRadiance(), charges,
+        item.isCanSummon(), item.getLockName(), item.getLockDiff(), item.getSignText(), item.getContainerGold(),
+        item.getGlobalRespawn(), item.getLocalRespawn(), item.getSpells(), item.getBoosts(),
+        item.getContainerLootGroups(), item.isUndroppable());
+  }
+
   /** What the offline game does for a drink: the spell resolves and only restores health or mana. */
   private static boolean offlineRestoreOnly(ItemDefinition item) {
     if (item.getBodyPart() != null || item.getNbCharges() != 1 || item.isUnlimitedUse() || item.getSpells().isEmpty())

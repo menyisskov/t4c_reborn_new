@@ -57,13 +57,36 @@ class OnlineItemUseTest {
         OnlineItemUse.prepareUse(state(exhausted), charge.id(), NOW, new Random(5), items, spells)).getMessage());
   }
 
-  @Test void multiChargeItemsFailClosedBecauseChargesAreNotPerInstance() throws Exception {
+  @Test void finiteMultiChargeItemsSpendChargesBeforeConsumingStackUnits() throws Exception {
     var base = ItemCatalog.loadBundled().items().get(POTION);
     var multi = new ItemContent(ItemContent.VERSION, Map.of(POTION, withCharges(base, 2)));
-    var charge = new CharacterProgress.Item(UUID.randomUUID(), POTION, 1, 2);
-    var p = progress(new CharacterProgress.Vitals(10, 100, 20, 30), List.of(charge), Map.of(), Map.of());
-    assertEquals("unsupported_item", assertThrows(PreviewWorld.Rejected.class, () ->
-        OnlineItemUse.prepareUse(state(p), charge.id(), NOW, new Random(5), multi, SpellCatalog.loadBundled())).getMessage());
+    var charge = new CharacterProgress.Item(UUID.randomUUID(), POTION, 2, 2);
+    var p = progress(new CharacterProgress.Vitals(1, 100, 20, 30), List.of(charge), Map.of(), Map.of());
+    var spells = SpellCatalog.loadBundled();
+
+    var first = OnlineItemUse.prepareUse(state(p), charge.id(), NOW, new Random(5), multi, spells).progress();
+    assertEquals(List.of(new CharacterProgress.Item(charge.id(), POTION, 2, 1)), first.inventory());
+    var second = OnlineItemUse.prepareUse(state(withLowHealth(first)), charge.id(), NOW + 60_000,
+        new Random(5), multi, spells).progress();
+    assertEquals(List.of(new CharacterProgress.Item(charge.id(), POTION, 1, 2)), second.inventory());
+    var third = OnlineItemUse.prepareUse(state(withLowHealth(second)), charge.id(), NOW + 120_000,
+        new Random(5), multi, spells).progress();
+    assertEquals(List.of(new CharacterProgress.Item(charge.id(), POTION, 1, 1)), third.inventory());
+    var fourth = OnlineItemUse.prepareUse(state(withLowHealth(third)), charge.id(), NOW + 180_000,
+        new Random(5), multi, spells).progress();
+    assertTrue(fourth.inventory().isEmpty());
+  }
+
+  @Test void depletedOrOverchargedMultiChargeInstancesAreRefused() throws Exception {
+    var base = ItemCatalog.loadBundled().items().get(POTION);
+    var multi = new ItemContent(ItemContent.VERSION, Map.of(POTION, withCharges(base, 2)));
+    var spells = SpellCatalog.loadBundled();
+    for (int invalidCharges : List.of(0, 3)) {
+      var invalid = new CharacterProgress.Item(UUID.randomUUID(), POTION, 2, invalidCharges);
+      var p = progress(new CharacterProgress.Vitals(1, 100, 20, 30), List.of(invalid), Map.of(), Map.of());
+      assertEquals("unsupported_item", assertThrows(PreviewWorld.Rejected.class, () ->
+          OnlineItemUse.prepareUse(state(p), invalid.id(), NOW, new Random(5), multi, spells)).getMessage());
+    }
   }
 
   @Test void manaPotionRestoresItsAuthoredManaConsumesOneAndRefusesAtFullMana() throws Exception {
@@ -110,6 +133,11 @@ class OnlineItemUseTest {
 
   private static OnlineStore.CharacterState state(CharacterProgress p) {
     return new OnlineStore.CharacterState(UUID.randomUUID(), UUID.randomUUID(), "Drinker", 0, 3, 3, 0, 0, 0, p);
+  }
+
+  private static CharacterProgress withLowHealth(CharacterProgress progress) {
+    return ProgressEdits.withVitals(progress, new CharacterProgress.Vitals(1, 100,
+        progress.vitals().maxMana(), progress.vitals().maxMana()));
   }
 
   private static ItemContent.Definition withCharges(ItemContent.Definition d, int nbCharges) {
