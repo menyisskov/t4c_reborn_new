@@ -60,7 +60,7 @@ Codex retains NativeAdapterSoak.java, NativeAdapterSoakDeadlineProbe.java, run-n
 Separate worktrees isolate files/builds but do not automatically isolate databases, ports, assets,
 tasks or semantic ownership. Declare dedicated resources before using them.
 
-T4C-0323 source and client work remain in progress on `codex/player-heal-0323`; root retains final Git integration. The focused server transaction and socket-route tests pass on PostgreSQL 16, along with the earlier root command/socket tests. Two-rendered-client healing and M4 completion remain unverified.
+T4C-0323 source and client work merged as PR #285 (`b66f12e0`); all task files are released. The focused server transaction and socket-route tests pass on PostgreSQL 16, along with the earlier root command/socket tests. Two-rendered-client healing and M4 completion remain unverified.
 
 ## Claim and update procedure
 
