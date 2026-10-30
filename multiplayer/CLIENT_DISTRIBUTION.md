@@ -4,9 +4,9 @@ This is a create-only test package for the native **online** client. It contains
 desktop application JAR, runtime dependency JARs, tracked game assets, the licensed
 online GLFW correction, and a headless integrity checker. It contains no JRE. The
 tester needs Windows x64, an installed x64 Java 21 or newer runtime on `PATH`, and
-network access to the intended server. The package is about 640 MB extracted
-(about 290 MB of it is the tracked `assets/origin/` folder of original-game files, which
-the online client was observed not to need; see "Clean-machine rehearsal" below).
+network access to the intended server. The package is about 759 MB extracted
+(287 MB of it is the tracked `assets/origin/` folder of original-game files, which
+the online client does not need; see "Size breakdown and the origin folder" below).
 The builder needs Git, Maven, and a Java 21
 JDK. Both the builder and the launcher run under stock Windows PowerShell 5.1 or PowerShell 7. Neither Git, Maven, this checkout, nor a Maven cache is needed by the tester.
 
@@ -71,8 +71,29 @@ keys in the endpoint. The profile path is supplied at launch and passed through 
 `T4C_ONLINE_PROFILE` environment variable to the existing `OnlineClient` entry point.
 Its contents are never copied into the bundle or printed by the launcher. Store each
 player's private profile outside the package and restrict its filesystem access.
-`launch-online.bat` starts the default local loopback profile or accepts
-`-CheckOnly`; use PowerShell for endpoint or private-profile arguments.
+`launch-online.bat` passes every argument through to the script, returns its exit code and, when
+started by double-click, keeps the window open after a failure so the message can be read:
+`launch-online.bat -Endpoint https://game.example.org -Profile C:\Private\player-one.json`.
+A profile that only holds an account key (no character, made by `--provision-online-account`)
+opens the online lobby and needs the `-Lobby` switch; a character profile joins directly.
+
+## Java requirement (21 or newer, x64)
+
+The package bundles no Java. Every launcher (`launch-online.ps1`, `verify-package.ps1`, and the `.bat` files that call
+them) first looks for `java` on `PATH` and, when it is missing, older than 21, not 64-bit, or not a Java at all, prints a
+short message with the fix and exits with code 1; no stack trace and nothing is started. To satisfy it, install any x64
+Java 21 or newer runtime (for example Eclipse Temurin 21 from adoptium.net, JRE or JDK), open a new command prompt and
+check that `java -version` reports 21 or higher and "64-Bit". The wording is covered by `test-package-java-check.ps1`
+(fake `java.cmd` files and a PATH without Java; no install, no download).
+
+**Option, not done: bundle a runtime with jlink.** `jdeps --print-module-deps` on this build lists
+`java.base, java.desktop, java.sql, jdk.httpserver, jdk.jfr, jdk.unsupported` for the client and
+`java.base, java.desktop, java.naming, java.security.jgss, java.sql, jdk.httpserver, jdk.management` for the server. On a JDK 21,
+`jlink --add-modules <those, plus java.logging,java.management> --strip-debug --no-header-files --no-man-pages --compress=zip-6 --output runtime`
+produced a measured 49 MB runtime for the union of both module sets (the full JDK is 328 MB). Shipping it would also need: the runtime's licence text and an update
+path for security fixes, the builder copying `runtime/` into the manifest (the checker rejects unlisted files), the launcher
+preferring `runtime\bin\java.exe` when present, and a re-test of the Java message. This is an owner decision; no runtime is
+bundled and nothing was downloaded to measure it.
 
 Each launch verifies the public manifest and the corrected embedded GLFW bytes
 before starting the renderer. The client runs with the package directory as its
@@ -114,7 +135,8 @@ that a tester's machine may lack. Observed:
   connected to the server's game socket, stayed responsive, and closed cleanly with exit code 0.
 - The only install-directory writes were the `logs/` files. The game wrote nothing under the
   profile directory except extracted native DLLs (LWJGL, libGDX, the pinned GLFW) in `TEMP`;
-  the GLFW extraction directory is not removed on exit (one small directory per launch).
+  at that time the GLFW extraction directory was not removed on exit (one small directory per launch);
+  T4C-0343 fixed this, see "Per-launch residue" below.
 - With `assets/origin/` moved away, the client (started with `java -cp`, bypassing the
   manifest check) connected and rendered its window the same way, so that folder is dead weight
   in this package. Whether to stop shipping it is an owner decision (it also holds original
@@ -123,4 +145,34 @@ that a tester's machine may lack. Observed:
   only API and failed under Windows PowerShell 5.1, and the launcher died with a "NativeCommandError"
   on the client's first stderr line under 5.1 (so `launch-online.bat` could never start the
   client). The launcher now starts the client with `Start-Process` and file redirection.
+
+## Per-launch residue (T4C-0343)
+
+The online GLFW library cannot be deleted while the client is running on Windows, so the old per-launch temp folder was never removed. The
+client now extracts it to `%TEMP%\t4c-online-glfw-<first 16 hex of its SHA-256>\glfw3.dll`, reuses that folder on every launch of any package
+carrying the same library, and re-writes it only if the file differs (a damaged or planted file is never loaded; if the shared folder is unusable a
+private fresh folder is used as before). Verified with five packaged launches (three package builds, lobby and in-game) from a scrubbed
+environment with a fresh `TEMP`: one `t4c-online-glfw-*` folder after the first launch and after every later one. LWJGL and libGDX already
+reuse stable per-user folders (`lwjgl_<user>`, `libgdx<user>`).
+
+## Verify a copied package
+
+`verify-package.bat` (or `powershell.exe -NoProfile -ExecutionPolicy Bypass -File verify-package.ps1`) inside the package re-hashes every
+file against its own `SHA256SUMS.tsv`, fails on a missing, changed or unlisted file, and prints the manifest's SHA-256. The builders print
+the same value; publish it separately from the download and pass it as `-ManifestSha256 <value>` to prove that the manifest itself is the
+one that was built (a tamperer who edits both files and the manifest would otherwise pass the self-check). It needs the Java 21 requirement above.
+
+## Size breakdown and the origin folder
+
+Measured on the default package built from `34863bf2` (extracted, 934 files, 759 MB): `assets/` 731 MB, `lib/` 17.9 MB (64 JARs), `app/` 10 MB, the rest
+under 1 MB. Inside `assets/`: `sprites` 232 MB, `origin` 287 MB, `maps` 119 MB, `sounds` 85 MB, `ui` 4.3 MB, `i18n` 2 MB, `editor` 1.3 MB, everything
+else under 1 MB. `assets/origin/` is 82 files: `.vsf`/`.VSB` 178 MB, `.Dat` 44 MB, `.WDA` 19 MB, `.dll` 12 files 7.9 MB, `.exe` 4 files 4.9 MB,
+`.bin` 8.9 MB, plus maps and fonts (the executables and DLLs are the part antivirus products may flag).
+
+`package-online-client.ps1 -Name <new> -ExcludeOrigin` (opt-in; the default is unchanged) leaves that folder out and records `excludeOrigin true` in the
+manifest. That package is 852 files and 472 MB. From a scrubbed environment against a packaged server on a disposable database it passed its
+integrity check, opened the online lobby (account profile with `-Lobby`) with the logo art and character panel rendered, and joined the game with a
+character profile and rendered the map, NPCs and HUD, then closed with exit 0. So the folder is not needed for the lobby or the starting area, and no Java source under `src/main` names `assets/origin`; other
+features that might read it indirectly were not exercised, and nothing was removed from the default builder. The zipped size and download time were not
+measured. Whether to ship it by default is an owner decision.
 

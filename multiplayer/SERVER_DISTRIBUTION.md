@@ -54,16 +54,25 @@ On a stock Windows client the default execution policy refuses unsigned scripts 
 zip marks each file as from the internet). Either run `Get-ChildItem -Recurse 'C:\Games\T4C Server QA' | Unblock-File`
 with a `RemoteSigned` or looser policy, or start each script through an explicit per-process policy, for example
 `powershell.exe -NoProfile -ExecutionPolicy Bypass -File 'C:\Games\T4C Server QA\start-server.ps1' -Port 18773`.
-The package has no `.bat` wrapper. The scripts work under Windows PowerShell 5.1 and PowerShell 7.
+Every script has a `.bat` twin (`check-server.bat`, `start-server.bat`, `stop-server.bat`, `provision-online.bat`, `verify-package.bat`) that starts
+it under `-ExecutionPolicy Bypass` for that one process, passes all arguments through, returns the exit code and, when double-clicked, keeps
+the window open after a failure: `start-server.bat -Port 18773 -StateDirectory C:\Private\t4c-qa-run-1` needs no policy change. The scripts
+work under Windows PowerShell 5.1 and PowerShell 7.
 
-The package has no provisioning wrapper script, but the packaged JAR carries the operator commands. With the
-same `T4C_DB_*` variables set, from any directory (the profile is written to a path you choose, outside the
-package, and holds an account key, so keep it private):
+Every script that runs Java first checks for an x64 Java 21 or newer and, if it is missing or too old, prints one plain message and exits 1
+(see the Java requirement in [CLIENT_DISTRIBUTION.md](CLIENT_DISTRIBUTION.md); no JRE is bundled and none is downloaded).
+
+`provision-online.ps1`/`.bat` wraps the packaged JAR's operator commands. With the same `T4C_DB_*` variables set, from any directory (the
+profile is written to a path you choose, outside the package, never overwritten, and holds an account key, so keep it private):
 
 ```powershell
-java -jar 'C:\Games\T4C Server QA\t4c-server.jar' --provision-online 'C:\Games\T4C Server QA\assets\maps\worldmap\worldmap.colbin' 'C:\Private\player-one.json' PlayerOne
-java -jar 'C:\Games\T4C Server QA\t4c-server.jar' --provision-online-account 'C:\Private\account-only.json'
+provision-online.bat -Profile 'C:\Private\player-one.json' -Name PlayerOne
+provision-online.bat -Profile 'C:\Private\player-two.json' -Name PlayerTwo -Class mage -Gender female -Alignment good
+provision-online.bat -Profile 'C:\Private\account-only.json' -AccountOnly
 ```
+
+`verify-package.bat` re-hashes the copied package against its `SHA256SUMS.tsv`; pass `-ManifestSha256 <value printed by the builder>` to check
+the manifest itself (see CLIENT_DISTRIBUTION.md). The raw `java -jar t4c-server.jar --provision-online ...` forms still work.
 
 If `-StateDirectory` is omitted, start creates a unique directory under
 `%LOCALAPPDATA%\T4C Online Server QA` and prints its path. The directory must not

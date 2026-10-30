@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0343`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0344`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0343 | M6 package hardening that needs no owner decision: launchers (client, server check/start/provision/verify) print a plain message and exit 1 for a missing, old, 32-bit or non-Java `java`; the pinned GLFW library extracts to one checksum-named TEMP folder reused by every launch (`OnlineNativeLibrary`, test); `.bat` wrappers for every server script plus a provisioning wrapper and a `verify-package` script (optional expected manifest hash) in both packages; launcher `-Lobby` switch for account-only profiles (the package could not open the lobby before); opt-in `-ExcludeOrigin` client build proved to connect and render lobby and game (default builder unchanged); package checkers updated; new `test-package-java-check.ps1`; M6 evidence checklist updated with only the proved items ticked | Process/Tooling / M6 | Done (PR open; same-machine evidence on a disposable PG16 cluster and scrubbed environment, not a second machine) | this PR | [2026-10-30](CHANGELOG.md) |
 | T4C-0342 | M2 and M3 live evidence and an equip fix: a rendered two-window run on the real screens (inventory window, equip and unequip with the own character's strength, armor class and drawn model, travel through the Lighthaven door and the cave, both players completing the Renewed Wards quest with a repeat turn-in refused, a server restart, cross-region targeting refused) and a native 18-round hard-kill drill of loot claims and corpse recoveries; fixed the own screen keeping join-time gear after an equip or unequip (`RemoteOwnLook`, test); new `NativeLootFaultDrill` and `accept` driver scene | Multiplayer / M2, M3 | Done (PR open; local PG16 and rendered evidence, not remote) | this PR | [2026-10-30](CHANGELOG.md) |
 | T4C-0336 | Let online characters spend earned stat points through the existing Statistics screen, with atomic server validation/persistence matching offline allocation rules | Multiplayer / M4 | Done (PR #301 open; 54 focused client tests and PostgreSQL persistence 1/1 passed; rendered check pending) | PR #301; 8a25023d | deferred until GA |
 | T4C-0335 | Match online creature pathing to the single-player foot rule so Skeleton pursuit acquires, follows, and resets valid targets correctly | Multiplayer / M4 | Done (PR #300 merged) | PR #300, merge 73f46063 | [CHANGELOG.md](CHANGELOG.md) |
