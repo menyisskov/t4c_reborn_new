@@ -12,6 +12,33 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
 @EnabledIfEnvironmentVariable(named="T4C_DB_URL",matches=".+")
 class HostedTransferTest {
+  @Test void recallTransferCommitsCastProgressAndDestinationOnce() throws Exception {
+    var store=OnlineStore.fromEnvironment();store.migrate();var account=store.provisionAccount();
+    var p=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(22)).progress();
+    p=ProgressEdits.withVitals(p,new CharacterProgress.Vitals(p.vitals().hp(),p.vitals().maxHp(),150,150));
+    var created=store.create(account.accountId(),"Recall transaction",0,2931.5,1056.5,p,10);
+    var session=store.acquire(account.secret(),created.id());
+    var destination=new CharacterProgress.Respawn(1,304.5,383.5);
+    var transfer=new PortalTransfer(0,"start","lighthaven-interior",
+        new CharacterProgress.Respawn(0,2931.5,1056.5),destination,0,0);
+    var mana=p.vitals().mana()-100;
+    var cooldowns=new HashMap<>(p.cooldowns());cooldowns.put("mental_exhaustion",123456L);
+    var cast=ProgressEdits.withCooldowns(ProgressEdits.withVitals(p,new CharacterProgress.Vitals(
+        p.vitals().hp(),p.vitals().maxHp(),mana,p.vitals().maxMana())),cooldowns);
+    var event=UUID.randomUUID();
+    var first=store.commitTransfer(session,0,event,transfer,cast);
+    assertTrue(first.applied());assertEquals(1,first.character().world());assertEquals(1,first.character().locationEpoch());
+    assertEquals(mana,first.character().progress().vitals().mana());
+    assertEquals(123456L,first.character().progress().cooldowns().get("mental_exhaustion"));
+    store.release(session);
+    var restarted=OnlineStore.fromEnvironment();var recovered=restarted.acquire(account.secret(),created.id());
+    var replay=restarted.commitTransfer(recovered,0,event,transfer,cast);
+    assertFalse(replay.applied());assertEquals(first.character(),replay.character());
+    var spentAgain=ProgressEdits.withVitals(cast,new CharacterProgress.Vitals(p.vitals().hp(),p.vitals().maxHp(),mana-1,p.vitals().maxMana()));
+    assertThrows(OnlineStore.Conflict.class,()->restarted.commitTransfer(recovered,0,event,transfer,spentAgain));
+    assertEquals(first.character(),restarted.load(account.accountId(),created.id()));restarted.release(recovered);
+  }
+
   @Test void transferReceiptEpochAndLeaseSurviveRestartWithoutReplayingOrLosingProgress() throws Exception {
     var store=OnlineStore.fromEnvironment();store.migrate();var account=store.provisionAccount();
     var p=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(2)).progress();

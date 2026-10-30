@@ -203,6 +203,9 @@ public final class SpellEngine {
 
     /** A dispel roll succeeded: remove the caster's buff of this spell if one is running. */
     record Dispel(String spellKey) implements Event {}
+
+    /** Apply the caster's authored recall dispels and transfer to its committed respawn point. */
+    record Recall() implements Event {}
   }
 
   /**
@@ -231,7 +234,7 @@ public final class SpellEngine {
 
   public static CastResolution cast(CastRequest request, WorldView world, RandomGenerator random) {
     var spell = request.spell();
-    if (spell.stage() > MAX_STAGE || !supported(spell))
+    if ((spell.stage() > MAX_STAGE && !isRecall(spell)) || !supported(spell))
       throw new IllegalArgumentException("unsupported_spell");
     UnitView primary = null;
     FriendView friend = null;
@@ -349,6 +352,10 @@ public final class SpellEngine {
         case DETECTION -> detection(spell, request.caster(), random, events);
         case DISPEL -> dispel(spell, request.caster(), random, events);
         case SPECIAL -> renewArmor(request, events);
+        case RECALL -> {
+          dispel(spell, request.caster(), random, events);
+          events.add(new Event.Recall());
+        }
         default -> throw new IllegalArgumentException("unsupported_spell");
       }
       return new CastResolution(SpellCastRules.Verdict.NONE, null, outcome, List.copyOf(events));
@@ -375,8 +382,13 @@ public final class SpellEngine {
       case DETECTION -> allEffects(spell, 15, 16, 17);
       case DISPEL -> onlyEffects(spell, 13);
       case SPECIAL -> spell.key().equals(RENEW_ARMOR);
+      case RECALL -> spell.key().equals("spell.word_of_recall") && allEffects(spell, 11, 13);
       default -> false;
     };
+  }
+
+  private static boolean isRecall(SpellContentV2.Spell spell) {
+    return spell.id() == 10029 && spell.key().equals("spell.word_of_recall");
   }
 
   private static boolean onlyEffects(SpellContentV2.Spell spell, int type) {

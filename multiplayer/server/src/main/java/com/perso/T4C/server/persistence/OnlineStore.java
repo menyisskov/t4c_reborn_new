@@ -1441,9 +1441,16 @@ public final class OnlineStore implements AutoCloseable {
 
   /** Atomic server-authored portal movement, with durable epoch fencing and receipt replay. */
   public RewardResult commitTransfer(Session session,long revision,UUID event,PortalTransfer transfer) throws SQLException {
+    return commitTransfer(session,revision,event,transfer,null);
+  }
+
+  /** Atomic server-authored transfer plus character progress, used by recall spells. */
+  public RewardResult commitTransfer(Session session,long revision,UUID event,PortalTransfer transfer,
+      CharacterProgress updatedProgress) throws SQLException {
     Objects.requireNonNull(event);Objects.requireNonNull(transfer);
     if(revision<0) throw new IllegalArgumentException("Invalid revision");
-    String digest=fingerprint(JSON.toJson(transfer));
+    String encoded=updatedProgress==null ? null : encodeProgress(updatedProgress);
+    String digest=fingerprint(encoded==null ? JSON.toJson(transfer) : JSON.toJson(transfer)+"\n"+encoded);
     try(var c=connections.open()) {
       c.setAutoCommit(false);
       try {
@@ -1457,15 +1464,15 @@ public final class OnlineStore implements AutoCloseable {
         if(state.revision()!=revision || state.locationEpoch()!=transfer.expectedEpoch() || state.world()!=transfer.source().world())
           throw new Conflict("Stale transfer");
         try(var q=c.prepareStatement("SELECT portal_cooldown_until<=floor(extract(epoch FROM clock_timestamp())*1000) FROM online_characters WHERE id=?")) {
-          q.setObject(1,state.id());try(var rows=q.executeQuery()) { rows.next();if(!rows.getBoolean(1)) throw new Conflict(PORTAL_COOLDOWN); }
+          q.setObject(1,state.id());try(var rows=q.executeQuery()) { rows.next();if(updatedProgress==null && !rows.getBoolean(1)) throw new Conflict(PORTAL_COOLDOWN); }
         }
         Math.addExact(state.locationEpoch(),1);
         try(var q=c.prepareStatement("INSERT INTO online_transfer_events(event_id,character_id,payload_hash) VALUES(?,?,?)")) {
           q.setObject(1,event);q.setObject(2,state.id());q.setString(3,digest);q.executeUpdate();
         }
         var destination=transfer.destination();
-        try(var q=c.prepareStatement("UPDATE online_characters SET world=?,x=?,y=?,location_epoch=location_epoch+1,portal_cooldown_until=?,revision=revision+1,updated_at=now() WHERE id=?")) {
-          q.setInt(1,destination.world());q.setDouble(2,destination.x());q.setDouble(3,destination.y());q.setLong(4,transfer.cooldownUntil());q.setObject(5,state.id());q.executeUpdate();
+        try(var q=c.prepareStatement("UPDATE online_characters SET world=?,x=?,y=?,location_epoch=location_epoch+1,portal_cooldown_until=?,progress=COALESCE(?::jsonb,progress),revision=revision+1,updated_at=now() WHERE id=?")) {
+          q.setInt(1,destination.world());q.setDouble(2,destination.x());q.setDouble(3,destination.y());q.setLong(4,updatedProgress==null ? transfer.cooldownUntil() : state.portalCooldownUntil());q.setString(5,encoded);q.setObject(6,state.id());q.executeUpdate();
         }
         lockTargetSpawns(c,state.id(),null);
         try(var q=c.prepareStatement("UPDATE online_spawns SET target_character=NULL,target_epoch=NULL,mode='RETURN',next_attack_at=0,state_revision=state_revision+1 WHERE target_character=?")) { q.setObject(1,state.id());q.executeUpdate(); }
