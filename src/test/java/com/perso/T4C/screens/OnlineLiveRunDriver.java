@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.perso.T4C.MyGame;
 import com.perso.T4C.config.GameConstants;
+import com.perso.T4C.gui.core.GuiManager;
 import com.perso.T4C.monster.core.BaseMonster;
 import com.perso.T4C.npc.core.BaseNPC;
 import com.perso.T4C.objects.GroundItem;
@@ -522,6 +523,7 @@ public final class OnlineLiveRunDriver extends MyGame {
     else if (scene.equals("beta")) betaScene();
     else if (scene.equals("mortal")) mortalScene();
     else if (scene.equals("m4")) m4Scene();
+    else if (scene.equals("accept")) acceptScene();
     else skeletonScene();
     action(
         () -> {
@@ -3294,15 +3296,406 @@ public final class OnlineLiveRunDriver extends MyGame {
     action(() -> log("M4 SUMMARY: hits taken " + hitsTaken + " damage " + damageTaken + " casts pressed " + castsPressed + " | " + state()));
   }
 
+  // ---------------------------------------------------------------- accept scene (T4C-0335, milestones M2 and M3)
+  //
+  // Two level-30 warriors beside WardenAelric run the whole authored adventure on the real screens: the own-screen inventory panel and
+  // character sheet around an equip, unequip and re-equip (stat and armor class numbers read from the screen's own Player object), the
+  // topic accept, the Lighthaven door pair, the walk to the Skeleton ground, kills until each character's own counter reaches the goal,
+  // a cave trip of one window while the other fights outside (cross-region commands attempted through the connection, logged as such),
+  // the walk back, the greeting turn-in twice per character, and a server restart. Chapters: -Daccept.chapters=equip,quest,boundary,turnin,restart.
+
+  private static final int ACCEPT_KILLS = 12;
+
+  private int questKills() {
+    return view().character().progress().questFlags().getOrDefault(QUEST_KILLS, 0);
+  }
+
+  private String sheet() {
+    var s = game();
+    var p = me(s);
+    return String.format("OWN SHEET strength %d, dexterity %d, armor class %.2f, endurance %d, worn on this screen %s", p.getEffectiveStrength(),
+        p.getEffectiveDexterity(), com.perso.T4C.combat.ArmorClassRules.effectiveArmorClass(p), p.getEffectiveEndurance(),
+        new java.util.TreeSet<>(p.getEquippedItems().keySet().stream().map(Object::toString).toList()));
+  }
+
+  /** Clicks a chat-bar button of the HUD (the screen's own touch handler) at a pixel inside it, found through the button's own bounds. */
+  private boolean clickHudButton(String logName) {
+    try {
+      var s = game();
+      Object hud = field(s, MainGameScreen.class, "hud");
+      @SuppressWarnings("unchecked")
+      List<Object> items = (List<Object>) field(hud, hud.getClass(), "chatBarButtons");
+      for (Object item : items) {
+        if (!logName.equals(field(item, item.getClass(), "logName"))) continue;
+        Object button = field(item, item.getClass(), "button");
+        var contains = button.getClass().getMethod("contains", float.class, float.class);
+        for (int y = 0; y < Gdx.graphics.getHeight(); y += 3)
+          for (int x = 0; x < Gdx.graphics.getWidth(); x += 3)
+            if ((Boolean) contains.invoke(button, (float) x, (float) y)) {
+              var processor = Gdx.input.getInputProcessor();
+              processor.mouseMoved(x, y);
+              processor.touchDown(x, y, 0, Input.Buttons.LEFT);
+              processor.touchUp(x, y, 0, Input.Buttons.LEFT);
+              return true;
+            }
+      }
+    } catch (ReflectiveOperationException | RuntimeException e) {
+      log("HUD button " + logName + ": " + e);
+    }
+    return false;
+  }
+
+  /** Waits for the committed state to change (an equip commit can take a few seconds when the first try is answered busy), then a moment more. */
+  private void settled(String label, String[] before) {
+    until("committed change after " + label, 15_000, () -> !state().equals(before[0]));
+    waitMs(1800);
+  }
+
+  private void pick(Predicate<com.perso.T4C.online.OnlineInventoryPanel.Row> match, String label) {
+    final String[] before = {null};
+    action(() -> before[0] = state());
+    inventoryPickRow(match, label, null);
+    settled(label, before);
+  }
+
+  /** A picture of the inventory window itself (600 x 470 around its centre), real back buffer. */
+  private void panelCrop(String name) {
+    int w = 600, h = 470, bw = Gdx.graphics.getBackBufferWidth(), bh = Gdx.graphics.getBackBufferHeight();
+    byte[] pixels = ScreenUtils.getFrameBufferPixels(340, bh - (150 + h), w, h, true);
+    for (int i = 3; i < pixels.length; i += 4) pixels[i] = (byte) 255;
+    Pixmap crop = new Pixmap(w, h, Pixmap.Format.RGBA8888);
+    BufferUtils.copy(pixels, 0, crop.getPixels(), pixels.length);
+    String file = tag + "-" + String.format("%02d", ++shots) + "-" + name + ".png";
+    PixmapIO.writePNG(new com.badlogic.gdx.files.FileHandle(out.resolve(file).toFile()), crop);
+    crop.dispose();
+    log("saved " + file);
+  }
+
+  /** The character sheet through the HUD's own button, a picture, and closed again (the button toggles). */
+  private void sheetShot(String name) {
+    action(
+        () -> {
+          boolean clicked = clickHudButton("Character");
+          log("CHARACTER SHEET click on the HUD button: " + clicked + " | " + sheet());
+        });
+    waitMs(1200);
+    action(
+        () -> {
+          log("CHARACTER SHEET window open after the click: " + GuiManager.isOpen());
+          shot(name);
+        });
+    action(() -> clickHudButton("Character"));
+    waitMs(600);
+    action(() -> press(Input.Keys.ESCAPE));
+    waitMs(300);
+  }
+
+  private void acceptEquip() {
+    final String side = tag.substring(tag.length() - 1);
+    final var carried = com.perso.T4C.online.OnlineInventoryPanel.Kind.CARRIED;
+    final var worn = com.perso.T4C.online.OnlineInventoryPanel.Kind.EQUIPPED;
+    final String[] weapon = {null};
+    action(
+        () -> {
+          for (var r : inventoryPanel().rows(view().character().progress()))
+            if (r.kind() == worn && r.slot() != null && r.slot().name().equals("WEAPON")) weapon[0] = r.item().key();
+          log("EQUIP baseline | " + sheet() + " | own public look " + lookOf(ownActor()) + " | " + state());
+          press(Input.Keys.I);
+        });
+    waitMs(900);
+    action(
+        () -> {
+          log("INVENTORY PANEL page 1 rows " + inventoryPanel().rows(view().character().progress()).stream()
+              .map(r -> r.kind() + ":" + r.slot() + ":" + r.item().key() + ":" + r.item().quantity() + ":charges " + r.item().charges()).toList());
+          panelCrop("inventory-window-page1-" + side);
+          press(Input.Keys.RIGHT);
+        });
+    waitMs(700);
+    action(
+        () -> {
+          panelCrop("inventory-window-page2-" + side);
+          press(Input.Keys.ESCAPE);
+        });
+    waitMs(500);
+    sheetShot("character-sheet-before-" + side);
+    action(() -> cropOf("own-before-" + side, me(game()).getPositionVector(), 200, 240));
+    // 1. Body armour off: armor class falls, the drawn model loses the piece.
+    action(() -> press(Input.Keys.I));
+    waitMs(700);
+    pick(row -> row.kind() == worn && row.item().key().equals("item.leather_armor"), "unequip-body-" + side);
+    action(
+        () -> {
+          log("EQUIP body armour off | " + sheet() + " | own public look " + lookOf(ownActor()));
+          press(Input.Keys.ESCAPE);
+          cropOf("own-body-off-" + side, me(game()).getPositionVector(), 200, 240);
+        });
+    sheetShot("character-sheet-body-off-" + side);
+    // 2. Weapon off: strength falls by the weapon's boost.
+    action(() -> press(Input.Keys.I));
+    waitMs(700);
+    pick(row -> row.kind() == worn && row.slot() != null && row.slot().name().equals("WEAPON"), "unequip-weapon-" + side);
+    action(
+        () -> {
+          log("EQUIP weapon off | " + sheet() + " | own public look " + lookOf(ownActor()));
+          press(Input.Keys.ESCAPE);
+          cropOf("own-weapon-off-" + side, me(game()).getPositionVector(), 200, 240);
+        });
+    sheetShot("character-sheet-weapon-off-" + side);
+    // 3. Both back on.
+    action(() -> press(Input.Keys.I));
+    waitMs(700);
+    pick(row -> row.kind() == carried && row.item().key().equals("item.leather_armor"), "re-equip-body-" + side);
+    pick(row -> row.kind() == carried && row.item().key().equals(weapon[0]), "re-equip-weapon-" + side);
+    action(
+        () -> {
+          log("EQUIP everything back on | " + sheet() + " | own public look " + lookOf(ownActor()) + " | " + state());
+          press(Input.Keys.ESCAPE);
+          cropOf("own-restored-" + side, me(game()).getPositionVector(), 200, 240);
+          signal(tag + ".equip-done");
+        });
+    sheetShot("character-sheet-restored-" + side);
+    until("the other window finished the equip chapter", 240_000, () -> signaled(peer() + ".equip-done"));
+  }
+
+  /** Kills until this character's own committed kill counter reaches {@code goal}; both keep fighting until both have, so nobody idles among Skeletons. */
+  private void acceptKills(int goal, String label) {
+    final String marker = "kills-" + goal + "-";
+    repeat(
+        label,
+        1_500_000,
+        () -> {
+          var s = game();
+          if (s == null) return false;
+          long now = System.currentTimeMillis();
+          watchDrops(now);
+          soakLog(now);
+          int k = questKills();
+          if (k >= goal && !signaled(marker + tag)) {
+            signal(marker + tag);
+            log("KILLS " + label + ": my counter reached " + k + " | " + questState());
+          }
+          if (signaled(marker + tag) && signaled(marker + peer())) {
+            held.clear();
+            return true;
+          }
+          if (now - lastMessageLog > 30_000) {
+            lastMessageLog = now;
+            log("KILLS " + label + ": " + questState());
+          }
+          combatFrame(s, true, null);
+          return false;
+        });
+  }
+
+  private long numberIn(String markerFile) {
+    try {
+      Path f = sync.resolve(markerFile);
+      return Files.exists(f) ? Long.parseLong(Files.readString(f).trim()) : -1;
+    } catch (java.io.IOException | RuntimeException e) {
+      return -1;
+    }
+  }
+
+  private void write(String name, String text) {
+    try {
+      Files.writeString(sync.resolve(name), text);
+    } catch (java.io.IOException e) {
+      throw new IllegalStateException(e);
+    }
+  }
+
+  private void logCommand(String what, java.util.concurrent.CompletionStage<OnlineConnection.CommandResult> stage) {
+    stage.whenComplete((r, f) -> log("CROSS-REGION " + what + " -> " + (f != null ? "failure " + f : "accepted=" + r.accepted() + " key=" + r.messageKey())));
+  }
+
+  /** The live Skeleton with the highest creature id in this window's region, or null. */
+  private BaseMonster highestIdSkeleton(MainGameScreen s) {
+    var r = remoteWorld(s);
+    BaseMonster best = null;
+    long bestId = -1;
+    for (BaseMonster m : monsters(s)) {
+      if (m.isDead() || m.getHealth() <= 0 || !isSkeleton(m)) continue;
+      long id = r.creatureId(m);
+      if (id > bestId && creatureHp(id) > 0) {
+        bestId = id;
+        best = m;
+      }
+    }
+    return best;
+  }
+
+  private long highestCreatureId() {
+    long max = -1;
+    for (var c : view().snapshot().creatures()) max = Math.max(max, c.id());
+    return max;
+  }
+
+  /**
+   * One window walks into the cave while the other stays out; each then tries the other's targets through the connection (the screen has no
+   * way to aim at another region, so these are logged as sent around the screen). Creature ids are region-local: the id of the other
+   * window's target either does not exist in this window's region (the server answers that there is no such target) or names a different
+   * creature here (out of reach); the other window's creature is never touched.
+   */
+  private void acceptBoundary() {
+    final boolean outside = tag.endsWith("A");
+    // Fight on until a ground drop exists, so the cave window can try to pick up an item it cannot see.
+    repeat(
+        "a ground drop exists in the outside window",
+        420_000,
+        () -> {
+          var s = game();
+          if (s == null) return false;
+          long now = System.currentTimeMillis();
+          watchDrops(now);
+          if (outside && !view().snapshot().loot().isEmpty() && !signaled("bnd.have-loot")) {
+            write("bnd.loot", view().snapshot().loot().get(0).id().toString());
+            signal("bnd.have-loot");
+          }
+          if (signaled("bnd.have-loot")) {
+            held.clear();
+            return true;
+          }
+          combatFrame(s, true, null);
+          return false;
+        });
+    if (outside) {
+      action(
+          () -> {
+            var s = game();
+            var r = remoteWorld(s);
+            BaseMonster m = highestIdSkeleton(s);
+            if (m != null) write("bnd.outside", String.valueOf(r.creatureId(m)));
+            var loot = view().snapshot().loot();
+            log("BOUNDARY outside window: target creature " + (m == null ? "none" : r.creatureId(m)) + " hp " + (m == null ? -1 : creatureHp(r.creatureId(m)))
+                + ", loot in view " + loot.size() + (loot.isEmpty() ? "" : " first " + loot.get(0).id() + " " + loot.get(0).key()) + " | " + state());
+          });
+    }
+    portalHop("B", 2770, 1095, "start", "skeleton-cave", true, "boundary-B-into-the-cave");
+    final long[] x = {-1}, y = {-1};
+    final int[] hpX = {-1}, hpY = {-1};
+    if (outside) {
+      repeat("the cave window published its report", 60_000, () -> numberIn("bnd.cave") > 0);
+      action(
+          () -> {
+            x[0] = numberIn("bnd.outside");
+            y[0] = numberIn("bnd.cave");
+            hpX[0] = creatureHp(x[0]);
+            log("BOUNDARY outside window: B is in the cave (others drawn " + others(game()).size() + ", snapshot players " + view().snapshot().players().size()
+                + "); the cave window's target id " + y[0] + (creatureHp(y[0]) >= 0 ? " also exists here as another creature (ids are region-local)" : " does not exist here")
+                + "; my target " + x[0] + " hp " + hpX[0]);
+            logCommand("attack on the cave window's creature id " + y[0] + " from the outside window", connection().attack(y[0]));
+            signal("bnd.outside-ready");
+          });
+    } else {
+      action(
+          () -> {
+            var v = view();
+            y[0] = highestCreatureId();
+            hpY[0] = creatureHp(y[0]);
+            long outsideId = numberIn("bnd.outside");
+            log("BOUNDARY cave window: region " + v.map().key() + ", creatures in my snapshot " + v.snapshot().creatures().size() + ", my highest id " + y[0] + " hp " + hpY[0]
+                + ", the outside window's target " + outsideId + (creatureHp(outsideId) >= 0 ? " also exists here as another creature (ids are region-local)" : " does not exist here")
+                + ", loot in my snapshot " + v.snapshot().loot().size());
+            write("bnd.cave", String.valueOf(y[0]));
+          });
+      until("the outside window is ready", 60_000, () -> signaled("bnd.outside-ready"));
+      action(
+          () -> {
+            long outsideId = numberIn("bnd.outside");
+            if (outsideId > 0) logCommand("attack on the outside window's creature id " + outsideId + " from the cave window", connection().attack(outsideId));
+            try {
+              Path f = sync.resolve("bnd.loot");
+              if (Files.exists(f)) logCommand("pickup of the outside window's ground drop from the cave window", connection().pickUp(UUID.fromString(Files.readString(f).trim())));
+              else log("BOUNDARY cave window: no outside loot id to try");
+            } catch (java.io.IOException ignored) {
+              log("BOUNDARY cave window: no outside loot id to try");
+            }
+          });
+    }
+    waitMs(5000);
+    action(
+        () -> {
+          if (outside) log("BOUNDARY outside window: my target " + x[0] + " hp " + hpX[0] + " -> " + creatureHp(x[0]) + " after the cave window's attack on it; drop still on the ground: "
+              + (!view().snapshot().loot().isEmpty()));
+          else {
+            log("BOUNDARY cave window: my creature " + y[0] + " hp " + hpY[0] + " -> " + creatureHp(y[0]) + " after the outside window's attack on that id | " + state());
+            signal("bnd.cave-done");
+          }
+        });
+    until("both windows finished the boundary attempts", 90_000, () -> signaled("bnd.cave-done"));
+    portalHop("B", 136, 665, "skeleton-cave", "start", false, "boundary-B-out-of-the-cave");
+  }
+
+  private void acceptTurnIn() {
+    action(() -> log("TURN-IN start: " + questState()));
+    // Aelric's tile (2948,1044): the walk from the Skeleton ground is longer than talkTo's own patience.
+    repeat(
+        "walked back to Warden Aelric",
+        360_000,
+        () -> {
+          var s = game();
+          if (s == null) return false;
+          long now = System.currentTimeMillis();
+          drinkIfHurt(view(), now);
+          Vector2 goal = tileCenter(2948, 1044);
+          walkToward(s, goal, 60f);
+          return distance(s, goal) <= 70f;
+        });
+    action(() -> held.clear());
+    talkTo("aelric", "turn-in-1");
+    action(() -> press(Input.Keys.ESCAPE));
+    waitMs(2500);
+    talkTo("aelric", "turn-in-2-repeat");
+    action(() -> press(Input.Keys.ESCAPE));
+    waitMs(2500);
+    action(
+        () -> {
+          log("TURN-IN end: " + questState() + " | " + state());
+          shot("turned-in");
+          signal(tag + ".turnin-done");
+        });
+    until("the other window finished the turn-in", 240_000, () -> signaled(peer() + ".turnin-done"));
+  }
+
+  private void acceptScene() {
+    skeletonsOnly = true;
+    var chapters = java.util.Arrays.asList(System.getProperty("accept.chapters", "equip,topic,hops,ground,kills,boundary,turnin,restart").split(","));
+    if (chapters.contains("equip")) acceptEquip();
+    if (chapters.contains("topic")) topicChapter();
+    if (chapters.contains("hops")) {
+      portalHop("A", 2931, 1056, "start", "lighthaven-interior", true, "1-A-into-Lighthaven");
+      portalHop("B", 2931, 1056, "start", "lighthaven-interior", false, "2-B-into-Lighthaven");
+      waitMs(3000);
+      portalHop("A", 306, 381, "lighthaven-interior", "start", true, "3-A-out-of-Lighthaven");
+      portalHop("B", 306, 381, "lighthaven-interior", "start", false, "4-B-out-of-Lighthaven");
+    }
+    if (chapters.contains("ground")) {
+      walkToGround();
+      action(() -> signal(tag + ".at-ground"));
+      until("peer at the ground", 240_000, () -> signaled(peer() + ".at-ground"));
+    }
+    if (chapters.contains("kills")) acceptKills(6, "first half of the kills");
+    if (chapters.contains("boundary")) acceptBoundary();
+    if (chapters.contains("kills")) acceptKills(ACCEPT_KILLS, "kills to the goal");
+    if (chapters.contains("turnin")) acceptTurnIn();
+    if (chapters.contains("restart")) {
+      action(() -> log("RESTART: before: " + questState() + " | " + state()));
+      restartCycle("acc", () -> log("RESTART: after the rejoin: " + questState() + " | " + state()));
+      waitMs(3000);
+      talkTo("aelric", "after-restart-repeat");
+      action(() -> log("RESTART: after the repeat greeting: " + questState()));
+    }
+  }
+
   // ---------------------------------------------------------------- frame loop
 
   @Override
   public void render() {
     super.render();
     long now = System.currentTimeMillis();
-    if (scene.equals("beta") || scene.equals("m4")) pollMessage();
+    if (scene.equals("beta") || scene.equals("m4") || scene.equals("accept")) pollMessage();
     if (scene.equals("m4")) m4Monitor();
-    if (now > (scene.equals("quest") ? t0 + 1_500_000 : scene.equals("beta") ? t0 + 4_800_000 : scene.equals("m4") ? t0 + 3_000_000 : deadline)) {
+    if (now > (scene.equals("quest") ? t0 + 1_500_000 : scene.equals("beta") ? t0 + 4_800_000 : scene.equals("m4") ? t0 + 3_000_000 : scene.equals("accept") ? t0 + 5_400_000 : deadline)) {
       log("DRIVER TIMEOUT at step " + index);
       Gdx.app.exit();
       return;

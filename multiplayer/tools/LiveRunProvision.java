@@ -84,6 +84,10 @@ public final class LiveRunProvision {
       m4Report();
       return;
     }
+    if ("accept-report".equals(scene)) {
+      acceptReport();
+      return;
+    }
     if ("lobby".equals(scene)) {
       lobbyScene(map, out, args.length > 3 ? args[3] : "");
       return;
@@ -283,7 +287,8 @@ public final class LiveRunProvision {
     System.out.println("skeletonGround=" + (int) Math.floor(ground.x()) + "," + (int) Math.floor(ground.y()));
     try (var store = OnlineStore.fromEnvironment()) {
       makeWithHeadroom(store, out.resolve("player-a.json"), "Live Alpha" + suffix, a, 30, items, -1);
-      makeWithHeadroom(store, out.resolve("player-b.json"), "Live Bravo" + suffix, b, 30, items, BRAVO_HEADROOM);
+      makeWithHeadroom(store, out.resolve("player-b.json"), "Live Bravo" + suffix, b, 30, items,
+          Boolean.getBoolean("beta.nofiller") ? -1 : BRAVO_HEADROOM);
     }
     System.out.println("PROVISION_OK");
   }
@@ -403,6 +408,28 @@ public final class LiveRunProvision {
     }
   }
 
+  /** T4C-0335: the committed rows behind the accept scene (quest state, once-only rewards, equipment, kill rewards, loot). */
+  private static void acceptReport() throws Exception {
+    try (var db = DriverManager.getConnection(System.getenv("T4C_DB_URL"), System.getenv("T4C_DB_USER"), System.getenv("T4C_DB_PASSWORD"))) {
+      report(db, "characters (name, revision, experience, gold, quest status, kills, knows renew armor, world, location epoch)",
+          "SELECT name, revision, experience, gold, progress->'questFlags'->>'quest.renewed_wards.status', progress->'questFlags'->>'quest.renewed_wards.kills', "
+              + "(progress->'spells')::text LIKE '%renew_armor%', world, location_epoch FROM online_characters WHERE name LIKE 'Live %' ORDER BY name");
+      report(db, "quest turn-in style rewards (rewards that are not creature kills): character, gold, experience, count",
+          "SELECT c.name, r.gold, r.experience, count(*) FROM online_rewards r JOIN online_characters c ON c.id=r.character_id "
+              + "WHERE r.gold > 0 AND NOT EXISTS (SELECT 1 FROM online_world_rewards w WHERE w.event_id=r.event_id) AND c.name LIKE 'Live %' GROUP BY c.name, r.gold, r.experience ORDER BY c.name");
+      report(db, "kill rewards per character (lethal claimant per creature life)",
+          "SELECT c.name, count(*) FROM online_world_rewards w JOIN online_characters c ON c.id=w.character_id GROUP BY c.name ORDER BY c.name");
+      report(db, "equipment of each character (slot=item key)",
+          "SELECT c.name, (SELECT string_agg(e.key || '=' || coalesce((SELECT i->>'key' FROM jsonb_array_elements(c.progress->'inventory') i WHERE i->>'id'=e.value),'?'), ' ') "
+              + "FROM jsonb_each_text(c.progress->'equipment') e) FROM online_characters c WHERE c.name LIKE 'Live %' ORDER BY c.name");
+      report(db, "ground loot (item, state, owner, claimed by, receipts)",
+          "SELECT l.item_key, l.state, o.name, coalesce(cb.name,'-'), (SELECT count(*) FROM online_loot_claims k WHERE k.loot_id=l.id) "
+              + "FROM online_ground_loot l JOIN online_characters o ON o.id=l.owner_character LEFT JOIN online_characters cb ON cb.id=l.claimed_by ORDER BY l.created_at");
+      report(db, "corpses (character, stacks, recovered)",
+          "SELECT c.name, jsonb_array_length(k.items), k.recovered FROM online_corpses k JOIN online_characters c ON c.id=k.character_id WHERE c.name LIKE 'Live %' ORDER BY k.created_at");
+    }
+  }
+
   private static void report(java.sql.Connection db, String title, String sql) throws Exception {
     System.out.println("== " + title);
     try (var st = db.createStatement(); var rs = st.executeQuery(sql)) {
@@ -437,6 +464,9 @@ public final class LiveRunProvision {
     // Both beta characters carry twenty Healing Potions so a twenty-minute fight does not end in an incidental death.
     var stocked = new java.util.ArrayList<>(progress.inventory());
     stocked.add(new CharacterProgress.Item(UUID.randomUUID(), "item.healing_potion", 20, 0));
+    // T4C-0335: -Dprovision.extra=item.a,item.b adds one unequipped piece of each (the equip-bonus checks need gear with boosts).
+    for (String extra : System.getProperty("provision.extra", "").split(","))
+      if (!extra.isBlank()) stocked.add(new CharacterProgress.Item(UUID.randomUUID(), extra.trim(), 1, 1));
     {
       var q = progress;
       progress = new CharacterProgress(q.version(), q.characterClass(), q.gender(), q.attributes(), q.vitals(),
