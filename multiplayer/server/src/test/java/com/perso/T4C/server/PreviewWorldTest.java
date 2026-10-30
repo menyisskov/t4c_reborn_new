@@ -163,4 +163,22 @@ class PreviewWorldTest {
         .filter(p -> p.id() == two.id()).findFirst().orElseThrow());
     assertFalse(plain.contains("name") || plain.contains("gender") || plain.contains("equipment"));
   }
+
+  @Test void invisibilityIsHiddenFromOtherObserversUnlessTheirDetectInvisibleIsActive() {
+    var world=openWorld();
+    var hidden=world.join();var observer=world.join();
+    world.visibility(hidden.token(),2_000,0);
+    assertEquals(List.of(observer.id()),world.snapshot(observer.token(),1_000).players().stream()
+        .map(PreviewWorld.PlayerView::id).toList());
+    assertEquals(List.of(hidden.id(),observer.id()),world.snapshot(hidden.token(),1_000).players().stream()
+        .map(PreviewWorld.PlayerView::id).toList(),"The hidden actor always sees their own actor");
+
+    world.visibility(observer.token(),0,1_500);
+    assertEquals(List.of(hidden.id(),observer.id()),world.snapshot(observer.token(),1_499).players().stream()
+        .map(PreviewWorld.PlayerView::id).toList());
+    assertEquals(List.of(observer.id()),world.snapshot(observer.token(),1_500).players().stream()
+        .map(PreviewWorld.PlayerView::id).toList(),"Detection expires at its absolute server deadline");
+    assertEquals(List.of(hidden.id(),observer.id()),world.snapshot(observer.token(),2_000).players().stream()
+        .map(PreviewWorld.PlayerView::id).toList(),"Invisibility expires at its absolute server deadline");
+  }
 }
