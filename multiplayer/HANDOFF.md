@@ -49,6 +49,14 @@ Both QA packages were rebuilt from `f3d4ed62` and rehearsed in a scrubbed enviro
 PowerShell 5.1 packaging defects were fixed and the remaining second-machine checklist is in [MILESTONES.md](MILESTONES.md) M6. Rebuild with
 `package-online-client.ps1 -Name <new>` and `package-online-server.ps1 -Name <new> -SourceRevision <sha>`; both now run under stock 5.1.
 
+### Package launcher hardening (T4C-0345, 2026-10-30)
+
+Launchers now check for Java 21 x64 with a plain message, the GLFW extraction folder is reused, the server package has `.bat` wrappers, a
+provisioning script and `verify-package`, and the client builder has an opt-in `-ExcludeOrigin` (default unchanged, owner decision open). The
+shared Java check lives in `multiplayer/tools/package-java-check.ps1` and is pasted into each generated script by the builders; run
+`test-package-java-check.ps1 [-ClientPackage ..] [-ServerPackage ..]` after changing it. The package checkers now expect the new files.
+Remaining owner decisions and second-machine evidence are listed in [MILESTONES.md](MILESTONES.md) M6.
+
 ### Latest live rendered evidence (T4C-0306, 2026-10-29)
 
 Two real rendered windows were run against a real server on a disposable PostgreSQL cluster with the test-scope
