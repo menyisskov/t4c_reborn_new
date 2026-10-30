@@ -2152,6 +2152,8 @@ public class MainGameScreen implements Screen {
     if (spellName == null || spellName.isEmpty()) {
       return false;
     }
+    // Online buff state is informational; recasting must go through an explicit server command.
+    if (isRemoteSession()) return true;
     long now = System.currentTimeMillis();
     if (spellName.equals(lastClickedBuffSpellName)
         && now - lastBuffClickMillis <= BUFF_DOUBLE_CLICK_MILLIS) {
@@ -4633,6 +4635,9 @@ public class MainGameScreen implements Screen {
 
   private void initializeHud() {
     hud = new PlayerHUD(player, spriteLoader);
+    if (remoteConnection != null)
+      hud.setRemoteHudStatus(() -> com.perso.T4C.ui.RemoteHudStatus.from(
+          remoteConnection.view(), System.currentTimeMillis()));
     hud.setPersistence(session.persistence());
     if (session.commands() instanceof com.perso.T4C.session.RemotePlayerCommands remoteCommands)
       hud.setRemotePlayerCommands(remoteCommands);
