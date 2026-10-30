@@ -61,10 +61,17 @@ class OnlinePickupRulesTest {
     json.getAsJsonObject("items").getAsJsonObject(RING).addProperty("weight", maximum - current + 1);
     assertEquals(Optional.of(OnlinePickupRules.Refusal.TOO_HEAVY), OnlinePickupRules.refusal(loot, pickup,
         progress, gson.fromJson(json, ItemContent.class)), "one unit over the limit is refused");
-    json.getAsJsonObject("items").getAsJsonObject(RING).addProperty("weight", 1);
+  }
+
+  @Test void uniqueFlaggedGroundItemsMayBePickedUpAsAdditionalCopies() throws Exception {
+    var gson = new Gson();
+    var progress = OnlineCharacterCreator.prepare(CharacterClass.WARRIOR, "male", false, new Random(7)).progress();
+    var json = gson.toJsonTree(ItemCatalog.loadBundled()).getAsJsonObject();
     json.getAsJsonObject("items").getAsJsonObject(RING).addProperty("unique", true);
-    var unique = OnlinePickupRules.refusal(loot, pickup, progress, gson.fromJson(json, ItemContent.class));
-    assertTrue(unique.isPresent() && unique.get() == OnlinePickupRules.Refusal.UNSUPPORTED_ITEM,
-        "unique items fail closed until the owner decides");
+    var loot = new OnlinePickupRules.Loot(UUID.randomUUID(), RING, 1, 0, 0, OWNER, 1_000, 5_000);
+    var pickup = new OnlinePickupRules.Pickup(OWNER, 1, 0, 0, 500);
+
+    assertEquals(Optional.empty(), OnlinePickupRules.refusal(loot, pickup,
+        progress, gson.fromJson(json, ItemContent.class)));
   }
 }
