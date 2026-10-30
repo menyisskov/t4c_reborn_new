@@ -91,7 +91,7 @@ log out and reconnect in two native clients. Check both players' progress. Recor
 this evidence separately; matching hashes alone do not establish a playable restore.
 No single-player saves or preferences are read or modified by the backup tool.
 
-T4C-0352 scripts this finish for twenty native adapters on a disposable cluster:
+T4C-0353 scripts this finish for twenty native adapters on a disposable cluster:
 [tools/run-native-restore-check.ps1](tools/NATIVE_RESTORE_CHECK.md) populates a database by real play, runs this verifier
 into a separate `t4c_restore_*` database, compares a gameplay-level summary of both, starts a server on the restore only
 and makes the same adapters play, stop gracefully, restart and reconnect there, then judges the restore against everything

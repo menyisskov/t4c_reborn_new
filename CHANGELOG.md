@@ -27,7 +27,7 @@ commit links, and finer-grained notes.
 ### Changed
 - Players who have learned Sneak can activate it online. Moving can reveal them as in single-player, and melee, ranged attacks and spell casts end concealment.
 
-## 2026-10-30 — Online server reliability checks and traffic figures (T4C-0352)
+## 2026-10-30 — Online server reliability checks and traffic figures (T4C-0353)
 
 ### Added
 - The online server now keeps count of how much game traffic it sends and receives and how long its saves take, so a long test session can report real figures for network use and save speed.

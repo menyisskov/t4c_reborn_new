@@ -64,7 +64,7 @@ playthrough and recovery criteria pass. Never infer Done from a task count or te
 | M2 — Inventory and loot | Server ground loot (drops, owner window, first-claim-wins, expiry, carry-weight rule), per-item corpse recovery within carry limits, native pickup/equip/inventory panels; all merged with CI evidence | Existing inventory/equipment work; T4C-0201, 0202, 0204, 0218, 0228, 0341 | Every bullet ticked (T4C-0306, 0312, 0318, 0341); the milestone's single integrated Done run, the corpse control and single-stack recovery from the screen, and remote or clean-machine evidence are open |
 | M3 — Complete authored adventure | Quest service rules, flag allowlist, once-only turn-in rewards, native talk panel, and the Skeleton hunting ground hosted as one world-0 region with unhosted portals refused; merged | T4C-0193, 0194, 0195, 0206, 0218, 0231, 0341 | Three of eight bullets ticked by T4C-0342 (kill credit, both players completing, region boundary); open: scope freeze, required-item quests, the unhosted-route refusal (no walkable unhosted route exists), restart with delayed intents; the Goblin-to-Wild-Horse fight (owner accepted it as not simulated for Beta) |
 | M4 — Supported combat and abilities | Restricted melee/physical retaliation, server-authoritative patrol/pursuit with guarded persistence, two-native-adapter pursuit/restart proof, brief two-client pursuit/retaliation/reconnect check, local PostgreSQL proof of authored hostile-clan spell damage (T4C-0317), durable authored monster self-healing (T4C-0319) and ranged monster attacks (T4C-0320) | T4C-0189, 0190, 0209, 0210, 0211, 0212, 0229, 0230, 0236, 0237, 0317, 0319, 0320, 0330 | T4C-0331 adds a rendered two-window run of different roles (contention, spells, buff and rejoin, refusals, death seen from the other window) and ticks three of the seven M4 bullets; pursuit of a fleeing player, sanctuary/interruption validation evidence, buff/cooldown HUD, tile-aimed area spells, stat allocation, rendered clan-spell combat and integrated M4/Beta acceptance remain open |
-| M5 — Reliability and anti-cheat | Pool/shutdown/fault probes, local HTTPS trust/hostname refusal and two-adapter reconnect, live two-account key-rotation fencing, historical two-hour native-adapter baseline with partial 20-player occupancy, isolated restart and database-crash probes, twenty-adapter forced-kill, PostgreSQL-crash and lost-acknowledgement drills (T4C-0310; database-recovery bullet ticked), brief rendered reconnect pass, and a 12-minute mixed twenty-adapter soak with eight adapters taking paced portal trips (49 region transfers, zero failures, 56.0% at twenty; T4C-0308), a two-hour twenty-adapter soak with eight portal walkers (625 observed transfers, flat CPU/heap, 2 adapter failures traced to a rejoin-lockout defect now fixed, 30-minute steady rerun clean; T4C-0315); shutdown-ownership, restored-database play, full-metric 30-minute record (socket bandwidth and database operation latency) and tamper/key-rotation bullets ticked on native-adapter evidence (T4C-0352); lost-acknowledgement for quest turn-in/death/transfer, rendered restart and the two-real-client mixed session open | T4C-0191, 0197, 0198, 0207, 0208, 0216, 0219, 0308, 0310, 0315, 0345 | Broader gameplay recovery (quest turn-in, death, transfer kills), rendered restart, two-real-client mixed soak on the release candidate |
+| M5 — Reliability and anti-cheat | Pool/shutdown/fault probes, local HTTPS trust/hostname refusal and two-adapter reconnect, live two-account key-rotation fencing, historical two-hour native-adapter baseline with partial 20-player occupancy, isolated restart and database-crash probes, twenty-adapter forced-kill, PostgreSQL-crash and lost-acknowledgement drills (T4C-0310; database-recovery bullet ticked), brief rendered reconnect pass, and a 12-minute mixed twenty-adapter soak with eight adapters taking paced portal trips (49 region transfers, zero failures, 56.0% at twenty; T4C-0308), a two-hour twenty-adapter soak with eight portal walkers (625 observed transfers, flat CPU/heap, 2 adapter failures traced to a rejoin-lockout defect now fixed, 30-minute steady rerun clean; T4C-0315); shutdown-ownership, restored-database play, full-metric 30-minute record (socket bandwidth and database operation latency) and tamper/key-rotation bullets ticked on native-adapter evidence (T4C-0353); lost-acknowledgement for quest turn-in/death/transfer, rendered restart and the two-real-client mixed session open | T4C-0191, 0197, 0198, 0207, 0208, 0216, 0219, 0308, 0310, 0315, 0345 | Broader gameplay recovery (quest turn-in, death, transfer kills), rendered restart, two-real-client mixed soak on the release candidate |
 | M6 — Package and native acceptance | Create-only client and local-loopback server QA packages, headless integrity checks, isolated persistent server stop and brief two-window local client smoke pass; clean-machine, remote and full rendered playthrough open | T4C-0205, 0215 and cross-cutting work | Clean-machine delivery and complete two-rendered-client playthrough |
 
 Task IDs not yet claimed are deliberately not represented as completed or assigned work.
@@ -399,11 +399,11 @@ Required behavior:
 - [x] Finish bounded connection reuse and shutdown ownership. A normal stop succeeds only after
   accepted work is drained and workers have terminated. A forced/incomplete flush is a visible
   failure; it must not be reported as a safe save.
-  Ticked by T4C-0352 (2026-10-30, `origin/main` 3e147d8b plus the T4C-0352 branch, protocol 8/schema 13, local PG16 WSL, native adapters). Code and tests already in
+  Ticked by T4C-0353 (2026-10-30, `origin/main` 3e147d8b plus the T4C-0353 branch, protocol 8/schema 13, local PG16 WSL, native adapters). Code and tests already in
   place from T4C-0196/0197: one owned pool of at most 8 connections with a 1 s acquire bound, real-PostgreSQL tests for backend reuse, state reset between borrowers,
   bounded saturation, replacement of a terminated backend and closing the physical sessions with the pool; a 12 s accepted-write drain plus a separate termination wait
   in the persistence workers; and tests for a blocked write that ignores interruption (the stop waits for the worker and fails with "flush incomplete") and for two
-  concurrent closers. T4C-0352 added the missing server-level and live halves. (1) `PreviewServerTest.shutdownWhileTheDatabaseIsUnreachableFailsVisiblyAndNeverReleasesTheLease`:
+  concurrent closers. T4C-0353 added the missing server-level and live halves. (1) `PreviewServerTest.shutdownWhileTheDatabaseIsUnreachableFailsVisiblyAndNeverReleasesTheLease`:
   with every connection failing, `close()` throws, the writer lease is not released and a second close reports the same failure. (2) The live drill
   `run-native-fault-drill.ps1 -Mode ShutdownOutage` crashed PostgreSQL (immediate mode) under twenty playing adapters and requested the private operator stop 1.5 s later while
   the sessions were still bound: the server answered HTTP 200 ("stopping"), then 30 s later **exited with code 1** with `Server shutdown failed; closing owned database pool
@@ -462,12 +462,12 @@ Required behavior:
   passed again, 322 of 322, on the current build. Not exercised: a crash around a pickup claim (the loot probe needs a killer
   that survives the lethal starter ground, T4C-0248), a quest turn-in, a death, or a transfer provably in flight. The bullet
   stays open. See [tools/NATIVE_FAULT_DRILL.md](tools/NATIVE_FAULT_DRILL.md).
-  T4C-0342 later covered the pickup claim and the corpse recovery (18 hard-killed rounds, each applied exactly once after the retry), and T4C-0352 reran that drill
+  T4C-0342 later covered the pickup claim and the corpse recovery (18 hard-killed rounds, each applied exactly once after the retry), and T4C-0353 reran that drill
   as step one of the restore check with the same result (see [tools/NATIVE_RESTORE_CHECK.md](tools/NATIVE_RESTORE_CHECK.md)); a quest turn-in, a death and a transfer provably in flight
   are still not exercised, so the bullet stays open.
 - [x] Account-key rotation/foreign ownership, stale/reordered/duplicate commands, speed/stat/item
   edits, oversized requests and forged targets/rewards are rejected without corrupting valid play.
-  Ticked by T4C-0352 (2026-10-30, `origin/main` 3e147d8b plus the T4C-0352 metrics change, protocol 8/schema 13, local PG16 WSL, native adapters):
+  Ticked by T4C-0353 (2026-10-30, `origin/main` 3e147d8b plus the T4C-0353 metrics change, protocol 8/schema 13, local PG16 WSL, native adapters):
   on the current build the 322-case tamper battery passed 322 of 322 (foreign account-key/character joins, rosters and admin routes;
   stale revision and epoch on every mutating route; replay, reorder, duplicate and sequence-jump input; speed and collision; stat, gold,
   flag and item edit fields; oversized, chunked and lying bodies; forged targets, pickups, recoveries and item ids) with the victim playing
@@ -496,10 +496,10 @@ Required behavior:
   collision. 321 passed with no committed state changed and the victim playing throughout; 1 failed (`/recover`
   reports a definite corpse-item refusal as `503 busy`, state unchanged; fixed since by PR #209). After server movement
   parity (T4C-0288) the same 322 cases all passed (322 PASS, 0 FAIL). Combat-time
-  forgery, enabled-portal transfers, rendered clients and remote/TLS abuse remain open; they are outside this bullet's wording, which T4C-0352 ticked (see its note above).
+  forgery, enabled-portal transfers, rendered clients and remote/TLS abuse remain open; they are outside this bullet's wording, which T4C-0353 ticked (see its note above).
 - [x] Restore a backup into a separate database and finish a native gameplay/reconnect check there;
   matching table hashes alone do not satisfy restored gameplay acceptance.
-  Ticked by T4C-0352 (2026-10-30, `origin/main` 3e147d8b plus the T4C-0352 branch, protocol 8/schema 13, local PG16 WSL, native adapters, not rendered):
+  Ticked by T4C-0353 (2026-10-30, `origin/main` 3e147d8b plus the T4C-0353 branch, protocol 8/schema 13, local PG16 WSL, native adapters, not rendered):
   `run-native-restore-check.ps1` populated a disposable database by real native play (18 hard-killed loot-claim and corpse-recovery rounds, then
   twenty characters with opening letters and quest flags played by a 120 s soak whose server was hard-killed so the dump held 20 live copied leases:
   38 characters, 78 reward receipts, 77 combat events, 9 loot claims, 10 corpses), ran `verify_backup.py` into a separate `t4c_restore_*` database
@@ -513,7 +513,7 @@ Required behavior:
   PostgreSQL-reparsed equivalent CHECK definitions; both new loot tables were empty. Two
   actual native network adapters subsequently rejoined the isolated restore and read matching
   committed progress, balances and positions after real lease expiry, then left normally.
-  That was a network read check without gameplay on the restore; T4C-0352 above supplies the gameplay and reconnect part.
+  That was a network read check without gameplay on the restore; T4C-0353 above supplies the gameplay and reconnect part.
   A hand-driven rendered playthrough on a restore remains the stronger, optional check (PARITY.md keeps its own line).
 - [ ] Run a mixed session with two real rendered clients on the integrated candidate, with zero
   unexplained disconnects, crashes, invariant violations, duplicate value or lost acknowledged
@@ -531,7 +531,7 @@ Required behavior:
 - [x] Record actual tick duration/debt, CPU/memory, bandwidth, database/command latency, occupancy
   and every error/recovery. Investigate stalls and growing queues/resources; do not count a failed
   run as passed merely because it ended.
-  Ticked by T4C-0352 (2026-10-30, `origin/main` 3e147d8b plus the T4C-0352 branch, protocol 8/schema 13, local PG16 WSL, native adapters, development build): the
+  Ticked by T4C-0353 (2026-10-30, `origin/main` 3e147d8b plus the T4C-0353 branch, protocol 8/schema 13, local PG16 WSL, native adapters, development build): the
   server's operator metrics now also report game-socket bytes and pooled database operation time, pool wait and timeouts, and one 30-minute
   twenty-adapter run (eight paced portal walkers, default reconnect churn) recorded every listed measure in one place: 61,154 ticks, 0 failed, 0 over
   budget, 34.000 ticks/s, mean callback 1.258 ms, max 22.57 ms, max start lateness 21.32 ms, 0 deadline debt and 0 resets; CPU 16.8% of one core;
@@ -553,14 +553,14 @@ Required behavior:
   2 adapter failures (a rejoin-lockout class defect and a guard that disagreed with the movement
   rule, both fixed; a 30-minute rerun on the fix had 0 failures and 95.8% at twenty). It records
   application body bytes (about 2.4 MB/s) but not socket bandwidth or database operation latency at the time,
-  which T4C-0352 now supplies; see [tools/NATIVE_ADAPTER_SOAK.md](tools/NATIVE_ADAPTER_SOAK.md).
+  which T4C-0353 now supplies; see [tools/NATIVE_ADAPTER_SOAK.md](tools/NATIVE_ADAPTER_SOAK.md).
   T4C-0221 repaired only Windows report replacement
   under a focused file-lock fixture; the earlier 66-second schema-11 smoke remains failed and
   no new sustained result is claimed. T4C-0227 adds bounded private operator
   counters for application body bytes and handler lifetime. The native soak
   consumer's finite 1 MiB cap covers the measured dense fixed-label schema
   while retaining its two-second whole-response deadline (at that point socket
-  bandwidth and database latency were still unmeasured; T4C-0352 added them). A sustained run on the
+  bandwidth and database latency were still unmeasured; T4C-0353 added them). A sustained run on the
   integrated release candidate remains outstanding.
 
 Done evidence: reproducible fault/abuse scripts, separate restored-database playthrough, and the

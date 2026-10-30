@@ -71,7 +71,7 @@ increase in database connections substitutes for a recovery or sustained-load te
   and preservation of committed character state.
 - Shutdown regressions cover a blocked accepted write which ignores interruption, incomplete-flush
   reporting, recovery of an unacknowledged commit, and two concurrent closers waiting for the drain.
-- T4C-0352 added a server-level regression and a live drill for the other half of that rule. The regression
+- T4C-0353 added a server-level regression and a live drill for the other half of that rule. The regression
   (`PreviewServerTest.shutdownWhileTheDatabaseIsUnreachableFailsVisiblyAndNeverReleasesTheLease`) joins a character, makes
   every database connection fail, and requires `close()` to throw "teardown reported a failure", the writer lease to stay in
   force (nothing was committed or released) and a second `close()` to report the same recorded failure. The live drill is
