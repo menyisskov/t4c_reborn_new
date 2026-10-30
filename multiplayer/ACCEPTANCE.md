@@ -12,6 +12,10 @@ remain scale evidence, and the server's 20-player runtime cap is unchanged.
 [TASKS.md](../TASKS.md) tracks individual implementation deliveries; a completed task is
 not automatically a completed milestone.
 
+### Walking speed parity (T4C-0360)
+
+PLAYER_SPEED is 80 in offline and online play; MONSTER_SPEED remains 45 and movement buffs are unchanged. Shared movement now charges target arrival to the movement budget and synchronizes diagonal tile-boundary crossings. Focused offline/shared tests passed 49/49, server parity passed 19/19, packages and `git diff --check` passed on base 510356da. No rendered-client verification; Beta remains open.
+
 ### Shared GUI keyboard routing (T4C-0356)
 
 The remote input adapter forwards key presses and typed characters to an open shared GUI before online shortcuts; input is consumed while that GUI is open. Closed-GUI remote shortcuts and offline input remain unchanged. Focused GUI keyboard and HUD tests passed 4/4; package and `git diff --check` passed on head `e95c177b` (base `1710e2c5`). No rendered-client check was run; M1, M4 and Beta remain open.
