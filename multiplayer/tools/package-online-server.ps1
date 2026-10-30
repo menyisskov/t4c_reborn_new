@@ -85,7 +85,8 @@ $checkScript = @'
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 $root = $PSScriptRoot
-$java = (Get-Command java -ErrorAction Stop).Source
+#JAVA_CHECK#
+$java = Assert-T4CJava 'the server package check'
 & $java -cp (Join-Path $root 'checker/server-package-check.jar') ServerPackageCheck $root
 if ($LASTEXITCODE -ne 0) { throw 'Server package integrity check failed.' }
 Push-Location $root
@@ -104,6 +105,8 @@ param(
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 $root = [IO.Path]::GetFullPath($PSScriptRoot)
+#JAVA_CHECK#
+$java = Assert-T4CJava 'the server'
 if ($GameSocketPort -eq 0) {
     if ($Port -ge 65535) { throw 'Set -GameSocketPort when the HTTP port is 65535.' }
     $GameSocketPort = $Port + 1
@@ -149,7 +152,6 @@ $expectedMode = if ($Preview) { 'local-preview' } else { 'local-persistent' }
 $control = if ($Preview) { '' } else { Join-Path $state 'control.token' }
 $stdout = Join-Path $state 'stdout.log'
 $stderr = Join-Path $state 'stderr.log'
-$java = (Get-Command java -ErrorAction Stop).Source
 $oldControl = [Environment]::GetEnvironmentVariable('T4C_CONTROL_FILE','Process')
 $oldBind = [Environment]::GetEnvironmentVariable('T4C_BIND_ADDRESS','Process')
 $oldGameSocketPort = [Environment]::GetEnvironmentVariable('T4C_GAME_SOCKET_PORT','Process')
@@ -239,8 +241,67 @@ try { $exitCode = $process.ExitCode } catch { throw 'Server exit status unreadab
 if ($null -eq $exitCode -or $exitCode -ne 0) { throw "Server exited with code $exitCode; no checkpoint success is claimed." }
 Write-Host 'Persistent server stopped with exit code 0 after its bounded checkpoint flush. Private state and logs retained.'
 '@
-foreach ($pair in @(@('check-server.ps1',$checkScript),@('start-server.ps1',$startScript),@('stop-server.ps1',$stopScript))) {
-    [IO.File]::WriteAllText((Join-Path $package $pair[0]),$pair[1] + "`n",[Text.UTF8Encoding]::new($false))
+$provisionScript = @'
+# Creates a private online profile (account key) with the packaged server JAR. Needs the same private T4C_DB_* settings as start-server.ps1.
+# The profile file holds a secret key: write it OUTSIDE this package, keep it private, and give it only to its player.
+param(
+    [Parameter(Mandatory)][string]$Profile,
+    [string]$Name,
+    [string]$Class,
+    [ValidateSet('','male','female')][string]$Gender = '',
+    [ValidateSet('','good','evil')][string]$Alignment = '',
+    [switch]$AccountOnly
+)
+$ErrorActionPreference = 'Stop'
+Set-StrictMode -Version Latest
+$root = [IO.Path]::GetFullPath($PSScriptRoot)
+#JAVA_CHECK#
+$java = Assert-T4CJava 'profile provisioning'
+if (!$AccountOnly -and !$Name) { Write-Host 'Give -Name for a character profile, or -AccountOnly for an account-only profile.'; exit 1 }
+$classArgs = @()
+if ($Class -or $Gender -or $Alignment) {
+    if (!$Class -or !$Gender -or !$Alignment) { Write-Host '-Class, -Gender and -Alignment must be given together (for example -Class mage -Gender female -Alignment good).'; exit 1 }
+    $classArgs = @($Class,$Gender,$Alignment)
+}
+foreach ($setting in @('T4C_DB_URL','T4C_DB_USER','T4C_DB_PASSWORD')) {
+    if ([string]::IsNullOrWhiteSpace([Environment]::GetEnvironmentVariable($setting))) {
+        Write-Host "Provisioning needs the private $setting environment setting (the same three T4C_DB_* values start-server.ps1 uses)."
+        exit 1
+    }
+}
+$target = [IO.Path]::GetFullPath($Profile)
+$comparison = [StringComparison]::OrdinalIgnoreCase
+if ($target.StartsWith($root + [IO.Path]::DirectorySeparatorChar,$comparison)) { Write-Host 'The profile holds a secret key: choose a path outside this package.'; exit 1 }
+if (Test-Path -LiteralPath $target) { Write-Host 'That profile file already exists; it is never overwritten. Choose a new path.'; exit 1 }
+if (!(Test-Path -LiteralPath (Split-Path -Parent $target) -PathType Container)) { Write-Host 'The profile folder does not exist; create it first.'; exit 1 }
+& (Join-Path $root 'check-server.ps1') | Out-Null
+$jar = Join-Path $root 't4c-server.jar'
+Push-Location $root
+try {
+    if ($AccountOnly) {
+        & $java '-Djava.awt.headless=true' -jar $jar --provision-online-account $target
+    } else {
+        $map = Join-Path $root 'assets/maps/worldmap/worldmap.colbin'
+        & $java '-Djava.awt.headless=true' -jar $jar --provision-online $map $target $Name @classArgs
+    }
+    if ($LASTEXITCODE -ne 0) { Write-Host 'Provisioning failed; no profile was reported created. Check the database settings and that the name is not already used.'; exit 1 }
+} finally { Pop-Location }
+'@
+$javaCheck = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'package-java-check.ps1'))
+$verifyScript = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'package-verify.template.ps1')).Replace('#JAVA_CHECK#',$javaCheck)
+$verifyScript = $verifyScript.Replace('#CHECK_COMMAND#','& $java -cp (Join-Path $root ''checker/server-package-check.jar'') ServerPackageCheck $root')
+foreach ($pair in @(@('check-server.ps1',$checkScript),@('start-server.ps1',$startScript),@('stop-server.ps1',$stopScript),@('provision-online.ps1',$provisionScript))) {
+    [IO.File]::WriteAllText((Join-Path $package $pair[0]),$pair[1].Replace('#JAVA_CHECK#',$javaCheck) + "`n",[Text.UTF8Encoding]::new($false))
+}
+[IO.File]::WriteAllText((Join-Path $package 'verify-package.ps1'),$verifyScript,[Text.UTF8Encoding]::new($false))
+# Each .bat starts its .ps1 under an explicit per-process execution policy (a stock Windows refuses unsigned .ps1 files), passes
+# every argument through, returns the exit code, and keeps the window open after a failure when it was started by double-click.
+foreach ($wrapped in @('check-server','start-server','stop-server','provision-online','verify-package')) {
+    $text = '@echo off' + "`r`n" + 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0' + $wrapped + '.ps1" %*' + "`r`n" +
+        'set "T4CRC=%ERRORLEVEL%"' + "`r`n" +
+        'if not "%T4CRC%"=="0" if not defined T4C_NO_PAUSE echo %cmdcmdline% | findstr /i /c:" /c " >nul && pause' + "`r`n" +
+        'exit /b %T4CRC%' + "`r`n"
+    [IO.File]::WriteAllText((Join-Path $package ($wrapped + '.bat')),$text,[Text.Encoding]::ASCII)
 }
 $classes = Join-Path $build 'checker-classes'
 New-Item -ItemType Directory -Path $classes -ErrorAction Stop | Out-Null
@@ -264,4 +325,5 @@ foreach ($file in @(Get-ChildItem -LiteralPath $package -Recurse -File | Sort-Ob
 if ($LASTEXITCODE -ne 0) { throw 'Created package failed integrity validation.' }
 & (Join-Path $package 'check-server.ps1')
 Write-Host "Created local QA server package: $package"
+Write-Host "Manifest SHA-256 (publish this out of band so a recipient can run verify-package.ps1 -ManifestSha256): $((Get-FileHash -LiteralPath (Join-Path $package 'SHA256SUMS.tsv') -Algorithm SHA256).Hash.ToLowerInvariant())"
 Write-Host "Committed source: $revision; isolated build retained at $build"

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Backup half of the restored-gameplay check (T4C-0345): runs multiplayer/tools/verify_backup.py against a disposable
+# Backup half of the restored-gameplay check (T4C-0350): runs multiplayer/tools/verify_backup.py against a disposable
 # acceptance cluster, restoring into a NEW t4c_restore_* database inside the same cluster.
 #   restore-check-backup.sh <t4c_acc_<12 hex>> <t4c_restore_<12 hex>> <verify_backup.py path (WSL)> <report path (WSL, new file)>
 # The cluster password is read from the cluster's own mode-0600 file into a mode-0600 PGPASSFILE that exists only for the

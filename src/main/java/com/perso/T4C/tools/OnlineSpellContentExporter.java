@@ -1,5 +1,6 @@
 package com.perso.T4C.tools;
 
+import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.item.json.ItemJsonLoader;
 import com.perso.T4C.online.model.SpellContent;
@@ -24,12 +25,17 @@ public final class OnlineSpellContentExporter {
   public static SpellContent snapshot() {
     ItemRegistry.resetAdditionalDefinitions();
     ItemJsonLoader.loadAndRegister();
+    return snapshot(ItemRegistry.allByKey().values());
+  }
+
+  static SpellContent snapshot(Iterable<ItemDefinition> items) {
     var spells = new TreeMap<String, SpellContent.Spell>();
     spells.put(HEAL_LIGHT, export(required(HEAL_LIGHT), SpellContent.Use.CAST));
     spells.put(RENEW_ARMOR, export(required(RENEW_ARMOR), SpellContent.Use.GRANT_ONLY));
-    // In-scope potions are consumables: one charge, no equipment slot, carrying a spell.
-    for (var item : ItemRegistry.allByKey().values()) {
-      if (item.getBodyPart() != null || item.getNbCharges() != 1 || item.getSpells().isEmpty()) continue;
+    // In-scope potions are finite consumables with no equipment slot and a restorative spell.
+    for (var item : items) {
+      if (item.getBodyPart() != null || item.getNbCharges() <= 0 || item.getSpells().isEmpty()
+          || (item.getNbCharges() > 1 && item.isUnlimitedUse())) continue;
       for (var itemSpell : item.getSpells()) {
         // Unresolved or non-heal consumable spells are out of online scope and fail closed by omission.
         var spell = SpellRegistry.findById(itemSpell.getSpellId());

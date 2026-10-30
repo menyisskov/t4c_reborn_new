@@ -302,6 +302,8 @@ component of its target tile). Result for "what is the next hosting slice that u
   soak was not re-run for this change; pursuit cost scales with players near monsters, so re-measure
   before the next Beta soak.
 
+**Decision (owner, 2026-10-30, T4C-0349):** option (b), raising the region bound with area-of-interest streaming, is chosen. The measured design and staged plan are in [WORLD_STREAMING_DESIGN.md](WORLD_STREAMING_DESIGN.md); the artificial-hub and per-quest-ferry options are not pursued.
+
 ## Lighthaven sewers, and a correction to the reach audit — T4C-0304, 2026-10-29
 
 The T4C-0300 audit said the starter crop's portal graph reaches "ten more dungeon chambers". That count

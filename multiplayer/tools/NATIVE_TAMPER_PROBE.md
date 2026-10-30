@@ -488,6 +488,6 @@ code was cut short by an interrupted session (cluster and server stopped, cleane
 
 Re-run on the current build (T4C-0310, 2026-10-29, `origin/main` c079b1c0, protocol 7/schema 13, disposable PG16 cluster `t4c_acc_*`, server on 18843): **322 PASS, 0 FAIL**, owned server exited 0 after the private admin stop.
 
-Re-run on the current build (T4C-0345, 2026-10-30, `origin/main` 3e147d8b plus the T4C-0345 server metrics change, protocol 8/schema 13, disposable PG16 cluster `t4c_acc_bc8d9e9d56c9` on 57702, server on 18831, destroyed afterwards): **322 PASS, 0 FAIL**, owned server exited 0 after the private admin stop.
+Re-run on the current build (T4C-0350, 2026-10-30, `origin/main` 3e147d8b plus the T4C-0350 server metrics change, protocol 8/schema 13, disposable PG16 cluster `t4c_acc_bc8d9e9d56c9` on 57702, server on 18831, destroyed afterwards): **322 PASS, 0 FAIL**, owned server exited 0 after the private admin stop.
 Case counts by group: `MAL` 108, `AUTH` 30, `EDIT` 26, `IDEM` 26, `FORGE` 25, `JOIN` 23, `BIG` 21, `B` (alive and play) 12, `EPOCH` 10, `SPEED` 10, `STALE` 9, `LEAK` 5, `ADMIN` 5, `ROSTER` 4, `FOREIGN` 3, `DB` 3, `SEQ` 1, `SETUP` 1.
 The victim kept playing throughout and its final committed record equalled provisioning apart from the one authored letter. No probe or server guard was changed. Scope unchanged: local HTTP and native-adapter evidence, not rendered, not remote or TLS, no combat-time forgery, no enabled-portal transfer.

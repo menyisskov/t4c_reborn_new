@@ -1,4 +1,4 @@
-# Restored-database gameplay and reconnect check (T4C-0345, M5)
+# Restored-database gameplay and reconnect check (T4C-0350, M5)
 
 `run-native-restore-check.ps1` finishes the recovery drill that [BACKUP.md](../BACKUP.md) leaves open: it takes a backup of
 a populated disposable database, restores it into a **separate database of the same disposable cluster**, starts a game
@@ -18,7 +18,7 @@ the CI PostgreSQL 18 authority. It never touches the shared `t4c_online`/`t4c_te
   `restore-check-backup.sh`, which writes a mode-0600 `PGPASSFILE` inside the cluster directory for the duration of the
   dump/restore and deletes it on exit. It is never printed, never in an argument, never logged, never committed.
 - The archive (it holds account verifiers) is written inside the cluster directory and disappears with the cluster. The
-  evidence directory (`%TEMP%\t4c-0345-restore-<cluster id>`) holds only counts, hashes, logs and the soak reports; the
+  evidence directory (`%TEMP%\t4c-0350-restore-<cluster id>`) holds only counts, hashes, logs and the soak reports; the
   profile JSON files (account keys) and control tokens are deleted when the run passes.
 - The Java helper `NativeRestoreCheck` is read-only and refuses any database that is not a loopback
   `t4c_acc_<12 hex>` or `t4c_restore_<12 hex>`. `NativeFaultDrill`'s own guard (only `t4c_acc_*`) is unchanged.

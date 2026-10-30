@@ -11,12 +11,18 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-30 — Clearer online launcher: it tells you when Java is missing (T4C-0345)
+
+### Changed
+- The online game's launcher now says in plain words when Java is missing, too old (it needs Java 21 or newer, 64-bit) or the wrong kind, and tells you how to fix it, instead of showing a wall of error text.
+- Starting the online game no longer leaves a new small folder in your temporary files every time you play.
+- The online launcher can now open the character lobby for an account-only key, and the downloadable test packages come with double-click launch files and a one-step "verify this copy" check.
 ## 2026-10-30 — Sneak works in online play (T4C-0344)
 
 ### Changed
 - Players who have learned Sneak can activate it online. Moving can reveal them as in single-player, and melee, ranged attacks and spell casts end concealment.
 
-## 2026-10-30 — Online server reliability checks and traffic figures (T4C-0345)
+## 2026-10-30 — Online server reliability checks and traffic figures (T4C-0350)
 
 ### Added
 - The online server now keeps count of how much game traffic it sends and receives and how long its saves take, so a long test session can report real figures for network use and save speed.

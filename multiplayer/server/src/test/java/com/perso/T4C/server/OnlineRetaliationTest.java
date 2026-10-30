@@ -102,7 +102,10 @@ class OnlineRetaliationTest {
       Thread.sleep(OnlineRetaliation.COOLDOWN_MILLIS+30);
       retaliation.step(); retaliation.step();
       assertEquals(1500,world.position(token).hp(),"Predicted health is not published before commit completion");
-      await(sessions,creatures,() -> sessions.character(token).revision()>1);
+      // A checkpoint already in flight makes the first draft stale (production retries from committed state on a
+      // later tick), so keep stepping retaliation until the spell damage itself is committed and published; the
+      // revision alone cannot tell a checkpoint from the spell commit. The 1.5 s attack cooldown prevents a second hit.
+      await(sessions,creatures,() -> { retaliation.step(); return world.position(token).hp()<1500; });
 
       int raw=OnlineMonsterSpellAttacks.rawDamage(definition,10086,new Random(1) {
         @Override public int nextInt(int bound) { return bound-1; }
