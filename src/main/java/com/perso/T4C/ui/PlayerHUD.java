@@ -26,6 +26,7 @@ import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.model.QuickSlotEntry;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.session.CharacterPersistence;
+import com.perso.T4C.session.RemotePlayerCommands;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellRegistry;
 import java.util.ArrayList;
@@ -123,6 +124,16 @@ public class PlayerHUD {
   private final List<GuiElement> hudBoxedElements = new ArrayList<>();
 
   private CharacterPersistence persistence = CharacterPersistence.local();
+  private RemotePlayerCommands remotePlayerCommands;
+
+  /** Remote-only commands retained across the character panels' shared tab navigation. */
+  public void setRemotePlayerCommands(RemotePlayerCommands commands) {
+    remotePlayerCommands = commands;
+  }
+
+  public RemotePlayerCommands remotePlayerCommands() {
+    return remotePlayerCommands;
+  }
 
   /** Where the windows and handlers that already hold this HUD store the character. */
   public void setPersistence(CharacterPersistence persistence) {

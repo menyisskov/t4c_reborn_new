@@ -35,7 +35,7 @@ public final class PreviewServer implements AutoCloseable {
   /** Ground loot shown in one snapshot: at most this many drops, nearest the viewer first. */
   static final int GROUND_LOOT_VIEW_LIMIT = 128;
   private static final Set<String> POST_ROUTES=Set.of("/join","/admin/shutdown","/input","/attack",
-      "/recover","/equip","/unequip","/interact","/pickup","/cast","/use","/region-ready","/leave",
+      "/recover","/equip","/unequip","/interact","/pickup","/cast","/use","/allocate-stats","/region-ready","/leave",
       "/account/characters","/shop-offers","/shop-buy","/shop-sell");
   private static final Set<String> GET_ROUTES=Set.of("/","/client.js","/style.css","/strings",
       "/account/characters","/map","/state","/character","/corpses","/health","/admin/metrics");
@@ -53,6 +53,25 @@ public final class PreviewServer implements AutoCloseable {
    */
   static boolean equipmentBodyValid(boolean equip, String body) {
     return body != null && body.matches(equip ? "[0-9]{1,19} [0-9]{1,19} " + UUID_TEXT + " " + SLOT : "[0-9]{1,19} [0-9]{1,19} " + SLOT);
+  }
+
+  static Map<String, Integer> parseStatAllocation(String encoded) {
+    if (encoded == null || encoded.isBlank()) throw new PreviewWorld.Rejected(409, "invalid_allocation");
+    String[] entries = encoded.split(",", -1);
+    if (entries.length > 5) throw new PreviewWorld.Rejected(409, "invalid_allocation");
+    var allocation = new TreeMap<String, Integer>();
+    for (String entry : entries) {
+      String[] pair = entry.split(":", -1);
+      if (pair.length != 2 || !pair[0].matches("[A-Za-z][A-Za-z0-9_]{0,31}")
+          || !pair[1].matches("[0-9]{1,10}"))
+        throw new PreviewWorld.Rejected(409, "invalid_allocation");
+      int amount;
+      try { amount = Integer.parseInt(pair[1]); }
+      catch (NumberFormatException invalid) { throw new PreviewWorld.Rejected(409, "invalid_allocation"); }
+      if (allocation.putIfAbsent(pair[0], amount) != null)
+        throw new PreviewWorld.Rejected(409, "invalid_allocation");
+    }
+    return Map.copyOf(allocation);
   }
   private final com.perso.T4C.online.model.ItemContent items;
   private final HttpServer http;
@@ -288,7 +307,7 @@ public final class PreviewServer implements AutoCloseable {
       requireLocalAdmin(exchange);
       return admission.session(controlToken);
     }
-    if(store==null && Set.of("/attack","/recover","/equip","/unequip","/interact","/pickup","/cast","/use",
+    if(store==null && Set.of("/attack","/recover","/equip","/unequip","/interact","/pickup","/cast","/use","/allocate-stats",
         "/shop-offers","/shop-buy","/shop-sell").contains(path))
       throw new PreviewWorld.Rejected(404,"route");
     return knownSession(exchange);
@@ -340,6 +359,7 @@ public final class PreviewServer implements AutoCloseable {
             : !type.toLowerCase(java.util.Locale.ROOT).startsWith("text/plain")))
           throw new PreviewWorld.Rejected(415, "input");
         if ("/join".equals(path) || "/pickup".equals(path) || "/cast".equals(path) || "/use".equals(path)
+            || "/allocate-stats".equals(path)
             || path.startsWith("/shop-") || "/account/characters".equals(path)) {
           var versions = exchange.getRequestHeaders().get(OnlineProtocol.VERSION_HEADER);
           if (versions == null || versions.size() != 1
@@ -350,6 +370,7 @@ public final class PreviewServer implements AutoCloseable {
             : store!=null && "/join".equals(path) ? 101
             : "/interact".equals(path) ? 128
             : path.startsWith("/shop-") ? 256
+            : "/allocate-stats".equals(path) ? 256
             : "/recover".equals(path) || "/cast".equals(path) ? 128
             : ("/equip".equals(path) || "/unequip".equals(path) || "/pickup".equals(path) || "/use".equals(path)) ? 96 : 64;
         checkDeclaredBodyLength(exchange,limit);
@@ -440,6 +461,29 @@ public final class PreviewServer implements AutoCloseable {
             var pending=onWorld(() -> { return admit(token,epoch).melee.attack(token,revision,target); });
             var committed=pending.toCompletableFuture().get(2,TimeUnit.SECONDS);
             json(exchange,observation,200,Map.of("revision",committed.character().revision()));
+          }
+          case "/allocate-stats" -> {
+            if (persistent == null) throw new PreviewWorld.Rejected(404, "route");
+            String token = token(exchange);
+            if (!body.matches("[0-9]{1,19} [0-9]{1,19} .{1,192}"))
+              throw new PreviewWorld.Rejected(400, "input");
+            String[] parts = body.split(" ", 3);
+            long revision, epoch;
+            try { revision = Long.parseLong(parts[0]); epoch = Long.parseLong(parts[1]); }
+            catch (NumberFormatException invalid) { throw new PreviewWorld.Rejected(400, "input"); }
+            var allocation = parseStatAllocation(parts[2]);
+            var pending = onWorld(() -> {
+              admit(token, epoch);
+              return persistent.allocateStats(token, revision, allocation);
+            });
+            PersistentSessions.StatAllocationReply committed;
+            try { committed = pending.toCompletableFuture().get(2, TimeUnit.SECONDS); }
+            catch (ExecutionException error) {
+              if (error.getCause() instanceof PreviewWorld.Rejected rejected) throw rejected;
+              throw error;
+            }
+            json(exchange, observation, 200,
+                Map.of("revision", committed.revision(), "allocatedPoints", committed.pointsSpent()));
           }
           case "/recover" -> {
             if (persistent==null) throw new PreviewWorld.Rejected(404,"route");

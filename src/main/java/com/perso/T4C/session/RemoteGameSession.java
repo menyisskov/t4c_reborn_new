@@ -5,6 +5,7 @@ import com.perso.T4C.online.OnlineConnection;
 import com.perso.T4C.player.BodyPart;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.Map;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Supplier;
 
@@ -173,6 +174,11 @@ public final class RemoteGameSession implements GameSession {
 
     @Override
     public CompletionStage<OnlineConnection.CommandResult> useItem(UUID itemInstance) {
+      throw down();
+    }
+
+    @Override
+    public CompletionStage<OnlineConnection.CommandResult> allocateStats(Map<String, Integer> allocation) {
       throw down();
     }
 

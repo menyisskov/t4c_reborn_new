@@ -108,7 +108,8 @@ public class GameInputHandler {
       if (GuiManager.isOpen()) {
         GuiManager.close();
       } else {
-        GuiManager.open(new Statistics(player));
+        PlayerHUD hud = hudSupplier == null ? null : hudSupplier.get();
+        GuiManager.open(new Statistics(player, hud));
       }
     }
     if (Gdx.input.isKeyJustPressed(Input.Keys.P)
@@ -137,7 +138,8 @@ public class GameInputHandler {
       if (GuiManager.isCurrent(Statistics.class)) {
         GuiManager.close();
       } else {
-        GuiManager.open(new Statistics(player));
+        PlayerHUD hud = hudSupplier == null ? null : hudSupplier.get();
+        GuiManager.open(new Statistics(player, hud));
       }
     }
     if (Gdx.input.isKeyJustPressed(Input.Keys.Q)

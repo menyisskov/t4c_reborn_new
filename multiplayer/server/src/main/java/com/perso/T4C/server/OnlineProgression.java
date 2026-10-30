@@ -7,13 +7,63 @@ import com.perso.T4C.player.PlayerProgression;
 import com.perso.T4C.player.ProgressionState;
 import com.perso.T4C.server.persistence.OnlineStore;
 import java.util.random.RandomGenerator;
+import java.util.Map;
+import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
 /** Builds an immutable reward draft. Persist it once; never reroll it while retrying a receipt. */
 final class OnlineProgression {
   private static final XpCurve CURVE=XpCurve.loadDefault();
+  private static final Set<String> STAT_IDS = Set.of("strength", "endurance", "dexterity", "wisdom", "intelligence");
   record Result(long experience, CharacterProgress progress) {}
+  record Allocation(int pointsSpent, CharacterProgress progress) {}
+
+  static Allocation allocateStats(OnlineStore.CharacterState character, Map<String, Integer> allocation) {
+    CharacterProgress progress = character.progress();
+    if (progress == null) throw new PreviewWorld.Rejected(409, "uninitialized_character");
+    if (allocation == null || allocation.isEmpty() || allocation.size() > STAT_IDS.size())
+      throw new PreviewWorld.Rejected(409, "invalid_allocation");
+    long spent = 0;
+    for (var entry : allocation.entrySet()) {
+      if (entry.getKey() == null || !STAT_IDS.contains(entry.getKey())
+          || entry.getValue() == null || entry.getValue() <= 0)
+        throw new PreviewWorld.Rejected(409, "invalid_allocation");
+      spent += entry.getValue();
+      if (spent > Integer.MAX_VALUE) throw new PreviewWorld.Rejected(409, "invalid_allocation");
+    }
+    int available = progress.advancement().statPoints();
+    if (spent > available) throw new PreviewWorld.Rejected(409, "insufficient_stat_points");
+    var old = progress.attributes();
+    int strength = allocated(old.strength(), allocation.get("strength"));
+    int endurance = allocated(old.endurance(), allocation.get("endurance"));
+    int dexterity = allocated(old.dexterity(), allocation.get("dexterity"));
+    int wisdom = allocated(old.wisdom(), allocation.get("wisdom"));
+    int intelligence = allocated(old.intelligence(), allocation.get("intelligence"));
+    CharacterProgress.Attributes attributes;
+    try {
+      attributes = new CharacterProgress.Attributes(strength, endurance, dexterity, wisdom, intelligence);
+    } catch (ArithmeticException overflow) {
+      throw new PreviewWorld.Rejected(409, "invalid_allocation");
+    }
+    var advancement = progress.advancement();
+    var updatedAdvancement = new CharacterProgress.Advancement(advancement.level(),
+        available - (int) spent, advancement.skillPoints(), advancement.rebirths(), advancement.karma());
+    var updated = new CharacterProgress(progress.version(), progress.characterClass(), progress.gender(), attributes,
+        progress.vitals(), updatedAdvancement, progress.inventory(), progress.equipment(), progress.skills(),
+        progress.spells(), progress.questFlags(), progress.storage(), progress.storageGold(), progress.respawn(),
+        progress.buffs(), progress.cooldowns(), progress.hiddenUntil(), progress.companion());
+    return new Allocation((int) spent, updated);
+  }
+
+  private static int allocated(int current, Integer amount) {
+    if (amount == null) return current;
+    try {
+      return Math.addExact(current, amount);
+    } catch (ArithmeticException overflow) {
+      throw new PreviewWorld.Rejected(409, "invalid_allocation");
+    }
+  }
 
   static Result award(OnlineStore.CharacterState character, long baseExperience, long now, RandomGenerator random) {
     if (baseExperience<0 || now<0) throw new IllegalArgumentException("Invalid experience award");

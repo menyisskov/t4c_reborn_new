@@ -1,8 +1,11 @@
 package com.perso.T4C.session;
 
 import com.perso.T4C.monster.core.BaseMonster;
+import com.perso.T4C.online.OnlineConnection;
 import com.perso.T4C.player.BodyPart;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  * Remote-only actions not exposed by {@link PlayerCommands} yet. Screen controls route equipment
@@ -47,6 +50,12 @@ public interface RemoteIntents {
   default boolean castToPlayer(String spellKey,long actor) { return false; }
 
   boolean useItem(UUID itemInstance);
+
+  /** Requests a server-validated allocation and delivers its committed reply on the render thread. */
+  default boolean allocateStats(
+      Map<String, Integer> allocation, Consumer<OnlineConnection.CommandResult> completion) {
+    return false;
+  }
 
   /** Cancels pending listing UI replies, for example when the player closes the shop panel. */
   void closeShop();

@@ -4634,6 +4634,8 @@ public class MainGameScreen implements Screen {
   private void initializeHud() {
     hud = new PlayerHUD(player, spriteLoader);
     hud.setPersistence(session.persistence());
+    if (session.commands() instanceof com.perso.T4C.session.RemotePlayerCommands remoteCommands)
+      hud.setRemotePlayerCommands(remoteCommands);
     hud.setBackpackAction(
         () -> {
           if (GuiManager.isCurrent(Inventory.class)) {
