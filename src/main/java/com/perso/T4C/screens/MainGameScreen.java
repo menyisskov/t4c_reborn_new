@@ -153,6 +153,7 @@ public class MainGameScreen implements Screen {
   private final java.util.List<Player> remoteHoveredPlayers = new java.util.ArrayList<>();
   private final com.perso.T4C.online.OnlineShopPanel remoteShopPanel =
       new com.perso.T4C.online.OnlineShopPanel();
+  private com.perso.T4C.gui.screen.ShopScreen remoteShopScreen;
   private final com.perso.T4C.online.OnlineInventoryPanel remoteInventoryPanel =
       new com.perso.T4C.online.OnlineInventoryPanel();
   private final com.perso.T4C.online.OnlineCorpsePanel remoteCorpsePanel =
@@ -382,7 +383,10 @@ public class MainGameScreen implements Screen {
           remoteTalkPanel.close();
           if (remoteShopPanel.isOpen() && npc.equals(remoteShopPanel.npc())) {
             remoteShopPanel.refresh(offers);
-            return;
+            if (remoteShopScreen != null && GuiManager.isCurrent(com.perso.T4C.gui.screen.ShopScreen.class)) {
+              remoteShopScreen.refreshOnlineOffers(offers);
+              return;
+            }
           }
           String name = npc;
           var view = remoteConnection == null ? null : remoteConnection.view();
@@ -395,6 +399,23 @@ public class MainGameScreen implements Screen {
                 .orElse(npc);
           }
           remoteShopPanel.open(npc, I18n.resolve(name), offers);
+          remoteShopScreen =
+              com.perso.T4C.gui.screen.ShopScreen.forOnline(
+                  MainGameScreen.this.player,
+                  npc,
+                  I18n.resolve(name),
+                  offers,
+                  action -> {
+                    var commands = (com.perso.T4C.session.RemotePlayerCommands) session.commands();
+                    if (action.selling())
+                      commands.shopSell(action.npc(), action.itemKey(), action.quantity());
+                    else commands.shopBuy(action.npc(), action.itemKey(), action.quantity());
+                  },
+                  () -> {
+                    remoteShopScreen = null;
+                    closeRemoteShop();
+                  });
+          GuiManager.open(remoteShopScreen);
         }
         @Override public void showTalk(String npc) {
           if (remoteShopPanel.isOpen()) return;
@@ -5743,6 +5764,7 @@ public class MainGameScreen implements Screen {
 
   /** The lines of whichever online panel is open, top to bottom; empty when none is. */
   private java.util.List<String> remotePanelLines() {
+    if (remoteShopPanel.isOpen()) return java.util.List.of();
     var view = remoteConnection == null ? null : remoteConnection.view();
     var progress = view == null || view.character() == null ? null : view.character().progress();
     if (remoteShopPanel.isOpen()) return remoteShopPanel.lines(MainGameScreen::onlineShopItemName);
@@ -5819,6 +5841,10 @@ public class MainGameScreen implements Screen {
 
   private void closeRemoteShop() {
     remoteShopPanel.close();
+    if (remoteShopScreen != null) {
+      remoteShopScreen = null;
+      if (GuiManager.isCurrent(com.perso.T4C.gui.screen.ShopScreen.class)) GuiManager.close();
+    }
     if (isRemoteSession())
       ((com.perso.T4C.session.RemotePlayerCommands) session.commands()).closeShop();
   }
