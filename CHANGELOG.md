@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-30 — Equipment changes now show on your own character in online play (T4C-0342)
+
+### Fixed
+- In online play, taking armour or a weapon off (or putting it on) changed your character for everyone else, but your own screen kept showing the gear you logged in with: the character sheet's Strength and Armor Class did not move and your own figure kept the old armour. Your own screen now follows every equip and unequip straight away, so the sheet shows the real numbers (for example Armor Class falls when the body armour comes off and Strength drops when the weapon does) and your figure loses and regains the piece.
+
 ## 2026-10-30 — Online Skeletons follow and notice players standing next to walls (T4C-0334)
 
 ### Fixed
