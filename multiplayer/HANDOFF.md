@@ -6,6 +6,10 @@ Last reviewed: 2026-10-30, Asia/Jerusalem. This file is the restart point for a 
 
 PR #327 merged at `8514f07c` (tested head `00d67c61`, source `fabcc3cc`). Shared `PLAYER_SPEED` is 80 offline and online; `MONSTER_SPEED` remains 45. Focused offline/shared tests passed 49/49; `ServerMovementParityTest` passed 19/19; root/server packages and diff check passed. The shared rule charges the remaining distance before arrival and keeps diagonal tile-boundary crossings synchronized; the randomized blocked-tile assertion is unchanged. No rendered-client check was run. No Beta milestone is complete from this change.
 
+### Online hostile spell repeat (T4C-0361)
+
+Candidate `863bfa5d` is rebased on `origin/main` `5acd7a0e`. Online targeted hostile casts repeat only after the prior command resolves, use the server's cooldown state, retry a transient busy response after the existing short delay, and stop on movement, dead targets or terminal server refusals. Offline behavior is unchanged. Focused tests passed 45/45; root package and diff check passed. No rendered-client check was run; PR integration is next and M4/Beta remain open.
+
 ### Shared GUI keyboard routing (T4C-0356)
 
 Implemented in `codex/online-remote-gui-keyboard-0356`, commit `e95c177b`, based on main `1710e2c5`. Open shared GUI screens now receive remote keyDown/keyTyped before online shortcuts and consume those events while open; closed-GUI shortcuts and offline input are unchanged. Focused tests passed 4/4, package and diff checks passed. PR #323 is open. No rendered-client check; M1/M4/Beta remain open.
