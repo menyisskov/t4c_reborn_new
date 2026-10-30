@@ -2112,6 +2112,12 @@ public class MainGameScreen implements Screen {
 
   private void castSelfCenteredAreaSpell(SpellData spell) {
     if (player == null || !SpellAreaTargeting.isSelfCenteredAttack(spell)) return;
+    if (isRemoteSession()) {
+      if (session.commands() instanceof com.perso.T4C.session.RemotePlayerCommands commands) {
+        commands.cast(spell.getKey());
+      }
+      return;
+    }
     SpellCastingService.Result cast =
         SpellCastingService.begin(
             new SpellCastingService.Request(
