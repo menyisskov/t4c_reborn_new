@@ -1,5 +1,7 @@
 # Online account roster
 
+Update (2026-10-30, T4C-0323): the native lobby (selection, Create form, refusal messages) now exists and ran rendered against a live local server; see MILESTONES.md M1 and CLIENT_UNIFICATION_DESIGN.md 3.18. The paragraphs below are the 2026-10-27 delivery record.
+
 Delivery status (2026-10-27): the account service/native adapter is implemented and verified,
 being delivered with T4C-0197. Visible selection/creation controls remain unfinished. Recorded
 working-tree checks do not establish rendered or full-Beta acceptance.

@@ -38,7 +38,7 @@ import java.util.UUID;
  * robe) and a level-1 Warrior carrying an over-weight stack within talking distance of the hosted shopkeeper Sigfried,
  * for the inventory, spell, potion, shop and walking-animation runs.
  *
- * <p>Usage: {@code LiveRunProvision COLLISION_FILE temple|skeletons|wares OUT_DIR [NAME_SUFFIX]}.
+ * <p>Usage: {@code LiveRunProvision COLLISION_FILE temple|skeletons|wares|quest|beta|mortal|lobby OUT_DIR [NAME_SUFFIX]}; the operator steps {@code lobby-leases}, {@code lobby-stale-move} and {@code lobby-created} take the same OUT_DIR.
  */
 public final class LiveRunProvision {
   private static final int WORLD = 0;
