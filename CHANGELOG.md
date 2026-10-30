@@ -11,6 +11,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-30 — New worlds start in the morning (T4C-0349)
+
+### Fixed
+- New games and the online world now start at 7 am instead of midnight. Existing saves keep their saved time of day.
+
 ## 2026-10-30 — Sneak works in online play (T4C-0344)
 
 ### Changed

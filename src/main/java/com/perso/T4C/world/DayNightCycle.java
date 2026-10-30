@@ -12,12 +12,16 @@ public class DayNightCycle {
   private boolean forceDaylight;
   private boolean unlit;
 
+  /** Hour a new world starts at (7 am). */
+  public static final float DEFAULT_START_HOUR = 7f;
+
   public DayNightCycle() {
-    this(7f * 3600f);
+    this(DEFAULT_START_HOUR);
   }
 
+  /** {@code initialHour} is in hours (0-24), not seconds. */
   public DayNightCycle(float initialHour) {
-    this.elapsedSeconds = initialHour * 3600f;
+    this.elapsedSeconds = (((initialHour % 24f) + 24f) % 24f) * 3600f;
   }
 
   public void update(float delta) {

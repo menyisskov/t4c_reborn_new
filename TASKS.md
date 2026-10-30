@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0345`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0350`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0349 | Start new games and the online world at 7 am instead of midnight (day/night default passed seconds into an hours parameter); saved clocks unchanged | Systems | In Progress | PR pending | [2026-10-30](CHANGELOG.md#2026-10-30--new-worlds-start-in-the-morning-t4c-0349) |
 | T4C-0344 | Restore authored Sneak use in online play through the persistent socket, including learned/cooldown/status checks, moving upkeep and combat reveal; preserve offline behavior | Multiplayer / M4 parity | Implementation complete (PR #309 open; focused validation passed; PostgreSQL persistence and rendered checks pending) | 392d2ca1 | [CHANGELOG.md](CHANGELOG.md#2026-10-30--sneak-works-in-online-play-t4c-0344) |
 | T4C-0342 | M2 and M3 live evidence and an equip fix: a rendered two-window run on the real screens (inventory window, equip and unequip with the own character's strength, armor class and drawn model, travel through the Lighthaven door and the cave, both players completing the Renewed Wards quest with a repeat turn-in refused, a server restart, cross-region targeting refused) and a native 18-round hard-kill drill of loot claims and corpse recoveries; fixed the own screen keeping join-time gear after an equip or unequip (`RemoteOwnLook`, test); new `NativeLootFaultDrill` and `accept` driver scene | Multiplayer / M2, M3 | Done (PR open; local PG16 and rendered evidence, not remote) | this PR | [2026-10-30](CHANGELOG.md) |
 | T4C-0343 | Make the six existing online HUD buttons clickable and show Warden Aelric's completed Renewed Wards greeting after turn-in | Multiplayer / M1/M3 | Done (PR #308 open; rendered QA pending) | PR #308, head 92f05139/398cfd25 | [CHANGELOG.md](CHANGELOG.md#2026-10-30--online-hud-buttons-and-warden-aelrics-completed-quest-greeting-t4c-0343) |
