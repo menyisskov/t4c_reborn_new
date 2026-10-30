@@ -1789,6 +1789,8 @@ public class MainGameScreen implements Screen {
     player.setCurrentHp(Math.min(vitals.hp(), player.getMaxHp()));
     player.setMaxMana(Math.max(0, vitals.maxMana()));
     player.setMana(Math.min(vitals.mana(), player.getMaxMana()));
+    // T4C-0337: the worn items too, so the character sheet's numbers and the drawn own model follow an equip or unequip.
+    com.perso.T4C.session.RemoteOwnLook.refresh(player, character.progress());
     lastRemoteVitalsRevision = character.revision();
   }
 

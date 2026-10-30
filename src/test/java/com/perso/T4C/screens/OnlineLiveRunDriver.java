@@ -3329,15 +3329,22 @@ public final class OnlineLiveRunDriver extends MyGame {
         if (!logName.equals(field(item, item.getClass(), "logName"))) continue;
         Object button = field(item, item.getClass(), "button");
         var contains = button.getClass().getMethod("contains", float.class, float.class);
+        long sx = 0, sy = 0, n = 0;
         for (int y = 0; y < Gdx.graphics.getHeight(); y += 3)
           for (int x = 0; x < Gdx.graphics.getWidth(); x += 3)
             if ((Boolean) contains.invoke(button, (float) x, (float) y)) {
-              var processor = Gdx.input.getInputProcessor();
-              processor.mouseMoved(x, y);
-              processor.touchDown(x, y, 0, Input.Buttons.LEFT);
-              processor.touchUp(x, y, 0, Input.Buttons.LEFT);
-              return true;
+              sx += x;
+              sy += y;
+              n++;
             }
+        if (n == 0) return false;
+        int x = (int) (sx / n), y = (int) (sy / n);
+        var processor = Gdx.input.getInputProcessor();
+        processor.mouseMoved(x, y);
+        boolean down = processor.touchDown(x, y, 0, Input.Buttons.LEFT);
+        boolean up = processor.touchUp(x, y, 0, Input.Buttons.LEFT);
+        log("HUD button " + logName + ": clicked at (" + x + "," + y + ") over " + n + " sampled pixels, touchDown handled " + down + ", touchUp handled " + up);
+        return true;
       }
     } catch (ReflectiveOperationException | RuntimeException e) {
       log("HUD button " + logName + ": " + e);
@@ -3603,6 +3610,10 @@ public final class OnlineLiveRunDriver extends MyGame {
           () -> {
             long outsideId = numberIn("bnd.outside");
             if (outsideId > 0) logCommand("attack on the outside window's creature id " + outsideId + " from the cave window", connection().attack(outsideId));
+          });
+      waitMs(2500);
+      action(
+          () -> {
             try {
               Path f = sync.resolve("bnd.loot");
               if (Files.exists(f)) logCommand("pickup of the outside window's ground drop from the cave window", connection().pickUp(UUID.fromString(Files.readString(f).trim())));
@@ -3670,6 +3681,49 @@ public final class OnlineLiveRunDriver extends MyGame {
       portalHop("B", 306, 381, "lighthaven-interior", "start", false, "4-B-out-of-Lighthaven");
     }
     if (chapters.contains("ground")) {
+      // A window that starts inside the cave (an earlier chapter left it there) takes the cave exit first.
+      repeat(
+          "left the cave if the character started in it",
+          150_000,
+          () -> {
+            var s = game();
+            if (s == null) return false;
+            if (!view().map().key().equals("skeleton-cave")) return true;
+            allowTile = tileKey(136, 665);
+            walkToward(s, tileCenter(136, 665), 3f);
+            return false;
+          });
+      action(() -> held.clear());
+      // Healthy before the walk (a window that starts hurt would die among the Skeletons), and south out of the temple room first
+      // (the route search oscillates at the respawn tile, 3.17 finding 6).
+      repeat(
+          "healthy enough for the walk",
+          180_000,
+          () -> {
+            var s = game();
+            if (s == null) return false;
+            var vit = view().character().progress().vitals();
+            drinkIfHurt(view(), System.currentTimeMillis());
+            return vit.hp() * 100 >= vit.maxHp() * 75;
+          });
+      final long[] leaving = {0};
+      repeat(
+          "walked south out of the temple room if it started there",
+          6_000,
+          () -> {
+            var s = game();
+            if (s == null) return true;
+            var p = me(s).getCoordinates();
+            int tx = (int) (p.getX() / TILE_W), ty = (int) (p.getY() / TILE_H);
+            if (Math.abs(tx - 2950) > 14 || Math.abs(ty - 1040) > 10) return true;
+            long now = System.currentTimeMillis();
+            if (leaving[0] == 0) leaving[0] = now;
+            held.clear();
+            held.add(Input.Keys.S);
+            return now - leaving[0] > 4000;
+          });
+      action(() -> held.clear());
+      waitMs(1500);
       walkToGround();
       action(() -> signal(tag + ".at-ground"));
       until("peer at the ground", 240_000, () -> signaled(peer() + ".at-ground"));
@@ -3678,6 +3732,21 @@ public final class OnlineLiveRunDriver extends MyGame {
     if (chapters.contains("boundary")) acceptBoundary();
     if (chapters.contains("kills")) acceptKills(ACCEPT_KILLS, "kills to the goal");
     if (chapters.contains("turnin")) acceptTurnIn();
+    if (chapters.contains("reaccept")) {
+      // After completion: the greeting, then topic 0 (the quest offer) again. The completed quest must stay completed.
+      talkTo("aelric", "reaccept-greeting");
+      action(
+          () -> {
+            log("REACCEPT: panel open " + talkPanel().isOpen() + " lines " + talkPanel().lines() + " | " + questState());
+            if (talkPanel().isOpen()) press(Input.Keys.NUM_1);
+          });
+      waitMs(3500);
+      action(
+          () -> {
+            log("REACCEPT: after topic 0 on a completed quest: " + questState());
+            press(Input.Keys.ESCAPE);
+          });
+    }
     if (chapters.contains("restart")) {
       action(() -> log("RESTART: before: " + questState() + " | " + state()));
       restartCycle("acc", () -> log("RESTART: after the rejoin: " + questState() + " | " + state()));
