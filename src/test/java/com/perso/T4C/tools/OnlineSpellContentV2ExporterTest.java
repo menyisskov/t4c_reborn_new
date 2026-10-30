@@ -16,17 +16,28 @@ class OnlineSpellContentV2ExporterTest {
   @Test
   void everyPlayerSpellIsClassifiedAndTheCountsMatchTheDesign() {
     var content = OnlineSpellContentV2Exporter.snapshot();
-    assertEquals(SpellRegistry.playerCastableSpells().size(), content.spells().size());
+    assertEquals(SpellRegistry.playerCastableSpells().size() + 1, content.spells().size());
     Map<Kind, Long> counts = new EnumMap<>(Kind.class);
     content.spells().values().forEach(spell -> counts.merge(spell.kind(), 1L, Long::sum));
     // These are the design's table; a content change that moves one is a deliberate decision.
     var expected = Map.ofEntries(Map.entry(Kind.NUKE, 40L), Map.entry(Kind.AREA_DAMAGE, 25L),
         Map.entry(Kind.DRAIN, 4L), Map.entry(Kind.HEAL, 4L), Map.entry(Kind.AREA_HEAL, 4L),
-        Map.entry(Kind.BUFF, 25L), Map.entry(Kind.DEBUFF, 1L), Map.entry(Kind.DOT, 4L),
+        Map.entry(Kind.BUFF, 26L), Map.entry(Kind.DEBUFF, 1L), Map.entry(Kind.DOT, 4L),
         Map.entry(Kind.SHIELD, 3L), Map.entry(Kind.GATEWAY, 7L), Map.entry(Kind.PORTAL, 6L),
         Map.entry(Kind.RECALL, 1L), Map.entry(Kind.DETECTION, 4L), Map.entry(Kind.DISPEL, 2L),
         Map.entry(Kind.SPECIAL, 2L));
     assertEquals(expected, counts);
+  }
+
+  @Test
+  void exportsPotionOfFuryForTheAuthoritativeItemBuffPath() {
+    var spell = OnlineSpellContentV2Exporter.snapshot().spells().get("spell.item_potion_of_fury");
+    assertNotNull(spell);
+    assertEquals(Kind.BUFF, spell.kind());
+    assertEquals(2, spell.stage());
+    assertEquals(300_000, Integer.parseInt(spell.duration()));
+    assertTrue(spell.effects().stream().anyMatch(effect -> effect.type() == 2
+        && effect.params().stream().anyMatch(param -> param.id() == 2 && "Strength".equals(param.expression()))));
   }
 
   @Test
@@ -73,6 +84,18 @@ class OnlineSpellContentV2ExporterTest {
     assertFalse(OnlineSpellContentExporter.snapshot(java.util.List.of(withCharges(potion, 3, true)))
         .spells().values().stream().anyMatch(spell -> spell.id() == spellId
             && spell.use() == com.perso.T4C.online.model.SpellContent.Use.ITEM));
+  }
+
+  @Test
+  void exportsPotionOfFuryAsAnItemOnlySpell() {
+    OnlineSpellContentExporter.snapshot();
+    var item = ItemRegistry.findByKey("item.potion_of_fury");
+    assertNotNull(item);
+    var id = item.getSpells().getFirst().getSpellId();
+    var spell = OnlineSpellContentExporter.snapshot().spells().values().stream()
+        .filter(candidate -> candidate.id() == id).findFirst().orElseThrow();
+    assertEquals("spell.item_potion_of_fury", spell.key());
+    assertEquals(com.perso.T4C.online.model.SpellContent.Use.ITEM, spell.use());
   }
 
   private static ItemDefinition withCharges(ItemDefinition item, int charges, boolean unlimited) {

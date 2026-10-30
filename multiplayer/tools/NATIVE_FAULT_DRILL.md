@@ -137,3 +137,7 @@ javac --release 21 -proc:none -cp $cp -d $probeDir multiplayer/tools/NativeLootF
 
 Recorded run 2026-10-30 (cluster `t4c_acc_cebf2600e307`, destroyed): 18 rounds, `RESULT: PASS`. Claim: delays 0 to 200 ms, reply lost and nothing applied; 350 ms reply lost and applied; 600 ms acknowledged and applied. Recovery: 0 to 120 ms lost and nothing applied; 200 and 350 ms lost and applied; 600 ms acknowledged. Every retry was accepted for an unapplied case and
 refused "unavailable" for an applied one; no duplicates. Details in [CLIENT_UNIFICATION_DESIGN.md](../CLIENT_UNIFICATION_DESIGN.md) 3.19.
+
+## Rendered mixed session (T4C-0363)
+
+The same faults with two real rendered windows instead of adapters: `run-rendered-mixed-session.ps1` (operator), `rendered-session-launch.ps1` (scrubbed-environment launcher), `summarize-rendered-session.ps1` (log and sample counts) and the driver scene `m5` of `OnlineLiveRunDriver`. It performs a graceful stop, a forced kill, a database crash, and a hard kill right after a pickup claim click and after a corpse-recovery request; run it from the package jars as described in [CLIENT_UNIFICATION_DESIGN.md](../CLIENT_UNIFICATION_DESIGN.md) 3.20. Same safety rules (protected ports refused, only started processes signalled, passwords only through `acceptance-cluster.ps1 -Action RunEnv`).

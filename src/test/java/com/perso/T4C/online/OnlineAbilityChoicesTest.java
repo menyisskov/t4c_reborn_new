@@ -224,6 +224,7 @@ class OnlineAbilityChoicesTest {
     }
     assertTrue(expected.containsAll(List.of("item.light_healing_potion", "item.healing_potion",
         "item.potion_of_healing", "item.critical_healing_potion", "item.potion_of_mana")), expected.toString());
+    expected.add("item.potion_of_fury");
     var offered = new java.util.TreeSet<String>();
     OnlineAbilityChoices.usablePotions(progress(Set.of(), inventory, Map.of()), ALLOWLIST)
         .forEach(row -> offered.add(row.itemKey()));

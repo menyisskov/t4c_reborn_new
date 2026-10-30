@@ -325,13 +325,7 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
   public boolean interact(String npc, int topic) {
     if (npc == null || topic < 0 || topic > 99) return false;
     try {
-      link.interact(npc, topic)
-          .whenComplete(
-              (result, failure) ->
-                  outcomes.add(
-                      failure != null || result == null
-                          ? Outcome.message("online.npc.refused", List.of())
-                          : Outcome.message(result.messageKey(), result.args())));
+      sendTopic(npc, topic, true);
       return true;
     } catch (IllegalStateException pendingOrOffline) {
       outcomes.add(Outcome.message("online.npc.refused", List.of()));
@@ -339,6 +333,29 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
     } catch (IllegalArgumentException invalidIdentity) {
       return false;
     }
+  }
+
+  /**
+   * One topic question. Like a greeting, a topic refused as busy or stale was rejected before any change (T4C-0363: a live
+   * rendered run lost the second window's quest acceptance to a revision moved by a checkpoint), so it is sent once more
+   * with the refreshed revision; a second refusal is shown, and nothing accepted is ever sent again.
+   */
+  private void sendTopic(String npc, int topic, boolean mayRetry) {
+    link.interact(npc, topic)
+        .whenComplete(
+            (result, failure) -> {
+              if (failure != null || result == null) {
+                outcomes.add(Outcome.message("online.npc.refused", List.of()));
+              } else if (!result.accepted() && mayRetry && NPC_BUSY_KEY.equals(result.messageKey())) {
+                try {
+                  sendTopic(npc, topic, false);
+                } catch (IllegalStateException | IllegalArgumentException unavailable) {
+                  outcomes.add(Outcome.message(result.messageKey(), result.args()));
+                }
+              } else {
+                outcomes.add(Outcome.message(result.messageKey(), result.args()));
+              }
+            });
   }
 
   /** The server's "busy / revision changed" refusal of an equipment change (see {@code OnlineCommandRefusals}). */

@@ -4,6 +4,7 @@ import com.perso.T4C.item.ItemDefinition;
 import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.item.json.ItemJsonLoader;
 import com.perso.T4C.online.model.SpellContent;
+import com.perso.T4C.spell.BuffAttributes;
 import com.perso.T4C.spell.SpellAreaTargeting;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellRegistry;
@@ -14,7 +15,7 @@ import java.util.TreeMap;
 
 /**
  * Build-time bridge that exports only the spells the online server may run or grant: the castable
- * self heal, grant-only quest spells, and plain health or mana restore spells carried by consumable items.
+ * self heal, grant-only quest spells, restorative consumables, and the Potion of Fury buff consumable.
  */
 public final class OnlineSpellContentExporter {
   static final String HEAL_LIGHT = "spell.heal_light";
@@ -32,14 +33,17 @@ public final class OnlineSpellContentExporter {
     var spells = new TreeMap<String, SpellContent.Spell>();
     spells.put(HEAL_LIGHT, export(required(HEAL_LIGHT), SpellContent.Use.CAST));
     spells.put(RENEW_ARMOR, export(required(RENEW_ARMOR), SpellContent.Use.GRANT_ONLY));
-    // In-scope potions are finite consumables with no equipment slot and a restorative spell.
+    // In-scope potions are finite consumables with no equipment slot and a restorative spell, except
+    // Potion of Fury, whose supported authored strength buff is handled through the v2 engine path.
     for (var item : items) {
       if (item.getBodyPart() != null || item.getNbCharges() <= 0 || item.getSpells().isEmpty()
           || (item.getNbCharges() > 1 && item.isUnlimitedUse())) continue;
       for (var itemSpell : item.getSpells()) {
-        // Unresolved or non-heal consumable spells are out of online scope and fail closed by omission.
+        // Unresolved or unsupported consumable spells are out of online scope and fail closed by omission.
         var spell = SpellRegistry.findById(itemSpell.getSpellId());
-        if (spell != null && isPlainRestore(spell)) spells.putIfAbsent(spell.getKey(), export(spell, SpellContent.Use.ITEM));
+        if (spell != null && (isPlainRestore(spell)
+            || ("item.potion_of_fury".equals(item.getKey()) && isSupportedBuff(spell))))
+          spells.putIfAbsent(spell.getKey(), export(spell, SpellContent.Use.ITEM));
       }
     }
     return new SpellContent(SpellContent.VERSION, spells);
@@ -65,6 +69,16 @@ public final class OnlineSpellContentExporter {
   private static boolean restoresMana(SpellData.T4cEffect effect) {
     return effect.getParameters().stream()
         .anyMatch(param -> param.getParamId() == 2 && "MANA".equalsIgnoreCase(param.getExpression()));
+  }
+
+  /** Potion of Fury is the one authored buff consumable currently wired through the online item path. */
+  private static boolean isSupportedBuff(SpellData spell) {
+    var effects = spell.getT4cEffects();
+    return effects != null && !effects.isEmpty()
+        && effects.stream().allMatch(effect -> effect != null && effect.getEffectType() == 2
+            && BuffAttributes.MODELLED.contains(BuffAttributes.normalize(effect.getParameters().stream()
+                .filter(param -> param.getParamId() == 2).map(SpellData.T4cEffect.EffectParam::getExpression)
+                .findFirst().orElse(null))));
   }
 
   static SpellContent.Spell export(SpellData spell, SpellContent.Use use) {

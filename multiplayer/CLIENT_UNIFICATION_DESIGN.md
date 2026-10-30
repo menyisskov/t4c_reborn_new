@@ -966,6 +966,63 @@ Fix (client only; wire and protocol unchanged): `RemotePlayerPlayback` records e
 
 Cost: other players are drawn about 0.2 s behind the server (before about 0.1 s). Not verified: a rendered two-window run (the sandbox refused WSL, so no disposable PostgreSQL cluster was started). The next live run should log the observed puppet's `isMoving`, walk timer and angle per frame.
 
+### 3.20 Rendered M5 mixed session with injected faults, run from the QA packages (T4C-0363, milestone M5)
+
+**Evidence class: rendered clients on the packaged jars, local, one machine.** Packages: `package-online-server.ps1` at `0dcdb164` (protocol 8) and
+`package-online-client.ps1` (source revision `bd7f869b` = `0dcdb164` plus tests and tools; `src/main`, assets and pom identical), zipped, extracted to new empty
+directories with spaces, file lists recorded before and after (the client directory gained only `logs/t4c.log` and an empty `t4c-error.log`, the server
+directory nothing). **What the packages do not cover:** the rendered clients are `OnlineLiveRunDriver` (test scope) compiled against `app/T4C.jar` and started with
+`java -cp app/T4C.jar;lib/*;driver-classes` in the package directory, so the package's `launch-online` scripts were not exercised; the accounts came from the
+dev tool `LiveRunProvision beta` (`-Dbeta.nofiller=true`), compiled against `t4c-server.jar`, which makes level-30 Warriors beside Warden Aelric. Server, provisioner
+and clients started from a scrubbed environment (`rendered-session-launch.ps1`: JDK bin and System32 only, fresh `TEMP` and profile, only the three `T4C_DB_*`
+values for the server and provisioner, via `acceptance-cluster.ps1 -Action RunEnv`). Disposable PostgreSQL 16 clusters on loopback 57311/57331, servers on 18861/18881
+(+1 for the game socket); no protected port, owner window or peer process was touched; every cluster was destroyed (`DESTROY_OK`) or, once, removed by hand after
+a WSL restart (below); servers stopped by the operator script. `DayNightCycle` untouched (the driver's daylight toggle).
+
+Operator: `multiplayer/tools/run-rendered-mixed-session.ps1 -ClientPackage DIR -ServerPackage DIR -DriverClasses DIR -ProvisionClasses DIR -DbPort P -ServerPort Q -OutDir NEW
+-KillRace 1 -KillRecover [-DriverProps '-Dm5.segmentMs=1500000']` (compile the driver and `LiveRunProvision` with `javac -cp` the package jars first; `-DeathOnly` plus
+`-Dm5.skipQuest=true -Dm5.from=death` runs only the death part). It waits for marker files from both windows, performs the fault, saves the committed rows
+(`LiveRunProvision accept-report`) around each, samples every process each minute (`samples.csv`) and `summarize-rendered-session.ps1 -OutDir` counts the logs.
+Driver scene `m5`: quest chapters of 3.19, then `m5Fault` cycles (committed state recorded before; `restartCycle`; exact comparison after), the cave pair, a mixed
+segment whose first race is hard-killed, and the death chapter whose first recovery request is hard-killed.
+
+| Result (run `full5`, 52.9 minutes to the last kill) | Observed |
+|---|---|
+| Quest, both windows | topic digit 1 accepted in both (Bravo's first press was refused "busy" in one run and had to be pressed again: finding 1); Lighthaven door pair, 12 kills each, one turn-in each at 549 s and 555 s (status 2, +500 gold, +400 experience, `spell.renew_armor`); the database has one turn-in reward row per character. |
+| Graceful restart `g` | `stop-server.ps1` exit 0; both windows "Disconnected", `R`, lobby hold, rejoined 33.1 s later; state record **IDENTICAL**, position within 4 px. |
+| Forced kill `k` | `Stop-Process -Force` (46 to 83 ms); rejoined 33.1 to 33.2 s later; **IDENTICAL**, 0 px. Rows saved right after the kill equal those before. |
+| Database crash `d` | immediate stop of the cluster's postmaster with the server running: `/health` stayed 200, 2 `Online persistence failed (operation=checkpoint, ... sqlstate=08001); character disconnected` lines, windows disconnected within seconds (they were walking left and right to force a commit), database restarted (crash recovery) 6 s later, rejoined after 33.1 s; **IDENTICAL** apart from the 72 to 80 px walked. |
+| Pickup claim kill `pk` | race 1 planned at +7 s, both windows clicked the drop; the driver wrote the marker in the frame of the click and the operator's kill was logged 0.19 s after the marker time in both runs (the `Stop-Process -Force` itself took 45 to 83 ms; the rest is the window's own click handling, file write and the operator's polling). Database right after: drop `ON_GROUND`, 0 receipts. After the restart: run `full4` one window got the ring, the other "Another player picked that up first."; `full5` both 582 px away, refused. Final report: one receipt per claimed drop. |
+| Claim races 2 to 6 | refusals as in 3.17: "Another player has the first claim on that item for now.", "Another player picked that up first.", "too far away"; the drop of race 6 was taken by one window only. |
+| Recovery kill `rk` | Bravo's first `/recover` and the kill within 0.2 s: the request failed "Gameplay result unavailable; reconnect and reload committed state"; database right after: Bravo's corpse `recovered`, no stacks. The restart and retry did not run (finding 3). |
+| Processes (1-minute samples) | server working set 0.48 to 0.86 GB, 3.3 to 11.1 percent of one core (mean 5.0); clients 1.4 to 5.0 GB working set, mean 95 and 97 percent of one core. |
+
+**Runs kept (all preserved outside the repository in `%TEMP%\m5run2`):** `full5` (52.9 minutes, above); `full4` (22 minutes, quest through `pk`, ended when the WSL virtual machine
+was restarted by something else, which killed its PostgreSQL: `up 3 min` at 07:59; first run of the g, k, d and pk results with the same outcomes); five smoke runs that found
+the harness defects; `rk1` (death only, no death within its limit).
+
+**Findings.**
+
+1. **Fixed here (Claude lane, test `RemotePlayerCommandsTest.aTopicRefusedAsBusyIsSentOnceMoreAndOnlyASecondRefusalIsShown`): a quest topic answered "busy" was dropped.** A checkpoint moved the
+   character revision between the topic panel opening and the digit; the answer "They are busy for a moment. Try again." left the quest unaccepted and the driver (unlike a person) did not
+   press again, so Bravo stood in the quest loop for 15 minutes with `status 0`. Greetings, equipment changes and attacks already retried once; the topic question now does too. The
+   packages under test predate the fix, so the driver presses the digit again (up to three more times).
+2. **Fixed here, harness:** (a) the operator hung forever when it read a launcher's output through a pipe while the started server kept the pipe open: children are now started with
+   `Process.Start` and waited by process; (b) the driver crashed with a null pointer when the connection vanished under a hard kill (`mixedFrame`, `restartCycle`, `combatFrame`, `soakLog`, `state`): it now
+   keeps its last values; (c) restarts failed when a killed server's port was still listed: the operator waits up to 90 s for the port; (d) PowerShell wrote
+   `Microsoft\Windows\PowerShell\ModuleAnalysisCache` into the server package directory when a script was started there from a scrubbed environment, so the package's own integrity check refused
+   the next start: server scripts now start from the output directory (this is also a note for testers, in MILESTONES M6).
+3. **Not completed:** the recovery-kill rejoin and retry. In `full5` Alpha's guard step ended after the kill and logged its state through a null connection (fixed in `state()` afterwards);
+   the follow-up run `rk1` (fix applied) never got a death: a level-30 Warrior with 278 hit points that swings and drinks nothing among the Skeletons did not die in the ten-minute limit.
+   In two earlier runs the same script produced a death after the limit. **Report only (Codex lane, `OnlineRetaliation`/spawn pressure):** whether Skeletons should be able to kill a level-30 Warrior
+   standing in their ground within ten minutes is a combat-balance question (3.17 saw the same characters come within 2 and 9 hit points of dying while fighting with potions).
+4. **External:** the WSL virtual machine restarted once during `full4` and killed its PostgreSQL (no clean shutdown), an environment event not a game finding; its stale cluster directory was refused by
+   `acceptance-cluster.ps1` for `Start` and `Destroy` (the PID file remained) and was removed by hand after verifying no process used it.
+5. Both characters died among the Skeletons during the session (no scripted death); Alpha's two corpses stayed unrecovered. Frequent "Your character is busy. Try again in a moment." chat lines (337 and 252
+   in the 52-minute logs, one per roughly four attack clicks) are the known swing/revision race of 3.17 finding 2 and are silent retried refusals shown on the second.
+
+**Not driven:** quest turn-in, death itself, or a transfer under a kill; the rejoin from the recovery kill; the launcher scripts of the package; a second machine; remote HTTPS.
+
 ## 4. Staged plan
 
 Sizes: S under a day, M a few days, L about a week, XL more. Every stage ends with the full

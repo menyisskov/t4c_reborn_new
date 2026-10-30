@@ -1,3 +1,8 @@
+## 2026-10-30 — Asking an NPC about a topic retries once when the game is busy (T4C-0363)
+
+### Fixed
+- In online play, asking a character such as Warden Aelric about a topic (for example accepting the Renewed Wards quest) while the game was momentarily busy used to answer "They are busy for a moment. Try again." and drop your question. The game now asks once more by itself, as it already did for greetings, and only tells you to try again if the second attempt is also busy.
+
 ## 2026-10-30 — Other players now walk smoothly in online play (T4C-0358)
 
 ### Fixed
