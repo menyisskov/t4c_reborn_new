@@ -2018,6 +2018,12 @@ public class MainGameScreen implements Screen {
     if (spell == null || player == null) {
       return;
     }
+    if (isRemoteSession()) {
+      if (session.commands() instanceof com.perso.T4C.session.RemotePlayerCommands commands) {
+        commands.cast(spell.getKey());
+      }
+      return;
+    }
     Gdx.app.log(
         "CastDefensive",
         "Casting: "
