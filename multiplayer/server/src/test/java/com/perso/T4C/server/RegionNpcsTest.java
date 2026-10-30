@@ -149,7 +149,7 @@ class RegionNpcsTest {
     var saved=new com.perso.T4C.server.persistence.OnlineStore.CharacterState(java.util.UUID.randomUUID(),
         java.util.UUID.randomUUID(),"Tester",0,2944,1059,0,0,0,progress);
 
-    for(String id:List.of("Fali","Rolph")) {
+    for(String id:List.of("Fali","Rolph","Araknor")) {
       var spawn=appearances.inRegion(spec).stream().filter(s->s.canonicalNpcId().equals(id))
           .findFirst().orElseThrow();
       assertFalse(spawn.interactionSupported(),"the vendor has no authored online dialogue script");

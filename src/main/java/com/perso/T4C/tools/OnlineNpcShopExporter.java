@@ -7,6 +7,7 @@ import com.perso.T4C.item.ItemSalePricing;
 import com.perso.T4C.item.json.ItemJsonLoader;
 import com.perso.T4C.monster.core.MonsterRegistry;
 import com.perso.T4C.monster.json.MonsterJsonLoader;
+import com.perso.T4C.npc.Araknor;
 import com.perso.T4C.npc.catalog.ShopCatalog;
 import com.perso.T4C.online.model.NpcShopContent;
 import java.nio.file.Files;
@@ -25,8 +26,10 @@ public final class OnlineNpcShopExporter {
     MonsterJsonLoader.loadAndRegister();
     ItemRegistry.resetAdditionalDefinitions();
     ItemJsonLoader.loadAndRegister();
+    var inventories = new java.util.TreeMap<>(ShopCatalog.allShopInventories());
+    inventories.put(Araknor.ID, Araknor.SHOP_ITEMS);
     List<NpcShopContent.Vendor> vendors =
-        ShopCatalog.allShopInventories().entrySet().stream()
+        inventories.entrySet().stream()
             .filter(
                 entry ->
                     entry.getValue().stream()
