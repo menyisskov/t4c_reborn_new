@@ -128,7 +128,7 @@ Each is a gap to close, never a decision to keep:
 - Ground-loot owner window (60 s) and expiry (15 min) have no single-player equivalent;
   they are a multiplayer rule, kept unless the owner removes them.
 - Movement: the server now steps players with single-player's grid-reservation rule through the shared `MovementRules` (T4C-0277): whole-tile reservation that is finished after the key is released, slide order -1,+1,-2,+2, the single-player diagonal corner rule, 300 px/s = 0.2757 tiles per tick, rest on tile centres (wire and database keep tile-centre doubles; fixed offset of half a tile to the rule's anchors). Open-ground speed and cardinal collision decisions equal the old loop (`ServerMovementParityTest`); `-Dt4c.server.movement=swept` is the rollback. Remaining debt: no dynamic blockers (monsters, NPCs, other players), no speed buffs or GM speed (the server has no player speed state), no stun/exhaust/attack gates beyond the existing frozen/dead stop, portal source tiles only on hosted regions, the hosted-crop loaders differ on the wall-foot rule (`PreviewMap.load` applies it, `RegionMapLoader` does not), and online client prediction (`MovementReconciler`) is still unused. Details and impact analysis: `CLIENT_UNIFICATION_DESIGN.md` 3.10.1.
-- Text HUD and panels; Space attacks the nearest target; audio disabled.
+- Text HUD and panels (the generic online list/shop/talk window is the owner-accepted interim Beta interface, 2026-10-30; the real single-player screens are required before GA); Space attacks the nearest target; audio disabled.
 - Accounts are operator-provisioned and characters are created in the lobby's Create form (in Beta scope since 2026-10-30); no import of desktop saves.
 
 ## Build order
