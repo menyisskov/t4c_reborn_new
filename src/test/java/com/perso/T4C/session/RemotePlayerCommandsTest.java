@@ -896,6 +896,26 @@ class RemotePlayerCommandsTest {
   }
 
   @Test
+  void aTopicRefusedAsBusyIsSentOnceMoreAndOnlyASecondRefusalIsShown() {
+    String npc = LighthavenSamaritan.ID;
+    link.next = new CompletableFuture<>();
+    assertTrue(session.commands().interact(npc, 0));
+    var first = link.next;
+    link.next = new CompletableFuture<>();
+
+    first.complete(new OnlineConnection.CommandResult(false, null, RemotePlayerCommands.NPC_BUSY_KEY));
+    session.commands().pump();
+
+    assertEquals(List.of("interact " + npc + " 0", "interact " + npc + " 0"), link.calls);
+    assertTrue(host.messages.isEmpty(), "the first busy refusal is not shown; the retry stands for it");
+
+    link.next.complete(new OnlineConnection.CommandResult(false, null, RemotePlayerCommands.NPC_BUSY_KEY));
+    session.commands().pump();
+    assertEquals(2, link.calls.size(), "busy is retried once, never indefinitely");
+    assertEquals(List.of(I18n.key(RemotePlayerCommands.NPC_BUSY_KEY)), host.messages);
+  }
+
+  @Test
   void aTradeRefusedAsBusyIsSentOnceMoreAndAnyOtherRefusalIsNotRetried() {
     String npc = LighthavenSamaritan.ID;
     var first = new CompletableFuture<OnlineConnection.CommandResult>();

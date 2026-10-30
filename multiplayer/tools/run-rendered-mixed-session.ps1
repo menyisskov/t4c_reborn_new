@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  Operator for the rendered two-client M5 mixed session with injected faults (T4C-0343).
+  Operator for the rendered two-client M5 mixed session with injected faults (T4C-0350).
 
 .DESCRIPTION
   Creates ONE disposable acceptance cluster (acceptance-cluster.ps1), starts the SERVER from an extracted server package, provisions two
@@ -29,6 +29,8 @@ param(
   [int]$KillRace = 1,
   [int]$WindowXA = 10,
   [int]$WindowXB = 1300,
+  [string]$DriverProps = '',
+  [switch]$DeathOnly,
   [switch]$KillRecover,
   [switch]$KeepCluster
 )
@@ -72,12 +74,20 @@ function Invoke-Launch($spec, [bool]$db) {
   $script:specN++
   $path = Join-Path $OutDir ('spec-{0:00}.json' -f $script:specN)
   ($spec | ConvertTo-Json -Depth 4) | Out-File -Encoding ascii $path
-  $common = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', $launcher, '-SpecFile', $path)
+  # A started server/client keeps inherited handles open for its whole life, so never read this child's output through a pipe
+  # (a pipeline would wait for EOF forever): start it with Process.Start and wait for the process itself.
+  $psi = New-Object System.Diagnostics.ProcessStartInfo
+  $psi.FileName = $psExe
+  $psi.UseShellExecute = $false
+  $inner = "@('-NoProfile','-ExecutionPolicy','Bypass','-File','$launcher','-SpecFile','$path')"
   if ($db) {
-    & $cluster -Action RunEnv -RunId $script:id -Command $psExe -CommandArgs $common | Out-Null
+    $psi.Arguments = "-NoProfile -ExecutionPolicy Bypass -Command `"& '$cluster' -Action RunEnv -RunId $($script:id) -Command '$psExe' -CommandArgs $inner`""
   } else {
-    & $psExe @common | Out-Null
+    $psi.Arguments = "-NoProfile -ExecutionPolicy Bypass -File `"$launcher`" -SpecFile `"$path`""
   }
+  $proc = [System.Diagnostics.Process]::Start($psi)
+  $proc.WaitForExit()
+  if ($proc.ExitCode -ne 0) { throw "launcher wrapper exited $($proc.ExitCode)" }
   $result = (Get-Content -LiteralPath ($path + '.result') -Raw).Trim()
   Remove-Item -LiteralPath $path -ErrorAction SilentlyContinue
   return $result
@@ -96,10 +106,16 @@ function Get-Health {
 }
 
 function Start-Realm {
+  # A hard-killed server's listener can take a while to disappear; start only when the HTTP port is free.
+  $freeBy = (Get-Date).AddSeconds(90)
+  while (Get-NetTCPConnection -State Listen -LocalPort $ServerPort -ErrorAction SilentlyContinue) {
+    if ((Get-Date) -gt $freeBy) { throw "port $ServerPort is still occupied 90 s after the stop" }
+    Start-Sleep -Milliseconds 500
+  }
   $script:serverN++
   $state = Join-Path $OutDir ('server-state-' + $script:serverN)
   $argLine = '-NoProfile -ExecutionPolicy Bypass -File "' + (Join-Path $ServerPackage 'start-server.ps1') + '" -Port ' + $ServerPort + ' -StateDirectory "' + $state + '"'
-  $spec = New-Spec $psExe $argLine $ServerPackage ('server-start-' + $script:serverN) $true $true @()
+  $spec = New-Spec $psExe $argLine $OutDir ('server-start-' + $script:serverN) $true $true @()
   $exit = Invoke-Launch $spec $true
   if ($exit -ne '0') { throw "start-server.ps1 exited $exit" }
   $session = Get-Content -LiteralPath (Join-Path $state 'session.json') -Raw | ConvertFrom-Json
@@ -112,7 +128,7 @@ function Start-Realm {
 function Stop-RealmGraceful {
   $state = Join-Path $OutDir ('server-state-' + $script:serverN)
   $argLine = '-NoProfile -ExecutionPolicy Bypass -File "' + (Join-Path $ServerPackage 'stop-server.ps1') + '" -StateDirectory "' + $state + '"'
-  $spec = New-Spec $psExe $argLine $ServerPackage ('server-stop-' + $script:serverN) $false $true @()
+  $spec = New-Spec $psExe $argLine $OutDir ('server-stop-' + $script:serverN) $false $true @()
   $exit = Invoke-Launch $spec $false
   Log ("graceful stop of server #{0}: stop-server.ps1 exit {1}" -f $script:serverN, $exit)
   return $exit
@@ -197,7 +213,7 @@ try {
 
   # The two rendered clients, from the CLIENT package's jars.
   $clientCp = '"' + (Join-Path $ClientPackage 'app\T4C.jar') + ';' + (Join-Path $ClientPackage 'lib\*') + ';' + $DriverClasses + '"'
-  $props = '-Dm5.killRace=' + $KillRace + ' ' + $(if ($KillRecover) { '-Dm5.killRecover=true ' } else { '' })
+  $props = '-Dm5.killRace=' + $KillRace + ' ' + $(if ($KillRecover) { '-Dm5.killRecover=true ' } else { '' }) + $(if ($DriverProps) { $DriverProps + ' ' } else { '' })
   foreach ($who in @(@('m5A', 'player-a.json', $WindowXA), @('m5B', 'player-b.json', $WindowXB))) {
     $argLine = $props + '-cp ' + $clientCp + ' com.perso.T4C.screens.OnlineLiveRunDriver http://127.0.0.1:' + $ServerPort + ' "' + (Join-Path $profiles $who[1]) + '" "' + $shots + '" ' + $who[0] + ' m5 "' + $sync + '" ' + $who[2] + ' 20 ' + $gx + ' ' + $gy
     $spec = New-Spec $javaExe $argLine $ClientPackage ('client-' + $who[0]) $false $false @()
@@ -208,6 +224,7 @@ try {
     Log ("client {0} started (wrapper {1}, java {2})" -f $who[0], $wrapper, $jp)
   }
 
+  if (-not $DeathOnly) {
   # Cycle g: graceful restart. The clients capture their committed state, signal, and wait for the disconnect.
   Wait-Files @('m5A.stop-ready-g', 'm5B.stop-ready-g') 3000 'both windows ready for the graceful restart' | Out-Null
   Save-Report 'before-graceful'
@@ -258,6 +275,7 @@ try {
   New-Item -ItemType File -Path (Join-Path $sync 'server-restarted-pk') | Out-Null
   Log 'FAULT pk: restarted, marker written'
 
+  }
   if ($KillRecover) {
     Wait-Files @('kill-now-rk') 2400 'the corpse-recovery kill marker' $true 5 | Out-Null
     Stop-RealmKill

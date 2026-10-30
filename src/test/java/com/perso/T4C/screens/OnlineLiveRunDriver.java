@@ -608,17 +608,18 @@ public final class OnlineLiveRunDriver extends MyGame {
     restartCycle(cycle, afterRejoin, null);
   }
 
-  /** {@code whileDown} runs every frame until the connection shows disconnected (T4C-0343: the database-crash cycle keeps committing meanwhile). */
+  /** {@code whileDown} runs every frame until the connection shows disconnected (T4C-0350: the database-crash cycle keeps committing meanwhile). */
   private void restartCycle(String cycle, Runnable afterRejoin, Runnable whileDown) {
     String suffix = cycle.isEmpty() ? "" : "-" + cycle;
     // 4. Server stop and restart (the operator does it between these markers).
     action(
         () -> {
           var s = game();
-          positionBeforeRestart = new Vector2(me(s).getCoordinates().getX(), me(s).getCoordinates().getY());
-          before = view().character().progress();
-          log("BEFORE RESTART: position " + positionBeforeRestart + " inventory " + inventorySummary(before) + " status " + connection().status());
-          shot("before-server-stop");
+          // After a hard kill the connection may already be gone (view null): keep the last known values then.
+          if (s != null) positionBeforeRestart = new Vector2(me(s).getCoordinates().getX(), me(s).getCoordinates().getY());
+          if (view() != null) before = view().character().progress();
+          log("BEFORE RESTART: position " + positionBeforeRestart + " inventory " + (before == null ? "?" : inventorySummary(before)) + " status " + connection().status());
+          if (s != null) shot("before-server-stop");
           signal(tag + ".stop-ready" + suffix);
         });
     long patience = scene.equals("quest") ? 1_200_000 : 180_000;
@@ -1505,6 +1506,19 @@ public final class OnlineLiveRunDriver extends MyGame {
           } else log("TOPIC: the panel did not open after the greeting");
         });
     waitMs(3500);
+    // A player who is told "They are busy for a moment. Try again." presses the digit again (T4C-0350: the second window's first
+    // press was refused that way in a live run; the game now also retries once by itself, but the packaged build under test does not).
+    for (int attempt = 2; attempt <= 4; attempt++) {
+      final int n = attempt;
+      action(
+          () -> {
+            if (view().character().progress().questFlags().getOrDefault(QUEST_STATUS, 0) == 0 && talkPanel().isOpen()) {
+              log("TOPIC: not accepted yet, digit 1 pressed again (attempt " + n + ")");
+              press(Input.Keys.NUM_1);
+            }
+          });
+      waitMs(3500);
+    }
     action(
         () -> {
           log("TOPIC after topic 0: " + questState() + " panel open " + talkPanel().isOpen());
@@ -1820,6 +1834,10 @@ public final class OnlineLiveRunDriver extends MyGame {
   private void combatFrame(MainGameScreen s, boolean attack, Vector2 focus) {
     long now = System.currentTimeMillis();
     var v = view();
+    if (v == null) { // the connection is gone (a hard kill or an outage is in progress)
+      held.clear();
+      return;
+    }
     drinkIfHurt(v, now);
     if (v.character().progress().vitals().hp() <= 0 || !attack) {
       held.clear();
@@ -1962,7 +1980,7 @@ public final class OnlineLiveRunDriver extends MyGame {
   private long xpAtStart;
 
   private void soakLog(long now) {
-    if (now - lastSoakLog < 60_000) return;
+    if (now - lastSoakLog < 60_000 || view() == null) return;
     lastSoakLog = now;
     var v = view();
     var rt = Runtime.getRuntime();
@@ -1981,7 +1999,7 @@ public final class OnlineLiveRunDriver extends MyGame {
 
   private void mixedFrame() {
     var s = game();
-    if (s == null) return;
+    if (s == null || view() == null || view().snapshot() == null) return; // the connection is gone (a hard kill is in progress)
     long now = System.currentTimeMillis();
     if (sessionStart == 0) {
       sessionStart = now;
@@ -2011,7 +2029,7 @@ public final class OnlineLiveRunDriver extends MyGame {
     deathChapter(false);
   }
 
-  /** {@code killRecover}: the operator hard-kills the server right after the first recovery request (T4C-0343); both windows then rejoin and Bravo retries. */
+  /** {@code killRecover}: the operator hard-kills the server right after the first recovery request (T4C-0350); both windows then rejoin and Bravo retries. */
   private void deathChapter(boolean killRecover) {
     if (tag.endsWith("A")) {
       // Alpha keeps fighting near the corpse spot so the recovering player can reach it.
@@ -2068,8 +2086,12 @@ public final class OnlineLiveRunDriver extends MyGame {
         () -> {
           var s = game();
           held.clear();
-          // Stand beside the nearest live monster and do nothing (no swings, no potions).
-          if (s != null) {
+          if (killRecover) {
+            // T4C-0350: standing beside idle Skeletons for ten minutes did not kill a 278-hit-point character (they only retaliate),
+            // so the M5 run keeps swinging, with no potions, until the death happens.
+            if (s != null) combatFrame(s, true, null);
+          } else if (s != null) {
+            // Stand beside the nearest live monster and do nothing (no swings, no potions).
             BaseMonster m = nearestLive(s);
             if (m != null && distance(s, m.getPosition()) > 40f) walkToward(s, m.getPosition(), 30f);
           }
@@ -3865,7 +3887,7 @@ public final class OnlineLiveRunDriver extends MyGame {
     }
   }
 
-  // ---------------------------------------------------------------- m5 scene (T4C-0343)
+  // ---------------------------------------------------------------- m5 scene (T4C-0350)
   //
   // The M5 mixed session: the whole quest (accept, Lighthaven door pair, kills, turn-in) for both windows, then a graceful server
   // restart, a forced server kill and a database crash with an exact before/after comparison of the committed state, a cave trip,
@@ -3942,9 +3964,23 @@ public final class OnlineLiveRunDriver extends MyGame {
   private void m5Scene() {
     skeletonsOnly = true;
     // The quest and the travel: topic panel, Lighthaven door pair, walk to the ground, kills to the goal, walk back, turn-in.
-    acceptScene(List.of("topic", "hops", "ground", "kills", "turnin"));
+    // -Dm5.skipQuest=true is for a smoke test of the fault machinery only; the evidence run does the quest.
+    if (!Boolean.getBoolean("m5.skipQuest")) acceptScene(List.of("topic", "hops", "ground", "kills", "turnin"));
     action(() -> log("M5 QUEST DONE: " + questState()));
     waitMs(3000);
+    // -Dm5.from=death is for a smoke test of the death and recovery-kill part only.
+    if ("death".equals(System.getProperty("m5.from"))) acceptScene(List.of("ground"));
+    else m5Faults();
+    deathChapter(m5KillRecover);
+    action(
+        () -> {
+          log("M5 SESSION SUMMARY: " + state() + " minHp " + minHp + " attacks " + attacksSent + " drops seen " + dropsSeen.size() + " races " + racesDone
+              + " connection " + connection().status() + " elapsed " + (System.currentTimeMillis() - t0) / 1000 + " s");
+          shot("final");
+        });
+  }
+
+  private void m5Faults() {
     m5Fault("g", "graceful server restart", false);
     waitMs(3000);
     m5Fault("k", "forced server kill", false);
@@ -3995,13 +4031,6 @@ public final class OnlineLiveRunDriver extends MyGame {
               + "; drop still listed " + (lootView(m5PkDrop) != null) + " | " + state());
         });
     mixedSegment("m5 fight and loot after the pickup kill", 420_000);
-    deathChapter(m5KillRecover);
-    action(
-        () -> {
-          log("M5 SESSION SUMMARY: " + state() + " minHp " + minHp + " attacks " + attacksSent + " drops seen " + dropsSeen.size() + " races " + racesDone
-              + " connection " + connection().status() + " elapsed " + (System.currentTimeMillis() - t0) / 1000 + " s");
-          shot("final");
-        });
   }
 
   // ---------------------------------------------------------------- frame loop
