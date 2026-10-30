@@ -2,6 +2,10 @@
 
 Last reviewed: 2026-10-27, Asia/Jerusalem. This file is the restart point for a different model. Recheck Git and running processes before acting; this describes recorded evidence, not live state.
 
+### Online ability-menu paging (T4C-0351)
+
+Implemented on `codex/online-ability-pages-0351`, commit `179cec80`, based on main `acb7f2ce`. Online spell and potion lists now page through all learned, server-supported entries; Left/Right changes pages and 1–9 selects within the active page. Focused tests passed 13/13, root package and `git diff --check` passed. No rendered-client or owner-QA test was run. Local PR integration is next; M4/Beta remain open. T4C-0350 day/night remains in open PR #315, still labeled T4C-0349 pending author renumbering.
+
 ## Read first
 
 ### Online Sneak parity (T4C-0344)
@@ -48,6 +52,14 @@ fixed here) are in [CLIENT_UNIFICATION_DESIGN.md](CLIENT_UNIFICATION_DESIGN.md) 
 Both QA packages were rebuilt from `f3d4ed62` and rehearsed in a scrubbed environment on this machine (not a second machine); four Windows
 PowerShell 5.1 packaging defects were fixed and the remaining second-machine checklist is in [MILESTONES.md](MILESTONES.md) M6. Rebuild with
 `package-online-client.ps1 -Name <new>` and `package-online-server.ps1 -Name <new> -SourceRevision <sha>`; both now run under stock 5.1.
+
+### Package launcher hardening (T4C-0345, 2026-10-30)
+
+Launchers now check for Java 21 x64 with a plain message, the GLFW extraction folder is reused, the server package has `.bat` wrappers, a
+provisioning script and `verify-package`, and the client builder has an opt-in `-ExcludeOrigin` (default unchanged, owner decision open). The
+shared Java check lives in `multiplayer/tools/package-java-check.ps1` and is pasted into each generated script by the builders; run
+`test-package-java-check.ps1 [-ClientPackage ..] [-ServerPackage ..]` after changing it. The package checkers now expect the new files.
+Remaining owner decisions and second-machine evidence are listed in [MILESTONES.md](MILESTONES.md) M6.
 
 ### Latest live rendered evidence (T4C-0306, 2026-10-29)
 

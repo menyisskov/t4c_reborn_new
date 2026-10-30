@@ -16,6 +16,12 @@ commit links, and finer-grained notes.
 ### Fixed
 - New games and the online world now start at 7 am instead of midnight. Existing saves keep their saved time of day.
 
+## 2026-10-30 — Clearer online launcher: it tells you when Java is missing (T4C-0345)
+
+### Changed
+- The online game's launcher now says in plain words when Java is missing, too old (it needs Java 21 or newer, 64-bit) or the wrong kind, and tells you how to fix it, instead of showing a wall of error text.
+- Starting the online game no longer leaves a new small folder in your temporary files every time you play.
+- The online launcher can now open the character lobby for an account-only key, and the downloadable test packages come with double-click launch files and a one-step "verify this copy" check.
 ## 2026-10-30 — Sneak works in online play (T4C-0344)
 
 ### Changed
