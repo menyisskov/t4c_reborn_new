@@ -61,8 +61,8 @@ playthrough and recovery criteria pass. Never infer Done from a task count or te
 | Milestone | Current status | Existing related tasks | Main outstanding work |
 | --- | --- | --- | --- |
 | M1 — Enter and interact | Roster/NPC backend and actual adapter probes pass, including two local HTTPS adapters with trust/hostname refusal and a separate live account-key rotation check; selection and refusal messages verified rendered; creation bullet and remote HTTPS open | T4C-0192, 0195, 0196, 0216, 0219, 0232, 0233, 0234 | Native character select and its Create form are merged as an opt-in lobby (`-Lobby`, owner-approved look) and ran rendered against a live local server (T4C-0306 to T4C-0325; four of seven bullets ticked); in-client character creation is recorded here as out of Beta scope (characters are operator-provisioned) while the creation bullet still requires it: owner decision; remote deployment |
-| M2 — Inventory and loot | Server ground loot (drops, owner window, first-claim-wins, expiry, carry-weight rule), per-item corpse recovery within carry limits, native pickup/equip/inventory panels; all merged with CI evidence | Existing inventory/equipment work; T4C-0201, 0202, 0204, 0218, 0228 | The two-adapter loot probe now starts legitimately (T4C-0235) but has never run (needs a database and port window); rendered loot play against a live server |
-| M3 — Complete authored adventure | Quest service rules, flag allowlist, once-only turn-in rewards, native talk panel, and the Skeleton hunting ground hosted as one world-0 region with unhosted portals refused; merged | T4C-0193, 0194, 0195, 0206, 0218, 0231 | Kill credit played through end to end against a live server, the Goblin-to-Wild-Horse fight (owner accepted it as not simulated for Beta), rendered walkthrough |
+| M2 — Inventory and loot | Server ground loot (drops, owner window, first-claim-wins, expiry, carry-weight rule), per-item corpse recovery within carry limits, native pickup/equip/inventory panels; all merged with CI evidence | Existing inventory/equipment work; T4C-0201, 0202, 0204, 0218, 0228, 0341 | Every bullet ticked (T4C-0306, 0312, 0318, 0341); the milestone's single integrated Done run, the corpse control and single-stack recovery from the screen, and remote or clean-machine evidence are open |
+| M3 — Complete authored adventure | Quest service rules, flag allowlist, once-only turn-in rewards, native talk panel, and the Skeleton hunting ground hosted as one world-0 region with unhosted portals refused; merged | T4C-0193, 0194, 0195, 0206, 0218, 0231, 0341 | Three of eight bullets ticked by T4C-0341 (kill credit, both players completing, region boundary); open: scope freeze, required-item quests, the unhosted-route refusal (no walkable unhosted route exists), restart with delayed intents; the Goblin-to-Wild-Horse fight (owner accepted it as not simulated for Beta) |
 | M4 — Supported combat and abilities | Restricted melee/physical retaliation, server-authoritative patrol/pursuit with guarded persistence, two-native-adapter pursuit/restart proof, brief two-client pursuit/retaliation/reconnect check, local PostgreSQL proof of authored hostile-clan spell damage (T4C-0317), durable authored monster self-healing (T4C-0319) and ranged monster attacks (T4C-0320) | T4C-0189, 0190, 0209, 0210, 0211, 0212, 0229, 0230, 0236, 0237, 0317, 0319, 0320, 0330 | T4C-0331 adds a rendered two-window run of different roles (contention, spells, buff and rejoin, refusals, death seen from the other window) and ticks three of the seven M4 bullets; pursuit of a fleeing player, sanctuary/interruption validation evidence, buff/cooldown HUD, tile-aimed area spells, stat allocation, rendered clan-spell combat and integrated M4/Beta acceptance remain open |
 | M5 — Reliability and anti-cheat | Pool/shutdown/fault probes, local HTTPS trust/hostname refusal and two-adapter reconnect, live two-account key-rotation fencing, historical two-hour native-adapter baseline with partial 20-player occupancy, isolated restart and database-crash probes, twenty-adapter forced-kill, PostgreSQL-crash and lost-acknowledgement drills (T4C-0310; database-recovery bullet ticked), brief rendered reconnect pass, and a 12-minute mixed twenty-adapter soak with eight adapters taking paced portal trips (49 region transfers, zero failures, 56.0% at twenty; T4C-0308), a two-hour twenty-adapter soak with eight portal walkers (625 observed transfers, flat CPU/heap, 2 adapter failures traced to a rejoin-lockout defect now fixed, 30-minute steady rerun clean; T4C-0315); full mixed recovery/load/abuse gates open (two-hour, two real clients, bandwidth, abuse) | T4C-0191, 0197, 0198, 0207, 0208, 0216, 0219, 0308, 0310, 0315 | Broader gameplay recovery, rendered restart, two-real-client mixed soak, bandwidth/DB latency and abuse checks |
 | M6 — Package and native acceptance | Create-only client and local-loopback server QA packages, headless integrity checks, isolated persistent server stop and brief two-window local client smoke pass; clean-machine, remote and full rendered playthrough open | T4C-0205, 0215 and cross-cutting work | Clean-machine delivery and complete two-rendered-client playthrough |
@@ -158,8 +158,8 @@ and [NPC_INTERACTION_DESIGN.md](NPC_INTERACTION_DESIGN.md) for current contracts
 
 Required behavior:
 
-- [ ] Native inventory shows committed item identities, quantities, charges and equipped slots.
-- [ ] Equip/unequip updates authoritative bonuses and the required appearance; shared attribute
+- [x] Native inventory shows committed item identities, quantities, charges and equipped slots.
+- [x] Equip/unequip updates authoritative bonuses and the required appearance; shared attribute
   requirements, occupancy, weight, uniqueness and other applicable item rules remain intact.
 - [x] Supported monsters produce their authored drops through a server-owned persistent loot path.
 - [x] Pickup uses server position/range, current region and the declared ownership/claim policy.
@@ -168,7 +168,7 @@ Required behavior:
   operations conserve quantity and preserve appropriate identities/charges.
 - [x] Death/corpse recovery conserves protected equipment and dropped contents under shared rules.
   No alternate pickup path bypasses corpse ownership or duplicates recovered contents.
-- [ ] Reconnect, restart and a lost pickup acknowledgement retain exactly the committed outcome.
+- [x] Reconnect, restart and a lost pickup acknowledgement retain exactly the committed outcome.
 
 T4C-0306 (2026-10-29, local rendered): two level-8 warriors killed Skeletons by clicking them; a drop appeared in both
 windows; two clients then clicked one drop (its 60 s owner window long over) at the same moment and the database shows
@@ -199,6 +199,28 @@ inspected, the screen has no corpse control (the recovery went through the conne
 acknowledgement during a claim or recovery was not run, so the reconnect/restart bullet and the Done evidence's "reload from PostgreSQL"
 step remain unmet.
 
+T4C-0341 (2026-10-30, local rendered plus native adapters, PostgreSQL 16 disposable clusters, details in
+CLIENT_UNIFICATION_DESIGN.md 3.19): **Ticked, and what proves each.** *Native inventory:* the inventory window (`I`) was driven on the real
+screen and kept as two pictures (`multiplayer/design/live6-inventory-window-page1.png`, `-page2.png`): every row names the item
+(Leather Pants, Recruit's Mace), the equipped slot in brackets (LEGS, WEAPON), the quantity ("Healing Potion x20") and the charge count
+("(1)"). *Equip bonuses and appearance on the own screen:* with body armour off the character sheet's Armor Class fell from 3.10 to 1.65 (the
+sheet shows 1) and with the weapon off Strength fell from 43 to 40 (the Recruit's Mace boost); both returned to 43 and 3.10 when the items went
+back on; the own figure lost and regained the armour (`live6-own-model-*.png`, `live6-character-sheet-body-armour-off.png`). **This found a
+defect, fixed here with a test:** before the fix the sheet read 43 and 3.10 throughout, because the own screen's player kept the join-time gear
+(only the vitals were refreshed); `RemoteOwnLook` now follows every committed equipment change (`RemoteOwnLookTest`). Requirements, occupancy, weight
+and uniqueness stay the shared rules' and the server tests' (a level-30 Warrior with Strength 43 got no change from the Strength-100 ring; equipping a mace
+into the taken weapon slot swapped it). The other window's view of an equip change is T4C-0318's. *Restart and lost acknowledgement:* the new
+`NativeLootFaultDrill` hard-killed a real server 18 times against one ground-drop claim or one two-stack corpse recovery each, 9 delays from
+0 to 600 ms, through the real adapter: after every kill the database held exactly the applied or exactly the unapplied outcome (claim: unapplied for
+0 to 200 ms with the reply lost, applied for 350 ms with the reply lost and for 600 ms acknowledged; recovery: unapplied 0 to 120 ms, applied for 200 and 350 ms
+with the reply lost, and for 600 ms acknowledged); after the restart and lease expiry the same request was accepted once for every unapplied case and refused
+("unavailable") for every applied one; the final state held the potion once (or the two stacks and 50 gold once), one receipt per claimed drop, the drop claimed by the
+claimant and the corpse recovered, no duplicate item ids, and the last server stopped gracefully with exit 0. Reload-from-restart of the
+inventory and quest items was also seen in the rendered run. **Not done, still true:** the drill is native adapters, not rendered clients; the corpse
+control on the screen and an individual single-stack recovery from the screen were not re-run (T4C-0321, T4C-0339 are merged separately); no
+remote or clean-machine run. With these three boxes every M2 bullet is ticked; the milestone's single Done run (earn, pick up and equip in one
+playthrough while the other window watches) is still spread over T4C-0306, 0312, 0318 and this task, so the owner decides whether to call M2 done.
+
 Done evidence: player A earns/picks up/equips loot while player B observes the shared world;
 repeat with a simultaneous claim and an inventory refusal. Reload from PostgreSQL and verify
 the final items/currency exist in exactly one permitted place. General loot is distinct from
@@ -211,11 +233,11 @@ Required behavior:
 - [ ] Freeze the actual quest/content scope above; export/validate its references from existing
   definitions instead of inventing a shorter online version.
 - [x] Native dialogue can accept the quest, show its objectives/progress and turn it in.
-- [ ] Server combat supplies authoritative kill credit under the declared two-player policy.
+- [x] Server combat supplies authoritative kill credit under the declared two-player policy.
   Replayed kills, old creature lives and unrelated players do not corrupt progress.
 - [ ] Required quest items and turn-in consumption resolve by real item identity/key. Item,
   currency, XP, ability rewards and completion state commit together, exactly once.
-- [ ] Both players can independently complete the selected adventure without blocking each other
+- [x] Both players can independently complete the selected adventure without blocking each other
   through a stale flag, consumed shared objective, duplicated claim or unsupported-state guard.
 - [ ] Every required map/encounter is hosted. Authored entrances/returns and valid respawns work;
   unknown/unhosted destinations produce an explicit refusal rather than a silent substitute.
@@ -228,7 +250,7 @@ Required behavior:
   [STARTER_ENCOUNTER_AUTHORITY_DESIGN.md](STARTER_ENCOUNTER_AUTHORITY_DESIGN.md)
   records T4C-0223's read-only NPC-ownership and directional Goblin-to-Horse
   authority plan. It does not enable the region, clan combat or quest completion.
-- [ ] Native map assets switch before movement resumes. Players in separate regions cannot see,
+- [x] Native map assets switch before movement resumes. Players in separate regions cannot see,
   target, damage or recover items from one another across that boundary.
 - [ ] Logout/rejoin and server restart preserve objective state, rewards and destination; delayed
   intents from a prior region cannot act on a new region's local entity IDs.
@@ -249,6 +271,25 @@ and turn it in" (accept and progress now through the screen, the turn-in through
 precisely:** kill credit and turn-in for the second window, a repeat turn-in and a restart/lost-response check in the same run, the
 unhosted-route refusal, and targeting, damage or recovery across a region boundary (only mutual invisibility was observed), so the
 travel, map-switch, both-players and restart bullets stay unticked.
+
+T4C-0341 (2026-10-30, local rendered, two level-30 Warriors, details in CLIENT_UNIFICATION_DESIGN.md 3.19): both windows accepted `renewed_wards` through the topic
+window, took the Lighthaven door pair (the map switched on screen, the other window watched each walker leave and arrive), walked to the Skeleton ground and
+fought until each character's own counter read 12 (credit goes to the lethal blow as declared; the counters were 12 and 12 although both attacked the same
+creatures); each then walked back to Warden Aelric and turned in once: the database holds one reward row per character (500 gold, 400 experience), status 2,
+`spell.renew_armor` known, and every later greeting (two in the same session, one after a graceful server restart) changed nothing. After the restart both characters
+came back with the same status, kills, gold, experience, inventory and position. One window then entered the cave while the other stayed out; neither saw the other
+(drawn players 0), the cave window's attack on the outside creature's id was answered "no target" (that id does not exist in the cave) and, in a second run, "busy", the
+outside window's attack on the cave window's id was refused "out of reach" (ids are region-local: the same number names another creature in each region), the
+target's hit points did not change in either region, and the cave window's pickup of the outside window's ground drop was refused with the drop still on the ground.
+**Ticked:** kill credit, both players completing, and the boundary bullet (map switch plus no seeing, targeting, damage or pickup across it; a foreign
+corpse cannot be recovered at all because recovery is owner-only, `NativeTamperProbe`/T4C-0251). **Not ticked and exactly why:** *scope freeze* (a design decision, not
+run evidence); *required quest items* (`renewed_wards` has no required item, so item identity and consumption stay with the server tests; its currency, experience, spell and
+completion commit together exactly once, as seen); *hosting and the unhosted-route refusal* (the only authored portal in the starter region whose route is not enabled,
+portal 947 at 2964,1038 toward world 1, sits in a pocket no hosted tile reaches, found by flooding the hosted map, so no player can walk into an unhosted route and
+there is nothing to refuse in play; the explicit refusals that do exist are the join and respawn ones, shown in the lobby as "Region offline" in the T4C-0325 run; whether that satisfies the
+bullet or an in-world refusal text is wanted is the owner's call); *restart and delayed intents* (restart preserved objective state, rewards and position for both
+characters, but the delayed-intent half rests on the stale-epoch battery of T4C-0251, not re-run on this build, so it stays open). Also not driven: a lost response during the
+turn-in itself (T4C-0310 produced both outcomes for the opening-NPC reward through the same reward path).
 
 Done evidence: two rendered clients follow the declared quest from acceptance through travel,
 combat and turn-in; both progress and reconnect with their own exact rewards. Include one

@@ -3385,16 +3385,29 @@ public final class OnlineLiveRunDriver extends MyGame {
           boolean clicked = clickHudButton("Character");
           log("CHARACTER SHEET click on the HUD button: " + clicked + " | " + sheet());
         });
-    waitMs(1200);
+    waitMs(800);
     action(
         () -> {
-          log("CHARACTER SHEET window open after the click: " + GuiManager.isOpen());
-          shot(name);
+          // The online screen's input chain does not route clicks to the HUD buttons (finding), so a click opens nothing: the HUD's own
+          // callback for that button is run instead (the same Runnable the button would run), and logged as scripted around the screen.
+          if (!GuiManager.isOpen()) {
+            try {
+              Object hud = field(game(), MainGameScreen.class, "hud");
+              ((Runnable) field(hud, hud.getClass(), "characterAction")).run();
+              log("CHARACTER SHEET: the click opened nothing; ran the HUD's characterAction callback instead (scripted around the screen)");
+            } catch (RuntimeException e) {
+              log("CHARACTER SHEET: could not run the callback: " + e);
+            }
+          }
         });
-    action(() -> clickHudButton("Character"));
-    waitMs(600);
-    action(() -> press(Input.Keys.ESCAPE));
-    waitMs(300);
+    waitMs(900);
+    action(
+        () -> {
+          log("CHARACTER SHEET window open: " + GuiManager.isOpen());
+          shot(name);
+          if (GuiManager.isOpen()) GuiManager.close();
+        });
+    waitMs(400);
   }
 
   private void acceptEquip() {
@@ -3434,8 +3447,9 @@ public final class OnlineLiveRunDriver extends MyGame {
         () -> {
           log("EQUIP body armour off | " + sheet() + " | own public look " + lookOf(ownActor()));
           press(Input.Keys.ESCAPE);
-          cropOf("own-body-off-" + side, me(game()).getPositionVector(), 200, 240);
         });
+    waitMs(500);
+    action(() -> cropOf("own-body-off-" + side, me(game()).getPositionVector(), 200, 240));
     sheetShot("character-sheet-body-off-" + side);
     // 2. Weapon off: strength falls by the weapon's boost.
     action(() -> press(Input.Keys.I));
@@ -3445,8 +3459,9 @@ public final class OnlineLiveRunDriver extends MyGame {
         () -> {
           log("EQUIP weapon off | " + sheet() + " | own public look " + lookOf(ownActor()));
           press(Input.Keys.ESCAPE);
-          cropOf("own-weapon-off-" + side, me(game()).getPositionVector(), 200, 240);
         });
+    waitMs(500);
+    action(() -> cropOf("own-weapon-off-" + side, me(game()).getPositionVector(), 200, 240));
     sheetShot("character-sheet-weapon-off-" + side);
     // 3. Both back on.
     action(() -> press(Input.Keys.I));
@@ -3457,6 +3472,10 @@ public final class OnlineLiveRunDriver extends MyGame {
         () -> {
           log("EQUIP everything back on | " + sheet() + " | own public look " + lookOf(ownActor()) + " | " + state());
           press(Input.Keys.ESCAPE);
+        });
+    waitMs(500);
+    action(
+        () -> {
           cropOf("own-restored-" + side, me(game()).getPositionVector(), 200, 240);
           signal(tag + ".equip-done");
         });

@@ -105,3 +105,21 @@ Not run, and why: `NativeDatabaseRecoveryProbe` (T4C-0208) hard-codes PostgreSQL
 above supersedes its scope but is a different tool. `NativeLootProbe` (retried pickup, lost response) needs a killer that
 survives the lethal starter ground (open owner decision T4C-0248) and was not run. `NativeTransferProbe` was not re-run
 (portal traversals are exercised by the walker drills). No rendered clients, no TLS, no remote host, no wire-level packet loss.
+
+## Loot claim and corpse recovery under a hard kill (`NativeLootFaultDrill`, T4C-0341)
+
+A separate, self-contained tool for milestone M2 ("a lost pickup acknowledgement retains exactly the committed outcome"). It needs no soak: it provisions one fresh character per round, seeds
+one owner-window ground drop (claim rounds) or one two-stack corpse with 50 gold (recovery rounds) at the character's tile before the first server start, starts its own `ServerMain --online`
+child, joins through the real `OnlineConnection`, waits until the drop or corpse is in the adapter's view, hands the request to the adapter and hard-kills the child 0, 10, 25, 50, 80, 120, 200, 350 or 600 ms later,
+restarts it, and after the last round waits 38 s (lease expiry) and retries every request through a new adapter. It requires that the database is a loopback `t4c_acc_<id>` cluster (refuses the protected ports and a listening port), writes
+`report.txt` to a new output directory and exits 1 on any failure. Checked per round: the database right after the kill holds exactly the applied outcome (potion +1 and one receipt, or two stacks and 50 gold with the corpse recovered)
+or exactly the unapplied one, never half; no duplicate item id in the inventory; after the retry the item(s) are there exactly once, the drop is `CLAIMED` by the claimant, the corpse is recovered; the final graceful shutdown exits 0.
+
+```powershell
+# repository root, after the Maven builds of ACCEPTANCE_CLUSTER.md; $rt is a copy of t4c-server.jar, lib/* and both .colbin maps outside the checkout
+javac --release 21 -proc:none -cp $cp -d $probeDir multiplayer/tools/NativeLootFaultDrill.java
+& multiplayer/tools/acceptance-cluster.ps1 -Action RunEnv -RunId t4c_acc_<id> -Command java -CommandArgs @('-Djava.awt.headless=true','-cp',"$probeDir;$cp",'com.perso.T4C.server.NativeLootFaultDrill',$rt,$javaExe,'<free-port>',"$env:TEMP\lootfault-<id>")
+```
+
+Recorded run 2026-10-30 (cluster `t4c_acc_cebf2600e307`, destroyed): 18 rounds, `RESULT: PASS`. Claim: delays 0 to 200 ms, reply lost and nothing applied; 350 ms reply lost and applied; 600 ms acknowledged and applied. Recovery: 0 to 120 ms lost and nothing applied; 200 and 350 ms lost and applied; 600 ms acknowledged. Every retry was accepted for an unapplied case and
+refused "unavailable" for an applied one; no duplicates. Details in [CLIENT_UNIFICATION_DESIGN.md](../CLIENT_UNIFICATION_DESIGN.md) 3.19.
