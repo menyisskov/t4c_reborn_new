@@ -20,7 +20,7 @@ class SpellContentV2ResourceTest {
   @Test void bundledV2CoversAllPlayerSpellsWithTheFortyEightStageOneSpells() throws Exception {
     var content = v2();
     assertEquals(2, content.version());
-    assertEquals(132, content.spells().size());
+    assertEquals(133, content.spells().size());
     assertEquals(48, content.spells().values().stream().filter(spell -> spell.stage() == 1).count());
   }
 
