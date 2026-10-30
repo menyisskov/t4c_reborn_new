@@ -47,7 +47,7 @@ re-measure before relying on a number.
   sounds or spell effects (stage 7), NPCs without a stationary or idle flag, health or hostility,
   corpses and ground-loot owner windows not drawn, other players only with the default look
   (appearance is an opaque id), no walk animation for them and no slot for them in the game screen
-  (both added in R3), and puppets glide with a 60 ms ease instead of
+  (both added in R3), and puppets glide with a 60 ms ease (replaced for players by a server-time replay buffer in T4C-0358, CLIENT_UNIFICATION_DESIGN.md 3.21) instead of
   the planned 100 ms-behind interpolation buffer. Full table: `CLIENT_UNIFICATION_DESIGN.md` 3.12.
   Progress (T4C-0292, remote session R3, headless and unwired): `RemoteGameSession.commands()` is
   `RemotePlayerCommands` over the existing connection: attack (server creature id), own movement
