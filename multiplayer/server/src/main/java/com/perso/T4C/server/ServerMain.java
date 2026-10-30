@@ -47,7 +47,10 @@ public final class ServerMain {
       return;
     }
     if (args.length > 0 && ("--preview".equals(args[0]) || "--online".equals(args[0]))) {
-      if (args.length != 3) throw new IllegalArgumentException("Expected --preview COLLISION_FILE PORT");
+      // Optional trailing --stream-world0 (online only, default off): host all of world 0 as one streamed region.
+      boolean streamWorld0=args.length==4 && "--stream-world0".equals(args[3]);
+      if (streamWorld0 && !"--online".equals(args[0])) throw new IllegalArgumentException("--stream-world0 needs --online");
+      if (args.length != 3 && !streamWorld0) throw new IllegalArgumentException("Expected --preview COLLISION_FILE PORT");
       // JDK HTTP implementation limits are set before its first use. Remote listeners require TLS.
       System.setProperty("jdk.httpserver.maxConnections", "128");
       System.setProperty("sun.net.httpserver.maxReqHeaders", "32");
@@ -71,7 +74,7 @@ public final class ServerMain {
       String controlToken=store!=null && controlFile!=null && !controlFile.isBlank()
           ? OnlineProvisioner.controlToken(java.nio.file.Path.of(controlFile)) : null;
       var plan=store==null ? HostedRegionPlan.single(PreviewMap.load(java.nio.file.Path.of(args[1])))
-          : HostedRegionPlan.startingSlice(java.nio.file.Path.of(args[1]));
+          : HostedRegionPlan.startingSlice(java.nio.file.Path.of(args[1]),streamWorld0);
       try (var server = new PreviewServer(plan,httpPort,gameSocketPort,store,controlToken,transport,store!=null)) {
         serverOwnsStore=true;
         Thread shutdown = new Thread(server::close, "preview-shutdown");
@@ -94,6 +97,7 @@ public final class ServerMain {
       System.out.println("Usage: java -jar t4c-server.jar [--ticks NON_NEGATIVE_COUNT]");
       System.out.println("       java -jar t4c-server.jar --preview COLLISION_FILE PORT");
       System.out.println("       java -jar t4c-server.jar --online COLLISION_FILE PORT");
+      System.out.println("       java -jar t4c-server.jar --online COLLISION_FILE PORT --stream-world0 (host all of world 0 as one windowed region; off by default)");
       System.out.println("       java -jar t4c-server.jar --provision-online COLLISION_FILE PRIVATE_PROFILE_FILE NAME [CLASS male|female good|evil]");
       System.out.println("       java -jar t4c-server.jar --provision-online-account PRIVATE_PROFILE_FILE");
       System.out.println("       java -jar t4c-server.jar --migrate-online (T4C_DB_URL, T4C_DB_USER, T4C_DB_PASSWORD)");

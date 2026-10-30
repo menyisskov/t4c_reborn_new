@@ -6,6 +6,7 @@ import com.perso.T4C.online.model.CreatureView;
 import com.perso.T4C.online.model.GroundLootView;
 import com.perso.T4C.online.model.OnlineProtocol;
 import com.perso.T4C.online.model.OnlineRegion;
+import com.perso.T4C.online.model.OnlineWindow;
 import com.perso.T4C.online.model.NpcView;
 import com.perso.T4C.online.model.NpcInteractionReply;
 import com.perso.T4C.online.model.ShopOffersReply;
@@ -21,7 +22,11 @@ public final class OnlineConnection implements AutoCloseable {
   private static final int MAX_CORPSE_ITEMS_PER_CORPSE = 256;
   private static final int MAX_CORPSE_ITEM_DETAILS = 2048;
   public record MapInfo(int originX, int originY, int width, int height, boolean persistent, int protocolVersion, int gameSocketPort,
-      int world,String key,long locationEpoch) {
+      int world,String key,long locationEpoch,boolean streamed) {
+    public MapInfo(int originX, int originY, int width, int height, boolean persistent, int protocolVersion, int gameSocketPort,
+        int world,String key,long locationEpoch) {
+      this(originX,originY,width,height,persistent,protocolVersion,gameSocketPort,world,key,locationEpoch,false);
+    }
     public OnlineRegion region() { return new OnlineRegion(world,key,originX,originY,width,height,locationEpoch); }
   }
 
@@ -72,7 +77,13 @@ public final class OnlineConnection implements AutoCloseable {
 
   /** Loot is region-local like creatures; it is published only with a snapshot whose region matches the map epoch. */
   public record Snapshot(long tick, List<Actor> players, Long characterRevision, List<CreatureView> creatures,
-      OnlineRegion region, List<NpcView> npcs, List<GroundLootView> loot) {}
+      OnlineRegion region, List<NpcView> npcs, List<GroundLootView> loot, OnlineWindow window, Boolean truncated) {
+    /** A snapshot that is complete for the whole region (no streaming window). */
+    public Snapshot(long tick, List<Actor> players, Long characterRevision, List<CreatureView> creatures,
+        OnlineRegion region, List<NpcView> npcs, List<GroundLootView> loot) {
+      this(tick,players,characterRevision,creatures,region,npcs,loot,null,null);
+    }
+  }
 
   public record CorpseItem(java.util.UUID id, String key, int quantity, int charges) {}
 
@@ -409,8 +420,7 @@ public final class OnlineConnection implements AutoCloseable {
         MapInfo map = JSON.fromJson(sendRetryingBusy("/map", null), MapInfo.class);
         if (map == null || map.protocolVersion() != OnlineProtocol.VERSION)
           throw new OnlineJoinFailure.Incompatible("Incompatible online protocol; update client and server together");
-        if (map.width() <= 0 || map.height() <= 0 || map.width() > 1024 || map.height() > 1024)
-          throw new IllegalStateException("Invalid server map");
+        validMapSize(map);
         if (map.persistent() != (credentials != null))
           throw new IllegalStateException("Profile and server mode do not match");
         if (map.gameSocketPort() != gameSocket.port())
@@ -519,6 +529,8 @@ public final class OnlineConnection implements AutoCloseable {
           }
           if (snapshot.players() == null || snapshot.players().size() > 20)
             throw new IllegalStateException("Invalid server snapshot");
+          validWindow(map, snapshot);
+          var window = snapshot.window();
           boolean hasSelf = false;
           for (Actor actor : snapshot.players()) {
             if (actor == null
@@ -530,7 +542,8 @@ public final class OnlineConnection implements AutoCloseable {
                 || actor.maxHp() <= 0 || actor.hp() < 0 || actor.hp() > actor.maxHp()
                 || !actor.lookValid()
                 || actor.x() >= map.width()
-                || actor.y() >= map.height())
+                || actor.y() >= map.height()
+                || outsideWindow(window, actor.x(), actor.y()))
               throw new IllegalStateException("Invalid server position");
             hasSelf |= actor.id() == joined.id();
           }
@@ -540,6 +553,7 @@ public final class OnlineConnection implements AutoCloseable {
           var creatureIds = new java.util.HashSet<Long>();
           for (var creature : creatures) {
             if (creature == null || creature.x() >= map.width() || creature.y() >= map.height()
+                || outsideWindow(window, creature.x(), creature.y())
                 || !creatureIds.add(creature.id()))
               throw new IllegalStateException("Invalid creature snapshot");
           }
@@ -547,14 +561,15 @@ public final class OnlineConnection implements AutoCloseable {
           if(npcs.size()>64) throw new IllegalStateException("Invalid NPC count");
           var npcIds=new java.util.HashSet<String>();
           for(var npc:npcs)
-            if(npc==null || npc.x()>=map.width() || npc.y()>=map.height() || !npcIds.add(npc.id()))
+            if(npc==null || npc.x()>=map.width() || npc.y()>=map.height()
+                || outsideWindow(window,npc.x(),npc.y()) || !npcIds.add(npc.id()))
               throw new IllegalStateException("Invalid NPC snapshot");
           var loot = snapshot.loot()==null ? List.<GroundLootView>of() : snapshot.loot();
           if (loot.size() > MAX_GROUND_LOOT) throw new IllegalStateException("Invalid loot count");
           var lootIds = new java.util.HashSet<java.util.UUID>();
           for (var drop : loot)
             if (drop == null || drop.x() < 0 || drop.y() < 0 || drop.x() >= map.width() || drop.y() >= map.height()
-                || !lootIds.add(drop.id()))
+                || outsideWindow(window, drop.x(), drop.y()) || !lootIds.add(drop.id()))
               throw new IllegalStateException("Invalid loot snapshot");
           if (map.persistent()) {
             if (snapshot.characterRevision() == null || snapshot.characterRevision() < 0)
@@ -604,7 +619,7 @@ public final class OnlineConnection implements AutoCloseable {
             view =
               new View(
                   joined.id(), map,
-                  new Snapshot(snapshot.tick(), List.copyOf(snapshot.players()), snapshot.characterRevision(), List.copyOf(creatures),snapshot.region(),List.copyOf(npcs),List.copyOf(loot)),
+                  new Snapshot(snapshot.tick(), List.copyOf(snapshot.players()), snapshot.characterRevision(), List.copyOf(creatures),snapshot.region(),List.copyOf(npcs),List.copyOf(loot),window,snapshot.truncated()),
                   character,corpses);
             status = "connected";
           }
@@ -670,8 +685,33 @@ public final class OnlineConnection implements AutoCloseable {
     var loaded=JSON.fromJson(sendSession("GET","/map",null),MapInfo.class);
     if (loaded==null || loaded.protocolVersion()!=OnlineProtocol.VERSION || loaded.persistent()!=persistent)
       throw new IllegalStateException("Invalid region map");
+    validMapSize(loaded);
     loaded.region(); // Validate the bounded descriptor before publishing actor coordinates.
     return loaded;
+  }
+
+  /** Largest edge of a map that is not streamed; a streamed map is bounded by {@link OnlineRegion#MAX_DIMENSION}. */
+  static final int MAX_PLAIN_MAP_EDGE = 1024;
+
+  private static void validMapSize(MapInfo map) {
+    int limit = map.streamed() ? OnlineRegion.MAX_DIMENSION : MAX_PLAIN_MAP_EDGE;
+    if (map.width() <= 0 || map.height() <= 0 || map.width() > limit || map.height() > limit)
+      throw new IllegalStateException("Invalid server map");
+  }
+
+  /** A window is only valid on a streamed map, inside the region, and every listed thing must lie in it. */
+  private static void validWindow(MapInfo map, Snapshot snapshot) {
+    var window = snapshot.window();
+    if (window == null) {
+      if (map.streamed()) throw new IllegalStateException("Streamed map snapshot has no window");
+      if (snapshot.truncated() != null) throw new IllegalStateException("Unexpected truncated flag");
+      return;
+    }
+    if (!map.streamed() || !window.fitsIn(map.region())) throw new IllegalStateException("Invalid snapshot window");
+  }
+
+  private static boolean outsideWindow(OnlineWindow window, double x, double y) {
+    return window != null && !window.contains(x, y);
   }
 
   /**
