@@ -345,10 +345,17 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
     return trade(npc, itemKey, quantity, false);
   }
 
+  /**
+   * The server's "busy / revision changed" refusal of a cast or a potion. A live two-window run (T4C-0331) had a Protection cast
+   * answered "busy" right after a Light Heal, because a regeneration checkpoint had just moved the committed revision; the refusal
+   * changed nothing, so it is sent once more like an attack, a greeting or an equipment change.
+   */
+  static final String ABILITY_BUSY_KEY = "online.ability.busy";
+
   @Override
   public boolean cast(String spellKey) {
     if (spellKey == null) return false;
-    return send(() -> link.cast(spellKey), "online.spell.refused");
+    return sendRetrying(() -> link.cast(spellKey), ABILITY_BUSY_KEY, ABILITY_BUSY_KEY, true);
   }
 
   @Override
@@ -361,7 +368,7 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
     boolean liveInSnapshot =
         view.snapshot().creatures().stream().anyMatch(creature -> creature.id() == id && creature.health() > 0);
     if (!liveInSnapshot) return false;
-    return send(() -> link.cast(spellKey, id), "online.spell.refused");
+    return sendRetrying(() -> link.cast(spellKey, id), ABILITY_BUSY_KEY, ABILITY_BUSY_KEY, true);
   }
 
   @Override
@@ -371,13 +378,13 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
     if(view==null || view.snapshot()==null || view.snapshot().players()==null
         || actor==view.ownId() || view.snapshot().players().stream()
             .noneMatch(player -> player.id()==actor && player.hp()>0)) return false;
-    return send(() -> link.castToPlayer(spellKey,actor),"online.spell.refused");
+    return sendRetrying(() -> link.castToPlayer(spellKey,actor),ABILITY_BUSY_KEY,ABILITY_BUSY_KEY,true);
   }
 
   @Override
   public boolean useItem(UUID itemInstance) {
     if (itemInstance == null) return false;
-    return send(() -> link.useItem(itemInstance), "online.item.use.refused");
+    return sendRetrying(() -> link.useItem(itemInstance), ABILITY_BUSY_KEY, ABILITY_BUSY_KEY, true);
   }
 
   @Override

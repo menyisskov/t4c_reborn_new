@@ -806,6 +806,65 @@ offers Play on a row that says In use (the roster is advisory; the server decide
 PARITY.md still says Archer awaits online ranged combat (the server's creation test accepts it); the empty-roster text points
 to Create while the milestone table calls in-client creation out of Beta scope. Both are owner decisions.
 
+### 3.18 Live rendered combat and abilities with two different roles: contention, spells, buff and rejoin, refusals, death seen from the other window (T4C-0331)
+
+**Evidence class: rendered clients, local only, same harness and limits as 3.15 to 3.17.** Build: `main` 155c03a5 plus this branch,
+protocol 8 (the first passes of the session ran on `main` b32587ff, protocol 7, and found the defects below; every case in the table was re-run on the merged build, except the Stone Shard cast under an unsupported quest flag, seen only on the first build), disposable PostgreSQL 16 cluster `t4c_acc_6937b64ed7ff` (loopback 57941), one `ServerMain --online` (HTTP 18951, game socket
+18952), all destroyed or stopped afterwards (`DESTROY_OK`, `/admin/shutdown` HTTP 200); no protected port, QA process, owner window or
+peer process was touched. Two real `MainGameScreen` windows per run (separate processes). Every run is a different pair of roles at level
+18 (levels through the server's own XP award path): **Warrior + Healer** (the full script), **Archer + Healer** (refusals) and
+**Paladin + Mage** (a second melee role, a fire caster and an area spell). Operator edits written by `LiveRunProvision m4`: the Healer
+also knows Protection (a timed buff) and starts at 40 percent health, the Mage also knows Fireball, the Warrior and Archer carry ten Healing
+Potions with the item's one charge, the Healer of the Archer run carries a quest flag the online game does not run, and the death run
+starts the Warrior at 25 hit points. Reproduce as in 3.15 with scene `m4` (`LiveRunProvision COLLISION m4 OUT SUFFIX`, `-Dm4.pair=warrior-healer|archer-healer|paladin-mage`,
+`-Dm4.level`, `-Dm4.alphaHp`, `-Dm4.alphaStack`; driver `-Dm4.chapters=census,buff,contention,refusal,area,reset,disconnect,restart,death,corpse`, `-Dm4.lives`, `-Dm4.spell`);
+the operator stops and restarts the server at the `stop-ready-m4` markers; `LiveRunProvision m4-report` prints the non-secret database rows used below.
+
+**Driven only through the screens' own handlers:** `C` and digit (spell list, cast), `U` and digit (potion), `I` and digit (equip, unequip), clicks on
+creatures (selection plus the melee swing the monster click handler sends) and on the drawn corpse, scripted walking, the screen's `R` after a server stop.
+**Scripted around the screen (logged as such):** the leaving of the world for the "disconnect" case calls `MainGameScreen.switchCharacter()` by reflection (the
+Options button was not clicked); the committed state, creature hit points and the other player's public hit points are read from the connection's view; the daylight
+toggle the other runs use was left as it was and `DayNightCycle` was not touched.
+
+| Scene and result | Observed |
+|---|---|
+| Two roles, different abilities | Warrior list: "You have no spells you can cast online." Healer list: Heal Light (Mana 2), Protection (Mana 9), Stone Shard (Mana 2). Mage list: Arcane Spark (1), Fire Dart (1), Fireball (7). Paladin list: Heal Light (2). The potion list of every role offers the Light Healing, Healing and Mana potions. |
+| Heal on self through `C` | Healer at 71 of 166: digit 1 "Health +13 \| Mana -2", health 71 to 84, mana 84 to 82, the mental, physical and attack exhaustion expiries committed (about 2 to 4 s). Later casts at 85 to 101 and 103 to 121 healed 16 to 18. |
+| Timed buff through `C` | Protection (digit 2): "Mana -9", the buff is committed with 1,197,625 ms left (20 minutes). |
+| Buff across a rejoin | Server graceful stop and restart (the lobby holds the character for about 33 s). Before the stop Protection had 1,053,736 ms left, after the rejoin 1,017,706 ms and 2.5 s later 1,015,182 ms: about 36 s used although about 85 s passed, because logged-out time does not run a buff down (as `OnlineBuffsTest` pins); the cooldown anchors, mana and vitals were the committed ones, position and inventory identical. Both windows rejoined after 33 s. |
+| Creature-target spell | A click on the Skeleton selects it (and sends a melee swing that is refused out of reach: "Your target is out of reach."), `C` then digit 3 casts Stone Shard through the persistent connection, each cast "Mana -2", and the creature's health fell in both windows with them. A cast with no live target said "There is nothing there to target."; one behind an obstacle "You cannot see the target." |
+| Splash spell | The Mage's Fireball (target type 17) was refused ("That spell cannot be cast on that target.") before the fix below. After it: accepted, "Mana -7", the 69-hit-point Skeleton died to the one cast. No second creature stood within 7 tiles, so the splash itself is covered by the PostgreSQL test only (`OnlineSpellStrikesTest.aFireballKillsTwoCreaturesAndWoundsAThirdInOneAtomicCommit`). |
+| Contention, one creature life at a time (3 lives) | Both windows attacked the same creature id (announced by file). Both windows logged the same creature health sequence (life 1: 69, 48, 26, 11, dead, identical in both). Experience: life 1 Warrior +226 and Healer +30, life 2 Warrior +50 and Healer +146, life 3 Warrior +48 and Healer +208. The extra amount is the death experience: only the lethal blow's owner gets it, the other keeps per-hit experience, as SCOPE_PROPOSAL section 3 declares. Database: `online_world_rewards` lists the Warrior for life 1 and the Healer for lives 2 and 3. A second pair (Paladin and Mage) did the same on two lives. |
+| Retaliation on the screen | After a hit the Skeleton hits back: 28 committed drops of 1 to 7 points for the Warrior in the whole run (103 points), each logged from the committed hit points; the crop `multiplayer/design/live5-retaliation.png` shows "Skeleton - Level 4" beside the Warrior with the health-colour outline. The Healer, who stood back, took none. (First build: a Skeleton did not attack an unprovoked player standing 25 px from it for 45 s; health rose by regeneration.) |
+| Leaving reach: portal, no heal | The Warrior wounded a Skeleton to 48 of 69, walked 9 tiles and through the cave mouth and back. The creature stayed at its tile (it did not follow the fleeing player), kept 48 hit points when the player returned and across a server restart (committed life identity); it never healed. The database showed such wounded creatures without a target after the player left in the earlier passes (PATROL or RETURN, 47 and 19 hit points kept) and, at the end of the final pass, back in NATURAL mode on the nearby Healer at 48. |
+| Disconnect leaves no immortal target | The Warrior wounded creature 29 to 41, then left the world (reflection, see above). The Healer then killed it from 41 to dead in 10 s and got its death experience (+200); the Warrior rejoined after 40 s. |
+| Death seen from the other window | The Warrior (25 hit points) provoked one Skeleton, then did nothing. The Healer's window showed the Warrior's public hit points fall (27, 17, 9, 7, 4 of 173) in its own snapshot, then the figure was at the temple tile (217,10) with 86 of 173 (half health, the death rule). One database row for the corpse (1 stack), no ground-loot row from the death. |
+| Corpse recovery on the screen | The Warrior walked back (131 s) and clicked the drawn "Corpse": "You gather your belongings from your corpse."; the carried list gained the stack back, the corpse listed empty and flagged recovered. (First build only: with an over-weight extra stack of the provisioner the same click was refused 6 times with "You cannot carry that much weight." and the corpse kept its contents.) |
+| Unsupported combat | An Archer took its quiver off (WEAPON2): the bow alone is refused, twice, "You cannot attack that yet."; with the quiver back on the same swing hit and gave experience. A Healer carrying a flag of a quest the online game does not run was refused every attack ("You cannot attack that yet."); on the first build of the session its Stone Shard cast was refused too ("A creature in the way cannot be fought online yet."), the cast was not reached in the final-build pass. A Warrior could not wear the Archer's bow: "You do not meet the requirements for that item." |
+
+**Defects found and fixed here (Claude lane, with tests):**
+
+1. **Taking off a quiver dropped the whole online connection.** The `/unequip` and `/equip` body pattern allowed only capital letters and underscores, but the
+   quiver sits in `WEAPON2`; the server answered 400 and the client treats a 400 as fatal ("Online connection stopped: Server rejected request: 400"). Now every body part name
+   is valid (`PreviewServer.equipmentBodyValid`, `EquipmentSlotBodyTest` walks every `BodyPart`).
+2. **Raw message keys in the chat.** A cast, potion or player-targeted cast sent while the previous command was in flight showed `online.spell.refused` / `online.item.use.refused`;
+   neither key existed. The failure texts now use the existing "busy" text, and `RemoteCommandMessageKeysTest` fails when the command class names a key the catalogue lacks
+   (it caught a third occurrence, merged in from `main` the same day).
+3. **A cast or potion answered "busy" was lost.** The Protection cast right after a Light Heal was refused as busy (a regeneration checkpoint had moved the revision), the same race attacks, greetings and equipment already
+   retry once. Casts, potions and player-targeted casts now retry once the same way (`RemotePlayerCommandsTest`).
+4. **Fireball and its two siblings could not be cast from the spell list.** Area spells aimed at a creature (target type 17) were listed as needing no target, so the server refused them. The list now asks for the selected creature
+   (`OnlineAbilityChoicesTest`). Type 19 areas (aimed at a tile, 20 spells) and area heals are still listed and still refused when cast from this list: they need the aiming and friend-target UI of the real spell book.
+
+**Findings not fixed (report, owner or Codex lane):**
+
+- A cast's reply text for an attack spell reads "Health +0 \| Mana -2": the committed reply carries no damage, so the player sees no number (events are stage 7).
+- The retaliating Skeleton did not pursue a player walking away (12 tiles); whether that is the authored hunting-ground rule or a defect needs the pursuit lane's RCA. A full-health Skeleton 25 px from an idle player did nothing for 45 s, while a Skeleton wounded earlier was later in NATURAL mode on a nearby player (database); pursuit and natural acquisition are otherwise covered by `OnlineMonsterPursuitTest` and the earlier two-adapter probe only.
+- There is no voluntary "return to lobby" key: `R` works only after a disconnect; the voluntary route is Options, Switch character (not clicked here).
+- The death penalty roll can leave nothing on the corpse (the Warrior of one run died with no corpse row at all); whether a death with no drops should still leave a corpse marker is a product question.
+- `PARITY.md` still said bows and stun blow were refused; `OnlineMeleeTest` shows both are accepted (bow only with a quiver). Corrected there.
+
+**Not driven:** the Paladin's own Light Heal cast (its list offers it; the Healer cast the same spell), Battle Mage and Cleric, a splash hit on a second creature, any spell with a tile aim (type 19) or friend target on the real spell book, stat allocation (no online control), multi-charge items, creature spell attackers and clan combat on the screen, a lost-response or forced-kill fault, and anything on a packaged candidate or a second machine.
+
 ## 4. Staged plan
 
 Sizes: S under a day, M a few days, L about a week, XL more. Every stage ends with the full

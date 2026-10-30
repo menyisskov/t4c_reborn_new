@@ -6,6 +6,16 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-30 — Online combat fixes from a two-window run: quiver, casts and Fireball (T4C-0331)
+
+### Fixed
+- In online play, taking off an Archer's quiver (or anything else worn in the second weapon slot) used to cut your connection to the server. It now simply comes off.
+- In online play, casting a spell or drinking a potion right after another action could answer "busy" and be lost. The game now tries once more by itself, and only says "Your character is busy. Try again in a moment." if the second try is refused too. When your previous action was still being settled, the chat used to show an internal text instead of that sentence.
+- In online play, area spells that are aimed at a creature (Fireball, Boulders, Cinderburst) can now be cast from the spell list: select the creature, press C and the spell's number. Before, the server refused them.
+
+### Changed
+- The project's multiplayer acceptance notes now record a two-window combat session with different classes and say which combat milestone items it proves and which are still open.
+
 ## 2026-10-30 — The online lobby says why a character could not be entered (T4C-0325)
 
 ### Fixed

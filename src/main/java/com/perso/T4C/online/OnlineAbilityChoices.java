@@ -30,6 +30,9 @@ final class OnlineAbilityChoices {
   /** {@code instance} is what {@link OnlineConnection#useItem} sends; {@code quantity} is for display. */
   record PotionChoice(UUID instance, String itemKey, String name, int quantity) {}
 
+  /** Authored spell target type "an area around the creature the caster targets". */
+  private static final int AREA_AROUND_CREATURE = 17;
+
   private OnlineAbilityChoices() {}
 
   /** Learned stage-1/2 spells the current engine resolves, in sorted key order. */
@@ -39,8 +42,11 @@ final class OnlineAbilityChoices {
     for (var key : progress.spells().stream().sorted().toList()) {
       var spell = catalog.spells().get(key);
       if (!isSupportedOnlineSpell(spell)) continue;
+      // Target type 17 is an area around a creature the caster aims at (Fireball, Boulders, Cinderburst): cast with no target the
+      // engine answers wrong_target (T4C-0331 live run). Type 19 areas are aimed at a tile and type 18 are centred on the caster.
       boolean creatureTarget = switch (spell.kind()) {
-        case NUKE, DRAIN, DEBUFF -> true;
+        case NUKE, DRAIN, DEBUFF, DOT -> true;
+        case AREA_DAMAGE -> spell.targetType() == AREA_AROUND_CREATURE;
         default -> false;
       };
       rows.add(new SpellChoice(key, spellName(key), manaLabel(spell.manaCost()), creatureTarget));
