@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0398`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0399`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0398 | Stage B part 2a: host the cavern (world 2) as a second streamed region behind `--stream-world2` (default off), derive the 406 world 0 / world 2 portals, compute its unhostable spawns at startup | Multiplayer / Beta world hosting | In Progress | | [2026-10-30](CHANGELOG.md) |
 | T4C-0397 | Online servers host all of world 0 by default (streamed region, creatures wake near players); `--no-stream-world0` restores the small starter crop; drill scripts pinned to the old crop to keep their evidence comparable | Multiplayer / Beta world hosting | In Progress | | [2026-10-30](CHANGELOG.md) |
 | T4C-0396 | Match walking to a recording of the real client: walk animation driven by distance travelled (one frame per original stride of 8 px) for the local and other online players, and shared player speed 80 -> 128 px/s (measured 128 across / 64 down on a diagonal); monsters, NPCs and companions' animation untouched, monster speed unchanged | Gameplay feel / movement | Done (branch claude/walk-anim-0396; client 1297 tests with 1 failure that also fails on clean main, server 438 with the same one pre-existing failure; rendered check pending) | this PR | [CHANGELOG.md](CHANGELOG.md#2026-10-30--walking-no-longer-looks-like-gliding-t4c-0396) |
 | T4C-0362 | Route player chat through the persistent game socket with server-authored speaker identity and per-region broadcast; preserve local NPC/GM chat offline | Multiplayer / M6 parity | Done (PR #331 merged; rendered verification pending) | PR #331 merge 66744905; source 8e06aa5d; server tests 4/4, client tests 15/15, package and diff check passed | [CHANGELOG.md](CHANGELOG.md#2026-10-30--player-chat-now-works-online-t4c-0362) |

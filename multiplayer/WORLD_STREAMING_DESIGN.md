@@ -934,3 +934,13 @@ none reported a failure.
 `--stream-world0` is accepted and does nothing; `--preview` never streams. The three native drill scripts
 (`run-native-fault-drill`, `run-native-load-record`, `run-native-restore-check`) pass `--no-stream-world0` so their recorded
 evidence stays comparable. Not re-measured: a rendered two-client run on the default plan.
+
+## 15. Stage B part 2a: the cavern as a streamed region (T4C-0398, `--stream-world2`, default off)
+
+World 2 (`CavernMap.colbin`) is hosted as one streamed region `cavern` at origin 0, sized from its collision file, spawn at
+the first standable authored portal target in the world. Needs world 0 streaming. The 406 portals between world 0 and
+world 2 are enabled by the existing derived rule; portals inside world 2 (140) stay refused until same-region transfers.
+Risk R6 is handled without a bundled list: the unhostable spawns of world 2 (foot-blocked anchors and records with no walk
+sprite) are computed from the real collision file at startup by `UnhostableSpawnAudit.audit(path, 2, ...)`, so the
+29% blocked-anchor rate is excluded rather than trusted. `HostedWorld2PlanTest` pins the plan (406 cross portals, no
+world 2 internal route). Not yet run: PostgreSQL boot of the region, a soak with portal trips, a rendered walk through a cave entrance, same-region transfers, world 1 merge.

@@ -29,6 +29,9 @@ public final class PortalDestinations {
     }
     return new PortalDestinations(grids);
   }
+  /** Width of a loaded world's collision grid, or 0 when the world was not loaded. */
+  public int width(int world) { var g=worlds.get(world);return g==null?0:g.width(); }
+  public int height(int world) { var g=worlds.get(world);return g==null?0:g.height(); }
   public Inspection inspect(CharacterProgress.Respawn destination) {
     var grid=worlds.get(destination.world());if(grid==null) return new Inspection(Status.UNRESOLVED_WORLD,-1);
     if(destination.x()>=grid.width() || destination.y()>=grid.height()) return new Inspection(Status.OUTSIDE_MAP,-1);

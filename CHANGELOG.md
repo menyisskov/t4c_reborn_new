@@ -1,3 +1,8 @@
+## 2026-10-30 — The cavern can be hosted online (T4C-0398)
+
+### Added
+- Online servers can now be started with the cavern world included, so cave entrances on the main map lead to the cavern and back instead of being refused. It is off by default while it is tested.
+
 ## 2026-10-30 — Online play now covers the whole world map (T4C-0397)
 
 ### Changed
