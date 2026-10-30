@@ -10,7 +10,7 @@
                       immediate-mode pg_ctl stop of the verified postmaster), the server stays running and must fail
                       closed, then the cluster is started again (crash recovery) and the server must recover.
 
-  Mode ShutdownOutage (T4C-0350): PostgreSQL is crashed as in DatabaseCrash and the private operator stop is requested
+  Mode ShutdownOutage (T4C-0352): PostgreSQL is crashed as in DatabaseCrash and the private operator stop is requested
                       immediately, while sessions are still bound. The stop must NOT report success: the server must exit
                       non-zero within 120 s with a failure line on stderr, committed state must survive, the unreleased
                       leases must expire on their own clock, and a restarted server must serve all twenty adapters again.
@@ -164,7 +164,7 @@ try {
     Start-Sleep -Seconds $OutageSeconds
     $tStart = Get-Date; $server = Start-Server 2; Wait-Health $server; Say "server 2 healthy $([int]((Get-Date) - $tStart).TotalMilliseconds) ms after launch (pid $($server.Id))"
   } elseif ($Mode -eq 'ShutdownOutage') {
-    # T4C-0350: an operator stop that arrives while the database is down must be a VISIBLE failure, never a safe save.
+    # T4C-0352: an operator stop that arrives while the database is down must be a VISIBLE failure, never a safe save.
     Copy-Item $state (Join-Path $Work 'monitor-state-at-fault.json')
     $faultMs = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
     & $cluster -Action Crash -RunId $RunId | Out-Null; Say 'FAULT: PostgreSQL stopped abruptly (immediate mode) while 20 adapters play'

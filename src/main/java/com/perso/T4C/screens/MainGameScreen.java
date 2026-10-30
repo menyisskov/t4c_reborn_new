@@ -538,7 +538,7 @@ public class MainGameScreen implements Screen {
   private static com.perso.T4C.world.DayNightCycle loadDayNightCycle() {
     try {
       com.perso.T4C.helper.PlayerStateDto state = PlayerStateStore.load();
-      if (state != null && state.dayNightHour > 0f) {
+      if (state != null && state.dayNightHour >= 0f) {
         return new com.perso.T4C.world.DayNightCycle(state.dayNightHour);
       }
     } catch (Throwable ignored) {
@@ -5366,6 +5366,11 @@ public class MainGameScreen implements Screen {
             remoteAbilityMenu.close();
             return true;
           }
+          if (keycode == Input.Keys.LEFT || keycode == Input.Keys.RIGHT) {
+            var view = remoteConnection == null ? null : remoteConnection.view();
+            var progress = view == null || view.character() == null ? null : view.character().progress();
+            if (turnRemoteAbilityMenuPage(remoteAbilityMenu, keycode, progress)) return true;
+          }
           if (keycode == Input.Keys.C || keycode == Input.Keys.U) {
             var view = remoteConnection == null ? null : remoteConnection.view();
             var progress = view == null || view.character() == null ? null : view.character().progress();
@@ -5547,6 +5552,14 @@ public class MainGameScreen implements Screen {
   static boolean routeRemoteHudButtonTouchUp(
       com.perso.T4C.ui.PlayerHUD hud, int screenX, int screenY, int button) {
     return button == Input.Buttons.LEFT && hud != null && hud.chatBarButtonsTouchUp(screenX, screenY);
+  }
+
+  static boolean turnRemoteAbilityMenuPage(
+      com.perso.T4C.online.OnlineAbilityMenu menu, int keycode,
+      com.perso.T4C.online.model.CharacterProgress progress) {
+    if (keycode != Input.Keys.LEFT && keycode != Input.Keys.RIGHT) return false;
+    menu.turnPage(keycode == Input.Keys.RIGHT ? 1 : -1, progress);
+    return true;
   }
 
   /** The lines of whichever online panel is open, top to bottom; empty when none is. */

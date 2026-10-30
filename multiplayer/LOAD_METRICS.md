@@ -142,13 +142,13 @@ does not turn these application counters into wire-bandwidth measurements.
 Keep all player, account, session, host, and credential identifiers out of this
 snapshot. This is operator data, not public gameplay state.
 
-T4C-0227 left these unmeasured; T4C-0350 (next section) adds game-socket bytes, database operation time,
+T4C-0227 left these unmeasured; T4C-0352 (next section) adds game-socket bytes, database operation time,
 pool wait and timeouts, and a Windows working-set sampler, and records one 30-minute run with all of them. Still not
 measured: NIC-level bytes including TCP/IP headers, TLS framing (no TLS run), remote latency, process native memory beyond
 the working set, and a sustained run on the integrated release candidate. A wall-clock ticks-per-second proxy alone cannot
 substitute for these measurements.
 
-### Game-socket bytes and database operation time (T4C-0350)
+### Game-socket bytes and database operation time (T4C-0352)
 
 `GET /admin/metrics` now also returns `gameSocket` and `database` objects next to `httpTraffic`. Both are
 fixed-cardinality counters with no per-connection, per-route, per-account or per-statement label and no history.
@@ -174,7 +174,7 @@ server's Windows working set, private bytes, CPU seconds, thread and handle coun
 private stop (must exit 0) and `summarize-load-record.ps1` turns the soak report into the record lines below. All rates are
 differences between the first and last operator snapshot of one server process; nothing is estimated by hand.
 
-#### Recorded 30-minute record (T4C-0350, 2026-10-30, local PG16 WSL, protocol 8, schema 13, `origin/main` 3e147d8b plus this branch)
+#### Recorded 30-minute record (T4C-0352, 2026-10-30, local PG16 WSL, protocol 8, schema 13, `origin/main` 3e147d8b plus this branch)
 
 Twenty native adapters (default 120 s reconnect churn), eight of them taking paced portal trips (30 s interval, 10 s dwell),
 disposable cluster `t4c_acc_115677693125` on 57703 (destroyed), server on 18841. The soak tool, the graceful stop (HTTP 200,

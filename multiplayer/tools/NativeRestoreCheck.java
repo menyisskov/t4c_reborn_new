@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Database-side helper for the restored-gameplay check (T4C-0350, milestone M5). It reads, and never writes, a loopback
+ * Database-side helper for the restored-gameplay check (T4C-0352, milestone M5). It reads, and never writes, a loopback
  * disposable database whose name is either {@code t4c_acc_<12 hex>} (the source) or {@code t4c_restore_<12 hex>} (the
  * restore made by verify_backup.py), through the private T4C_DB_URL, T4C_DB_USER and T4C_DB_PASSWORD environment that
  * acceptance-cluster.ps1 RunEnv sets for one child command. It never prints a credential.

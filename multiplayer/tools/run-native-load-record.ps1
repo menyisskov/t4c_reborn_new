@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  Full-metric load record (T4C-0350, milestone M5): a twenty-adapter native soak on a disposable cluster, with the
+  Full-metric load record (T4C-0352, milestone M5): a twenty-adapter native soak on a disposable cluster, with the
   private operator metrics sampled throughout, and a written summary of every measure the M5 record asks for.
 
 .DESCRIPTION
@@ -40,7 +40,7 @@ if (-not $RunId) {
   $created = (& $cluster -Action Create -Port $DbPort | Out-String)
   if ($created -notmatch 'CREATE_OK id=(t4c_acc_[0-9a-f]{12})') { throw 'Cluster creation did not report an id' }
   $id = $Matches[1]
-  $work = Join-Path $env:TEMP ("t4c-0350-load-" + $id)
+  $work = Join-Path $env:TEMP ("t4c-0352-load-" + $id)
   Write-Host "cluster $id on $DbPort; evidence $work"
   $passed = $false
   try {

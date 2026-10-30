@@ -11,6 +11,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-30 — New worlds start in the morning (T4C-0350)
+
+### Fixed
+- New games and the online world now start at 7 am instead of midnight. Existing saves keep their saved time of day.
+
 ## 2026-10-30 — Clearer online launcher: it tells you when Java is missing (T4C-0345)
 
 ### Changed
@@ -22,7 +27,7 @@ commit links, and finer-grained notes.
 ### Changed
 - Players who have learned Sneak can activate it online. Moving can reveal them as in single-player, and melee, ranged attacks and spell casts end concealment.
 
-## 2026-10-30 — Online server reliability checks and traffic figures (T4C-0350)
+## 2026-10-30 — Online server reliability checks and traffic figures (T4C-0352)
 
 ### Added
 - The online server now keeps count of how much game traffic it sends and receives and how long its saves take, so a long test session can report real figures for network use and save speed.
