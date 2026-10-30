@@ -94,7 +94,7 @@ try {
   $controlFile = Join-Path $Work 'control.token'
   $env:T4C_CONTROL_FILE = $controlFile; $env:T4C_BIND_ADDRESS = '127.0.0.1'
   try {
-    $server = Start-Process -FilePath 'java' -ArgumentList @('-Djava.awt.headless=true', '-jar', $jar, '--online', $map, $ServerPort) -WorkingDirectory $rt `
+    $server = Start-Process -FilePath 'java' -ArgumentList @('-Djava.awt.headless=true', '-jar', $jar, '--online', $map, $ServerPort, '--no-stream-world0') -WorkingDirectory $rt `
       -RedirectStandardOutput (Join-Path $Work 'server.out.log') -RedirectStandardError (Join-Path $Work 'server.err.log') -PassThru -WindowStyle Hidden | ForEach-Object { $null = $_.Handle; $_ }
   } finally { Remove-Item Env:\T4C_CONTROL_FILE, Env:\T4C_BIND_ADDRESS -ErrorAction SilentlyContinue }
   $until = (Get-Date).AddSeconds(60)

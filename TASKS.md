@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0397`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0398`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,7 +18,8 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0396 | Match walking to a recording of the real client: walk animation driven by distance travelled (one frame per original stride of 8 px) for the local and other online players, and shared player speed 80 -> 128 px/s (measured 128 across / 64 down on a diagonal); monsters, NPCs and companions' animation untouched, monster speed unchanged | Gameplay feel / movement | In Progress (branch claude/walk-anim-0396; client 1297 tests with 1 failure that also fails on clean main, server 438 with the same one pre-existing failure; rendered check pending) | this PR | [CHANGELOG.md](CHANGELOG.md#2026-10-30--walking-no-longer-looks-like-gliding-t4c-0396) |
+| T4C-0397 | Online servers host all of world 0 by default (streamed region, creatures wake near players); `--no-stream-world0` restores the small starter crop; drill scripts pinned to the old crop to keep their evidence comparable | Multiplayer / Beta world hosting | In Progress | | [2026-10-30](CHANGELOG.md) |
+| T4C-0396 | Match walking to a recording of the real client: walk animation driven by distance travelled (one frame per original stride of 8 px) for the local and other online players, and shared player speed 80 -> 128 px/s (measured 128 across / 64 down on a diagonal); monsters, NPCs and companions' animation untouched, monster speed unchanged | Gameplay feel / movement | Done (branch claude/walk-anim-0396; client 1297 tests with 1 failure that also fails on clean main, server 438 with the same one pre-existing failure; rendered check pending) | this PR | [CHANGELOG.md](CHANGELOG.md#2026-10-30--walking-no-longer-looks-like-gliding-t4c-0396) |
 | T4C-0362 | Route player chat through the persistent game socket with server-authored speaker identity and per-region broadcast; preserve local NPC/GM chat offline | Multiplayer / M6 parity | Done (PR #331 merged; rendered verification pending) | PR #331 merge 66744905; source 8e06aa5d; server tests 4/4, client tests 15/15, package and diff check passed | [CHANGELOG.md](CHANGELOG.md#2026-10-30--player-chat-now-works-online-t4c-0362) |
 | T4C-0360 | Raise shared player walking speed from 75 to 80 for offline and online play; keep collision-safe movement and parity | Multiplayer / movement parity | Done (PR #327 merged; rendered verification pending) | PR #327 merge 8514f07c; source fabcc3cc, tracking 00d67c61; focused movement 49/49 and server parity 19/19; root/server packages and diff check passed on 510356da | deferred until GA |
 | T4C-0361 | Restore automatic repeat casting for targeted hostile spells online, matching single-player target retention and stopping on movement, death, cooldown or terminal refusal | Multiplayer / M4 parity | Done (PR #329 merged; rendered verification pending) | PR #329 merge 73e31073; source 863bfa5d, tracking adc6e953; focused tests 45/45, package and diff check passed | deferred until GA |
