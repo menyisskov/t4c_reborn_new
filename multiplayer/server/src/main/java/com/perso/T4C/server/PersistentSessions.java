@@ -1006,7 +1006,8 @@ final class PersistentSessions {
     if (progress==null) return;
     binding.region.world.health(binding.token,progress.vitals().hp(),progress.vitals().maxHp());
     binding.region.world.visibility(binding.token,progress.hiddenUntil(),
-        progress.cooldowns().getOrDefault("detect_invisible_until",0L));
+        progress.cooldowns().getOrDefault("detect_invisible_until",0L),
+        progress.cooldowns().getOrDefault("detect_hidden_until",0L));
     // The public look (name, gender, visible worn items) follows the same committed state.
     binding.region.world.look(binding.token,binding.saved.name(),progress.gender(),
         com.perso.T4C.online.model.PublicLook.visibleEquipment(progress,hosted.items));
