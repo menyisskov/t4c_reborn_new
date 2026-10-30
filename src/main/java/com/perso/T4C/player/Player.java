@@ -343,17 +343,24 @@ public class Player extends Stats implements ProgressionState {
     movement.move(this, dx, dy, delta);
   }
 
+  /**
+   * Advances the legs by the ground covered since the last call. Online play does not run {@link #update} (the server owns
+   * vitals and regeneration), so the screen calls this on its own to keep the walk cycle moving (T4C-0400).
+   */
+  public void updateWalkAnimation(float delta) {
+    float travelledPx =
+        PlayerAnimations.walkDistance(lastWalkX, lastWalkY, position.getX(), position.getY());
+    lastWalkX = position.getX();
+    lastWalkY = position.getY();
+    animations.update(delta, movement.isMoving(), travelledPx);
+  }
+
   public void update(float delta) {
     com.perso.T4C.teleport.LocationDiscovery.discoverNearby(this);
     if (isStunned() || isPhysicallyExhausted()) {
       movement.stop();
     }
-    float travelledPx =
-        PlayerAnimations.walkDistance(
-            lastWalkX, lastWalkY, position.getX(), position.getY());
-    lastWalkX = position.getX();
-    lastWalkY = position.getY();
-    animations.update(delta, movement.isMoving(), travelledPx);
+    updateWalkAnimation(delta);
     tickNaturalRegeneration(delta);
     tickSneakUpkeep();
     tickRegenBuffs(delta);

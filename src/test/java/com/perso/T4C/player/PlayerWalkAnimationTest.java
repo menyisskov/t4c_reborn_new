@@ -84,4 +84,27 @@ class PlayerWalkAnimationTest {
             / NativeTimingProfile.current().frameDurationSeconds();
     assertEquals(stridesWalked, framesPlayed, 0.01f);
   }
+
+  /** Online play never calls update(): the screen calls updateWalkAnimation alone, and the legs must still count the ground (T4C-0400). */
+  @Test
+  void anOnlinePlayerWhoOnlyGetsTheWalkAnimationStillWalks() {
+    Player player = new Player();
+    player.setMapBounds(10_000, 10_000);
+    player.setWorldPosition(320f, 320f, 0);
+    player.updateWalkAnimation(0.016f);
+    float before = player.getAnimations().getAnimTimer();
+
+    for (int i = 0; i < 30; i++) {
+      player.move(1f, 0f, 0.016f);
+      player.updateWalkAnimation(0.016f);
+    }
+
+    float stridesWalked =
+        (player.getCoordinates().getX() - 320f) / PlayerAnimations.walkStridePixels();
+    float framesPlayed =
+        (player.getAnimations().getAnimTimer() - before)
+            / NativeTimingProfile.current().frameDurationSeconds();
+    assertEquals(stridesWalked, framesPlayed, 0.01f);
+    org.junit.jupiter.api.Assertions.assertTrue(framesPlayed > 1f);
+  }
 }

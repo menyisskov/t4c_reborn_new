@@ -4689,6 +4689,7 @@ public class MainGameScreen implements Screen {
         savePlayerState();
       }
       if (!isRemoteSession()) player.update(delta);
+      else player.updateWalkAnimation(delta);
       playerPositionTemp.set(player.getPositionVector());
       int margin = 5;
       session

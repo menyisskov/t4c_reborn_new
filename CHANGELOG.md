@@ -1,3 +1,8 @@
+## 2026-10-30 — Your character now walks with moving legs in online play (T4C-0400)
+
+### Fixed
+- In online play your own character slid across the ground in a standing pose. Its legs now step with the ground you cover, the same as in single-player and as other players already did.
+
 ## 2026-10-30 — Packaged online servers start again (T4C-0399)
 
 ### Fixed
