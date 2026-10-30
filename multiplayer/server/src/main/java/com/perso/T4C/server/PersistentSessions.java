@@ -211,6 +211,26 @@ final class PersistentSessions {
             committed.character().revision(), draft.pointsSpent()));
   }
 
+  CompletionStage<OnlineStore.RewardResult> sneak(String token,long revision) {
+    var saved=usableCharacter(token,revision,false);
+    final CharacterProgress draft;
+    try { draft=OnlineSneak.activate(saved.progress(),wallClock.getAsLong()); }
+    catch(IllegalArgumentException refused) { throw new PreviewWorld.Rejected(409,refused.getMessage()); }
+    return commitGameplayEvent(token,revision,UUID.randomUUID(),0,0,draft);
+  }
+
+  private void upkeepSneak(Binding binding) {
+    var progress=binding.saved.progress();
+    if(progress==null || progress.hiddenUntil()!=Long.MAX_VALUE
+        || !binding.region.world.moving(binding.token)) return;
+    int witnesses=binding.region.world.witnesses(binding.token);
+    if(OnlineSneak.remainsHidden(progress,hosted.items,wallClock.getAsLong(),witnesses,ThreadLocalRandom.current())) return;
+    var revealed=ProgressEdits.withHiddenUntil(progress,0);
+    binding.progressUnsaved=true;
+    binding.saved=withProgress(binding.saved,revealed);
+    publishHealth(binding);
+  }
+
   /**
    * Self-cast of a learned spell. The draft is rolled once from committed state and committed once through
    * the shared single-flight event path; a refusal commits nothing and keeps the player connected, an ambiguous
@@ -237,7 +257,7 @@ final class PersistentSessions {
   }
 
   private CompletionStage<AbilityReply> commitAbility(String token,long revision,OnlineCasting.Result draft) {
-    return commitGameplayEvent(token,revision,UUID.randomUUID(),0,0,draft.progress())
+    return commitGameplayEvent(token,revision,UUID.randomUUID(),0,0,ProgressEdits.withHiddenUntil(draft.progress(),0))
         .thenApply(committed->new AbilityReply(committed.character().revision(),draft.healthGained(),
             draft.manaSpent(),draft.manaGained()));
   }
@@ -456,7 +476,7 @@ final class PersistentSessions {
     if ((strike.after()==0)!=Objects.requireNonNull(eventId).equals(strike.life()))
       throw new IllegalArgumentException("Invalid strike event identity");
     if (!Objects.requireNonNull(drops).isEmpty() && strike.after()!=0) throw new IllegalArgumentException("Loot requires a lethal strike");
-    return commitEvent(token,expectedRevision,eventId,gold,experience,progress,false,strike,provocation,null,null,null,drops);
+    return commitEvent(token,expectedRevision,eventId,gold,experience,ProgressEdits.withHiddenUntil(progress,0),false,strike,provocation,null,null,null,drops);
   }
 
   /**
@@ -474,7 +494,7 @@ final class PersistentSessions {
     if (binding.saved.revision()!=expectedRevision) throw new PreviewWorld.Rejected(409,"revision");
     var drops=strikes.stream().flatMap(hit -> hit.drops().stream()).toList();
     var result=new CompletableFuture<OnlineStore.RewardResult>();
-    binding.event=new GameplayEvent(eventId,gold,experience,progress,false,null,null,null,null,null,null,null,null,
+    binding.event=new GameplayEvent(eventId,gold,experience,ProgressEdits.withHiddenUntil(progress,0),false,null,null,null,null,null,null,null,null,
         drops,strikes,null,result,null);
     if (!binding.pending) submit(binding);
     return result.minimalCompletionStage();
@@ -720,9 +740,11 @@ final class PersistentSessions {
       var position=world.position(binding.token);
       if (position==null) { binding.closing=true;invalidateRead(binding); }
       else binding.position=position;
+      if(position!=null && !binding.pending && binding.event==null) upkeepSneak(binding);
       if (System.nanoTime()>=binding.allowedUntil) { world.remove(binding.token); binding.closing=true;invalidateRead(binding); }
       maybeTransfer(binding);
-      if (!binding.pending && (binding.event!=null || binding.closing || tick-binding.checkpointSubmitted>=CHECKPOINT_TICKS)) submit(binding);
+      if (!binding.pending && (binding.event!=null || binding.closing || binding.progressUnsaved
+          || tick-binding.checkpointSubmitted>=CHECKPOINT_TICKS)) submit(binding);
     }
   }
 

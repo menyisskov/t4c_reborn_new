@@ -47,7 +47,7 @@ public final class PreviewWorld {
     double x, y;
     int hp=1,maxHp=1;
     long hiddenUntil, detectInvisibleUntil, detectHiddenUntil;
-    boolean frozen;
+    boolean frozen, movedThisTick;
     final ServerMovement.Glide glide = new ServerMovement.Glide();
     double requestCredits = REQUEST_BURST;
     long budgetTick;
@@ -226,6 +226,27 @@ public final class PreviewWorld {
     return p == null ? null : view(p);
   }
 
+  boolean moving(String token) {
+    var p=players.get(token);
+    return p!=null && p.movedThisTick;
+  }
+
+  int witnesses(String token) {
+    var observer=players.get(token);
+    if(observer==null) return 0;
+    var center=OnlineSneak.WITNESS_RANGE
+        * Math.max(com.perso.T4C.config.GameConstants.GRID_W,com.perso.T4C.config.GameConstants.GRID_H);
+    int count=0;
+    for(var creature:creatures) {
+      if(inactiveCreatures.contains(creature.id()) || creatureHealth.getOrDefault(creature.id(),creature.health())<=0) continue;
+      var at=creaturePosition(creature.id());
+      double dx=(at.x()-observer.x)*com.perso.T4C.config.GameConstants.GRID_W;
+      double dy=(at.y()-observer.y)*com.perso.T4C.config.GameConstants.GRID_H;
+      if(Math.hypot(dx,dy)<=center) count++;
+    }
+    return count;
+  }
+
   private static PlayerView view(Player p) {
     return new PlayerView(p.id,p.x,p.y,p.sequence,p.appearance,p.hp,p.maxHp,p.name,p.gender,p.equipment);
   }
@@ -283,11 +304,14 @@ public final class PreviewWorld {
     int steps = (int) Math.ceil(distance / 0.2);
     double amount = distance / steps;
     for (Player p : players.values()) {
+      double beforeX=p.x,beforeY=p.y;
+      p.movedThisTick=false;
       if (p.frozen || p.hp<=0) continue;
       if (tick - p.lastInput > INPUT_TIMEOUT_TICKS) { p.dx = 0; p.dy = 0; }
       if (grid) {
         var moved = ServerMovement.step(map, terrain, p.glide, p.x, p.y, p.dx, p.dy);
         p.x = moved.x(); p.y = moved.y();
+        p.movedThisTick=p.x!=beforeX || p.y!=beforeY;
         continue;
       }
       for (int i = 0; i < steps; i++) {
@@ -297,6 +321,7 @@ public final class PreviewWorld {
           p.x = x; p.y = y;
         } else break;
       }
+      p.movedThisTick=p.x!=beforeX || p.y!=beforeY;
     }
   }
 }

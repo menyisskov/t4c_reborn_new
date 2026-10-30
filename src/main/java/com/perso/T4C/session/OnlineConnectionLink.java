@@ -106,6 +106,8 @@ public final class OnlineConnectionLink implements RemoteLink {
     return connection.allocateStats(allocation);
   }
 
+  @Override public CompletionStage<OnlineConnection.CommandResult> sneak() { return connection.sneak(); }
+
   @Override
   public void direction(int dx, int dy, long frame) {
     connection.direction(dx, dy, frame);

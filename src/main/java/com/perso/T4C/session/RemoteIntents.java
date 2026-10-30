@@ -54,6 +54,9 @@ public interface RemoteIntents {
 
   boolean useItem(UUID itemInstance);
 
+  /** Activates learned Sneak remotely; the server validates and persists it. */
+  default boolean sneak() { return false; }
+
   /** Requests a server-validated allocation and delivers its committed reply on the render thread. */
   default boolean allocateStats(
       Map<String, Integer> allocation, Consumer<OnlineConnection.CommandResult> completion) {

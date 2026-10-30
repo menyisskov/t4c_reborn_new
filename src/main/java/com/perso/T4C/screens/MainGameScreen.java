@@ -5309,6 +5309,13 @@ public class MainGameScreen implements Screen {
     });
     remote.addProcessor(new com.badlogic.gdx.InputAdapter() {
       @Override public boolean keyDown(int keycode) {
+        if(keycode==Input.Keys.K && !isTextInputActive()
+            && !Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)
+            && !Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT) && player!=null
+            && player.getSkillLevel("sneak")>0) {
+          ((com.perso.T4C.session.RemotePlayerCommands)session.commands()).sneak();
+          return true;
+        }
         if (keycode == Input.Keys.ESCAPE
             && selectedTargetedSpell != null
             && isPositionTargetSpell(selectedTargetedSpell)) {

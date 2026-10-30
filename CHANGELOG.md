@@ -11,6 +11,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-30 — Sneak works in online play (T4C-0344)
+
+### Changed
+- Players who have learned Sneak can activate it online. Moving can reveal them as in single-player, and melee, ranged attacks and spell casts end concealment.
+
 ## 2026-10-30 — Equipment changes now show on your own character in online play (T4C-0342)
 
 ### Fixed
