@@ -6,6 +6,9 @@ import com.perso.T4C.npc.core.NpcContext;
 import com.perso.T4C.npc.core.NpcSpec;
 import com.perso.T4C.npc.core.ScriptedNpc;
 import com.perso.T4C.player.BodyPart;
+import com.perso.T4C.player.Player;
+import com.perso.T4C.quest.QuestRegistry;
+import com.perso.T4C.quest.QuestService;
 import com.perso.T4C.spawn.Spawn;
 import java.util.List;
 
@@ -53,6 +56,17 @@ public final class WardenAelric extends ScriptedNpc {
   public WardenAelric(NpcContext context) throws GameException {
 
     super(SPEC, context);
+  }
+
+  @Override
+  protected void onInteractStart(Player player) {
+    var quest = QuestRegistry.findById("renewed_wards");
+    if (quest != null
+        && QuestService.statusFor(player, quest) == QuestService.STATUS_COMPLETED) {
+      say("${quest.renewed_wards.completed}", player);
+      return;
+    }
+    super.onInteractStart(player);
   }
 
   public static NpcSpec spec() {
