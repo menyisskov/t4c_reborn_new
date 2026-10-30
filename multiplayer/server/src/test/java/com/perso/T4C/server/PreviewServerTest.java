@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.Gson;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.Socket;
@@ -18,6 +19,51 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import com.perso.T4C.server.persistence.OnlineStore;
 
 class PreviewServerTest {
+  @Test void playerChatUsesTheAuthenticatedGameSocketAndUtf8() throws Exception {
+    var map=new PreviewMap(new boolean[8][8],0,0,3,3);
+    try(var server=new PreviewServer(map,0);var client=HttpClient.newHttpClient()) {
+      server.start();String url=server.url();
+      int socketPort=object(client.send(request(url,"/map",null,null),HttpResponse.BodyHandlers.ofString()))
+          .get("gameSocketPort").getAsInt();
+      try(var first=new Socket();var second=new Socket()) {
+        var firstInput=connectGameSocket(first,socketPort);
+        var secondInput=connectGameSocket(second,socketPort);
+        var firstOutput=new java.io.DataOutputStream(first.getOutputStream());
+        var secondOutput=new java.io.DataOutputStream(second.getOutputStream());
+        var json=new Gson();
+        socketRequest(firstOutput,firstInput,json,1,"POST","join","");
+        var sent=socketRequest(firstOutput,firstInput,json,2,"POST","chat","send Olá, aventureiros");
+        assertEquals(200,sent.get("status").getAsInt());
+        socketRequest(secondOutput,secondInput,json,1,"POST","join","");
+        var received=socketRequest(secondOutput,secondInput,json,2,"POST","chat","poll 0");
+        assertEquals(200,received.get("status").getAsInt());
+        var message=JsonParser.parseString(received.get("body").getAsString()).getAsJsonObject()
+            .getAsJsonArray("messages").get(0).getAsJsonObject();
+        assertEquals("Player 1",message.get("speaker").getAsString());
+        assertEquals("Olá, aventureiros",message.get("text").getAsString());
+      }
+    }
+  }
+
+  private static java.io.DataInputStream connectGameSocket(Socket socket,int port) throws Exception {
+    socket.connect(new InetSocketAddress("127.0.0.1",port),1000);
+    var input=new java.io.DataInputStream(socket.getInputStream());
+    var output=new java.io.DataOutputStream(socket.getOutputStream());
+    com.perso.T4C.online.model.GameSocketProtocol.writeFrame(output,
+        new Gson().toJson(new com.perso.T4C.online.model.GameSocketProtocol.Hello(
+            com.perso.T4C.online.model.GameSocketProtocol.VERSION)));
+    var hello=JsonParser.parseString(com.perso.T4C.online.model.GameSocketProtocol.readFrame(input)).getAsJsonObject();
+    assertTrue(hello.get("accepted").getAsBoolean());
+    return input;
+  }
+
+  private static JsonObject socketRequest(java.io.DataOutputStream output,java.io.DataInputStream input,
+      Gson json,long id,String method,String command,String body) throws Exception {
+    com.perso.T4C.online.model.GameSocketProtocol.writeFrame(output,json.toJson(
+        new com.perso.T4C.online.model.GameSocketProtocol.Request(id,method,command,body)));
+    return JsonParser.parseString(com.perso.T4C.online.model.GameSocketProtocol.readFrame(input)).getAsJsonObject();
+  }
+
   @Test void statAllocationParserRejectsMalformedAndDuplicateEntries() {
     assertEquals(java.util.Map.of("strength", 2, "wisdom", 1),
         PreviewServer.parseStatAllocation("strength:2,wisdom:1"));

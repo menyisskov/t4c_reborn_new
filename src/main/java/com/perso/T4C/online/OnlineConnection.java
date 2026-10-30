@@ -19,6 +19,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /** Network-only adapter for the local Alpha server; never touches graphics or character files. */
 public final class OnlineConnection implements AutoCloseable {
+  private static final int MAX_CHAT_TEXT = 160;
+  private static final int MAX_CHAT_MESSAGES_PER_POLL = 50;
+  private static final int MAX_QUEUED_CHAT_MESSAGES = 16;
+  private static final long CHAT_POLL_INTERVAL_NANOS = java.util.concurrent.TimeUnit.MILLISECONDS.toNanos(500);
+  private static final long CHAT_SEND_INTERVAL_NANOS = java.util.concurrent.TimeUnit.SECONDS.toNanos(1);
   private static final int MAX_CORPSE_ITEMS_PER_CORPSE = 256;
   private static final int MAX_CORPSE_ITEM_DETAILS = 2048;
   public record MapInfo(int originX, int originY, int width, int height, boolean persistent, int protocolVersion, int gameSocketPort,
@@ -100,6 +105,12 @@ public final class OnlineConnection implements AutoCloseable {
   public record View(long ownId, MapInfo map, Snapshot snapshot, OnlineCharacterView character,
       List<Corpse> corpses) {}
 
+  /** One bounded, server-authored remote chat message. */
+  public record ChatMessage(long id, String speaker, String text) {}
+
+  private record ChatPollReply(Long cursor, List<ChatMessage> messages) {}
+  private record ChatSendReply(Long cursor) {}
+
   private record Joined(long id, OnlineRegion region) {}
 
   /** {@code args} fill a dialogue message's authored placeholders; refusals carry a key and no args. */
@@ -155,6 +166,12 @@ public final class OnlineConnection implements AutoCloseable {
   private volatile long acknowledgedRegion = -1;
   private final java.util.concurrent.atomic.AtomicReference<GameplayCommand> gameplay =
       new java.util.concurrent.atomic.AtomicReference<>();
+  private final java.util.concurrent.ConcurrentLinkedQueue<String> outgoingChat =
+      new java.util.concurrent.ConcurrentLinkedQueue<>();
+  private final java.util.concurrent.ConcurrentLinkedQueue<ChatMessage> incomingChat =
+      new java.util.concurrent.ConcurrentLinkedQueue<>();
+  private final java.util.concurrent.atomic.AtomicInteger queuedChatCount =
+      new java.util.concurrent.atomic.AtomicInteger();
   private final Thread worker;
   private volatile boolean closed;
   private volatile View view;
@@ -230,6 +247,27 @@ public final class OnlineConnection implements AutoCloseable {
 
   public String status() {
     return status;
+  }
+
+  /** Enqueues one remote chat line for the connection worker; never performs socket I/O on the render thread. */
+  public boolean sendChat(String text) {
+    if (text == null || text.isBlank() || text.codePointCount(0, text.length()) > MAX_CHAT_TEXT || closed
+        || !"connected".equals(status)) return false;
+    int queued = queuedChatCount.incrementAndGet();
+    if (queued > MAX_QUEUED_CHAT_MESSAGES) {
+      queuedChatCount.decrementAndGet();
+      return false;
+    }
+    outgoingChat.add(text);
+    return true;
+  }
+
+  /** Drains newly received server chat on the render thread. */
+  public List<ChatMessage> drainChatMessages() {
+    var messages = new java.util.ArrayList<ChatMessage>();
+    ChatMessage message;
+    while ((message = incomingChat.poll()) != null) messages.add(message);
+    return List.copyOf(messages);
   }
 
   /**
@@ -434,6 +472,10 @@ public final class OnlineConnection implements AutoCloseable {
         map=readMap(map.persistent());
         if (!map.region().equals(joined.region())) throw new IllegalStateException("Joined map changed unexpectedly");
         long sequence = 0;
+        long chatCursor = 0;
+        OnlineRegion chatRegion = joined.region();
+        long nextChatPollNanos = 0;
+        long nextChatSendNanos = 0;
         inputFrames.clear();
         OnlineCharacterView character = null;
         List<Corpse> corpses = List.of();
@@ -624,6 +666,47 @@ public final class OnlineConnection implements AutoCloseable {
             status = "connected";
           }
           break;
+          }
+          long now = System.nanoTime();
+          if (!chatRegion.equals(map.region())) {
+            chatRegion = map.region();
+            chatCursor = 0;
+            nextChatPollNanos = 0;
+          }
+          if (now >= nextChatSendNanos) {
+            String chatText = outgoingChat.poll();
+            if (chatText != null) {
+              queuedChatCount.decrementAndGet();
+              try {
+                String sent = sendSession("POST", "/chat", "send " + chatText);
+                var ack = JSON.fromJson(sent, ChatSendReply.class);
+                if (ack == null || ack.cursor() == null || ack.cursor() <= 0)
+                  throw new IllegalStateException("Invalid chat acknowledgement");
+              } catch (Rejected refused) {
+                // Chat is best-effort; a sender-specific refusal must not stop the game session.
+              }
+              nextChatSendNanos = now + CHAT_SEND_INTERVAL_NANOS;
+            }
+          }
+          if (now >= nextChatPollNanos) {
+            var polled = JSON.fromJson(sendRetryingBusy("/chat", "poll " + chatCursor), ChatPollReply.class);
+            if (polled == null || polled.cursor() == null || polled.cursor() < chatCursor
+                || polled.messages() == null || polled.messages().size() > MAX_CHAT_MESSAGES_PER_POLL)
+              throw new IllegalStateException("Invalid chat poll response");
+            long previousId = chatCursor;
+            for (var message : polled.messages()) {
+              if (message == null || message.id() <= previousId || message.id() > polled.cursor()
+                  || message.speaker() == null || message.speaker().isBlank() || message.speaker().length() > 64
+                  || message.text() == null || message.text().isBlank()
+                  || message.text().codePointCount(0, message.text().length()) > MAX_CHAT_TEXT)
+                throw new IllegalStateException("Invalid chat message");
+              previousId = message.id();
+            }
+            if (polled.cursor() != (polled.messages().isEmpty() ? chatCursor : previousId))
+              throw new IllegalStateException("Invalid chat cursor");
+            if (!polled.messages().isEmpty()) incomingChat.addAll(polled.messages());
+            chatCursor = polled.cursor();
+            nextChatPollNanos = now + CHAT_POLL_INTERVAL_NANOS;
           }
           if (command != null && gameplay.compareAndSet(command, null))
             command.result().complete(new CommandResult(accepted, character,messageKey,messageArgs,shop));

@@ -82,6 +82,9 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
 
     /** Opens the read-only item selector for one owner-listed corpse. */
     default void showCorpse(UUID corpse) {}
+
+    /** Adds one server-authored remote player chat line to the existing chat UI. */
+    default void showChat(String speaker, String text) {}
   }
 
   /** The swing-cooldown refusal is routine and never shown (same key as the text client). */
@@ -692,6 +695,9 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
 
   /** Shows the messages of replies that arrived since the last call; call on the render thread. */
   public void pump() {
+    if (host != null) {
+      for (var message : link.drainChatMessages()) host.showChat(message.speaker(), message.text());
+    }
     Outcome outcome;
     while ((outcome = outcomes.poll()) != null) {
       if (outcome.completion() != null) outcome.completion().accept(outcome.commandResult());
@@ -711,6 +717,11 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
               ? withOwnName(I18n.key(key))
               : I18n.message(key, outcome.args().toArray()));
     }
+  }
+
+  /** Queues a chat line for server routing without blocking the render thread. */
+  public boolean sendChat(String text) {
+    return link.sendChat(text);
   }
 
   /**

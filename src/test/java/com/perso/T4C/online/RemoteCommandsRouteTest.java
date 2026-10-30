@@ -96,6 +96,13 @@ class RemoteCommandsRouteTest {
               String[] parts = request.split(" ");
               lastInputSequence.set(Long.parseLong(parts[1]));
             }
+            case "/chat" -> {
+              calls.add(new Call(path, request));
+              if (request.startsWith("send ")) body = "{\"cursor\":1}";
+              else if (request.equals("poll 0"))
+                body = "{\"cursor\":1,\"messages\":[{\"id\":1,\"speaker\":\"Other player\",\"text\":\"Hello there\"}]}";
+              else body = "{\"cursor\":1,\"messages\":[]}";
+            }
             case "/attack", "/pickup", "/interact" -> {
               calls.add(new Call(path, request));
               code = status.get();
@@ -187,8 +194,39 @@ class RemoteCommandsRouteTest {
 
   private static List<Call> otherCalls(List<Call> calls) {
     List<Call> out = new ArrayList<>();
-    for (Call call : calls) if (!call.path().equals("/input")) out.add(call);
+    for (Call call : calls) if (!call.path().equals("/input") && !call.path().equals("/chat")) out.add(call);
     return out;
+  }
+
+  @Test
+  void remoteChatUsesAuthenticatedSocketAndPumpsServerMessagesToHost() throws Exception {
+    var credentials = new OnlineConnection.Credentials("b".repeat(64), UUID.randomUUID());
+    var calls = new CopyOnWriteArrayList<Call>();
+    var server = server(credentials, new AtomicLong(1), calls, new AtomicLong(-1),
+        new AtomicReference<>("{}"), new AtomicInteger(200));
+    try (var connection = new OnlineConnection(
+        URI.create("http://127.0.0.1:" + server.getAddress().getPort()), credentials, SOCKET_PORTS.get(server))) {
+      awaitTrue(() -> connection.view() != null && connection.view().character() != null);
+      var shown = new CopyOnWriteArrayList<String>();
+      var commands = new RemotePlayerCommands(new OnlineConnectionLink(connection), monster -> -1);
+      commands.bind(new RemotePlayerCommands.Host() {
+        @Override public Player player() { return null; }
+        @Override public void showMessage(String text) {}
+        @Override public void showChat(String speaker, String text) { shown.add(speaker + ":" + text); }
+      });
+
+      assertTrue(commands.sendChat("Hello server"));
+      awaitTrue(() -> calls.stream().anyMatch(call -> call.path().equals("/chat")
+          && call.body().equals("send Hello server")));
+      awaitTrue(() -> {
+        commands.pump();
+        return !shown.isEmpty();
+      });
+      assertEquals(List.of("Other player:Hello there"), shown);
+      assertTrue(calls.stream().anyMatch(call -> call.path().equals("/chat") && call.body().equals("poll 0")));
+    } finally {
+      stop(server);
+    }
   }
 
   @Test

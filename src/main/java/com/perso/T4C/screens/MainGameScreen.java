@@ -372,6 +372,9 @@ public class MainGameScreen implements Screen {
       commands.bind(new com.perso.T4C.session.RemotePlayerCommands.Host() {
         @Override public Player player() { return MainGameScreen.this.player; }
         @Override public void showMessage(String text) { showSystemMessage(text); }
+        @Override public void showChat(String speaker, String text) {
+          if (gameChat != null) gameChat.addLocalMessage(speaker, text);
+        }
         @Override public void showShop(
             String npc, com.perso.T4C.online.model.ShopOffersReply offers) {
           remoteInventoryPanel.close();
@@ -1617,6 +1620,8 @@ public class MainGameScreen implements Screen {
     com.perso.T4C.profiler.FrameEvent frameEvent =
         gameProfiler.isActive() ? new com.perso.T4C.profiler.FrameEvent() : null;
     if (frameEvent != null) frameEvent.begin();
+    if (session.commands() instanceof com.perso.T4C.session.RemotePlayerCommands remoteCommands)
+      remoteCommands.pump();
     section(
         "input",
         () -> {
@@ -4833,6 +4838,11 @@ public class MainGameScreen implements Screen {
         new GameChat(
             text -> {
               if (gmCommands.handleChatMessage(text, player)) {
+                return true;
+              }
+              if (remoteConnection != null) {
+                if (session.commands() instanceof com.perso.T4C.session.RemotePlayerCommands remoteCommands)
+                  remoteCommands.sendChat(text);
                 return true;
               }
               if (player != null) {

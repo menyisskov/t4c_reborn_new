@@ -20,6 +20,10 @@ PR #327 merged at 8514f07c (tested head 00d67c61, source fabcc3cc). PLAYER_SPEED
 
 PR #329 merged at 73e31073 (tested head adc6e953; source 863bfa5d). Targeted hostile spells repeat online through the existing authoritative socket, wait for server cooldowns, retry transient ability-busy replies after a short delay, and stop on movement, dead targets or terminal refusals. Offline casting is unchanged. Focused hostile-target, remote-auto-attack and command tests passed 45/45; root package and diff check passed on base 5acd7a0e. No rendered-client verification; M4 and Beta remain open.
 
+### Online player chat (T4C-0362)
+
+PR #331 merged at `66744905` (source `8e06aa5d`). Remote chat sends and polls use the authenticated persistent game socket; the server supplies speaker names and scopes messages to the sender's current hosted region. Focused server tests passed 4/4, including a two-socket UTF-8 exchange; focused client tests passed 15/15 and the package and diff checks passed. Single-player NPC and GM chat paths are unchanged. No rendered-client verification; M6 and Beta remain open.
+
 ### Shared GUI keyboard routing (T4C-0356)
 
 The remote input adapter forwards key presses and typed characters to an open shared GUI before online shortcuts; input is consumed while that GUI is open. Closed-GUI remote shortcuts and offline input remain unchanged. Focused GUI keyboard and HUD tests passed 4/4; package and `git diff --check` passed on head `e95c177b` (base `1710e2c5`). No rendered-client check was run; M1, M4 and Beta remain open.

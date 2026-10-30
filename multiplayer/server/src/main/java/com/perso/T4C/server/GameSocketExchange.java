@@ -35,10 +35,11 @@ final class GameSocketExchange extends HttpExchange {
     this.method = request.method();
     this.remote = remote;
     this.local = local;
-    boolean accountCreation=method.equals("POST") && request.command().equals("account/characters");
-    if(!accountCreation && request.body().chars().anyMatch(character -> character > 0x7f))
+    boolean utf8Body=method.equals("POST") && (request.command().equals("account/characters")
+        || request.command().equals("chat"));
+    if(!utf8Body && request.body().chars().anyMatch(character -> character > 0x7f))
       throw new IllegalArgumentException("Game action body must use the existing ASCII protocol");
-    byte[] bytes = request.body().getBytes(accountCreation
+    byte[] bytes = request.body().getBytes(utf8Body
         ? java.nio.charset.StandardCharsets.UTF_8 : java.nio.charset.StandardCharsets.US_ASCII);
     body = new ByteArrayInputStream(bytes);
     requestHeaders.set("Host", URI.create(origin).getRawAuthority());
@@ -47,7 +48,7 @@ final class GameSocketExchange extends HttpExchange {
     if (authorization != null) requestHeaders.set("Authorization", authorization);
     if (method.equals("POST")) {
       requestHeaders.set("Origin", origin);
-      requestHeaders.set("Content-Type", accountCreation ? "application/json" : "text/plain");
+      requestHeaders.set("Content-Type", utf8Body && request.command().equals("account/characters") ? "application/json" : "text/plain");
       requestHeaders.set("Content-Length", Integer.toString(bytes.length));
     }
   }
