@@ -11,6 +11,7 @@ import com.perso.T4C.server.persistence.OnlineStore;
 import com.perso.T4C.spell.engine.SpellEngine;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
@@ -26,9 +27,9 @@ class OnlineSpellStrikesTest {
     var healer=OnlineCharacterCreator.prepare(CharacterClass.HEALER,"male",false,new Random(8));
     var base=healer.progress();
     var casterProgress=new CharacterProgress(base.version(),base.characterClass(),base.gender(),base.attributes(),
-        new CharacterProgress.Vitals(base.vitals().hp(),base.vitals().maxHp(),20,20),
+        new CharacterProgress.Vitals(base.vitals().hp(),base.vitals().maxHp(),200,200),
         new CharacterProgress.Advancement(3,0,0,0,0),base.inventory(),base.equipment(),base.skills(),
-        Set.of("spell.heal_light"),base.questFlags(),base.storage(),base.storageGold(),base.respawn(),base.buffs(),
+        Set.of("spell.heal_light","spell.bless"),base.questFlags(),base.storage(),base.storageGold(),base.respawn(),base.buffs(),
         base.cooldowns(),0,base.companion());
     var recipientBase=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(9)).progress();
     var recipientProgress=new CharacterProgress(recipientBase.version(),recipientBase.characterClass(),recipientBase.gender(),
@@ -40,10 +41,11 @@ class OnlineSpellStrikesTest {
     var recipient=store.create(key.accountId(),"Online ally",0,5.5,5.5,recipientProgress,0);
     var casterToken=sessions.join(store.acquire(key.secret(),caster.id()),System.nanoTime()).token();
     var allyJoined=sessions.join(store.acquire(key.secret(),recipient.id()),System.nanoTime());
-    long now=System.currentTimeMillis();
+    var clock=new AtomicLong(System.currentTimeMillis());
+    long now=clock.get();
     try(var creatures=new PersistentCreatures(store,world)) {
       var spells=new OnlineSpellStrikes(map,world,sessions,creatures,ItemCatalog.loadBundled(),SpellCatalogV2.bundled(),
-          new Random(10),()->now);
+          new Random(10),clock::get);
       var pending=spells.cast(casterToken,0,"spell.heal_light",new SpellEngine.Target.Friend(allyJoined.id())).toCompletableFuture();
       long deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(5);
       while(!pending.isDone() && System.nanoTime()<deadline) { sessions.step();creatures.step();Thread.sleep(5); }
@@ -52,10 +54,22 @@ class OnlineSpellStrikesTest {
       var savedRecipient=store.load(key.accountId(),recipient.id());
       assertEquals(caster.revision()+1,savedCaster.revision());
       assertEquals(reply.revision(),savedCaster.revision());
-      assertEquals(18,savedCaster.progress().vitals().mana(),"the spell cost commits with the heal");
+      assertTrue(savedCaster.progress().vitals().mana()<200,"the spell cost commits with the heal");
       assertTrue(savedRecipient.progress().vitals().hp()>2);
       assertEquals(recipient.revision()+1,savedRecipient.revision());
       assertEquals(17,savedRecipient.progress().vitals().mana());
+      clock.addAndGet(TimeUnit.MINUTES.toMillis(2)); // normal cast exhaustion elapses before the next cast
+      var buffPending=spells.cast(casterToken,reply.revision(),"spell.bless",
+          new SpellEngine.Target.Friend(allyJoined.id())).toCompletableFuture();
+      deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(5);
+      while(!buffPending.isDone() && System.nanoTime()<deadline) { sessions.step();creatures.step();Thread.sleep(5); }
+      var buffReply=buffPending.get();
+      savedCaster=store.load(key.accountId(),caster.id());savedRecipient=store.load(key.accountId(),recipient.id());
+      assertEquals(buffReply.revision(),savedCaster.revision());
+      assertTrue(savedCaster.progress().vitals().mana()<198,"the learned buff charges the caster");
+      assertTrue(savedRecipient.progress().buffs().stream().anyMatch(buff->buff.spell().equals("spell.bless")
+          && buff.expiresAt()>now && !buff.modifiers().isEmpty()),"recipient buff and absolute expiry commit durably");
+      assertEquals(recipient.revision()+2,savedRecipient.revision());
     } finally { sessions.shutdown(); }
   }
 

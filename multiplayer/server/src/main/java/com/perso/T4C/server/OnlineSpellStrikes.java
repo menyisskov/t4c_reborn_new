@@ -120,8 +120,23 @@ final class OnlineSpellStrikes {
         sessions.region(token).world(), source,friendView);
     if(playerTarget!=null) {
       var friendHeal=plan.events().stream().filter(SpellEngine.Event.FriendHeal.class::isInstance)
-          .map(SpellEngine.Event.FriendHeal.class::cast).findFirst().orElseThrow(() -> rejected("wrong_target"));
-      return sessions.commitPlayerHeal(token,revision,UUID.randomUUID(),plan.progress(),playerTarget,friendHeal.amount())
+          .map(SpellEngine.Event.FriendHeal.class::cast).findFirst().orElse(null);
+      var friendBuff=plan.events().stream().filter(SpellEngine.Event.ApplyBuff.class::isInstance)
+          .map(SpellEngine.Event.ApplyBuff.class::cast).filter(buff->buff.recipient()!=null).findFirst().orElse(null);
+      if(friendHeal==null && friendBuff==null) throw rejected("wrong_target");
+      CharacterProgress recipientProgress;
+      if(friendHeal!=null) {
+        var pv=playerTarget.progress().vitals();
+        int healedHp=(int)Math.min(pv.maxHp(),(long)pv.hp()+friendHeal.amount());
+        if(healedHp==pv.hp())
+          return sessions.commitGameplayEvent(token,revision,UUID.randomUUID(),0,0,plan.progress())
+              .thenApply(committed -> new Reply(committed.character().revision(),0,plan.manaSpent(),List.of(),plan.buffs()));
+        recipientProgress=ProgressEdits.withVitals(playerTarget.progress(),new CharacterProgress.Vitals(
+            healedHp,pv.maxHp(),pv.mana(),pv.maxMana()));
+      } else {
+        recipientProgress=OnlineBuffs.apply(playerTarget.progress(),friendBuff,now);
+      }
+      return sessions.commitPlayerEffect(token,revision,UUID.randomUUID(),plan.progress(),playerTarget,recipientProgress)
           .thenApply(committed -> new Reply(committed.character().revision(),0,plan.manaSpent(),List.of(),plan.buffs()));
     }
     var reserved = new ArrayList<Long>();
@@ -169,6 +184,10 @@ final class OnlineSpellStrikes {
     } catch (IllegalArgumentException unsupported) {
       throw rejected("unsupported_spell");
     }
+    if (target instanceof SpellEngine.Target.Friend
+        && !((spell.kind() == SpellContentV2.Kind.HEAL && spell.stage() == 1)
+            || (spell.kind() == SpellContentV2.Kind.BUFF && spell.stage() == 2)))
+      throw rejected("wrong_target");
     boolean attack = spell.kind() == SpellContentV2.Kind.NUKE || spell.kind() == SpellContentV2.Kind.DRAIN
         || spell.kind() == SpellContentV2.Kind.DEBUFF || spell.kind() == SpellContentV2.Kind.DOT
         || spell.kind() == SpellContentV2.Kind.AREA_DAMAGE;
@@ -233,11 +252,11 @@ final class OnlineSpellStrikes {
         case SpellEngine.Event.FriendHeal ignored -> { /* Committed with the recipient in one two-character transaction. */ }
         case SpellEngine.Event.DrainHeal drain -> working = healed(working, drain.amount());
         case SpellEngine.Event.ApplyBuff buff -> {
-          // Only the caster's own buffs are laid here; a friend's is committed on the friend's own character.
-          if (buff.recipient() != null) throw new IllegalStateException("Friend buff reached the caster draft");
-          working = OnlineBuffs.apply(working, buff, now);
-          laid.add(new Laid(buff.spellKey(), working.buffs().stream()
-              .filter(b -> b.spell().equals(buff.spellKey())).findFirst().orElseThrow().expiresAt()));
+          if (buff.recipient() == null) {
+            working = OnlineBuffs.apply(working, buff, now);
+            laid.add(new Laid(buff.spellKey(), working.buffs().stream()
+                .filter(b -> b.spell().equals(buff.spellKey())).findFirst().orElseThrow().expiresAt()));
+          }
         }
         case SpellEngine.Event.Hide hide ->
             working = ProgressEdits.withHiddenUntil(working, Math.addExact(now, hide.durationMillis()));
