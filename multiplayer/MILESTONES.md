@@ -203,6 +203,8 @@ change on a refusal. The panels are drawn upside down at the bottom right, the o
 inspected and other players have no appearance parts, so the first two M2 bullets stay open
 (see CLIENT_UNIFICATION_DESIGN.md 3.16).
 
+T4C-0357 (2026-10-30, native adapters, throwaway Docker PostgreSQL 18.1 on loopback, protocol 8, details in tools/NATIVE_LOOT_PROBE.md Run 4): `NativeLootProbe` PASSED end to end for the first time: a level-30 killer made 13 Skeleton kills and 3 real drops; a second adapter saw the first drop; a claim race after the owner window had one winner and the loser was refused `online.loot.taken`; an over-weight claimant was refused `online.loot.too_heavy` with the drop kept on the ground; a closed-connection pickup rejoined with no replay and no duplicate; graceful shutdown exit 0; the database check found one `CLAIMED` row with one holder and one receipt and two unclaimed rows with no holder or receipt. This is a second, independent native confirmation of already-ticked bullets (server drops, claim race, capacity refusal preserving loot). **No box is newly ticked**: the reconnect/restart bullet still needs a restart during a claim (the earlier fault drill covers that) and the rendered inventory bullet is unchanged.
+
 T4C-0318 (2026-10-29, local rendered, two level-30 warriors, `d4eff350` plus this branch, details in
 CLIENT_UNIFICATION_DESIGN.md 3.17): Skeleton drops (Light Healing Potion, Leather Gloves, Healing Potion) appeared in both
 windows with the owner window counting down in both committed views; a claim race inside the window (owner took it, the other
