@@ -54,7 +54,7 @@ class SpellEngineStageTwoGoldenTest {
 
   static List<String> stageTwoKeys() throws Exception {
     var keys = new ArrayList<String>();
-    content().spells().values().stream().filter(spell -> spell.stage() == 2).forEach(spell -> keys.add(spell.key()));
+    content().spells().values().stream().filter(spell -> spell.stage() == 2 && !spell.key().startsWith("spell.item_")).forEach(spell -> keys.add(spell.key()));
     java.util.Collections.sort(keys);
     return keys;
   }

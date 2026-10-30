@@ -135,6 +135,20 @@ class ItemSalePricingTest {
   }
 
   @Test
+  void bundledDropPricedResaleMatchesSharedOfflineRule() {
+    var stocked = new java.util.HashSet<String>();
+    com.perso.T4C.npc.catalog.ShopCatalog.allShopInventories().values().forEach(stocked::addAll);
+    var item = ItemRegistry.allByKey().values().stream()
+        .filter(candidate -> candidate.isRarityPriced() && candidate.getPrice() == 0
+            && !candidate.isUndroppable() && !stocked.contains(candidate.getKey()))
+        .filter(candidate -> ItemSalePricing.easiestDropChance(candidate.getKey()) > 0)
+        .findFirst().orElseThrow();
+    assertEquals(
+        ShopRules.rarityDropPrice(item.getKey(), item.isUnique(), ItemSalePricing.easiestDropChance(item.getKey())),
+        ItemSalePricing.sellPrice(item));
+  }
+
+  @Test
   void buyPricesLegacyItemsAndProtectedItemsKeepTheirContracts() {
     var json = new ItemJsonDef();
     json.key = "resale_test";

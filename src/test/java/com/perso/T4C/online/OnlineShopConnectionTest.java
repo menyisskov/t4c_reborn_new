@@ -52,6 +52,7 @@ class OnlineShopConnectionTest {
         case "/character" -> reply = "{\"id\":\"" + credentials.characterId() + "\",\"name\":\"Shopper\",\"gold\":500,"
             + "\"experience\":0,\"revision\":" + revision.get() + ",\"locationEpoch\":0}";
         case "/corpses" -> reply = "[]";
+        case "/chat" -> reply = "{\"cursor\":0,\"messages\":[]}";
         case "/shop-offers", "/shop-buy", "/shop-sell" -> {
           calls.add(new Call(path, request, exchange.getRequestHeaders().getFirst(
               com.perso.T4C.online.model.OnlineProtocol.VERSION_HEADER)));

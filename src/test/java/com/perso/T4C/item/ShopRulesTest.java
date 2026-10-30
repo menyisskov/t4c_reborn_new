@@ -49,4 +49,14 @@ class ShopRulesTest {
   @Test void perRequestQuantityLimitIsSmall() {
     assertTrue(ShopRules.MAX_TRADE_QUANTITY >= 10 && ShopRules.MAX_TRADE_QUANTITY < 100);
   }
+
+  @Test void rarityResaleUsesDropChanceAndExistingFallbacks() {
+    assertEquals(10_000, ShopRules.priceForDropChance(.01));
+    assertEquals(10_000, ShopRules.rarityDropPrice("item.rare", false, .01));
+    assertEquals(2_500, ShopRules.rarityDropPrice("item.rare", false, 0));
+    assertEquals(25_000, ShopRules.rarityDropPrice("item.rare", true, 0));
+    assertEquals(100_000, ShopRules.rarityDropPrice("item.godsforged_rare", false, 0));
+    assertEquals(200_000, ShopRules.rarityDropPrice("item.empyrean_rare", false, 0));
+  }
+
 }

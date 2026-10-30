@@ -1,8 +1,15 @@
 package com.perso.T4C.item;
 
+import com.perso.T4C.monster.core.MonsterDef;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
- * Pure vendor arithmetic shared by single-player (ShopScreen, ItemSaleService) and the online
- * server. No game objects: callers pass plain numbers so both sides run exactly the same code.
+ * Vendor arithmetic and rarity pricing shared by single-player (ShopScreen, ItemSaleService) and
+ * the online server. Drop indexing reads immutable monster definitions; it has no renderer or save
+ * dependencies.
  */
 public final class ShopRules {
   /** Largest number of units a single online buy or sell request may name. */
@@ -13,6 +20,8 @@ public final class ShopRules {
 
   /** Marker returned by {@link #baseSellPrice} when the price depends on monster drop tables. */
   public static final long NEEDS_DROP_TABLE = -1L;
+  private static final Set<String> CRAFTING_MATERIAL_KEYS = Set.of("item.wyrmforged_ember",
+      "item.veiled_aether_shard", "item.tempered_godcore", "item.bound_godsigil");
 
   private ShopRules() {}
 
@@ -46,6 +55,52 @@ public final class ShopRules {
   /** Only items worth gold can be sold. */
   public static boolean sellable(long unitSellPrice) {
     return unitSellPrice > 0;
+  }
+
+  /** Same drop rarity formula and fallback values used by offline and online vendors. */
+  public static long rarityDropPrice(String itemKey, boolean unique, double chance) {
+    if (itemKey.startsWith("item.ancient_celestial_") || itemKey.startsWith("item.empyrean_")) {
+      if (chance <= 0) return 200_000;
+      long dropPrice = priceForDropChance(chance);
+      long scaled = dropPrice >= Integer.MAX_VALUE / 50L ? Integer.MAX_VALUE : dropPrice * 50L;
+      return Math.max(200_000, scaled);
+    }
+    if (chance > 0) return priceForDropChance(chance);
+    if (itemKey.startsWith("item.godsforged_")) return 100_000;
+    if (unique || CRAFTING_MATERIAL_KEYS.contains(itemKey)) return 25_000;
+    return 2_500;
+  }
+
+  /** A 1% drop sells for 10,000 gold; rarer drops pay proportionally more. */
+  public static long priceForDropChance(double chance) {
+    if (!Double.isFinite(chance) || chance <= 0 || chance > 1)
+      throw new IllegalArgumentException("Drop probability must be finite and in (0,1]");
+    return Math.round(100.0 / chance);
+  }
+
+  /** Indexes the easiest authored monster drop chance, including repeated independent rolls. */
+  public static Map<String, Double> indexDropChances(List<MonsterDef> monsters) {
+    Map<String, Double> result = new HashMap<>();
+    for (MonsterDef monster : monsters) {
+      if (monster == null || monster.getLoot() == null) continue;
+      Map<String, Double> misses = new HashMap<>();
+      for (MonsterDef.LootDrop drop : monster.getLoot()) {
+        if (drop == null || drop.getItem() == null || drop.getItem().isBlank()) continue;
+        double chance = drop.getChance();
+        if (!Double.isFinite(chance) || chance <= 0) continue;
+        misses.merge(normalizeKey(drop.getItem()), 1.0 - Math.min(1.0, chance), (a, b) -> a * b);
+      }
+      misses.forEach((key, miss) -> result.merge(key, 1.0 - miss, Math::max));
+    }
+    return Map.copyOf(result);
+  }
+
+  public static double dropChance(Map<String, Double> indexed, String itemKey) {
+    return indexed.getOrDefault(normalizeKey(itemKey), 0.0);
+  }
+
+  private static String normalizeKey(String key) {
+    return ItemKeys.normalize(key);
   }
 
   /**
