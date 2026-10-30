@@ -20,6 +20,7 @@ import java.util.TreeMap;
  * the live cast allowlist; its item entries support restorative consumables and modeled buff potions.
  */
 public final class OnlineSpellContentV2Exporter {
+  private static final Set<Integer> LINKED_CREATURE_EFFECTS = Set.of(10151, 10349);
   private static final Set<String> ITEM_BUFFS = Set.of(
       "item.potion_of_fury", "item.potion_of_nimbleness", "item.hyper_potion_of_nimbleness",
       "item.potion_of_clear_thought", "item.potion_of_fortitude", "item.potion_of_tranquility",
@@ -33,6 +34,12 @@ public final class OnlineSpellContentV2Exporter {
     var spells = new TreeMap<String, SpellContentV2.Spell>();
     for (SpellData spell : SpellRegistry.playerCastableSpells()) {
       spells.put(spell.getKey(), export(spell));
+    }
+    // The linked effects for Entangle are server execution data. They are included in the v2
+    // catalog so its authored timer chain can resolve, but are never offered as learned spells.
+    for (int spellId : LINKED_CREATURE_EFFECTS) {
+      SpellData spell = SpellRegistry.findById(spellId);
+      if (spell != null) spells.put(spell.getKey(), export(spell, true));
     }
     // These item buffs are not player-castable, but the socket item path resolves their authored
     // effects through the same v2 buff engine and persistent buff state as a learned buff spell.
@@ -50,7 +57,13 @@ public final class OnlineSpellContentV2Exporter {
   }
 
   static SpellContentV2.Spell export(SpellData spell) {
-    Kind kind = classify(spell);
+    return export(spell, false);
+  }
+
+  private static SpellContentV2.Spell export(SpellData spell, boolean helperOnly) {
+    // Some execution helpers are deliberately not player-castable and need not have a standalone
+    // engine shape (10349 is a physical exhaustion payload with no effects of its own).
+    Kind kind = helperOnly ? Kind.SPECIAL : classify(spell);
     int stage = stage(spell, kind);
     List<SpellContent.Effect> effects = spell.getT4cEffects().stream()
         .map(effect -> new SpellContent.Effect(effect.getEffectType(),
@@ -68,7 +81,7 @@ public final class OnlineSpellContentV2Exporter {
         new SpellContentV2.Learning(spell.getMinLevel(), spell.getMinInt(), spell.getMinWis()),
         new SpellContentV2.Visual(spell.getProjectileSpell(), spell.getImpactSpell(), spell.getSound(),
             spell.getSoundImpact(), spell.getVisualEffect(), spell.getVisualEffectTarget()),
-        effects, dispelTargets(spell));
+        effects, dispelTargets(spell), helperOnly);
   }
 
   /** Id to key for every spell a dispel effect names that single-player can resolve. */

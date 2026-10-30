@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletionStage;
 import java.util.function.LongSupplier;
@@ -60,6 +61,7 @@ final class OnlineSpellStrikes {
   /** The cast's strikes ready to commit, with what the reply says. */
   record Plan(CharacterProgress progress, long gold, long experience, List<OnlineStore.SpellStrike> strikes,
       List<Long> struck, int healthGained, int manaSpent, List<Hit> hits, List<Laid> buffs,
+      List<Long> effectTargets, List<OnlineStore.CreatureEffectUpdate> creatureEffects,
       List<SpellEngine.Event> events) {}
 
   /** A buff the cast laid on the caster and when it ends (absolute UTC millis; {@link Long#MAX_VALUE} = never). */
@@ -144,14 +146,21 @@ final class OnlineSpellStrikes {
           .thenApply(committed -> new Reply(committed.character().revision(),0,plan.manaSpent(),List.of(),plan.buffs()));
     }
     var reserved = new ArrayList<Long>();
+    var effectTargets = Set.copyOf(plan.effectTargets());
     try {
-      for (long id : plan.struck()) {
+      var allTargets = new java.util.LinkedHashSet<Long>(plan.struck());
+      allTargets.addAll(plan.effectTargets());
+      for (long id : allTargets) {
         creatures.reserve(id);
         reserved.add(id);
       }
-      CompletionStage<OnlineStore.RewardResult> pending = plan.strikes().isEmpty()
-          ? sessions.commitGameplayEvent(token, revision, UUID.randomUUID(), 0, 0, castProgress)
-          : sessions.commitSpellStrikes(token, revision, UUID.randomUUID(), plan.gold(), plan.experience(),
+      if (!plan.creatureEffects().isEmpty() && !plan.strikes().isEmpty()) throw rejected("unsupported_spell");
+      UUID eventId=UUID.randomUUID();
+      CompletionStage<OnlineStore.RewardResult> pending = !plan.creatureEffects().isEmpty()
+          ? sessions.commitSpellEffects(token,revision,eventId,castProgress,plan.creatureEffects())
+          : plan.strikes().isEmpty()
+          ? sessions.commitGameplayEvent(token, revision, eventId, 0, 0, castProgress)
+          : sessions.commitSpellStrikes(token, revision, eventId, plan.gold(), plan.experience(),
               castProgress, plan.strikes());
       return pending.whenComplete((result, error) -> {
         // Session completions run on the simulation owner, including its shutdown drain.
@@ -160,6 +169,7 @@ final class OnlineSpellStrikes {
           // Hide uncertain outcomes (and kills) until the database state is reloaded.
           boolean killed = plan.hits().stream().anyMatch(hit -> hit.target() == id && hit.killed());
           if (error != null || killed) creatures.rewardCommitted(id);
+          else if(effectTargets.contains(id)) creatures.effectCommitted(id);
           else creatures.damageCommitted(id);
         }
       }).thenApply(committed -> new Reply(committed.character().revision(), plan.healthGained(),
@@ -249,6 +259,8 @@ final class OnlineSpellStrikes {
     var laid = new ArrayList<Laid>();
     var strikes = new ArrayList<OnlineStore.SpellStrike>();
     var struck = new ArrayList<Long>();
+    var effectTargets = new ArrayList<Long>();
+    var creatureEffects = new ArrayList<OnlineStore.CreatureEffectUpdate>();
     var hits = new LinkedHashMap<Long, Hit>();
     for (var event : resolved.events()) {
       switch (event) {
@@ -268,6 +280,23 @@ final class OnlineSpellStrikes {
         case SpellEngine.Event.DetectHidden detect -> working = detecting(working, DETECT_HIDDEN, now, detect.durationMillis());
         case SpellEngine.Event.Dispel dispel -> working = OnlineBuffs.dispel(working, dispel.spellKey(), now);
         case SpellEngine.Event.Recall ignored -> { /* Transfer and this progress draft commit together below. */ }
+        case SpellEngine.Event.ScheduleCreatureEffect timer -> {
+          var life=source.life(timer.target());
+          if(life.diedAt()!=null) throw rejected("creature_unavailable");
+          var motion=source.capture(timer.target());
+          long expiresAt=Long.MAX_VALUE;
+          long nextAt=Math.addExact(now,timer.initialDelayMillis());
+          long movementUntil=life.timedEffects().stream().filter(existing->existing.sourceSpellId()==timer.sourceSpellId())
+              .mapToLong(OnlineStore.SpawnTimedEffect::movementUntil).max().orElse(0L);
+          var effect=new OnlineStore.SpawnTimedEffect(timer.sourceSpellId(),timer.effectSpellId(),timer.movementSpellId(),
+              expiresAt,nextAt,timer.frequencyMillis(),timer.chancePercent(),timer.movementExhaustionMillis(),movementUntil,
+              timer.durationMillis(),timer.movementInitialDelayMillis());
+          var next=new ArrayList<OnlineStore.SpawnTimedEffect>(life.timedEffects());
+          next.removeIf(existing -> existing.sourceSpellId()==timer.sourceSpellId());
+          next.add(effect);
+          creatureEffects.add(new OnlineStore.CreatureEffectUpdate(life.key(),life.eventId(),motion.revision(),next));
+          effectTargets.add(timer.target());
+        }
         case SpellEngine.Event.Damage damage -> {
           var fact = view.fact(damage.target());
           var definition = fact.spawn.definition();
@@ -325,7 +354,8 @@ final class OnlineSpellStrikes {
     // A character holding buffs records when it was last settled online, so logged-out time is never counted.
     working = OnlineBuffs.anchored(working, now);
     return new Plan(working, gold, experience, List.copyOf(strikes), List.copyOf(struck), healthGained,
-        costs.manaCost(), List.copyOf(hits.values()), List.copyOf(laid), resolved.events());
+        costs.manaCost(), List.copyOf(hits.values()), List.copyOf(laid), List.copyOf(effectTargets),
+        List.copyOf(creatureEffects), resolved.events());
   }
 
   /** The spell keys offered to Renew Armor: the components this character has learned. */
@@ -335,6 +365,9 @@ final class OnlineSpellStrikes {
       var component = spells.spells().get(key);
       if (component != null && progress.spells().contains(key)) related.put(key, component);
     }
+    if(progress.spells().contains("spell.entangle"))
+      spells.spells().values().stream().filter(SpellContentV2.Spell::helperOnly)
+          .forEach(helper -> related.put(helper.key(),helper));
     return related;
   }
 
@@ -443,7 +476,8 @@ final class OnlineSpellStrikes {
     private SpellEngine.UnitView unitOf(Fact fact) {
       var position = source.position(fact.spawn.id());
       return new SpellEngine.UnitView(fact.spawn.id(), position.x(), position.y(), fact.health,
-          !fact.spawn.spawn().stationary(), resistance(fact.spawn.definition()));
+          !fact.spawn.spawn().stationary(), resistance(fact.spawn.definition()),
+          fact.spawn.definition().getStr(),fact.spawn.definition().getLevel());
     }
 
     @Override public SpellEngine.UnitView unit(long id) {

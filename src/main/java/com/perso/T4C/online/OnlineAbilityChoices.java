@@ -68,7 +68,8 @@ final class OnlineAbilityChoices {
   private static boolean isSupportedOnlineSpell(SpellContentV2.Spell spell) {
     if (spell == null || !SpellEngine.supported(spell)) return false;
     return spell.stage() <= OnlineSpellAllowlistV2.ENABLED_STAGE
-        || (spell.id() == 10029 && "spell.word_of_recall".equals(spell.key()));
+        || (spell.id() == 10029 && "spell.word_of_recall".equals(spell.key()))
+        || (spell.id() == 10150 && "spell.entangle".equals(spell.key()));
   }
 
   static List<PotionChoice> usablePotions(CharacterProgress progress, SpellContent allowlist) {

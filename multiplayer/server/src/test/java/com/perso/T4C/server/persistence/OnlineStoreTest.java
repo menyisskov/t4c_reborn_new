@@ -18,6 +18,38 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 /** Runs against PostgreSQL, including in CI; no in-memory substitute for transaction semantics. */
 @EnabledIfEnvironmentVariable(named="T4C_DB_URL", matches=".+")
 class OnlineStoreTest {
+  @Test void entangleEffectReceiptSurvivesReloadAndCannotCrossCreatureRespawn() throws Exception {
+    var spawn=store.loadOrCreateSpawn("entangle:"+UUID.randomUUID());
+    var account=store.provisionAccount();
+    var character=store.create(account.accountId(),"Entangle",0,10,20,CharacterProgressTest.sample(),0);
+    var session=store.acquire(account.secret(),character.id());
+    var effect=new OnlineStore.SpawnTimedEffect(10150,10151,10349,Long.MAX_VALUE,1_000,2_000,50,
+        1_750,0,5_000,1_000);
+    var progress=CharacterProgressTest.sample();
+    var event=UUID.randomUUID();
+    var update=new OnlineStore.CreatureEffectUpdate(spawn.key(),spawn.eventId(),spawn.stateRevision(),java.util.List.of(effect));
+    var committed=store.commitSpellEffects(session,character.revision(),event,progress,java.util.List.of(update));
+    assertTrue(committed.applied());
+    assertEquals(java.util.List.of(effect),store.loadOrCreateSpawn(spawn.key()).timedEffects());
+    assertFalse(store.commitSpellEffects(session,character.revision(),event,progress,java.util.List.of(update)).applied(),
+        "an uncertain cast receipt cannot duplicate the timed effect or cost");
+
+    var current=store.loadOrCreateSpawn(spawn.key());
+    var motion=new OnlineStore.SpawnMotion(current.key(),current.eventId(),current.stateRevision(),10.5,20.5,
+        "IDLE",null,null);
+    var lethal=new OnlineStore.CreatureStrike(current.key(),current.eventId(),10,10,0,motion);
+    assertTrue(store.commitCreatureStrike(session,committed.character().revision(),current.eventId(),0,0,
+        progress,lethal).applied());
+    var dead=store.loadOrCreateSpawn(spawn.key());
+    assertTrue(dead.timedEffects().isEmpty(),"terminal creature lives discard their effects");
+    var respawned=store.respawn(dead.key(),dead.eventId(),dead.stateRevision(),0);
+    assertTrue(respawned.timedEffects().isEmpty(),"effects never cross the new creature life");
+    assertThrows(OnlineStore.Conflict.class,()->store.replaceTimedEffects(current.key(),current.eventId(),
+        current.stateRevision(),java.util.List.of(effect),java.util.List.of()),
+        "a stale timer update cannot write into a respawned life");
+    store.release(session);
+  }
+
   @Test void creationReceiptSerializesDuplicatesAndNeverRunsSecondStarter() throws Exception {
     var key=store.provisionAccount();
     var request=new OnlineCharacterCreation.Request(UUID.randomUUID(),"Created","warrior","male",false);

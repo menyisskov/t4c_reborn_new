@@ -10,9 +10,9 @@ import java.util.Objects;
 
 /**
  * The engine's spell catalog (spells-v2) with a stage gate. A spell is castable only when its
- * authored engine stage is at or below {@link #ENABLED_STAGE}; everything else stays refused as
- * {@code unsupported_spell}, exactly like a key the server has never heard of. Raising the stage is
- * the only change a later engine stage makes here. The live spells-v1 allowlist is not replaced:
+ * authored engine stage is at or below {@link #ENABLED_STAGE}, or is one of the individually
+ * supported later spells. Everything else stays refused as {@code unsupported_spell}. The live
+ * spells-v1 allowlist is not replaced:
  * {@link PersistentSessions#cast} keeps serving the v1 self-cast spells unchanged.
  */
 public final class SpellCatalogV2 {
@@ -34,18 +34,25 @@ public final class SpellCatalogV2 {
   /** The named spell when this server may resolve it; any other key or stage is refused. */
   public SpellContentV2.Spell castable(String key) {
     var spell = content.spells().get(key);
-    if (spell == null || (spell.stage() > enabledStage && !isRecall(spell))) throw new IllegalArgumentException("unsupported_spell");
+    if (spell == null || spell.helperOnly()
+        || (spell.stage() > enabledStage && !isRecall(spell) && !isEntangle(spell)))
+      throw new IllegalArgumentException("unsupported_spell");
     return spell;
   }
 
   /** True when {@link #castable} would accept the key. */
   public boolean castableKey(String key) {
     var spell = content.spells().get(key);
-    return spell != null && (spell.stage() <= enabledStage || isRecall(spell));
+    return spell != null && !spell.helperOnly()
+        && (spell.stage() <= enabledStage || isRecall(spell) || isEntangle(spell));
   }
 
   private static boolean isRecall(SpellContentV2.Spell spell) {
     return spell.id() == 10029 && spell.key().equals("spell.word_of_recall");
+  }
+
+  private static boolean isEntangle(SpellContentV2.Spell spell) {
+    return spell.id() == 10150 && spell.key().equals("spell.entangle");
   }
 
   public Map<String, SpellContentV2.Spell> spells() {
@@ -53,7 +60,8 @@ public final class SpellCatalogV2 {
   }
 
   public long castableCount() {
-    return content.spells().values().stream().filter(spell -> spell.stage() <= enabledStage || isRecall(spell)).count();
+    return content.spells().values().stream().filter(spell -> !spell.helperOnly()
+        && (spell.stage() <= enabledStage || isRecall(spell) || isEntangle(spell))).count();
   }
 
   public static synchronized SpellCatalogV2 bundled() {

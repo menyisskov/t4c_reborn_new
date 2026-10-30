@@ -212,6 +212,11 @@ final class OnlineMonsterPursuit {
 
   Decision step(List<TargetView> targets, List<ClanView> creatures, double seconds,
                 boolean allowReplan, boolean frozen) {
+    return step(targets,creatures,seconds,allowReplan,frozen,false);
+  }
+
+  Decision step(List<TargetView> targets, List<ClanView> creatures, double seconds,
+                boolean allowReplan, boolean frozen, boolean movementExhausted) {
     Objects.requireNonNull(targets);
     Objects.requireNonNull(creatures);
     if (!Double.isFinite(seconds) || seconds <= 0 || seconds > MAX_STEP_SECONDS + EPSILON)
@@ -302,6 +307,8 @@ final class OnlineMonsterPursuit {
       return decision(false, false, false);
     if (clanFollowed!=null && inAttackRange(clanFollowed)
         && map.hasLineOfSight(x,y,goalX,goalY)) return decision(false,false,false);
+    // Exhaustion impedes movement only; a creature already in range can still attack above.
+    if(movementExhausted) return decision(false,false,false);
     if(retryDelay>0) retryDelay=Math.max(0,retryDelay-seconds);
     boolean needsReplan = navigationGoalChanged(goalX, goalY) || pathFailed;
     if(pathFailed && retryDelay>0) needsReplan=false;

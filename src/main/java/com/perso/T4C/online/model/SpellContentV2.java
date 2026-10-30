@@ -60,7 +60,18 @@ public record SpellContentV2(int version, Map<String, Spell> spells) {
       String successRate, String mentalExhaustion, String physicalExhaustion, String attackExhaustion,
       int cooldownSeconds, int radius, int element, int attackType, int minDamage, int maxDamage,
       String duration, String frequency, Learning learning, Visual visual, List<SpellContent.Effect> effects,
-      Map<Integer, String> dispelTargets) {
+      Map<Integer, String> dispelTargets, boolean helperOnly) {
+    public Spell(String key, int id, Kind kind, int stage, String support, int targetType,
+        boolean attack, boolean selfCenteredAttack, boolean pvp, boolean lineOfSight, String manaCost,
+        String successRate, String mentalExhaustion, String physicalExhaustion, String attackExhaustion,
+        int cooldownSeconds, int radius, int element, int attackType, int minDamage, int maxDamage,
+        String duration, String frequency, Learning learning, Visual visual, List<SpellContent.Effect> effects,
+        Map<Integer, String> dispelTargets) {
+      this(key, id, kind, stage, support, targetType, attack, selfCenteredAttack, pvp, lineOfSight, manaCost,
+          successRate, mentalExhaustion, physicalExhaustion, attackExhaustion, cooldownSeconds, radius, element,
+          attackType, minDamage, maxDamage, duration, frequency, learning, visual, effects, dispelTargets, false);
+    }
+
     public Spell {
       if (key == null || !key.startsWith("spell.") || key.length() <= 6 || key.length() > 256
           || id < 0 || kind == null || stage < 1 || stage > 4 || support == null || targetType < 0

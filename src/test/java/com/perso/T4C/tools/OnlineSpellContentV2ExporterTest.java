@@ -16,9 +16,10 @@ class OnlineSpellContentV2ExporterTest {
   @Test
   void everyPlayerSpellIsClassifiedAndTheCountsMatchTheDesign() {
     var content = OnlineSpellContentV2Exporter.snapshot();
-    assertEquals(SpellRegistry.playerCastableSpells().size() + 11, content.spells().size());
+    assertEquals(SpellRegistry.playerCastableSpells().size() + 13, content.spells().size());
     Map<Kind, Long> counts = new EnumMap<>(Kind.class);
-    content.spells().values().forEach(spell -> counts.merge(spell.kind(), 1L, Long::sum));
+    content.spells().values().stream().filter(spell -> !spell.helperOnly())
+        .forEach(spell -> counts.merge(spell.kind(), 1L, Long::sum));
     // These are the design's table; a content change that moves one is a deliberate decision.
     var expected = Map.ofEntries(Map.entry(Kind.NUKE, 40L), Map.entry(Kind.AREA_DAMAGE, 25L),
         Map.entry(Kind.DRAIN, 4L), Map.entry(Kind.HEAL, 4L), Map.entry(Kind.AREA_HEAL, 4L),
@@ -27,6 +28,9 @@ class OnlineSpellContentV2ExporterTest {
         Map.entry(Kind.RECALL, 1L), Map.entry(Kind.DETECTION, 4L), Map.entry(Kind.DISPEL, 2L),
         Map.entry(Kind.SPECIAL, 2L));
     assertEquals(expected, counts);
+    assertTrue(content.spells().get("spell.entangle_effect").helperOnly());
+    assertTrue(content.spells().get("spell.entangle_effect_2").helperOnly());
+    assertFalse(content.spells().get("spell.entangle").helperOnly());
   }
 
   @Test
@@ -143,7 +147,7 @@ class OnlineSpellContentV2ExporterTest {
   @Test
   void stageOneIsExactlyTheFortyEightDirectSpells() {
     var stageOne = OnlineSpellContentV2Exporter.snapshot().spells().values().stream()
-        .filter(spell -> spell.stage() == 1).toList();
+        .filter(spell -> !spell.helperOnly() && spell.stage() == 1).toList();
     assertEquals(48, stageOne.size());
     assertTrue(stageOne.stream().allMatch(spell -> spell.support().equals("stage-1")));
     var kinds = stageOne.stream().map(spell -> spell.kind()).collect(Collectors.toSet());

@@ -5,6 +5,7 @@ import com.perso.T4C.online.model.MonsterContent;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.random.RandomGenerator;
 
 /** Simulation-owned creature lives, with one bounded persistence worker per region. */
 final class PersistentCreatures implements AutoCloseable {
@@ -31,6 +32,7 @@ final class PersistentCreatures implements AutoCloseable {
   private record Completion(long id,OnlineStore.SpawnState saved,boolean checkpoint,boolean persisted) {
     Completion(long id,OnlineStore.SpawnState saved,boolean checkpoint) { this(id,saved,checkpoint,saved!=null); }
   }
+  private record EffectCompletion(long id,long cacheGeneration,OnlineStore.SpawnState saved) {}
   private record ActivationResult(List<Integer> indices,Map<String,OnlineStore.SpawnState> rows) {}
   private record DeleteCompletion(long id,long cacheGeneration,long touch,boolean deleted) {}
   /** Streamed lifecycle states of one hosted spawn (WORLD_STREAMING_DESIGN.md 3.4); everything else in this class is the active state. */
@@ -54,6 +56,7 @@ final class PersistentCreatures implements AutoCloseable {
   private final MonsterContent.Classified classified;
   private final Map<Long,Entry> entries=new LinkedHashMap<>();
   private final ConcurrentLinkedQueue<Completion> completed=new ConcurrentLinkedQueue<>();
+  private final ConcurrentLinkedQueue<EffectCompletion> effectCompletions=new ConcurrentLinkedQueue<>();
   private final ConcurrentLinkedQueue<PairCompletion> completedPairs=new ConcurrentLinkedQueue<>();
   private final ThreadPoolExecutor worker;
   private long tick;
@@ -72,6 +75,7 @@ final class PersistentCreatures implements AutoCloseable {
   private long activatedTotal,deactivatedTotal,pristineDeleted,capRefusals,failedActivations,batchesTotal,retryAfterTick;
   private volatile long maxBatchNanos;
   private boolean closing;
+  private final Random effectRandom=new Random();
 
   PersistentCreatures(OnlineStore store,PreviewWorld world) throws SQLException {
     this(store,world,world.map(),"single",null,null);
@@ -171,6 +175,7 @@ final class PersistentCreatures implements AutoCloseable {
   void release(long id) { var entry=entries.get(id);if(entry!=null) entry.reserved=false; }
   void rewardCommitted(long id) { reload(id,true); }
   void damageCommitted(long id) { reload(id,false); }
+  void effectCommitted(long id) { reload(id,false); }
   boolean stunned(long id,long now) {
     var entry=entries.get(id);
     return entry!=null && entry.stunnedUntilMillis>now;
@@ -209,13 +214,19 @@ final class PersistentCreatures implements AutoCloseable {
     drain();tick++;
     if(streamed) streamedTick();
     var clanTargets=clanViews();
+    long now=System.currentTimeMillis();
     for(var entry:entries.values()) {
       entry.attackReady=false;
       if(entry.controller==null || entry.pending || entry.recovering || entry.reserved || entry.settling
-          || entry.saved.diedAt()!=null || entry.stunnedUntilMillis>System.currentTimeMillis()) continue;
+          || entry.saved.diedAt()!=null || entry.stunnedUntilMillis>now) continue;
+      if(!entry.saved.timedEffects().isEmpty()) {
+        var advanced=advanceTimedEffects(entry.saved.timedEffects(),now,effectRandom);
+        if(!advanced.equals(entry.saved.timedEffects())) { submitTimedEffects(entry,advanced);continue; }
+      }
       var before=entry.controller.current();
       var decision=entry.controller.step(targets,clanTargets,1.0/PreviewWorld.TICK_RATE,
-          permittedId!=null && permittedId==entry.spawn.id(),false);
+          permittedId!=null && permittedId==entry.spawn.id(),false,
+          entry.saved.timedEffects().stream().anyMatch(effect -> effect.movementUntil()>now));
       entry.needsReplan=decision.needsReplan();
       entry.attackReady=decision.attackReady() && decision.mode()==OnlineMonsterPursuit.Mode.CLAN;
       boolean positionChanged=Double.compare(before.x(),decision.x())!=0 || Double.compare(before.y(),decision.y())!=0;
@@ -238,6 +249,59 @@ final class PersistentCreatures implements AutoCloseable {
   }
 
   void step() { step(List.of(),null); }
+
+  /** Apply one due Entangle timer, persist its next deadline first, and retain movement exhaustion through its own expiry. */
+  static List<OnlineStore.SpawnTimedEffect> advanceTimedEffects(List<OnlineStore.SpawnTimedEffect> effects,
+      long now,RandomGenerator random) {
+    Objects.requireNonNull(effects);Objects.requireNonNull(random);
+    var next=new ArrayList<OnlineStore.SpawnTimedEffect>();
+    for(var effect:effects) {
+      if(effect.expiresAt()<=now) {
+        if(effect.movementUntil()>now)
+          next.add(new OnlineStore.SpawnTimedEffect(effect.sourceSpellId(),effect.linkedSpellId(),
+              effect.movementSpellId(),effect.expiresAt(),Long.MAX_VALUE,effect.frequencyMillis(),
+              effect.chancePercent(),effect.movementMillis(),effect.movementUntil(),
+              effect.linkedDurationMillis(),effect.movementInitialDelayMillis()));
+        continue;
+      }
+      if(effect.nextAt()>now) { next.add(effect);continue; }
+      if(effect.linkedSpellId()==10151) {
+        if(effect.chancePercent()>0 && random.nextInt(101)<=effect.chancePercent()) {
+          next.add(new OnlineStore.SpawnTimedEffect(effect.sourceSpellId(),10349,effect.movementSpellId(),
+              Math.addExact(now,effect.linkedDurationMillis()),Math.addExact(now,effect.movementInitialDelayMillis()),
+              effect.frequencyMillis(),100,effect.movementMillis(),effect.movementUntil(),0,effect.movementInitialDelayMillis()));
+        } else if(effect.movementUntil()>now) {
+          next.add(new OnlineStore.SpawnTimedEffect(effect.sourceSpellId(),10349,effect.movementSpellId(),
+              now,Long.MAX_VALUE,effect.frequencyMillis(),100,effect.movementMillis(),effect.movementUntil(),0,
+              effect.movementInitialDelayMillis()));
+        }
+        continue; // The source OnTimer is a one-shot that schedules the linked effect.
+      }
+      long movementUntil=effect.movementUntil();
+      if(effect.chancePercent()>0 && random.nextInt(101)<=effect.chancePercent())
+        movementUntil=Math.max(movementUntil,Math.addExact(now,effect.movementMillis()));
+      next.add(new OnlineStore.SpawnTimedEffect(effect.sourceSpellId(),effect.linkedSpellId(),
+          effect.movementSpellId(),effect.expiresAt(),Math.addExact(now,effect.frequencyMillis()),
+          effect.frequencyMillis(),effect.chancePercent(),effect.movementMillis(),movementUntil,
+          effect.linkedDurationMillis(),effect.movementInitialDelayMillis()));
+    }
+    return List.copyOf(next);
+  }
+
+  private void submitTimedEffects(Entry entry,List<OnlineStore.SpawnTimedEffect> replacement) {
+    var current=entry.saved;
+    entry.pending=true;
+    long generation=entry.cacheGeneration;
+    try {
+      worker.execute(() -> {
+        OnlineStore.SpawnState saved=null;
+        try { saved=store.replaceTimedEffects(current.key(),current.eventId(),current.stateRevision(),
+            current.timedEffects(),replacement); }
+        catch(SQLException|RuntimeException conflict) { /* Reload authoritative life/effect state; never replay an uncertain timer. */ }
+        finally { effectCompletions.add(new EffectCompletion(entry.spawn.id(),generation,saved)); }
+      });
+    } catch(RejectedExecutionException busy) { entry.pending=false; }
+  }
 
   private List<OnlineMonsterPursuit.ClanView> clanViews() {
     if(classified==null) return List.of();
@@ -653,6 +717,20 @@ final class PersistentCreatures implements AutoCloseable {
       publish(source,true);publish(target,true);
     }
     if(streamed) drainStreamed();
+    EffectCompletion effect;
+    while((effect=effectCompletions.poll())!=null) {
+      var entry=entries.get(effect.id());
+      if(entry==null) continue;
+      entry.pending=false;
+      if(entry.reloadAfterPending || entry.cacheGeneration!=effect.cacheGeneration()) {
+        entry.reloadAfterPending=false;entry.recovering=true;submitRead(entry);continue;
+      }
+      if(effect.saved()==null) {
+        entry.recovering=true;entry.dirty=false;world.creatureActive(effect.id(),false);
+        continue; // The timer write may have committed; reload before resuming or rerolling.
+      }
+      entry.saved=effect.saved();entry.maybeRow=true;entry.recovering=false;entry.dirty=false;
+    }
     Completion result;
     while((result=completed.poll())!=null) {
       var entry=entries.get(result.id());

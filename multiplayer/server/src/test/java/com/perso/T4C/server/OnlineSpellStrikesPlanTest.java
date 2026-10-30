@@ -34,6 +34,7 @@ class OnlineSpellStrikesPlanTest {
     final List<PreviewWorld.CreatureSpawn> spawns = new ArrayList<>();
     final Map<Long, double[]> where = new java.util.HashMap<>();
     final Map<Long, UUID> lives = new java.util.HashMap<>();
+    final Map<Long, List<OnlineStore.SpawnTimedEffect>> effects = new java.util.HashMap<>();
     boolean busy;
 
     void add(long id, MonsterDef def, double x, double y) {
@@ -46,7 +47,8 @@ class OnlineSpellStrikesPlanTest {
     @Override public PreviewWorld.CreaturePosition position(long id) { return new PreviewWorld.CreaturePosition(where.get(id)[0], where.get(id)[1]); }
     @Override public OnlineStore.SpawnState life(long id) {
       if (busy) throw new PreviewWorld.Rejected(409, "creature_unavailable");
-      return new OnlineStore.SpawnState("t-" + id, 0, lives.get(id), null, null, null, null, 0, null, null, "IDLE", null, 0);
+      return new OnlineStore.SpawnState("t-" + id, 0, lives.get(id), null, null, null, null, 0, null, null,
+          "IDLE", null, 0, null, null, null, null, effects.getOrDefault(id,List.of()));
     }
     @Override public OnlineStore.SpawnMotion capture(long id) {
       return new OnlineStore.SpawnMotion("t-" + id, lives.get(id), 0, where.get(id)[0], where.get(id)[1], "IDLE", null, null);
@@ -119,8 +121,31 @@ class OnlineSpellStrikesPlanTest {
     assertEquals("creature_unavailable", refusal(() -> unchecked(progress(20, known, Map.of()), "spell.fire_dart", 77L, source)));
     assertEquals("out_of_range", refusal(() -> unchecked(progress(20, known, Map.of()), "spell.fire_dart", 2L, source)));
     assertEquals("wrong_target", refusal(() -> unchecked(progress(20, known, Map.of()), "spell.fire_dart", null, source)));
-    // Stage 4 remains closed except for the separately supported authored recall.
-    assertEquals("unsupported_spell", refusal(() -> unchecked(progress(20, Set.of("spell.entangle"), Map.of()), "spell.entangle", 1L, source)));
+    // The one explicitly implemented stage-4 effect chain is castable; linked helpers are not.
+    var entangle=plan(progress(20,Set.of("spell.entangle"),Map.of()),"spell.entangle",1L,source);
+    assertTrue(entangle.strikes().isEmpty());
+    assertEquals(List.of(1L),entangle.effectTargets());
+    var timer=assertInstanceOf(com.perso.T4C.spell.engine.SpellEngine.Event.ScheduleCreatureEffect.class,
+        entangle.events().stream().filter(com.perso.T4C.spell.engine.SpellEngine.Event.ScheduleCreatureEffect.class::isInstance)
+            .findFirst().orElseThrow());
+    assertEquals(10150,timer.sourceSpellId());
+    assertEquals(10151,timer.effectSpellId());
+    assertEquals(10349,timer.movementSpellId());
+    assertEquals(1_000,timer.initialDelayMillis());
+    assertEquals(2_000,timer.frequencyMillis());
+    assertEquals(1_000,timer.movementInitialDelayMillis());
+    assertEquals(1_750,timer.movementExhaustionMillis());
+    assertTrue(timer.durationMillis()>0);
+    assertEquals(1,entangle.creatureEffects().size());
+    assertEquals(10151,entangle.creatureEffects().getFirst().effects().getFirst().linkedSpellId());
+    source.effects.put(1L,List.of(new OnlineStore.SpawnTimedEffect(10150,10349,10349,70_000,60_000,
+        2_000,100,1_750,55_000,5_000,1_000)));
+    var reapplied=plan(progress(20,Set.of("spell.entangle"),Map.of()),"spell.entangle",1L,source);
+    assertEquals(1,reapplied.creatureEffects().getFirst().effects().size(),"reapplication replaces the same source timer");
+    assertEquals(10151,reapplied.creatureEffects().getFirst().effects().getFirst().linkedSpellId());
+    assertEquals(55_000,reapplied.creatureEffects().getFirst().effects().getFirst().movementUntil(),
+        "reapplication retains already committed exhaustion");
+    assertThrows(IllegalArgumentException.class, () -> SpellCatalogV2.bundled().castable("spell.tame_beast"));
     var recall=plan(progress(150,Set.of("spell.word_of_recall"),Map.of()),"spell.word_of_recall",null,source);
     assertEquals(100,recall.manaSpent());
     assertEquals(4,recall.events().stream().filter(com.perso.T4C.spell.engine.SpellEngine.Event.Dispel.class::isInstance).count());
@@ -128,6 +153,44 @@ class OnlineSpellStrikesPlanTest {
     assertEquals("unsupported_spell", refusal(() -> unchecked(progress(20, Set.of("spell.tame_beast"), Map.of()), "spell.tame_beast", null, source)));
     source.busy = true;
     assertEquals("creature_unavailable", refusal(() -> unchecked(progress(20, known, Map.of()), "spell.fire_dart", 1L, source)));
+  }
+
+  @Test void entangleTimerIsOneShotThenRunsLinkedMovementTicksWithoutCatchUp() {
+    var source=new OnlineStore.SpawnTimedEffect(10150,10151,10349,Long.MAX_VALUE,1_000,2_000,50,
+        1_750,0,5_000,1_000);
+    var noProc=new Random() { @Override public int nextInt(int bound) { return 51; } };
+    assertTrue(PersistentCreatures.advanceTimedEffects(List.of(source),1_000,noProc).isEmpty());
+    var reapplication=new OnlineStore.SpawnTimedEffect(10150,10151,10349,Long.MAX_VALUE,1_000,2_000,50,
+        1_750,1_500,5_000,1_000);
+    var retained=PersistentCreatures.advanceTimedEffects(List.of(reapplication),1_000,noProc).getFirst();
+    assertEquals(10349,retained.linkedSpellId());
+    assertEquals(1_500,retained.movementUntil());
+    var proc=new Random() { @Override public int nextInt(int bound) { return 0; } };
+    var active=PersistentCreatures.advanceTimedEffects(List.of(source),1_000,proc).getFirst();
+    assertEquals(10349,active.linkedSpellId());
+    assertEquals(6_000,active.expiresAt());
+    assertEquals(2_000,active.nextAt());
+    var tick=PersistentCreatures.advanceTimedEffects(List.of(active),2_100,proc).getFirst();
+    assertEquals(4_100,tick.nextAt(),"late ticks schedule from now; they do not catch up");
+    assertEquals(3_850,tick.movementUntil());
+    assertTrue(PersistentCreatures.advanceTimedEffects(List.of(tick),6_000,proc).isEmpty());
+  }
+
+  @Test void movementExhaustionStopsPursuitButDoesNotSuppressAnInRangeAttack() throws Exception {
+    var map=new PreviewMap(new boolean[10][30],0,0,1,3);
+    var definition=MonsterCatalog.loadBundled().monsters().get("Skeleton");
+    UUID life=UUID.randomUUID(),character=UUID.randomUUID();
+    var spawn=new MonsterContent.Spawn("movement-test","Skeleton",1,3,0,false,true);
+    var seed=new OnlineMonsterPursuit.Seed(life,1.5,3.5,OnlineMonsterPursuit.Mode.RETALIATION,character,7);
+    var outOfRange=new OnlineMonsterPursuit(map,spawn,definition,"start",seed)
+        .step(List.of(new OnlineMonsterPursuit.TargetView(character,7,0,"start",8.5,3.5,true,true,true)),
+            List.of(),1.0/PreviewWorld.TICK_RATE,true,false,true);
+    assertFalse(outOfRange.attackReady());
+    assertEquals(1.5,outOfRange.x(),1e-8,"exhaustion blocks closing distance");
+    var inRange=new OnlineMonsterPursuit(map,spawn,definition,"start",seed)
+        .step(List.of(new OnlineMonsterPursuit.TargetView(character,7,0,"start",2.5,3.5,true,true,true)),
+            List.of(),1.0/PreviewWorld.TICK_RATE,true,false,true);
+    assertTrue(inRange.attackReady(),"movement exhaustion does not prevent an already available attack");
   }
 
   private static OnlineSpellStrikes.Plan aimed(CharacterProgress p, String spell, com.perso.T4C.spell.engine.SpellEngine.Target target,
