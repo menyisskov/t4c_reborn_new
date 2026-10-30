@@ -2177,6 +2177,17 @@ public class MainGameScreen implements Screen {
       return true;
     }
     SpellData spell = selectedTargetedSpell;
+    if (isRemoteSession()) {
+      if (session.world() instanceof com.perso.T4C.session.RemoteWorldDriver remote) {
+        tryCastHostileSpellOnRemoteMonster(
+            spell,
+            monster,
+            remote,
+            (com.perso.T4C.session.RemotePlayerCommands) session.commands());
+      }
+      clearSelectedTargetedSpell(true);
+      return true;
+    }
     SpellCastingService.Result cast = castAttackSpell(spell, monster);
     if (!cast.success()) {
       showSystemMessage(SpellCastingService.message(cast.failure()));
@@ -2189,6 +2200,19 @@ public class MainGameScreen implements Screen {
     } else {
       clearCurrentAttackTarget();
     }
+    return true;
+  }
+
+  static boolean tryCastHostileSpellOnRemoteMonster(
+      SpellData spell,
+      BaseMonster monster,
+      com.perso.T4C.session.RemoteWorldDriver remote,
+      com.perso.T4C.session.RemotePlayerCommands commands) {
+    if (spell == null || monster == null || monster.isDead() || remote == null || commands == null) {
+      return false;
+    }
+    if (remote.creatureId(monster) <= 0) return false;
+    commands.cast(spell.getKey(), monster);
     return true;
   }
 
