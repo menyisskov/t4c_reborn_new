@@ -12,6 +12,10 @@ remain scale evidence, and the server's 20-player runtime cap is unchanged.
 [TASKS.md](../TASKS.md) tracks individual implementation deliveries; a completed task is
 not automatically a completed milestone.
 
+### Shared GUI keyboard routing (T4C-0356)
+
+The remote input adapter forwards key presses and typed characters to an open shared GUI before online shortcuts; input is consumed while that GUI is open. Closed-GUI remote shortcuts and offline input remain unchanged. Focused GUI keyboard and HUD tests passed 4/4; package and `git diff --check` passed on head `e95c177b` (base `1710e2c5`). No rendered-client check was run; M1, M4 and Beta remain open.
+
 ## Partial parity implementation evidence (not a milestone pass)
 
 T4C-0272 enables online creation of the four caster classes from the shared starting kits.
