@@ -33,6 +33,12 @@ class HostedQuestCompletableTest {
         }
         assertTrue(targets>=quest.getRequiredKills(),
             quest.getId()+" has "+targets+" hosted targets for "+quest.getRequiredKills()+" kills");
+        if (quest.getId().equals("lighthaven_samaritan_rats")) {
+          assertEquals("LighthavenSamaritan", giver.id());
+          assertEquals(1, quest.getTargetWorldZ());
+          assertEquals(15, quest.getRequiredKills());
+          assertTrue(targets >= 15, "the hosted world-1 objective area needs at least 15 Brown Rats");
+        }
       }
     }
   }

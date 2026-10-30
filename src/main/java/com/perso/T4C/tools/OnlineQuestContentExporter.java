@@ -19,7 +19,7 @@ import java.util.TreeMap;
  * offline-only, and any quest field the server cannot run fails the export instead of being dropped.
  */
 public final class OnlineQuestContentExporter {
-  static final List<String> ALLOWLIST = List.of("renewed_wards");
+  static final List<String> ALLOWLIST = List.of("renewed_wards", "lighthaven_samaritan_rats");
 
   private OnlineQuestContentExporter() {}
 

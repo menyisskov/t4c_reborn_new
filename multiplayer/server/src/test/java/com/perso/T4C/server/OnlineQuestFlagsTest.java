@@ -13,6 +13,10 @@ class OnlineQuestFlagsTest {
     assertTrue(OnlineQuestFlags.supported(Map.of(), QUESTS));
     assertTrue(OnlineQuestFlags.supported(Map.of(CrimsonscaleLetterRules.LETTER_FLAG, 1,
         "quest.renewed_wards.status", 2, "quest.renewed_wards.kills", 12, "killlog.Skeleton", 4), QUESTS));
+    assertTrue(OnlineQuestFlags.supported(Map.of(
+        "quest.__NEWBIE_QUEST.kills", 15,
+        "quest.lighthaven_samaritan_rats.status", 1), QUESTS));
+    assertFalse(OnlineQuestFlags.supported(Map.of("quest.__NEWBIE_QUEST.kills", 16), QUESTS));
     assertFalse(OnlineQuestFlags.supported(Map.of("quest.renewed_wards.kills", 13), QUESTS));
     assertFalse(OnlineQuestFlags.supported(Map.of("quest.renewed_wards.status", 3), QUESTS));
   }

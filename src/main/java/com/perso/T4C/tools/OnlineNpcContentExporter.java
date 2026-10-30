@@ -2,6 +2,7 @@ package com.perso.T4C.tools;
 
 import com.google.gson.Gson;
 import com.perso.T4C.npc.Kilhiam;
+import com.perso.T4C.npc.LighthavenSamaritan;
 import com.perso.T4C.npc.Sigfried;
 import com.perso.T4C.npc.WardenAelric;
 import com.perso.T4C.npc.core.NpcSpec;
@@ -16,6 +17,8 @@ public final class OnlineNpcContentExporter {
   public static NpcInteractionContent snapshot() {
     return new NpcInteractionContent(NpcInteractionContent.VERSION, List.of(
         npc(Kilhiam.class, Kilhiam.spec()), npc(WardenAelric.class, WardenAelric.spec()),
+        npc(LighthavenSamaritan.class, LighthavenSamaritan.ID,
+            LighthavenSamaritan.DISPLAY_NAME, LighthavenSamaritan.SPRITE_BASE),
         // Sigfried keeps his authored shop; online he only greets and trades (stock in npc-shops-v2).
         npc(Sigfried.class, Sigfried.spec())));
   }
@@ -26,6 +29,12 @@ public final class OnlineNpcContentExporter {
     var parts = new TreeMap<String, String>();
     for (var part : spec.parts()) parts.put(part.bodyPart().name(), part.spriteBase());
     return new NpcInteractionContent.Npc(spec.id(), spec.displayName(), spawn.z(), spawn.x(), spawn.y(), spec.spriteBase(), parts);
+  }
+  private static NpcInteractionContent.Npc npc(Class<?> type, String id, String displayName, String spriteBase) {
+    var spawn = type.getAnnotation(Spawn.class);
+    if (spawn == null || spawn.aggressive() || !spawn.type().equals(id))
+      throw new IllegalArgumentException("Unsupported story NPC spawn");
+    return new NpcInteractionContent.Npc(id, displayName, spawn.z(), spawn.x(), spawn.y(), spriteBase, Map.of());
   }
   public static String render(NpcInteractionContent content) {
     var gson = new Gson(); var tree = gson.toJsonTree(content).getAsJsonObject();

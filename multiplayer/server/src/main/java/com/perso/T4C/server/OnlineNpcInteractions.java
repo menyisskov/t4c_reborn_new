@@ -117,7 +117,12 @@ public final class OnlineNpcInteractions {
     QuestDef definition=quests.definitions().stream().filter(d->d.getGiverNpc().equals(npcId))
         .findFirst().orElseThrow(()->new IllegalArgumentException("NPC has no online quest"));
     if(topic.isEmpty()) return toResult(OnlineQuests.greet(saved,definition,items,instanceId,now,random));
-    return toResult(OnlineQuests.topic(saved.progress(),definition,topic.getAsInt()));
+    int authoredTopic=topic.getAsInt();
+    if("LighthavenSamaritan".equals(npcId)) {
+      if(authoredTopic!=37) throw new IllegalArgumentException("Unsupported quest topic");
+      authoredTopic=0;
+    }
+    return toResult(OnlineQuests.topic(saved.progress(),definition,authoredTopic));
   }
 
   private static Result toResult(OnlineQuests.Result reply) {
