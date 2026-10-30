@@ -41,7 +41,7 @@ final class OnlineAbilityChoices {
     var rows = new ArrayList<SpellChoice>();
     for (var key : progress.spells().stream().sorted().toList()) {
       var spell = catalog.spells().get(key);
-      if (spell == null || spell.stage() > OnlineSpellAllowlistV2.ENABLED_STAGE || !SpellEngine.supported(spell)) continue;
+      if (!isSupportedOnlineSpell(spell)) continue;
       // Target type 17 is an area around a creature the caster aims at (Fireball, Boulders, Cinderburst): cast with no target the
       // engine answers wrong_target (T4C-0331 live run). Type 19 areas are aimed at a tile and type 18 are centred on the caster.
       boolean creatureTarget = switch (spell.kind()) {
@@ -52,6 +52,12 @@ final class OnlineAbilityChoices {
       rows.add(new SpellChoice(key, spellName(key), manaLabel(spell.manaCost()), creatureTarget));
     }
     return List.copyOf(rows);
+  }
+
+  private static boolean isSupportedOnlineSpell(SpellContentV2.Spell spell) {
+    if (spell == null || !SpellEngine.supported(spell)) return false;
+    return spell.stage() <= OnlineSpellAllowlistV2.ENABLED_STAGE
+        || (spell.id() == 10029 && "spell.word_of_recall".equals(spell.key()));
   }
 
   static List<PotionChoice> usablePotions(CharacterProgress progress, SpellContent allowlist) {

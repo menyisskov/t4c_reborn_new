@@ -118,6 +118,9 @@ final class OnlineSpellStrikes {
     };
     var plan = plan(saved, spellKey, target, now, random, items, spells, map, position.x(), position.y(),
         sessions.region(token).world(), source,friendView);
+    if(plan.events().stream().anyMatch(SpellEngine.Event.Recall.class::isInstance))
+      return sessions.recall(token,revision,plan.progress())
+          .thenApply(committed -> new Reply(committed.character().revision(),0,plan.manaSpent(),List.of(),plan.buffs()));
     if(playerTarget!=null) {
       var friendHeal=plan.events().stream().filter(SpellEngine.Event.FriendHeal.class::isInstance)
           .map(SpellEngine.Event.FriendHeal.class::cast).findFirst().orElse(null);
@@ -263,6 +266,7 @@ final class OnlineSpellStrikes {
         case SpellEngine.Event.DetectInvisible detect -> working = detecting(working, DETECT_INVISIBLE, now, detect.durationMillis());
         case SpellEngine.Event.DetectHidden detect -> working = detecting(working, DETECT_HIDDEN, now, detect.durationMillis());
         case SpellEngine.Event.Dispel dispel -> working = OnlineBuffs.dispel(working, dispel.spellKey(), now);
+        case SpellEngine.Event.Recall ignored -> { /* Transfer and this progress draft commit together below. */ }
         case SpellEngine.Event.Damage damage -> {
           var fact = view.fact(damage.target());
           var definition = fact.spawn.definition();

@@ -124,6 +124,18 @@ class OnlineAbilityMenuTest {
   }
 
   @Test
+  void learnedWordOfRecallIsSelectableWithoutACreatureTarget() {
+    var menu = new OnlineAbilityMenu();
+    var state = progress(10, Set.of("spell.word_of_recall"), List.of());
+    menu.toggle(OnlineAbilityMenu.Kind.SPELLS, true);
+
+    var action = menu.choose(1, state, ENGINE_CATALOG, ALLOWLIST, true).orElseThrow();
+
+    assertEquals("spell.word_of_recall", action.spellKey());
+    assertFalse(action.requiresCreatureTarget());
+  }
+
+  @Test
   void targetedDispatchCanResolveOnlyTheSelectedLiveCreatureFromTheLatestSnapshot() {
     var live = new CreatureView(42, "Goblin", 2, 3, 5, 5, "walk", "attack", "death");
     var dead = new CreatureView(43, "Goblin", 2, 3, 0, 5, "walk", "attack", "death");

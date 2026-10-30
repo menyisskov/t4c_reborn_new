@@ -398,6 +398,29 @@ final class PersistentSessions {
     return commitEvent(token,expectedRevision,eventId,gold,experience,progress,false,null,provocation,null,null,null);
   }
 
+  /** Commit a recall's cast effects and durable region/location change as one database transaction. */
+  CompletionStage<OnlineStore.RewardResult> recall(String token,long expectedRevision,CharacterProgress progress) {
+    var binding=active(token);
+    if(binding.event!=null || binding.awaitingRegionReady || binding.pending || binding.saved.revision()!=expectedRevision)
+      throw new PreviewWorld.Rejected(409,"busy");
+    if(progress==null || binding.saved.progress()==null) throw new PreviewWorld.Rejected(409,"uninitialized_character");
+    var authored=binding.saved.progress().respawn();
+    var destination=respawnDestination(authored);
+    if(!hosted.canStand(destination)) throw new PreviewWorld.Rejected(409,"unavailable_respawn");
+    var target=hosted.require(destination.world(),destination.x(),destination.y());
+    var arrival=destination;
+    var transfer=new com.perso.T4C.server.persistence.PortalTransfer(0,binding.region.spec.key(),target.spec.key(),
+        new CharacterProgress.Respawn(binding.saved.world(),binding.saved.x(),binding.saved.y()),arrival,
+        binding.saved.locationEpoch(),0);
+    var position=binding.region.world.position(token);if(position==null) throw new PreviewWorld.Rejected(401,"session");
+    binding.position=position;binding.region.world.freeze(token,true);
+    var result=new CompletableFuture<OnlineStore.RewardResult>();
+    binding.event=new GameplayEvent(UUID.randomUUID(),0,0,progress,false,null,null,null,null,null,null,transfer,null,
+        List.of(),List.of(),null,result,null);
+    if(!binding.pending) submit(binding);
+    return result.minimalCompletionStage();
+  }
+
   CompletionStage<OnlineStore.RewardResult> commitWorldReward(String token, long expectedRevision,
       UUID eventId, long gold, long experience, CharacterProgress progress) {
     return commitEvent(token,expectedRevision,eventId,gold,experience,progress,true,null,null,null,null,null);
@@ -778,7 +801,8 @@ final class PersistentSessions {
             } else {
             if (event.transfer()!=null) {
               try {
-                reward=store.commitTransfer(binding.session,revision,event.id(),event.transfer());
+                reward=store.commitTransfer(binding.session,revision,event.id(),event.transfer(),
+                    event.transfer().cooldownUntil()==0 ? event.progress() : null);
                 saved=reward.character();
               } catch (OnlineStore.Conflict conflict) {
                 // Rolled back before any write; only the database clock disagreed. Anything else fails closed.

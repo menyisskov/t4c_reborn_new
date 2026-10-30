@@ -9,6 +9,7 @@ import com.perso.T4C.online.model.CharacterProgress;
 import com.perso.T4C.online.model.MonsterContent;
 import com.perso.T4C.server.persistence.OnlineStore;
 import com.perso.T4C.spell.engine.SpellEngine;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -18,6 +19,38 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 /** PostgreSQL contract: one cast commits mana, exhaustion, every creature's health, kills and drops atomically. */
 @EnabledIfEnvironmentVariable(named = "T4C_DB_URL", matches = ".+")
 class OnlineSpellStrikesTest {
+  @Test void learnedWordOfRecallCommitsCostsAndReturnsToSavedRespawnRegion() throws Exception {
+    var store=OnlineStore.fromEnvironment();store.migrate();var account=store.provisionAccount();
+    var prepared=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(31));
+    var base=prepared.progress();
+    var progress=new CharacterProgress(base.version(),base.characterClass(),base.gender(),base.attributes(),
+        new CharacterProgress.Vitals(base.vitals().hp(),base.vitals().maxHp(),200,200),base.advancement(),base.inventory(),
+        base.equipment(),base.skills(),Set.of("spell.word_of_recall"),base.questFlags(),base.storage(),base.storageGold(),
+        new CharacterProgress.Respawn(0,2944.5,1059.5),base.buffs(),base.cooldowns(),0,base.companion());
+    var created=store.create(account.accountId(),"Recall caster",1,304.5,383.5,progress,0);
+    var plan=HostedRegionPlan.startingSlice(Path.of("../../assets/maps/worldmap/worldmap.colbin"));
+    try(var hosted=new HostedWorlds(plan,store,ItemCatalog.loadBundled(),MonsterCatalog.loadBundled())) {
+      var joined=hosted.sessions.join(store.acquire(account.secret(),created.id()),System.nanoTime());
+      hosted.sessions.regionReady(joined.token(),0);
+      var region=hosted.actor(joined.token());
+      var pending=region.spells.cast(joined.token(),0,"spell.word_of_recall",new SpellEngine.Target.Self()).toCompletableFuture();
+      long deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(5);
+      while(!pending.isDone() && System.nanoTime()<deadline) { hosted.step();Thread.sleep(5); }
+      var reply=pending.get();var saved=store.load(account.accountId(),created.id());
+      assertEquals(reply.revision(),saved.revision());
+      assertEquals(0,saved.world());assertEquals(1,saved.locationEpoch());
+      assertEquals(2944.5,saved.x());assertEquals(1059.5,saved.y());
+      assertEquals(100,saved.progress().vitals().mana());
+      assertTrue(saved.progress().cooldowns().get(OnlineCasting.MENTAL_EXHAUSTION)>0);
+      assertEquals(0,hosted.sessions.region(joined.token()).world());
+      assertEquals(100,reply.manaSpent());
+      var left=hosted.sessions.leave(joined.token());
+      deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(5);
+      while(!left.isDone() && System.nanoTime()<deadline) { hosted.step();Thread.sleep(5); }
+      left.get();
+    }
+  }
+
   @Test void learnedLightHealCommitsCasterCostAndNearbyPlayersHealthTogether() throws Exception {
     var store=OnlineStore.fromEnvironment();store.migrate();
     var map=new PreviewMap(new boolean[20][20],0,0,3,5);

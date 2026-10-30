@@ -244,14 +244,14 @@ class OnlineBuffsTest {
     assertEquals(SpellCastRules.Verdict.NO_LINE_OF_SIGHT, SpellEngine.cast(request.apply("spell.barrier"), world, new Random(1)).verdict());
   }
 
-  @Test void theStageGateOpensExactlyTheStageOneTwoAndThreeSpells() throws Exception {
+  @Test void theStageGateOpensStageOneTwoThreeAndOnlyWordOfRecallFromStageFour() throws Exception {
     var catalog = SpellCatalogV2.bundled();
-    assertEquals(48 + 33 + 42, catalog.castableCount());
+    assertEquals(48 + 33 + 42 + 1, catalog.castableCount());
     assertTrue(catalog.castableKey("spell.fireball") && catalog.castableKey("spell.poison") && catalog.castableKey("spell.earthquake"));
     assertTrue(catalog.castableKey("spell.barrier") && catalog.castableKey("spell.dispel") && catalog.castableKey("spell.curse"));
     assertTrue(catalog.castableKey("spell.renew_armor") && catalog.castableKey("spell.true_sight"));
-    assertFalse(catalog.castableKey("spell.entangle")
-        || catalog.castableKey("spell.word_of_recall") || catalog.castableKey("spell.tame_beast"));
+    assertTrue(catalog.castableKey("spell.word_of_recall"));
+    assertFalse(catalog.castableKey("spell.entangle") || catalog.castableKey("spell.tame_beast"));
     assertEquals(SpellContentV2.Kind.BUFF, catalog.castable("spell.light").kind());
   }
 }

@@ -119,10 +119,13 @@ class OnlineSpellStrikesPlanTest {
     assertEquals("creature_unavailable", refusal(() -> unchecked(progress(20, known, Map.of()), "spell.fire_dart", 77L, source)));
     assertEquals("out_of_range", refusal(() -> unchecked(progress(20, known, Map.of()), "spell.fire_dart", 2L, source)));
     assertEquals("wrong_target", refusal(() -> unchecked(progress(20, known, Map.of()), "spell.fire_dart", null, source)));
-    // Later stages stay refused exactly like an unknown key: Entangle needs creature movement state,
-    // the portals and recall are stage 4.
+    // Stage 4 remains closed except for the separately supported authored recall.
     assertEquals("unsupported_spell", refusal(() -> unchecked(progress(20, Set.of("spell.entangle"), Map.of()), "spell.entangle", 1L, source)));
-    assertEquals("unsupported_spell", refusal(() -> unchecked(progress(20, Set.of("spell.word_of_recall"), Map.of()), "spell.word_of_recall", null, source)));
+    var recall=plan(progress(150,Set.of("spell.word_of_recall"),Map.of()),"spell.word_of_recall",null,source);
+    assertEquals(100,recall.manaSpent());
+    assertEquals(4,recall.events().stream().filter(com.perso.T4C.spell.engine.SpellEngine.Event.Dispel.class::isInstance).count());
+    assertTrue(recall.events().getLast() instanceof com.perso.T4C.spell.engine.SpellEngine.Event.Recall);
+    assertEquals("unsupported_spell", refusal(() -> unchecked(progress(20, Set.of("spell.tame_beast"), Map.of()), "spell.tame_beast", null, source)));
     source.busy = true;
     assertEquals("creature_unavailable", refusal(() -> unchecked(progress(20, known, Map.of()), "spell.fire_dart", 1L, source)));
   }
