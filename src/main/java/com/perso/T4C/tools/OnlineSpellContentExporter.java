@@ -25,7 +25,8 @@ public final class OnlineSpellContentExporter {
       "item.potion_of_fury", "item.potion_of_nimbleness", "item.hyper_potion_of_nimbleness",
       "item.potion_of_clear_thought", "item.potion_of_fortitude", "item.potion_of_tranquility",
       "item.hyper_potion_of_clear_thought", "item.hyper_potion_of_fortitude",
-      "item.hyper_potion_of_tranquility", "item.hyper_potion_of_fury");
+      "item.hyper_potion_of_tranquility", "item.hyper_potion_of_fury",
+      "item.hyper_potion_of_violent_rage");
 
   private OnlineSpellContentExporter() {}
 

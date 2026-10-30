@@ -23,7 +23,8 @@ public final class SpellCatalog {
       "spell.item_hyper_potion_of_nimbleness", "spell.item_potion_of_clear_thought",
       "spell.item_potion_of_fortitude", "spell.item_potion_of_tranquility",
       "spell.item_hyper_potion_of_clear_thought", "spell.item_hyper_potion_of_fortitude",
-      "spell.item_hyper_potion_of_tranquility", "spell.item_hyper_potion_of_fury");
+      "spell.item_hyper_potion_of_tranquility", "spell.item_hyper_potion_of_fury",
+      "spell.item_hyper_potion_of_violent_rage");
   private final SpellContent content;
 
   public SpellCatalog(SpellContent content) {
