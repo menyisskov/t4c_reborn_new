@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  Turns a NativeAdapterSoak JSON report (sampled with T4C_SOAK_CONTROL_FILE) into the M5 load-record lines (T4C-0344).
+  Turns a NativeAdapterSoak JSON report (sampled with T4C_SOAK_CONTROL_FILE) into the M5 load-record lines (T4C-0345).
 
 .DESCRIPTION
   Pure arithmetic over the report's own numbers; nothing is estimated. Rates divide the difference between the

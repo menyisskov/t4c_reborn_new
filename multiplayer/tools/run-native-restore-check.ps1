@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  Restored-database gameplay and reconnect check (T4C-0344, milestone M5): populate a disposable PostgreSQL database
+  Restored-database gameplay and reconnect check (T4C-0345, milestone M5): populate a disposable PostgreSQL database
   through real native play, back it up with verify_backup.py into a SEPARATE database of the same disposable cluster,
   then start a server on the restore and make the same twenty native adapters play and reconnect there.
 
@@ -50,7 +50,7 @@ if (-not $RunId) {
   $created = (& $cluster -Action Create -Port $DbPort | Out-String)
   if ($created -notmatch 'CREATE_OK id=(t4c_acc_[0-9a-f]{12})') { throw 'Cluster creation did not report an id' }
   $id = $Matches[1]
-  $work = Join-Path $env:TEMP ("t4c-0344-restore-" + $id)
+  $work = Join-Path $env:TEMP ("t4c-0345-restore-" + $id)
   Write-Host "cluster $id on $DbPort; evidence $work"
   $passed = $false
   try {

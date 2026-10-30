@@ -10,7 +10,7 @@
                       immediate-mode pg_ctl stop of the verified postmaster), the server stays running and must fail
                       closed, then the cluster is started again (crash recovery) and the server must recover.
 
-  Mode ShutdownOutage (T4C-0344): PostgreSQL is crashed as in DatabaseCrash and the private operator stop is requested
+  Mode ShutdownOutage (T4C-0345): PostgreSQL is crashed as in DatabaseCrash and the private operator stop is requested
                       immediately, while sessions are still bound. The stop must NOT report success: the server must exit
                       non-zero within 120 s with a failure line on stderr, committed state must survive, the unreleased
                       leases must expire on their own clock, and a restarted server must serve all twenty adapters again.
@@ -95,7 +95,15 @@ function Wait-Health([System.Diagnostics.Process]$proc, [int]$limit = 60) {
   while ((Get-Date) -lt $until) { if ($proc.HasExited) { throw "Server exited early (code $($proc.ExitCode))" }; if (Test-Health) { return }; Start-Sleep -Milliseconds 300 }
   throw 'Server did not become healthy'
 }
-function Java-Tool([string[]]$a) { & java '-Djava.awt.headless=true' -cp $probeCp com.perso.T4C.server.NativeFaultDrill @a; if ($LASTEXITCODE -ne 0) { throw "NativeFaultDrill $($a[0]) failed ($LASTEXITCODE)" } }
+# A native command's stderr must never reach this script's own stderr: RunEnv runs us as a child of a 'Stop' script that
+# would turn the first stderr line (an adapter reporting a closed or killed session) into a terminating error. Merge it into the output.
+function Java-Tool([string[]]$a) {
+  $previous = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
+  try { $out = & java '-Djava.awt.headless=true' -cp $probeCp com.perso.T4C.server.NativeFaultDrill @a 2>&1 | ForEach-Object { "$_" }; $code = $LASTEXITCODE }
+  finally { $ErrorActionPreference = $previous }
+  if ($code -ne 0) { throw "NativeFaultDrill $($a[0]) failed ($code): $((@($out) | Select-Object -Last 3) -join ' | ')" }
+  $out
+}
 
 $server = $null; $soak = $null; $monitor = $null
 $profiles = Join-Path $Work 'profiles'; $state = Join-Path $Work 'monitor-state.json'; $stopMonitor = Join-Path $Work 'monitor.stop'; $stopSoak = Join-Path $Work 'soak.stop'
@@ -156,7 +164,7 @@ try {
     Start-Sleep -Seconds $OutageSeconds
     $tStart = Get-Date; $server = Start-Server 2; Wait-Health $server; Say "server 2 healthy $([int]((Get-Date) - $tStart).TotalMilliseconds) ms after launch (pid $($server.Id))"
   } elseif ($Mode -eq 'ShutdownOutage') {
-    # T4C-0344: an operator stop that arrives while the database is down must be a VISIBLE failure, never a safe save.
+    # T4C-0345: an operator stop that arrives while the database is down must be a VISIBLE failure, never a safe save.
     Copy-Item $state (Join-Path $Work 'monitor-state-at-fault.json')
     $faultMs = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
     & $cluster -Action Crash -RunId $RunId | Out-Null; Say 'FAULT: PostgreSQL stopped abruptly (immediate mode) while 20 adapters play'

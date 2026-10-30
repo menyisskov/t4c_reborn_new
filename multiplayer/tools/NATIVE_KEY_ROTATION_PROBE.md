@@ -110,3 +110,8 @@ evidence of a deterministic shutdown failure after the rotation drain.
 
 This is a local native adapter security check. It does not establish a
 rendered-client run, remote deployment or the complete Beta gate.
+
+Re-run on the current build (T4C-0345, 2026-10-30, `origin/main` 3e147d8b plus the T4C-0345 server metrics change, protocol 8/schema 13, unchanged probe source,
+disposable PG16 acceptance cluster `t4c_acc_9f2311e03b41` on 57704 holding the dedicated database `t4c_rotation_0218_a1b6134dcd77`, server on 18851, cluster destroyed afterwards):
+**PASS**. Roster 401 and join 409 for the old key, the old active adapter failed closed without a post-rotation committed change, the new key rejoined the same
+committed character, the observer stayed connected and kept playing, and the owned persistent server exited 0 after the private stop.
