@@ -21,6 +21,16 @@ public final class OnlineConnectionLink implements RemoteLink {
   }
 
   @Override
+  public boolean sendChat(String text) {
+    return connection.sendChat(text);
+  }
+
+  @Override
+  public java.util.List<OnlineConnection.ChatMessage> drainChatMessages() {
+    return connection.drainChatMessages();
+  }
+
+  @Override
   public CompletionStage<OnlineConnection.CommandResult> attack(long creature) {
     return connection.attack(creature);
   }

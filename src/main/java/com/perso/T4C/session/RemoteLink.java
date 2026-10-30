@@ -17,6 +17,12 @@ public interface RemoteLink {
   /** The newest view, or {@code null} before the first snapshot. */
   OnlineConnection.View view();
 
+  /** Queues a server-routed chat line; returns false if the link cannot accept it. */
+  default boolean sendChat(String text) { return false; }
+
+  /** Newly received server chat, drained by the render thread. */
+  default java.util.List<OnlineConnection.ChatMessage> drainChatMessages() { return java.util.List.of(); }
+
   CompletionStage<OnlineConnection.CommandResult> attack(long creature);
 
   CompletionStage<OnlineConnection.CommandResult> pickUp(UUID loot);
