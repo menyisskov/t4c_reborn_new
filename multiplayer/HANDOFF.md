@@ -8,7 +8,7 @@ PR #327 merged at `8514f07c` (tested head `00d67c61`, source `fabcc3cc`). Shared
 
 ### Online hostile spell repeat (T4C-0361)
 
-Candidate `863bfa5d` is rebased on `origin/main` `5acd7a0e`. Online targeted hostile casts repeat only after the prior command resolves, use the server's cooldown state, retry a transient busy response after the existing short delay, and stop on movement, dead targets or terminal server refusals. Offline behavior is unchanged. Focused tests passed 45/45; root package and diff check passed. No rendered-client check was run; PR integration is next and M4/Beta remain open.
+PR #329 merged at `73e31073` (tested head `adc6e953`, source `863bfa5d`). Online targeted hostile casts repeat only after the prior command resolves, use the server's cooldown state, retry transient busy responses after the existing short delay, and stop on movement, dead targets or terminal server refusals. Offline behavior is unchanged. Focused tests passed 45/45; root package and diff check passed. No rendered-client check was run; M4/Beta remain open.
 
 ### Shared GUI keyboard routing (T4C-0356)
 
