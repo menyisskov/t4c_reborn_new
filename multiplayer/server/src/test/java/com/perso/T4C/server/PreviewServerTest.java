@@ -488,6 +488,30 @@ class PreviewServerTest {
   }
 
   @Test @EnabledIfEnvironmentVariable(named="T4C_DB_URL",matches=".+")
+  void shutdownWhileTheDatabaseIsUnreachableFailsVisiblyAndNeverReleasesTheLease() throws Exception {
+    var down=new java.util.concurrent.atomic.AtomicBoolean();
+    var store=new OnlineStore(() -> {
+      if (down.get()) throw new java.sql.SQLException("Test: database unreachable","08001");
+      return java.sql.DriverManager.getConnection(System.getenv("T4C_DB_URL"),System.getenv("T4C_DB_USER"),System.getenv("T4C_DB_PASSWORD"));
+    });
+    store.migrate(); var key=store.provisionAccount();
+    var character=store.create(key.accountId(),"Shutdown without database",0,3.5,3.5);
+    var server=new PreviewServer(new PreviewMap(new boolean[8][8],0,0,3,3),0,store);
+    try (var client=HttpClient.newHttpClient()) {
+      server.start(); login(client,server.url(),key,character.id());
+      down.set(true);
+      var failure=assertThrows(IllegalStateException.class,server::close,
+          "A stop whose final save could not commit must be a visible failure, never a safe save");
+      assertTrue(failure.getMessage().contains("teardown reported a failure"),failure.getMessage());
+      down.set(false);
+      assertThrows(Exception.class,()->store.acquire(key.secret(),character.id()),
+          "Nothing was committed, so the writer lease is still in force until it expires");
+      var again=assertThrows(IllegalStateException.class,server::close,"A second close reports the same recorded failure");
+      assertTrue(again.getMessage().contains("teardown reported a failure"));
+    } finally { down.set(false); }
+  }
+
+  @Test @EnabledIfEnvironmentVariable(named="T4C_DB_URL",matches=".+")
   void corpseHttpRecoveryKeepsOwnershipDistanceAndItemIdentityAcrossRetries() throws Exception {
     var store=OnlineStore.fromEnvironment(); store.migrate();
     var owner=store.provisionAccount(); var stranger=store.provisionAccount();

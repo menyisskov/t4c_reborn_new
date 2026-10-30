@@ -10,6 +10,11 @@
                       immediate-mode pg_ctl stop of the verified postmaster), the server stays running and must fail
                       closed, then the cluster is started again (crash recovery) and the server must recover.
 
+  Mode ShutdownOutage (T4C-0344): PostgreSQL is crashed as in DatabaseCrash and the private operator stop is requested
+                      immediately, while sessions are still bound. The stop must NOT report success: the server must exit
+                      non-zero within 120 s with a failure line on stderr, committed state must survive, the unreleased
+                      leases must expire on their own clock, and a restarted server must serve all twenty adapters again.
+
   Everything is disposable: a new acceptance cluster (random t4c_acc_ id) on -DbPort, a copied runtime in TEMP, one
   ServerMain --online child on -ServerPort. Refuses 55432, 55433, 18765, 18766, 18770, 18771 and any listening port.
   Password handling is that of acceptance-cluster.ps1 RunEnv (process-scoped, never printed). The cluster is destroyed
@@ -18,7 +23,7 @@
   Pass criteria are written down in NATIVE_FAULT_DRILL.md. The script prints the drill log and the verifier's result.
 #>
 param(
-  [Parameter(Mandatory)][ValidateSet('ServerKill', 'DatabaseCrash', 'LostAck')][string]$Mode,
+  [Parameter(Mandatory)][ValidateSet('ServerKill', 'DatabaseCrash', 'ShutdownOutage', 'LostAck')][string]$Mode,
   [Parameter(Mandatory)][ValidateRange(1024, 65535)][int]$DbPort,
   [Parameter(Mandatory)][ValidateRange(1024, 65535)][int]$ServerPort,
   [ValidateRange(120, 3600)][int]$Seconds = 330,
@@ -150,6 +155,31 @@ try {
     Java-Tool @('verify', $profiles, (Join-Path $Work 'monitor-state-at-fault.json'), (Join-Path $Work 'verify-after-kill-before-restart.txt'), 'expect-letters') | ForEach-Object { Say "  [after kill, before restart] $_" }
     Start-Sleep -Seconds $OutageSeconds
     $tStart = Get-Date; $server = Start-Server 2; Wait-Health $server; Say "server 2 healthy $([int]((Get-Date) - $tStart).TotalMilliseconds) ms after launch (pid $($server.Id))"
+  } elseif ($Mode -eq 'ShutdownOutage') {
+    # T4C-0344: an operator stop that arrives while the database is down must be a VISIBLE failure, never a safe save.
+    Copy-Item $state (Join-Path $Work 'monitor-state-at-fault.json')
+    $faultMs = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
+    & $cluster -Action Crash -RunId $RunId | Out-Null; Say 'FAULT: PostgreSQL stopped abruptly (immediate mode) while 20 adapters play'
+    $token1 = (Get-Content (Join-Path $Work 'control-1.token') -Raw).Trim()
+    $resp = Invoke-WebRequest -Uri "$endpoint/admin/shutdown" -Method Post -Headers @{ Origin = $endpoint; Authorization = "Bearer $token1" } -ContentType 'text/plain' -Body '' -UseBasicParsing -TimeoutSec 5
+    $stopAskedMs = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
+    Say "operator stop requested $($stopAskedMs - $faultMs) ms after the crash while sessions were bound: HTTP $($resp.StatusCode)"
+    $exited = $server.WaitForExit(120000)
+    $stopCode = $(if ($exited) { $server.ExitCode } else { -1 })
+    $stopMs = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
+    $errText = Get-Content (Join-Path $Work 'server-1.err.log') -Raw -ErrorAction SilentlyContinue
+    $failureLines = @(($errText -split "`n") | Where-Object { $_ -match 'persistence failed|shutdown failed|flush incomplete|did not terminate|teardown' } | ForEach-Object { $_.Trim() })
+    Say "server after the stop request: exited=$exited, exit code $stopCode, $([int](($stopMs - $stopAskedMs) / 1000)) s after the request; failure lines on stderr: $($failureLines.Count)"
+    foreach ($l in ($failureLines | Select-Object -First 6)) { Say "  stderr: $l" }
+    if (-not $exited) { throw 'The server did not exit within 120 s of the stop request while the database was down' }
+    if ($stopCode -eq 0) { throw 'DEFECT: the stop exited 0 although the database was down and sessions were bound' }
+    if ($failureLines.Count -eq 0) { throw 'The failed stop printed no failure line' }
+    Say 'visible failure confirmed: non-zero exit and a failure line on stderr'
+    Start-Sleep -Seconds 2
+    & $cluster -Action Start -RunId $RunId | Out-Null; Say 'PostgreSQL restarted (crash recovery)'
+    Java-Tool @('verify', $profiles, (Join-Path $Work 'monitor-state-at-fault.json'), (Join-Path $Work 'verify-after-db-recovery.txt'), 'expect-letters') | ForEach-Object { Say "  [after database recovery] $_" }
+    Start-Sleep -Seconds $OutageSeconds
+    $tStart = Get-Date; $server = Start-Server 2; Wait-Health $server; Say "server 2 healthy $([int]((Get-Date) - $tStart).TotalMilliseconds) ms after launch (pid $($server.Id)); the lease of every unreleased session must expire on its own clock"
   } else {
     Copy-Item $state (Join-Path $Work 'monitor-state-at-fault.json')
     $faultMs = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
@@ -169,7 +199,7 @@ try {
   New-Item $stopMonitor -ItemType File | Out-Null; $monitor.WaitForExit(20000) | Out-Null
 
   # ---- graceful end: the final server must still stop cleanly through its private control path.
-  $token = (Get-Content (Join-Path $Work $(if ($Mode -eq 'ServerKill') { 'control-2.token' } else { 'control-1.token' })) -Raw).Trim()
+  $token = (Get-Content (Join-Path $Work $(if ($Mode -ne 'DatabaseCrash') { 'control-2.token' } else { 'control-1.token' })) -Raw).Trim()
   $resp = Invoke-WebRequest -Uri "$endpoint/admin/shutdown" -Method Post -Headers @{ Origin = $endpoint; Authorization = "Bearer $token" } -ContentType 'text/plain' -Body '' -UseBasicParsing -TimeoutSec 5
   $exited = $server.WaitForExit(100000)
   Say "final graceful shutdown: HTTP $($resp.StatusCode), exited=$exited, exit code $(if ($exited) { $server.ExitCode } else { 'n/a' })"
@@ -201,7 +231,7 @@ try {
   if (-not $full) { throw 'Not all 20 leases were live again after the fault' }
   # Bound: a lease is 30 s from its last renewal (PERSISTENCE.md), so every lease is free by fault + 30 s; the server
   # restart (outage + about 2 s), twenty paced opens (0.5 s each) and the soak's 3 s retry add at most about 25 s.
-  if ($Mode -eq 'ServerKill' -and ((($full.At - $faultMs) / 1000) -gt ($OutageSeconds + 60))) { throw 'Adapters rejoined later than the documented lease bound plus restart and pacing' }
+  if ($Mode -ne 'DatabaseCrash' -and ((($full.At - $faultMs) / 1000) -gt ($OutageSeconds + 60))) { throw 'Adapters rejoined later than the documented lease bound plus restart and pacing' }
   # ---- judge against the committed database
   Java-Tool @('verify', $profiles, $state, (Join-Path $Work 'verify.txt'), 'expect-letters') | ForEach-Object { Say "  [final] $_" }
   }
