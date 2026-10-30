@@ -47,6 +47,9 @@ Codex retains NativeAdapterSoak.java, NativeAdapterSoakDeadlineProbe.java, run-n
 | --- | --- | --- |
 | Physical checkout Git branch/index/commits/PRs | Released to root after merged PR157/main d4dc908a | Preserve peer/personal/prototype/ServerTransportTest and future claims |
 | Root Maven and root multiplayer target outputs | No active shared window | Do not rebuild loaded QA binaries; claim a new window before use |
+| T4C-0323 disposable PG cluster t4c_acc_0323a1b2c3d4 / 57618 | Missing, WSL data directory absent; no listener observed | 2026-10-30 02:05 checked; ownership guard refused cleanup because the directory is absent | Previous PreviewServer player-heal route test | Do not reuse; preserve reports; no process was signalled |
+| T4C-0323 disposable PG cluster t4c_acc_0323f01aa555 / 57617 | Destroyed, port free | Focused player-heal transaction test; logs retained in isolated worktree target | Do not reuse cluster id or port |
+| T4C-0323 disposable PG cluster t4c_acc_3a6b19f84c2d / 57619 | Destroyed, port free | DESTROY_OK after focused test 2026-10-30 | PreviewServer player-heal route regression; isolated WSL PG16 | Do not reuse cluster id or port |
 | Owner QA127.0.0.1:18765 and t4c_online | Owner interactive, two source-8da/schema-9 native clients | Do not stop, migrate, replace or drive the desktop without owner handoff |
 | Shared PostgreSQL55432 service and t4c_test | Service stays online; test DB has no claimed mutation window | Do not restart service or run data-mutating tests without a new claim |
 | Retained T4C-0198 pooled baseline | Finished; supervisor/server/adapter PIDs gone, port18770 free; retained report and DB | Preserve report/logs and DB; no full mixed 20-player Beta pass claim |
@@ -56,6 +59,8 @@ Codex retains NativeAdapterSoak.java, NativeAdapterSoakDeadlineProbe.java, run-n
 | Owner desktop/game automation | Owner control, two live QA clients | No GUI action from this metadata task |
 Separate worktrees isolate files/builds but do not automatically isolate databases, ports, assets,
 tasks or semantic ownership. Declare dedicated resources before using them.
+
+T4C-0323 source and client work remain in progress on `codex/player-heal-0323`; root retains final Git integration. The focused server transaction and socket-route tests pass on PostgreSQL 16, along with the earlier root command/socket tests. Two-rendered-client healing and M4 completion remain unverified.
 
 ## Claim and update procedure
 

@@ -24,6 +24,7 @@ final class PersistentSessions {
   private static final Set<String> SHOP_REFUSALS=OnlineStore.SHOP_REFUSALS;
   private static final Set<String> PICKUP_REFUSALS=Set.of("revision","loot_unavailable","loot_reserved",
       "out_of_range","too_heavy","unsupported_item","unsupported_pickup",OnlinePickupRules.LOOT_TAKEN);
+  record FriendTarget(long actorId,String token,long revision,double x,double y,boolean alive,CharacterProgress progress) {}
   private final OnlineStore store;
   private final HostedWorlds hosted;
   /** Wall clock for absolute expiries and regeneration anchors; tests replace it. */
@@ -65,6 +66,7 @@ final class PersistentSessions {
       this.token=token; this.session=session; this.saved=session.character(); this.position=position;
     }
   }
+  private record PlayerHeal(Binding recipient,long revision,int amount) {}
   /**
    * One gameplay write. A pickup carries {@code loot}; a lethal strike carries its committed {@code drops}.
    * Both are published to the region loot cache only after their transaction commits.
@@ -74,7 +76,7 @@ final class PersistentSessions {
       OnlineStore.MonsterAttack monsterAttack, OnlineStore.DeathTransition death, UUID corpse, UUID corpseItem,
       com.perso.T4C.server.persistence.PortalTransfer transfer, UUID loot, List<LootDropDraft> drops,
       List<OnlineStore.SpellStrike> spellStrikes, OnlineStore.MonsterHeal monsterHeal,
-      CompletableFuture<OnlineStore.RewardResult> result, OnlineShopTrades.Trade shop) {
+      CompletableFuture<OnlineStore.RewardResult> result, OnlineShopTrades.Trade shop,PlayerHeal playerHeal) {
     GameplayEvent { drops=List.copyOf(drops); spellStrikes=spellStrikes==null ? List.of() : List.copyOf(spellStrikes); }
     GameplayEvent(UUID id, long gold, long experience, CharacterProgress progress, boolean worldReward,
         OnlineStore.CreatureStrike strike, OnlineStore.CreatureProvocation provocation,
@@ -82,12 +84,21 @@ final class PersistentSessions {
         com.perso.T4C.server.persistence.PortalTransfer transfer, UUID loot, List<LootDropDraft> drops,
         List<OnlineStore.SpellStrike> spellStrikes, CompletableFuture<OnlineStore.RewardResult> result) {
       this(id,gold,experience,progress,worldReward,strike,provocation,monsterAttack,death,corpse,corpseItem,transfer,
-          loot,drops,spellStrikes,null,result,null);
+          loot,drops,spellStrikes,null,result,null,null);
+    }
+    GameplayEvent(UUID id,long gold,long experience,CharacterProgress progress,boolean worldReward,
+        OnlineStore.CreatureStrike strike,OnlineStore.CreatureProvocation provocation,
+        OnlineStore.MonsterAttack monsterAttack,OnlineStore.DeathTransition death,UUID corpse,UUID corpseItem,
+        com.perso.T4C.server.persistence.PortalTransfer transfer,UUID loot,List<LootDropDraft> drops,
+        List<OnlineStore.SpellStrike> spellStrikes,OnlineStore.MonsterHeal monsterHeal,
+        CompletableFuture<OnlineStore.RewardResult> result,OnlineShopTrades.Trade shop) {
+      this(id,gold,experience,progress,worldReward,strike,provocation,monsterAttack,death,corpse,corpseItem,
+          transfer,loot,drops,spellStrikes,monsterHeal,result,shop,null);
     }
   }
   private record Completion(Binding binding, OnlineStore.CharacterState saved, boolean finalSave,
       long allowedUntil, OnlineStore.RewardResult reward, String refusal, Exception error,
-      com.perso.T4C.server.persistence.PersistenceFailure.Operation operation) {}
+      com.perso.T4C.server.persistence.PersistenceFailure.Operation operation,OnlineStore.CharacterState partnerSaved) {}
 
   PersistentSessions(OnlineStore store, PreviewMap map, PreviewWorld world) throws SQLException {
     this(store,new HostedWorlds(map,world));
@@ -587,6 +598,47 @@ final class PersistentSessions {
     if(binding.event!=null) throw new PreviewWorld.Rejected(409,"busy");
     binding.awaitingRegionReady=false;binding.region.world.freeze(token,false);
   }
+  /** Resolves a live friendly actor from this hosted region; actor ids never cross region instances. */
+  FriendTarget friendTarget(String token,long actorId) {
+    if(actorId<=0) throw new PreviewWorld.Rejected(409,"friend_unavailable");
+    var caster=active(token);
+    for(var candidate:bindings.values()) {
+      if(candidate==caster || candidate.region.world!=caster.region.world) continue;
+      var position=candidate.region.world.position(candidate.token);
+      if(position==null || position.id()!=actorId) continue;
+      if(candidate.closing || candidate.pending || candidate.event!=null || candidate.awaitingRegionReady
+          || candidate.saved.progress()==null)
+        throw new PreviewWorld.Rejected(409,"friend_unavailable");
+      return new FriendTarget(actorId,candidate.token,candidate.saved.revision(),position.x(),position.y(),
+          candidate.saved.progress().vitals().hp()>0,candidate.saved.progress());
+    }
+    throw new PreviewWorld.Rejected(409,"friend_unavailable");
+  }
+
+  /** Reserves both online characters and commits one server-calculated heal under a single receipt. */
+  CompletionStage<OnlineStore.RewardResult> commitPlayerHeal(String token,long revision,UUID eventId,
+      CharacterProgress casterProgress,FriendTarget target,int amount) {
+    var caster=active(token);var recipient=active(target.token());
+    if(caster.event!=null || caster.awaitingRegionReady || caster.pending || caster.saved.revision()!=revision)
+      throw new PreviewWorld.Rejected(409,"busy");
+    var position=recipient.region.world.position(recipient.token);
+    if(recipient==caster || position==null || position.id()!=target.actorId()
+        || recipient.region.world!=caster.region.world || recipient.saved.revision()!=target.revision()
+        || recipient.event!=null || recipient.pending || recipient.awaitingRegionReady
+        || recipient.saved.progress()==null || recipient.saved.progress().vitals().hp()<=0)
+      throw new PreviewWorld.Rejected(409,"friend_unavailable");
+    if(amount<=0) throw new IllegalArgumentException("Invalid friend heal amount");
+    var vitals=recipient.saved.progress().vitals();
+    int hp=(int)Math.min(vitals.maxHp(),(long)vitals.hp()+amount);
+    if(hp==vitals.hp()) return commitGameplayEvent(token,revision,eventId,0,0,casterProgress);
+    var result=new CompletableFuture<OnlineStore.RewardResult>();
+    var linked=new PlayerHeal(recipient,target.revision(),amount);
+    var event=new GameplayEvent(eventId,0,0,casterProgress,false,null,null,null,null,null,null,null,null,
+        List.of(),List.of(),null,result,null,linked);
+    caster.event=event;recipient.event=event;recipient.pending=true;
+    if(!caster.pending) submit(caster);
+    return result.minimalCompletionStage();
+  }
   boolean belongs(String token,PreviewWorld world) {
     var binding=bindings.get(token);return binding!=null && !binding.closing && binding.region.world==world;
   }
@@ -681,7 +733,7 @@ final class PersistentSessions {
     try {
       writes.execute(() -> {
         OnlineStore.CharacterState saved=null; Exception failure=null;
-        OnlineStore.RewardResult reward=null; String refusal=null;
+        OnlineStore.RewardResult reward=null; String refusal=null;OnlineStore.CharacterState partnerSaved=null;
         long allowedUntil=System.nanoTime()+AUTHORITY_NANOS;
         try {
           store.renew(binding.session);
@@ -719,6 +771,14 @@ final class PersistentSessions {
               refusal=conflict.getMessage();
             }
           } else {
+            if(event.playerHeal()!=null) {
+              var heal=event.playerHeal();
+              store.renew(heal.recipient().session);
+              var committed=store.commitPlayerHeal(binding.session,revision,event.id(),event.progress(),
+                  heal.recipient().session,heal.revision(),heal.amount());
+              reward=new OnlineStore.RewardResult(committed.applied(),committed.caster());
+              saved=committed.caster();partnerSaved=committed.recipient();
+            } else {
             if (event.transfer()!=null) {
               try {
                 reward=store.commitTransfer(binding.session,revision,event.id(),event.transfer());
@@ -742,13 +802,14 @@ final class PersistentSessions {
                 : store.commitGameplayEvent(binding.session,revision,event.id(),event.gold(),event.experience(),event.progress(),event.provocation());
             saved=reward.character();
             }
+            }
           }
           if (finalSave) store.release(binding.session);
         } catch (Exception error) { failure=error; }
-        completions.add(new Completion(binding,saved,finalSave,allowedUntil,reward,refusal,failure,operation));
+        completions.add(new Completion(binding,saved,finalSave,allowedUntil,reward,refusal,failure,operation,partnerSaved));
       });
     } catch (RejectedExecutionException error) {
-      completions.add(new Completion(binding,null,finalSave,0,null,null,error,operation));
+      completions.add(new Completion(binding,null,finalSave,0,null,null,error,operation,null));
     }
   }
 
@@ -776,6 +837,12 @@ final class PersistentSessions {
       binding.pending=false;
       if (completed.error()!=null) {
         // Fail closed on uncertain writes. Lease expiry permits recovery from the last DB commit.
+        var playerHeal=binding.event==null ? null : binding.event.playerHeal();
+        if(playerHeal!=null) {
+          var partner=playerHeal.recipient();partner.pending=false;
+          partner.region.world.remove(partner.token);bindings.remove(partner.token);invalidateRead(partner);
+          partner.closed.completeExceptionally(new IllegalStateException("Persistence unavailable"));
+        }
         binding.region.world.remove(binding.token); bindings.remove(binding.token);
         invalidateRead(binding);
         if(binding.event!=null && (binding.event.death()!=null || binding.event.transfer()!=null)) hosted.reloadTargets(binding.saved.id());
@@ -789,6 +856,9 @@ final class PersistentSessions {
         binding.allowedUntil=completed.allowedUntil();
         var refused=binding.event;
         binding.event=null;
+        if(refused.playerHeal()!=null) {
+          var partner=refused.playerHeal().recipient();partner.pending=false;partner.event=null;
+        }
         // The database says this drop is no longer on the ground, so the cache was stale: drop it and re-sync.
         if ("loot_unavailable".equals(completed.refusal()) || OnlinePickupRules.LOOT_TAKEN.equals(completed.refusal())) {
           binding.region.loot.remove(refused.loot());
@@ -805,6 +875,10 @@ final class PersistentSessions {
       } else {
         binding.saved=completed.saved();
         publishHealth(binding);
+        if(completed.partnerSaved()!=null && binding.event!=null && binding.event.playerHeal()!=null) {
+          var partner=binding.event.playerHeal().recipient();
+          partner.saved=completed.partnerSaved();partner.pending=false;partner.event=null;publishHealth(partner);
+        }
         binding.allowedUntil=completed.allowedUntil();
         if (completed.reward()!=null) {
           var event=binding.event;

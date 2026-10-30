@@ -203,6 +203,8 @@ repeat turn-in and a lost-response/restart recovery check. See [MAP_TRANSFER_DES
 
 ## M4 — Play the supported combat and ability set
 
+Current evidence (T4C-0323, in progress): learned single-target heal effects route to another live nearby player through the game socket; atomic caster/recipient persistence and the PostgreSQL-backed socket route pass focused tests. No rendered-client evidence yet; this does not complete M4.
+
 Required behavior:
 
 - [ ] Declare classes and required abilities above. A melee-only networking preview cannot be

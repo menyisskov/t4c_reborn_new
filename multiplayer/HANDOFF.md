@@ -119,6 +119,10 @@ The checkout intentionally contains user changes in account_storage.json, charac
 
 A protected-file backup from before multiplayer work exists in the user's temporary directory named `t4c-local-before-merge-0ad2911c72e641bd81173c0978d5f05a`. Hash comparisons have shown zero content differences during this work; do not restore over newer user changes.
 
+## Active delivery — T4C-0323 online player healing
+
+Branch `codex/player-heal-0323`, based on `1d8820f` (PR #284/main). Learned single-target heals now target another live actor through the persistent socket; caster cost and recipient HP commit in one receipt-bound PostgreSQL transaction. Focused service and DB-backed socket-route tests pass; root command/socket tests passed 31/31 and 11/11. A parser regression requiring a space before `a:` was fixed. T4C-0323 remains In Progress: no two-rendered-client heal validation or M4 completion is claimed. Next: local focused regression review, then selective PR delivery and rendered test when owner desktop permission is available.
+
 ## Current implementation
 
 The server is a separate headless Maven reactor (`pom.xml` in this folder) with domain/shared rules and a server module. The simulation owns mutable world state at 34 ticks/sec, caps sessions at 20, validates direction-only movement, authoritative collision/sanctuary/LOS and bounded authenticated request budgets. The realm initially hosts an 80 by 60 starting crop (world 0, origin 2904,1029) and an 80 by 60 interior crop (world 1, origin 264,353), connected only by authored portals 16/17. Six guards occupy the starting crop; eleven interior residents retain unsupported scripted/combat restrictions. Global capacity is twenty across regions.

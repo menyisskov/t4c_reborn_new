@@ -241,7 +241,7 @@ public final class OnlineConnection implements AutoCloseable {
   }
 
   /**
-   * Casts a learned spell at a creature by id (protocol 6 target token {@code u:<id>}). Damage, mana,
+   * Casts a learned spell at a creature by id (target token {@code u:<id>}). Damage, mana,
    * exhaustion, kills and rewards are server decisions; refusals carry a readable message key. Never replayed.
    */
   public java.util.concurrent.CompletionStage<CommandResult> cast(String spellKey, long creature) {
@@ -249,6 +249,14 @@ public final class OnlineConnection implements AutoCloseable {
       throw new IllegalArgumentException("Invalid spell key");
     if (creature <= 0) throw new IllegalArgumentException("Invalid target");
     return gameplayCommand("/cast", spellKey + " u:" + creature);
+  }
+
+  /** Casts a learned single-target spell at another online actor by snapshot id. */
+  public java.util.concurrent.CompletionStage<CommandResult> castToPlayer(String spellKey,long actor) {
+    if (spellKey == null || !spellKey.matches("spell\\.[a-z0-9_]{1,64}"))
+      throw new IllegalArgumentException("Invalid spell key");
+    if(actor<=0) throw new IllegalArgumentException("Invalid target");
+    return gameplayCommand("/cast",spellKey+" a:"+actor);
   }
 
   /** Uses one carried consumable instance by identity only; the server owns charges and effects. Never replayed. */

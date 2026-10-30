@@ -17,6 +17,48 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 /** PostgreSQL contract: one cast commits mana, exhaustion, every creature's health, kills and drops atomically. */
 @EnabledIfEnvironmentVariable(named = "T4C_DB_URL", matches = ".+")
 class OnlineSpellStrikesTest {
+  @Test void learnedLightHealCommitsCasterCostAndNearbyPlayersHealthTogether() throws Exception {
+    var store=OnlineStore.fromEnvironment();store.migrate();
+    var map=new PreviewMap(new boolean[20][20],0,0,3,5);
+    var world=new PreviewWorld(map,new MonsterContent(MonsterContent.VERSION,MonsterCatalog.loadBundled().monsters(),List.of()));
+    var sessions=new PersistentSessions(store,map,world);
+    var key=store.provisionAccount();
+    var healer=OnlineCharacterCreator.prepare(CharacterClass.HEALER,"male",false,new Random(8));
+    var base=healer.progress();
+    var casterProgress=new CharacterProgress(base.version(),base.characterClass(),base.gender(),base.attributes(),
+        new CharacterProgress.Vitals(base.vitals().hp(),base.vitals().maxHp(),20,20),
+        new CharacterProgress.Advancement(3,0,0,0,0),base.inventory(),base.equipment(),base.skills(),
+        Set.of("spell.heal_light"),base.questFlags(),base.storage(),base.storageGold(),base.respawn(),base.buffs(),
+        base.cooldowns(),0,base.companion());
+    var recipientBase=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(9)).progress();
+    var recipientProgress=new CharacterProgress(recipientBase.version(),recipientBase.characterClass(),recipientBase.gender(),
+        recipientBase.attributes(),new CharacterProgress.Vitals(2,recipientBase.vitals().maxHp(),17,25),
+        recipientBase.advancement(),recipientBase.inventory(),recipientBase.equipment(),recipientBase.skills(),
+        recipientBase.spells(),recipientBase.questFlags(),recipientBase.storage(),recipientBase.storageGold(),
+        recipientBase.respawn(),recipientBase.buffs(),recipientBase.cooldowns(),0,recipientBase.companion());
+    var caster=store.create(key.accountId(),"Online healer",0,4.5,5.5,casterProgress,healer.gold());
+    var recipient=store.create(key.accountId(),"Online ally",0,5.5,5.5,recipientProgress,0);
+    var casterToken=sessions.join(store.acquire(key.secret(),caster.id()),System.nanoTime()).token();
+    var allyJoined=sessions.join(store.acquire(key.secret(),recipient.id()),System.nanoTime());
+    long now=System.currentTimeMillis();
+    try(var creatures=new PersistentCreatures(store,world)) {
+      var spells=new OnlineSpellStrikes(map,world,sessions,creatures,ItemCatalog.loadBundled(),SpellCatalogV2.bundled(),
+          new Random(10),()->now);
+      var pending=spells.cast(casterToken,0,"spell.heal_light",new SpellEngine.Target.Friend(allyJoined.id())).toCompletableFuture();
+      long deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(5);
+      while(!pending.isDone() && System.nanoTime()<deadline) { sessions.step();creatures.step();Thread.sleep(5); }
+      var reply=pending.get();
+      var savedCaster=store.load(key.accountId(),caster.id());
+      var savedRecipient=store.load(key.accountId(),recipient.id());
+      assertEquals(caster.revision()+1,savedCaster.revision());
+      assertEquals(reply.revision(),savedCaster.revision());
+      assertEquals(18,savedCaster.progress().vitals().mana(),"the spell cost commits with the heal");
+      assertTrue(savedRecipient.progress().vitals().hp()>2);
+      assertEquals(recipient.revision()+1,savedRecipient.revision());
+      assertEquals(17,savedRecipient.progress().vitals().mana());
+    } finally { sessions.shutdown(); }
+  }
+
   @Test void aNukeKillsOneCreatureSplashesAnotherAndCommitsOnceThenRefusesARepeat() throws Exception {
     var store = OnlineStore.fromEnvironment(); store.migrate();
     var gson = new Gson();
