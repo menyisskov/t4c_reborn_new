@@ -11,6 +11,17 @@ class NpcShopCatalogTest {
     var catalog = NpcShopCatalog.loadBundled();
     assertFalse(catalog.content().vendors().isEmpty());
     assertTrue(catalog.content().vendors().stream().anyMatch(vendor -> vendor.npcId().equals("Fali")));
+    var thalindra = catalog.content().vendors().stream()
+        .filter(vendor -> vendor.npcId().equals("ArchmageThalindra")).findFirst().orElseThrow();
+    assertEquals(
+        java.util.List.of(
+            "item.pyromancers_mantle",
+            "item.tidecallers_mantle",
+            "item.geomancers_mantle",
+            "item.windweavers_mantle",
+            "item.lightbringers_mantle",
+            "item.shadowmancers_mantle"),
+        thalindra.offers().stream().map(NpcShopContent.Offer::itemKey).toList());
   }
 
   @Test

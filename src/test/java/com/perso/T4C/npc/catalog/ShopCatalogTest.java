@@ -6,6 +6,7 @@ import com.perso.T4C.item.ItemKeys;
 import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.item.ItemSalePricing;
 import com.perso.T4C.npc.behavior.ShopBehavior;
+import com.perso.T4C.npc.ArchmageThalindra;
 import com.perso.T4C.tools.OnlineNpcShopExporter;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,7 @@ class ShopCatalogTest {
     long exportedVendors =
         inventories.values().stream()
             .filter(items -> items.stream().anyMatch(key -> ItemRegistry.findByKey(key) != null))
-            .count() + 1;
+            .count() + 2;
     assertEquals(exportedVendors, exported.vendors().size());
     exported.vendors().stream().filter(vendor -> inventories.containsKey(vendor.npcId()))
         .forEach(
@@ -47,6 +48,17 @@ class ShopCatalogTest {
         araknor.offers().stream()
             .map(com.perso.T4C.online.model.NpcShopContent.Offer::itemKey).toList());
     assertEquals(10_000L, araknor.offers().getFirst().buyPrice());
+    var thalindra =
+        exported.vendors().stream()
+            .filter(vendor -> vendor.npcId().equals(ArchmageThalindra.ID))
+            .findFirst()
+            .orElseThrow();
+    assertEquals(
+        ArchmageThalindra.SHOP_ITEMS,
+        thalindra.offers().stream()
+            .map(com.perso.T4C.online.model.NpcShopContent.Offer::itemKey)
+            .map(key -> key.substring("item.".length()))
+            .toList());
     exported.vendors().forEach(
         vendor ->
             vendor.offers().forEach(
