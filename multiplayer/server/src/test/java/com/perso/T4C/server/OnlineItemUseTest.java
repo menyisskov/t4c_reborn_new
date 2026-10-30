@@ -218,6 +218,64 @@ class OnlineItemUseTest {
     assertHyperPotionUse(used, 55);
   }
 
+  @Test void hyperStatPotionsUseTheirTrueStatFormulaAndIgnoreAnExistingBuffToThatStat() throws Exception {
+    var cases = List.of(
+        new HyperStatPotion("item.hyper_potion_of_clear_thought", "spell.item_hyper_potion_of_clear_thought",
+            "int", 120, 220),
+        new HyperStatPotion("item.hyper_potion_of_fortitude", "spell.item_hyper_potion_of_fortitude", "end", 120, 220),
+        new HyperStatPotion("item.hyper_potion_of_tranquility", "spell.item_hyper_potion_of_tranquility", "wis", 120, 220),
+        new HyperStatPotion("item.hyper_potion_of_fury", "spell.item_hyper_potion_of_fury", "str", 120, 220));
+    for (var potion : cases) {
+      var minimum = useHyperStatPotion(potion, potion.lowStat(), 0);
+      assertHyperStatUse(minimum, potion, 50);
+      var scaled = useHyperStatPotion(potion, potion.highStat(), 200);
+      assertHyperStatUse(scaled, potion, 55);
+      assertEquals(2, scaled.progress().buffs().size(), "the existing temporary buff is preserved");
+    }
+  }
+
+  private record HyperStatPotion(String itemKey, String spellKey, String attribute, int lowStat, int highStat) {}
+
+  private static OnlineCasting.Result useHyperStatPotion(HyperStatPotion potion, int stat, int activeBuff)
+      throws Exception {
+    var base = OnlineCharacterCreator.prepare(CharacterClass.WARRIOR, "male", false, new Random(3)).progress();
+    var attributes = switch (potion.attribute()) {
+      case "str" -> new CharacterProgress.Attributes(stat, base.attributes().endurance(), base.attributes().dexterity(),
+          base.attributes().wisdom(), base.attributes().intelligence());
+      case "end" -> new CharacterProgress.Attributes(base.attributes().strength(), stat, base.attributes().dexterity(),
+          base.attributes().wisdom(), base.attributes().intelligence());
+      case "wis" -> new CharacterProgress.Attributes(base.attributes().strength(), base.attributes().endurance(),
+          base.attributes().dexterity(), stat, base.attributes().intelligence());
+      case "int" -> new CharacterProgress.Attributes(base.attributes().strength(), base.attributes().endurance(),
+          base.attributes().dexterity(), base.attributes().wisdom(), stat);
+      default -> throw new IllegalArgumentException(potion.attribute());
+    };
+    var stack = new CharacterProgress.Item(UUID.randomUUID(), potion.itemKey(), 1, 1);
+    var buffs = activeBuff == 0 ? List.<CharacterProgress.Buff>of()
+        : List.of(new CharacterProgress.Buff("spell.item_potion_of_" + potion.attribute(), NOW + 600_000,
+            0, 0, Map.of(potion.attribute(), activeBuff), NOW));
+    var progress = new CharacterProgress(base.version(), base.characterClass(), base.gender(), attributes, base.vitals(),
+        base.advancement(), List.of(stack), Map.of(), base.skills(), base.spells(), base.questFlags(), base.storage(),
+        base.storageGold(), base.respawn(), buffs, base.cooldowns(), base.hiddenUntil(), base.companion());
+    return OnlineItemUse.prepareUse(state(progress), stack.id(), NOW, new Random(5), ItemCatalog.loadBundled(),
+        SpellCatalog.loadBundled(), SpellCatalogV2.loadBundled());
+  }
+
+  private static void assertHyperStatUse(OnlineCasting.Result used, HyperStatPotion potion, int expectedBonus) {
+    assertTrue(used.progress().inventory().stream().noneMatch(item -> item.key().equals(potion.itemKey())),
+        "accepted use atomically consumes only the matching potion charge");
+    var buff = used.progress().buffs().stream().filter(candidate -> candidate.spell().equals(potion.spellKey()))
+        .findFirst().orElseThrow();
+    assertEquals(NOW + 300_000, buff.expiresAt());
+    assertEquals(expectedBonus, buff.modifiers().get(potion.attribute()));
+    assertEquals(NOW, used.progress().cooldowns().get(OnlineBuffs.ANCHOR));
+    assertEquals(used.progress(), OnlineBuffs.expire(used.progress(), NOW + 299_999));
+    assertFalse(OnlineBuffs.expire(used.progress(), NOW + 300_000).buffs().stream()
+        .anyMatch(candidate -> candidate.spell().equals(potion.spellKey())));
+    assertEquals(0, used.manaSpent());
+    assertEquals(0, used.healthGained());
+  }
+
   private static OnlineCasting.Result useHyperPotion(int dexterity, int gearDexterity, int activeDexterityBuff)
       throws Exception {
     var items = ItemCatalog.loadBundled();

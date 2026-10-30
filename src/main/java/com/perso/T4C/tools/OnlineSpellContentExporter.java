@@ -23,7 +23,9 @@ public final class OnlineSpellContentExporter {
   static final String RENEW_ARMOR = "spell.renew_armor";
   private static final Set<String> ITEM_BUFFS = Set.of(
       "item.potion_of_fury", "item.potion_of_nimbleness", "item.hyper_potion_of_nimbleness",
-      "item.potion_of_clear_thought", "item.potion_of_fortitude", "item.potion_of_tranquility");
+      "item.potion_of_clear_thought", "item.potion_of_fortitude", "item.potion_of_tranquility",
+      "item.hyper_potion_of_clear_thought", "item.hyper_potion_of_fortitude",
+      "item.hyper_potion_of_tranquility", "item.hyper_potion_of_fury");
 
   private OnlineSpellContentExporter() {}
 
