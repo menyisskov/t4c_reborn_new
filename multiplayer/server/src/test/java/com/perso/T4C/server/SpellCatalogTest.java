@@ -60,6 +60,11 @@ class SpellCatalogTest {
     assertEquals(SpellContent.Use.ITEM, catalog.require("spell.item_hyper_potion_of_nimbleness").use());
     assertThrows(IllegalArgumentException.class,
         () -> catalog.castable("spell.item_hyper_potion_of_nimbleness"));
+    for (var key : java.util.List.of("spell.item_potion_of_clear_thought",
+        "spell.item_potion_of_fortitude", "spell.item_potion_of_tranquility")) {
+      assertEquals(SpellContent.Use.ITEM, catalog.require(key).use());
+      assertThrows(IllegalArgumentException.class, () -> catalog.castable(key));
+    }
 
     var invalidAttributeJson = new Gson().fromJson(bundledJson(), JsonObject.class);
     var params = invalidAttributeJson.getAsJsonObject("spells").getAsJsonObject("spell.item_potion_of_nimbleness")

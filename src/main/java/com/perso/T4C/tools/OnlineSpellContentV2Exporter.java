@@ -21,7 +21,8 @@ import java.util.TreeMap;
  */
 public final class OnlineSpellContentV2Exporter {
   private static final Set<String> ITEM_BUFFS = Set.of(
-      "item.potion_of_fury", "item.potion_of_nimbleness", "item.hyper_potion_of_nimbleness");
+      "item.potion_of_fury", "item.potion_of_nimbleness", "item.hyper_potion_of_nimbleness",
+      "item.potion_of_clear_thought", "item.potion_of_fortitude", "item.potion_of_tranquility");
 
   private OnlineSpellContentV2Exporter() {}
 

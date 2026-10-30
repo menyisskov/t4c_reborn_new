@@ -22,7 +22,8 @@ public final class OnlineSpellContentExporter {
   static final String HEAL_LIGHT = "spell.heal_light";
   static final String RENEW_ARMOR = "spell.renew_armor";
   private static final Set<String> ITEM_BUFFS = Set.of(
-      "item.potion_of_fury", "item.potion_of_nimbleness", "item.hyper_potion_of_nimbleness");
+      "item.potion_of_fury", "item.potion_of_nimbleness", "item.hyper_potion_of_nimbleness",
+      "item.potion_of_clear_thought", "item.potion_of_fortitude", "item.potion_of_tranquility");
 
   private OnlineSpellContentExporter() {}
 
@@ -74,7 +75,7 @@ public final class OnlineSpellContentExporter {
         .anyMatch(param -> param.getParamId() == 2 && "MANA".equalsIgnoreCase(param.getExpression()));
   }
 
-  /** Potion of Fury is the one authored buff consumable currently wired through the online item path. */
+  /** The explicitly listed authored buff consumables supported by the online item path. */
   private static boolean isSupportedBuff(SpellData spell) {
     var effects = spell.getT4cEffects();
     return effects != null && !effects.isEmpty()
