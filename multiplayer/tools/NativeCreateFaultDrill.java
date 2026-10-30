@@ -30,7 +30,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Interrupted and retried CHARACTER CREATION drill (T4C-0350, milestone M1 bullet 3). One fresh account per round; the
+ * Interrupted and retried CHARACTER CREATION drill (T4C-0352, milestone M1 bullet 3). One fresh account per round; the
  * real {@link OnlineAccountClient} (the one the lobby's Create form uses) sends the creation request to a real
  * {@code ServerMain --online} child, and the child is hard-killed a fixed number of milliseconds later, so the kill races
  * the commit. Rounds cycle through all seven classes. With the database static, the committed outcome must be exactly

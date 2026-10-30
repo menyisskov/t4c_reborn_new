@@ -97,7 +97,7 @@ public final class LiveRunProvision {
       return;
     }
     if ("empty".equals(scene)) {
-      // T4C-0350: two accounts with NO characters (player-a.json, player-b.json) for the rendered creation run.
+      // T4C-0352: two accounts with NO characters (player-a.json, player-b.json) for the rendered creation run.
       try (var store = OnlineStore.fromEnvironment()) {
         writeProfile(out.resolve("player-a.json"), store.provisionAccount().secret(), null);
         writeProfile(out.resolve("player-b.json"), store.provisionAccount().secret(), null);
@@ -421,7 +421,7 @@ public final class LiveRunProvision {
     }
   }
 
-  /** T4C-0350: non-secret rows of the characters the in-lobby Create form made (names starting with the given prefix). */
+  /** T4C-0352: non-secret rows of the characters the in-lobby Create form made (names starting with the given prefix). */
   private static void createReport(String prefix) throws Exception {
     try (var db = DriverManager.getConnection(System.getenv("T4C_DB_URL"), System.getenv("T4C_DB_USER"), System.getenv("T4C_DB_PASSWORD"))) {
       report(db, "created characters (name, class, level, gold, stacks, equipped slots, spells, letters, creation receipts, revision)",

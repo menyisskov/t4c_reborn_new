@@ -6,7 +6,7 @@
 > limit. See [PARITY.md](PARITY.md) for the rule, the checklist and the build order. The
 > two-player starter route below remains a useful intermediate checkpoint.
 
-> **Owner decision 2026-10-30 (T4C-0350): in-client character creation is inside the Beta scope.** The
+> **Owner decision 2026-10-30 (T4C-0352): in-client character creation is inside the Beta scope.** The
 > lobby's Create form, the authenticated creation request and the server-generated starting kit are
 > Beta deliverables, so characters are no longer "operator-provisioned only" and the "creatable
 > offline only" lines below no longer limit the online game. All seven classes are offered and created

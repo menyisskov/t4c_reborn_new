@@ -803,7 +803,7 @@ refusal (409 `account_or_session`, on purpose: no account oracle), and `OnlineCo
 before the status flips to disconnected), `OnlineJoinFailure` maps refusals to messages, and the lobby refines the general
 refusal with the freshly read row of the selected character (in use, Region offline, Respawning). Not changed: the lobby still
 offers Play on a row that says In use (the roster is advisory; the server decides). Two notes written here at the time are
-settled by T4C-0350 (section 3.20): PARITY.md's Archer line was stale (online archery exists since T4C-0273), and the owner
+settled by T4C-0352 (section 3.20): PARITY.md's Archer line was stale (online archery exists since T4C-0273), and the owner
 ruled on 2026-10-30 that in-client creation is in Beta scope, so the empty-roster text that points to Create is correct.
 
 ### 3.18 Live rendered combat and abilities with two different roles: contention, spells, buff and rejoin, refusals, death seen from the other window (T4C-0331)
@@ -904,7 +904,7 @@ two-window runs (a chapter a run, because early runs found driver problems liste
 
 **Not driven:** a lost response or kill during the quest turn-in itself; a rendered corpse recovery and individual single-stack recovery (T4C-0321/0339 merged separately); the cave's own residents' combat (30 creatures in the cave snapshot, none fought); a package, remote or second-machine run; the stale-epoch battery on this build.
 
-### 3.20 Character creation: two rendered windows, an interrupted-request drill and all seven classes (T4C-0350, milestone M1)
+### 3.20 Character creation: two rendered windows, an interrupted-request drill and all seven classes (T4C-0352, milestone M1)
 
 **Evidence class: rendered clients plus native adapter, local only.** Base `origin/main` acb7f2ce plus this branch, protocol 8.
 Owner decision 2026-10-30: in-client creation is in Beta scope (SCOPE_PROPOSAL.md, DESIGN_GUIDELINES.md). Two disposable PG16 clusters

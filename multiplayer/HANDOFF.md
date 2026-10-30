@@ -2,6 +2,10 @@
 
 Last reviewed: 2026-10-27, Asia/Jerusalem. This file is the restart point for a different model. Recheck Git and running processes before acting; this describes recorded evidence, not live state.
 
+### Online ability-menu paging (T4C-0351)
+
+Implemented on `codex/online-ability-pages-0351`, commit `179cec80`, based on main `acb7f2ce`. Online spell and potion lists now page through all learned, server-supported entries; Left/Right changes pages and 1–9 selects within the active page. Focused tests passed 13/13, root package and `git diff --check` passed. No rendered-client or owner-QA test was run. Local PR integration is next; M4/Beta remain open. T4C-0350 day/night remains in open PR #315, still labeled T4C-0349 pending author renumbering.
+
 ## Read first
 
 ### Online Sneak parity (T4C-0344)

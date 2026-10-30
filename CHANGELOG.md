@@ -17,7 +17,7 @@ commit links, and finer-grained notes.
 - The online game's launcher now says in plain words when Java is missing, too old (it needs Java 21 or newer, 64-bit) or the wrong kind, and tells you how to fix it, instead of showing a wall of error text.
 - Starting the online game no longer leaves a new small folder in your temporary files every time you play.
 - The online launcher can now open the character lobby for an account-only key, and the downloadable test packages come with double-click launch files and a one-step "verify this copy" check.
-## 2026-10-30 — Character creation in online play is now checked against retries and crashes (T4C-0350)
+## 2026-10-30 — Character creation in online play is now checked against retries and crashes (T4C-0352)
 
 ### Changed
 - Online character creation is part of the planned Beta. Creating a character in the lobby offers all seven classes, and each class starts with exactly the same gear, potions, spells and starting gold range as in single-player.

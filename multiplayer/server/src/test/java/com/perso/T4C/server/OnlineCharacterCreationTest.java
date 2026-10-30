@@ -107,7 +107,7 @@ class OnlineCharacterCreationTest {
     }
   }
 
-  /** T4C-0350: a request that is retried while the first copy is still in flight (an impatient double Enter, a client retry
+  /** T4C-0352: a request that is retried while the first copy is still in flight (an impatient double Enter, a client retry
    * after a timeout) creates one character and one kit, whichever copy commits first. */
   @Test void concurrentCopiesOfOneRequestCreateOneCharacterAndOneKit() throws Exception {
     var store=OnlineStore.fromEnvironment();store.migrate();var owner=store.provisionAccount();

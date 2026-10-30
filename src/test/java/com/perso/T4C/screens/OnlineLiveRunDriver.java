@@ -579,7 +579,7 @@ public final class OnlineLiveRunDriver extends MyGame {
         });
   }
 
-  // ---------------------------------------------------------------- M1 creation scenes (T4C-0350)
+  // ---------------------------------------------------------------- M1 creation scenes (T4C-0352)
 
   /**
    * Scene {@code create}, first part: the account has no character. The lobby's own Create form is driven through the

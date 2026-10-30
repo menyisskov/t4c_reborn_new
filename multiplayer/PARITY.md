@@ -19,7 +19,7 @@ re-measure before relying on a number.
 | Shops | 21 | 0 |
 | Quests | 35 | 1 (renewed_wards); rules generic, the rest wait on hosting their givers and kill grounds |
 | Player spells | 132 | Stage 1 and 2 (81 spells) plus Light Heal; starting spell kits are now offered to six online classes |
-| Classes | 7 | 7: all seven can be created in the lobby (Warrior, Archer, Paladin, Cleric, Healer, Mage, Battle Mage), each with its single-player starting kit (T4C-0350); Archer fights with a bow and quiver (T4C-0273) |
+| Classes | 7 | 7: all seven can be created in the lobby (Warrior, Archer, Paladin, Cleric, Healer, Mage, Battle Mage), each with its single-player starting kit (T4C-0352); Archer fights with a bow and quiver (T4C-0273) |
 | Combat | melee, bows, two weapons, stun blow, stealth, spells | melee, bows with a quiver, a learned stun blow and the supported spell stages; two weapons and stealth not yet verified online (see the T4C-0331 correction below) |
 | Interface | full GUI (inventory, spell book, minimap, macros, options, journal) | plain text panels |
 | Audio and effects | on | audio off, no spell effects |
