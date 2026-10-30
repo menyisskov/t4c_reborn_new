@@ -1,3 +1,8 @@
+## 2026-10-30 — Packaged online servers start again (T4C-0399)
+
+### Fixed
+- A freshly packaged online server could fail to start after the cavern work; it now starts normally and only needs the cavern files when the cavern is switched on.
+
 ## 2026-10-30 — The cavern can be hosted online (T4C-0398)
 
 ### Added
