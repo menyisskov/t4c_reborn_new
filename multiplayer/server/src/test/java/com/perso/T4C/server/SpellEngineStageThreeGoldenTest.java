@@ -236,4 +236,17 @@ class SpellEngineStageThreeGoldenTest {
     assertThrows(IllegalArgumentException.class, () -> SpellEngine.cast(cast("spell.entangle", new SpellEngine.Target.Unit(1), 7, 10, 500),
         Fixture.standard(), new Random(1)));
   }
+
+  @Test void wordOfRecallIsTheOnlyStageFourSpellResolvedAndKeepsItsAuthoredDispels() throws Exception {
+    var resolved=SpellEngine.cast(cast("spell.word_of_recall",new SpellEngine.Target.Self(),7,10,500),
+        Fixture.standard(),new Random(1));
+    assertTrue(resolved.success());
+    assertEquals(100,resolved.costs().manaCost());
+    assertEquals(30_000,resolved.costs().mentalMillis());
+    assertEquals(30_000,resolved.costs().physicalMillis());
+    assertEquals(4,resolved.events().stream().filter(SpellEngine.Event.Dispel.class::isInstance).count());
+    assertTrue(resolved.events().getLast() instanceof SpellEngine.Event.Recall);
+    assertThrows(IllegalArgumentException.class,()->SpellEngine.cast(
+        cast("spell.entangle",new SpellEngine.Target.Unit(1),7,10,500),Fixture.standard(),new Random(1)));
+  }
 }

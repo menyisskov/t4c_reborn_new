@@ -98,6 +98,18 @@ class OnlineAbilityChoicesTest {
   }
 
   @Test
+  void exposesOnlyTheAuthoredLearnedWordOfRecallAboveTheCurrentServerStage() {
+    var stageFourKeys = ENGINE_CATALOG.spells().values().stream()
+        .filter(spell -> spell.stage() > OnlineSpellAllowlistV2.ENABLED_STAGE)
+        .map(SpellContentV2.Spell::key)
+        .collect(java.util.stream.Collectors.toSet());
+    var rows = OnlineAbilityChoices.castableSpells(progress(stageFourKeys, List.of(), Map.of()), ENGINE_CATALOG);
+
+    assertEquals(List.of("spell.word_of_recall"), rows.stream().map(OnlineAbilityChoices.SpellChoice::key).toList());
+    assertFalse(rows.getFirst().requiresCreatureTarget());
+  }
+
+  @Test
   void creatureAttackSpellsAreMarkedForMonsterTargeting() {
     var rows = OnlineAbilityChoices.castableSpells(
         progress(Set.of(targetedKey()), List.of(), Map.of()), ENGINE_CATALOG);
