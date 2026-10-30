@@ -331,6 +331,8 @@ T4C-0351 implementation evidence: the online ability menu pages through all lear
 
 T4C-0355 implementation evidence: double-clicking an own-character buff in the online buff bar resolves its key against committed own buffs and SpellRegistry, then sends the existing authoritative socket cast. Server still checks learning, cooldown and supported content; offline recasting is unchanged. Focused tests passed 2/2; package and diff check passed on merged main b2490b75. No rendered-client check was run; M4 and Beta remain open.
 
+T4C-0360 implementation evidence: shared player movement speed is now 80 offline and online; monster speed remains 45. The shared rule charges target arrival against the movement budget and keeps diagonal tile-boundary crossings synchronized. Focused offline/shared tests passed 49/49 and online server parity 19/19; root/server packages and diff check passed on main 510356da. No rendered-client retest was run; this does not complete an M4 or Beta gate.
+
 Required behavior:
 
 - [x] Declare classes and required abilities above. A melee-only networking preview cannot be
