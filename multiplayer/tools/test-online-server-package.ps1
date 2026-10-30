@@ -11,7 +11,8 @@ $fixture = Join-Path $env:TEMP ('t4c-server-package-fixture-' + [guid]::NewGuid(
 New-Item -ItemType Directory -Path $fixture -ErrorAction Stop | Out-Null
 $files = @(
     't4c-server.jar', 'checker/server-package-check.jar',
-    'check-server.ps1', 'start-server.ps1', 'stop-server.ps1',
+    'check-server.ps1', 'start-server.ps1', 'stop-server.ps1', 'provision-online.ps1', 'verify-package.ps1',
+    'check-server.bat', 'start-server.bat', 'stop-server.bat', 'provision-online.bat', 'verify-package.bat',
     'assets/maps/worldmap/worldmap.colbin', 'assets/maps/dungeon/DungeonMap.colbin',
     'lib/fixture.jar'
 )
