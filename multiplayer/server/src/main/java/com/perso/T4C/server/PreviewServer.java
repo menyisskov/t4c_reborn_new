@@ -777,7 +777,7 @@ public final class PreviewServer implements AutoCloseable {
         .filter(loot -> window==null || window.contains(loot.x()-region.map.originX,loot.y()-region.map.originY))
         .sorted(java.util.Comparator.comparingDouble(loot -> Math.max(Math.abs(loot.x()-viewerX),Math.abs(loot.y()-viewerY))))
         .toList();
-    boolean cut=inside.size()>GROUND_LOOT_VIEW_LIMIT;
+    boolean cut=inside.size()>GROUND_LOOT_VIEW_LIMIT || window!=null && region.loot.readCapped();
     var nearest=cut ? inside.subList(0,GROUND_LOOT_VIEW_LIMIT) : inside;
     for (var loot : nearest) {
       var entry=new JsonObject();

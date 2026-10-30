@@ -157,7 +157,7 @@ final class OnlineMonsterPursuit {
     // The authored anchor is the exact integer tile coordinate already published by PreviewWorld.
     homeX = spawn.x() - map.originX;
     homeY = spawn.y() - map.originY;
-    if (!map.canStand(homeX, homeY) || !open(seed.x(), seed.y()))
+    if (!open(homeX, homeY) || !open(seed.x(), seed.y()))
       throw new IllegalArgumentException("Creature is outside walkable region");
     x = seed.x();
     y = seed.y();

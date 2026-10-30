@@ -160,6 +160,13 @@ public final class PreviewWorld {
     return windows;
   }
 
+  /** Region-local tile positions of every player here, arrivals still frozen included (nearest-first admission). */
+  List<double[]> playerTiles() {
+    var tiles=new ArrayList<double[]>(players.size());
+    for (var p:players.values()) tiles.add(new double[] {p.x,p.y});
+    return tiles;
+  }
+
   /** Which movement rule steps players; defaults to single-player's grid reservation. */
   MovementRules.Mode movementMode() { return movement; }
   void movementMode(MovementRules.Mode mode) {

@@ -29,11 +29,12 @@ public final class UnhostableSpawnAudit {
 
   public record Entry(String key, int x, int y, String reason) {}
   /**
-   * {@code footBlocked}: anchors on a tile the foot rule blocks (the design's 153); {@code wallAbove}: standable
-   * for a creature's foot but refused by the home rule (a wall directly above); {@code noSprite}: no walk pattern
-   * or no definition, which the creature world refuses to host. One reason per key, in that order.
+   * {@code footBlocked}: anchors on a tile the foot rule blocks (the design's 153); {@code noSprite}: no walk
+   * pattern or no definition, which the creature world refuses to host. One reason per key, in that order. A
+   * creature's home answers to single-player's foot rule only (T4C-0372): a wall directly above the tile does not
+   * matter, as it does not for the player standing there.
    */
-  public record Document(int version, int world, int footBlocked, int wallAbove, int noSprite, List<Entry> entries) {}
+  public record Document(int version, int world, int footBlocked, int noSprite, List<Entry> entries) {}
 
   private UnhostableSpawnAudit() {}
 
@@ -44,18 +45,17 @@ public final class UnhostableSpawnAudit {
     var map = RegionMapLoader.loadStreamed(grid, spec);
     var monsters = HostedWorlds.withoutNpcOwnedSpawns(MonsterCatalog.loadBundled());
     var entries = new ArrayList<Entry>();
-    int foot = 0, wall = 0, noSprite = 0;
+    int foot = 0, noSprite = 0;
     for (var spawn : monsters.region(0, 0, 0, spec.width(), spec.height())) {
       var definition = spawn.definition() == null ? null : monsters.monsters().get(spawn.definition());
       if (map.blocksFoot(spawn.x(), spawn.y())) { foot++; entries.add(new Entry(spawn.persistenceKey(), spawn.x(), spawn.y(), "foot_blocked")); }
-      else if (!map.canStand(spawn.x(), spawn.y())) { wall++; entries.add(new Entry(spawn.persistenceKey(), spawn.x(), spawn.y(), "wall_above")); }
       else if (definition == null || definition.getWalkPattern() == null || definition.getWalkPattern().isBlank()) {
         noSprite++;
         entries.add(new Entry(spawn.persistenceKey(), spawn.x(), spawn.y(), definition == null ? "no_definition" : "no_walk_pattern"));
       }
     }
     entries.sort(Comparator.comparing(Entry::key));
-    return new Document(VERSION, 0, foot, wall, noSprite, List.copyOf(entries));
+    return new Document(VERSION, 0, foot, noSprite, List.copyOf(entries));
   }
 
   /** The bundled list. */

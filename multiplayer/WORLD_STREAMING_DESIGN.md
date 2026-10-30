@@ -528,6 +528,7 @@ a handoff.
 * **Slice 2 (not started in this PR):** stage A behind the default-off option, with tests and an
   idle-tick measurement of the full world-0 plan with no players.
 * **Slice 2, part 1 (T4C-0359):** see section 11. Part 2 (creature activation, T4C-0366): requirements in section 10, record in section 12.
+* **Stage B, part 1 (T4C-0372):** the stage A leftovers, record in section 13. Worlds 1 and 2 are part 2.
 
 ## 10. Owner requirements for stage A part 2 (creature activation), 2026-10-30
 
@@ -764,7 +765,7 @@ reconnects every 900 s. Report and server log are kept outside the repository (s
 | Attacks | 557 sent, 264 accepted, 293 refused (cooldown, range, busy), 20 scheduled reconnects | | |
 | Adapter guards | 1 guard tripped: 10 `position_not_walkable` on adapter 14 (x about 5845, see below); every other guard clean for all twenty adapters | | 0 |
 
-**One open finding, not hidden by loosening the guard.** The adapter parked in the far east (x = 5,845, the
+**One open finding, not hidden by loosening the guard (fixed in stage B part 1, section 13).** The adapter parked in the far east (x = 5,845, the
 largest x of the twenty) reported 10 `position_not_walkable` out of 11,946 observations. Each position is
 on a diagonal glide between two walkable tile centres, but the two axes disagree by 0.003 tile where the guard
 (`PreviewMap.onGridPath`, `LATTICE_EPSILON`) allows 0.001. Movement runs in float world pixels (design section 11,
@@ -796,8 +797,131 @@ walker can trip the T4C-0315 lattice guard roughly once per 1,000 observations.
 
 ### Remains for stage B and later
 
+(Stage B part 1, section 13, has since done: nearest-first admission, the loot cap in `truncated`, the portal
+transfer test, the foot rule for homes, and the far-east precision fix. What is left is listed there.)
+
 Worlds 1 and 2 as streamed regions (and the world-2 audit, risk R6); nearest-first admission and eviction
 under the active cap; surfacing the loot cap in `truncated`; a database test through a real portal transfer
 into the streamed region; relaxing the creature home rule to the foot rule (37 more spawns); the 386
 sprite-less records need data, not code; world 2 arrival latency; the unchanged items of section 4 stage A
 that need a rendered client (walk from the temple to a far monster field, restart mid-chase).
+
+## 13. Stage B part 1 record (T4C-0372, default-off `--stream-world0`)
+
+The leftovers of stage A, closed before worlds 1 and 2. Everything stays behind the flag; the default plan, its
+tests and single-player are untouched (the full server module, 425 tests with PostgreSQL, passes).
+
+### 1. Far-east float precision: root cause and fix
+
+Cause (reproduced deterministically by `ServerMovementFarEastPrecisionTest`, 800 ticks at `PLAYER_SPEED` 80 px/s,
+the shared `MovementRules.Grid` rule through `ServerMovement.step`, same open map, walk started at x = 5,800 and at
+x = 200): the server converted the tile-centre double position to float world pixels `(x - 0.5) * 32` and ran the
+shared rule on it. At x = 5,800 that is 185,600 px, where a float step is 0.0156 px, and a tick covers 2.35 px, so
+every tick's `x + step` is rounded to a 1/64 px grid while the y axis (23,000 px, 0.002 px grid) rounds on a finer
+one. The two axes of a diagonal glide therefore drift apart by a few thousandths of a tile, and a straight walk
+gains or loses distance every tick because the rounding is not symmetric. It is rounding in the float stepping,
+not a rule difference and not a lossy round trip (tile double to float pixel and back is exact).
+
+| 800-tick walk from x = 5,800 (200 for the reference) | before | after |
+|---|---|---|
+| Straight east, far vs near, position difference | 0.159 tile (0.27% speed error) | 0.00009 tile |
+| Diagonal, worst difference between the x and y distance walked (the soak guard allows 0.002) | 0.00256 tile (guard tripped) | 0.00021 (the same as at x = 200) |
+| Diagonal, far vs near | 0.0147 tile | 0.00003 tile |
+| Stays on the glide lattice (`PreviewMap.onGridPath`) | left it | stays on it |
+
+Fix (`ServerMovement.step`): the shared rule is unchanged and still runs in float pixels, but in a frame whose
+origin is a whole number of tiles near the player. The frame origin is `block * 256 - 16` tiles for a position in
+256-tile block `block >= 1` and 0 in block 0, so the pixel values stay below about 8,200 (float step 0.001 px) and a
+position that moves backwards across a block edge inside one tick keeps a positive local coordinate (the rule
+truncates a pixel to its tile). The reservation target is kept in absolute pixels in `Glide` (a whole number of
+tiles, exact in a float) and shifted into and out of the frame, so the frame can change between ticks; terrain
+questions add the offset back. A region narrower than 256 tiles is entirely in block 0, so every non-streamed
+region steps bit for bit as before; `MovementRulesTest`, `ServerMovementParityTest`, `GridRestPositionTest` and
+the single-player goldens are unchanged and green, no golden was regenerated, and the soak guard
+(`PreviewMap.LATTICE_EPSILON`, 2e-3 tile) was not touched. Tile-double positions on the wire and in the database
+are unchanged.
+
+### 2. Nearest-first admission and the loot cap
+
+* `PersistentCreatures.dispatchNearest`: when more creatures wait (`queued`) than the cap has room for (1,024
+  minus live minus loading), the waiting creatures are ordered by squared tile distance from their home to the
+  nearest player (arrivals still frozen included), ties to the lower spawn index, and the nearest `min(room, 64)`
+  are loaded; the rest stay queued in their original order (urgent arrivals stay urgent). With no room nothing is
+  touched and `cap-refusals` counts the tick; with room for everyone the old FIFO path runs unchanged, so the
+  check costs nothing unless the cap binds. `StreamedCreaturesDatabaseTest` (cap lowered to 40, a player in the
+  densest window) requires the live set to equal the 40 nearest spawns exactly, then raises the cap and requires
+  the remainder to follow. Eviction of far live creatures in favour of near waiting ones is not implemented
+  (admission only).
+* The per-cell loot read (1,024 rows) now sets `RegionGroundLoot.readCapped` when it comes back full, and
+  `/state` reports `truncated: true` for every viewer of that region until a read comes back under the cap.
+  `RegionGroundLootTest` pins the flag (full read, read under the cap, non-streamed region).
+
+### 3. Real portal transfer through the streamed region (PostgreSQL)
+
+`StreamedCreaturesDatabaseTest.aRealPortalTransferIntoAndOutOfTheStreamedRegionHoldsTheArrivalAndFencesEpochs`:
+a character joins the streamed region, walks onto the temple portal (real session transfer, epoch 0 to 1) into the
+Lighthaven interior, stays until every temple creature has gone dormant (active = 0), takes the interior's portal
+back (epoch 1 to 2) into the streamed region and is released only after the destination window is live. Result:
+the actor was frozen while the commit and the client load ran, was released after 2 ticks of activation hold
+(about 59 ms, budget 1.0 s), `windowActive` was true at release, the first snapshot listed all 9 creatures of the
+snapshot window (8 strictly inside, all of them in the list), and the return activated at least that many from
+dormant. Fences: the old epochs are refused with `requireEpoch`, the persisted character is at world 0 epoch 2,
+a transfer committed by the released first session is refused with a `Conflict`, and a fresh session rejoins into a
+populated room. The test uses the real portal pair between the streamed world 0 and a world-1 piece (the only
+hosted pair), which lands at the temple; the dense windows of the design are reached by the join path, which the
+stage A gate already covers.
+
+### 4. Creature home follows the foot rule
+
+`OnlineMonsterPursuit` accepted a home only where the player stand rule (`canStand`, which also looks at the tile
+above) said yes. Single-player's creature rule is the static foot collision of the tile (`open`), the same rule
+the creature already used for every step and for its saved position. The home check now uses it. The audit
+(`UnhostableSpawnAudit`, regenerated; `UnhostableSpawnsTest` recomputes it from the real `.colbin` and requires byte
+equality) lists 153 foot-blocked anchors and 389 without a walk sprite: 542 of 7,614 stay out (was 576), 7,072
+are hosted (was 7,038). The document's `wallAbove` field is gone. The gain is 34 rather than 37 because 3 of the 37
+also have no walk sprite and move into that group. Flag off: a home that was legal before is still legal, and no
+shipped crop contained a refused one (startup would have thrown).
+
+### Measurements (this machine, Windows, JDK 21, 2026-10-30, disposable PostgreSQL 16 in WSL)
+
+| Quantity | Value | Budget |
+|---|---|---|
+| Idle tick, no players, paced 34 Hz, 1,200 ticks, default plan | 0.447 ms mean, 2.7 ms max, 0 over 29.4 ms | <= 2.0 ms |
+| Idle tick, same, `--stream-world0` | 0.413 ms mean, 5.8 ms max, 0 over (stage A: 0.448 ms) | <= 2.0 ms |
+
+30-minute native soak, `--stream-world0` on port 18861, 20 native adapters spread by `SoakSpread` over the twenty
+densest separated fields, `T4C_SOAK_STREAM_WORLD0=1`, reconnect interval 900 s; the report is `finished: true`,
+elapsed 1,800,050 ms, protocol 9. Report and server log are kept outside the repository (scratch); the numbers
+below are copied from them.
+
+| Quantity | This run (61,953 ticks) | Stage A run (61,177 ticks) | Budget (3.9) |
+|---|---|---|---|
+| Tick mean / max | 1.827 ms / 23.4 ms | 2.014 ms / 26.9 ms | <= 5 ms / below 29.4 ms |
+| Over budget / failed / deadline resets | 0 / 0 / 0 | 0 / 0 / 0 | |
+| Observed tick rate | 34.00003 Hz | 34.00004 Hz | 34 Hz |
+| Server CPU | 16.9% of one core (308.5 s / 1,822 s) | 17.1% | <= 60% |
+| Heap in use (largest sample / last) | 666 MB / 217 MB (committed 1 GiB) | 692 MiB peak | <= 1 GiB |
+| Application responses | 3.38 GB, 659,518 requests, 0 read or write failures | 3.31 GB, 649,901 | |
+| `/health` mean | 0.61 ms, 0 failures | 0.72 ms | |
+| Database | 140,213 pooled operations, slowest 103 ms, 0 acquire timeouts, 0 deadlocks | 138,995, 44 ms | |
+| Creature lifecycle | live 807 on average, peak 1,024 (the cap); 1,712 activated, 916 deactivated, 181 pristine rows deleted, 70 batches (slowest 4 ms), 0 failed; cap refusals 970 ticks, all in the first minutes | peak 1,024, 1,720 activated | |
+| Attacks | 620 sent, 284 accepted, 336 refused; 20 scheduled reconnects | 557 / 264 / 293 | |
+| Movement observations | 226,190 over the twenty adapters; the far-east adapter (x = 5,840) 13,225 | 11,946 for it | |
+| **Adapter guards** | **0 failures on every adapter, 0 `position_not_walkable`** (the far-east adapter: 10 in 11,946 before) | 1 guard tripped | **0** |
+
+Not measured: server working set (only JVM counters are in the report); the 2 h stage B soak with portal trips
+between all three worlds (needs worlds 1 and 2). Nearest-first admission was in effect during the whole soak (the
+cap was reached in the first minutes); its effect on far creatures is not separately measured. Some adapters hold
+their tile and fight in place, so their movement observation counts are small (0 to 7,606 for six of the twenty);
+none reported a failure.
+
+### Remains for stage B part 2
+
+* Worlds 1 and 2 as streamed regions (merging the five world-1 pieces), the world-2 spawn audit (risk R6), derived
+  portal enablement for the whole graph and same-region transfers; the 76 world-0 to world-0 portals are still
+  refused with an explicit reason.
+* Eviction of far live creatures when nearer ones wait at the cap (admission is nearest-first; a full cap is never
+  rebalanced), and a hot-spot run that proves the cap policy under 20 players in the densest world-2 block.
+* A portal arrival test into the densest windows (the only hosted pair lands at the temple).
+* The 389 sprite-less records need data, not code. World 2 arrival latency is still arithmetic.
+* The rendered-client gates of section 4 (walk from the temple to a far field, restart mid-chase).

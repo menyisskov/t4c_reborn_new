@@ -61,7 +61,11 @@ final class ServerMovement {
     return Math.abs(coordinate - centre) <= CENTRE_TOLERANCE ? coordinate : centre;
   }
 
-  /** A claimed destination tile (local pixels) and the unit direction used to reach it. */
+  /**
+   * A claimed destination tile and the unit direction used to reach it. The target is kept in region-local
+   * <i>absolute</i> pixels (whole multiples of a tile, exact in a float up to 16 million) so it stays valid when the
+   * tick's float frame moves; {@link #step} shifts it into the frame and back.
+   */
   static final class Glide {
     private MovementRules.Reservation reservation;
 
@@ -74,23 +78,52 @@ final class ServerMovement {
     }
   }
 
+  /**
+   * The float frame of one tick: a whole number of tiles subtracted from the position before the shared rule runs in
+   * float pixels, so a player at x = 5,845 steps with the precision of one at x = 200 (a float pixel is 0.016 px at
+   * 187,000 px, 0.0005 px at 6,400 px). Block 0 has no shift, so every region narrower than {@link #FRAME_TILES}
+   * (all non-streamed ones) steps bit-for-bit as before. Elsewhere the origin sits {@link #FRAME_MARGIN_TILES} tiles
+   * before the block so a position that moves backwards across the block edge inside a tick keeps a positive local
+   * coordinate (the rule truncates a pixel to its tile).
+   */
+  static final int FRAME_TILES = 256;
+  static final int FRAME_MARGIN_TILES = 16;
+
+  static int frameOrigin(double tile) {
+    int block = (int) Math.floor(tile / FRAME_TILES);
+    return block <= 0 ? 0 : block * FRAME_TILES - FRAME_MARGIN_TILES;
+  }
+
   /** The shared rule's four terrain questions, answered from the hosted crop. */
   static final class Terrain implements MovementRules.Terrain {
     private final PreviewMap map;
+    private final int offsetX;
+    private final int offsetY;
 
     Terrain(PreviewMap map) {
+      this(map, 0, 0);
+    }
+
+    private Terrain(PreviewMap map, int offsetX, int offsetY) {
       this.map = map;
+      this.offsetX = offsetX;
+      this.offsetY = offsetY;
+    }
+
+    /** The same questions asked in a frame whose origin is the given whole number of tiles into the map. */
+    Terrain framed(int originTileX, int originTileY) {
+      return originTileX == offsetX && originTileY == offsetY ? this : new Terrain(map, originTileX, originTileY);
     }
 
     @Override
     public boolean hasCollision(float worldX, float worldY) {
-      return map.blocksFoot((int) (worldX / GRID_W), (int) (worldY / GRID_H));
+      return map.blocksFoot((int) (worldX / GRID_W) + offsetX, (int) (worldY / GRID_H) + offsetY);
     }
 
     @Override
     public boolean hasPlayerCollision(float worldX, float worldY) {
-      int tileX = (int) (worldX / GRID_W);
-      int tileY = (int) (worldY / GRID_H);
+      int tileX = (int) (worldX / GRID_W) + offsetX;
+      int tileY = (int) (worldY / GRID_H) + offsetY;
       return !map.portalPassable(tileX, tileY) && map.blocksFoot(tileX, tileY);
     }
 
@@ -102,7 +135,7 @@ final class ServerMovement {
 
     @Override
     public boolean isPlayerPassableTile(int gridX, int gridY) {
-      return map.portalPassable(gridX, gridY);
+      return map.portalPassable(gridX + offsetX, gridY + offsetY);
     }
   }
 
@@ -115,21 +148,30 @@ final class ServerMovement {
    * server's fixed delta; unlike the old loop a released key does not stop the player mid-tile.
    */
   static Moved step(PreviewMap map, Terrain terrain, Glide glide, double x, double y, int dx, int dy) {
-    float px = pixelX(x);
-    float py = pixelY(y);
-    float mapWidth = map.width * (float) GRID_W;
-    float mapHeight = map.height * (float) GRID_H;
+    // The rule runs in float pixels; shift the frame so they stay small (see FRAME_TILES). The position is converted
+    // from tile doubles once, the reservation (absolute) is shifted in and out, and the result shifts back in double.
+    int ox = frameOrigin(x);
+    int oy = frameOrigin(y);
+    float shiftX = (float) ox * GRID_W;
+    float shiftY = (float) oy * GRID_H;
+    Terrain framed = terrain.framed(ox, oy);
+    float px = pixelX(x - ox);
+    float py = pixelY(y - oy);
+    float mapWidth = (map.width - ox) * (float) GRID_W;
+    float mapHeight = (map.height - oy) * (float) GRID_H;
     float budget = BUDGET_PER_TICK;
+    MovementRules.Reservation held = glide.reservation;
+    MovementRules.Reservation local = held == null ? null : shifted(held, -shiftX, -shiftY);
     for (int guard = 0; guard < 256; guard++) {
-      if (glide.reservation != null) {
-        MovementRules.Grid.Advance advance = MovementRules.Grid.advance(px, py, glide.reservation, budget);
+      if (local != null) {
+        MovementRules.Grid.Advance advance = MovementRules.Grid.advance(px, py, local, budget);
         px = advance.x();
         py = advance.y();
         budget = Math.max(0f, budget - advance.spent());
         if (advance.arrived()) {
-          glide.reservation = null;
+          local = null;
         }
-        if (glide.reservation != null || budget < EPSILON) {
+        if (local != null || budget < EPSILON) {
           break;
         }
         continue;
@@ -137,12 +179,16 @@ final class ServerMovement {
       if (dx == 0 && dy == 0) {
         break;
       }
-      glide.reservation =
-          MovementRules.Grid.reserve(terrain, px, py, dx, dy, true, mapWidth, mapHeight);
-      if (glide.reservation == null || budget < EPSILON) {
+      local = MovementRules.Grid.reserve(framed, px, py, dx, dy, true, mapWidth, mapHeight);
+      if (local == null || budget < EPSILON) {
         break;
       }
     }
-    return new Moved(tileX(px), tileY(py));
+    glide.reservation = local == null ? null : shifted(local, shiftX, shiftY);
+    return new Moved(tileX(px) + ox, tileY(py) + oy);
+  }
+
+  private static MovementRules.Reservation shifted(MovementRules.Reservation r, float byX, float byY) {
+    return new MovementRules.Reservation(r.targetX() + byX, r.targetY() + byY, r.moveX(), r.moveY());
   }
 }
