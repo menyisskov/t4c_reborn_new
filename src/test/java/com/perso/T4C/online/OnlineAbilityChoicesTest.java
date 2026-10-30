@@ -226,6 +226,7 @@ class OnlineAbilityChoicesTest {
         "item.potion_of_healing", "item.critical_healing_potion", "item.potion_of_mana")), expected.toString());
     expected.add("item.potion_of_fury");
     expected.add("item.potion_of_nimbleness");
+    expected.add("item.hyper_potion_of_nimbleness");
     var offered = new java.util.TreeSet<String>();
     OnlineAbilityChoices.usablePotions(progress(Set.of(), inventory, Map.of()), ALLOWLIST)
         .forEach(row -> offered.add(row.itemKey()));

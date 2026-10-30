@@ -20,7 +20,8 @@ import java.util.TreeMap;
  * the live cast allowlist; its item entries support restorative consumables and modeled buff potions.
  */
 public final class OnlineSpellContentV2Exporter {
-  private static final Set<String> ITEM_BUFFS = Set.of("item.potion_of_fury", "item.potion_of_nimbleness");
+  private static final Set<String> ITEM_BUFFS = Set.of(
+      "item.potion_of_fury", "item.potion_of_nimbleness", "item.hyper_potion_of_nimbleness");
 
   private OnlineSpellContentV2Exporter() {}
 
