@@ -22,6 +22,13 @@ commit links, and finer-grained notes.
 - The online game's launcher now says in plain words when Java is missing, too old (it needs Java 21 or newer, 64-bit) or the wrong kind, and tells you how to fix it, instead of showing a wall of error text.
 - Starting the online game no longer leaves a new small folder in your temporary files every time you play.
 - The online launcher can now open the character lobby for an account-only key, and the downloadable test packages come with double-click launch files and a one-step "verify this copy" check.
+## 2026-10-30 — Character creation in online play is now checked against retries and crashes (T4C-0352)
+
+### Changed
+- Online character creation is part of the planned Beta. Creating a character in the lobby offers all seven classes, and each class starts with exactly the same gear, potions, spells and starting gold range as in single-player.
+- If a creation request is sent twice, or the server stops at the worst moment while one is in flight, you end up with exactly one character and one starting kit. Pressing Create again never gives a second character or a second set of gear.
+- The project's notes now say plainly that Archer can be created and played online, and that characters are made in the lobby rather than set up by an operator.
+
 ## 2026-10-30 — Sneak works in online play (T4C-0344)
 
 ### Changed

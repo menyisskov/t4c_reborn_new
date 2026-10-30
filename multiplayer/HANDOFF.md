@@ -75,8 +75,8 @@ refusal, a scripted death/corpse recovery, spells, the quest loop and travel, a 
 
 The online create form and authenticated server endpoint now offer Warrior, Paladin, Cleric,
 Healer, Mage and Battle Mage. Starting attributes, equipment and spells come from the shared
-`CharacterClass`/`OnlineCharacterCreator`; server class resolution explicitly rejects Archer
-until ranged attacks are supported. Focused local form, kit and class-resolution tests passed;
+`CharacterClass`/`OnlineCharacterCreator`; server class resolution rejected Archer at that
+time (Archer is offered and created since T4C-0273 added ranged attacks; all seven classes now). Focused local form, kit and class-resolution tests passed;
 the authenticated creation integration tests passed 2/2 against a disposable PG16 cluster,
 which was destroyed and its port released. No desktop or owner QA resource was used. This is
 not full character parity or Beta acceptance. Next gameplay gaps remain ranged combat, broader

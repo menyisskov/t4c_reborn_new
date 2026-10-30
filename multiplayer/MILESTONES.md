@@ -60,7 +60,7 @@ playthrough and recovery criteria pass. Never infer Done from a task count or te
 
 | Milestone | Current status | Existing related tasks | Main outstanding work |
 | --- | --- | --- | --- |
-| M1 — Enter and interact | Roster/NPC backend and actual adapter probes pass, including two local HTTPS adapters with trust/hostname refusal and a separate live account-key rotation check; selection and refusal messages verified rendered; creation bullet and remote HTTPS open | T4C-0192, 0195, 0196, 0216, 0219, 0232, 0233, 0234 | Native character select and its Create form are merged as an opt-in lobby (`-Lobby`, owner-approved look) and ran rendered against a live local server (T4C-0306 to T4C-0325; four of seven bullets ticked); in-client character creation is recorded here as out of Beta scope (characters are operator-provisioned) while the creation bullet still requires it: owner decision; remote deployment |
+| M1 — Enter and interact | Roster/NPC backend and actual adapter probes pass, including two local HTTPS adapters with trust/hostname refusal and a separate live account-key rotation check; selection and refusal messages verified rendered; creation bullet ticked by T4C-0352; remote HTTPS open | T4C-0192, 0195, 0196, 0216, 0219, 0232, 0233, 0234 | Native character select and its Create form are merged as an opt-in lobby (`-Lobby`, owner-approved look) and ran rendered against a live local server (T4C-0306 to T4C-0325, T4C-0352; six of seven bullets ticked); in-client character creation is in Beta scope (owner decision 2026-10-30) and its idempotency is proven by a hard-kill drill plus two rendered windows creating their own characters (T4C-0352); open: remote HTTPS deployment and rendered-client credential evidence |
 | M2 — Inventory and loot | Server ground loot (drops, owner window, first-claim-wins, expiry, carry-weight rule), per-item corpse recovery within carry limits, native pickup/equip/inventory panels; all merged with CI evidence | Existing inventory/equipment work; T4C-0201, 0202, 0204, 0218, 0228, 0341 | Every bullet ticked (T4C-0306, 0312, 0318, 0341); the milestone's single integrated Done run, the corpse control and single-stack recovery from the screen, and remote or clean-machine evidence are open |
 | M3 — Complete authored adventure | Quest service rules, flag allowlist, once-only turn-in rewards, native talk panel, and the Skeleton hunting ground hosted as one world-0 region with unhosted portals refused; merged | T4C-0193, 0194, 0195, 0206, 0218, 0231, 0341 | Three of eight bullets ticked by T4C-0342 (kill credit, both players completing, region boundary); open: scope freeze, required-item quests, the unhosted-route refusal (no walkable unhosted route exists), restart with delayed intents; the Goblin-to-Wild-Horse fight (owner accepted it as not simulated for Beta) |
 | M4 — Supported combat and abilities | Restricted melee/physical retaliation, server-authoritative patrol/pursuit with guarded persistence, two-native-adapter pursuit/restart proof, brief two-client pursuit/retaliation/reconnect check, local PostgreSQL proof of authored hostile-clan spell damage (T4C-0317), durable authored monster self-healing (T4C-0319) and ranged monster attacks (T4C-0320) | T4C-0189, 0190, 0209, 0210, 0211, 0212, 0229, 0230, 0236, 0237, 0317, 0319, 0320, 0330 | T4C-0331 adds a rendered two-window run of different roles (contention, spells, buff and rejoin, refusals, death seen from the other window) and ticks three of the seven M4 bullets; pursuit of a fleeing player, sanctuary/interruption validation evidence, buff/cooldown HUD, tile-aimed area spells, stat allocation, rendered clan-spell combat and integrated M4/Beta acceptance remain open |
@@ -77,7 +77,7 @@ Required behavior:
 - [x] Each player uses a separate online account, with no desktop character/save import.
 - [x] The native client discovers only that account's characters, displays availability and lets
   the player select one. Pagination, an empty roster and unavailable characters remain usable.
-- [ ] Native character creation uses shared name/slot/class rules and server-generated initial
+- [x] Native character creation uses shared name/slot/class rules and server-generated initial
   stats, items and gold. A retried or interrupted request cannot create duplicates or regrant a kit.
 - [x] Invalid keys, foreign characters, a character already in use and incompatible versions give
   usable errors. Selection alone acquires no gameplay lease or player slot.
@@ -127,13 +127,27 @@ evidence and ticks four of the seven:
   second letter). Lost response: T4C-0310 `LostAck` produced both outcomes (reply lost before the commit, and reply lost after it)
   and every character ended with exactly one letter and one receipt. That drill used native adapters, not a rendered window,
   and the client never replays a gameplay request; this is the one judgement call in the four ticks.
-- **Native creation (left open, owner decision).** The lobby now has a working Create form (T4C-0272 and the lobby creation
-  work). This pass drove it rendered once as extra evidence (the form, one Archer typed and created, the roster listing it,
-  entering the game with the server-generated kit: 46 inventory stacks and 204 gold) and the server-side idempotency is covered
-  by `OnlineCharacterCreationTest` (PostgreSQL) and `OnlineCreateFormTest` (7). It is not ticked because the status table above
-  records in-client creation as outside the Beta scope while this bullet still requires it; the owner decides whether to keep
-  the bullet (then this evidence, plus one interrupted-request drill rendered, would support ticking it) or to rewrite it as
-  operator-provisioned. The "Done evidence" line below (both clients create) is blocked by the same decision.
+- **Native creation (ticked by T4C-0352, 2026-10-30; the owner ruled the same day that in-client creation is in Beta scope).**
+  Shared rules: the Create form takes its name rules from `CharacterCreationRules` and its class and gender lists from
+  `OnlineCharacterCreation`, the lists the server enforces (`OnlineCreateFormTest` 7, `CharacterCreationRulesTest`); the slot
+  limit is the server's `roster_full` (`OnlineStoreTest`, PostgreSQL); the server builds stats, kit and gold itself from the shared
+  class data, and every one of the seven offered classes gets exactly its single-player kit (`OnlineCharacterCreatorTest.everyOfferedClassGetsExactlyItsSinglePlayerKit`
+  and `CharacterKitParityTest`, both compared with `CharacterStartingKit.itemCounts`). Retries: `OnlineCharacterCreationTest`
+  (PostgreSQL, 3 of 3) proves a replayed request id returns the same character with an unchanged record, another body under the
+  same id is `creation_conflict`, a replay while the character is in play changes nothing, and eight concurrent copies of one request
+  create one character. Interrupted request, live: `NativeCreateFaultDrill` (new) sends the creation request through the lobby's
+  own `OnlineAccountClient` to a real `ServerMain --online`, hard-kills the server 0 to 900 ms later (20 rounds, all seven classes),
+  restarts it and resends the same request id: the database right after each kill held either no character or one character with the
+  complete kit and one receipt, never half (15 of 20 had committed; in the run that passed, round 16 lost its reply and was already
+  committed, in another run round 4 did); every retry ended with exactly one character, one receipt and a byte-identical record
+  for the 15 that had committed (nothing regranted), a second replay changed nothing, a new request id with the same name was
+  refused `name_taken` and the same id with another alignment `creation_conflict`, and every kit equalled its class kit. Rendered:
+  two real windows each created their own character through the lobby (`C`, typed name, class row, `Enter`; one Paladin and one Archer),
+  entered, were greeted by Kilhiam once, left through the screen's switch-character callback and reconnected, were greeted again
+  without a second letter, and after closing both windows and reopening them found the characters on the roster and entered
+  again (`CLIENT_UNIFICATION_DESIGN.md` 3.20, `ACCEPTANCE.md`). Limits: local PostgreSQL 16 only; the interrupted request was
+  driven by the native client, not a rendered window; the Options button and the window-close button were not clicked
+  (a reflected callback and process exit stood in); no remote or HTTPS creation run.
 - **Credentials and HTTPS (left open).** Credentials: after both runs a scan of every driver and server log, the preference file
   and the chat log for the six exact account keys (and for any 64-hex string in the run logs) found none; existing tests cover the
   profile, credentials and lobby `toString`, the roster, creation, join and metrics responses (`OnlineAccountProfileTest`,
@@ -153,7 +167,9 @@ evidence and ticks four of the seven:
 T4C-0343 implementation evidence (local only): the existing six online HUD buttons now route clicks to their current actions; completed Renewed Wards greetings use the authored completed line in offline and server paths. Focused tests and both packages pass. No rendered-client check has been run for this delivery, so M1 remains open.
 
 Done evidence: both rendered clients create/select their own characters, connect, converse, close
-and reconnect. Retain operator profiles as a compatibility path. See [ACCOUNT_LIFECYCLE.md](ACCOUNT_LIFECYCLE.md)
+and reconnect. (Met locally by T4C-0352 for the creating half: two rendered windows created their own characters through
+the lobby, connected, talked to Kilhiam, closed and reconnected, see the creation note above; M1 itself stays open because
+the remote HTTPS bullet is unticked.) Retain operator profiles as a compatibility path. See [ACCOUNT_LIFECYCLE.md](ACCOUNT_LIFECYCLE.md)
 and [NPC_INTERACTION_DESIGN.md](NPC_INTERACTION_DESIGN.md) for current contracts and limits.
 
 ## M2 — Use inventory and receive loot

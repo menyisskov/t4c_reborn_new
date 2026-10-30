@@ -6,6 +6,13 @@
 > limit. See [PARITY.md](PARITY.md) for the rule, the checklist and the build order. The
 > two-player starter route below remains a useful intermediate checkpoint.
 
+> **Owner decision 2026-10-30 (T4C-0352): in-client character creation is inside the Beta scope.** The
+> lobby's Create form, the authenticated creation request and the server-generated starting kit are
+> Beta deliverables, so characters are no longer "operator-provisioned only" and the "creatable
+> offline only" lines below no longer limit the online game. All seven classes are offered and created
+> online with their single-player kits; Archer fights online since T4C-0273 (the Archer exclusion in
+> section 1 is closed). Which abilities each class needs for the checkpoint is unchanged by this note.
+
 Status: **APPROVED by the owner on 2026-10-27 with the amendments below.** Drafted the same day,
 Asia/Jerusalem. [MILESTONES.md](MILESTONES.md) "Scope must be explicit before completion" remains
 the authority and records the approval. Sections still say PROPOSED in their headings; read them
