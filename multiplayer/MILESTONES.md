@@ -333,6 +333,8 @@ T4C-0355 implementation evidence: double-clicking an own-character buff in the o
 
 T4C-0360 implementation evidence: PR #327 merged at 8514f07c (tested head 00d67c61, source fabcc3cc). Shared player movement speed is 80 offline and online; monster speed remains 45. The shared rule charges target arrival against the movement budget and keeps diagonal tile-boundary crossings synchronized. Focused offline/shared tests passed 49/49 and server parity 19/19; root/server packages and diff check passed on main 510356da. No rendered-client retest was run; M4 and Beta remain open.
 
+T4C-0361 implementation evidence: online targeted hostile spells repeat over the existing authoritative socket after each result, honor returned cooldowns, retry transient busy replies after a short delay, and stop on movement, dead targets or terminal refusals. Offline casting is unchanged. Focused tests passed 45/45; root package and diff check passed on 5acd7a0e. No rendered-client check was run; M4 and Beta remain open.
+
 Required behavior:
 
 - [x] Declare classes and required abilities above. A melee-only networking preview cannot be

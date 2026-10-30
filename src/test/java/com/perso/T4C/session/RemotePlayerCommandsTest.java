@@ -283,6 +283,22 @@ class RemotePlayerCommandsTest {
   }
 
   @Test
+  void hostileCastCompletionRunsEvenWhenTheCommandIsSynchronouslyBusy() {
+    showSkeleton(31L);
+    link.throwOnSend = new IllegalStateException("Gameplay command pending");
+    var replies = new ArrayList<OnlineConnection.CommandResult>();
+    var commands = (RemotePlayerCommands) session.commands();
+
+    assertTrue(commands.castWithResult("spell.fireball", skeleton(), replies::add));
+    assertTrue(replies.isEmpty(), "completion is delivered through the render-thread pump");
+    commands.pump();
+
+    assertEquals(1, replies.size());
+    assertEquals(RemotePlayerCommands.ABILITY_BUSY_KEY, replies.get(0).messageKey());
+    assertFalse(replies.get(0).accepted());
+  }
+
+  @Test
   void aCastOrPotionRefusedAsBusyIsSentOnceMoreAndOnlyASecondBusyRefusalIsShown() {
     UUID potion = UUID.fromString("00000000-0000-0000-0000-000000000044");
     Player player = playerAtTile(100, 205);

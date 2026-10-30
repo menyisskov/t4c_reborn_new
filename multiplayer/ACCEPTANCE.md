@@ -16,6 +16,10 @@ not automatically a completed milestone.
 
 PR #327 merged at 8514f07c (tested head 00d67c61, source fabcc3cc). PLAYER_SPEED is 80 in offline and online play; MONSTER_SPEED remains 45 and movement buffs are unchanged. Shared movement charges arrival to the movement budget and synchronizes diagonal tile-boundary crossings. Focused offline/shared tests passed 49/49, server parity passed 19/19, root/server packages and diff check passed on 510356da. No rendered-client verification; Beta remains open.
 
+### Online hostile spell repeat (T4C-0361)
+
+Targeted hostile spells now repeat online through the existing authoritative socket, waiting for server cooldowns, retrying transient ability-busy replies after a short delay, and stopping on movement, dead targets or terminal refusals. Offline casting is unchanged. Focused hostile-target, remote-auto-attack and command tests passed 45/45; the root package and `git diff --check` passed on base 5acd7a0e. No rendered-client verification; M4 and Beta remain open.
+
 ### Shared GUI keyboard routing (T4C-0356)
 
 The remote input adapter forwards key presses and typed characters to an open shared GUI before online shortcuts; input is consumed while that GUI is open. Closed-GUI remote shortcuts and offline input remain unchanged. Focused GUI keyboard and HUD tests passed 4/4; package and `git diff --check` passed on head `e95c177b` (base `1710e2c5`). No rendered-client check was run; M1, M4 and Beta remain open.
