@@ -70,6 +70,41 @@ final class OnlineMonsterPursuit {
   private enum SearchStatus { FOUND, UNREACHABLE, DEFERRED }
   private record SearchResult(SearchStatus status, List<Cell> path) {}
   private static final int MAX_EXPANSIONS = 8000;
+  private static final int DENSE_LIMIT = 1 << 20;
+  /** Per-solve search bookkeeping by flat tile index. */
+  private interface SearchState {
+    double best(int index);
+    void best(int index, double cost);
+    int parent(int index);
+    void parent(int index, int from);
+    boolean closed(int index);
+    void close(int index);
+  }
+  private static final class DenseState implements SearchState {
+    private final double[] best; private final int[] parent; private final boolean[] closed;
+    DenseState(int count) {
+      best = new double[count]; Arrays.fill(best, Double.POSITIVE_INFINITY);
+      parent = new int[count]; Arrays.fill(parent, -1);
+      closed = new boolean[count];
+    }
+    public double best(int index) { return best[index]; }
+    public void best(int index, double cost) { best[index] = cost; }
+    public int parent(int index) { return parent[index]; }
+    public void parent(int index, int from) { parent[index] = from; }
+    public boolean closed(int index) { return closed[index]; }
+    public void close(int index) { closed[index] = true; }
+  }
+  private static final class HashedState implements SearchState {
+    private final java.util.HashMap<Integer, Double> best = new java.util.HashMap<>();
+    private final java.util.HashMap<Integer, Integer> parent = new java.util.HashMap<>();
+    private final java.util.HashSet<Integer> closed = new java.util.HashSet<>();
+    public double best(int index) { var cost = best.get(index); return cost == null ? Double.POSITIVE_INFINITY : cost; }
+    public void best(int index, double cost) { best.put(index, cost); }
+    public int parent(int index) { var from = parent.get(index); return from == null ? -1 : from; }
+    public void parent(int index, int from) { parent.put(index, from); }
+    public boolean closed(int index) { return closed.contains(index); }
+    public void close(int index) { closed.add(index); }
+  }
   private static final long MAX_SEARCH_NANOS = 16_000_000L;
   private static final double MAX_STEP_SECONDS = 1.0 / PreviewWorld.TICK_RATE;
   private static final double UNREACHABLE_SECONDS = .75;
@@ -398,25 +433,25 @@ final class OnlineMonsterPursuit {
     if (!navigationClear(goal.x(), goal.y(), true))
       return new SearchResult(SearchStatus.UNREACHABLE, List.of());
     int count = map.width * map.height;
-    double[] best = new double[count]; Arrays.fill(best, Double.POSITIVE_INFINITY);
-    int[] parent = new int[count]; Arrays.fill(parent, -1);
-    boolean[] closed = new boolean[count];
+    // Small regions keep flat arrays; a streamed world (about 19 M tiles) would allocate that per solve, so
+    // its search state is hashed and bounded by MAX_EXPANSIONS instead.
+    SearchState state = count <= DENSE_LIMIT ? new DenseState(count) : new HashedState();
     int source = start.y() * map.width + start.x(), destination = goal.y() * map.width + goal.x();
     var open = new PriorityQueue<Node>(Comparator.comparingDouble(Node::score));
-    best[source] = 0; open.add(new Node(source, 0));
+    state.best(source, 0); open.add(new Node(source, 0));
     long deadline = System.nanoTime() + MAX_SEARCH_NANOS;
     int expanded = 0;
     while (!open.isEmpty() && expanded < MAX_EXPANSIONS && System.nanoTime() < deadline) {
       int current = open.remove().index();
-      if (closed[current]) continue;
+      if (state.closed(current)) continue;
       if (current == destination) {
         var reverse = new ArrayList<Cell>();
-        for (int at = current; at != source; at = parent[at])
+        for (int at = current; at != source; at = state.parent(at))
           reverse.add(new Cell(at % map.width, at / map.width));
         java.util.Collections.reverse(reverse);
         return new SearchResult(SearchStatus.FOUND, List.copyOf(reverse));
       }
-      closed[current] = true; expanded++;
+      state.close(current); expanded++;
       int cx = current % map.width, cy = current / map.width;
       for (int dy = -1; dy <= 1; dy++) for (int dx = -1; dx <= 1; dx++) {
         if (dx == 0 && dy == 0) continue;
@@ -425,9 +460,9 @@ final class OnlineMonsterPursuit {
             || (dx != 0 && dy != 0 && (!navigationClear(cx + dx, cy, false)
                 || !navigationClear(cx, cy + dy, false)))) continue;
         int index = ny * map.width + nx;
-        double cost = best[current] + Math.hypot(dx * GRID_W, dy * GRID_H);
-        if (cost >= best[index]) continue;
-        best[index] = cost; parent[index] = current;
+        double cost = state.best(current) + Math.hypot(dx * GRID_W, dy * GRID_H);
+        if (cost >= state.best(index)) continue;
+        state.best(index, cost); state.parent(index, current);
         open.add(new Node(index, cost + Math.hypot((goal.x() - nx) * GRID_W,
             (goal.y() - ny) * GRID_H)));
       }

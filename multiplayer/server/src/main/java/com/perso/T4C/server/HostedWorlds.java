@@ -18,6 +18,7 @@ final class HostedWorlds implements AutoCloseable {
     OnlineClanCombat clanCombat;
     RegionNpcs npcs;
     final RegionGroundLoot loot;
+    long seenCoverage;
     Region(RegionMapLoader.Spec spec,PreviewMap map,PreviewWorld world) { this.spec=spec;this.map=map;this.world=world;this.loot=new RegionGroundLoot(spec); }
     OnlineRegion descriptor(long epoch) { return new OnlineRegion(spec.world(),spec.key(),map.originX,map.originY,map.width,map.height,epoch); }
   }
@@ -26,7 +27,7 @@ final class HostedWorlds implements AutoCloseable {
   final PersistentSessions sessions;
   /** Null only for the in-memory single-map seam; pickups need the bundled item content. */
   final ItemContent items;
-  private long lastPathPermit=-1;
+  private long lastPathPermit=-1,streamStatsTick;
   HostedWorlds(PreviewMap map,PreviewWorld world) {
     plan=HostedRegionPlan.single(map);regions=List.of(new Region(plan.regions.getFirst().spec(),map,world));sessions=null;items=null;
   }
@@ -50,12 +51,13 @@ final class HostedWorlds implements AutoCloseable {
       for(var region:regions) if(store!=null) {
         validateClanAuthority(region,classifedRequired(classified));
         region.creatures=new PersistentCreatures(store,region.world,region.map,region.spec.key(),sessions,items,classified);
+        if(region.creatures.streamed()) region.loot.coveredAreas(region.creatures::coveredRects);
         region.melee=new OnlineMelee(region.map,region.world,sessions,region.creatures,items,new java.security.SecureRandom(),System::currentTimeMillis);
         region.spells=new OnlineSpellStrikes(region.map,region.world,sessions,region.creatures,items,SpellCatalogV2.bundled(),new java.security.SecureRandom(),System::currentTimeMillis);
         region.retaliation=new OnlineRetaliation(region.map,region.world,sessions,region.creatures,items,new java.security.SecureRandom(),System::currentTimeMillis);
         region.clanCombat=new OnlineClanCombat(region.map,region.world,region.creatures,classified,
             new java.security.SecureRandom(),System::currentTimeMillis);
-        long unsupported=region.world.creatureSpawns().stream().filter(s->s.definition().getSourceEvents()!=null && !s.definition().getSourceEvents().isEmpty()
+        long unsupported=region.world.hostedSpawns().stream().filter(s->s.definition().getSourceEvents()!=null && !s.definition().getSourceEvents().isEmpty()
             || !OnlineLootDrafts.supports(s.definition(),items) || !OnlineRetaliation.supported(s.definition())).count();
         if(unsupported>0) System.out.println("Region "+region.spec.key()+": "+unsupported+" creatures retain unsupported combat/script restrictions.");
       }
@@ -82,15 +84,18 @@ final class HostedWorlds implements AutoCloseable {
     return Objects.requireNonNull(content,"Missing classified authority");
   }
   private static void validateClanAuthority(Region region,MonsterContent.Classified classified) {
-    for(var source:region.world.creatureSpawns()) {
+    // The clans present in the region, computed once: a streamed region lists thousands of spawns.
+    var present=new HashSet<MonsterContent.Clan>();
+    for(var target:region.world.hostedSpawns()) {
+      var other=classified.authorities().get(target.definition().getName());
+      if(other!=null) present.add(other.clan());
+    }
+    for(var source:region.world.hostedSpawns()) {
       var authority=classified.authorities().get(source.definition().getName());
       if(authority==null) throw new IllegalArgumentException("Missing hosted creature authority");
       if(!source.spawn().aggressive() || source.spawn().stationary()) continue;
-      boolean hasTarget=region.world.creatureSpawns().stream().anyMatch(target -> {
-        var other=classified.authorities().get(target.definition().getName());
-        return other!=null && classified.relations().stream().anyMatch(r->r.source()==authority.clan()
-            && r.target()==other.clan());
-      });
+      boolean hasTarget=classified.relations().stream().anyMatch(r->r.source()==authority.clan()
+          && present.contains(r.target()));
       if(hasTarget && (authority.attackFrameEvidence()!=MonsterContent.AttackFrameEvidence.FRAME_NAME_PRESENT
           || !source.definition().isCanAttack() || !OnlineRetaliation.supported(source.definition())))
         throw new IllegalArgumentException("Unsupported hosted clan attacker");
@@ -122,8 +127,21 @@ final class HostedWorlds implements AutoCloseable {
     }
     var targets=sessions==null ? List.<OnlineMonsterPursuit.TargetView>of() : sessions.targetViews();
     for(var region:regions) {
-      if(region.creatures!=null) region.creatures.step(targets,
-          permit!=null && permit.region()==region ? permit.id() : null);
+      if(region.creatures!=null) {
+        region.creatures.step(targets,permit!=null && permit.region()==region ? permit.id() : null);
+        if(region.creatures.streamed() && ++streamStatsTick%(PreviewWorld.TICK_RATE*30L)==0) {
+          var stats=region.creatures.stats(); // one operator line every 30 s: the lifecycle counters of the streamed region
+          System.out.println("streamed-creatures region="+region.spec.key()+" active="+stats.active()+" loading="+stats.loading()
+              +" queued="+stats.queued()+" settling="+stats.settling()+" covered-cells="+stats.coveredCells()+" activated="+stats.activated()
+              +" deactivated="+stats.deactivated()+" pristine-rows-deleted="+stats.pristineRowsDeleted()+" batches="+stats.batches()
+              +" max-batch-ms="+stats.maxBatchNanos()/1_000_000+" cap-refusals="+stats.capRefusals()+" failed="+stats.failedActivations()
+              +" max-active="+stats.maxActiveSeen());
+        }
+        if(region.creatures.streamed() && region.creatures.coverageVersion()!=region.seenCoverage) {
+          region.seenCoverage=region.creatures.coverageVersion();
+          region.loot.invalidate(); // a newly covered cell: read its loot
+        }
+      }
       if(region.clanCombat!=null) region.clanCombat.step();
       if(region.retaliation!=null) region.retaliation.step();
     }

@@ -180,22 +180,38 @@ class NativeAdapterSoak {
     }
   }
   /** Cardinal breadth-first step over the collision map to an exact goal tile; null when unreachable or already there. */
+  /**
+   * A streamed whole-world region (about 19 M tiles) cannot afford one array per tile per call, so routing there
+   * searches a square of this radius around the start; a small region is searched whole, exactly as before.
+   */
+  static final int STREAMED_ROUTE_RADIUS=100;
+  static final long WHOLE_REGION_ROUTING_LIMIT=4_000_000L;
+  static int[] routeWindow(PreviewMap map,int sx,int sy) {
+    if((long)map.width*map.height<=WHOLE_REGION_ROUTING_LIMIT) return new int[]{0,0,map.width,map.height};
+    int x0=Math.max(0,sx-STREAMED_ROUTE_RADIUS),y0=Math.max(0,sy-STREAMED_ROUTE_RADIUS);
+    int x1=Math.min(map.width,sx+STREAMED_ROUTE_RADIUS+1),y1=Math.min(map.height,sy+STREAMED_ROUTE_RADIUS+1);
+    return new int[]{x0,y0,x1-x0,y1-y0};
+  }
   static int[] pathToTile(PreviewMap map,int sx,int sy,int gx,int gy) {
     if(sx==gx && sy==gy) return null;
     if(sx<0 || sy<0 || sx>=map.width || sy>=map.height || gx<0 || gy<0 || gx>=map.width || gy>=map.height) return null;
-    int[] parent=new int[map.width*map.height]; Arrays.fill(parent,-1);
-    int[] queue=new int[parent.length]; int head=0,tail=0,start=sy*map.width+sx,goal=gy*map.width+gx; queue[tail++]=start; parent[start]=start;
+    var w=routeWindow(map,sx,sy); int x0=w[0],y0=w[1],ww=w[2],wh=w[3];
+    if(gx<x0 || gy<y0 || gx>=x0+ww || gy>=y0+wh) return null;
+    int[] parent=new int[ww*wh]; Arrays.fill(parent,-1);
+    int[] queue=new int[parent.length]; int head=0,tail=0,start=(sy-y0)*ww+(sx-x0),goal=(gy-y0)*ww+(gx-x0); queue[tail++]=start; parent[start]=start;
     while(head<tail && parent[goal]<0) {
-      int cell=queue[head++],cx=cell%map.width,cy=cell/map.width;
+      int cell=queue[head++],cx=cell%ww+x0,cy=cell/ww+y0;
       for(int[] d:DIRECTIONS) {
-        int nx=cx+d[0],ny=cy+d[1],id=ny*map.width+nx;
-        if(nx<0 || ny<0 || nx>=map.width || ny>=map.height || parent[id]>=0 || !map.canStand(nx+.5,ny+.5)) continue;
+        int nx=cx+d[0],ny=cy+d[1];
+        if(nx<x0 || ny<y0 || nx>=x0+ww || ny>=y0+wh) continue;
+        int id=(ny-y0)*ww+(nx-x0);
+        if(parent[id]>=0 || !map.canStand(nx+.5,ny+.5)) continue;
         parent[id]=cell; queue[tail++]=id;
       }
     }
     if(parent[goal]<0) return null;
     int cell=goal; while(parent[cell]!=start) cell=parent[cell];
-    return new int[]{cell%map.width,cell/map.width};
+    return new int[]{cell%ww+x0,cell/ww+y0};
   }
   static void require(boolean ok,String what) { if(!ok) throw new AssertionError("Self-test failed: "+what); }
   /** Headless check of the pacing helper: {@code NativeAdapterSoak.java --self-test}. */
@@ -248,6 +264,7 @@ class NativeAdapterSoak {
     long commandStarted,nextCommand,reconnectAt,reconnectStarted,lastTick=-1,lastRevision=-1,lastFresh;
     long openedAt=-1,firstConnectedMillis=-1;
     boolean connectedSinceOpen;
+    double homeX=Double.NaN,homeY=Double.NaN;
     long attacks,recoveries,accepted,rejected,failures,reconnects,observations,moved,hpChanges;
     long locationEpoch=-1,epochChanges,worldTransfers,regionTransfers;
     PortalTrip trip;
@@ -297,7 +314,9 @@ class NativeAdapterSoak {
     Path stopFile=stopFileSetting==null || stopFileSetting.isBlank()?null:Path.of(stopFileSetting);
     // Use the server's trusted hosted graph and exact portal-source collision exceptions.
     // Never turn server-provided region keys into filesystem paths.
-    var hosted=HostedRegionPlan.startingSlice(Path.of(args[3]));
+    // T4C_SOAK_STREAM_WORLD0=1 mirrors a server started with --stream-world0 (the streamed whole-world-0 region).
+    boolean streamWorld0="1".equals(System.getenv("T4C_SOAK_STREAM_WORLD0"));
+    var hosted=HostedRegionPlan.startingSlice(Path.of(args[3]),streamWorld0);
     var maps=new HashMap<String,HostedRegionPlan.Region>();
     for(var region:hosted.regions()) maps.put(region.spec().key(),region);
     List<Player> players=new ArrayList<>();
@@ -475,8 +494,12 @@ class NativeAdapterSoak {
               .findFirst().orElse(null);
           var creatures=snapshot.creatures();
           var target=creatures.isEmpty()?null:creatures.get((i+(int)((now-start)/30_000))%creatures.size());
-          double tx=corpse!=null?corpse.x()-map.originX:target!=null?target.x():map.spawnX;
-          double ty=corpse!=null?corpse.y()-map.originY:target!=null?target.y():map.spawnY;
+          // Streamed runs spread the adapters over the world (SoakSpread): with nothing to fight an adapter holds
+          // the tile it joined on instead of walking back to the temple.
+          if(streamWorld0 && Double.isNaN(p.homeX)) { p.homeX=Math.floor(self.x())+.5; p.homeY=Math.floor(self.y())+.5; }
+          double fallbackX=streamWorld0 && !Double.isNaN(p.homeX)?p.homeX:map.spawnX,fallbackY=streamWorld0 && !Double.isNaN(p.homeY)?p.homeY:map.spawnY;
+          double tx=corpse!=null?corpse.x()-map.originX:target!=null?target.x():fallbackX;
+          double ty=corpse!=null?corpse.y()-map.originY:target!=null?target.y():fallbackY;
           boolean reachable=distance(self.x(),self.y(),tx,ty)<48 && map.allowsCombat(self.x(),self.y(),tx,ty,false);
           if(reachable) {
             p.connection.stopInput();
@@ -538,18 +561,21 @@ class NativeAdapterSoak {
   }
   static double[] path(PreviewMap map,double x,double y,double tx,double ty) {
     // Cardinal breadth-first routing uses the same collision map. The server still decides movement.
-    int start=(int)y*map.width+(int)x; int[] parent=new int[map.width*map.height]; Arrays.fill(parent,-1);
+    var w=routeWindow(map,(int)x,(int)y); int x0=w[0],y0=w[1],ww=w[2],wh=w[3];
+    int start=((int)y-y0)*ww+((int)x-x0); int[] parent=new int[ww*wh]; Arrays.fill(parent,-1);
     int[] queue=new int[parent.length]; int head=0,tail=0; queue[tail++]=start; parent[start]=start;
     while(head<tail) {
-      int cell=queue[head++],cx=cell%map.width,cy=cell/map.width;
+      int cell=queue[head++],cx=cell%ww+x0,cy=cell/ww+y0;
       if(distance(cx+.5,cy+.5,tx,ty)<40 && map.allowsCombat(cx+.5,cy+.5,tx,ty,false)) {
         if(cell==start) return new double[]{cx+.5,cy+.5};
         while(parent[cell]!=start) cell=parent[cell];
-        return new double[]{cell%map.width+.5,cell/map.width+.5};
+        return new double[]{cell%ww+x0+.5,cell/ww+y0+.5};
       }
       for(int[] d:DIRECTIONS) {
-        int nx=cx+d[0],ny=cy+d[1],id=ny*map.width+nx;
-        if(nx<0 || ny<0 || nx>=map.width || ny>=map.height || parent[id]>=0 || !map.canStand(nx+.5,ny+.5)) continue;
+        int nx=cx+d[0],ny=cy+d[1];
+        if(nx<x0 || ny<y0 || nx>=x0+ww || ny>=y0+wh) continue;
+        int id=(ny-y0)*ww+(nx-x0);
+        if(parent[id]>=0 || !map.canStand(nx+.5,ny+.5)) continue;
         parent[id]=cell; queue[tail++]=id;
       }
     }

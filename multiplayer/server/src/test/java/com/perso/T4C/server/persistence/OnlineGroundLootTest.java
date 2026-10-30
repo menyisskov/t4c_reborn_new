@@ -99,6 +99,21 @@ class OnlineGroundLootTest {
     assertEquals(1, store.listGroundLoot(world, WHOLE_REGION).size(), "a replay never duplicates drops");
   }
 
+  @Test void aStreamedRegionReadsOnlyTheCellsItCoversInOneStatement() throws Exception {
+    var store = store();
+    var fixture = killedDrop(store); // one drop at (10.5, 20.5) in a fresh world
+    var cell = new OnlineStore.TileRect(0, 0, 32, 32);
+    assertEquals(1, store.listGroundLoot(fixture.world(), List.of(cell)).size(), "the covered cell holds the drop");
+    assertEquals(fixture.drop().id(), store.listGroundLoot(fixture.world(), List.of(cell)).get(0).id());
+    assertTrue(store.listGroundLoot(fixture.world(), List.of(new OnlineStore.TileRect(64, 64, 96, 96))).isEmpty(),
+        "a cell without it reads nothing");
+    assertEquals(1, store.listGroundLoot(fixture.world(),
+        List.of(new OnlineStore.TileRect(64, 64, 96, 96), cell, new OnlineStore.TileRect(0, 0, 40, 40))).size(),
+        "overlapping rectangles never duplicate a drop");
+    assertTrue(store.listGroundLoot(fixture.world() + 1, List.of(cell)).isEmpty(), "another world reads nothing");
+    assertTrue(store.listGroundLoot(fixture.world(), List.of()).isEmpty(), "no covered cell reads nothing");
+  }
+
   @Test void claimCommitsOnceAndAReplayReturnsTheSameReceipt() throws Exception {
     var store = store();
     var content = ItemCatalog.loadBundled();

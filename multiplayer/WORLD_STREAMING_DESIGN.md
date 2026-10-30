@@ -527,7 +527,7 @@ a handoff.
   and starter-route pointers, a PEER_WORK note.
 * **Slice 2 (not started in this PR):** stage A behind the default-off option, with tests and an
   idle-tick measurement of the full world-0 plan with no players.
-* **Slice 2, part 1 (T4C-0359):** see section 11. Part 2 (creature activation) is section 10.
+* **Slice 2, part 1 (T4C-0359):** see section 11. Part 2 (creature activation, T4C-0366): requirements in section 10, record in section 12.
 
 ## 10. Owner requirements for stage A part 2 (creature activation), 2026-10-30
 
@@ -645,3 +645,159 @@ section 10); `OnlineMonsterPursuit` path search allocates `width * height` ints 
 streamed region; `RegionGroundLoot` per-cell reads; `PersistentSessions` for the pre-activation
 hook (section 10); `WORLD_STREAMING_DESIGN.md` section 5 file list and the unhostable list tool.
 Remaining test list is in section 4 (cell index, lifecycle, unhostable list, PostgreSQL gates).
+
+## 12. Stage A part 2 record (T4C-0366, default-off `--stream-world0`)
+
+Scope shipped: creature activation and deactivation for the streamed world 0, exception-only persistence,
+the arrival hold, the windowed pursuit search, per-cell loot reads, the generated unhostable list, and the
+soak spread mode. With the flag off the hosted plan, its tests and its startup path are the ones that
+shipped (the full server suite, 410 tests, passes unchanged).
+
+### What was built
+
+* `CreatureCellIndex` (new, pure): the hosted spawn anchors of the region in the 32-tile cells of
+  `AreaOfInterest`, plus an overlay for a creature that stands away from home (a wounded one that went
+  dormant, or one displaced when the server stopped). A dormant creature costs one `CreatureSpawn` record
+  (shared, immutable), one int in a cell array and one byte of lifecycle state; it has no `Entry`, no
+  controller and no per-creature map entry.
+* Lifecycle (`PersistentCreatures`, streamed mode): `DORMANT -> QUEUED -> LOADING -> ACTIVE -> SETTLING ->
+  DORMANT`. `AreaOfInterest.Coverage` is fed every 8 ticks with one 129 x 129 simulation window per player
+  (`PreviewWorld.simulationWindows`, frozen arrivals included) and immediately by `requestWindow` on an
+  arrival. Newly covered cells queue their spawns; at most 64 per tick are dispatched, as one
+  `online_spawns` read by key (`OnlineStore.loadSpawns`, one statement, no insert) on the existing
+  persistence worker. A row with `died_at` is run through the existing respawn rule inside the same worker
+  call, so a creature that died while dormant respawns on the first activation after its delay. The active
+  cap (1,024) is an explicit counter (`cap-refusals`), never silent.
+* Deactivation, once a second: a creature outside every covered cell (home cell and current cell) is
+  settled only when nothing is pending, recovering, reserved, stunned or targeting and its mode is idle or
+  patrol. Pristine and without a row: dropped, zero writes. Wounded or dead: the last state is flushed first
+  and the creature is dropped only after the checkpoint is confirmed (a failed checkpoint keeps it live and
+  retries). A chase, a return or a clan fight is sticky: a window never cuts it off.
+* Exception-only persistence: a creature at full health, at home, with no target has no row. Rows appear
+  only inside the transaction of the first write that needs one (`OnlineStore.ensureSpawn`, an
+  `INSERT ... ON CONFLICT DO NOTHING` in the checkpoint, strike, provocation and spell transactions, with
+  the same life id the creature already carries), and are deleted again by
+  `OnlineStore.deleteSpawnIfPristine` (guarded by life, revision, health, target, nobody targeting it and
+  no reward on that life) once the creature is pristine, within a second of healing back and on
+  deactivation. A pure patrol position change is never checkpointed for a creature without a row. Startup
+  reads the existing rows once (`listSpawnPositions`), indexes any creature standing outside its home cell by
+  where it stands, and creates nothing. **No schema change or migration**: the table already allowed absent
+  rows, and rows written by the old per-spawn startup keep working (they are read like any deviated row and
+  removed when their creature is next seen pristine).
+* Arrival hold: `PersistentSessions.requestArrival` activates the destination window at `join` and at the end
+  of every death, recall or portal transfer (during the commit and the client's region load);
+  `regionReady` no longer unfreezes the actor until `windowActive` (every creature whose home is in the 97 x
+  97 snapshot window is live), or 3 s have passed so a database stall cannot strand a player. The HTTP reply
+  to the ready call is unchanged; the actor simply stays frozen a little longer.
+* `OnlineMonsterPursuit.findPath` keeps flat arrays for regions up to 2^20 tiles (all shipped ones) and uses
+  hashed bookkeeping above that, bounded by the existing 8,000-expansion limit; the result is identical.
+* `RegionGroundLoot` of a streamed region reads only the covered cells, merged into rectangles, in one
+  statement (`OnlineStore.listGroundLoot(world, rectangles)`, at most 1,024 rows) and re-reads when a cell
+  becomes covered. The 256-oldest whole-region read is not used for a streamed region.
+* The generated list `unhostable-spawns-v1.json` (`UnhostableSpawnAudit` writes it, `UnhostableSpawnsTest`
+  recomputes it from the real `.colbin` and requires byte equality): 576 of 7,614 world-0 records stay
+  out. 153 are anchors on foot-blocked tiles (the design's count), 37 more stand on a tile whose tile above
+  is blocked (a creature's home must pass the player stand rule, `OnlineMonsterPursuit` constructor), and 386
+  have no walk sprite (11 of the 397 sprite-less records are already in the first two groups). That leaves
+  7,038 hosted.
+* `OnlineStore.loadSpawns`, `listSpawnPositions`, `deleteSpawnIfPristine`, `listGroundLoot(rects)`;
+  `PreviewWorld` grows and shrinks its live creature set (`activateCreature`/`deactivateCreature`,
+  `creatureSpawn(id)`), `OnlineMelee`, `OnlineSpellStrikes` and `OnlineClanCombat` look a creature up by id
+  instead of caching or scanning the construction-time list.
+* Soak: `NativeAdapterSoak` takes `T4C_SOAK_STREAM_WORLD0=1` (the streamed plan; adapters hold the tile they
+  joined on instead of walking back to the temple; route search is bounded to a 201 x 201 box on a streamed
+  map) and `multiplayer/tools/SoakSpread.java` moves the twenty QA characters to twenty well separated
+  monster fields. The server prints one `streamed-creatures ...` line every 30 s (active, loading, queued,
+  settling, covered cells, activated, deactivated, pristine rows deleted, batches, slowest batch, cap
+  refusals, failed, peak active).
+
+### Gates (disposable PostgreSQL 16, real world-0 content; `StreamedCreaturesDatabaseTest`, all pass)
+
+| Gate | Result |
+|---|---|
+| Startup reads no per-spawn rows | 0 `online_spawns` rows for the 7,038 hosted spawns after construction |
+| Activate then deactivate an untouched window writes 0 rows | 232 creatures activated and 232 deactivated around a player standing in the densest 129 x 129 window; 0 rows throughout |
+| A player standing among 59 to 91 creatures | rows only for the aggroed ones (2 to 4 of them, each targeting); 0 pristine rows |
+| A wounded creature writes exactly one row and survives a restart | 1 row after one landed hit; 1 row after shutdown; after a restart it activates wounded (health below authored maximum) |
+| A creature that is pristine again leaves nothing stale | row set back to the content state, then activated: deleted within 3 s, 0 rows, `pristineRowsDeleted` = 1 |
+| Arrival: every snapshot-window creature live before release | join into the densest window (175 creatures in 129 x 129, 91 in the 97 x 97 snapshot window): client "ready" at once, actor stayed frozen 117 to 141 ms, first snapshot after release listed all 59 creatures strictly inside the window |
+| Activation latency, busiest 384 x 384 window (559 creatures) | nine arrivals 128 tiles apart, all 559 live in 297 to 313 ms (9 batches, slowest database batch 2 ms on the pooled store, 8 to 20 ms on the unpooled test store); under the 1.0 s budget with the batch left at 64 per tick |
+| Existing suites with the flag off | server module 410 tests, 0 failures (includes `HostedKillRegionTest`, `HostedTransferTest`, `PersistentCreaturesTest`, `PreviewServerTest`, `PreviewWorldTest`, `OnlineMeleeTest`, `OnlineRetaliationTest`, `OnlineClanCombatTest`) |
+| Pursuit in a streamed region | 26 of 26 placements single-player's creature A* can reach are followed on the 19 M-tile map (`StreamedPursuitTest`) |
+
+World 2 (959 creatures in its busiest 384 window) is not hosted until stage B, so its latency is arithmetic
+only: 15 ticks at 64 per tick (0.44 s) plus one batch read of the size measured above.
+
+### Measurements (this machine, Windows, JDK 21, 2026-10-30)
+
+| Quantity | Value | Budget |
+|---|---|---|
+| Idle tick, flag on, no players, 0 active creatures, paced 34 Hz | 0.448 ms mean, 6.4 ms max, 0 over | <= 2.0 ms |
+| Idle tick, same, 120 / 291 / 524 / 1,024 active creatures (no players) | 0.553 / 0.942 / 1.388 / 2.256 ms mean (about 1.8 microseconds per active creature); max 9 to 11 ms; 0 ticks over 29.4 ms | the 2.0 ms budget is the no-player case, where nothing is active |
+| 20 players spread over the 20 densest separated fields, 180 s, in-process, paced | tick mean 1.52 ms, max 21.2 ms, 0 over; CPU 9.1% of one core; heap in use at peak 665 MB; active creatures peaked at the 1,024 cap (1,482 activated, 652 deactivated) | tick <= 5 ms, CPU <= 60% |
+| `/state` JSON, creatures + players + window (Gson, before NPC and loot lists), starter town | 2,068 bytes, 9 creatures | |
+| same, densest 97 x 97 window in world 0 | 20,188 bytes, 114 creatures (177 bytes each) | p95 <= 20 KB |
+| same, projection for the 256-creature cap | 256 x 177 = 45 KB | <= 42 KB: 8% over the arithmetic; no real window in world 0 has more than 114 creatures |
+| Startup, plan + creatures, 0 / 1 deviated rows | 1.2 s (cold JVM, includes loading the 19 MB collision grid) / 0.32 s (warm) | |
+| Heap held by 7,038 dormant spawns | not separable from the grid; the dormant records are shared content |  |
+
+### 30-minute native soak, flag on, 20 adapters spread over world 0
+
+Server `--online worldmap.colbin 18835 --stream-world0` on the disposable cluster; twenty native `OnlineConnection`
+adapters (no renderer), protocol 9, each placed by `SoakSpread` in a different one of the twenty densest separated
+monster fields (10 to 40 creatures in its 32-tile cell), fighting what is near and otherwise holding its tile;
+reconnects every 900 s. Report and server log are kept outside the repository (scratch), the numbers below are copied from them.
+
+| Quantity | This run (30 min, 61,177 ticks) | T4C-0315 / 0353 baseline (2 h, temple + 8 portal walkers) | Budget (3.9) |
+|---|---|---|---|
+| Tick mean | 2.014 ms | 2.48 ms | <= 5 ms |
+| Tick max | 26.9 ms | 35.9 ms | below 29.4 ms |
+| Ticks over budget / failed / deadline resets | 0 / 0 / 0 | 1 of 244,928 / 0 / 0 | no worse than 1 in 2 h, 0 failed |
+| Observed tick rate | 34.00004 Hz | 34 Hz | 34 Hz |
+| Server CPU | 17.1% of one core | 36.7% | <= 60% |
+| Heap in use, peak sample | 692 MiB (committed 1 GiB; 481 MiB at start) | 654 MiB | <= 1 GiB |
+| Working set | not measured (only the JVM heap counters are in the report) | 842 to 879 MiB | <= 1.5 GB |
+| Application responses | 3.31 GB, about 1.8 MB/s total, about 90 KB/s per adapter, 649,901 requests, 0 read or write failures | 2.44 MB/s, 122 KB/s per adapter | |
+| `/health` mean | 0.72 ms, 0 failures | | |
+| Database | 138,995 pooled operations, slowest 44 ms, 0 acquire timeouts, 0 deadlocks | 0 persistence failures | |
+| Creature lifecycle (server lines, every 30 s) | about 790 live in steady state, peak 1,024 (the cap), 1,720 activated, 931 deactivated, 168 pristine rows deleted, 100 activation batches (slowest 6 ms), 0 failed activations, cap refusals 1,042 ticks (all in the first minutes; none after) | n/a | |
+| Attacks | 557 sent, 264 accepted, 293 refused (cooldown, range, busy), 20 scheduled reconnects | | |
+| Adapter guards | 1 guard tripped: 10 `position_not_walkable` on adapter 14 (x about 5845, see below); every other guard clean for all twenty adapters | | 0 |
+
+**One open finding, not hidden by loosening the guard.** The adapter parked in the far east (x = 5,845, the
+largest x of the twenty) reported 10 `position_not_walkable` out of 11,946 observations. Each position is
+on a diagonal glide between two walkable tile centres, but the two axes disagree by 0.003 tile where the guard
+(`PreviewMap.onGridPath`, `LATTICE_EPSILON`) allows 0.001. Movement runs in float world pixels (design section 11,
+"Float precision"): at x = 5,845 a float pixel is 0.016 px, while the neighbours at x = 5,456 and 5,616 stayed clean. The positions are legal (never inside a wall
+or off the glide by more than 0.003 tile); the fix, stepping in a viewer-relative frame, was already named in part 1
+and is stage B work together with worlds 1 and 2 (world-2 coordinates are smaller). Until then a streamed far-east
+walker can trip the T4C-0315 lattice guard roughly once per 1,000 observations.
+
+### Deviations from the design text
+
+* The unhostable list is larger than the design's 153 (see above): the controller's home rule is the player
+  stand rule, so 37 foot-passable anchors and 386 sprite-less records are excluded as well. Hosting the 37
+  needs the creature home check relaxed to the foot rule in `OnlineMonsterPursuit`; it is a separate, flag-off
+  visible decision.
+* A snapshot is filtered from the active set (at most 1,024), not looked up through the cell index; the cost
+  is O(active), measured above.
+* A dormant wounded creature resumes where it was last checkpointed (design 3.4); an unhurt one has nothing
+  persisted and re-activates at its home. Patrol drift is therefore not preserved for unhurt creatures.
+* The active cap admits in arrival order, nearest-first admission under the cap is not implemented: twenty
+  players in the twenty densest fields reach the cap (1,024) and some far creatures wait (`cap-refusals`
+  counts ticks blocked). The design's own worst case (20 hot spots) exceeds 1,024 by 3 to 4 times.
+* The loot read is capped at 1,024 rows and reaching the cap is not yet surfaced in the snapshot `truncated`
+  hint.
+* The portal transfer path calls the same `requestArrival` as `join`, but only the join/ready path is
+  exercised by a database test (no hosted portal leads into world 0 from a world-1 piece in the test plan
+  without a long walk); `HostedTransferTest` still passes with the hook in place.
+* In-process measurements use the pooled store; `StreamedCreaturesDatabaseTest` therefore needs
+  `OnlineDatabasePool` because the unpooled test store exhausts the Windows ephemeral port range.
+
+### Remains for stage B and later
+
+Worlds 1 and 2 as streamed regions (and the world-2 audit, risk R6); nearest-first admission and eviction
+under the active cap; surfacing the loot cap in `truncated`; a database test through a real portal transfer
+into the streamed region; relaxing the creature home rule to the foot rule (37 more spawns); the 386
+sprite-less records need data, not code; world 2 arrival latency; the unchanged items of section 4 stage A
+that need a rendered client (walk from the temple to a far monster field, restart mid-chase).

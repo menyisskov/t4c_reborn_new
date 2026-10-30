@@ -67,6 +67,16 @@ First run a three-minute smoke check, then inspect its report before a two-hour 
 ./multiplayer/tools/run-native-adapter-soak.ps1 -Port 18765 -Seconds 7200 -ServerProcessId 12345
 ```
 
+**Streamed world 0 (T4C-0363).** For a server started with `--stream-world0`, set `T4C_SOAK_STREAM_WORLD0=1` so the
+harness builds the same streamed plan (the adapters read the shared collision grid, route inside a 201 x 201 box instead
+of the 19 M-tile map, and hold the tile they joined on when nothing is near). After provisioning, run
+`java -cp <soak classpath> multiplayer/tools/SoakSpread.java <profiles-dir> <worldmap.colbin>` against the disposable
+database (it refuses any database not named `t4c_acc_` or `t4c_loot_`) to move the twenty characters from the temple to
+twenty separated monster fields, so a run exercises activation, chases and deactivation across the map. The server prints a
+`streamed-creatures` line every 30 s (active, loading, queued, settling, covered cells, activated, deactivated, pristine
+rows deleted, batches, slowest batch, cap refusals, peak active); keep its stdout for the report. Recorded in
+WORLD_STREAMING_DESIGN.md section 12.
+
 Fresh credentials go through the existing owner-private provisioner into ignored
 `multiplayer/local/soak-<run>/player-01.json` through `player-20.json`. They never appear in output
 or the report. To resume those same isolated characters, pass `-Profiles <that-directory>`.

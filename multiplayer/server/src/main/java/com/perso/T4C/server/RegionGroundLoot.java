@@ -44,6 +44,11 @@ final class RegionGroundLoot {
 
   int world() { return spec.world(); }
   OnlineStore.TileRect area() { return area; }
+  /** Streamed regions read only the cells around players (WORLD_STREAMING_DESIGN.md 3.6), never the whole world. */
+  boolean streamed() { return spec.streamed(); }
+  private java.util.function.Supplier<List<OnlineStore.TileRect>> coveredAreas=List::of;
+  void coveredAreas(java.util.function.Supplier<List<OnlineStore.TileRect>> supplier) { coveredAreas=java.util.Objects.requireNonNull(supplier); }
+  List<OnlineStore.TileRect> coveredAreas() { return coveredAreas.get(); }
   boolean loaded() { return loaded; }
   boolean needsRead() { return dirty && !reading; }
   boolean reading() { return reading; }

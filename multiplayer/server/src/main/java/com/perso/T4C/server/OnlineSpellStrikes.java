@@ -109,7 +109,7 @@ final class OnlineSpellStrikes {
     }
     var source = new CreatureSource() {
       @Override public PreviewWorld.CreatureSpawn spawn(long id) {
-        return world.creatureSpawns().stream().filter(s -> s.id() == id).findFirst().orElse(null);
+        return world.creatureSpawn(id);
       }
       @Override public List<PreviewWorld.CreatureSpawn> spawns() { return world.creatureSpawns(); }
       @Override public PreviewWorld.CreaturePosition position(long id) { return world.creaturePosition(id); }
