@@ -73,7 +73,10 @@ public class MyGame extends Game {
 
   public boolean onlineLobbyLaunch() { return onlineLobbyModel!=null; }
 
-  public void showOnlineLobby() {
+  public void showOnlineLobby() { showOnlineLobby(null); }
+
+  /** @param failure why the last attempt to enter the game failed, or null; shown under the roster */
+  public void showOnlineLobby(String failure) {
     if (onlineConnection!=null) { onlineConnection.close();onlineConnection=null; }
     var screen=OnlineLobbyScreen.forAccountClient(batch,onlineLobbyModel,
         new OnlineAccountClient(onlineEndpoint,onlineAccountKey),new OnlineLobbyScreen.Listener() {
@@ -84,6 +87,7 @@ public class MyGame extends Game {
           }
           @Override public void back() { Gdx.app.exit(); }
         });
+    if (failure!=null) screen.showJoinFailure(failure);
     setScreen(screen);
   }
 
@@ -213,8 +217,9 @@ public class MyGame extends Game {
         try { setScreen(new MainGameScreen(MyGame.this,onlineConnection)); }
         catch (GameException failure) { Gdx.app.error("online","Could not load the online game screen",failure);Gdx.app.exit(); }
       } else if ("disconnected".equals(status)) {
+        String failure=onlineConnection.failureText();
         Gdx.app.postRunnable(() -> {
-          if (getScreen() instanceof OnlineHandoffScreen) showOnlineLobby();
+          if (getScreen() instanceof OnlineHandoffScreen) showOnlineLobby(failure);
         });
       }
     }

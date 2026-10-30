@@ -60,7 +60,7 @@ playthrough and recovery criteria pass. Never infer Done from a task count or te
 
 | Milestone | Current status | Existing related tasks | Main outstanding work |
 | --- | --- | --- | --- |
-| M1 — Enter and interact | Roster/NPC backend and actual adapter probes pass, including two local HTTPS adapters with trust/hostname refusal and a separate live account-key rotation check; visible creation/selection incomplete | T4C-0192, 0195, 0196, 0216, 0219, 0232, 0233, 0234 | Native character select is merged as an opt-in lobby (`-Lobby`, owner-approved look) but has never run against a live server; in-client character creation is out of Beta scope (characters are operator-provisioned); full account lifecycle; remote deployment |
+| M1 — Enter and interact | Roster/NPC backend and actual adapter probes pass, including two local HTTPS adapters with trust/hostname refusal and a separate live account-key rotation check; selection and refusal messages verified rendered; creation bullet and remote HTTPS open | T4C-0192, 0195, 0196, 0216, 0219, 0232, 0233, 0234 | Native character select and its Create form are merged as an opt-in lobby (`-Lobby`, owner-approved look) and ran rendered against a live local server (T4C-0306 to T4C-0325; four of seven bullets ticked); in-client character creation is recorded here as out of Beta scope (characters are operator-provisioned) while the creation bullet still requires it: owner decision; remote deployment |
 | M2 — Inventory and loot | Server ground loot (drops, owner window, first-claim-wins, expiry, carry-weight rule), per-item corpse recovery within carry limits, native pickup/equip/inventory panels; all merged with CI evidence | Existing inventory/equipment work; T4C-0201, 0202, 0204, 0218, 0228 | The two-adapter loot probe now starts legitimately (T4C-0235) but has never run (needs a database and port window); rendered loot play against a live server |
 | M3 — Complete authored adventure | Quest service rules, flag allowlist, once-only turn-in rewards, native talk panel, and the Skeleton hunting ground hosted as one world-0 region with unhosted portals refused; merged | T4C-0193, 0194, 0195, 0206, 0218, 0231 | Kill credit played through end to end against a live server, the Goblin-to-Wild-Horse fight (owner accepted it as not simulated for Beta), rendered walkthrough |
 | M4 — Supported combat and abilities | Restricted melee/physical retaliation, server-authoritative patrol/pursuit with guarded persistence, two-native-adapter pursuit/restart proof, brief two-client pursuit/retaliation/reconnect check, local PostgreSQL proof of authored hostile-clan spell damage (T4C-0317), durable authored monster self-healing (T4C-0319) and ranged monster attacks (T4C-0320) | T4C-0189, 0190, 0209, 0210, 0211, 0212, 0229, 0230, 0236, 0237, 0317, 0319, 0320 | Remaining class abilities and spells, rendered clan-spell combat, longer rendered pursuit, reset/death and integrated M4/Beta acceptance remain open |
@@ -74,16 +74,16 @@ Independent implementation can proceed in parallel; acceptance must use an integ
 
 Required behavior:
 
-- [ ] Each player uses a separate online account, with no desktop character/save import.
-- [ ] The native client discovers only that account's characters, displays availability and lets
+- [x] Each player uses a separate online account, with no desktop character/save import.
+- [x] The native client discovers only that account's characters, displays availability and lets
   the player select one. Pagination, an empty roster and unavailable characters remain usable.
 - [ ] Native character creation uses shared name/slot/class rules and server-generated initial
   stats, items and gold. A retried or interrupted request cannot create duplicates or regrant a kit.
-- [ ] Invalid keys, foreign characters, a character already in use and incompatible versions give
+- [x] Invalid keys, foreign characters, a character already in use and incompatible versions give
   usable errors. Selection alone acquires no gameplay lease or player slot.
 - [x] Kilhiam appears using authored appearance/location. The native talk control sends identity
   only; range, line of sight, region, readiness and current revision are server decisions.
-- [ ] Authored English dialogue is readable in the client. First-letter item/flag commits together;
+- [x] Authored English dialogue is readable in the client. First-letter item/flag commits together;
   repeated greetings, reconnect and a lost response never grant another copy.
 - [ ] Credentials are absent from logs, public snapshots and ordinary preferences. Any non-loopback
   connection uses trusted HTTPS with hostname verification; no plaintext or trust-all workaround.
@@ -93,9 +93,62 @@ Required behavior:
 T4C-0306 (2026-10-29, local rendered, not remote): two real windows each selected their own operator-provisioned
 character in the lobby, drew each other, walked to Kilhiam and clicked him through the screen's own NPC click handler
 (each got exactly one letter; a repeat click and a greeting after a server stop/restart gave none); an out-of-range
-click was refused by the server. That ticks the Kilhiam appearance/talk bullet above. The dialogue bullet stays open:
-the lost-response case was not driven rendered, and character creation was not driven. See
+click was refused by the server. That ticks the Kilhiam appearance/talk bullet above. The dialogue bullet stayed open at
+that point because the lost-response case had not been driven; T4C-0310 and T4C-0325 below close it. See
 [CLIENT_UNIFICATION_DESIGN.md](CLIENT_UNIFICATION_DESIGN.md) 3.15 and `multiplayer/design/live2-*.png`.
+
+T4C-0325 (2026-10-30, local rendered, one disposable PG16 cluster per run, not remote; details and per-case results in
+[CLIENT_UNIFICATION_DESIGN.md](CLIENT_UNIFICATION_DESIGN.md) 3.18 and [ACCEPTANCE.md](ACCEPTANCE.md)) maps each bullet to its
+evidence and ticks four of the seven:
+
+- **Separate account, no desktop import (ticked).** Every rendered window in T4C-0306/0312/0318/0323 used its own
+  operator-provisioned account (this pass: six accounts, one process each); a character moved to another account vanished from
+  the first account's roster on the next refresh; `RemoteSessionWritesNothingTest` (5 tests) shows the remote session writes no
+  desktop save and cannot reach the local account vault; PARITY.md records operator-provisioned characters.
+- **Roster, availability, pagination, empty, unavailable (ticked).** One account with 25 characters (20 per page, so two pages)
+  listed all 25 in order with every status label (Ready, In use, New, Region offline, Respawning) and scrolled to the last row;
+  an account with none showed the empty-roster text and Enter opened no connection; selecting a Region offline and a
+  Respawning character and pressing Enter gave a message naming the state and acquired no lease. `OnlineLobbyModelTest`
+  (14) covers paging, order, cursor and truncation.
+- **Usable errors, no lease from selection (ticked, after a fix).** Rendered: an invalid key ("The server did not accept this
+  account..."), a character in use in another window ("already in use ... wait about 30 seconds"), a character moved to another
+  account under an open lobby (generic "could not be entered ... not on this account"), a client built with protocol 8 against a
+  protocol-7 server ("different versions ... update together"); the lobby holds no lease from selection alone (database lease
+  count 0 after 8 s of selection, and no connection object exists until Play). Before this pass a refused join dropped the player
+  back to the lobby with no message and a version mismatch read "could not reach the server" (fixed, `OnlineJoinFailureTest`,
+  `OnlineLobbyScreenTextTest`). The server deliberately answers an unknown key, another account's character, a missing character
+  and one in use with the same refusal (no account oracle), so the foreign case can only be reached through a stale roster and
+  its text lists the possibilities. "No player slot" is shown by the lobby opening no join request; the server's capacity
+  counter was not sampled.
+- **Dialogue, first-letter commit, repeats, reconnect, lost response (ticked).** Readable: the parchment greeting and the talk
+  panel in T4C-0306/0312 screenshots. Letter and flag commit together and a receipt retry cannot duplicate:
+  `OnlineNpcInteractionsTest.questFlagAndLetterCommitTogetherAndReceiptRetryCannotDuplicateReward` and `OnlineNpcHttpTest`
+  (PostgreSQL). Repeats and reconnect rendered in T4C-0306 (repeat click and a greeting after a server stop/restart gave no
+  second letter). Lost response: T4C-0310 `LostAck` produced both outcomes (reply lost before the commit, and reply lost after it)
+  and every character ended with exactly one letter and one receipt. That drill used native adapters, not a rendered window,
+  and the client never replays a gameplay request; this is the one judgement call in the four ticks.
+- **Native creation (left open, owner decision).** The lobby now has a working Create form (T4C-0272 and the lobby creation
+  work). This pass drove it rendered once as extra evidence (the form, one Archer typed and created, the roster listing it,
+  entering the game with the server-generated kit: 46 inventory stacks and 204 gold) and the server-side idempotency is covered
+  by `OnlineCharacterCreationTest` (PostgreSQL) and `OnlineCreateFormTest` (7). It is not ticked because the status table above
+  records in-client creation as outside the Beta scope while this bullet still requires it; the owner decides whether to keep
+  the bullet (then this evidence, plus one interrupted-request drill rendered, would support ticking it) or to rewrite it as
+  operator-provisioned. The "Done evidence" line below (both clients create) is blocked by the same decision.
+- **Credentials and HTTPS (left open).** Credentials: after both runs a scan of every driver and server log, the preference file
+  and the chat log for the six exact account keys (and for any 64-hex string in the run logs) found none; existing tests cover the
+  profile, credentials and lobby `toString`, the roster, creation, join and metrics responses (`OnlineAccountProfileTest`,
+  `OnlineLobbyModelTest.toStringNeverContainsTheAccountKey`, `AccountRosterTest`, `GameSocketServerTest`, `PreviewServerTest`,
+  `HttpTrafficMetricsTest`). HTTPS: a source search finds no trust manager or host-name verifier override and the client
+  sets HTTPS endpoint identification on every game socket; `ServerTransportTest` (2) and `OnlineEndpointTest` (2) passed again
+  here; T4C-0216's two-adapter probe is unchanged (not re-run: it needs its own `t4c_tls_0216_*` database). New: the rendered
+  lobby over a local HTTPS server with a one-day fixture certificate listed 25 characters and entered the game with the
+  certificate trusted, and showed "Could not reach the online server" with the certificate untrusted and with `127.0.0.1` against
+  a `localhost` certificate. Still unproved: a genuinely non-loopback deployment with a certificate chain a client trusts.
+  Left unticked until that deployment check exists.
+- **Operator-profile compatibility path.** The profile file format is unchanged and every run above used operator-provisioned
+  profiles; `OnlineLobbyLaunchTest.defaultLaunchIsDirectAndArgumentsAreUntouched` and `OnlineAccountProfileTest` (a
+  character profile keeps direct launch and can prefer lobby selection) cover the retained direct path; T4C-0212's rendered
+  check and T4C-0311's packaged-client rehearsal used it live.
 
 Done evidence: both rendered clients create/select their own characters, connect, converse, close
 and reconnect. Retain operator profiles as a compatibility path. See [ACCOUNT_LIFECYCLE.md](ACCOUNT_LIFECYCLE.md)

@@ -770,6 +770,42 @@ prints `skeletonGround=`); `-Dbeta.scale`, `-Dbeta.from=ground|death` and `-Dbet
 window, mana potion, creature-target casting, spell merchants, character creation, the Options button, targeting or damage across
 a region boundary, individual single-stack corpse recovery, and a mixed session on the packaged candidate.
 
+### 3.18 Rendered lobby error cases and local HTTPS (T4C-0325, milestone M1)
+
+**Evidence class: rendered lobby windows, local only.** Same harness idea as 3.15 but a purpose-built test-scope driver,
+`OnlineLobbyCasesDriver` (one process per case; Enter, Down/Up and C are delivered to the lobby screen's own input processor;
+the only injected value is the typed creation name). Operator tool: `LiveRunProvision` scenes `lobby`, `lobby-leases`,
+`lobby-stale-move`, `lobby-created`. Two disposable PG16 clusters (loopback 57931 and 57932, `DESTROY_OK`), one
+`ServerMain --online` each (HTTP 18941, HTTPS 18961, game socket one above), both stopped. Reproduce: build as in 3.15, create the
+cluster, start the server through `RunEnv`, run `LiveRunProvision COLLISION lobby OUTDIR`, then one driver per scene
+(`plain`, `roster`, `inuse`, `stale`, `create`, `tls`) with the endpoint, a profile from OUTDIR and a sync directory. For the
+version case put a copy of `OnlineProtocol`, `OnlineAccountClient` and `OnlineConnection` compiled with `VERSION = 8` first on
+the client classpath (the constant is inlined, so all three must be recompiled). For HTTPS give the server
+`T4C_TLS_KEYSTORE`, `T4C_TLS_PASSWORD_FILE`, `T4C_PUBLIC_ORIGIN=https://localhost:<port>` and the client a truststore holding only
+the public certificate.
+
+| Case (image in `multiplayer/design/`) | Observed |
+|---|---|
+| Invalid key, `m1-lobby-invalid-key` | roster read refused (401); text "The server did not accept this account. Check your online profile."; Enter opens no connection. |
+| Empty roster, `m1-lobby-empty-roster` | "This account has no characters yet. Press Create to make your first one."; Enter does nothing; no connection. |
+| Incompatible version, `m1-lobby-incompatible-version` | client with protocol 8 against server protocol 7: "This client and the server use different versions. Update the client and the server together." (before the fix: "Could not reach the online server"). |
+| Pagination, `m1-lobby-roster-page-1`, `m1-lobby-roster-page-last` | 25 characters (one Ready, one Region offline, one Respawning, 22 New) in two server pages, all listed in server order, `truncated=false`, scrolls to the last row. |
+| Unavailable, `m1-lobby-unavailable-region` | Play on a Region offline character and on a Respawning one: "That character cannot be played right now (Region offline|Respawning). Choose another character or try again later."; no lease left. |
+| In use, `m1-lobby-in-use` | window B (same account) shows the character In use; Play: "That character is already in use, in another window or in a session that has not timed out yet. Wait about 30 seconds, then press R." Window A kept playing; lease released when A left. |
+| Foreign, `m1-lobby-foreign` | the character was moved to another account while the lobby was open; Play: "That character could not be entered. It may be in use in another window (wait about 30 seconds, then press R), or it is not on this account."; the next roster no longer lists it. |
+| Selection alone | database lease count 0 after 8 s on a 25-character roster and after every refused Play; 1 only while the ready character was in play. |
+| Creation (extra), `m1-lobby-create-form` | C opened the form; typed name, Down chose Archer; Enter created one character, the roster listed it, Play entered the game with 46 inventory stacks and 204 gold from the server-generated kit. |
+| HTTPS (`m1-tls-lobby-trusted`, `m1-tls-hostname-mismatch`) | trusted `localhost` certificate: roster and join worked; default trust and `127.0.0.1` host name: "Could not reach the online server", no roster. |
+
+Finding fixed here: the server answers an unknown key, another account's character, a missing one and one in use with one
+refusal (409 `account_or_session`, on purpose: no account oracle), and `OnlineConnection` only logged the failure, so
+`OnlineHandoffScreen` returned to the lobby without a word. `OnlineConnection.failureText()` now carries the reason (recorded
+before the status flips to disconnected), `OnlineJoinFailure` maps refusals to messages, and the lobby refines the general
+refusal with the freshly read row of the selected character (in use, Region offline, Respawning). Not changed: the lobby still
+offers Play on a row that says In use (the roster is advisory; the server decides); the Create form lists Archer although
+PARITY.md still says Archer awaits online ranged combat (the server's creation test accepts it); the empty-roster text points
+to Create while the milestone table calls in-client creation out of Beta scope. Both are owner decisions.
+
 ## 4. Staged plan
 
 Sizes: S under a day, M a few days, L about a week, XL more. Every stage ends with the full

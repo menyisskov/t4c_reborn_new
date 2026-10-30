@@ -38,7 +38,7 @@ import java.util.UUID;
  * robe) and a level-1 Warrior carrying an over-weight stack within talking distance of the hosted shopkeeper Sigfried,
  * for the inventory, spell, potion, shop and walking-animation runs.
  *
- * <p>Usage: {@code LiveRunProvision COLLISION_FILE temple|skeletons|wares OUT_DIR [NAME_SUFFIX]}.
+ * <p>Usage: {@code LiveRunProvision COLLISION_FILE temple|skeletons|wares|quest|beta|mortal|lobby OUT_DIR [NAME_SUFFIX]}; the operator steps {@code lobby-leases}, {@code lobby-stale-move} and {@code lobby-created} take the same OUT_DIR.
  */
 public final class LiveRunProvision {
   private static final int WORLD = 0;
@@ -76,6 +76,14 @@ public final class LiveRunProvision {
       betaScene(plan, out, args.length > 3 ? args[3] : "");
       return;
     }
+    if ("lobby".equals(scene)) {
+      lobbyScene(map, out, args.length > 3 ? args[3] : "");
+      return;
+    }
+    if ("lobby-leases".equals(scene) || "lobby-stale-move".equals(scene) || "lobby-created".equals(scene)) {
+      lobbyDatabaseStep(scene, out);
+      return;
+    }
     if ("move-skeletons".equals(scene) || "move-giver".equals(scene)) {
       move(plan, map, out, scene);
       return;
@@ -100,6 +108,114 @@ public final class LiveRunProvision {
       make(store, out.resolve("player-b.json"), "Live Bravo" + suffix, b, level);
     }
     System.out.println("PROVISION_OK");
+  }
+
+  /**
+   * T4C-0325 scene {@code lobby}: the accounts behind the rendered lobby error cases of milestone M1. Writes
+   * {@code player-a.json} (account A: one ready warrior "Lobby Alpha" at the temple, an unhosted-region character, a
+   * character with no respawn point and 22 never-initialised ones, so the roster needs two pages), {@code player-b.json}
+   * (account B, one ready warrior), {@code player-c.json} (an account with no characters), {@code player-s.json}
+   * (account S, one ready warrior that the operator later moves to account B while its lobby is open) and
+   * {@code player-d.json} (a second empty account, for the creation form) and {@code player-badkey.json} (a well-formed key no account has). {@code stale.txt} carries the two non-secret ids the
+   * operator needs for that move. Nothing is printed except non-secret labels.
+   */
+  private static void lobbyScene(PreviewMap map, Path out, String suffix) throws Exception {
+    Spot temple = new Spot(map.originX + map.spawnX, map.originY + map.spawnY);
+    try (var store = OnlineStore.fromEnvironment()) {
+      var keyA = store.provisionAccount();
+      var alpha = store.create(keyA.accountId(), "Lobby Alpha" + suffix, WORLD, temple.x(), temple.y(),
+          readyKit("female", 1), readyGold());
+      // Position (1,1) of world 0 is outside every hosted region: the roster calls it "Region offline".
+      var kit = readyKit("male", 2);
+      store.create(keyA.accountId(), "Lobby Remote" + suffix, WORLD, 1, 1, kit, readyGold());
+      store.create(keyA.accountId(), "Lobby NoRespawn" + suffix, WORLD, temple.x(), temple.y(), withRespawn(kit, null), readyGold());
+      for (int i = 0; i < 22; i++)
+        store.create(keyA.accountId(), String.format("Lobby Filler %02d%s", i, suffix), WORLD, temple.x(), temple.y());
+      writeProfile(out.resolve("player-a.json"), keyA.secret(), alpha.id());
+
+      var keyB = store.provisionAccount();
+      var bravo = store.create(keyB.accountId(), "Lobby Bravo" + suffix, WORLD, temple.x() + 1, temple.y(),
+          readyKit("female", 3), readyGold());
+      writeProfile(out.resolve("player-b.json"), keyB.secret(), bravo.id());
+
+      var keyC = store.provisionAccount();
+      writeProfile(out.resolve("player-c.json"), keyC.secret(), null);
+
+      var keyS = store.provisionAccount();
+      var stale = store.create(keyS.accountId(), "Lobby Stale" + suffix, WORLD, temple.x() + 2, temple.y(),
+          readyKit("male", 4), readyGold());
+      writeProfile(out.resolve("player-s.json"), keyS.secret(), stale.id());
+      Files.writeString(out.resolve("stale.txt"), stale.id() + " " + keyB.accountId());
+
+      writeProfile(out.resolve("player-d.json"), store.provisionAccount().secret(), null);
+
+      byte[] random = new byte[32];
+      new java.security.SecureRandom().nextBytes(random);
+      writeProfile(out.resolve("player-badkey.json"), java.util.HexFormat.of().formatHex(random), UUID.randomUUID());
+    }
+    System.out.println("PROVISION_OK");
+  }
+
+  /**
+   * Operator steps between the lobby cases. {@code lobby-leases} prints how many characters currently hold a session
+   * lease (the lobby must hold none from selection alone). {@code lobby-created} prints what the in-lobby creation form
+   * stored for the character it created (row count, gold, inventory stacks). {@code lobby-stale-move} moves the character in {@code stale.txt} to the other
+   * account listed there (a plain account_id update while the server is idle for that character), so the open lobby's
+   * roster is out of date.
+   */
+  private static void lobbyDatabaseStep(String scene, Path out) throws Exception {
+    try (var db = DriverManager.getConnection(System.getenv("T4C_DB_URL"), System.getenv("T4C_DB_USER"), System.getenv("T4C_DB_PASSWORD"))) {
+      if ("lobby-leases".equals(scene)) {
+        try (var ps = db.prepareStatement(
+                "SELECT count(*) FILTER (WHERE session_id IS NOT NULL AND session_until>clock_timestamp()), "
+                    + "count(*) FILTER (WHERE session_id IS NOT NULL), count(*) FROM online_characters");
+            var rows = ps.executeQuery()) {
+          rows.next();
+          System.out.println("LEASES live=" + rows.getLong(1) + " rowsWithSessionId=" + rows.getLong(2) + " characters=" + rows.getLong(3));
+        }
+        return;
+      }
+      if ("lobby-created".equals(scene)) {
+        try (var ps = db.prepareStatement(
+                "SELECT count(*), max(gold), max(jsonb_array_length(progress->'inventory')), "
+                    + "count(*) FILTER (WHERE progress IS NOT NULL) FROM online_characters WHERE name='Lobby Cr'");
+            var rows = ps.executeQuery()) {
+          rows.next();
+          System.out.println("CREATED rows=" + rows.getLong(1) + " gold=" + rows.getLong(2) + " inventoryStacks=" + rows.getLong(3)
+              + " withProgress=" + rows.getLong(4));
+        }
+        return;
+      }
+      String[] ids = Files.readString(out.resolve("stale.txt")).trim().split(" ");
+      try (var ps = db.prepareStatement("UPDATE online_characters SET account_id=?::uuid WHERE id=?::uuid AND session_id IS NULL")) {
+        ps.setString(1, ids[1]);
+        ps.setString(2, ids[0]);
+        if (ps.executeUpdate() != 1) throw new IllegalStateException("the character could not be moved");
+      }
+      System.out.println("MOVED the stale character to the other account");
+    }
+  }
+
+  private static CharacterProgress readyKit(String gender, long seed) {
+    return OnlineCharacterCreator.prepare(CharacterClass.WARRIOR, gender, false, new Random(seed)).progress();
+  }
+
+  private static long readyGold() {
+    return OnlineCharacterCreator.prepare(CharacterClass.WARRIOR, "male", false, new Random(1)).gold();
+  }
+
+  private static CharacterProgress withRespawn(CharacterProgress q, CharacterProgress.Respawn respawn) {
+    return new CharacterProgress(q.version(), q.characterClass(), q.gender(), q.attributes(), q.vitals(),
+        q.advancement(), q.inventory(), q.equipment(), q.skills(), q.spells(), q.questFlags(), q.storage(),
+        q.storageGold(), respawn, q.buffs(), q.cooldowns(), q.hiddenUntil(), q.companion());
+  }
+
+  private static void writeProfile(Path profile, String secret, UUID characterId) throws Exception {
+    privateFile(profile);
+    var json = new java.util.LinkedHashMap<String, Object>();
+    json.put("secret", secret);
+    if (characterId != null) json.put("characterId", characterId);
+    Files.writeString(profile, new Gson().toJson(json), StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
   }
 
   /**
