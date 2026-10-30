@@ -45,6 +45,10 @@ T4C-0344 implementation evidence: the native online action activates learned Sne
 
 T4C-0351 implementation evidence: online spell and potion lists page through every server-supported entry, with Left/Right navigation and 1–9 selection scoped to the current page. Focused tests passed 13/13; root package and `git diff --check` passed on main `acb7f2ce`. No rendered-client or owner-QA check was run; M4/Beta remain incomplete.
 
+T4C-0354 implementation evidence: journal Inventory now opens the authoritative online inventory panel; offline fallback remains. Focused tests passed 3/3, package and diff check passed on tested head cda1311e. No rendered-client check; M2 remains open.
+
+T4C-0355 implementation evidence: online double-click recast validates the own committed buff and registry spell before dispatch through RemotePlayerCommands.cast; server authority handles learning/cooldown/content checks, offline behavior unchanged. Focused test passed 2/2; package and diff check passed on b2490b75. No rendered-client check; M4/Beta remain open.
+
 ## Verified foundation (updated 2026-10-27)
 
 T4C-0227 adds `httpTraffic` to the existing loopback/private-token
