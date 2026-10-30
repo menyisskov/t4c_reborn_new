@@ -76,6 +76,9 @@ public class Player extends Stats implements ProgressionState {
 
   private final Coordinates position = new Coordinates(0f, 0f, 0);
   private final Vector2 positionVector = new Vector2();
+  // Where the legs last counted ground from; the walk animation follows distance, not time.
+  private float lastWalkX = Float.NaN;
+  private float lastWalkY = Float.NaN;
   @Getter private final PlayerAnimations animations;
   @Getter private final PlayerMovement movement;
   private final Random random = new Random();
@@ -345,7 +348,12 @@ public class Player extends Stats implements ProgressionState {
     if (isStunned() || isPhysicallyExhausted()) {
       movement.stop();
     }
-    animations.update(delta, movement.isMoving());
+    float travelledPx =
+        PlayerAnimations.walkDistance(
+            lastWalkX, lastWalkY, position.getX(), position.getY());
+    lastWalkX = position.getX();
+    lastWalkY = position.getY();
+    animations.update(delta, movement.isMoving(), travelledPx);
     tickNaturalRegeneration(delta);
     tickSneakUpkeep();
     tickRegenBuffs(delta);

@@ -19,6 +19,7 @@ import com.perso.T4C.online.model.GroundLootView;
 import com.perso.T4C.online.model.NpcView;
 import com.perso.T4C.online.model.OnlineRegion;
 import com.perso.T4C.player.Player;
+import com.perso.T4C.player.PlayerAnimations;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -455,6 +456,8 @@ public final class RemoteWorldDriver implements WorldDriver {
       // RemotePlayerPlayback): position, walking flag and facing all come from the drawn motion,
       // so the legs run exactly while the picture moves, with no restart between polls.
       RemotePlayerPlayback route = entry.route;
+      float fromX = player.getCoordinates().getX();
+      float fromY = player.getCoordinates().getY();
       route.advance(delta);
       player.getCoordinates().setX(route.x());
       player.getCoordinates().setY(route.y());
@@ -470,7 +473,12 @@ public final class RemoteWorldDriver implements WorldDriver {
         player.getMovement().faceToward(0f, 0f, dx, dy);
       }
       player.getMovement().puppetMoving(moving);
-      player.getAnimations().update(delta, moving);
+      player
+          .getAnimations()
+          .update(
+              delta,
+              moving,
+              PlayerAnimations.walkDistance(fromX, fromY, route.x(), route.y()));
     }
   }
 }

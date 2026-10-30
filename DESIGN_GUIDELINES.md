@@ -77,6 +77,13 @@
 - `DayNightCycle`'s constructor argument is hours. A saved `dayNightHour` is always honoured exactly, including 0 (midnight); only the no-saved-clock default changed.
 - Open gap: online players each run their own local clock; sharing the server's time of day would need a protocol addition and is not decided.
 
+## Walk animation follows distance (T4C-0396)
+
+- The player's legs advance by ground covered, one walk frame per original-game stride (`PlayerAnimations.walkStridePixels()`, 8 px in both timing profiles), not by the clock. A clock-driven cycle at a speed other than the original's made the character glide; the fix is to tie the legs to the ground. Owner request, 2026-10-30.
+- Player walking speed is `PLAYER_SPEED` = 128 px/s horizontal-equivalent (4 tiles/s; 64 px/s down on a diagonal), measured from an owner recording of the real client on 2026-10-30; the owner asked that our client and server match it. This replaces the 70-80 range of T4C-0316/0360. Offline client, online prediction and the server all read the one constant. Monster speed stays 45, so players now outpace monsters about 2.8 to 1; whether to retune monsters is an open balance call, not decided.
+- Applies to the local player and to other players in online play. Monsters, NPCs and companions keep their own clock-driven animation (they pace themselves) until the owner reports the same glide on them.
+- Open gap: the original also moved in discrete 8 x 4 px (or 4 x 2 px) ticks; drawn movement here stays smooth. Snapping the drawn position to those ticks is an untried option, to be taken only if distance-locked legs still feel like gliding.
+
 ## Mythic monster encounters (T4C-0153)
 
 - The owner wants new monsters at level 1000 and above that feel substantially tougher than Arch Drake. They remain optional challenge content above the level-400 player cap; their level does not raise that cap.

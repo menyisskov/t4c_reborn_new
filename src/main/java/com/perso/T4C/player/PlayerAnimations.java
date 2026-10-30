@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.perso.T4C.entity.EntityAnimationsBase;
+import com.perso.T4C.config.GameConstants;
 import com.perso.T4C.config.NativeTimingProfile;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.helper.SpriteLoader;
@@ -108,6 +109,42 @@ public class PlayerAnimations extends EntityAnimationsBase {
       holdingMeleeAttackPose = false;
     }
     animTimer = moving ? animTimer + delta : 0f;
+  }
+
+  /**
+   * Walking update for a body that really moves: the legs advance by the ground covered, one
+   * walk frame per {@link #walkStridePixels()}, so the feet keep pace with the picture at any
+   * speed and stop the moment the body does. {@code travelledPx} is horizontal-equivalent
+   * pixels, as measured by {@link #walkDistance}.
+   */
+  public void update(float delta, boolean moving, float travelledPx) {
+    if (attacking || !moving) {
+      update(delta, moving);
+      return;
+    }
+    holdingMeleeAttackPose = false;
+    NativeTimingProfile profile = NativeTimingProfile.current();
+    // animTimer counts seconds at the original game's pace, so frame selection is unchanged.
+    animTimer += Math.max(0f, travelledPx) / (profile.movX() * profile.fps());
+  }
+
+  /** Ground covered by one walk frame in the original game: one tick's step times its framing. */
+  public static float walkStridePixels() {
+    NativeTimingProfile profile = NativeTimingProfile.current();
+    return (float) profile.movX() * profile.framing();
+  }
+
+  /**
+   * Horizontal-equivalent distance between two positions (the map is drawn at 2:1). A jump of
+   * more than four tiles in one update is a teleport or a map change, not a step, so it counts
+   * as no walking.
+   */
+  public static float walkDistance(float fromX, float fromY, float toX, float toY) {
+    float distance =
+        Math.max(
+            Math.abs(toX - fromX),
+            Math.abs(toY - fromY) * GameConstants.GRID_W / GameConstants.GRID_H);
+    return distance <= 4f * GameConstants.GRID_W ? distance : 0f; // also rejects NaN
   }
 
   private boolean isAttackPoseVisible() {
