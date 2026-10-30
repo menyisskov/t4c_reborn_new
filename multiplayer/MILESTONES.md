@@ -174,6 +174,8 @@ and [NPC_INTERACTION_DESIGN.md](NPC_INTERACTION_DESIGN.md) for current contracts
 
 ## M2 — Use inventory and receive loot
 
+T4C-0354 implementation evidence: the character journal Inventory tab now routes through the configured HUD action to the authoritative online inventory panel; offline Inventory remains unchanged. Focused navigation tests passed 3/3, package and diff check passed on tested head cda1311e. No rendered-client check was run; M2 and Beta remain open.
+
 Required behavior:
 
 - [x] Native inventory shows committed item identities, quantities, charges and equipped slots.
@@ -324,6 +326,8 @@ Current evidence (T4C-0323, PR #285 merged): learned single-target heal effects 
 T4C-0344 implementation evidence: learned online Sneak now commits concealment and its cooldown; movement upkeep uses the authored skill/stat/witness checks, and melee, ranged attacks and spell casts reveal it. Focused server tests passed 19 total (0 failures/errors, 6 skipped, including database-gated cases), focused client tests passed 49/49, root and server package builds passed, and `git diff --check` passed. The PostgreSQL persistence/observer case and rendered-client verification were not run. M4 and Beta remain open.
 
 T4C-0351 implementation evidence: the online ability menu pages through all learned, server-supported spells and usable potions; Left/Right changes pages and 1–9 selects within the current page. The focused menu tests passed 12/12 and screen key-routing test passed 1/1; root package and `git diff --check` passed on main `acb7f2ce`. No rendered-client test was run. M4 and Beta remain open.
+
+T4C-0355 implementation evidence: double-clicking an own-character buff in the online buff bar resolves its key against committed own buffs and SpellRegistry, then sends the existing authoritative socket cast. Server still checks learning, cooldown and supported content; offline recasting is unchanged. Focused tests passed 2/2; package and diff check passed on merged main b2490b75. No rendered-client check was run; M4 and Beta remain open.
 
 Required behavior:
 

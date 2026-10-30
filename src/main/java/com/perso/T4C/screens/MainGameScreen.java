@@ -115,6 +115,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -2171,14 +2172,30 @@ public class MainGameScreen implements Screen {
     if (spellName == null || spellName.isEmpty()) {
       return false;
     }
-    // Online buff state is informational; recasting must go through an explicit server command.
-    if (isRemoteSession()) return true;
     long now = System.currentTimeMillis();
     if (spellName.equals(lastClickedBuffSpellName)
         && now - lastBuffClickMillis <= BUFF_DOUBLE_CLICK_MILLIS) {
-      SpellData spell = findSpellByName(spellName);
-      if (spell != null) {
-        castDefensiveSpell(spell);
+      if (isRemoteSession()) {
+        com.perso.T4C.session.RemotePlayerCommands commands =
+            session.commands() instanceof com.perso.T4C.session.RemotePlayerCommands remote
+                ? remote
+                : null;
+        var view = remoteConnection == null ? null : remoteConnection.view();
+        var progress = view == null || view.character() == null ? null : view.character().progress();
+        if (commands != null && progress != null) {
+          recastRemoteBuff(
+              spellName,
+              progress.buffs().stream()
+                  .filter(java.util.Objects::nonNull)
+                  .map(com.perso.T4C.online.model.CharacterProgress.Buff::spell)
+                  .toList(),
+              commands::cast);
+        }
+      } else {
+        SpellData spell = findSpellByName(spellName);
+        if (spell != null) {
+          castDefensiveSpell(spell);
+        }
       }
       lastClickedBuffSpellName = null;
       lastBuffClickMillis = 0L;
@@ -2199,6 +2216,23 @@ public class MainGameScreen implements Screen {
       }
     }
     return null;
+  }
+
+  static boolean recastRemoteBuff(
+      String buffName,
+      Collection<String> ownBuffSpellKeys,
+      java.util.function.Consumer<String> cast) {
+    if (buffName == null || ownBuffSpellKeys == null || cast == null) return false;
+    SpellData spell = SpellRegistry.findByName(buffName);
+    if (spell == null
+        || ownBuffSpellKeys.stream()
+            .map(SpellRegistry::findByName)
+            .filter(java.util.Objects::nonNull)
+            .noneMatch(ownSpell -> spell.getKey().equals(ownSpell.getKey()))) {
+      return false;
+    }
+    cast.accept(spell.getKey());
+    return true;
   }
 
   private boolean tryCastAttackSpell(BaseMonster monster) {
