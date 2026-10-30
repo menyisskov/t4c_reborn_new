@@ -9,6 +9,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
@@ -426,7 +427,7 @@ class OnlineConnectionTest {
       String request = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
       int status = 200;
       String reply = "{}";
-      if (java.util.Set.of("/join", "/pickup", "/cast", "/use").contains(path)
+      if (java.util.Set.of("/join", "/pickup", "/cast", "/use", "/allocate-stats").contains(path)
           && !Integer.toString(com.perso.T4C.online.model.OnlineProtocol.VERSION).equals(
               exchange.getRequestHeaders().getFirst(com.perso.T4C.online.model.OnlineProtocol.VERSION_HEADER))) {
         status = 426;
@@ -438,7 +439,14 @@ class OnlineConnectionTest {
         case "/state" -> reply = "{\"tick\":8,\"region\":" + regionJson(0) + ",\"characterRevision\":" + revision.get()
             + ",\"players\":[{\"id\":7,\"x\":40.5,\"y\":30.5,\"sequence\":0,\"hp\":27,\"maxHp\":40}],\"loot\":[]}";
         case "/character" -> reply = "{\"id\":\"" + credentials.characterId() + "\",\"name\":\"Caster\",\"gold\":0,"
-            + "\"experience\":0,\"revision\":" + revision.get() + ",\"locationEpoch\":0}";
+            + "\"experience\":0,\"revision\":" + revision.get() + ",\"locationEpoch\":0"
+            + (revision.get() < 5 ? "" : ",\"progress\":{\"version\":2,\"characterClass\":\"warrior\",\"gender\":\"male\","
+                + "\"attributes\":{\"strength\":12,\"endurance\":11,\"dexterity\":12,\"wisdom\":14,\"intelligence\":14},"
+                + "\"vitals\":{\"hp\":20,\"maxHp\":20,\"mana\":10,\"maxMana\":10},"
+                + "\"advancement\":{\"level\":1,\"statPoints\":0,\"skillPoints\":0,\"rebirths\":0,\"karma\":0},"
+                + "\"inventory\":[],\"equipment\":{},\"skills\":{},\"spells\":[],\"questFlags\":{},\"storage\":[],"
+                + "\"storageGold\":0,\"respawn\":{\"world\":0,\"x\":1,\"y\":1},\"buffs\":[],\"cooldowns\":{},"
+                + "\"hiddenUntil\":0,\"companion\":null}") + "}";
         case "/corpses" -> reply = "[]";
         case "/cast" -> {
           bodies.add("cast " + request);
@@ -460,6 +468,10 @@ class OnlineConnectionTest {
           reply = "{\"revision\":" + revision.incrementAndGet()
               + ",\"healthGained\":9,\"manaSpent\":2,\"manaGained\":5}";
         }
+        case "/allocate-stats" -> {
+          bodies.add("stats " + request);
+          reply = "{\"revision\":" + revision.incrementAndGet() + ",\"allocatedPoints\":3}";
+        }
         case "/pickup" -> {
           bodies.add("pickup " + request);
           reply = "{\"revision\":" + revision.incrementAndGet() + "}";
@@ -477,6 +489,8 @@ class OnlineConnectionTest {
       awaitTrue(() -> connection.view() != null && connection.view().character() != null);
       assertThrows(IllegalArgumentException.class, () -> connection.cast("heal_light"));
       assertThrows(IllegalArgumentException.class, () -> connection.cast("spell.Bad Key"));
+      assertThrows(IllegalArgumentException.class, () -> connection.allocateStats(Map.of("luck", 1)));
+      assertThrows(IllegalArgumentException.class, () -> connection.allocateStats(Map.of("strength", 0)));
 
       var refused = connection.cast("spell.heal_light").toCompletableFuture().get(3, TimeUnit.SECONDS);
       assertFalse(refused.accepted());
@@ -512,10 +526,17 @@ class OnlineConnectionTest {
       assertEquals(4, used.character().revision());
       assertEquals("use 3 0 " + potion, bodies.getLast());
       assertEquals(6, bodies.size());
+      var allocated = connection.allocateStats(Map.of("wisdom", 1, "strength", 2))
+          .toCompletableFuture().get(3, TimeUnit.SECONDS);
+      assertTrue(allocated.accepted());
+      assertEquals("online.stats.applied", allocated.messageKey());
+      assertEquals(java.util.List.of(3), allocated.args());
+      assertEquals(5, allocated.character().revision());
+      assertEquals("stats 4 0 strength:2,wisdom:1", bodies.getLast());
       var picked = connection.pickUp(UUID.randomUUID()).toCompletableFuture().get(3, TimeUnit.SECONDS);
       assertTrue(picked.accepted(), "The version-gated pickup also stays usable through this adapter");
-      assertEquals(5, picked.character().revision());
-      assertEquals(7, bodies.size());
+      assertEquals(6, picked.character().revision());
+      assertEquals(8, bodies.size());
     } finally {
       server.stop(0);
     }

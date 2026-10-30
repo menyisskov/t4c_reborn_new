@@ -18,6 +18,7 @@ import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spell.SpellData;
+import com.perso.T4C.session.RemotePlayerCommands;
 import com.perso.T4C.ui.FontManager;
 import com.perso.T4C.ui.HudTooltip;
 import com.perso.T4C.ui.PlayerHUD;
@@ -30,12 +31,14 @@ import java.util.Map;
 public class Statistics extends CharacterPanel {
   private final Player player;
   private final PlayerHUD hud;
+  private final RemotePlayerCommands remotePlayerCommands;
   private final List<StatHoverInfo> statHoverInfos = new ArrayList<>();
   private final HudTooltip tooltip = new HudTooltip();
   private final Map<String, Integer> pendingAllocations = new LinkedHashMap<>();
   private final Map<String, GuiButton> statUpButtons = new LinkedHashMap<>();
   private final Map<String, GuiButton> statDownButtons = new LinkedHashMap<>();
   private GuiButton applyButton;
+  private boolean remoteAllocationInFlight;
 
   public Statistics(Player player) {
     this(player, null);
@@ -45,6 +48,7 @@ public class Statistics extends CharacterPanel {
     super(player, hud, "ui.journal.character", "character");
     this.player = player;
     this.hud = hud;
+    this.remotePlayerCommands = hud == null ? null : hud.remotePlayerCommands();
     addStatLabels();
     addStatPointButtons();
   }
@@ -251,7 +255,7 @@ public class Statistics extends CharacterPanel {
   }
 
   private void allocatePoint(String statId) {
-    if (player == null || spentPendingPoints() >= player.getStatPoints()) {
+    if (player == null || remoteAllocationInFlight || spentPendingPoints() >= player.getStatPoints()) {
       return;
     }
     pendingAllocations.merge(statId, 1, Integer::sum);
@@ -259,6 +263,7 @@ public class Statistics extends CharacterPanel {
   }
 
   private void deallocatePoint(String statId) {
+    if (remoteAllocationInFlight) return;
     Integer current = pendingAllocations.get(statId);
     if (current == null || current <= 0) {
       return;
@@ -273,6 +278,18 @@ public class Statistics extends CharacterPanel {
 
   private void applyPendingAllocations() {
     if (player == null || pendingAllocations.isEmpty()) {
+      return;
+    }
+    if (remotePlayerCommands != null) {
+      if (remoteAllocationInFlight) return;
+      remoteAllocationInFlight = true;
+      refreshStatPointButtonsVisibility();
+      boolean queued = remotePlayerCommands.allocateStats(
+          Map.copyOf(pendingAllocations), this::completeRemoteAllocation);
+      if (!queued) {
+        remoteAllocationInFlight = false;
+        refreshStatPointButtonsVisibility();
+      }
       return;
     }
     for (Map.Entry<String, Integer> entry : pendingAllocations.entrySet()) {
@@ -291,17 +308,34 @@ public class Statistics extends CharacterPanel {
     refreshStatPointButtonsVisibility();
   }
 
+  private void completeRemoteAllocation(com.perso.T4C.online.OnlineConnection.CommandResult result) {
+    if (result != null && result.accepted() && result.character() != null
+        && result.character().progress() != null) {
+      var progress = result.character().progress();
+      var attributes = progress.attributes();
+      player.setStrength(attributes.strength());
+      player.setEndurance(attributes.endurance());
+      player.setDexterity(attributes.dexterity());
+      player.setWisdom(attributes.wisdom());
+      player.setIntelligence(attributes.intelligence());
+      player.setStatPoints(progress.advancement().statPoints());
+      pendingAllocations.clear();
+    }
+    remoteAllocationInFlight = false;
+    refreshStatPointButtonsVisibility();
+  }
+
   private void refreshStatPointButtonsVisibility() {
     boolean hasStatPoints = player != null && player.getStatPoints() > 0;
-    boolean canAllocate = hasStatPoints && spentPendingPoints() < player.getStatPoints();
+    boolean canAllocate = !remoteAllocationInFlight && hasStatPoints && spentPendingPoints() < player.getStatPoints();
     for (Map.Entry<String, GuiButton> entry : statUpButtons.entrySet()) {
       entry.getValue().setVisible(canAllocate);
     }
     for (GuiButton down : statDownButtons.values()) {
-      down.setVisible(hasStatPoints);
+      down.setVisible(!remoteAllocationInFlight && hasStatPoints);
     }
     if (applyButton != null) {
-      applyButton.setVisible(!pendingAllocations.isEmpty());
+      applyButton.setVisible(!remoteAllocationInFlight && !pendingAllocations.isEmpty());
     }
   }
 

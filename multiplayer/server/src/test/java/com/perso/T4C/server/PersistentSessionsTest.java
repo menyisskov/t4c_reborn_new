@@ -25,6 +25,36 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 /** Consequential join between the tick-owned state and the real PostgreSQL transaction queue. */
 @EnabledIfEnvironmentVariable(named="T4C_DB_URL", matches=".+")
 class PersistentSessionsTest {
+  @Test void statAllocationAtomicallyPersistsAttributesAndPointsAndRejectsStaleOrExcessRequests() throws Exception {
+    var store=OnlineStore.fromEnvironment(); store.migrate(); var key=store.provisionAccount();
+    var prepared=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(44));
+    var p=prepared.progress();
+    var progress=new CharacterProgress(p.version(),p.characterClass(),p.gender(),p.attributes(),p.vitals(),
+        new CharacterProgress.Advancement(p.advancement().level(),3,p.advancement().skillPoints(),
+            p.advancement().rebirths(),p.advancement().karma()),p.inventory(),p.equipment(),p.skills(),p.spells(),
+        p.questFlags(),p.storage(),p.storageGold(),p.respawn(),p.buffs(),p.cooldowns(),p.hiddenUntil(),p.companion());
+    var created=store.create(key.accountId(),"Stat allocation",0,3.5,3.5,progress,prepared.gold());
+    var map=new PreviewMap(new boolean[8][8],0,0,3,3);
+    var sessions=new PersistentSessions(store,map,new PreviewWorld(map));
+    String token=sessions.join(store.acquire(key.secret(),created.id()),System.nanoTime()).token();
+    try {
+      var accepted=sessions.allocateStats(token,created.revision(),Map.of("strength",2,"wisdom",1)).toCompletableFuture();
+      await(sessions,accepted); var reply=accepted.get();
+      var saved=store.load(key.accountId(),created.id());
+      assertEquals(created.revision()+1,reply.revision());
+      assertEquals(3,reply.pointsSpent());
+      assertEquals(progress.attributes().strength()+2,saved.progress().attributes().strength());
+      assertEquals(progress.attributes().wisdom()+1,saved.progress().attributes().wisdom());
+      assertEquals(0,saved.progress().advancement().statPoints());
+
+      assertThrows(PreviewWorld.Rejected.class,()->sessions.allocateStats(token,created.revision(),Map.of("dexterity",1)));
+      assertThrows(PreviewWorld.Rejected.class,()->sessions.allocateStats(token,reply.revision(),Map.of("dexterity",1)));
+      assertEquals(saved,store.load(key.accountId(),created.id()),"Refusals must not partially persist an allocation");
+    } finally {
+      var closed=sessions.leave(token); await(sessions,closed); closed.get(); sessions.shutdown();
+    }
+  }
+
   @Test void expiredNonMaxHpBuffIsPersistedBeforeTheFirstRegenTick() throws Exception {
     var store=OnlineStore.fromEnvironment(); store.migrate(); var key=store.provisionAccount();
     long joinedAt=1_000_000L; var now=new java.util.concurrent.atomic.AtomicLong(joinedAt);

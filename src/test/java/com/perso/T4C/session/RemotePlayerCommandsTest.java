@@ -131,6 +131,11 @@ class RemotePlayerCommandsTest {
     }
 
     @Override
+    public CompletionStage<OnlineConnection.CommandResult> allocateStats(Map<String, Integer> allocation) {
+      return reply("stats " + new java.util.TreeMap<>(allocation));
+    }
+
+    @Override
     public CompletionStage<OnlineConnection.CommandResult> shopOffers(String npc) {
       calls.add("shopOffers " + npc);
       return offers;
@@ -545,6 +550,23 @@ class RemotePlayerCommandsTest {
     assertTrue(sent);
     assertEquals(List.of("cast spell.area_blast p:8,9"), link.calls);
     assertTrue(player.isAttackReady());
+  }
+
+  @Test
+  void statAllocationReplyReachesItsCallbackOnlyWhenPumpedOnTheRenderThread() {
+    var completed = new java.util.concurrent.atomic.AtomicReference<OnlineConnection.CommandResult>();
+    var reply = new OnlineConnection.CommandResult(true, null,
+        "online.stats.applied", List.of(3));
+    boolean sent = session.commands().allocateStats(Map.of("strength", 2, "wisdom", 1), completed::set);
+
+    assertTrue(sent);
+    assertEquals(List.of("stats {strength=2, wisdom=1}"), link.calls);
+    link.next.complete(reply);
+    assertTrue(completed.get() == null, "The network thread queues the result without running UI callbacks");
+    session.commands().pump();
+
+    assertEquals(reply, completed.get());
+    assertEquals(List.of(I18n.message("online.stats.applied", 3)), host.messages);
   }
 
   @Test

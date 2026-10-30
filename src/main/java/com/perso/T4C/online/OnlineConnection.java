@@ -11,6 +11,9 @@ import com.perso.T4C.online.model.NpcInteractionReply;
 import com.perso.T4C.online.model.ShopOffersReply;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /** Network-only adapter for the local Alpha server; never touches graphics or character files. */
@@ -97,6 +100,7 @@ public final class OnlineConnection implements AutoCloseable {
       Long revision, int healthGained, int manaSpent, int manaGained, List<SpellHit> hits) {}
   /** One server-committed creature strike reported by a spell cast. */
   private record SpellHit(Integer damage) {}
+  private record StatAllocationCommitted(Long revision, Integer allocatedPoints) {}
   /** A committed vendor trade: units moved and the gold paid or received, both the server's numbers. */
   private record ShopCommitted(Long revision, int quantity, long total) {}
   private static final class Rejected extends IllegalStateException {
@@ -109,6 +113,8 @@ public final class OnlineConnection implements AutoCloseable {
   /** Server cap for ground loot in one snapshot. */
   private static final int MAX_GROUND_LOOT = 128;
   private static final int MAX_CREATURES = 256;
+  private static final Set<String> STAT_IDS =
+      Set.of("strength", "endurance", "dexterity", "wisdom", "intelligence");
   private static final Gson JSON = new Gson();
   private final URI endpoint;
   private final int configuredSocketPort;
@@ -287,6 +293,26 @@ public final class OnlineConnection implements AutoCloseable {
     return gameplayCommand("/use", java.util.Objects.requireNonNull(item).toString());
   }
 
+  /** Sends point counts only; the server applies them to its committed attributes and point balance. */
+  public java.util.concurrent.CompletionStage<CommandResult> allocateStats(Map<String, Integer> allocation) {
+    if (allocation == null || allocation.isEmpty() || allocation.size() > STAT_IDS.size())
+      throw new IllegalArgumentException("Invalid stat allocation");
+    var ordered = new TreeMap<String, Integer>();
+    long total = 0;
+    for (var entry : allocation.entrySet()) {
+      if (entry.getKey() == null || !STAT_IDS.contains(entry.getKey())
+          || entry.getValue() == null || entry.getValue() <= 0)
+        throw new IllegalArgumentException("Invalid stat allocation");
+      total += entry.getValue();
+      if (total > Integer.MAX_VALUE) throw new IllegalArgumentException("Invalid stat allocation");
+      ordered.put(entry.getKey(), entry.getValue());
+    }
+    String encoded = ordered.entrySet().stream()
+        .map(entry -> entry.getKey() + ":" + entry.getValue())
+        .collect(java.util.stream.Collectors.joining(","));
+    return gameplayCommand("/allocate-stats", encoded);
+  }
+
   /** Authored identity only; the server resolves dialogue, proximity and any item grant. */
   public java.util.concurrent.CompletionStage<CommandResult> interact(String npc) {
     return interact(npc, java.util.OptionalInt.empty());
@@ -411,6 +437,15 @@ public final class OnlineConnection implements AutoCloseable {
                 requiredRevision=trade.revision();
                 messageKey=command.path().equals("/shop-buy") ? "online.shop.bought" : "online.shop.sold";
                 messageArgs=List.of(trade.quantity(),(int)Math.min(Integer.MAX_VALUE,trade.total()));
+              } else if (command.path().equals("/allocate-stats")) {
+                var allocation = JSON.fromJson(reply, StatAllocationCommitted.class);
+                if (allocation == null || allocation.revision() == null
+                    || allocation.revision() <= command.revision()
+                    || allocation.allocatedPoints() == null || allocation.allocatedPoints() <= 0)
+                  throw new IllegalStateException("Invalid stat allocation acknowledgement");
+                requiredRevision = allocation.revision();
+                messageKey = "online.stats.applied";
+                messageArgs = List.of(allocation.allocatedPoints());
               } else {
                 var committed = JSON.fromJson(reply, Committed.class);
                 if (committed == null || committed.revision() == null || committed.revision() <= command.revision())
@@ -433,7 +468,9 @@ public final class OnlineConnection implements AutoCloseable {
             } catch (Rejected rejected) {
               if (rejected.code != 409) throw rejected;
               // A normal conflict leaves the session usable. Refresh, but never replay stale intent.
-              messageKey = OnlineCommandRefusals.messageKey(command.path(), rejected.reason);
+              messageKey = command.path().equals("/allocate-stats")
+                  ? statAllocationRefusal(rejected.reason)
+                  : OnlineCommandRefusals.messageKey(command.path(), rejected.reason);
               messageArgs = List.of();
             }
           }
@@ -505,6 +542,8 @@ public final class OnlineConnection implements AutoCloseable {
               if (updated == null || !credentials.characterId().equals(updated.id())
                   || updated.revision() < Math.max(requiredRevision, snapshot.characterRevision()))
                 throw new IllegalStateException("Invalid private character state");
+              if (command != null && command.path().equals("/allocate-stats") && updated.progress() == null)
+                throw new IllegalStateException("Stat allocation response omitted authoritative progress");
               character = updated;
               var found = JSON.fromJson(sendSession("GET","/corpses",null),Corpse[].class);
               if (found==null || found.length>256) throw new IllegalStateException("Invalid corpse list");
@@ -581,6 +620,14 @@ public final class OnlineConnection implements AutoCloseable {
       total += hit.damage();
     }
     return (int) Math.min(Integer.MAX_VALUE, total);
+  }
+
+  private static String statAllocationRefusal(String reason) {
+    return switch (reason == null ? "" : reason) {
+      case "busy", "revision", "region", "uninitialized_character" -> "online.stats.busy";
+      case "insufficient_stat_points" -> "online.stats.no_points";
+      default -> "online.stats.refused";
+    };
   }
 
   private MapInfo readMap(boolean persistent) throws Exception {
