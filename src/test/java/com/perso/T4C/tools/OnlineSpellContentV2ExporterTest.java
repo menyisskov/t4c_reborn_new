@@ -2,6 +2,8 @@ package com.perso.T4C.tools;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.perso.T4C.item.ItemDefinition;
+import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.online.model.SpellContentV2.Kind;
 import com.perso.T4C.spell.SpellRegistry;
 import java.util.EnumMap;
@@ -55,5 +57,33 @@ class OnlineSpellContentV2ExporterTest {
     assertEquals(v1.mentalExhaustion(), v2.mentalExhaustion());
     assertEquals(v1.id(), v2.id());
     assertEquals(1, v2.stage());
+  }
+
+  @Test
+  void exportsRestoreSpellsFromFiniteMultiChargeItems() {
+    OnlineSpellContentExporter.snapshot(); // Load authored items and spells.
+    var potion = ItemRegistry.findByKey("item.critical_healing_potion");
+    var multiCharge = withCharges(potion, 3, false);
+
+    var exported = OnlineSpellContentExporter.snapshot(java.util.List.of(multiCharge));
+    var spellId = potion.getSpells().getFirst().getSpellId();
+
+    assertTrue(exported.spells().values().stream().anyMatch(spell ->
+        spell.id() == spellId && spell.use() == com.perso.T4C.online.model.SpellContent.Use.ITEM));
+    assertFalse(OnlineSpellContentExporter.snapshot(java.util.List.of(withCharges(potion, 3, true)))
+        .spells().values().stream().anyMatch(spell -> spell.id() == spellId
+            && spell.use() == com.perso.T4C.online.model.SpellContent.Use.ITEM));
+  }
+
+  private static ItemDefinition withCharges(ItemDefinition item, int charges, boolean unlimited) {
+    return new ItemDefinition(item.getKey(), item.getName(), item.getBodyPart(),
+        item.getAppearanceEquippedPrimary(), item.getSecondaryBodyPart(), item.getAppearanceEquippedSecondary(),
+        item.getAppearanceInventory(), item.getPrice(), item.getWeight(), item.getArmorClass(), item.getDodgeLost(),
+        item.getMinEnd(), item.getReqAttack(), item.getReqStr(), item.getReqAgi(), item.getMinInt(), item.getMinWis(),
+        item.getAttackSpeed(), item.isUnique(), item.isBow(), unlimited, item.getNumId(), item.getStructure(),
+        item.getAppearanceId(), item.getDmgFormula(), item.getAtkDelay(), item.getRadiance(), charges,
+        item.isCanSummon(), item.getLockName(), item.getLockDiff(), item.getSignText(), item.getContainerGold(),
+        item.getGlobalRespawn(), item.getLocalRespawn(), item.getSpells(), item.getBoosts(),
+        item.getContainerLootGroups(), item.isUndroppable());
   }
 }
