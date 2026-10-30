@@ -20,7 +20,9 @@ class SpellContentV2ResourceTest {
   @Test void bundledV2CoversAllPlayerSpellsWithTheFortyEightStageOneSpells() throws Exception {
     var content = v2();
     assertEquals(2, content.version());
-    assertEquals(133, content.spells().size());
+    // 132 player spells plus item spells (spell.item_*, one per online-usable potion effect), which grow with item parity work.
+    long itemSpells = content.spells().keySet().stream().filter(key -> key.startsWith("spell.item_")).count();
+    assertEquals(132 + itemSpells, content.spells().size());
     assertEquals(48, content.spells().values().stream().filter(spell -> spell.stage() == 1).count());
   }
 
