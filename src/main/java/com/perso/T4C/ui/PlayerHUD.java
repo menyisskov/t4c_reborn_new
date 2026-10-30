@@ -97,6 +97,7 @@ public class PlayerHUD {
   private float quickSlotGuiGrabOffsetX;
   private float quickSlotGuiGrabOffsetY;
   private Runnable backpackAction = () -> {};
+  private boolean backpackActionConfigured;
   private Runnable characterAction = () -> {};
   private Runnable spellBookAction = () -> {};
   private Runnable questAction = () -> {};
@@ -762,6 +763,12 @@ public class PlayerHUD {
 
   public void setBackpackAction(Runnable backpackAction) {
     this.backpackAction = backpackAction == null ? () -> {} : backpackAction;
+    this.backpackActionConfigured = backpackAction != null;
+  }
+
+  /** Returns the configured inventory route, or the supplied local fallback. */
+  public Runnable backpackActionOr(Runnable fallback) {
+    return backpackActionConfigured ? backpackAction : fallback;
   }
 
   public void setCharacterAction(Runnable characterAction) {

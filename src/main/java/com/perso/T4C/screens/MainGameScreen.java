@@ -4660,14 +4660,7 @@ public class MainGameScreen implements Screen {
     hud.setPersistence(session.persistence());
     if (session.commands() instanceof com.perso.T4C.session.RemotePlayerCommands remoteCommands)
       hud.setRemotePlayerCommands(remoteCommands);
-    hud.setBackpackAction(
-        () -> {
-          if (GuiManager.isCurrent(Inventory.class)) {
-            GuiManager.close();
-          } else {
-            GuiManager.open(new Inventory(player, hud));
-          }
-        });
+    hud.setBackpackAction(this::toggleCharacterInventory);
     hud.setCharacterAction(
         () -> {
           if (GuiManager.isCurrent(Statistics.class)) {
@@ -4742,6 +4735,37 @@ public class MainGameScreen implements Screen {
     lastMapZoneWorld = Integer.MIN_VALUE;
     lastMapZoneId = Integer.MIN_VALUE;
     updateMapZoneDisplay();
+  }
+
+  private void toggleCharacterInventory() {
+    if (remoteConnection == null) {
+      if (GuiManager.isCurrent(Inventory.class)) {
+        GuiManager.close();
+      } else {
+        GuiManager.open(new Inventory(player, hud));
+      }
+      return;
+    }
+
+    toggleRemoteInventory(
+        remoteInventoryPanel,
+        GuiManager::close,
+        () -> {
+          closeRemoteShop();
+          remoteAbilityMenu.close();
+          remoteCorpsePanel.close();
+        });
+  }
+
+  static void toggleRemoteInventory(
+      com.perso.T4C.online.OnlineInventoryPanel panel, Runnable closeGui, Runnable closeOtherPanels) {
+    if (panel.isOpen()) {
+      panel.close();
+      return;
+    }
+    if (closeGui != null) closeGui.run();
+    if (closeOtherPanels != null) closeOtherPanels.run();
+    panel.open();
   }
 
   private void playNpcCastVfx(SpellData spell, Player castOn, Vector2 casterPosition) {
