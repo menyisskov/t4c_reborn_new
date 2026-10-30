@@ -436,6 +436,85 @@ public final class OnlineStore implements AutoCloseable {
     }
   }
 
+  /**
+   * Exception-only persistence (streamed regions, WORLD_STREAMING_DESIGN.md section 10): reads the rows that exist
+   * for these keys and creates nothing. A key with no row is a pristine creature fully described by the
+   * content files. Worker-thread only; at most {@link #MAX_SPAWN_BATCH} keys per call.
+   */
+  public java.util.Map<String,SpawnState> loadSpawns(java.util.Collection<String> keys) throws SQLException {
+    if (keys.size()>MAX_SPAWN_BATCH) throw new IllegalArgumentException("Too many spawn keys");
+    for (var key:keys) spawnKey(key);
+    var found=new java.util.HashMap<String,SpawnState>();
+    if (keys.isEmpty()) return found;
+    try (var c=connections.open(); var s=c.prepareStatement("""
+        SELECT s.generation,s.event_id,r.character_id,r.claimed_at,s.health,s.target_character,s.next_attack_at,
+               s.current_x,s.current_y,s.mode,s.target_epoch,s.state_revision,
+               s.target_spawn_key,s.target_life,s.died_at,s.death_kind,s.spawn_key
+        FROM online_spawns s LEFT JOIN online_world_rewards r ON r.event_id=s.event_id
+        WHERE s.spawn_key=ANY(?)
+        """)) {
+      s.setArray(1,c.createArrayOf("varchar",keys.toArray()));
+      try (var rows=s.executeQuery()) {
+        while (rows.next()) {
+          var key=rows.getString(17);var claimedAt=rows.getTimestamp(4);
+          found.put(key,new SpawnState(key,rows.getLong(1),rows.getObject(2,UUID.class),rows.getObject(3,UUID.class),
+              claimedAt==null ? null : claimedAt.toInstant(),rows.getObject(5,Integer.class),rows.getObject(6,UUID.class),rows.getLong(7),
+              rows.getObject(8,Double.class),rows.getObject(9,Double.class),rows.getString(10),rows.getObject(11,Long.class),rows.getLong(12),
+              rows.getString(13),rows.getObject(14,UUID.class),rows.getTimestamp(15)==null ? null : rows.getTimestamp(15).toInstant(),rows.getString(16)));
+        }
+      }
+    }
+    return found;
+  }
+  public static final int MAX_SPAWN_BATCH=1024;
+
+  /** A creature row's persisted position (null until it first moved under a checkpoint). */
+  public record SpawnPosition(String key,Double x,Double y) {}
+
+  /** Startup scan for streamed regions: every row that exists, i.e. only the creatures players disturbed. */
+  public java.util.List<SpawnPosition> listSpawnPositions() throws SQLException {
+    var rows=new java.util.ArrayList<SpawnPosition>();
+    try (var c=connections.open(); var s=c.prepareStatement("SELECT spawn_key,current_x,current_y FROM online_spawns");
+         var result=s.executeQuery()) {
+      while (result.next()) rows.add(new SpawnPosition(result.getString(1),result.getObject(2,Double.class),result.getObject(3,Double.class)));
+    }
+    return rows;
+  }
+
+  /**
+   * A creature that is back to its authored pristine state (alive, unhurt or healed, no target, nobody
+   * targeting it) leaves no row. Guarded by life and revision, so a row that changed meanwhile survives.
+   * Returns false when nothing was deleted (no row, changed row, or another creature still references it).
+   */
+  public boolean deleteSpawnIfPristine(String key,UUID life,long revision,int maximumHealth) throws SQLException {
+    spawnKey(key);
+    try (var c=connections.open(); var s=c.prepareStatement("""
+        DELETE FROM online_spawns s
+        WHERE s.spawn_key=? AND s.event_id=? AND s.state_revision=? AND s.died_at IS NULL
+          AND (s.health IS NULL OR s.health>=?) AND s.target_character IS NULL AND s.target_spawn_key IS NULL
+          AND s.mode IN ('IDLE','PATROL','RETURN')
+          AND NOT EXISTS (SELECT 1 FROM online_spawns t WHERE t.target_spawn_key=s.spawn_key)
+          AND NOT EXISTS (SELECT 1 FROM online_world_rewards r WHERE r.event_id=s.event_id)
+        """)) {
+      s.setString(1,key);s.setObject(2,life);s.setLong(3,revision);s.setInt(4,maximumHealth);
+      return s.executeUpdate()==1;
+    }
+  }
+
+  /** Lazily creates the row of a creature that is about to be written; a no-op when it exists. Same transaction as the write. */
+  private static void ensureSpawn(Connection c,String key,UUID life) throws SQLException {
+    if (key==null || life==null) return;
+    try (var s=c.prepareStatement("INSERT INTO online_spawns(spawn_key,event_id) VALUES (?,?) ON CONFLICT (spawn_key) DO NOTHING")) {
+      s.setString(1,key);s.setObject(2,life);s.executeUpdate();
+    }
+  }
+
+  private static void ensureMotion(Connection c,SpawnMotion motion) throws SQLException {
+    if (motion==null) return;
+    ensureSpawn(c,motion.key(),motion.life());
+    ensureSpawn(c,motion.targetSpawnKey(),motion.targetLife());
+  }
+
   private static SpawnState loadSpawn(Connection c,String key) throws SQLException {
       try (var s=c.prepareStatement("""
           SELECT s.generation,s.event_id,r.character_id,r.claimed_at,s.health,s.target_character,s.next_attack_at,
@@ -495,6 +574,7 @@ public final class OnlineStore implements AutoCloseable {
           if (motion.targetEpoch()==null || target.locationEpoch()!=motion.targetEpoch() || target.progress()==null
               || target.progress().vitals().hp()<=0) throw new Conflict("Creature target changed");
         }
+        ensureMotion(c,motion);
         if (motion.targetSpawnKey()!=null) {
           lockSpawnKeys(c,motion.key(),motion.targetSpawnKey());
           var target=loadSpawn(c,motion.targetSpawnKey());
@@ -984,6 +1064,9 @@ public final class OnlineStore implements AutoCloseable {
         }
         if (revision!=null && state.revision()!=revision) throw new Conflict("Stale gameplay event");
         boolean matchedSpawn=false;
+        ensureMotion(c,motion);
+        if (strike!=null) ensureSpawn(c,strike.key(),strike.life());
+        if (provocation!=null) ensureSpawn(c,provocation.key(),provocation.life());
         if(worldReward && strike==null) {
           // Character lock precedes a possible spawn lock on every PLAYER claim path.
           // Take it before either reward insert, matching the physical lethal path.
@@ -1147,6 +1230,7 @@ public final class OnlineStore implements AutoCloseable {
         }
         for (var hit:strikes) {
           var strike=hit.strike(); var motion=strike.motion(); boolean lethal=strike.after()==0;
+          ensureMotion(c,motion);ensureSpawn(c,strike.key(),strike.life());
           if (motion.targetCharacter()!=null && (motion.targetEpoch()==null || state.locationEpoch()!=motion.targetEpoch()))
             throw new Conflict("Creature target epoch changed");
           try (var s=c.prepareStatement("""
@@ -1710,6 +1794,48 @@ public final class OnlineStore implements AutoCloseable {
         state=load(c,session.accountId(),session.characterId(),false);
         c.commit(); return new RewardResult(true,state);
       } catch (SQLException|RuntimeException failure) { c.rollback(); throw failure; }
+    }
+  }
+
+  /** Cap on one streamed per-cell read; reaching it is reported through {@link #LOOT_CELLS_LIMIT}. */
+  public static final int LOOT_CELLS_LIMIT=1024;
+
+  /**
+   * Live drops in a set of rectangles (the covered cells of a streamed region), oldest first, in one
+   * statement. At most {@link #LOOT_CELLS_LIMIT} rows come back; a result of exactly that size means the
+   * cap was reached and the caller must report it rather than treat the list as complete.
+   */
+  public java.util.List<GroundLoot> listGroundLoot(int world, java.util.List<TileRect> areas) throws SQLException {
+    if (world<0) throw new IllegalArgumentException("Invalid loot world");
+    if (areas.isEmpty()) return java.util.List.of();
+    if (areas.size()>2000) throw new IllegalArgumentException("Too many loot areas");
+    var where=new StringBuilder();
+    for (int i=0;i<areas.size();i++) where.append(i==0 ? "" : " OR ").append("(x BETWEEN ? AND ? AND y BETWEEN ? AND ?)");
+    try (var c=connections.open(); var s=c.prepareStatement("""
+        SELECT id,world,x,y,item_key,quantity,charges,owner_character,
+          owner_until>clock_timestamp() AS owner_open,
+          GREATEST(0::bigint,floor(extract(epoch FROM (owner_until-clock_timestamp()))*1000)::bigint) AS owner_remaining_ms
+        FROM online_ground_loot
+        WHERE state='ON_GROUND' AND world=? AND expires_at>clock_timestamp() AND (""" + where + """
+        )
+        ORDER BY created_at,id LIMIT ?
+        """)) {
+      int p=1;
+      s.setInt(p++,world);
+      for (var area:areas) {
+        s.setDouble(p++,area.minX()); s.setDouble(p++,area.maxX()); s.setDouble(p++,area.minY()); s.setDouble(p++,area.maxY());
+      }
+      s.setInt(p,LOOT_CELLS_LIMIT);
+      try (var rows=s.executeQuery()) {
+        var result=new java.util.ArrayList<GroundLoot>();
+        while (rows.next()) {
+          boolean open=rows.getBoolean("owner_open");
+          result.add(new GroundLoot(rows.getObject("id",UUID.class),rows.getInt("world"),rows.getDouble("x"),rows.getDouble("y"),
+              rows.getString("item_key"),rows.getInt("quantity"),rows.getInt("charges"),
+              open ? rows.getObject("owner_character",UUID.class) : null,open ? rows.getLong("owner_remaining_ms") : 0L));
+        }
+        return java.util.List.copyOf(result);
+      }
     }
   }
 

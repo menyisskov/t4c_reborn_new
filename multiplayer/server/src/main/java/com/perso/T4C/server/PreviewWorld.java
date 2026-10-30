@@ -67,9 +67,14 @@ public final class PreviewWorld {
   private final PreviewMap map;
   private final ServerMovement.Terrain terrain;
   private MovementRules.Mode movement = ServerMovement.defaultMode();
-  private final List<CreatureView> creatures;
+  /** Live creatures by id, insertion ordered. A region that lists its creatures fills it once; a streamed one grows and shrinks it. */
+  private final Map<Long,CreatureView> creatures = new LinkedHashMap<>();
   record CreatureSpawn(long id, MonsterContent.Spawn spawn, com.perso.T4C.monster.core.MonsterDef definition) {}
-  private final List<CreatureSpawn> creatureSpawns;
+  private final List<CreatureSpawn> creatureSpawns = new ArrayList<>();
+  private final List<CreatureSpawn> creatureSpawnsView = java.util.Collections.unmodifiableList(creatureSpawns);
+  private final Map<Long,CreatureSpawn> spawnsById = new java.util.HashMap<>();
+  /** Streamed regions only: every hosted spawn of the world (dormant content, ids are index + 1), shared and immutable. */
+  private final List<CreatureSpawn> hostedSpawns;
   private final java.util.Set<Long> inactiveCreatures = new java.util.HashSet<>();
   private final Map<Long,Integer> creatureHealth = new java.util.HashMap<>();
   private final Map<Long,CreaturePosition> creaturePositions = new java.util.HashMap<>();
@@ -83,12 +88,21 @@ public final class PreviewWorld {
 
   PreviewWorld(PreviewMap map,MonsterContent content,int worldId) {
     this.map = map; this.worldId=worldId; this.terrain = new ServerMovement.Terrain(map);
-    var residents=new ArrayList<CreatureView>();
-    var authored=new ArrayList<CreatureSpawn>();
     var keys=new java.util.HashSet<String>();
-    // A streamed region hosts no resident creatures until activation exists (stage A part 2): the
-    // whole world's spawn list is dormant content, and the 256 cap below keeps guarding every
-    // region that still lists its creatures up front.
+    // A streamed region lists no resident creatures: the whole world's spawn list is dormant content,
+    // activated around players by PersistentCreatures (stage A part 2). The 256 cap below keeps
+    // guarding every region that still lists its creatures up front.
+    if (content!=null && map.streamed()) {
+      var all=new ArrayList<CreatureSpawn>();
+      for (var spawn:content.region(worldId,map.originX,map.originY,map.width,map.height)) {
+        if (!keys.add(spawn.persistenceKey())) throw new IllegalArgumentException("Duplicate authored spawn identity");
+        var definition=spawn.definition()==null ? null : content.monsters().get(spawn.definition());
+        if (definition==null || definition.getWalkPattern()==null || definition.getWalkPattern().isBlank())
+          throw new IllegalArgumentException("Unsupported creature in streamed region: "+spawn.type());
+        all.add(new CreatureSpawn(all.size()+1L,spawn,definition));
+      }
+      hostedSpawns=java.util.Collections.unmodifiableList(all);
+    } else hostedSpawns=null;
     if (content!=null && !map.streamed()) {
       var spawns=content.region(worldId,map.originX,map.originY,map.width,map.height);
       if (spawns.size()>256) throw new IllegalArgumentException("Creature preview capacity exceeded");
@@ -99,16 +113,51 @@ public final class PreviewWorld {
           throw new IllegalArgumentException("Unsupported creature in online starting area: "+spawn.type());
         // Preserve authored tile anchors, as MonsterManager does. These actors are stationary:
         // monster movement/footprints, density rules and AI remain separate integration work.
-        residents.add(new CreatureView(residents.size()+1L,definition.getName(),
+        long id=creatures.size()+1L;
+        creatures.put(id,new CreatureView(id,definition.getName(),
             spawn.x()-map.originX,spawn.y()-map.originY,definition.getHealth(),definition.getHealth(),
             definition.getWalkPattern(),definition.getAttackPattern(),definition.getDeathPattern()));
-        authored.add(new CreatureSpawn(residents.size(),spawn,definition));
+        var hosted=new CreatureSpawn(id,spawn,definition);
+        creatureSpawns.add(hosted);spawnsById.put(id,hosted);
       }
     }
-    creatures=List.copyOf(residents);
-    creatureSpawns=List.copyOf(authored);
-    for (var creature : creatures)
+    for (var creature : creatures.values())
       creaturePositions.put(creature.id(), new CreaturePosition(creature.x(), creature.y()));
+  }
+
+  /** True when this world keeps its creatures dormant and activates them around players. */
+  boolean streamedCreatures() { return hostedSpawns!=null; }
+  /** Every hosted spawn including dormant ones (streamed), otherwise the same as {@link #creatureSpawns()}. */
+  List<CreatureSpawn> hostedSpawns() { return hostedSpawns!=null ? hostedSpawns : creatureSpawnsView; }
+  /** The live (active) creature with this id, or null. */
+  CreatureSpawn creatureSpawn(long id) { return spawnsById.get(id); }
+  int activeCreatureCount() { return creatures.size(); }
+
+  /** Adds a dormant spawn to the live set at its home with full health; the caller then publishes its saved life. */
+  void activateCreature(CreatureSpawn spawn) {
+    if (hostedSpawns==null || spawnsById.containsKey(spawn.id())) throw new IllegalStateException("Cannot activate creature");
+    var d=spawn.definition();
+    double x=spawn.spawn().x()-map.originX,y=spawn.spawn().y()-map.originY;
+    creatures.put(spawn.id(),new CreatureView(spawn.id(),d.getName(),x,y,d.getHealth(),d.getHealth(),
+        d.getWalkPattern(),d.getAttackPattern(),d.getDeathPattern()));
+    creaturePositions.put(spawn.id(),new CreaturePosition(x,y));
+    creatureSpawns.add(spawn);spawnsById.put(spawn.id(),spawn);
+  }
+
+  /** Removes a creature from every live collection; its durable life is the caller's business. */
+  void deactivateCreature(long id) {
+    if (hostedSpawns==null) throw new IllegalStateException("Cannot deactivate creature");
+    var spawn=spawnsById.remove(id);
+    if (spawn!=null) creatureSpawns.remove(spawn);
+    creatures.remove(id);creaturePositions.remove(id);creatureHealth.remove(id);inactiveCreatures.remove(id);
+  }
+
+  /** One simulation window per player (the region's activation interest), frozen arrivals included. */
+  List<AreaOfInterest.Window> simulationWindows() {
+    var windows=new ArrayList<AreaOfInterest.Window>(players.size());
+    for (var p:players.values())
+      windows.add(AreaOfInterest.window(p.x,p.y,AreaOfInterest.SIMULATION_HALF_EXTENT,map.width,map.height));
+    return windows;
   }
 
   /** Which movement rule steps players; defaults to single-player's grid reservation. */
@@ -118,7 +167,7 @@ public final class PreviewWorld {
     for (Player p : players.values()) p.glide.clear();
   }
 
-  List<CreatureSpawn> creatureSpawns() { return creatureSpawns; }
+  List<CreatureSpawn> creatureSpawns() { return creatureSpawnsView; }
   PreviewMap map() { return map; }
   CreaturePosition creaturePosition(long id) {
     var position = creaturePositions.get(id);
@@ -137,7 +186,8 @@ public final class PreviewWorld {
     if (active) inactiveCreatures.remove(id); else inactiveCreatures.add(id);
   }
   void creatureHealth(long id, Integer health) {
-    var initial=creatures.get(Math.toIntExact(id-1));
+    var initial=creatures.get(id);
+    if (initial==null) throw new IllegalArgumentException("Unknown creature");
     if (health==null) creatureHealth.remove(id);
     else {
       if (health<0 || health>initial.maxHealth()) throw new IllegalArgumentException("Saved creature health exceeds authored health");
@@ -226,7 +276,7 @@ public final class PreviewWorld {
       if(p==observer || !indefiniteHidden && !finiteInvisible
           || indefiniteHidden && detectsHidden || finiteInvisible && detectsInvisible) result.add(view(p));
     }
-    var visible=creatures.stream().filter(c -> !inactiveCreatures.contains(c.id()))
+    var visible=creatures.values().stream().filter(c -> !inactiveCreatures.contains(c.id()))
         .map(c -> {
           var position=creaturePosition(c.id());
           return new CreatureView(c.id(),c.definition(),position.x(),position.y(),
@@ -260,7 +310,7 @@ public final class PreviewWorld {
     var center=OnlineSneak.WITNESS_RANGE
         * Math.max(com.perso.T4C.config.GameConstants.GRID_W,com.perso.T4C.config.GameConstants.GRID_H);
     int count=0;
-    for(var creature:creatures) {
+    for(var creature:creatures.values()) {
       if(inactiveCreatures.contains(creature.id()) || creatureHealth.getOrDefault(creature.id(),creature.health())<=0) continue;
       var at=creaturePosition(creature.id());
       double dx=(at.x()-observer.x)*com.perso.T4C.config.GameConstants.GRID_W;

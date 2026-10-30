@@ -26,13 +26,11 @@ final class OnlineClanCombat {
   private final MonsterContent.Classified classified;
   private final Random random;
   private final LongSupplier clock;
-  private final Map<Long,PreviewWorld.CreatureSpawn> spawns=new HashMap<>();
 
   OnlineClanCombat(PreviewMap map,PreviewWorld world,PersistentCreatures creatures,
       MonsterContent.Classified classified,Random random,LongSupplier clock) {
     this.map=map;this.world=world;this.creatures=creatures;this.classified=classified;
     this.random=random;this.clock=clock;
-    for(var spawn:world.creatureSpawns()) spawns.put(spawn.id(),spawn);
   }
 
   void step() {
@@ -44,13 +42,13 @@ final class OnlineClanCombat {
   }
 
   private void attack(long sourceId,long now) {
-    var sourceSpawn=spawns.get(sourceId);
+    var sourceSpawn=world.creatureSpawn(sourceId);
     var sourceLife=creatures.life(sourceId);
     if(sourceLife.diedAt()!=null || sourceLife.nextAttackAt()>now
         || !"CLAN".equals(sourceLife.mode()) || sourceLife.targetSpawnKey()==null) return;
     Long targetId=creatures.idForKey(sourceLife.targetSpawnKey());
     if(targetId==null || targetId==sourceId) return;
-    var targetSpawn=spawns.get(targetId);
+    var targetSpawn=world.creatureSpawn(targetId);
     var targetLife=creatures.life(targetId);
     if(targetLife.diedAt()!=null || !targetLife.eventId().equals(sourceLife.targetLife())
         || sourceSpawn.spawn().world()!=targetSpawn.spawn().world()) return;

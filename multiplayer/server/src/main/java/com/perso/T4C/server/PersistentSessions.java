@@ -52,6 +52,9 @@ final class PersistentSessions {
     long checkpointSubmitted, allowedUntil;
     boolean pending, closing;
     boolean awaitingRegionReady;
+    /** Streamed regions: the client is ready but the arrival is held until the creatures around it are live (section 10). */
+    boolean releaseWhenActive;
+    long holdUntilTick;
     /** Earliest tick a portal transfer refused for a cooldown the database clock has not reached may be proposed again. */
     long transferRetryTick;
     /** In-memory progress (regeneration, join anchor) the next checkpoint must persist. */
@@ -107,7 +110,10 @@ final class PersistentSessions {
   /** Loads every hosted region's live ground loot before any session can be admitted. */
   PersistentSessions(OnlineStore store,HostedWorlds hosted) throws SQLException {
     this.store=store;this.hosted=hosted;
-    for (var region:hosted.regions) region.loot.replace(store.listGroundLoot(region.loot.world(),region.loot.area()));
+    for (var region:hosted.regions) {
+      if (region.loot.streamed()) { region.loot.replace(java.util.List.of());region.loot.invalidate(); } // read per covered cell once players arrive
+      else region.loot.replace(store.listGroundLoot(region.loot.world(),region.loot.area()));
+    }
   }
 
   PreviewWorld.Joined join(OnlineStore.Session session, long acquisitionStarted) {
@@ -130,6 +136,7 @@ final class PersistentSessions {
     binding.checkpointSubmitted=tick;
     binding.allowedUntil=acquisitionStarted+AUTHORITY_NANOS;
     bindings.put(joined.token(),binding);
+    requestArrival(binding);
     publishHealth(binding);
     return joined;
   }
@@ -650,7 +657,40 @@ final class PersistentSessions {
   void regionReady(String token,long epoch) {
     requireEpoch(token,epoch);var binding=active(token);
     if(binding.event!=null) throw new PreviewWorld.Rejected(409,"busy");
+    var creatures=binding.region.creatures;
+    var at=binding.region.world.position(token);
+    if(creatures!=null && creatures.streamed() && at!=null && !creatures.windowActive(at.x(),at.y())) {
+      // Never release an arrival into an empty room: the actor stays frozen until the snapshot
+      // window's creatures are live, or the hold budget runs out (a database stall must not strand a player).
+      binding.releaseWhenActive=true;binding.holdUntilTick=tick+ARRIVAL_HOLD_TICKS;
+      creatures.requestWindow(at.x(),at.y());
+      return;
+    }
     binding.awaitingRegionReady=false;binding.region.world.freeze(token,false);
+  }
+  /** True while an actor is frozen at an arrival: waiting for the client, or held for creature activation. */
+  boolean arrivalHeld(String token) {
+    var binding=bindings.get(token);
+    return binding!=null && (binding.awaitingRegionReady || binding.releaseWhenActive);
+  }
+  /** Longest an arrival waits for creature activation after the client is ready (3 s at 34 Hz). */
+  static final long ARRIVAL_HOLD_TICKS=PreviewWorld.TICK_RATE*3L;
+  /** The destination window is activated while the transfer commits and the client loads, before the actor is released. */
+  private void requestArrival(Binding binding) {
+    var creatures=binding.region.creatures;
+    var at=binding.region.world.position(binding.token);
+    if(creatures!=null && creatures.streamed() && at!=null) creatures.requestWindow(at.x(),at.y());
+  }
+  private void releaseHeldArrivals() {
+    for(var binding:bindings.values()) {
+      if(!binding.releaseWhenActive) continue;
+      var creatures=binding.region.creatures;
+      var at=binding.region.world.position(binding.token);
+      if(at==null || creatures==null || tick>=binding.holdUntilTick || creatures.windowActive(at.x(),at.y())) {
+        binding.releaseWhenActive=false;
+        if(at!=null && binding.event==null) { binding.awaitingRegionReady=false;binding.region.world.freeze(binding.token,false); }
+      }
+    }
   }
   /** Resolves a live friendly actor from this hosted region; actor ids never cross region instances. */
   FriendTarget friendTarget(String token,long actorId) {
@@ -735,6 +775,7 @@ final class PersistentSessions {
       for (var region:hosted.regions) if (region.loot.needsRead()) startLootRead(region);
       if (!sweepPending) startSweep();
     }
+    releaseHeldArrivals();
     for (var binding:new ArrayList<>(bindings.values())) {
       var world=binding.region.world;
       var position=world.position(binding.token);
@@ -943,6 +984,8 @@ final class PersistentSessions {
             var map=destination.map;
             binding.region.world.transferTo(destination.world,binding.token,binding.saved.x()-map.originX,binding.saved.y()-map.originY);
             binding.region=destination;binding.awaitingRegionReady=hosted.plan.transitions;
+            binding.releaseWhenActive=false;
+            requestArrival(binding); // pre-activate the destination window during the commit/readiness handshake
             hosted.reloadTargets(binding.saved.id());
             // Logout can remove the actor while death commits. Its final checkpoint must keep
             // the committed respawn destination, never the pre-death position.
@@ -984,9 +1027,10 @@ final class PersistentSessions {
   private void startLootRead(HostedWorlds.Region region) {
     var loot=region.loot;
     loot.beginRead();
+    var covered=loot.streamed() ? loot.coveredAreas() : null; // simulation thread: the coverage is read here, not on the worker
     try { lookups.execute(() -> {
       java.util.List<OnlineStore.GroundLoot> found;
-      try { found=store.listGroundLoot(loot.world(),loot.area()); }
+      try { found=covered!=null ? store.listGroundLoot(loot.world(),covered) : store.listGroundLoot(loot.world(),loot.area()); }
       catch (SQLException | RuntimeException failure) { found=null; }
       var result=found;
       reads.add(() -> finishLootRead(region,result));

@@ -178,7 +178,9 @@ public final class HostedRegionPlan {
       if(hostedTarget.isPresent() && !explained)
         throw new IOException("Refused portal "+portal.id()+" unexpectedly has a hosted destination");
     }
-    var plan=new HostedRegionPlan(regions,new PortalCatalog(new PortalContent(1,enabled)),true,refused,UNHOSTABLE_SPAWN_KEYS);
+    var unhostable=new HashSet<>(UNHOSTABLE_SPAWN_KEYS);
+    if(streamWorld0) unhostable.addAll(UnhostableSpawnAudit.bundledKeys()); // world 0 hosts every authored spawn a creature can stand on
+    var plan=new HostedRegionPlan(regions,new PortalCatalog(new PortalContent(1,enabled)),true,refused,unhostable);
     plan.sharedCollision=Map.copyOf(shared);
     plan.enabledPortals=List.copyOf(enabled);
     return plan;
