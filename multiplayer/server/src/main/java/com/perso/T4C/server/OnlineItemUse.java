@@ -3,7 +3,9 @@ package com.perso.T4C.server;
 import com.perso.T4C.online.model.CharacterProgress;
 import com.perso.T4C.online.model.ItemContent;
 import com.perso.T4C.online.model.SpellContent;
+import com.perso.T4C.online.model.SpellContentV2;
 import com.perso.T4C.server.persistence.OnlineStore;
+import com.perso.T4C.spell.engine.SpellEngine;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -19,6 +21,11 @@ final class OnlineItemUse {
 
   static OnlineCasting.Result prepareUse(OnlineStore.CharacterState saved, UUID instanceId, long now,
       RandomGenerator random, ItemContent items, SpellCatalog spells) {
+    return prepareUse(saved, instanceId, now, random, items, spells, SpellCatalogV2.bundled());
+  }
+
+  static OnlineCasting.Result prepareUse(OnlineStore.CharacterState saved, UUID instanceId, long now,
+      RandomGenerator random, ItemContent items, SpellCatalog spells, SpellCatalogV2 spellsV2) {
     var progress = OnlineCasting.aliveProgress(saved, now);
     var instance = progress.inventory().stream().filter(item -> item.id().equals(instanceId))
         .findFirst().orElseThrow(() -> OnlineCasting.rejected("item_not_owned"));
@@ -36,6 +43,18 @@ final class OnlineItemUse {
     var selected = selectSpell(definition.spells(), random);
     if (selected == null) throw OnlineCasting.rejected("chance_failed");
     var spell = itemSpell(spells, selected.spellId());
+    if (isBuff(spell)) {
+      var authored = spellsV2.spells().get(spell.key());
+      if (authored == null || authored.kind() != SpellContentV2.Kind.BUFF || authored.id() != spell.id())
+        throw OnlineCasting.rejected("unsupported_spell");
+      var resolved = SpellEngine.resolveBuff(authored, OnlineSpellContexts.forSelf(progress, items, now));
+      if (resolved.modifiers().isEmpty()) throw OnlineCasting.rejected("no_effect");
+      var buff = new SpellEngine.Event.ApplyBuff(null, authored.key(), resolved.durationSeconds(), resolved.modifiers());
+      var applied = OnlineBuffs.anchored(OnlineBuffs.apply(progress, buff, now), now);
+      var inventory = spend(progress.inventory(), instance, definition.unlimitedUse(),
+          Math.max(1, definition.nbCharges()));
+      return new OnlineCasting.Result(ProgressEdits.withInventory(applied, inventory), 0, 0, 0);
+    }
     var effects = OnlineCasting.effects(spell, progress, items, now, random);
     if (effects.healthDelta() > 0 && progress.vitals().hp() >= progress.vitals().maxHp())
       throw OnlineCasting.rejected("no_healing_needed");
@@ -47,6 +66,12 @@ final class OnlineItemUse {
         Math.max(1, definition.nbCharges()));
     return new OnlineCasting.Result(ProgressEdits.withInventory(applied.progress(), inventory),
         applied.healthGained(), applied.manaSpent(), applied.manaGained());
+  }
+
+  private static boolean isBuff(SpellContent.Spell spell) {
+    return spell.effects().stream().anyMatch(effect -> effect.type() == 2
+        && effect.params().stream().filter(param -> param.id() == 2)
+            .noneMatch(param -> "MANA".equalsIgnoreCase(param.expression())));
   }
 
   /** Authored order: the first copy whose chance roll succeeds supplies the spell. */
