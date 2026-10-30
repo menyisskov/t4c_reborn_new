@@ -2,6 +2,11 @@
 
 Last reviewed: 2026-10-30, Asia/Jerusalem. This file is the restart point for a different model. Recheck Git and running processes before acting; this describes recorded evidence, not live state.
 
+### Shared GUI keyboard routing (T4C-0356)
+
+Implemented in `codex/online-remote-gui-keyboard-0356`, commit `e95c177b`, based on main `1710e2c5`. Open shared GUI screens now receive remote keyDown/keyTyped before online shortcuts and consume those events while open; closed-GUI shortcuts and offline input are unchanged. Focused tests passed 4/4, package and diff checks passed. PR #323 is open. No rendered-client check; M1/M4/Beta remain open.
+
+
 ### Online buff-bar recast (T4C-0355)
 
 Implemented in `codex/online-buff-recast-0355`, commit `f32f36bc`, based on latest main `b2490b75`. A double-click resolves only a buff in the connected character's committed progress, maps it through SpellRegistry, and sends its canonical key with the existing RemotePlayerCommands.cast. The server remains authoritative for learned spells, cooldown and content support. Offline double-click recast is unchanged. Focused test 2/2, package and diff check passed. No rendered-client check was run. Next: open and merge the locally validated PR; M4/Beta remain open.

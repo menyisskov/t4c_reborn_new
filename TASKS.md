@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0358`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0359`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,8 +18,10 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0356 | Forward keyboard events to open shared GUI screens in remote play before game shortcuts, preserving keyboard capture/modal behavior and offline input | Multiplayer / M1/M4 parity | PR #323 open; local validation passed; rendered check pending | head e95c177b on origin/main 1710e2c5; focused 4/4, package and diff check passed | deferred until GA |
 | T4C-0353 | M5 shutdown ownership, restored-database play, measured adapter load, tamper and key-rotation evidence | Multiplayer / M5 | Done (PR #319 merged; native-adapter evidence only, rendered gates remain) | PR #319 merge b2490b75, tested head 4f05db8b | deferred until GA |
 | T4C-0354 | Route the shared character journal Inventory tab to the authoritative online inventory panel; preserve local inventory offline | Multiplayer / M2 parity | Done (PR #320 merged; rendered verification pending) | PR #320 merge dbd7da1b, tested head cda1311e; task ID corrected from 0353 after PR #319 claimed it | deferred until GA |
+| T4C-0358 | Other players walk like single-player: position, leg animation and facing are replayed from the server route at the server pace instead of chasing the latest poll | Multiplayer / M5 parity | Implementation complete; PR pending | this PR, tested on origin/main 8d008632 | deferred until GA |
 | T4C-0355 | Restore online recasting of the active player buff by double-clicking its buff-bar icon through the authoritative socket; preserve offline recasting | Multiplayer / M4 parity | Implementation complete; PR pending | commit f32f36bc, tested on origin/main b2490b75 | deferred until GA |
 | T4C-0357 | Run the two-adapter native loot probe to a PASS on a throwaway Docker PostgreSQL 18.1 (level-30 killer, current protocol, current race-loser key); probe-only fixes, no server or balance change | Process/Tooling (multiplayer evidence) | Done (PR pending) | branch worktree-agent-a958642b2be3f8efc | [2026-10-30](CHANGELOG.md#2026-10-30--native-loot-check-now-runs-end-to-end-t4c-0357) |
 | T4C-0345 | M6 package hardening that needs no owner decision: launchers (client, server check/start/provision/verify) print a plain message and exit 1 for a missing, old, 32-bit or non-Java `java`; the pinned GLFW library extracts to one checksum-named TEMP folder reused by every launch (`OnlineNativeLibrary`, test); `.bat` wrappers for every server script plus a provisioning wrapper and a `verify-package` script (optional expected manifest hash) in both packages; launcher `-Lobby` switch for account-only profiles (the package could not open the lobby before); opt-in `-ExcludeOrigin` client build proved to connect and render lobby and game (default builder unchanged); package checkers updated; new `test-package-java-check.ps1`; M6 evidence checklist updated with only the proved items ticked | Process/Tooling / M6 | Done (PR #310 merged; same-machine evidence, second-machine verification remains open) | PR #310, merge 31399570 | deferred until GA |

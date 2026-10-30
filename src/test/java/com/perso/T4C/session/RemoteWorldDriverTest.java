@@ -363,49 +363,46 @@ class RemoteWorldDriverTest {
   }
 
   @Test
-  void anotherPlayerWalksWhileItGlidesToANewPositionAndRestsWhenItArrives() {
+  void anotherPlayerWalksTheServersStepAndRestsWhenItArrives() {
     view =
-        view(1, MAP.region(), List.of(actor(OWN, 3.5, 5.5, 100, 100), actor(9, 10.5, 12.5, 40, 80)),
+        view(100, MAP.region(), List.of(actor(OWN, 3.5, 5.5, 100, 100), actor(9, 10.5, 12.5, 40, 80)),
             List.of(), List.of(), List.of());
     tick(0.016f);
     Player other = driver.otherPlayers().get(0);
     assertFalse(other.getMovement().isMoving(), "placed, not walking");
 
+    // 17 ticks (half a second) later the server has walked it one tile east.
     view =
-        view(2, MAP.region(), List.of(actor(OWN, 3.5, 5.5, 100, 100), actor(9, 13.5, 12.5, 40, 80)),
+        view(117, MAP.region(), List.of(actor(OWN, 3.5, 5.5, 100, 100), actor(9, 11.5, 12.5, 40, 80)),
             List.of(), List.of(), List.of());
-    tick(0.016f);
-    assertTrue(other.getMovement().isMoving(), "on its way to the new tile");
-    for (int i = 0; i < 100; i++) tick(0.05f);
+    boolean walked = false;
+    for (int i = 0; i < 90; i++) {
+      tick(0.016f);
+      walked |= other.getMovement().isMoving();
+    }
+    assertTrue(walked, "walked the step");
     assertFalse(other.getMovement().isMoving(), "arrived");
+    assertEquals((100 + 11.5f - 0.5f) * GRID_W, other.getPositionVector().x, 0.5f);
   }
 
   @Test
-  void anotherPlayerKeepsWalkingWhenEachServerStepIsOnlyAFewPixels() {
-    // At the single-player walking pace (54 px/s at 34 Hz) a step is about 1.6 px: the eased
-    // position is within half a pixel of the target, which used to read as "standing".
-    double x = 10.5;
-    long serverTick = 1;
+  void anotherPlayerThatIsMovedFarAtOnceIsPlacedThereWithoutWalking() {
     view =
-        view(serverTick, MAP.region(), List.of(actor(OWN, 3.5, 5.5, 100, 100), actor(9, x, 12.5, 40, 80)),
+        view(100, MAP.region(), List.of(actor(OWN, 3.5, 5.5, 100, 100), actor(9, 10.5, 12.5, 40, 80)),
             List.of(), List.of(), List.of());
-    tick(0.03f);
+    tick(0.016f);
     Player other = driver.otherPlayers().get(0);
-    for (int i = 0; i < 40; i++) {
-      x += 1.6 / 32.0;
-      view =
-          view(++serverTick, MAP.region(),
-              List.of(actor(OWN, 3.5, 5.5, 100, 100), actor(9, x, 12.5, 40, 80)),
-              List.of(), List.of(), List.of());
-      // Two 60 fps frames per 34 Hz server tick: the walk must hold on every frame.
-      tick(0.0147f);
-      assertTrue(other.getMovement().isMoving(), "walking on frame A of step " + i);
-      tick(0.0147f);
-      assertTrue(other.getMovement().isMoving(), "walking on frame B of step " + i);
-    }
-    for (int i = 0; i < 20; i++) tick(0.03f);
-    assertFalse(other.getMovement().isMoving(), "rests once the server stops moving it");
+    // A portal or respawn: tens of tiles in one tick.
+    view =
+        view(101, MAP.region(), List.of(actor(OWN, 3.5, 5.5, 100, 100), actor(9, 40.5, 30.5, 40, 80)),
+            List.of(), List.of(), List.of());
+    tick(0.016f);
+    assertFalse(other.getMovement().isMoving());
+    assertEquals((100 + 40.5f - 0.5f) * GRID_W, other.getPositionVector().x, 0.5f);
   }
+
+  // The continuous-walk guarantees (legs never restart, pace equals the server's, facing follows
+  // the path, late polls are absorbed) are pinned in RemotePlayerWalkParityTest.
 
   // --- the session ---
 
