@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0343`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0344`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -19,6 +19,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
 | T4C-0342 | M2 and M3 live evidence and an equip fix: a rendered two-window run on the real screens (inventory window, equip and unequip with the own character's strength, armor class and drawn model, travel through the Lighthaven door and the cave, both players completing the Renewed Wards quest with a repeat turn-in refused, a server restart, cross-region targeting refused) and a native 18-round hard-kill drill of loot claims and corpse recoveries; fixed the own screen keeping join-time gear after an equip or unequip (`RemoteOwnLook`, test); new `NativeLootFaultDrill` and `accept` driver scene | Multiplayer / M2, M3 | Done (PR open; local PG16 and rendered evidence, not remote) | this PR | [2026-10-30](CHANGELOG.md) |
+| T4C-0343 | Make the six existing online HUD buttons clickable and show Warden Aelric's completed Renewed Wards greeting after turn-in | Multiplayer / M1/M3 | Verified locally; PR pending merge | 398cfd2563ff3b8189bc2cf57b4abc74b0d4e0ba, based on main 3e147d8b | [CHANGELOG.md](CHANGELOG.md#2026-10-30--online-hud-buttons-and-warden-aelrics-completed-quest-greeting-t4c-0343) |
 | T4C-0336 | Let online characters spend earned stat points through the existing Statistics screen, with atomic server validation/persistence matching offline allocation rules | Multiplayer / M4 | Done (PR #301 open; 54 focused client tests and PostgreSQL persistence 1/1 passed; rendered check pending) | PR #301; 8a25023d | deferred until GA |
 | T4C-0335 | Match online creature pathing to the single-player foot rule so Skeleton pursuit acquires, follows, and resets valid targets correctly | Multiplayer / M4 | Done (PR #300 merged) | PR #300, merge 73f46063 | [CHANGELOG.md](CHANGELOG.md) |
 | T4C-0334 | Show authoritative monster damage in online attack-spell results while preserving heal, potion, and no-hit result messages | Multiplayer / M4 | Done (PR #299 merged) | PR #299, merge fa5f8d52 | deferred until GA |

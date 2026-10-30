@@ -1,3 +1,8 @@
+## 2026-10-30 — Online HUD buttons and Warden Aelric's completed quest greeting (T4C-0343)
+
+### Fixed
+- The six buttons at the bottom of the online screen now open their existing character, inventory, spellbook, quest, map and options windows when clicked.
+- After finishing Renewed Wards, Warden Aelric now greets you with the completed line instead of repeating the offer.
 # Changelog
 
 All notable game-content and systems changes are documented here, newest first.

@@ -150,6 +150,8 @@ evidence and ticks four of the seven:
   character profile keeps direct launch and can prefer lobby selection) cover the retained direct path; T4C-0212's rendered
   check and T4C-0311's packaged-client rehearsal used it live.
 
+T4C-0343 implementation evidence (local only): the existing six online HUD buttons now route clicks to their current actions; completed Renewed Wards greetings use the authored completed line in offline and server paths. Focused tests and both packages pass. No rendered-client check has been run for this delivery, so M1 remains open.
+
 Done evidence: both rendered clients create/select their own characters, connect, converse, close
 and reconnect. Retain operator profiles as a compatibility path. See [ACCOUNT_LIFECYCLE.md](ACCOUNT_LIFECYCLE.md)
 and [NPC_INTERACTION_DESIGN.md](NPC_INTERACTION_DESIGN.md) for current contracts and limits.
@@ -290,6 +292,8 @@ there is nothing to refuse in play; the explicit refusals that do exist are the 
 bullet or an in-world refusal text is wanted is the owner's call); *restart and delayed intents* (restart preserved objective state, rewards and position for both
 characters, but the delayed-intent half rests on the stale-epoch battery of T4C-0251, not re-run on this build, so it stays open). Also not driven: a lost response during the
 turn-in itself (T4C-0310 produced both outcomes for the opening-NPC reward through the same reward path).
+
+T4C-0343 adds the completed-state dialogue response to the online quest greeting without changing reward or progress state. The local server regression passes; this is not rendered quest-loop evidence, so M3 remains open.
 
 Done evidence: two rendered clients follow the declared quest from acceptance through travel,
 combat and turn-in; both progress and reconnect with their own exact rewards. Include one
