@@ -25,6 +25,38 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 /** Consequential join between the tick-owned state and the real PostgreSQL transaction queue. */
 @EnabledIfEnvironmentVariable(named="T4C_DB_URL", matches=".+")
 class PersistentSessionsTest {
+  @Test void onlyCommittedInvisibilityAndDetectInvisibleArePublishedToSnapshots() throws Exception {
+    var store=OnlineStore.fromEnvironment();store.migrate();var key=store.provisionAccount();
+    long now=1_000;var prepared=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(90));
+    var base=prepared.progress();
+    var hidden=new CharacterProgress(base.version(),base.characterClass(),base.gender(),base.attributes(),base.vitals(),
+        base.advancement(),base.inventory(),base.equipment(),base.skills(),base.spells(),base.questFlags(),base.storage(),
+        base.storageGold(),base.respawn(),base.buffs(),base.cooldowns(),2_000,base.companion());
+    var createdHidden=store.create(key.accountId(),"Hidden actor",0,3.5,3.5,base,prepared.gold());
+    var createdObserver=store.create(key.accountId(),"Detecting observer",0,3.5,3.5,base,prepared.gold());
+    var map=new PreviewMap(new boolean[8][8],0,0,3,3);var world=new PreviewWorld(map);
+    var sessions=new PersistentSessions(store,map,world);sessions.wallClock=()->now;
+    String hiddenToken=sessions.join(store.acquire(key.secret(),createdHidden.id()),System.nanoTime()).token();
+    String observerToken=sessions.join(store.acquire(key.secret(),createdObserver.id()),System.nanoTime()).token();
+    try {
+      var committed=sessions.commitGameplayEvent(hiddenToken,createdHidden.revision(),UUID.randomUUID(),0,0,hidden).toCompletableFuture();
+      await(sessions,committed);assertTrue(committed.get().applied());
+      assertEquals(List.of(world.position(observerToken).id()),world.snapshot(observerToken,now).players().stream()
+          .map(PreviewWorld.PlayerView::id).toList(),"Unseen state is published only after the Invisibility commit");
+
+      var detected=new CharacterProgress(base.version(),base.characterClass(),base.gender(),base.attributes(),base.vitals(),
+          base.advancement(),base.inventory(),base.equipment(),base.skills(),base.spells(),base.questFlags(),base.storage(),
+          base.storageGold(),base.respawn(),base.buffs(),Map.of("detect_invisible_until",3_000L),base.hiddenUntil(),base.companion());
+      var detectCommit=sessions.commitGameplayEvent(observerToken,createdObserver.revision(),UUID.randomUUID(),0,0,detected).toCompletableFuture();
+      await(sessions,detectCommit);assertTrue(detectCommit.get().applied());
+      assertEquals(2,world.snapshot(observerToken,now).players().size(),
+          "Committed Detect Invisible reveals the actor to the observer");
+    } finally {
+      var first=sessions.leave(hiddenToken);await(sessions,first);first.get();
+      var second=sessions.leave(observerToken);await(sessions,second);second.get();sessions.shutdown();
+    }
+  }
+
   @Test void statAllocationAtomicallyPersistsAttributesAndPointsAndRejectsStaleOrExcessRequests() throws Exception {
     var store=OnlineStore.fromEnvironment(); store.migrate(); var key=store.provisionAccount();
     var prepared=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(44));
