@@ -10,6 +10,11 @@
 - After finishing Renewed Wards, Warden Aelric now greets you with the completed line instead of repeating the offer.
 # Changelog
 
+## 2026-10-30 — Player chat now works online (T4C-0362)
+
+### Added
+- Online players can send and receive regional chat through their existing game connection. Names come from the server; offline chat is unchanged.
+
 All notable game-content and systems changes are documented here, newest first.
 Format is loosely based on [Keep a Changelog](https://keepachangelog.com/),
 grouped by content pass rather than by individual commit. Every entry
