@@ -5341,6 +5341,14 @@ public class MainGameScreen implements Screen {
     remote.addProcessor(new com.badlogic.gdx.InputAdapter() {
       private boolean hudButtonCaptured;
 
+      @Override public boolean keyDown(int keycode) {
+        return routeRemoteGuiKeyDown(keycode);
+      }
+
+      @Override public boolean keyTyped(char character) {
+        return routeRemoteGuiKeyTyped(character);
+      }
+
       @Override public boolean touchDown(int x, int y, int pointer, int button) {
         if (GuiManager.isOpen()) {
           GuiManager.onTouchDown(x, y, button);
@@ -5588,6 +5596,18 @@ public class MainGameScreen implements Screen {
     });
     remote.addProcessor(monsters);remote.addProcessor(npcClicks);remote.addProcessor(lootClicks);
     Gdx.input.setInputProcessor(remote);
+  }
+
+  static boolean routeRemoteGuiKeyDown(int keycode) {
+    if (!GuiManager.isOpen()) return false;
+    GuiManager.onKeyDown(keycode);
+    return true;
+  }
+
+  static boolean routeRemoteGuiKeyTyped(char character) {
+    if (!GuiManager.isOpen()) return false;
+    GuiManager.onKeyTyped(character);
+    return true;
   }
 
   static boolean shouldQueueReturnToLobby(boolean lobbyCapable, String connectionStatus,
