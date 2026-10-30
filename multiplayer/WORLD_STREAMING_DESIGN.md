@@ -527,7 +527,7 @@ a handoff.
   and starter-route pointers, a PEER_WORK note.
 * **Slice 2 (not started in this PR):** stage A behind the default-off option, with tests and an
   idle-tick measurement of the full world-0 plan with no players.
-* **Slice 2, part 1 (T4C-0353):** see section 11. Part 2 (creature activation) is section 10.
+* **Slice 2, part 1 (T4C-0357):** see section 11. Part 2 (creature activation) is section 10.
 
 ## 10. Owner requirements for stage A part 2 (creature activation), 2026-10-30
 
@@ -569,7 +569,7 @@ File lists in section 5 are unchanged, plus: `OnlineStore` gains the deviated-ro
 delete/pristine rule; `PersistentSessions`/`PortalTransfer` gain the pre-activation hook before
 `regionReady` releases a frozen arrival.
 
-## 11. Stage A part 1 record (T4C-0353, default-off `--stream-world0`)
+## 11. Stage A part 1 record (T4C-0357, default-off `--stream-world0`)
 
 Scope shipped: the shared pieces, the option and the protocol bump; **no creature activation**. With
 `--stream-world0` the server hosts region `start` as the whole of world 0 (6144 x 3072, origin 0, same
