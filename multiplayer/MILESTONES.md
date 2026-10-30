@@ -461,7 +461,7 @@ Required behavior:
   also passed again on the current build. Details and limits: [tools/NATIVE_FAULT_DRILL.md](tools/NATIVE_FAULT_DRILL.md).
   That run left the bullet open: no rendered forced kill, and a kill during a loot claim, quest turn-in or death was not exercised
   (portal trips were mid-flight at the kill but no transfer was provably in flight).
-  **Ticked by T4C-0362 (2026-10-30, local PG16 WSL, one machine).** Two real rendered windows, started from the CLIENT QA package's
+  **Ticked by T4C-0363 (2026-10-30, local PG16 WSL, one machine).** Two real rendered windows, started from the CLIENT QA package's
   jars (source `bd7f869b`, content identical to main `0dcdb164`) against the SERVER QA package (`0dcdb164`, protocol 8), both from a
   scrubbed process environment, survived four injected faults in one 52.9-minute session (an earlier 22-minute run, cut short by
   an unrelated restart of the WSL virtual machine that killed its PostgreSQL, had repeated the first four with the same result):
@@ -502,7 +502,7 @@ Required behavior:
   passed again, 322 of 322, on the current build. Not exercised: a crash around a pickup claim (the loot probe needs a killer
   that survives the lethal starter ground, T4C-0248), a quest turn-in, a death, or a transfer provably in flight. The bullet
   stays open. See [tools/NATIVE_FAULT_DRILL.md](tools/NATIVE_FAULT_DRILL.md).
-  T4C-0362 (2026-10-30, rendered, from the QA packages) added two rendered kills around single requests. **Pickup claim:** the
+  T4C-0363 (2026-10-30, rendered, from the QA packages) added two rendered kills around single requests. **Pickup claim:** the
   driver delivered a real click on a ground drop and the operator hard-killed the server within a few milliseconds of it
   (two runs). In both the database right after the kill still showed the drop `ON_GROUND` with no receipt (reply lost, nothing
   applied); after the restart and the 33 s lease hold the second click on the same drop produced exactly one claimant and one
@@ -581,7 +581,7 @@ Required behavior:
   used, no intentional reconnect or restart was part of the session, the quest kills and turn-in were not done by both windows, the
   death and recovery ran in a separate shorter session after a driver fix, the recovery bypassed the screen, and two
   Claude-lane refusals (busy equipment change, busy attack) were found and fixed in it (see CLIENT_UNIFICATION_DESIGN.md 3.17).
-  T4C-0362 (2026-10-30) ran the closest session yet, **on the two QA packages** (server `0dcdb164`, client source `bd7f869b`, scrubbed
+  T4C-0363 (2026-10-30) ran the closest session yet, **on the two QA packages** (server `0dcdb164`, client source `bd7f869b`, scrubbed
   environment, driver compiled against the packaged client jar; the packaged client directory gained only `logs/`, the server
   package nothing): two real rendered windows for **52.9 minutes** (from the lobby until the operator's last kill), level-30
   Warriors beside Warden Aelric. Quest: both accepted `renewed_wards`, took the Lighthaven door pair, walked to the Skeleton
@@ -656,7 +656,7 @@ ticked. It found and fixed four Windows PowerShell 5.1 defects (builder `GetRela
 client launcher dying on the client's first stderr line, which made `launch-online.bat` unable to start the client); the 5.1 shell is the only one
 on a stock Windows machine. Details: [CLIENT_DISTRIBUTION.md](CLIENT_DISTRIBUTION.md) and [SERVER_DISTRIBUTION.md](SERVER_DISTRIBUTION.md).
 
-**Rendered play from the packages (T4C-0362, 2026-10-30, same machine).** The packages were rebuilt from `0dcdb164`, zipped and extracted
+**Rendered play from the packages (T4C-0363, 2026-10-30, same machine).** The packages were rebuilt from `0dcdb164`, zipped and extracted
 to new empty directories with spaces, and a 52.9-minute two-window session with injected faults ran from them (see M5). Honest scope: the
 server ran from the package, but the rendered clients were the **driver class** (`OnlineLiveRunDriver`, test scope, compiled against
 `app/T4C.jar` and launched with `java -cp app/T4C.jar;lib/*;<driver classes>` from the package directory), not `launch-online.bat`, so the

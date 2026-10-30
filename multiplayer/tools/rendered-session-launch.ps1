@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  Starts one program from a SCRUBBED process environment (T4C-0362, the T4C-0311 rehearsal rules).
+  Starts one program from a SCRUBBED process environment (T4C-0363, the T4C-0311 rehearsal rules).
 
 .DESCRIPTION
   -SpecFile names a JSON file with: filePath, argumentLine, workingDirectory, stdoutFile, stderrFile, scratchRoot, javaExe (optional),

@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  Counts the evidence in the output directory of run-rendered-mixed-session.ps1 (T4C-0362). Reads only that directory.
+  Counts the evidence in the output directory of run-rendered-mixed-session.ps1 (T4C-0363). Reads only that directory.
 
 .DESCRIPTION
   Per client log: ERROR / WARN / Exception / stack-trace line counts, "M5 DOWN" disconnect counts, every "M5 COMPARE" verdict, the

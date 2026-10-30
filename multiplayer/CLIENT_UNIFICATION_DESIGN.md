@@ -966,7 +966,7 @@ Fix (client only; wire and protocol unchanged): `RemotePlayerPlayback` records e
 
 Cost: other players are drawn about 0.2 s behind the server (before about 0.1 s). Not verified: a rendered two-window run (the sandbox refused WSL, so no disposable PostgreSQL cluster was started). The next live run should log the observed puppet's `isMoving`, walk timer and angle per frame.
 
-### 3.20 Rendered M5 mixed session with injected faults, run from the QA packages (T4C-0362, milestone M5)
+### 3.20 Rendered M5 mixed session with injected faults, run from the QA packages (T4C-0363, milestone M5)
 
 **Evidence class: rendered clients on the packaged jars, local, one machine.** Packages: `package-online-server.ps1` at `0dcdb164` (protocol 8) and
 `package-online-client.ps1` (source revision `bd7f869b` = `0dcdb164` plus tests and tools; `src/main`, assets and pom identical), zipped, extracted to new empty
