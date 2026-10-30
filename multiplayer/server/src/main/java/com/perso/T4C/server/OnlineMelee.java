@@ -175,7 +175,8 @@ final class OnlineMelee {
         for (var hit:targets) {
           long id=hit.spawn().id(); pendingTargets.remove(id); creatures.release(id);
           if (id==target && error==null && result!=null && stunDuration>0) creatures.stunCommitted(id,clock.getAsLong(),stunDuration);
-          if (hit.damage()>0 || hit.after()==0) {
+          // A miss that provokes the creature still advanced its persisted pose and revision: reload it like a hit.
+          if (hit.damage()>0 || hit.after()==0 || strikes.isEmpty() && missedProvocation!=null && id==target) {
             if (error!=null || hit.after()==0) creatures.rewardCommitted(id); // Hide uncertain outcomes until reload.
             else creatures.damageCommitted(id);
           }

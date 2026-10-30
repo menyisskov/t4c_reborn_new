@@ -15,6 +15,11 @@
 - After finishing Renewed Wards, Warden Aelric now greets you with the completed line instead of repeating the offer.
 # Changelog
 
+## 2026-10-30 — Missing a creature online no longer disconnects you (T4C-0375)
+
+### Fixed
+- In online play, swinging at a creature and missing, then attacking or casting at that same creature, could drop you from the game with a connection error. A missed swing now leaves the fight in sync so the next attack or spell goes through.
+
 ## 2026-10-30 — Player chat now works online (T4C-0362)
 
 ### Added
