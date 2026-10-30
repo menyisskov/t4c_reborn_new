@@ -274,7 +274,7 @@ $comparison = [StringComparison]::OrdinalIgnoreCase
 if ($target.StartsWith($root + [IO.Path]::DirectorySeparatorChar,$comparison)) { Write-Host 'The profile holds a secret key: choose a path outside this package.'; exit 1 }
 if (Test-Path -LiteralPath $target) { Write-Host 'That profile file already exists; it is never overwritten. Choose a new path.'; exit 1 }
 if (!(Test-Path -LiteralPath (Split-Path -Parent $target) -PathType Container)) { Write-Host 'The profile folder does not exist; create it first.'; exit 1 }
-& (Join-Path $root 'check-server.ps1')
+& (Join-Path $root 'check-server.ps1') | Out-Null
 $jar = Join-Path $root 't4c-server.jar'
 Push-Location $root
 try {

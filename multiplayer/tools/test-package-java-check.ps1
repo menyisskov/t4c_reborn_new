@@ -7,7 +7,7 @@ Set-StrictMode -Version Latest
 
 $snippet = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot 'package-java-check.ps1')).Path
 $shell = Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe'
-$bareDir = Join-Path $env:SystemRoot 'System32'
+$bareDir = (Join-Path $env:SystemRoot 'System32') + ';' + (Join-Path $env:SystemRoot 'System32/WindowsPowerShell/v1.0')   # a stock Windows PATH: no Java
 $work = Join-Path ([IO.Path]::GetTempPath()) ('t4c-java-check-' + [guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $work -ErrorAction Stop | Out-Null
 

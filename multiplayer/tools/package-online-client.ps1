@@ -90,7 +90,7 @@ foreach ($asset in $assets) { Copy-PackageFile (Join-Path $sourceRoot ($asset -r
 Copy-PackageFile $license 'GLFW-LICENSE.txt'
 
 $launch = @'
-param([ValidateRange(1024,65535)][int]$Port = 18765, [string]$Profile, [string]$Endpoint, [switch]$CheckOnly)
+param([ValidateRange(1024,65535)][int]$Port = 18765, [string]$Profile, [string]$Endpoint, [switch]$CheckOnly, [switch]$Lobby)
 $ErrorActionPreference = 'Stop'
 #JAVA_CHECK#
 if (!$Endpoint) { $Endpoint = "http://127.0.0.1:$Port" }
@@ -108,6 +108,9 @@ $cp = (Join-Path $root 'checker/online-package-check.jar') + ';' + (Join-Path $r
 & $java -cp $cp com.perso.T4C.online.OnlinePackageCheck $root
 if ($LASTEXITCODE -ne 0) { throw 'Package integrity check failed.' }
 if ($CheckOnly) { return }
+# An account-only profile (no character) opens the online lobby, where the player picks or creates a character.
+if ($Lobby -and !$Profile) { throw '-Lobby needs -Profile (an account profile).' }
+$lobbyArgument = if ($Lobby) { ' --lobby' } else { '' }
 if ($Profile) {
     $profilePath = (Resolve-Path -LiteralPath $Profile -ErrorAction Stop).Path
     if (!(Test-Path -LiteralPath $profilePath -PathType Leaf) -or (Get-Item -LiteralPath $profilePath).Length -gt 4096) { throw 'Online profile is missing or too large.' }
@@ -119,7 +122,7 @@ New-Item -ItemType Directory -Path $logs -Force | Out-Null
 $log = Join-Path $logs ('online-' + [guid]::NewGuid().ToString('N'))
 # Start-Process keeps the client's stderr out of the PowerShell error stream. Redirecting a native command's stderr with 2>>
 # under Windows PowerShell 5.1 (the shell launch-online.bat uses) turns the first stderr line into a terminating error and kills the client.
-$clientProcess = Start-Process -FilePath $java -ArgumentList ('-cp "' + $cp + '" com.perso.T4C.online.OnlineClient "' + $endpointValue + '"') -WorkingDirectory $root -NoNewWindow -Wait -PassThru -RedirectStandardOutput ($log + '.log') -RedirectStandardError ($log + '-error.log')
+$clientProcess = Start-Process -FilePath $java -ArgumentList ('-cp "' + $cp + '" com.perso.T4C.online.OnlineClient "' + $endpointValue + '"' + $lobbyArgument) -WorkingDirectory $root -NoNewWindow -Wait -PassThru -RedirectStandardOutput ($log + '.log') -RedirectStandardError ($log + '-error.log')
 if ($clientProcess.ExitCode -ne 0) { throw "Online client exited with code $($clientProcess.ExitCode). Logs: $logs" }
 '@
 $javaCheck = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'package-java-check.ps1'))
