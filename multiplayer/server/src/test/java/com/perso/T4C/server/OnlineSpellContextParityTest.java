@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.perso.T4C.helper.CharacterClass;
 import com.perso.T4C.helper.DiceFormula;
+import com.perso.T4C.combat.SkillBonusRules;
 import com.perso.T4C.online.model.CharacterProgress;
 import com.perso.T4C.online.model.ItemContent;
 import com.perso.T4C.player.BodyPart;
@@ -107,15 +108,29 @@ class OnlineSpellContextParityTest {
     int light = (skill <= 0 ? 100 : skill)
         + progress.questFlags().getOrDefault("legacy:power:light", 0)
         + bonuses.getOrDefault(23, 0);
-    return new DiceFormula.Context(base.strength() + bonuses.getOrDefault(3, 0),
+    var context = new DiceFormula.Context(base.strength() + bonuses.getOrDefault(3, 0),
         base.endurance() + bonuses.getOrDefault(2, 0), base.dexterity() + bonuses.getOrDefault(6, 0),
         base.intelligence() + bonuses.getOrDefault(1, 0), 0, base.wisdom() + bonuses.getOrDefault(4, 0), 0,
         progress.advancement().level(), 0, 100, 100, light);
+    return context.withSelfTrue(Map.of(
+        "attack", SkillBonusRules.effective("attack", progress.skills().getOrDefault("attack", 0), 0,
+            stat -> bonuses.getOrDefault(stat, 0)),
+        "archery", SkillBonusRules.effective("archery", progress.skills().getOrDefault("archery", 0), 0,
+            stat -> bonuses.getOrDefault(stat, 0)),
+        "dodge", SkillBonusRules.effective("dodge", progress.skills().getOrDefault("dodge", 0), 0,
+            stat -> bonuses.getOrDefault(stat, 0))));
   }
 
   @Test void everyCurrentlySupportedSpellStillEvaluatesIdenticallyWithTheSharedContext() throws Exception {
     var items = ItemCatalog.loadBundled();
     var spells = SpellCatalog.loadBundled();
+    var skilled = character("skilled", items);
+    var skilledLegacy = legacyOnlineContext(skilled, items);
+    assertEquals(40, skilledLegacy.selfTrue.get("attack"));
+    assertEquals(120, DiceFormula.of("self.true_attack*3").evaluate(skilledLegacy),
+        "authored Hyper Potion of Violent Rage attack boost");
+    assertEquals(-66, DiceFormula.of("-self.true_dodge*2").evaluate(skilledLegacy),
+        "authored Hyper Potion of Violent Rage dodge penalty");
     int checked = 0;
     for (String name : CHARACTERS.keySet()) {
       var progress = character(name, items);
