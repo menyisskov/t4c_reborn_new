@@ -94,6 +94,20 @@ class OnlineAbilityChoicesTest {
   }
 
   @Test
+  void tileAimedAreaDamageNeedsPositionTargetWithoutBeingTreatedAsSelfCast() {
+    var aimed = ENGINE_CATALOG.spells().values().stream()
+        .filter(s -> s.kind() == SpellContentV2.Kind.AREA_DAMAGE && s.targetType() == 19
+            && !s.selfCenteredAttack() && s.stage() <= OnlineSpellAllowlistV2.ENABLED_STAGE
+            && SpellEngine.supported(s))
+        .map(SpellContentV2.Spell::key).sorted().findFirst().orElseThrow();
+    var rows = OnlineAbilityChoices.castableSpells(progress(Set.of(aimed), List.of(), Map.of()), ENGINE_CATALOG);
+
+    assertEquals(1, rows.size());
+    assertTrue(rows.getFirst().requiresPositionTarget());
+    assertFalse(rows.getFirst().requiresCreatureTarget());
+  }
+
+  @Test
   void unlearnedSpellsAreNotOffered() {
     assertTrue(OnlineAbilityChoices.castableSpells(progress(Set.of(), List.of(), Map.of()), ENGINE_CATALOG).isEmpty());
     assertTrue(OnlineAbilityChoices.castableSpells(null, ENGINE_CATALOG).isEmpty());

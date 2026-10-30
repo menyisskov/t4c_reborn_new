@@ -38,6 +38,11 @@ public interface RemoteIntents {
 
   boolean cast(String spellKey, BaseMonster target);
 
+  /** Asks the server to cast at a region-local tile; the server validates range and line of sight. */
+  default boolean castAtPosition(String spellKey, int tileX, int tileY) {
+    return false;
+  }
+
   /** Casts a learned single-target heal at a live online player id. */
   default boolean castToPlayer(String spellKey,long actor) { return false; }
 

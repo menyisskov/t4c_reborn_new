@@ -46,6 +46,11 @@ public interface RemoteLink {
 
   CompletionStage<OnlineConnection.CommandResult> cast(String spellKey, long creature);
 
+  default CompletionStage<OnlineConnection.CommandResult> castAtPosition(
+      String spellKey, int tileX, int tileY) {
+    throw new IllegalStateException("Position-target spells are not available on this link");
+  }
+
   CompletionStage<OnlineConnection.CommandResult> castToPlayer(String spellKey,long actor);
 
   CompletionStage<OnlineConnection.CommandResult> useItem(UUID itemInstance);

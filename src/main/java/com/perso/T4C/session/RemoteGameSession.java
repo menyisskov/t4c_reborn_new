@@ -161,6 +161,12 @@ public final class RemoteGameSession implements GameSession {
     }
 
     @Override
+    public CompletionStage<OnlineConnection.CommandResult> castAtPosition(
+        String spellKey, int tileX, int tileY) {
+      throw down();
+    }
+
+    @Override
     public CompletionStage<OnlineConnection.CommandResult> castToPlayer(String spellKey,long actor) {
       throw down();
     }

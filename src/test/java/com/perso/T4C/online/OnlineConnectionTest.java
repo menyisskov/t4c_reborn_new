@@ -482,17 +482,21 @@ class OnlineConnectionTest {
       assertFalse(friend.accepted());
       assertEquals("cast 1 0 spell.heal_light a:9",bodies.getLast(),"The target actor id uses the existing socket cast command");
 
+      var tile = connection.castAtPosition("spell.area_blast", 8, 9).toCompletableFuture().get(3, TimeUnit.SECONDS);
+      assertFalse(tile.accepted());
+      assertEquals("cast 1 0 spell.area_blast p:8,9", bodies.getLast());
+
       var used = connection.useItem(potion).toCompletableFuture().get(3, TimeUnit.SECONDS);
       assertTrue(used.accepted());
       assertEquals("online.ability.result", used.messageKey());
       assertEquals(java.util.List.of(9, 3), used.args(), "health gained and net mana");
       assertEquals(2, used.character().revision());
       assertEquals("use 1 0 " + potion, bodies.getLast());
-      assertEquals(4, bodies.size());
+      assertEquals(5, bodies.size());
       var picked = connection.pickUp(UUID.randomUUID()).toCompletableFuture().get(3, TimeUnit.SECONDS);
       assertTrue(picked.accepted(), "The version-gated pickup also stays usable through this adapter");
       assertEquals(3, picked.character().revision());
-      assertEquals(5, bodies.size());
+      assertEquals(6, bodies.size());
     } finally {
       server.stop(0);
     }
