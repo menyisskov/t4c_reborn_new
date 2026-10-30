@@ -79,6 +79,7 @@ public final class OnlineClient extends ApplicationAdapter {
   private final ConcurrentLinkedQueue<Staged> staged = new ConcurrentLinkedQueue<>();
   private boolean talkOpen;
   private boolean inventoryOpen;
+  private boolean questJournalOpen;
   private int inventoryPage;
   private int displayedInventoryPage = -1;
   private java.util.List<OnlineInventoryRows.Row> displayedInventoryRows = java.util.List.of();
@@ -271,6 +272,7 @@ public final class OnlineClient extends ApplicationAdapter {
                 return true;
               }
               if (code == Input.Keys.I) { toggleInventory(); return true; }
+              if (code == Input.Keys.J) { toggleQuestJournal(); return true; }
               if (code == Input.Keys.C) { toggleAbilityMenu(OnlineAbilityMenu.Kind.SPELLS); return true; }
               if (code == Input.Keys.U) { toggleAbilityMenu(OnlineAbilityMenu.Kind.POTIONS); return true; }
               if (talkOpen && talkShop != null && code == Input.Keys.B) { openShop(); return true; }
@@ -584,6 +586,7 @@ public final class OnlineClient extends ApplicationAdapter {
     talkShop = null;
     talkOpen = false;
     inventoryOpen = false;
+    questJournalOpen = false;
     abilityMenu.close();
     talkText = null;
     talkTopics = List.of();
@@ -647,6 +650,12 @@ public final class OnlineClient extends ApplicationAdapter {
     inventoryPage = 0;
     displayedInventoryRows = java.util.List.of();
     displayedInventoryPage = -1;
+  }
+
+  private void toggleQuestJournal() {
+    boolean open = !questJournalOpen;
+    closePanels();
+    questJournalOpen = open;
   }
 
   private CharacterProgress ownProgress() {
@@ -766,6 +775,13 @@ public final class OnlineClient extends ApplicationAdapter {
       OnlineAbilityMenu.draw(hud, font,
           abilityMenu.lines(progress, OnlineSpellAllowlistV2.bundled(), OnlineSpellAllowlist.bundled()),
           width - 360, height - 16);
+    } else if (questJournalOpen) {
+      OnlineAbilityMenu.draw(
+          hud,
+          font,
+          OnlineQuestJournal.lines(
+              view == null || view.character() == null ? null : view.character().progress()),
+          width - 420, height - 16);
     } else if (inventoryOpen) {
       float x = width - 360, y = height - 16;
       font.draw(hud, I18n.key("online.inventory.title"), x, y);
@@ -886,7 +902,8 @@ public final class OnlineClient extends ApplicationAdapter {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     // Esc closes an open panel first; with no panel open it exits, or returns to the lobby in lobby mode.
     if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-      if (talkOpen || inventoryOpen || abilityMenu.isOpen() || shopPanel.isOpen()) closePanels();
+      if (talkOpen || inventoryOpen || questJournalOpen || abilityMenu.isOpen() || shopPanel.isOpen())
+        closePanels();
       else if (lobbyModel != null) { returnToLobby(); return; }
       else Gdx.app.exit();
     }
