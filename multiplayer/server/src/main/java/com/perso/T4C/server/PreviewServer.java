@@ -537,8 +537,8 @@ public final class PreviewServer implements AutoCloseable {
             String token=token(exchange);
             boolean cast="/cast".equals(path);
             String uuid="[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
-            // Protocol 6: /cast may end with one target token, u:<creature id> or p:<x>,<y>; absent means self.
-            String aim="u:[0-9]{1,19}|p:-?[0-9]{1,6},-?[0-9]{1,6}";
+            // /cast may end with u:<creature>, p:<x>,<y> or a:<online actor>; absent means self.
+            String aim="(?:u:[0-9]{1,19}|p:-?[0-9]{1,6},-?[0-9]{1,6}|a:[0-9]{1,19})";
             if (!body.matches("[0-9]{1,19} [0-9]{1,19} "+(cast ? "spell\\.[a-z0-9_]{1,64}( "+aim+")?" : uuid)))
               throw new PreviewWorld.Rejected(400,"input");
             String[] parts=body.split(" "); long revision,epoch; java.util.UUID instance=null;
@@ -547,6 +547,8 @@ public final class PreviewServer implements AutoCloseable {
               if (!cast) instance=java.util.UUID.fromString(parts[2]);
               else if (parts.length>3) target=parts[3].startsWith("u:")
                   ? new com.perso.T4C.spell.engine.SpellEngine.Target.Unit(Long.parseLong(parts[3].substring(2)))
+                  : parts[3].startsWith("a:")
+                  ? new com.perso.T4C.spell.engine.SpellEngine.Target.Friend(Long.parseLong(parts[3].substring(2)))
                   : new com.perso.T4C.spell.engine.SpellEngine.Target.Position(
                       Integer.parseInt(parts[3].substring(2,parts[3].indexOf(','))),
                       Integer.parseInt(parts[3].substring(parts[3].indexOf(',')+1))); }

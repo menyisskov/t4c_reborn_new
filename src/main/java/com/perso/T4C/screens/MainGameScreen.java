@@ -3275,6 +3275,19 @@ public class MainGameScreen implements Screen {
       return false;
     }
     Vector3 worldCoords = camera.unproject(clickWorldCoordsTemp.set(screenX, screenY, 0));
+    if(isRemoteSession() && isTargetedHealSpell(selectedTargetedSpell)
+        && session.world() instanceof com.perso.T4C.session.RemoteWorldDriver remote) {
+      for(Player other:remote.otherPlayers()) {
+        if(!other.isMouseOver(worldCoords.x,worldCoords.y)) continue;
+        long actor=remote.playerId(other);
+        if(actor>0) {
+          var commands=(com.perso.T4C.session.RemotePlayerCommands)session.commands();
+          commands.castToPlayer(selectedTargetedSpell.getKey(),actor);
+          clearSelectedTargetedSpell(true);
+          return true;
+        }
+      }
+    }
     if (!player.isMouseOver(worldCoords.x, worldCoords.y)) {
       return false;
     }

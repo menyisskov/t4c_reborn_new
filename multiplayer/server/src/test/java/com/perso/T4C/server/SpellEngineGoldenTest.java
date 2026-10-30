@@ -81,6 +81,7 @@ class SpellEngineGoldenTest {
     for (var event : resolved.events()) {
       switch (event) {
         case SpellEngine.Event.SelfHeal h -> out.append(" heal=").append(h.amount());
+        case SpellEngine.Event.FriendHeal h -> out.append(" friendHeal=").append(h.recipient()).append(':').append(h.amount());
         case SpellEngine.Event.DrainHeal d -> out.append(" drain=").append(d.amount());
         case SpellEngine.Event.Damage d -> out.append(d.kind() == SpellEngine.DamageKind.DIRECT ? " primary=" : " res" + d.target() + "=")
             .append(d.amount());
@@ -99,6 +100,31 @@ class SpellEngineGoldenTest {
     for (int k = 0; k < keys.size(); k++)
       for (int c = 0; c < CASTERS.length; c++) text.append(scenario(content().spells().get(keys.get(k)), k, CASTERS[c], c)).append('\n');
     assertEquals(Files.readString(GOLDEN).replace("\r\n", "\n"), text.toString());
+  }
+
+  @Test void singleTargetHealProducesFriendHealOnlyForAnExplicitFriendTarget() throws Exception {
+    var items=ItemCatalog.loadBundled();
+    var progress=OnlineSpellContextParityTest.character("geared",items);
+    var caster=OnlineSpellContexts.caster(progress,items);
+    var spell=content().spells().values().stream()
+        .filter(candidate -> candidate.kind()==SpellContentV2.Kind.HEAL && candidate.targetType()==3)
+        .findFirst().orElseThrow();
+    var friendWorld=new Fixture() {
+      @Override public SpellEngine.FriendView friend(long id) {
+        return id==22 ? new SpellEngine.FriendView(id,8,10,true,null) : null;
+      }
+    };
+    var friendCast=SpellEngine.cast(new SpellEngine.CastRequest(spell,caster,7,10,
+        new SpellEngine.Target.Friend(22),true,10_000,false,false,false),friendWorld,new Random(12));
+    assertTrue(friendCast.success());
+    assertTrue(friendCast.events().stream().anyMatch(event -> event instanceof SpellEngine.Event.FriendHeal heal
+        && heal.recipient()==22 && heal.amount()>0));
+    assertTrue(friendCast.events().stream().noneMatch(SpellEngine.Event.SelfHeal.class::isInstance));
+
+    var selfCast=SpellEngine.cast(new SpellEngine.CastRequest(spell,caster,7,10,
+        new SpellEngine.Target.Self(),true,10_000,false,false,false),friendWorld,new Random(12));
+    assertTrue(selfCast.success());
+    assertTrue(selfCast.events().stream().anyMatch(SpellEngine.Event.SelfHeal.class::isInstance));
   }
 
   // ---- edge cases ----

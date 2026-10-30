@@ -75,6 +75,11 @@ public final class OnlineConnectionLink implements RemoteLink {
   }
 
   @Override
+  public CompletionStage<OnlineConnection.CommandResult> castToPlayer(String spellKey,long actor) {
+    return connection.castToPlayer(spellKey,actor);
+  }
+
+  @Override
   public CompletionStage<OnlineConnection.CommandResult> recover(UUID corpse) {
     return connection.recover(corpse);
   }

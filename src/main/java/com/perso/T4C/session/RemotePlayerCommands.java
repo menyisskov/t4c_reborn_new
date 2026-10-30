@@ -365,6 +365,16 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
   }
 
   @Override
+  public boolean castToPlayer(String spellKey,long actor) {
+    if(spellKey==null || actor<=0) return false;
+    OnlineConnection.View view=link.view();
+    if(view==null || view.snapshot()==null || view.snapshot().players()==null
+        || actor==view.ownId() || view.snapshot().players().stream()
+            .noneMatch(player -> player.id()==actor && player.hp()>0)) return false;
+    return send(() -> link.castToPlayer(spellKey,actor),"online.spell.refused");
+  }
+
+  @Override
   public boolean useItem(UUID itemInstance) {
     if (itemInstance == null) return false;
     return send(() -> link.useItem(itemInstance), "online.item.use.refused");

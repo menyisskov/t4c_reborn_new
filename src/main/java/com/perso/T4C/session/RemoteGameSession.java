@@ -161,6 +161,11 @@ public final class RemoteGameSession implements GameSession {
     }
 
     @Override
+    public CompletionStage<OnlineConnection.CommandResult> castToPlayer(String spellKey,long actor) {
+      throw down();
+    }
+
+    @Override
     public CompletionStage<OnlineConnection.CommandResult> useItem(UUID itemInstance) {
       throw down();
     }

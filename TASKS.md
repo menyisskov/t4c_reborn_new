@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0323`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0324`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0323 | Let learned single-target healing spells heal another live nearby online player through the persistent socket; atomically persist caster cost and recipient health while preserving offline self-casting | Multiplayer / M4 | In Progress (focused service and socket route tests pass; rendered check open) | this PR | [CHANGELOG.md](CHANGELOG.md#2026-10-30--heal-a-nearby-online-player-with-single-target-spells-t4c-0323) |
 | T4C-0318 | Live two-window rendered evidence on current main: NPC topic panel accepting the quest, equipment seen by the other window (name and outline), claim races inside and after the owner window with a weight refusal and the taken-by-another message, a corpse recovery after a death, portal trips watched from both windows (Lighthaven door, skeleton cave), and a 39-minute mixed session (19 minutes of timed fight, idle and loot); driver and provisioning scenes extended. Defect fixed: an equipment change or an attack refused as busy (a checkpoint had just moved the revision) is now tried once more instead of failing with a generic text | Multiplayer / M2-M3-M5 evidence | Done (PR open) | this PR | [CHANGELOG.md](CHANGELOG.md#2026-10-30--equipping-and-attacking-retry-when-the-game-is-busy-online-t4c-0318) |
 | T4C-0321 | Online: every restore potion is usable (Potion of Mana added) and the character's own corpse is drawn and recoverable on the real screen | Multiplayer / M2 | Done (PR #283 merged) | PR #283, merge b32587ff | deferred until GA |
 | T4C-0322 | Make authored Fali and Rolph vendor shops in hosted Lighthaven reachable through the existing authoritative NPC/shop socket flow; preserve scripted NPC topics and offline behavior | Multiplayer / M2 parity | In Progress | origin/main b32587ff; codex/npc-shops-0322 | deferred until GA |

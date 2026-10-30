@@ -175,8 +175,11 @@ public final class SpellEngine {
     /** Health the caster regains from a drain: the full rolled damage of the direct hit. */
     record DrainHeal(int amount) implements Event {}
 
-    /** Health a single-target heal restores to the caster (positive only). */
+    /** Health a self-cast heal restores to the caster (positive only). */
     record SelfHeal(int amount) implements Event {}
+
+    /** Health a single-target heal restores to a friendly player (positive only). */
+    record FriendHeal(long recipient, int amount) implements Event {}
 
     /**
      * A buff to lay on the caster ({@code recipient} null) or on the friend with that id.
@@ -252,8 +255,9 @@ public final class SpellEngine {
         if (friend == null || !friend.alive()) return CastResolution.refused("friend_unavailable");
       }
     }
-    // Only a timed buff is ever laid on someone else; flags, dispels and heals always affect the caster.
-    if (friend != null && spell.kind() != SpellContentV2.Kind.BUFF)
+    // Only authored buffs and single-target heals may affect someone else. Flags, dispels,
+    // drains and area heals retain their caster-only behavior.
+    if (friend != null && spell.kind() != SpellContentV2.Kind.BUFF && spell.kind() != SpellContentV2.Kind.HEAL)
       return CastResolution.refused(SpellCastRules.Verdict.WRONG_TARGET);
     float distance = 0f;
     boolean sightClear = true;
@@ -320,8 +324,17 @@ public final class SpellEngine {
       if (!outcome.success()) return CastResolution.refused(outcome.verdict());
       var events = new ArrayList<Event>();
       switch (spell.kind()) {
-        // An area heal heals the caster only: single-player routes it through the self-cast path.
-        case HEAL, AREA_HEAL -> {
+        // Single-player always uses Self; the friend event is emitted only for an explicit player target.
+        // An area heal remains caster-only.
+        case HEAL -> {
+          int heal = healAmount(spell, request.caster(), random);
+          if (heal > 0) {
+            if (request.target() instanceof Target.Friend friendTarget)
+              events.add(new Event.FriendHeal(friendTarget.id(), heal));
+            else events.add(new Event.SelfHeal(heal));
+          }
+        }
+        case AREA_HEAL -> {
           int heal = healAmount(spell, request.caster(), random);
           if (heal > 0) events.add(new Event.SelfHeal(heal));
         }

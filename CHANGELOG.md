@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-30 — Heal a nearby online player with single-target spells (T4C-0323)
+
+### Added
+- Learned single-target healing spells can now heal another live nearby online player. The game sends the target through its persistent connection, and caster costs and the recipient's health are saved together. Offline self-healing is unchanged.
+
 ## 2026-10-30 — Equipping and attacking retry when the game is busy online (T4C-0318)
 
 ### Fixed

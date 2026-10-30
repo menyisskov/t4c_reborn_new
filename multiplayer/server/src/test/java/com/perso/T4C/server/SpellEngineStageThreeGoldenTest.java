@@ -114,6 +114,7 @@ class SpellEngineStageThreeGoldenTest {
     for (var event : resolved.events()) {
       switch (event) {
         case SpellEngine.Event.SelfHeal h -> out.append(" heal=").append(h.amount());
+        case SpellEngine.Event.FriendHeal h -> out.append(" friendHeal=").append(h.recipient()).append(':').append(h.amount());
         case SpellEngine.Event.Damage d -> {
           switch (d.kind()) {
             case DIRECT -> out.append(" primary=");
