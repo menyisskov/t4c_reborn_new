@@ -5425,7 +5425,8 @@ public class MainGameScreen implements Screen {
     remote.addProcessor(new com.badlogic.gdx.InputAdapter() {
       private boolean returnQueued;
       @Override public boolean keyDown(int keycode) {
-        if (keycode!=Input.Keys.R || !"disconnected".equals(remoteConnection.status()) || returnQueued)
+        if (keycode != Input.Keys.R
+            || !shouldQueueReturnToLobby(game.onlineLobbyLaunch(), remoteConnection.status(), returnQueued))
           return false;
         returnQueued=true;
         Gdx.app.postRunnable(() -> game.returnToOnlineLobby(MainGameScreen.this));
@@ -5446,6 +5447,12 @@ public class MainGameScreen implements Screen {
     });
     remote.addProcessor(monsters);remote.addProcessor(npcClicks);remote.addProcessor(lootClicks);
     Gdx.input.setInputProcessor(remote);
+  }
+
+  static boolean shouldQueueReturnToLobby(boolean lobbyCapable, String connectionStatus,
+      boolean returnQueued) {
+    return lobbyCapable && !returnQueued
+        && ("connected".equals(connectionStatus) || "disconnected".equals(connectionStatus));
   }
 
   /** The lines of whichever online panel is open, top to bottom; empty when none is. */
