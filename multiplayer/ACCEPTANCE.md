@@ -38,6 +38,8 @@ test passed 1/1; the server package built and `git diff --check` passed. Cluster
 rendered client was used, and M4/Beta remain incomplete.
 
 T4C-0320 verifies authored monster attack range online. `OnlineMonsterPursuitTest` passed 8/8, including an authored Goblin Bomberman spell attacking at three tiles without movement and refusing beyond maximum range. The PostgreSQL 16 `OnlineClanCombatTest` passed 1/1 with the attacker remaining on its spawn tile while its authored ranged spell committed the target death. Disposable cluster `t4c_acc_83451ad0017b` on loopback port 58123 was destroyed. Line of sight and attack eligibility remain checked. This is local server evidence only: no rendered-client run, no schema/protocol change, and M4/Beta remain incomplete.
+T4C-0343 implementation evidence: focused online HUD button routing passed 1/1, offline Warden greeting tests passed 2/2, and the existing server quest suite passed 6/6; root and server packages and `git diff --check` passed. No rendered-client or owner-QA window was used. Online visual navigation and repeated Warden greeting still need a rendered check; M1/M3/Beta remain incomplete.
+
 ## Verified foundation (updated 2026-10-27)
 
 T4C-0227 adds `httpTraffic` to the existing loopback/private-token

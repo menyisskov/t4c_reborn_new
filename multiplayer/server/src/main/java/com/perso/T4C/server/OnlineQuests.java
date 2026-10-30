@@ -67,10 +67,11 @@ final class OnlineQuests {
   /** Greeting turns in a ready quest; any other greeting is the giver's welcome, with no change. */
   static Result greet(OnlineStore.CharacterState saved, QuestDef definition, ItemContent items,
       Supplier<UUID> instanceId, long now, RandomGenerator random) {
-    if (readiness(saved.progress(), definition) == Readiness.READY) {
-      return turnIn(saved, definition, items, instanceId, now, random);
-    }
-    return reply(saved.progress(), npcKey("welcome", definition, null), List.of(), false);
+    return switch (readiness(saved.progress(), definition)) {
+      case READY -> turnIn(saved, definition, items, instanceId, now, random);
+      case COMPLETED -> reply(saved.progress(), messageKey(definition.getCompletedText()), List.of(), false);
+      default -> reply(saved.progress(), npcKey("welcome", definition, null), List.of(), false);
+    };
   }
 
   /** Topic 0 is the quest itself; topic 1 is the giver's lore line and never changes state. */
