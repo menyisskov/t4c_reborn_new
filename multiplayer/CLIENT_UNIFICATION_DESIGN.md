@@ -865,7 +865,7 @@ toggle the other runs use was left as it was and `DayNightCycle` was not touched
 
 **Not driven:** the Paladin's own Light Heal cast (its list offers it; the Healer cast the same spell), Battle Mage and Cleric, a splash hit on a second creature, any spell with a tile aim (type 19) or friend target on the real spell book, stat allocation (no online control), multi-charge items, creature spell attackers and clan combat on the screen, a lost-response or forced-kill fault, and anything on a packaged candidate or a second machine.
 
-### 3.19 Live rendered inventory, equip, the whole authored adventure for both players, region boundary and loot/recovery fault drill (T4C-0341, milestones M2 and M3)
+### 3.19 Live rendered inventory, equip, the whole authored adventure for both players, region boundary and loot/recovery fault drill (T4C-0342, milestones M2 and M3)
 
 **Evidence class: rendered clients and native adapters, local only, same harness and limits as 3.15 to 3.18.** Build: `origin/main` 73f46063 and later merges (protocol 8) plus this branch;
 disposable PostgreSQL 16 clusters `t4c_acc_cebf2600e307` (loopback 57971) for both parts, one `ServerMain --online` (HTTP 18981 for the rendered runs, 18972 for the drill, 38 s

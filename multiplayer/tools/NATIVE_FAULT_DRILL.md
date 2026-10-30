@@ -106,7 +106,7 @@ above supersedes its scope but is a different tool. `NativeLootProbe` (retried p
 survives the lethal starter ground (open owner decision T4C-0248) and was not run. `NativeTransferProbe` was not re-run
 (portal traversals are exercised by the walker drills). No rendered clients, no TLS, no remote host, no wire-level packet loss.
 
-## Loot claim and corpse recovery under a hard kill (`NativeLootFaultDrill`, T4C-0341)
+## Loot claim and corpse recovery under a hard kill (`NativeLootFaultDrill`, T4C-0342)
 
 A separate, self-contained tool for milestone M2 ("a lost pickup acknowledgement retains exactly the committed outcome"). It needs no soak: it provisions one fresh character per round, seeds
 one owner-window ground drop (claim rounds) or one two-stack corpse with 50 gold (recovery rounds) at the character's tile before the first server start, starts its own `ServerMain --online`

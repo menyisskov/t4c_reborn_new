@@ -408,7 +408,7 @@ public final class LiveRunProvision {
     }
   }
 
-  /** T4C-0335: the committed rows behind the accept scene (quest state, once-only rewards, equipment, kill rewards, loot). */
+  /** T4C-0342: the committed rows behind the accept scene (quest state, once-only rewards, equipment, kill rewards, loot). */
   private static void acceptReport() throws Exception {
     try (var db = DriverManager.getConnection(System.getenv("T4C_DB_URL"), System.getenv("T4C_DB_USER"), System.getenv("T4C_DB_PASSWORD"))) {
       report(db, "characters (name, revision, experience, gold, quest status, kills, knows renew armor, world, location epoch)",
@@ -464,7 +464,7 @@ public final class LiveRunProvision {
     // Both beta characters carry twenty Healing Potions so a twenty-minute fight does not end in an incidental death.
     var stocked = new java.util.ArrayList<>(progress.inventory());
     stocked.add(new CharacterProgress.Item(UUID.randomUUID(), "item.healing_potion", 20, 0));
-    // T4C-0335: -Dprovision.extra=item.a,item.b adds one unequipped piece of each (the equip-bonus checks need gear with boosts).
+    // T4C-0342: -Dprovision.extra=item.a,item.b adds one unequipped piece of each (the equip-bonus checks need gear with boosts).
     for (String extra : System.getProperty("provision.extra", "").split(","))
       if (!extra.isBlank()) stocked.add(new CharacterProgress.Item(UUID.randomUUID(), extra.trim(), 1, 1));
     {

@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Keeps the own {@link Player} of an online screen on the server's committed worn items (T4C-0337). The player is built once
+ * Keeps the own {@link Player} of an online screen on the server's committed worn items (T4C-0342). The player is built once
  * at join; before this, an equip or unequip changed the committed character (and what other windows saw) while the own
  * screen kept the join-time gear: the character sheet's strength and armor class, the drawn own model and every bonus read
  * from the worn items stayed those of the first frame (found live: the weapon's strength bonus and the body armour's armor

@@ -25,7 +25,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Lost-acknowledgement and restart drill for the LOOT CLAIM and CORPSE RECOVERY requests (T4C-0335, milestone M2). The
+ * Lost-acknowledgement and restart drill for the LOOT CLAIM and CORPSE RECOVERY requests (T4C-0342, milestone M2). The
  * sibling of {@link NativeFaultDrill}'s {@code greet-kill}: one fresh character per round joins a real ServerMain child,
  * the request is handed to the real {@code OnlineConnection} adapter, and the child is hard-killed a fixed number of
  * milliseconds later so the kill races the commit. With the database static, the committed outcome must be exactly

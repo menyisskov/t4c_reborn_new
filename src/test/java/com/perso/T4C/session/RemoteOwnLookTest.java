@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
 /**
- * T4C-0337: an equip or unequip that the server commits reaches the own screen's player, so the strength and armor class of the
+ * T4C-0342: an equip or unequip that the server commits reaches the own screen's player, so the strength and armor class of the
  * character sheet and the drawn model follow it (live finding of the rendered inventory run: they stayed those of the join).
  */
 @ResourceLock("user.dir")

@@ -3296,7 +3296,7 @@ public final class OnlineLiveRunDriver extends MyGame {
     action(() -> log("M4 SUMMARY: hits taken " + hitsTaken + " damage " + damageTaken + " casts pressed " + castsPressed + " | " + state()));
   }
 
-  // ---------------------------------------------------------------- accept scene (T4C-0335, milestones M2 and M3)
+  // ---------------------------------------------------------------- accept scene (T4C-0342, milestones M2 and M3)
   //
   // Two level-30 warriors beside WardenAelric run the whole authored adventure on the real screens: the own-screen inventory panel and
   // character sheet around an equip, unequip and re-equip (stat and armor class numbers read from the screen's own Player object), the
