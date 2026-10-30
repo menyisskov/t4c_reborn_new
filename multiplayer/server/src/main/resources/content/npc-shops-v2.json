@@ -2,6 +2,16 @@
   "version": 2,
   "vendors": [
     {
+      "npcId": "Araknor",
+      "offers": [
+        {
+          "itemKey": "item.necromantic_scroll",
+          "buyPrice": 10000,
+          "sellPrice": 5000
+        }
+      ]
+    },
+    {
       "npcId": "ChryseidaYolangda",
       "offers": [
         {

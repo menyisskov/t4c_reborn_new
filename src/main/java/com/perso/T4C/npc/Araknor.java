@@ -17,6 +17,9 @@ public final class Araknor extends ScriptedNpc {
 
   public static final String ID = "Araknor";
 
+  /** Stock for Araknor's authored SCROLL shop, shared with the online vendor export. */
+  public static final List<String> SHOP_ITEMS = List.of("necromantic_scroll");
+
   public static final String DISPLAY_NAME = "${npc.araknor}";
 
   public static final String SPRITE_BASE = null;
@@ -142,7 +145,7 @@ public final class Araknor extends ScriptedNpc {
 
         if (text != null && text.toUpperCase(java.util.Locale.ROOT).contains("SCROLL")) {
 
-          c.openShop(java.util.List.of("necromantic_scroll"));
+          c.openShop(SHOP_ITEMS);
 
           return true;
         }

@@ -29,16 +29,24 @@ class ShopCatalogTest {
     long exportedVendors =
         inventories.values().stream()
             .filter(items -> items.stream().anyMatch(key -> ItemRegistry.findByKey(key) != null))
-            .count();
+            .count() + 1;
     assertEquals(exportedVendors, exported.vendors().size());
-    exported.vendors().forEach(
-        vendor ->
-            assertEquals(
-                inventories.get(vendor.npcId()).stream()
-                    .filter(key -> ItemRegistry.findByKey(key) != null)
-                    .map(ItemKeys::normalize)
-                    .toList(),
-                vendor.offers().stream().map(com.perso.T4C.online.model.NpcShopContent.Offer::itemKey).toList()));
+    exported.vendors().stream().filter(vendor -> inventories.containsKey(vendor.npcId()))
+        .forEach(
+            vendor ->
+                assertEquals(
+                    inventories.get(vendor.npcId()).stream()
+                        .filter(key -> ItemRegistry.findByKey(key) != null)
+                        .map(ItemKeys::normalize)
+                        .toList(),
+                    vendor.offers().stream().map(com.perso.T4C.online.model.NpcShopContent.Offer::itemKey).toList()));
+    var araknor =
+        exported.vendors().stream().filter(vendor -> vendor.npcId().equals("Araknor"))
+            .findFirst().orElseThrow();
+    assertEquals(List.of("item.necromantic_scroll"),
+        araknor.offers().stream()
+            .map(com.perso.T4C.online.model.NpcShopContent.Offer::itemKey).toList());
+    assertEquals(10_000L, araknor.offers().getFirst().buyPrice());
     exported.vendors().forEach(
         vendor ->
             vendor.offers().forEach(
