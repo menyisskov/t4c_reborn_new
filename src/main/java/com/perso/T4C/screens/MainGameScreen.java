@@ -242,6 +242,9 @@ public class MainGameScreen implements Screen {
   private long nextAutoSpellAttemptAtMs = 0L;
   private static final long AUTO_SPELL_RETRY_DELAY_MS = 100L;
   private long nextAutoWeaponTargetAtMs;
+  private volatile long nextRemoteWeaponAttackAtMs;
+  private volatile boolean remoteWeaponAttackInFlight;
+  private volatile long remoteWeaponAttackGeneration;
   private static final long AUTO_WEAPON_TARGET_INTERVAL_MS = 250L;
   private BaseMonster selectedMonster = null;
   private long lastRemoteVitalsRevision = Long.MIN_VALUE;
@@ -2890,6 +2893,75 @@ public class MainGameScreen implements Screen {
     }
   }
 
+  /** Repeats weapon attack intents online while leaving every outcome to the server. */
+  private void performRemoteWeaponAttackTick() {
+    if (!isRemoteSession() || player == null) return;
+    boolean interacting =
+        GuiManager.isOpen()
+            || isTextInputActive()
+            || selectedTargetedSpell != null
+            || remoteTalkPanel != null && remoteTalkPanel.isOpen()
+            || remoteShopPanel != null && remoteShopPanel.isOpen()
+            || remoteInventoryPanel != null && remoteInventoryPanel.isOpen()
+            || remoteAbilityMenu != null && remoteAbilityMenu.isOpen()
+            || tameChannel != null
+            || harvestChannel != null;
+    if (!WeaponAutoAttack.canRun(player, interacting)
+        || currentAttackSpell != null
+        || currentAttackNpcTarget != null) {
+      remoteWeaponAttackGeneration++;
+      nextRemoteWeaponAttackAtMs = 0L;
+      return;
+    }
+
+    long now = System.currentTimeMillis();
+    if (remoteWeaponAttackInFlight || now < nextRemoteWeaponAttackAtMs) return;
+    BaseMonster target =
+        WeaponAutoAttack.selectTarget(
+            player, currentAttackTarget, monsterManager == null ? List.of() : monsterManager.getMonsters());
+    if (target == null) {
+      currentAttackTarget = null;
+      nextRemoteWeaponAttackAtMs = 0L;
+      return;
+    }
+    currentAttackTarget = target;
+
+    long targetId = ((com.perso.T4C.session.RemoteGameSession) session).remoteWorld().creatureId(target);
+    if (targetId <= 0) {
+      nextRemoteWeaponAttackAtMs = 0L;
+      return;
+    }
+
+    remoteWeaponAttackInFlight = true;
+    long generation = remoteWeaponAttackGeneration;
+    long weaponIntervalMs =
+        Math.max(
+            AUTO_WEAPON_TARGET_INTERVAL_MS,
+            (long) Math.ceil(1000d / resolveEquippedWeaponAttackSpeed()));
+    nextRemoteWeaponAttackAtMs = now + weaponIntervalMs;
+    try {
+      ((com.perso.T4C.session.RemotePlayerCommands) session.commands())
+          .attackWithResult(target)
+          .whenComplete(
+              (result, failure) -> {
+                remoteWeaponAttackInFlight = false;
+                if (remoteWeaponAttackGeneration != generation) return;
+                long retryDelay = AUTO_WEAPON_TARGET_INTERVAL_MS;
+                if (failure == null
+                    && result != null
+                    && (result.accepted()
+                        || "online.attack.cooldown".equals(result.messageKey()))) {
+                  retryDelay = weaponIntervalMs;
+                }
+                nextRemoteWeaponAttackAtMs =
+                    System.currentTimeMillis() + retryDelay;
+              });
+    } catch (IllegalStateException | IllegalArgumentException pending) {
+      remoteWeaponAttackInFlight = false;
+      nextRemoteWeaponAttackAtMs = now + AUTO_WEAPON_TARGET_INTERVAL_MS;
+    }
+  }
+
   private void performAutoSpellTick() {
     if (player.getMovement().isMoving()) {
       clearCurrentAttackTarget();
@@ -3071,6 +3143,8 @@ public class MainGameScreen implements Screen {
     currentAttackSpell = null;
     nextAutoSpellAttemptAtMs = 0L;
     nextAutoWeaponTargetAtMs = 0L;
+    remoteWeaponAttackGeneration++;
+    nextRemoteWeaponAttackAtMs = 0L;
   }
 
   private void applyBowImpact(
@@ -4384,7 +4458,10 @@ public class MainGameScreen implements Screen {
                   renderStartY,
                   renderEndY,
                   margin));
-      if (isRemoteSession()) return;
+      if (isRemoteSession()) {
+        performRemoteWeaponAttackTick();
+        return;
+      }
       pruneSelectedMonster();
       performAttackTick();
       spellEffectManager.update(this::applyPeriodicSpellImpact);
