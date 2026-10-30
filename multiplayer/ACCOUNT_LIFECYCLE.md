@@ -1,6 +1,6 @@
 # Online account roster
 
-Update (2026-10-30, T4C-0325): the native lobby (selection, Create form, refusal messages) now exists and ran rendered against a live local server; see MILESTONES.md M1 and CLIENT_UNIFICATION_DESIGN.md 3.18. The paragraphs below are the 2026-10-27 delivery record.
+Update (2026-10-30, T4C-0325): the native lobby (selection, Create form, refusal messages) now exists and ran rendered against a live local server; see MILESTONES.md M1 and CLIENT_UNIFICATION_DESIGN.md 3.18. The paragraphs below are the 2026-10-27 delivery record. Since 2026-10-30 (owner decision, T4C-0352) in-client creation is in Beta scope: the Create form, the idempotent creation request and its interrupted-request evidence are recorded in MILESTONES.md M1 and CLIENT_UNIFICATION_DESIGN.md 3.20; "operator-provisioned" below describes accounts, not a limit on characters.
 
 Delivery status (2026-10-27): the account service/native adapter is implemented and verified,
 being delivered with T4C-0197. Visible selection/creation controls remain unfinished. Recorded

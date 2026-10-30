@@ -53,6 +53,31 @@ class OnlineCharacterCreatorTest {
     }
   }
 
+  /** The single-player side is {@code CharacterKitParityTest}; both compare with {@code CharacterStartingKit.itemCounts}. */
+  @Test void everyOfferedClassGetsExactlyItsSinglePlayerKit() {
+    assertEquals(OnlineCharacterCreation.CLASSES.size(), CharacterClass.values().length);
+    for (String id : OnlineCharacterCreation.CLASSES) {
+      var type = AccountRosterService.resolveCharacterClass(id);
+      assertEquals(id, type.id());
+      for (boolean evil : new boolean[] {false, true}) {
+        var prepared = OnlineCharacterCreator.prepare(type, "female", evil, new Random(3));
+        var progress = prepared.progress();
+        var counts = new java.util.TreeMap<String, Integer>();
+        progress.inventory().forEach(item -> counts.merge(item.key(), item.quantity(), Integer::sum));
+        assertEquals(CharacterStartingKit.itemCounts(type), counts, id);
+        assertEquals(progress.inventory().size(), progress.inventory().stream().map(item -> item.id()).distinct().count(), id);
+        assertEquals(type.startingEquipment().keySet().stream().map(Enum::name).collect(java.util.stream.Collectors.toSet()),
+            progress.equipment().keySet(), id);
+        assertEquals(Set.copyOf(type.startingSpellKeys()), progress.spells(), id);
+        assertEquals(1, progress.advancement().level(), id);
+        assertEquals(CharacterStartingKit.SKILLS, progress.skills(), id);
+        assertTrue(prepared.gold() >= CharacterStartingKit.MIN_GOLD && prepared.gold() <= CharacterStartingKit.MAX_GOLD, id);
+        assertEquals(evil ? CharacterStartingKit.EVIL_KARMA : CharacterStartingKit.GOOD_KARMA, progress.advancement().karma(), id);
+        assertTrue(progress.vitals().maxHp() > 0 && progress.vitals().hp() == progress.vitals().maxHp(), id);
+      }
+    }
+  }
+
   @Test void preparesTheSharedClassKitAndRollWithoutDesktopStorage() {
     var type=CharacterClass.PALADIN;
     var expected=CharacterCreationRules.roll(type,new Random(7));
