@@ -16,6 +16,12 @@ import org.junit.jupiter.params.provider.ValueSource;
 class OnlineSpellQuestContentFreshnessTest {
   @TempDir Path temporary;
 
+  @org.junit.jupiter.api.AfterEach
+  void restoreSharedRegistries() {
+    // snapshot() loads the JSON items into the static registry; do not leak them to later tests.
+    com.perso.T4C.item.ItemRegistry.resetAdditionalDefinitions();
+  }
+
   @org.junit.jupiter.api.Test
   void onlineQuestExportIncludesTheHostedLighthavenRatQuest() {
     var quest = OnlineQuestContentExporter.snapshot().quests().get("lighthaven_samaritan_rats");
