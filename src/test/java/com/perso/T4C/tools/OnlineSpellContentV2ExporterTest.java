@@ -16,13 +16,13 @@ class OnlineSpellContentV2ExporterTest {
   @Test
   void everyPlayerSpellIsClassifiedAndTheCountsMatchTheDesign() {
     var content = OnlineSpellContentV2Exporter.snapshot();
-    assertEquals(SpellRegistry.playerCastableSpells().size() + 10, content.spells().size());
+    assertEquals(SpellRegistry.playerCastableSpells().size() + 11, content.spells().size());
     Map<Kind, Long> counts = new EnumMap<>(Kind.class);
     content.spells().values().forEach(spell -> counts.merge(spell.kind(), 1L, Long::sum));
     // These are the design's table; a content change that moves one is a deliberate decision.
     var expected = Map.ofEntries(Map.entry(Kind.NUKE, 40L), Map.entry(Kind.AREA_DAMAGE, 25L),
         Map.entry(Kind.DRAIN, 4L), Map.entry(Kind.HEAL, 4L), Map.entry(Kind.AREA_HEAL, 4L),
-        Map.entry(Kind.BUFF, 35L), Map.entry(Kind.DEBUFF, 1L), Map.entry(Kind.DOT, 4L),
+        Map.entry(Kind.BUFF, 36L), Map.entry(Kind.DEBUFF, 1L), Map.entry(Kind.DOT, 4L),
         Map.entry(Kind.SHIELD, 3L), Map.entry(Kind.GATEWAY, 7L), Map.entry(Kind.PORTAL, 6L),
         Map.entry(Kind.RECALL, 1L), Map.entry(Kind.DETECTION, 4L), Map.entry(Kind.DISPEL, 2L),
         Map.entry(Kind.SPECIAL, 2L));
@@ -111,6 +111,33 @@ class OnlineSpellContentV2ExporterTest {
           entry.getKey());
       assertEquals(spell.effects(), legacy.spells().get(entry.getKey()).effects(), entry.getKey());
     }
+  }
+
+  @Test
+  void exportsHyperPotionOfViolentRageWithItsAuthoredCompoundEffectsAndDuration() {
+    var v2 = OnlineSpellContentV2Exporter.snapshot().spells().get("spell.item_hyper_potion_of_violent_rage");
+    var v1 = OnlineSpellContentExporter.snapshot().spells().get("spell.item_hyper_potion_of_violent_rage");
+    assertNotNull(v2);
+    assertNotNull(v1);
+    assertEquals(Kind.BUFF, v2.kind());
+    assertEquals(2, v2.stage());
+    assertEquals(60_000, Integer.parseInt(v2.duration()));
+    assertEquals(com.perso.T4C.online.model.SpellContent.Use.ITEM, v1.use());
+    assertEquals(10183, v1.id());
+    assertEquals(v1.effects(), v2.effects());
+    assertEquals(4, v2.effects().size());
+    assertTrue(v2.effects().stream().anyMatch(effect -> effect.params().stream()
+        .anyMatch(param -> param.id() == 2 && "str".equals(param.expression()))
+        && effect.params().stream().anyMatch(param -> param.id() == 3 && "self.true_str*3".equals(param.expression()))));
+    assertTrue(v2.effects().stream().anyMatch(effect -> effect.params().stream()
+        .anyMatch(param -> param.id() == 2 && "attack".equals(param.expression()))
+        && effect.params().stream().anyMatch(param -> param.id() == 3 && "self.true_attack*3".equals(param.expression()))));
+    assertTrue(v2.effects().stream().anyMatch(effect -> effect.params().stream()
+        .anyMatch(param -> param.id() == 2 && "AC".equals(param.expression()))
+        && effect.params().stream().anyMatch(param -> param.id() == 3 && "-self.AC".equals(param.expression()))));
+    assertTrue(v2.effects().stream().anyMatch(effect -> effect.params().stream()
+        .anyMatch(param -> param.id() == 2 && "dodge".equals(param.expression()))
+        && effect.params().stream().anyMatch(param -> param.id() == 3 && "-self.true_dodge*2".equals(param.expression()))));
   }
 
   @Test

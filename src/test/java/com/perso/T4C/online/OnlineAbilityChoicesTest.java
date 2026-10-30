@@ -169,6 +169,19 @@ class OnlineAbilityChoicesTest {
   }
 
   @Test
+  void offersHyperPotionOfViolentRageAsAUsableCarriedPotion() {
+    var definition = ItemRegistry.findByKey("item.hyper_potion_of_violent_rage");
+    assertNotNull(definition);
+    var instance = UUID.randomUUID();
+    var rows = OnlineAbilityChoices.usablePotions(progress(Set.of(),
+        List.of(new Item(instance, "item.hyper_potion_of_violent_rage", 1, 1)), Map.of()), ALLOWLIST);
+
+    assertEquals(1, rows.size());
+    assertEquals(instance, rows.getFirst().instance());
+    assertEquals(1, rows.getFirst().quantity());
+  }
+
+  @Test
   void offersFiniteMultiChargeRestorativesOnlyWhileTheirCurrentItemHasCharges() {
     var base = potion();
     var multi = withCharges(base, 3, false);
@@ -234,8 +247,9 @@ class OnlineAbilityChoicesTest {
     expected.add("item.hyper_potion_of_fortitude");
     expected.add("item.hyper_potion_of_tranquility");
     expected.add("item.hyper_potion_of_fury");
+    expected.add("item.hyper_potion_of_violent_rage");
     for (var key : List.of("item.hyper_potion_of_clear_thought", "item.hyper_potion_of_fortitude",
-        "item.hyper_potion_of_tranquility", "item.hyper_potion_of_fury")) {
+        "item.hyper_potion_of_tranquility", "item.hyper_potion_of_fury", "item.hyper_potion_of_violent_rage")) {
       var definition = ItemRegistry.findByKey(key);
       assertNotNull(definition, key);
       assertEquals(1, definition.getNbCharges(), key);

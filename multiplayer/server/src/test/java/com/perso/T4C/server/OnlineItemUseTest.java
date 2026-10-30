@@ -234,6 +234,29 @@ class OnlineItemUseTest {
     }
   }
 
+  @Test void hyperPotionOfViolentRageAppliesAuthoredBuffsAndConsumesItsChargeAtomically() throws Exception {
+    var stack = new CharacterProgress.Item(UUID.randomUUID(), "item.hyper_potion_of_violent_rage", 1, 1);
+    var p = progress(new CharacterProgress.Vitals(10, 100, 20, 30), List.of(stack), Map.of(), Map.of());
+    var used = OnlineItemUse.prepareUse(state(p), stack.id(), NOW, new Random(5), ItemCatalog.loadBundled(),
+        SpellCatalog.loadBundled(), SpellCatalogV2.loadBundled());
+
+    assertTrue(used.progress().inventory().isEmpty(), "accepted use consumes the matching potion charge");
+    var buff = used.progress().buffs().stream()
+        .filter(candidate -> candidate.spell().equals("spell.item_hyper_potion_of_violent_rage"))
+        .findFirst().orElseThrow();
+    assertEquals(NOW + 60_000, buff.expiresAt());
+    assertTrue(buff.modifiers().containsKey("str"));
+    assertTrue(buff.modifiers().containsKey("skill:attack"));
+    assertTrue(buff.modifiers().containsKey("skill:dodge"));
+    assertEquals(0, buff.modifiers().getOrDefault("armorClass", 0),
+        "authored -self.AC remains zero in shared evaluation");
+    assertEquals(NOW, used.progress().cooldowns().get(OnlineBuffs.ANCHOR));
+    assertEquals(used.progress(), OnlineBuffs.expire(used.progress(), NOW + 59_999));
+    assertTrue(OnlineBuffs.expire(used.progress(), NOW + 60_000).buffs().isEmpty());
+    assertEquals(0, used.manaSpent());
+    assertEquals(0, used.healthGained());
+  }
+
   private record HyperStatPotion(String itemKey, String spellKey, String attribute, int lowStat, int highStat) {}
 
   private static OnlineCasting.Result useHyperStatPotion(HyperStatPotion potion, int stat, int activeBuff)

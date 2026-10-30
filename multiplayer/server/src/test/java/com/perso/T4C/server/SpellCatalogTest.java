@@ -67,7 +67,7 @@ class SpellCatalogTest {
     }
     for (var key : java.util.List.of("spell.item_hyper_potion_of_clear_thought",
         "spell.item_hyper_potion_of_fortitude", "spell.item_hyper_potion_of_tranquility",
-        "spell.item_hyper_potion_of_fury")) {
+        "spell.item_hyper_potion_of_fury", "spell.item_hyper_potion_of_violent_rage")) {
       assertEquals(SpellContent.Use.ITEM, catalog.require(key).use());
       assertThrows(IllegalArgumentException.class, () -> catalog.castable(key));
     }
