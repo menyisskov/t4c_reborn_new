@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  Counts the evidence in the output directory of run-rendered-mixed-session.ps1 (T4C-0350). Reads only that directory.
+  Counts the evidence in the output directory of run-rendered-mixed-session.ps1 (T4C-0353). Reads only that directory.
 
 .DESCRIPTION
   Per client log: ERROR / WARN / Exception / stack-trace line counts, "M5 DOWN" disconnect counts, every "M5 COMPARE" verdict, the
@@ -33,7 +33,7 @@ $ops = @{}
 foreach ($entry in $all) {
   $other = @($entry[2] | Where-Object { $_ -match '\bERROR\b|\bWARN\b|Exception' -and $_ -notmatch 'persistence failed' }).Count
   $pf = @($entry[2] | Where-Object { $_ -match 'persistence failed' })
-  foreach ($l in $pf) { $op = if ($l -match 'persistence failed \(?([A-Za-z_ ]+?)[\):,]') { $Matches[1].Trim() } else { 'unparsed' }; $ops[$op] = 1 + [int]$ops[$op] }
+  foreach ($l in $pf) { $op = if ($l -match 'operation=([A-Za-z_]+)') { $Matches[1] } else { 'unparsed' }; $ops[$op] = 1 + [int]$ops[$op] }
   Write-Output ("{0}/{1}: {2} lines, persistence-failed {3}, other ERROR/WARN/Exception {4}" -f $entry[0], $entry[1], $entry[2].Count, $pf.Count, $other)
 }
 if ($ops.Count) { Write-Output ("persistence-failed by operation: " + (($ops.GetEnumerator() | Sort-Object Name | ForEach-Object { "$($_.Name)=$($_.Value)" }) -join ', ')) }

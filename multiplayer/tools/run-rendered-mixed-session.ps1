@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  Operator for the rendered two-client M5 mixed session with injected faults (T4C-0350).
+  Operator for the rendered two-client M5 mixed session with injected faults (T4C-0353).
 
 .DESCRIPTION
   Creates ONE disposable acceptance cluster (acceptance-cluster.ps1), starts the SERVER from an extracted server package, provisions two

@@ -745,7 +745,7 @@ public final class OnlineLiveRunDriver extends MyGame {
     restartCycle(cycle, afterRejoin, null);
   }
 
-  /** {@code whileDown} runs every frame until the connection shows disconnected (T4C-0350: the database-crash cycle keeps committing meanwhile). */
+  /** {@code whileDown} runs every frame until the connection shows disconnected (T4C-0353: the database-crash cycle keeps committing meanwhile). */
   private void restartCycle(String cycle, Runnable afterRejoin, Runnable whileDown) {
     String suffix = cycle.isEmpty() ? "" : "-" + cycle;
     // 4. Server stop and restart (the operator does it between these markers).
@@ -974,6 +974,7 @@ public final class OnlineLiveRunDriver extends MyGame {
 
   /** One line of committed state: revision, gold, vitals, what is worn, what is carried, buffs and cooldowns. */
   private String state() {
+    if (view() == null) return "(connection gone: a fault is in progress)";
     var c = view().character();
     var p = c.progress();
     java.util.Map<java.util.UUID, String> keys = new java.util.HashMap<>();
@@ -1643,7 +1644,7 @@ public final class OnlineLiveRunDriver extends MyGame {
           } else log("TOPIC: the panel did not open after the greeting");
         });
     waitMs(3500);
-    // A player who is told "They are busy for a moment. Try again." presses the digit again (T4C-0350: the second window's first
+    // A player who is told "They are busy for a moment. Try again." presses the digit again (T4C-0353: the second window's first
     // press was refused that way in a live run; the game now also retries once by itself, but the packaged build under test does not).
     for (int attempt = 2; attempt <= 4; attempt++) {
       final int n = attempt;
@@ -2166,7 +2167,7 @@ public final class OnlineLiveRunDriver extends MyGame {
     deathChapter(false);
   }
 
-  /** {@code killRecover}: the operator hard-kills the server right after the first recovery request (T4C-0350); both windows then rejoin and Bravo retries. */
+  /** {@code killRecover}: the operator hard-kills the server right after the first recovery request (T4C-0353); both windows then rejoin and Bravo retries. */
   private void deathChapter(boolean killRecover) {
     if (tag.endsWith("A")) {
       // Alpha keeps fighting near the corpse spot so the recovering player can reach it.
@@ -2224,7 +2225,7 @@ public final class OnlineLiveRunDriver extends MyGame {
           var s = game();
           held.clear();
           if (killRecover) {
-            // T4C-0350: standing beside idle Skeletons for ten minutes did not kill a 278-hit-point character (they only retaliate),
+            // T4C-0353: standing beside idle Skeletons for ten minutes did not kill a 278-hit-point character (they only retaliate),
             // so the M5 run keeps swinging, with no potions, until the death happens.
             if (s != null) combatFrame(s, true, null);
           } else if (s != null) {
@@ -4024,7 +4025,7 @@ public final class OnlineLiveRunDriver extends MyGame {
     }
   }
 
-  // ---------------------------------------------------------------- m5 scene (T4C-0350)
+  // ---------------------------------------------------------------- m5 scene (T4C-0353)
   //
   // The M5 mixed session: the whole quest (accept, Lighthaven door pair, kills, turn-in) for both windows, then a graceful server
   // restart, a forced server kill and a database crash with an exact before/after comparison of the committed state, a cave trip,
@@ -4167,7 +4168,7 @@ public final class OnlineLiveRunDriver extends MyGame {
           log("M5 PK final: carried " + after + " of " + m5PkKey + " (before the claim " + m5PkCarried + "); messages " + messagesSince(System.currentTimeMillis() - 6000)
               + "; drop still listed " + (lootView(m5PkDrop) != null) + " | " + state());
         });
-    mixedSegment("m5 fight and loot after the pickup kill", 420_000);
+    mixedSegment("m5 fight and loot after the pickup kill", Long.getLong("m5.segmentMs", 420_000L));
   }
 
   // ---------------------------------------------------------------- frame loop
