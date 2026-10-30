@@ -71,6 +71,15 @@ increase in database connections substitutes for a recovery or sustained-load te
   and preservation of committed character state.
 - Shutdown regressions cover a blocked accepted write which ignores interruption, incomplete-flush
   reporting, recovery of an unacknowledged commit, and two concurrent closers waiting for the drain.
+- T4C-0353 added a server-level regression and a live drill for the other half of that rule. The regression
+  (`PreviewServerTest.shutdownWhileTheDatabaseIsUnreachableFailsVisiblyAndNeverReleasesTheLease`) joins a character, makes
+  every database connection fail, and requires `close()` to throw "teardown reported a failure", the writer lease to stay in
+  force (nothing was committed or released) and a second `close()` to report the same recorded failure. The live drill is
+  `run-native-fault-drill.ps1 -Mode ShutdownOutage` ([tools/NATIVE_FAULT_DRILL.md](tools/NATIVE_FAULT_DRILL.md)): PostgreSQL
+  is crashed under twenty playing adapters and the operator stop is requested immediately; the server process must exit
+  non-zero within 120 s with a failure line on stderr, committed state must survive, and a restarted server must serve all
+  twenty again after the leases expire. The pool now also reports operation time, pool wait and acquire timeouts
+  (`/admin/metrics` `database`, see LOAD_METRICS.md).
 - Final local integration before delivery passed 18 domain + 82 server tests, zero failures/errors/skips.
   That count includes separate metrics groundwork still pending its own delivery.
 - Actual native roster and network-fault probes passed after the corrected pooled server restart:

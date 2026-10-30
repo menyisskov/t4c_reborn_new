@@ -1,6 +1,23 @@
 # Multiplayer implementation handoff
 
-Last reviewed: 2026-10-27, Asia/Jerusalem. This file is the restart point for a different model. Recheck Git and running processes before acting; this describes recorded evidence, not live state.
+Last reviewed: 2026-10-30, Asia/Jerusalem. This file is the restart point for a different model. Recheck Git and running processes before acting; this describes recorded evidence, not live state.
+
+### Shared GUI keyboard routing (T4C-0356)
+
+Implemented in `codex/online-remote-gui-keyboard-0356`, commit `e95c177b`, based on main `1710e2c5`. Open shared GUI screens now receive remote keyDown/keyTyped before online shortcuts and consume those events while open; closed-GUI shortcuts and offline input are unchanged. Focused tests passed 4/4, package and diff checks passed. PR #323 is open. No rendered-client check; M1/M4/Beta remain open.
+
+
+### Online buff-bar recast (T4C-0355)
+
+Implemented in `codex/online-buff-recast-0355`, commit `f32f36bc`, based on latest main `b2490b75`. A double-click resolves only a buff in the connected character's committed progress, maps it through SpellRegistry, and sends its canonical key with the existing RemotePlayerCommands.cast. The server remains authoritative for learned spells, cooldown and content support. Offline double-click recast is unchanged. Focused test 2/2, package and diff check passed. No rendered-client check was run. Next: open and merge the locally validated PR; M4/Beta remain open.
+
+### Journal inventory routing (T4C-0354)
+
+Merged as PR #320 at dbd7da1b, tested head cda1311e. Online character-journal Inventory opens the authoritative remote inventory panel; single-player fallback remains unchanged. Focused tests 3/3, package and diff check passed. No rendered check; M2/Beta remain open. The PR title used 0353 before PR #319 took that ID; canonical task ID is 0354.
+
+### Online ability-menu paging (T4C-0351)
+
+Implemented in PR #317, merged `01ee5dab`, based on main `acb7f2ce`. Online spell and potion lists page through learned, server-supported entries; Left/Right changes pages and 1–9 selects within the page. Focused tests passed 13/13, package and diff checks passed. No rendered-client or owner-QA test was run; M4/Beta remain open. T4C-0350 day/night PR #315 merged as `e33a6744`.
 
 ## Read first
 
@@ -49,6 +66,14 @@ Both QA packages were rebuilt from `f3d4ed62` and rehearsed in a scrubbed enviro
 PowerShell 5.1 packaging defects were fixed and the remaining second-machine checklist is in [MILESTONES.md](MILESTONES.md) M6. Rebuild with
 `package-online-client.ps1 -Name <new>` and `package-online-server.ps1 -Name <new> -SourceRevision <sha>`; both now run under stock 5.1.
 
+### Package launcher hardening (T4C-0345, 2026-10-30)
+
+Launchers now check for Java 21 x64 with a plain message, the GLFW extraction folder is reused, the server package has `.bat` wrappers, a
+provisioning script and `verify-package`, and the client builder has an opt-in `-ExcludeOrigin` (default unchanged, owner decision open). The
+shared Java check lives in `multiplayer/tools/package-java-check.ps1` and is pasted into each generated script by the builders; run
+`test-package-java-check.ps1 [-ClientPackage ..] [-ServerPackage ..]` after changing it. The package checkers now expect the new files.
+Remaining owner decisions and second-machine evidence are listed in [MILESTONES.md](MILESTONES.md) M6.
+
 ### Latest live rendered evidence (T4C-0306, 2026-10-29)
 
 Two real rendered windows were run against a real server on a disposable PostgreSQL cluster with the test-scope
@@ -63,8 +88,8 @@ refusal, a scripted death/corpse recovery, spells, the quest loop and travel, a 
 
 The online create form and authenticated server endpoint now offer Warrior, Paladin, Cleric,
 Healer, Mage and Battle Mage. Starting attributes, equipment and spells come from the shared
-`CharacterClass`/`OnlineCharacterCreator`; server class resolution explicitly rejects Archer
-until ranged attacks are supported. Focused local form, kit and class-resolution tests passed;
+`CharacterClass`/`OnlineCharacterCreator`; server class resolution rejected Archer at that
+time (Archer is offered and created since T4C-0273 added ranged attacks; all seven classes now). Focused local form, kit and class-resolution tests passed;
 the authenticated creation integration tests passed 2/2 against a disposable PG16 cluster,
 which was destroyed and its port released. No desktop or owner QA resource was used. This is
 not full character parity or Beta acceptance. Next gameplay gaps remain ranged combat, broader

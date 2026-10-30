@@ -23,6 +23,8 @@ import java.util.function.Function;
  * the server stays the authority on mana, cooldown, exhaustion and effect.
  */
 public final class OnlineAbilityMenu {
+  public static final int MAX_CHOICES = OnlineAbilityChoices.MAX_CHOICES;
+
   public enum Kind { NONE, SPELLS, POTIONS }
 
   /** A spell key or potion identity plus the target form needed by the selected cast. */
@@ -35,6 +37,7 @@ public final class OnlineAbilityMenu {
 
   private final Function<String, ItemDefinition> items;
   private Kind open = Kind.NONE;
+  private int page;
 
   public OnlineAbilityMenu() {
     this(ItemRegistry::findByKey);
@@ -54,6 +57,18 @@ public final class OnlineAbilityMenu {
 
   public void close() {
     open = Kind.NONE;
+    page = 0;
+  }
+
+  public int page() {
+    return page;
+  }
+
+  /** Moves through the current filtered list, clamping when server progress changes. */
+  public void turnPage(int delta, CharacterProgress progress) {
+    if (!isOpen()) return;
+    int size = choices(progress).size();
+    page = clampPage(page + delta, size);
   }
 
   /**
@@ -61,8 +76,11 @@ public final class OnlineAbilityMenu {
    * dead or disconnected the press is ignored and nothing stays open.
    */
   public void toggle(Kind requested, boolean available) {
-    if (requested == Kind.NONE || !available || open == requested) open = Kind.NONE;
-    else open = requested;
+    if (requested == Kind.NONE || !available || open == requested) close();
+    else {
+      open = requested;
+      page = 0;
+    }
   }
 
   /** True only for a connected character that is alive. */
@@ -90,9 +108,11 @@ public final class OnlineAbilityMenu {
       close();
       return Optional.empty();
     }
+    List<?> rows = choices(progress, engineCatalog, potionAllowlist);
+    page = clampPage(page, rows.size());
     Optional<Action> picked =
         open == Kind.SPELLS
-            ? OnlineAbilityChoices.choose(OnlineAbilityChoices.castableSpells(progress, engineCatalog), digit)
+            ? OnlineAbilityChoices.choose(page(OnlineAbilityChoices.castableSpells(progress, engineCatalog), page), digit)
                 .map(
                     row ->
                         new Action(
@@ -102,7 +122,7 @@ public final class OnlineAbilityMenu {
                             row.requiresCreatureTarget(),
                             row.requiresPositionTarget()))
             : OnlineAbilityChoices.choose(
-                    OnlineAbilityChoices.usablePotions(progress, potionAllowlist, items), digit)
+                    page(OnlineAbilityChoices.usablePotions(progress, potionAllowlist, items), page), digit)
                 .map(row -> new Action(Kind.POTIONS, null, row.instance(), false, false));
     picked.ifPresent(action -> close());
     return picked;
@@ -118,26 +138,30 @@ public final class OnlineAbilityMenu {
     return lines(progress, OnlineSpellAllowlistV2.bundled(), potionAllowlist);
   }
 
-  /** Title, one line per row (first nine), an overflow note if needed, and the close hint. */
+  /** Title, one page of rows, a page indicator when needed, and the close hint. */
   List<String> lines(CharacterProgress progress, SpellContentV2 engineCatalog, SpellContent potionAllowlist) {
     var lines = new ArrayList<String>();
     if (open == Kind.SPELLS) {
       lines.add(I18n.key("online.ability.spells_title"));
       var rows = OnlineAbilityChoices.castableSpells(progress, engineCatalog);
+      page = clampPage(page, rows.size());
       if (rows.isEmpty()) lines.add(I18n.key("online.ability.spells_empty"));
-      for (int i = 0; i < rows.size() && i < OnlineAbilityChoices.MAX_CHOICES; i++)
+      List<OnlineAbilityChoices.SpellChoice> visible = page(rows, page);
+      for (int i = 0; i < visible.size(); i++)
         lines.add(
-            I18n.message("online.ability.spell_row", i + 1, rows.get(i).name(), rows.get(i).manaCostLabel()));
-      more(lines, rows.size());
+            I18n.message("online.ability.spell_row", i + 1, visible.get(i).name(), visible.get(i).manaCostLabel()));
+      pageIndicator(lines, rows.size());
       lines.add(I18n.key("online.ability.spells_close"));
     } else if (open == Kind.POTIONS) {
       lines.add(I18n.key("online.ability.potions_title"));
       var rows = OnlineAbilityChoices.usablePotions(progress, potionAllowlist, items);
+      page = clampPage(page, rows.size());
       if (rows.isEmpty()) lines.add(I18n.key("online.ability.potions_empty"));
-      for (int i = 0; i < rows.size() && i < OnlineAbilityChoices.MAX_CHOICES; i++)
+      List<OnlineAbilityChoices.PotionChoice> visible = page(rows, page);
+      for (int i = 0; i < visible.size(); i++)
         lines.add(
-            I18n.message("online.ability.potion_row", i + 1, rows.get(i).name(), rows.get(i).quantity()));
-      more(lines, rows.size());
+            I18n.message("online.ability.potion_row", i + 1, visible.get(i).name(), visible.get(i).quantity()));
+      pageIndicator(lines, rows.size());
       lines.add(I18n.key("online.ability.potions_close"));
     }
     return lines;
@@ -148,9 +172,34 @@ public final class OnlineAbilityMenu {
     return lines(progress, OnlineSpellAllowlistV2.bundled(), OnlineSpellAllowlist.bundled());
   }
 
-  private static void more(List<String> lines, int total) {
-    if (total > OnlineAbilityChoices.MAX_CHOICES)
-      lines.add(I18n.message("online.ability.more", total - OnlineAbilityChoices.MAX_CHOICES));
+  private void pageIndicator(List<String> lines, int total) {
+    if (total > MAX_CHOICES)
+      lines.add(I18n.message("online.inventory.page", page + 1, pageCount(total)));
+  }
+
+  private List<?> choices(CharacterProgress progress) {
+    return choices(progress, OnlineSpellAllowlistV2.bundled(), OnlineSpellAllowlist.bundled());
+  }
+
+  private List<?> choices(CharacterProgress progress, SpellContentV2 engineCatalog, SpellContent potionAllowlist) {
+    return open == Kind.SPELLS
+        ? OnlineAbilityChoices.castableSpells(progress, engineCatalog)
+        : open == Kind.POTIONS
+            ? OnlineAbilityChoices.usablePotions(progress, potionAllowlist, items)
+            : List.of();
+  }
+
+  private static int pageCount(int size) {
+    return Math.max(1, (size + MAX_CHOICES - 1) / MAX_CHOICES);
+  }
+
+  private static int clampPage(int page, int size) {
+    return Math.max(0, Math.min(page, pageCount(size) - 1));
+  }
+
+  private static <T> List<T> page(List<T> rows, int page) {
+    int start = clampPage(page, rows.size()) * MAX_CHOICES;
+    return rows.subList(start, Math.min(start + MAX_CHOICES, rows.size()));
   }
 
   /** Draws the lines as plain HUD text in the inventory list's style: title, rows, then the hint. */

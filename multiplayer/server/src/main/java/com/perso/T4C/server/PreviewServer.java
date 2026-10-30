@@ -94,6 +94,7 @@ public final class PreviewServer implements AutoCloseable {
   private final String controlToken;
   private final SimulationLoop loop;
   private final HttpTrafficMetrics traffic = new HttpTrafficMetrics();
+  private final GameSocketTraffic socketTraffic = new GameSocketTraffic();
   private final ServerRuntimeMetrics runtimeMetrics;
   private final Thread simulation;
   private final AtomicBoolean closed = new AtomicBoolean();
@@ -152,7 +153,7 @@ public final class PreviewServer implements AutoCloseable {
           return socketRequest(request,sessionToken,remote);
         }
         @Override public void disconnected(String sessionToken) { socketDisconnected(sessionToken); }
-      });
+      }, socketTraffic);
     } catch(IOException|RuntimeException failure) {
       http.stop(0);
       if(accounts!=null) accounts.close();
@@ -168,7 +169,7 @@ public final class PreviewServer implements AutoCloseable {
       }
       hosted.step();
     });
-    runtimeMetrics = new ServerRuntimeMetrics(loop, traffic);
+    runtimeMetrics = new ServerRuntimeMetrics(loop, traffic, socketTraffic, () -> store == null ? null : store.databaseMetrics());
     simulation = new Thread(() -> {
       try { loop.run(Long.MAX_VALUE); }
       catch (Throwable error) { failure = error; }

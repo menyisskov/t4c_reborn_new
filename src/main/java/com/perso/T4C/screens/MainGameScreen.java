@@ -115,6 +115,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -538,7 +539,7 @@ public class MainGameScreen implements Screen {
   private static com.perso.T4C.world.DayNightCycle loadDayNightCycle() {
     try {
       com.perso.T4C.helper.PlayerStateDto state = PlayerStateStore.load();
-      if (state != null && state.dayNightHour > 0f) {
+      if (state != null && state.dayNightHour >= 0f) {
         return new com.perso.T4C.world.DayNightCycle(state.dayNightHour);
       }
     } catch (Throwable ignored) {
@@ -2171,14 +2172,30 @@ public class MainGameScreen implements Screen {
     if (spellName == null || spellName.isEmpty()) {
       return false;
     }
-    // Online buff state is informational; recasting must go through an explicit server command.
-    if (isRemoteSession()) return true;
     long now = System.currentTimeMillis();
     if (spellName.equals(lastClickedBuffSpellName)
         && now - lastBuffClickMillis <= BUFF_DOUBLE_CLICK_MILLIS) {
-      SpellData spell = findSpellByName(spellName);
-      if (spell != null) {
-        castDefensiveSpell(spell);
+      if (isRemoteSession()) {
+        com.perso.T4C.session.RemotePlayerCommands commands =
+            session.commands() instanceof com.perso.T4C.session.RemotePlayerCommands remote
+                ? remote
+                : null;
+        var view = remoteConnection == null ? null : remoteConnection.view();
+        var progress = view == null || view.character() == null ? null : view.character().progress();
+        if (commands != null && progress != null) {
+          recastRemoteBuff(
+              spellName,
+              progress.buffs().stream()
+                  .filter(java.util.Objects::nonNull)
+                  .map(com.perso.T4C.online.model.CharacterProgress.Buff::spell)
+                  .toList(),
+              commands::cast);
+        }
+      } else {
+        SpellData spell = findSpellByName(spellName);
+        if (spell != null) {
+          castDefensiveSpell(spell);
+        }
       }
       lastClickedBuffSpellName = null;
       lastBuffClickMillis = 0L;
@@ -2199,6 +2216,23 @@ public class MainGameScreen implements Screen {
       }
     }
     return null;
+  }
+
+  static boolean recastRemoteBuff(
+      String buffName,
+      Collection<String> ownBuffSpellKeys,
+      java.util.function.Consumer<String> cast) {
+    if (buffName == null || ownBuffSpellKeys == null || cast == null) return false;
+    SpellData spell = SpellRegistry.findByName(buffName);
+    if (spell == null
+        || ownBuffSpellKeys.stream()
+            .map(SpellRegistry::findByName)
+            .filter(java.util.Objects::nonNull)
+            .noneMatch(ownSpell -> spell.getKey().equals(ownSpell.getKey()))) {
+      return false;
+    }
+    cast.accept(spell.getKey());
+    return true;
   }
 
   private boolean tryCastAttackSpell(BaseMonster monster) {
@@ -4660,14 +4694,7 @@ public class MainGameScreen implements Screen {
     hud.setPersistence(session.persistence());
     if (session.commands() instanceof com.perso.T4C.session.RemotePlayerCommands remoteCommands)
       hud.setRemotePlayerCommands(remoteCommands);
-    hud.setBackpackAction(
-        () -> {
-          if (GuiManager.isCurrent(Inventory.class)) {
-            GuiManager.close();
-          } else {
-            GuiManager.open(new Inventory(player, hud));
-          }
-        });
+    hud.setBackpackAction(this::toggleCharacterInventory);
     hud.setCharacterAction(
         () -> {
           if (GuiManager.isCurrent(Statistics.class)) {
@@ -4742,6 +4769,37 @@ public class MainGameScreen implements Screen {
     lastMapZoneWorld = Integer.MIN_VALUE;
     lastMapZoneId = Integer.MIN_VALUE;
     updateMapZoneDisplay();
+  }
+
+  private void toggleCharacterInventory() {
+    if (remoteConnection == null) {
+      if (GuiManager.isCurrent(Inventory.class)) {
+        GuiManager.close();
+      } else {
+        GuiManager.open(new Inventory(player, hud));
+      }
+      return;
+    }
+
+    toggleRemoteInventory(
+        remoteInventoryPanel,
+        GuiManager::close,
+        () -> {
+          closeRemoteShop();
+          remoteAbilityMenu.close();
+          remoteCorpsePanel.close();
+        });
+  }
+
+  static void toggleRemoteInventory(
+      com.perso.T4C.online.OnlineInventoryPanel panel, Runnable closeGui, Runnable closeOtherPanels) {
+    if (panel.isOpen()) {
+      panel.close();
+      return;
+    }
+    if (closeGui != null) closeGui.run();
+    if (closeOtherPanels != null) closeOtherPanels.run();
+    panel.open();
   }
 
   private void playNpcCastVfx(SpellData spell, Player castOn, Vector2 casterPosition) {
@@ -5283,6 +5341,14 @@ public class MainGameScreen implements Screen {
     remote.addProcessor(new com.badlogic.gdx.InputAdapter() {
       private boolean hudButtonCaptured;
 
+      @Override public boolean keyDown(int keycode) {
+        return routeRemoteGuiKeyDown(keycode);
+      }
+
+      @Override public boolean keyTyped(char character) {
+        return routeRemoteGuiKeyTyped(character);
+      }
+
       @Override public boolean touchDown(int x, int y, int pointer, int button) {
         if (GuiManager.isOpen()) {
           GuiManager.onTouchDown(x, y, button);
@@ -5365,6 +5431,11 @@ public class MainGameScreen implements Screen {
           if (keycode == Input.Keys.ESCAPE) {
             remoteAbilityMenu.close();
             return true;
+          }
+          if (keycode == Input.Keys.LEFT || keycode == Input.Keys.RIGHT) {
+            var view = remoteConnection == null ? null : remoteConnection.view();
+            var progress = view == null || view.character() == null ? null : view.character().progress();
+            if (turnRemoteAbilityMenuPage(remoteAbilityMenu, keycode, progress)) return true;
           }
           if (keycode == Input.Keys.C || keycode == Input.Keys.U) {
             var view = remoteConnection == null ? null : remoteConnection.view();
@@ -5527,6 +5598,18 @@ public class MainGameScreen implements Screen {
     Gdx.input.setInputProcessor(remote);
   }
 
+  static boolean routeRemoteGuiKeyDown(int keycode) {
+    if (!GuiManager.isOpen()) return false;
+    GuiManager.onKeyDown(keycode);
+    return true;
+  }
+
+  static boolean routeRemoteGuiKeyTyped(char character) {
+    if (!GuiManager.isOpen()) return false;
+    GuiManager.onKeyTyped(character);
+    return true;
+  }
+
   static boolean shouldQueueReturnToLobby(boolean lobbyCapable, String connectionStatus,
       boolean returnQueued) {
     return lobbyCapable && !returnQueued
@@ -5547,6 +5630,14 @@ public class MainGameScreen implements Screen {
   static boolean routeRemoteHudButtonTouchUp(
       com.perso.T4C.ui.PlayerHUD hud, int screenX, int screenY, int button) {
     return button == Input.Buttons.LEFT && hud != null && hud.chatBarButtonsTouchUp(screenX, screenY);
+  }
+
+  static boolean turnRemoteAbilityMenuPage(
+      com.perso.T4C.online.OnlineAbilityMenu menu, int keycode,
+      com.perso.T4C.online.model.CharacterProgress progress) {
+    if (keycode != Input.Keys.LEFT && keycode != Input.Keys.RIGHT) return false;
+    menu.turnPage(keycode == Input.Keys.RIGHT ? 1 : -1, progress);
+    return true;
   }
 
   /** The lines of whichever online panel is open, top to bottom; empty when none is. */

@@ -1,4 +1,9 @@
-param([Parameter(Mandatory)][ValidatePattern('^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$')][string]$Name)
+param(
+    [Parameter(Mandatory)][ValidatePattern('^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$')][string]$Name,
+    # Opt-in size experiment (T4C-0345): leave out the tracked assets/origin/ folder (original-game files the online client does not read).
+    # The default package is unchanged; see CLIENT_DISTRIBUTION.md for the measured result before deciding to make this the default.
+    [switch]$ExcludeOrigin
+)
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
@@ -54,8 +59,10 @@ if ($LASTEXITCODE -ne 0 -or $assetEntries.Count -eq 0) { throw 'Cannot list trac
 $assets = [Collections.Generic.List[string]]::new()
 foreach ($entry in $assetEntries) {
     if ($entry -notmatch '^([0-7]{6}) [0-9a-f]{40} [0-3]\t(.+)$' -or $Matches[1] -notin @('100644','100755')) { throw 'Tracked asset has unsupported Git mode or path.' }
+    if ($ExcludeOrigin -and $Matches[2].StartsWith('assets/origin/', [StringComparison]::Ordinal)) { continue }
     $assets.Add($Matches[2])
 }
+if ($assets.Count -eq 0) { throw 'No assets left to package.' }
 foreach ($asset in $assets) {
     if ($asset -notmatch '^assets/[A-Za-z0-9_./ -]+$' -or $asset.Contains('..') -or $asset.Contains([char]9)) { throw 'Unsafe tracked asset path.' }
     $source = Join-Path $sourceRoot ($asset -replace '/', [IO.Path]::DirectorySeparatorChar)
@@ -83,8 +90,9 @@ foreach ($asset in $assets) { Copy-PackageFile (Join-Path $sourceRoot ($asset -r
 Copy-PackageFile $license 'GLFW-LICENSE.txt'
 
 $launch = @'
-param([ValidateRange(1024,65535)][int]$Port = 18765, [string]$Profile, [string]$Endpoint, [switch]$CheckOnly)
+param([ValidateRange(1024,65535)][int]$Port = 18765, [string]$Profile, [string]$Endpoint, [switch]$CheckOnly, [switch]$Lobby)
 $ErrorActionPreference = 'Stop'
+#JAVA_CHECK#
 if (!$Endpoint) { $Endpoint = "http://127.0.0.1:$Port" }
 $parsed = $null
 if (![uri]::TryCreate($Endpoint, [UriKind]::Absolute, [ref]$parsed) -or
@@ -94,12 +102,15 @@ if (![uri]::TryCreate($Endpoint, [UriKind]::Absolute, [ref]$parsed) -or
     throw 'Endpoint must be an HTTPS origin, or http://127.0.0.1:PORT for local development.'
 }
 $endpointValue = if ($parsed.Scheme -eq 'http') { "http://127.0.0.1:$($parsed.Port)" } else { $parsed.GetLeftPart([UriPartial]::Authority) }
-$java = (Get-Command java -ErrorAction Stop).Source
+$java = Assert-T4CJava 'the online client'
 $root = $PSScriptRoot
 $cp = (Join-Path $root 'checker/online-package-check.jar') + ';' + (Join-Path $root 'app/T4C.jar') + ';' + (Join-Path $root 'lib/*')
 & $java -cp $cp com.perso.T4C.online.OnlinePackageCheck $root
 if ($LASTEXITCODE -ne 0) { throw 'Package integrity check failed.' }
 if ($CheckOnly) { return }
+# An account-only profile (no character) opens the online lobby, where the player picks or creates a character.
+if ($Lobby -and !$Profile) { throw '-Lobby needs -Profile (an account profile).' }
+$lobbyArgument = if ($Lobby) { ' --lobby' } else { '' }
 if ($Profile) {
     $profilePath = (Resolve-Path -LiteralPath $Profile -ErrorAction Stop).Path
     if (!(Test-Path -LiteralPath $profilePath -PathType Leaf) -or (Get-Item -LiteralPath $profilePath).Length -gt 4096) { throw 'Online profile is missing or too large.' }
@@ -111,12 +122,26 @@ New-Item -ItemType Directory -Path $logs -Force | Out-Null
 $log = Join-Path $logs ('online-' + [guid]::NewGuid().ToString('N'))
 # Start-Process keeps the client's stderr out of the PowerShell error stream. Redirecting a native command's stderr with 2>>
 # under Windows PowerShell 5.1 (the shell launch-online.bat uses) turns the first stderr line into a terminating error and kills the client.
-$clientProcess = Start-Process -FilePath $java -ArgumentList ('-cp "' + $cp + '" com.perso.T4C.online.OnlineClient "' + $endpointValue + '"') -WorkingDirectory $root -NoNewWindow -Wait -PassThru -RedirectStandardOutput ($log + '.log') -RedirectStandardError ($log + '-error.log')
+$clientProcess = Start-Process -FilePath $java -ArgumentList ('-cp "' + $cp + '" com.perso.T4C.online.OnlineClient "' + $endpointValue + '"' + $lobbyArgument) -WorkingDirectory $root -NoNewWindow -Wait -PassThru -RedirectStandardOutput ($log + '.log') -RedirectStandardError ($log + '-error.log')
 if ($clientProcess.ExitCode -ne 0) { throw "Online client exited with code $($clientProcess.ExitCode). Logs: $logs" }
 '@
+$javaCheck = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'package-java-check.ps1'))
+$launch = $launch.Replace('#JAVA_CHECK#', $javaCheck)
 [IO.File]::WriteAllText((Join-Path $bundle 'launch-online.ps1'), $launch + "`n", [Text.UTF8Encoding]::new($false))
-$batch = '@echo off' + "`r`n" + 'if /I "%~1"=="-CheckOnly" (' + "`r`n" + '  powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0launch-online.ps1" -CheckOnly' + "`r`n" + ') else (' + "`r`n" + '  powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0launch-online.ps1"' + "`r`n" + ')' + "`r`n"
-[IO.File]::WriteAllText((Join-Path $bundle 'launch-online.bat'), $batch, [Text.Encoding]::ASCII)
+# Each .bat starts its .ps1 with an explicit per-process policy (a stock Windows refuses unsigned .ps1), passes every argument
+# through, returns the script's exit code, and keeps the window open after a failure when it was started by double-click.
+function Write-BatchWrapper([string]$batName, [string]$scriptName) {
+    $text = '@echo off' + "`r`n" + 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0' + $scriptName + '" %*' + "`r`n" +
+        'set "T4CRC=%ERRORLEVEL%"' + "`r`n" +
+        'if not "%T4CRC%"=="0" if not defined T4C_NO_PAUSE echo %cmdcmdline% | findstr /i /c:" /c " >nul && pause' + "`r`n" +
+        'exit /b %T4CRC%' + "`r`n"
+    [IO.File]::WriteAllText((Join-Path $bundle $batName), $text, [Text.Encoding]::ASCII)
+}
+Write-BatchWrapper 'launch-online.bat' 'launch-online.ps1'
+$verify = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'package-verify.template.ps1')).Replace('#JAVA_CHECK#', $javaCheck)
+$verify = $verify.Replace('#CHECK_COMMAND#', '$cp = (Join-Path $root ''checker/online-package-check.jar'') + '';'' + (Join-Path $root ''app/T4C.jar'') + '';'' + (Join-Path $root ''lib/*'')' + "`n" + '& $java -cp $cp com.perso.T4C.online.OnlinePackageCheck $root')
+[IO.File]::WriteAllText((Join-Path $bundle 'verify-package.ps1'), $verify, [Text.UTF8Encoding]::new($false))
+Write-BatchWrapper 'verify-package.bat' 'verify-package.ps1'
 
 $checkerClasses = Join-Path $buildRoot 'checker-classes'
 New-Item -ItemType Directory -Path $checkerClasses -ErrorAction Stop | Out-Null
@@ -132,6 +157,7 @@ $lines.Add("fact`tsourceRevision`t$revision")
 $lines.Add("fact`tartifact`tT4C-1.0-SNAPSHOT.jar")
 $lines.Add("fact`tplatform`tWindows-x86_64")
 $lines.Add("fact`tjavaMinimum`t21")
+if ($ExcludeOrigin) { $lines.Add("fact`texcludeOrigin`ttrue") }
 $files = @(Get-ChildItem -LiteralPath $bundle -File -Recurse | Sort-Object FullName)
 foreach ($file in $files) {
     # Windows PowerShell 5.1 (the only shell on a stock Windows 10/11 box) has no [IO.Path]::GetRelativePath.
@@ -146,4 +172,5 @@ $packageClasspath = (Join-Path $bundle 'checker/online-package-check.jar') + ';'
 & $clientJava -cp $packageClasspath com.perso.T4C.online.OnlinePackageCheck $bundle
 if ($LASTEXITCODE -ne 0) { throw 'New package did not pass its headless integrity check.' }
 Write-Host "Created online client package: $bundle"
+Write-Host "Manifest SHA-256 (publish this out of band so a recipient can run verify-package.ps1 -ManifestSha256): $((Get-FileHash -LiteralPath (Join-Path $bundle 'SHA256SUMS.tsv') -Algorithm SHA256).Hash.ToLowerInvariant())"
 Write-Host "Source revision: $revision; inspect SHA256SUMS.tsv for exact packaged file hashes."

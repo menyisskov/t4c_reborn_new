@@ -35,6 +35,7 @@ final class GameSocketServer implements AutoCloseable {
 
   private final ServerSocket listener;
   private final Handler handler;
+  private final GameSocketTraffic traffic;
   private final ThreadPoolExecutor clients = new ThreadPoolExecutor(
       MAX_CONNECTIONS, MAX_CONNECTIONS, 0, TimeUnit.MILLISECONDS,
       new ArrayBlockingQueue<>(MAX_CONNECTIONS), task -> {
@@ -46,7 +47,10 @@ final class GameSocketServer implements AutoCloseable {
   private final AtomicBoolean closed = new AtomicBoolean();
   private Thread acceptor;
 
-  GameSocketServer(ServerSocket listener, Handler handler) {
+  GameSocketServer(ServerSocket listener, Handler handler) { this(listener, handler, new GameSocketTraffic()); }
+
+  GameSocketServer(ServerSocket listener, Handler handler, GameSocketTraffic traffic) {
+    this.traffic = java.util.Objects.requireNonNull(traffic);
     this.listener = java.util.Objects.requireNonNull(listener);
     this.handler = java.util.Objects.requireNonNull(handler);
   }
@@ -67,9 +71,11 @@ final class GameSocketServer implements AutoCloseable {
         try {
           peer.setSoTimeout(SOCKET_IDLE_TIMEOUT_MILLIS);
           sockets.add(peer);
+          traffic.accepted();
           clients.execute(() -> serve(peer));
         } catch (java.util.concurrent.RejectedExecutionException full) {
-          sockets.remove(peer);
+          if (sockets.remove(peer)) traffic.closed();
+          traffic.refusedFull();
           closeQuietly(peer);
         }
       } catch (IOException failure) {
@@ -81,8 +87,8 @@ final class GameSocketServer implements AutoCloseable {
     String sessionToken = null;
     boolean normalLeave = false;
     try (socket;
-         var input = new DataInputStream(socket.getInputStream());
-         var output = new DataOutputStream(socket.getOutputStream())) {
+         var input = new DataInputStream(traffic.counting(socket.getInputStream()));
+         var output = new DataOutputStream(traffic.counting(socket.getOutputStream()))) {
       var remote = (InetSocketAddress) socket.getRemoteSocketAddress();
       String first = GameSocketProtocol.readFrame(input);
       if (first == null) return;
@@ -139,7 +145,7 @@ final class GameSocketServer implements AutoCloseable {
     } catch (Exception failure) {
       // Handler failures are private; connection teardown releases the bound session below.
     } finally {
-      sockets.remove(socket);
+      if (sockets.remove(socket)) traffic.closed();
       closeQuietly(socket);
       if (sessionToken != null && !normalLeave) {
         try { handler.disconnected(sessionToken); } catch (RuntimeException ignored) { }
