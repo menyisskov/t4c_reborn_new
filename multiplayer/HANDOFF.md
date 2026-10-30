@@ -119,9 +119,9 @@ The checkout intentionally contains user changes in account_storage.json, charac
 
 A protected-file backup from before multiplayer work exists in the user's temporary directory named `t4c-local-before-merge-0ad2911c72e641bd81173c0978d5f05a`. Hash comparisons have shown zero content differences during this work; do not restore over newer user changes.
 
-## Active delivery — T4C-0323 online player healing
+## Delivered — T4C-0323 online player healing (PR #285)
 
-Branch `codex/player-heal-0323`, based on `1d8820f` (PR #284/main). Learned single-target heals now target another live actor through the persistent socket; caster cost and recipient HP commit in one receipt-bound PostgreSQL transaction. Focused service and DB-backed socket-route tests pass; root command/socket tests passed 31/31 and 11/11. A parser regression requiring a space before `a:` was fixed. T4C-0323 remains In Progress: no two-rendered-client heal validation or M4 completion is claimed. Next: local focused regression review, then selective PR delivery and rendered test when owner desktop permission is available.
+Branch `codex/player-heal-0323`, based on `1d8820f` (PR #284/main). Learned single-target heals now target another live actor through the persistent socket; caster cost and recipient HP commit in one receipt-bound PostgreSQL transaction. Focused service and DB-backed socket-route tests pass; root command/socket tests passed 31/31 and 11/11. A parser regression requiring a space before `a:` was fixed. PR #285 merged as b66f12e0. Source/test files are released. No two-rendered-client heal validation or M4 completion is claimed; next is rendered two-player validation when owner desktop permission is available.
 
 ## Current implementation
 
