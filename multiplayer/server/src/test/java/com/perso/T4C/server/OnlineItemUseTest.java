@@ -124,7 +124,7 @@ class OnlineItemUseTest {
   @Test void buffPotionsAreRefusedWithAClearCodeAndNothingChanges() throws Exception {
     var items = ItemCatalog.loadBundled();
     var spells = SpellCatalog.loadBundled();
-    var buff = new CharacterProgress.Item(UUID.randomUUID(), "item.potion_of_fortitude", 1, 1);
+    var buff = new CharacterProgress.Item(UUID.randomUUID(), "item.potion_of_partial_air_resistance", 1, 1);
     var p = progress(new CharacterProgress.Vitals(10, 100, 5, 40), List.of(buff), Map.of(), Map.of());
     var code = assertThrows(PreviewWorld.Rejected.class, () ->
         OnlineItemUse.prepareUse(state(p), buff.id(), NOW, new Random(5), items, spells)).getMessage();
@@ -174,6 +174,36 @@ class OnlineItemUseTest {
     assertEquals(0, used.manaSpent());
     assertEquals(0, used.healthGained());
   }
+
+  @Test void ordinaryStatPotionsPersistTheirAuthoredBuffsAndSpendTheirCharges() throws Exception {
+    var items = ItemCatalog.loadBundled();
+    var spells = SpellCatalog.loadBundled();
+    var spellsV2 = SpellCatalogV2.loadBundled();
+    var potions = List.of(
+        new StatPotion("item.potion_of_clear_thought", "spell.item_potion_of_clear_thought", "int"),
+        new StatPotion("item.potion_of_fortitude", "spell.item_potion_of_fortitude", "end"),
+        new StatPotion("item.potion_of_tranquility", "spell.item_potion_of_tranquility", "wis"));
+
+    for (var potion : potions) {
+      var stack = new CharacterProgress.Item(UUID.randomUUID(), potion.itemKey(), 1, 1);
+      var p = progress(new CharacterProgress.Vitals(10, 100, 5, 40), List.of(stack), Map.of(), Map.of());
+      var used = OnlineItemUse.prepareUse(state(p), stack.id(), NOW, new Random(5), items, spells, spellsV2);
+
+      assertTrue(used.progress().inventory().isEmpty(), potion.itemKey());
+      assertEquals(1, used.progress().buffs().size(), potion.itemKey());
+      var buff = used.progress().buffs().getFirst();
+      assertEquals(potion.spellKey(), buff.spell());
+      assertEquals(NOW + 300_000, buff.expiresAt(), potion.itemKey());
+      assertEquals(Map.of(potion.attribute(), 10), buff.modifiers(), potion.itemKey());
+      assertEquals(used.progress(), OnlineBuffs.expire(used.progress(), NOW + 299_999), potion.itemKey());
+      assertTrue(OnlineBuffs.expire(used.progress(), NOW + 300_000).buffs().isEmpty(), potion.itemKey());
+      assertEquals(NOW, used.progress().cooldowns().get(OnlineBuffs.ANCHOR), potion.itemKey());
+      assertEquals(0, used.manaSpent(), potion.itemKey());
+      assertEquals(0, used.healthGained(), potion.itemKey());
+    }
+  }
+
+  private record StatPotion(String itemKey, String spellKey, String attribute) {}
 
   @Test void hyperPotionOfNimblenessUsesItsMinimumBonusBelowTheThreshold() throws Exception {
     var used = useHyperPotion(120, 0, 0);
