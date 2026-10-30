@@ -14,6 +14,7 @@ import com.perso.T4C.world.MovementRules;
 import java.util.List;
 import java.util.Queue;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicLong;
@@ -171,6 +172,47 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
     long id = creatureIds.applyAsLong(target);
     if (id <= 0) return;
     sendRetrying(() -> link.attack(id), "online.attack.busy", "online.attack.busy", true);
+  }
+
+  /** Sends one weapon intent and exposes its authoritative reply for bounded screen repetition. */
+  public CompletionStage<OnlineConnection.CommandResult> attackWithResult(BaseMonster target) {
+    if (target == null) return CompletableFuture.completedFuture(null);
+    long id = creatureIds.applyAsLong(target);
+    if (id <= 0) return CompletableFuture.completedFuture(null);
+    try {
+      CompletionStage<OnlineConnection.CommandResult> result = attackWithRetry(id, true);
+      result.whenComplete(
+          (reply, failure) ->
+              outcomes.add(
+                  Outcome.message(
+                      failure != null || reply == null ? "online.attack.busy" : reply.messageKey(),
+                      failure != null || reply == null ? List.of() : reply.args())));
+      return result;
+    } catch (IllegalStateException pendingOrOffline) {
+      outcomes.add(Outcome.message("online.attack.busy", List.of()));
+      return CompletableFuture.failedFuture(pendingOrOffline);
+    } catch (IllegalArgumentException invalidIdentity) {
+      return CompletableFuture.failedFuture(invalidIdentity);
+    }
+  }
+
+  private CompletionStage<OnlineConnection.CommandResult> attackWithRetry(
+      long creatureId, boolean mayRetry) {
+    try {
+      return link.attack(creatureId)
+          .thenCompose(
+              reply -> {
+                if (mayRetry
+                    && reply != null
+                    && !reply.accepted()
+                    && "online.attack.busy".equals(reply.messageKey())) {
+                  return attackWithRetry(creatureId, false);
+                }
+                return CompletableFuture.completedFuture(reply);
+              });
+    } catch (IllegalStateException | IllegalArgumentException unavailable) {
+      return CompletableFuture.failedFuture(unavailable);
+    }
   }
 
   @Override

@@ -470,6 +470,49 @@ class RemotePlayerCommandsTest {
   }
 
   @Test
+  void attackWithResultExposesOneAuthoritativeReplyWithoutRetryingOrLocalMutation() {
+    showSkeleton(41);
+    var reply = new CompletableFuture<OnlineConnection.CommandResult>();
+    link.next = reply;
+    BaseMonster monster = skeleton();
+
+    var completion = ((RemotePlayerCommands) session.commands()).attackWithResult(monster);
+
+    assertEquals(List.of("attack 41"), link.calls);
+    assertFalse(completion.toCompletableFuture().isDone());
+    assertEquals(30, monster.getHealth());
+    assertTrue(player.isAttackReady());
+    reply.complete(
+        new OnlineConnection.CommandResult(false, null, RemotePlayerCommands.SILENT_COOLDOWN_KEY));
+    assertEquals(
+        RemotePlayerCommands.SILENT_COOLDOWN_KEY,
+        completion.toCompletableFuture().join().messageKey());
+    assertEquals(1, link.calls.size(), "the completion path never retries an attack");
+  }
+
+  @Test
+  void attackWithResultPreservesOneBusyRetryAndReturnsItsFinalReply() {
+    showSkeleton(41);
+    var first = new CompletableFuture<OnlineConnection.CommandResult>();
+    var second = new CompletableFuture<OnlineConnection.CommandResult>();
+    link.next = first;
+    var completion =
+        ((RemotePlayerCommands) session.commands()).attackWithResult(skeleton());
+
+    link.next = second;
+    first.complete(new OnlineConnection.CommandResult(false, null, "online.attack.busy"));
+
+    assertEquals(List.of("attack 41", "attack 41"), link.calls);
+    assertFalse(completion.toCompletableFuture().isDone());
+    second.complete(new OnlineConnection.CommandResult(false, null, RemotePlayerCommands.SILENT_COOLDOWN_KEY));
+
+    assertEquals(
+        RemotePlayerCommands.SILENT_COOLDOWN_KEY,
+        completion.toCompletableFuture().join().messageKey());
+    assertEquals(2, link.calls.size(), "busy is retried once, never indefinitely");
+  }
+
+  @Test
   void attackingNothingOrAnObjectTheServerDidNotSendSendsNothing() {
     session.commands().attack(null);
     BaseMonster stranger = MonsterRegistry.create(MonsterRegistry.findByName("Skeleton"), 0, 0);
