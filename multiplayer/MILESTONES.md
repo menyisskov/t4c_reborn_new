@@ -241,7 +241,9 @@ Required behavior:
   currency, XP, ability rewards and completion state commit together, exactly once.
 - [x] Both players can independently complete the selected adventure without blocking each other
   through a stale flag, consumed shared objective, duplicated claim or unsupported-state guard.
-- [ ] Every required map/encounter is hosted. Authored entrances/returns and valid respawns work;
+- [ ] Every required map/encounter is hosted. (Owner decision 2026-10-30: reach the rest of the world by raising the
+  region bound with area-of-interest streaming; plan and stage gates in [WORLD_STREAMING_DESIGN.md](WORLD_STREAMING_DESIGN.md),
+  T4C-0349, design only so far.) Authored entrances/returns and valid respawns work;
   unknown/unhosted destinations produce an explicit refusal rather than a silent substitute.
   [HOSTED_STARTER_ROUTE_DESIGN.md](HOSTED_STARTER_ROUTE_DESIGN.md) records T4C-0214's
   read-only candidate 249×117 contiguous starting region and its real collision paths;
