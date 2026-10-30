@@ -770,7 +770,7 @@ prints `skeletonGround=`); `-Dbeta.scale`, `-Dbeta.from=ground|death` and `-Dbet
 window, mana potion, creature-target casting, spell merchants, character creation, the Options button, targeting or damage across
 a region boundary, individual single-stack corpse recovery, and a mixed session on the packaged candidate.
 
-### 3.18 Rendered lobby error cases and local HTTPS (T4C-0323, milestone M1)
+### 3.18 Rendered lobby error cases and local HTTPS (T4C-0324, milestone M1)
 
 **Evidence class: rendered lobby windows, local only.** Same harness idea as 3.15 but a purpose-built test-scope driver,
 `OnlineLobbyCasesDriver` (one process per case; Enter, Down/Up and C are delivered to the lobby screen's own input processor;

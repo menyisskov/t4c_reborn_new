@@ -98,6 +98,15 @@ final class OnlineSpellStrikes {
     var saved = sessions.usableCharacter(token, revision, false);
     long now = clock.getAsLong();
     var position = world.position(token);
+    PersistentSessions.FriendTarget playerTarget=target instanceof SpellEngine.Target.Friend friend
+        ? sessions.friendTarget(token,friend.id()) : null;
+    SpellEngine.FriendView friendView=null;
+    if(playerTarget!=null) {
+      SpellFormulaContexts.Caster friendCaster;
+      try { friendCaster=OnlineSpellContexts.caster(playerTarget.progress(),items,now); }
+      catch(IllegalArgumentException unsupported) { throw rejected("unsupported_ability"); }
+      friendView=new SpellEngine.FriendView(playerTarget.actorId(),playerTarget.x(),playerTarget.y(),playerTarget.alive(),friendCaster);
+    }
     var source = new CreatureSource() {
       @Override public PreviewWorld.CreatureSpawn spawn(long id) {
         return world.creatureSpawns().stream().filter(s -> s.id() == id).findFirst().orElse(null);
@@ -108,7 +117,13 @@ final class OnlineSpellStrikes {
       @Override public OnlineStore.SpawnMotion capture(long id) { return OnlineSpellStrikes.this.creatures.capture(id); }
     };
     var plan = plan(saved, spellKey, target, now, random, items, spells, map, position.x(), position.y(),
-        sessions.region(token).world(), source);
+        sessions.region(token).world(), source,friendView);
+    if(playerTarget!=null) {
+      var friendHeal=plan.events().stream().filter(SpellEngine.Event.FriendHeal.class::isInstance)
+          .map(SpellEngine.Event.FriendHeal.class::cast).findFirst().orElseThrow(() -> rejected("wrong_target"));
+      return sessions.commitPlayerHeal(token,revision,UUID.randomUUID(),plan.progress(),playerTarget,friendHeal.amount())
+          .thenApply(committed -> new Reply(committed.character().revision(),0,plan.manaSpent(),List.of(),plan.buffs()));
+    }
     var reserved = new ArrayList<Long>();
     try {
       for (long id : plan.struck()) {
@@ -140,6 +155,12 @@ final class OnlineSpellStrikes {
   static Plan plan(OnlineStore.CharacterState saved, String spellKey, SpellEngine.Target target, long now, Random random,
       ItemContent items, SpellCatalogV2 spells, PreviewMap map, double casterX, double casterY, int regionWorld,
       CreatureSource source) {
+    return plan(saved,spellKey,target,now,random,items,spells,map,casterX,casterY,regionWorld,source,null);
+  }
+
+  private static Plan plan(OnlineStore.CharacterState saved, String spellKey, SpellEngine.Target target, long now,
+      Random random, ItemContent items, SpellCatalogV2 spells, PreviewMap map, double casterX, double casterY,
+      int regionWorld, CreatureSource source,SpellEngine.FriendView friend) {
     var progress = OnlineCasting.aliveProgress(saved, now);
     if (!progress.spells().contains(spellKey)) throw rejected("not_learned");
     SpellContentV2.Spell spell;
@@ -163,7 +184,7 @@ final class OnlineSpellStrikes {
     }
     var cooldowns = progress.cooldowns();
     var view = new View(source, map, casterX, casterY,
-        target instanceof SpellEngine.Target.Unit unit ? Long.valueOf(unit.id()) : null);
+        target instanceof SpellEngine.Target.Unit unit ? Long.valueOf(unit.id()) : null,friend);
     var request = new SpellEngine.CastRequest(spell, caster, casterX, casterY, target,
         true, progress.vitals().mana(), false,
         SpellCastRules.isActive(cooldowns.getOrDefault(spell.key(), 0L), now),
@@ -209,6 +230,7 @@ final class OnlineSpellStrikes {
     for (var event : resolved.events()) {
       switch (event) {
         case SpellEngine.Event.SelfHeal heal -> working = healed(working, heal.amount());
+        case SpellEngine.Event.FriendHeal ignored -> { /* Committed with the recipient in one two-character transaction. */ }
         case SpellEngine.Event.DrainHeal drain -> working = healed(working, drain.amount());
         case SpellEngine.Event.ApplyBuff buff -> {
           // Only the caster's own buffs are laid here; a friend's is committed on the friend's own character.
@@ -360,15 +382,22 @@ final class OnlineSpellStrikes {
     private final PreviewMap map;
     private final double casterX, casterY;
     private final Long primary;
+    private final SpellEngine.FriendView friend;
     private final Map<Long, Fact> facts = new LinkedHashMap<>();
     private List<SpellEngine.UnitView> near;
 
-    View(CreatureSource source, PreviewMap map, double casterX, double casterY, Long primary) {
+    View(CreatureSource source, PreviewMap map, double casterX, double casterY, Long primary,
+        SpellEngine.FriendView friend) {
       this.source = source;
       this.map = map;
       this.casterX = casterX;
       this.casterY = casterY;
       this.primary = primary;
+      this.friend=friend;
+    }
+
+    @Override public SpellEngine.FriendView friend(long id) {
+      return friend!=null && friend.id()==id ? friend : null;
     }
 
     Fact fact(long id) {

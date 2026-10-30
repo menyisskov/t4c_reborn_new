@@ -24,7 +24,7 @@ import java.util.TreeMap;
 import java.util.function.BooleanSupplier;
 
 /**
- * Developer driver for the rendered LOBBY error cases of milestone M1 (T4C-0323; test scope, not
+ * Developer driver for the rendered LOBBY error cases of milestone M1 (T4C-0324; test scope, not
  * shipped, not a unit test). It is the real launcher game ({@link MyGame}) and the real
  * {@link OnlineLobbyScreen} against a running {@code ServerMain --online}; keys are delivered to the
  * screen's own input processor, nothing is injected into the model. One process per case.

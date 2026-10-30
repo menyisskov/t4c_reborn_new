@@ -146,6 +146,12 @@ public final class RemoteWorldDriver implements WorldDriver {
     return out;
   }
 
+  /** The server actor id of a rendered remote player, or -1 when the puppet is no longer present. */
+  public long playerId(Player player) {
+    for(var entry:players.entrySet()) if(entry.getValue().player==player) return entry.getKey();
+    return -1L;
+  }
+
   /** The server id of a puppet monster of this driver, or -1 (step R3 sends intents by id). */
   public long creatureId(BaseMonster monster) {
     for (Map.Entry<Long, BaseMonster> entry : monsters.entrySet()) {

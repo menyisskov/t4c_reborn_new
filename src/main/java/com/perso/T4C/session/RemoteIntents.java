@@ -38,6 +38,9 @@ public interface RemoteIntents {
 
   boolean cast(String spellKey, BaseMonster target);
 
+  /** Casts a learned single-target heal at a live online player id. */
+  default boolean castToPlayer(String spellKey,long actor) { return false; }
+
   boolean useItem(UUID itemInstance);
 
   /** Cancels pending listing UI replies, for example when the player closes the shop panel. */

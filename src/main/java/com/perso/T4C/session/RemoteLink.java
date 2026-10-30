@@ -46,6 +46,8 @@ public interface RemoteLink {
 
   CompletionStage<OnlineConnection.CommandResult> cast(String spellKey, long creature);
 
+  CompletionStage<OnlineConnection.CommandResult> castToPlayer(String spellKey,long actor);
+
   CompletionStage<OnlineConnection.CommandResult> useItem(UUID itemInstance);
 
   /** Holds a direction (each component -1..1); {@code frame} names the predicted client input. */

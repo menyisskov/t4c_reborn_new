@@ -115,6 +115,11 @@ class RemotePlayerCommandsTest {
     }
 
     @Override
+    public CompletionStage<OnlineConnection.CommandResult> castToPlayer(String spellKey,long actor) {
+      return reply("cast " + spellKey + " player " + actor);
+    }
+
+    @Override
     public CompletionStage<OnlineConnection.CommandResult> useItem(UUID itemInstance) {
       return reply("use " + itemInstance);
     }
@@ -236,6 +241,23 @@ class RemotePlayerCommandsTest {
     assertEquals(beforeInventory, player.getInventory());
     assertEquals(beforeMana, player.getMana());
     assertEquals(beforeHealth, player.getCurrentHp());
+  }
+
+  @Test
+  void castToPlayerSendsOnlyALiveSnapshotActorId() {
+    FakeLink link=new FakeLink();
+    link.view=new OnlineConnection.View(OWN,MAP,
+        new OnlineConnection.Snapshot(4,List.of(actor(localX(105),localY(205),2),
+            new OnlineConnection.Actor(9,localX(106),localY(205),2,0,80,100)),1L,List.of(),MAP.region(),List.of(),List.of()),
+        null,List.of());
+    Player player=playerAtTile(100,205);int hp=player.getCurrentHp(),mana=player.getMana();
+    var commands=new RemoteGameSession(link,new GroundItemManager()).commands();commands.bind(new TestHost(player));
+
+    assertTrue(commands.castToPlayer("spell.light",9));
+    assertFalse(commands.castToPlayer("spell.light",OWN));
+    assertFalse(commands.castToPlayer("spell.light",10));
+    assertEquals(List.of("cast spell.light player 9"),link.calls);
+    assertEquals(hp,player.getCurrentHp());assertEquals(mana,player.getMana());
   }
 
   private static final class TestHost implements RemotePlayerCommands.Host {

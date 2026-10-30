@@ -28,6 +28,7 @@ public final class OnlineStore implements AutoCloseable {
     }
   }
   public record RewardResult(boolean applied, CharacterState character) {}
+  public record PlayerHealResult(boolean applied,CharacterState caster,CharacterState recipient) {}
   /** Proposed ground-loot policy (LOOT_DESIGN.md section 3), in database milliseconds; pending owner approval. */
   public static final long LOOT_OWNER_WINDOW_MILLIS = 60_000L;
   public static final long LOOT_LIFETIME_MILLIS = 15L * 60_000L;
@@ -1333,6 +1334,79 @@ public final class OnlineStore implements AutoCloseable {
         c.commit();return new RewardResult(true,state);
       } catch(SQLException|RuntimeException failure) { c.rollback();throw failure; }
     }
+  }
+
+  /** Atomically spends the caster's spell result and heals one other live character. */
+  public PlayerHealResult commitPlayerHeal(Session casterSession,long casterRevision,UUID event,
+      CharacterProgress casterProgress,Session recipientSession,long recipientRevision,int amount) throws SQLException {
+    Objects.requireNonNull(casterSession);Objects.requireNonNull(recipientSession);Objects.requireNonNull(event);
+    Objects.requireNonNull(casterProgress);
+    if(casterRevision<0 || recipientRevision<0 || amount<=0
+        || casterSession.characterId().equals(recipientSession.characterId()))
+      throw new IllegalArgumentException("Invalid player heal");
+    String casterEncoded=encodeProgress(casterProgress);
+    String payload="player-heal-v1\n"+casterSession.characterId()+"\n"+casterRevision+"\n"+casterEncoded
+        +"\n"+recipientSession.characterId()+"\n"+recipientRevision+"\n"+amount;
+    String digest=fingerprint(payload);
+    try(var c=connections.open()) {
+      c.setAutoCommit(false);
+      try {
+        CharacterState caster,recipient;
+        // Every two-character commit takes both rows in character-id order to avoid deadlocks.
+        if(casterSession.characterId().compareTo(recipientSession.characterId())<0) {
+          caster=lockSession(c,casterSession);recipient=lockSession(c,recipientSession);
+        } else {
+          recipient=lockSession(c,recipientSession);caster=lockSession(c,casterSession);
+        }
+        try(var q=c.prepareStatement("SELECT gold,experience,payload_hash FROM online_rewards WHERE character_id=? AND event_id=?")) {
+          q.setObject(1,caster.id());q.setObject(2,event);
+          try(var rows=q.executeQuery()) {
+            if(rows.next()) {
+              if(rows.getLong(1)!=0 || rows.getLong(2)!=0 || !digest.equals(rows.getString(3)))
+                throw new Conflict("Player heal receipt mismatch");
+              c.commit();return new PlayerHealResult(false,caster,recipient);
+            }
+          }
+        }
+        if(caster.revision()!=casterRevision || recipient.revision()!=recipientRevision
+            || caster.progress()==null || recipient.progress()==null
+            || caster.progress().vitals().hp()<=0 || recipient.progress().vitals().hp()<=0
+            || caster.world()!=recipient.world()) throw new Conflict("Player heal target changed");
+        var before=recipient.progress().vitals();
+        int after=(int)Math.min(before.maxHp(),(long)before.hp()+amount);
+        if(after<=before.hp()) throw new Conflict("Player heal had no effect");
+        var recipientProgress=withHealth(recipient.progress(),after);
+        try(var q=c.prepareStatement("INSERT INTO online_rewards(character_id,event_id,gold,experience,payload_hash) VALUES(?,?,0,0,?)")) {
+          q.setObject(1,caster.id());q.setObject(2,event);q.setString(3,digest);q.executeUpdate();
+        }
+        try(var q=c.prepareStatement("""
+            UPDATE online_characters SET progress=?::jsonb,revision=revision+1,updated_at=now()
+            WHERE id=? AND account_id=? AND session_id=? AND revision=?
+            """)) {
+          q.setString(1,casterEncoded);bindSession(q,casterSession,2);q.setLong(5,casterRevision);
+          if(q.executeUpdate()!=1) throw new Conflict("Stale player heal caster");
+        }
+        try(var q=c.prepareStatement("""
+            UPDATE online_characters SET progress=?::jsonb,revision=revision+1,updated_at=now()
+            WHERE id=? AND account_id=? AND session_id=? AND revision=?
+            """)) {
+          q.setString(1,encodeProgress(recipientProgress));bindSession(q,recipientSession,2);q.setLong(5,recipientRevision);
+          if(q.executeUpdate()!=1) throw new Conflict("Stale player heal recipient");
+        }
+        caster=load(c,casterSession.accountId(),casterSession.characterId(),false);
+        recipient=load(c,recipientSession.accountId(),recipientSession.characterId(),false);
+        c.commit();return new PlayerHealResult(true,caster,recipient);
+      } catch(SQLException|RuntimeException failure) { c.rollback();throw failure; }
+    }
+  }
+
+  private static CharacterProgress withHealth(CharacterProgress progress,int hp) {
+    var vitals=progress.vitals();
+    return new CharacterProgress(progress.version(),progress.characterClass(),progress.gender(),progress.attributes(),
+        new CharacterProgress.Vitals(hp,vitals.maxHp(),vitals.mana(),vitals.maxMana()),progress.advancement(),
+        progress.inventory(),progress.equipment(),progress.skills(),progress.spells(),progress.questFlags(),
+        progress.storage(),progress.storageGold(),progress.respawn(),progress.buffs(),progress.cooldowns(),
+        progress.hiddenUntil(),progress.companion());
   }
 
   /**

@@ -122,6 +122,7 @@ class SpellEngineStageTwoGoldenTest {
     for (var event : plan.events()) {
       switch (event) {
         case SpellEngine.Event.SelfHeal heal -> out.append(" heal=").append(heal.amount());
+        case SpellEngine.Event.FriendHeal heal -> out.append(" friendHeal=").append(heal.recipient()).append(':').append(heal.amount());
         case SpellEngine.Event.ApplyBuff buff -> {
           if (spell.kind() == SpellContentV2.Kind.SPECIAL)
             out.append(" ").append(buff.spellKey().substring(6)).append("=").append(buff.durationSeconds()).append(":")

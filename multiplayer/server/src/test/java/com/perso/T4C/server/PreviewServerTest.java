@@ -672,11 +672,14 @@ class PreviewServerTest {
     var broke=ProgressEdits.withSpells(ProgressEdits.withVitals(base,
         new com.perso.T4C.online.model.CharacterProgress.Vitals(10,500,0,0)),java.util.Set.of("spell.heal_light"));
     var caster=store.create(owner.accountId(),"HTTP caster",0,30.5,30.5,hurt,0);
+    var allyProgress=ProgressEdits.withVitals(base,new com.perso.T4C.online.model.CharacterProgress.Vitals(2,500,17,25));
+    var ally=store.create(owner.accountId(),"HTTP ally",0,31.5,30.5,allyProgress,0);
     var poorCaster=store.create(poor.accountId(),"HTTP poor",0,30.5,30.5,broke,0);
     String current=Integer.toString(com.perso.T4C.online.model.OnlineProtocol.VERSION);
     try (var server=new PreviewServer(new PreviewMap(new boolean[60][80],0,0,30,30),0,store); var client=HttpClient.newHttpClient()) {
       server.start(); String url=server.url();
-      String token=login(client,url,owner,caster.id());
+      var casterJoin=join(client,url,owner,caster.id());String token=casterJoin.get("token").getAsString();
+      var allyJoined=join(client,url,owner,ally.id());String allyToken=allyJoined.get("token").getAsString();
       var joined=object(client.send(request(url,"/character",token,null),HttpResponse.BodyHandlers.ofString()));
       assertTrue(joined.getAsJsonObject("progress").getAsJsonObject("vitals").get("hp").getAsInt()<=16,"Logged-out time never heals");
       long revision=joined.get("revision").getAsLong();
@@ -686,14 +689,18 @@ class PreviewServerTest {
       assertEquals(409,client.send(abilityRequest(url,"/cast",token,current,(revision+1)+" 0 spell.heal_light"),HttpResponse.BodyHandlers.ofString()).statusCode(),"A stale revision commits nothing");
       var unknown=client.send(abilityRequest(url,"/cast",token,current,revision+" 0 spell.fireball_of_doom"),HttpResponse.BodyHandlers.ofString());
       assertEquals(409,unknown.statusCode()); assertTrue(unknown.body().contains("not_learned"),unknown.body());
-      var cast=client.send(abilityRequest(url,"/cast",token,current,revision+" 0 spell.heal_light"),HttpResponse.BodyHandlers.ofString());
+      var cast=client.send(abilityRequest(url,"/cast",token,current,
+          revision+" 0 spell.heal_light a:"+allyJoined.get("id").getAsLong()),HttpResponse.BodyHandlers.ofString());
       assertEquals(200,cast.statusCode(),cast.body());
       assertTrue(object(cast).get("revision").getAsLong()>revision);
       assertEquals(2,object(cast).get("manaSpent").getAsInt());
       var after=object(client.send(request(url,"/character",token,null),HttpResponse.BodyHandlers.ofString()));
       var vitals=after.getAsJsonObject("progress").getAsJsonObject("vitals");
-      assertTrue(vitals.get("hp").getAsInt()>=19,"Light Heal restores at least its base roll");
+      assertTrue(vitals.get("hp").getAsInt()<=16,"A player-target heal does not heal its caster");
       assertTrue(vitals.get("mana").getAsInt()>=28,"Two mana spent, at most natural regeneration since");
+      var allyVitals=object(client.send(request(url,"/character",allyToken,null),HttpResponse.BodyHandlers.ofString()))
+          .getAsJsonObject("progress").getAsJsonObject("vitals");
+      assertTrue(allyVitals.get("hp").getAsInt()>2,"The live nearby target receives the committed heal");
       long next=after.get("revision").getAsLong();
       // Exhaustion: a second cast and movement are definite refusals that keep the player connected.
       var again=client.send(abilityRequest(url,"/cast",token,current,next+" 0 spell.heal_light"),HttpResponse.BodyHandlers.ofString());
@@ -896,9 +903,13 @@ class PreviewServerTest {
   }
 
   private String login(HttpClient client,String url,OnlineStore.AccountKey key,java.util.UUID character) throws Exception {
+    return join(client,url,key,character).get("token").getAsString();
+  }
+
+  private com.google.gson.JsonObject join(HttpClient client,String url,OnlineStore.AccountKey key,java.util.UUID character) throws Exception {
     var response=client.send(request(url,"/join",null,key.secret()+" "+character),HttpResponse.BodyHandlers.ofString());
     assertEquals(200,response.statusCode());
-    return object(response).get("token").getAsString();
+    return object(response);
   }
 
   private static com.google.gson.JsonObject lootEntry(com.google.gson.JsonObject state,java.util.UUID id) {
