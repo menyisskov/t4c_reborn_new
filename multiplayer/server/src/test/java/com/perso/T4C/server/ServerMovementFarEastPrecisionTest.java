@@ -92,8 +92,13 @@ class ServerMovementFarEastPrecisionTest {
     // The frame origin changes every 256 tiles; a diagonal walk from just before one must stay continuous.
     double[][] path = walk(map, 5110, 700, 1, 1);
     double px = 5110.5;
+    // A tick may cover one speed-sized step plus a little rounding, never a jump.
+    double stepLimit =
+        1.25 * com.perso.T4C.config.GameConstants.PLAYER_SPEED
+            / com.perso.T4C.config.GameConstants.GRID_W
+            / PreviewWorld.TICK_RATE;
     for (double[] p : path) {
-      assertTrue(Math.abs(p[0] - px) < 0.1, "a tick moved " + (p[0] - px) + " tiles");
+      assertTrue(Math.abs(p[0] - px) < stepLimit, "a tick moved " + (p[0] - px) + " tiles");
       px = p[0];
     }
     assertEquals(path[TICKS - 1][0] - 5110.5, path[TICKS - 1][1] - 700.5, 1e-3);

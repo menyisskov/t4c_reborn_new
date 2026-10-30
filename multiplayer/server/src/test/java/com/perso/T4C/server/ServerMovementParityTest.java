@@ -62,8 +62,8 @@ class ServerMovementParityTest {
 
   @Test
   void aTickCoversTheSameDistanceAsTheTamperProbeMeasures() {
-    assertEquals(80f, PLAYER_SPEED);
-    assertEquals(16f / 9f, PLAYER_SPEED / MONSTER_SPEED, 0.001f);
+    assertEquals(128f, PLAYER_SPEED); // measured on the real client (2026-10-30 recording)
+    assertTrue(PLAYER_SPEED > MONSTER_SPEED);
     assertEquals(PLAYER_SPEED / GRID_W / PreviewWorld.TICK_RATE, PER_TICK, 1e-9);
     assertEquals(PER_TICK, ServerMovement.BUDGET_PER_TICK / (double) GRID_W, 1e-6);
   }

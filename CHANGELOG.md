@@ -1,7 +1,10 @@
-## 2026-10-30 — Walking no longer looks like gliding (T4C-0396)
+## 2026-10-30 — Walking looks and feels like the original game (T4C-0396)
+
+### Changed
+- Your character now walks at the same pace as in the original game, about 60% faster than before, in single-player and online. Monsters are not faster, so they are easier to outrun than they were. Speed buffs still apply on top.
 
 ### Fixed
-- Your character's legs now move in step with the ground they cover, one step for every stretch of road, the way they did in the original game. Before, the legs kept a fixed rhythm no matter how fast you were moving, so the character seemed to slide along the ground instead of walking. The legs now stop the moment you stop or bump into something, and speed up or slow down with your walking speed. Other players you see online walk the same way. Walking speed itself is unchanged.
+- Your character's legs now move in step with the ground they cover, one step for every stretch of road, the way they did in the original game. Before, the legs kept a fixed rhythm no matter how fast you were moving, so the character seemed to slide along the ground instead of walking. The legs now stop the moment you stop or bump into something, and speed up or slow down with your walking speed. Other players you see online walk the same way.
 
 ## 2026-10-30 — Asking an NPC about a topic retries once when the game is busy (T4C-0363)
 

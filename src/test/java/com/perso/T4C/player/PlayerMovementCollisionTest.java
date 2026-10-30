@@ -32,9 +32,12 @@ class PlayerMovementCollisionTest {
   }
 
   @Test
-  void playerBaselineMovementMatchesTheTunedSpeed() {
-    assertEquals(80f, PLAYER_SPEED);
-    assertEquals(16f / 9f, PLAYER_SPEED / MONSTER_SPEED, 0.001f);
+  void playerBaselineMovementMatchesTheRealClientRecording() {
+    // Measured from a recording of the real client walking a diagonal (2026-10-30): the world
+    // scrolled 128 px/s across and 64 px/s down, i.e. 128 horizontal-equivalent px/s.
+    assertEquals(128f, PLAYER_SPEED);
+    // The player outpaces monsters; how much is a balance call (see DESIGN_GUIDELINES.md).
+    assertTrue(PLAYER_SPEED > MONSTER_SPEED);
   }
 
   @TempDir Path tempDir;
