@@ -4,7 +4,7 @@ Last reviewed: 2026-10-30, Asia/Jerusalem. This file is the restart point for a 
 
 ### Shared GUI keyboard routing (T4C-0356)
 
-Implemented in `codex/online-remote-gui-keyboard-0356`, commit `e95c177b`, based on main `1710e2c5`. Open shared GUI screens now receive remote keyDown/keyTyped before online shortcuts and consume those events while open; closed-GUI shortcuts and offline input are unchanged. Focused tests passed 4/4, package and diff checks passed. PR #322 is open. No rendered-client check; M1/M4/Beta remain open.
+Implemented in `codex/online-remote-gui-keyboard-0356`, commit `e95c177b`, based on main `1710e2c5`. Open shared GUI screens now receive remote keyDown/keyTyped before online shortcuts and consume those events while open; closed-GUI shortcuts and offline input are unchanged. Focused tests passed 4/4, package and diff checks passed. PR #323 is open. No rendered-client check; M1/M4/Beta remain open.
 
 
 ### Online buff-bar recast (T4C-0355)
