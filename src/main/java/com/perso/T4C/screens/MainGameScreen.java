@@ -3101,6 +3101,9 @@ public class MainGameScreen implements Screen {
               (result, failure) -> {
                 remoteWeaponAttackInFlight = false;
                 if (remoteWeaponAttackGeneration != generation) return;
+                if (failure == null && result != null && result.accepted()) {
+                  queueRemoteBowPresentation(target, targetId, generation);
+                }
                 long retryDelay = AUTO_WEAPON_TARGET_INTERVAL_MS;
                 if (failure == null
                     && result != null
@@ -3115,6 +3118,55 @@ public class MainGameScreen implements Screen {
       remoteWeaponAttackInFlight = false;
       nextRemoteWeaponAttackAtMs = now + AUTO_WEAPON_TARGET_INTERVAL_MS;
     }
+  }
+
+  private void queueRemoteBowPresentation(
+      BaseMonster target, long creatureId, long expectedGeneration) {
+    Gdx.app.postRunnable(
+        () -> {
+          if (expectedGeneration >= 0 && remoteWeaponAttackGeneration != expectedGeneration) return;
+          playRemoteBowPresentation(target, creatureId);
+        });
+  }
+
+  /** Shows the accepted remote bow shot without applying any local combat result. */
+  private void playRemoteBowPresentation(BaseMonster target, long creatureId) {
+    if (!isRemoteSession()
+        || player == null
+        || !PlayerAppearanceDefaults.hasBowEquipped(player)
+        || (currentAttackTarget != target && selectedMonster != target)
+        || target == null
+        || target.isDead()
+        || ((com.perso.T4C.session.RemoteGameSession) session)
+                .remoteWorld()
+                .creatureId(target)
+            != creatureId) {
+      return;
+    }
+
+    Vector2 playerPos = player.getPositionVector();
+    Vector2 monsterPos = target.getPosition();
+    player.getMovement().faceToward(playerPos.x, playerPos.y, monsterPos.x, monsterPos.y);
+    ProjectileDirection dir = computeFlipFallbackDirection(playerPos, monsterPos);
+    boolean launched =
+        spellRenderer.launchProjectile(
+            BOW_PROJECTILE_SPRITE + dir.angle,
+            target,
+            playerPos.x,
+            playerPos.y,
+            dir.flipX,
+            () -> {});
+    if (!launched) {
+      launched =
+          spellRenderer.launchProjectile(
+              BOW_PROJECTILE_SPRITE + "000",
+              target,
+              playerPos.x,
+              playerPos.y,
+              false,
+              () -> {});
+    }
+    if (launched) player.attack(player.getMovement(), true);
   }
 
   private void performRemoteAutoSpellTick() {
@@ -5442,10 +5494,7 @@ public class MainGameScreen implements Screen {
       @Override public void handleGlobalKeys() {}
     };
     MonsterInputHandler monsters=new MonsterInputHandler(camera,monsterManager,player,null,null,systemMessage);
-    monsters.setOnAttackTargetSelected(monster -> {
-      setSelectedMonster(monster);
-      session.commands().attack(monster);
-    });
+    monsters.setOnAttackTargetSelected(this::handleRemoteAttackTargetSelected);
     monsters.setOnClickedElsewhere(() -> setSelectedMonster(null));
     com.badlogic.gdx.InputAdapter npcClicks=new com.badlogic.gdx.InputAdapter() {
       private final Vector3 at=new Vector3();
@@ -5718,6 +5767,25 @@ public class MainGameScreen implements Screen {
     });
     remote.addProcessor(monsters);remote.addProcessor(npcClicks);remote.addProcessor(lootClicks);
     Gdx.input.setInputProcessor(remote);
+  }
+
+  private void handleRemoteAttackTargetSelected(BaseMonster monster) {
+    setSelectedMonster(monster);
+    if (PlayerAppearanceDefaults.hasBowEquipped(player)
+        && session.commands() instanceof com.perso.T4C.session.RemotePlayerCommands commands) {
+      long creatureId =
+          ((com.perso.T4C.session.RemoteGameSession) session).remoteWorld().creatureId(monster);
+      commands
+          .attackWithResult(monster)
+          .whenComplete(
+              (result, failure) -> {
+                if (failure == null && result != null && result.accepted() && creatureId > 0) {
+                  queueRemoteBowPresentation(monster, creatureId, -1L);
+                }
+              });
+      return;
+    }
+    session.commands().attack(monster);
   }
 
   static boolean routeRemoteGuiKeyDown(int keycode) {
