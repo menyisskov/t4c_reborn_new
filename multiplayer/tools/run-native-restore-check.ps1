@@ -93,7 +93,7 @@ $javaExe = (Get-Command java).Source
 function Start-Server([string]$name) {
   $env:T4C_CONTROL_FILE = (Join-Path $Work "control-$name.token"); $env:T4C_BIND_ADDRESS = '127.0.0.1'
   try {
-    return Start-Process -FilePath 'java' -ArgumentList @('-Djava.awt.headless=true', '-jar', $jar, '--online', $map, $ServerPort) -WorkingDirectory $rt `
+    return Start-Process -FilePath 'java' -ArgumentList @('-Djava.awt.headless=true', '-jar', $jar, '--online', $map, $ServerPort, '--no-stream-world0') -WorkingDirectory $rt `
       -RedirectStandardOutput (Join-Path $Work "server-$name.out.log") -RedirectStandardError (Join-Path $Work "server-$name.err.log") -PassThru -WindowStyle Hidden | ForEach-Object { $null = $_.Handle; $_ }
   } finally { Remove-Item Env:\T4C_CONTROL_FILE, Env:\T4C_BIND_ADDRESS -ErrorAction SilentlyContinue }
 }

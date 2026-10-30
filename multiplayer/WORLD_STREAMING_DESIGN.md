@@ -925,3 +925,12 @@ none reported a failure.
 * A portal arrival test into the densest windows (the only hosted pair lands at the temple).
 * The 389 sprite-less records need data, not code. World 2 arrival latency is still arithmetic.
 * The rendered-client gates of section 4 (walk from the temple to a far field, restart mid-chase).
+
+
+## 14. Default flipped (T4C-0397)
+
+`--online` now hosts streamed world 0 by default, on the strength of the stage A and stage B part 1 gates above (30-minute
+20-adapter soak, 0 failures; real portal transfer test). `--no-stream-world0` restores the 249 x 117 starter crop;
+`--stream-world0` is accepted and does nothing; `--preview` never streams. The three native drill scripts
+(`run-native-fault-drill`, `run-native-load-record`, `run-native-restore-check`) pass `--no-stream-world0` so their recorded
+evidence stays comparable. Not re-measured: a rendered two-client run on the default plan.

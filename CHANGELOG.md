@@ -1,3 +1,8 @@
+## 2026-10-30 — Online play now covers the whole world map (T4C-0397)
+
+### Changed
+- Online servers now host the entire main world instead of a small starter area. Monsters across the map wake up as you approach and go back to sleep when you leave, so far more of the world has creatures to fight online. Areas beyond the main world, and most quest-givers and shops, are still being added.
+
 ## 2026-10-30 — Walking looks and feels like the original game (T4C-0396)
 
 ### Changed
