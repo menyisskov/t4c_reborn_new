@@ -66,7 +66,7 @@ final class PersistentSessions {
       this.token=token; this.session=session; this.saved=session.character(); this.position=position;
     }
   }
-  private record PlayerHeal(Binding recipient,long revision,int amount) {}
+  private record PlayerEffect(Binding recipient,long revision,CharacterProgress progress) {}
   /**
    * One gameplay write. A pickup carries {@code loot}; a lethal strike carries its committed {@code drops}.
    * Both are published to the region loot cache only after their transaction commits.
@@ -76,7 +76,7 @@ final class PersistentSessions {
       OnlineStore.MonsterAttack monsterAttack, OnlineStore.DeathTransition death, UUID corpse, UUID corpseItem,
       com.perso.T4C.server.persistence.PortalTransfer transfer, UUID loot, List<LootDropDraft> drops,
       List<OnlineStore.SpellStrike> spellStrikes, OnlineStore.MonsterHeal monsterHeal,
-      CompletableFuture<OnlineStore.RewardResult> result, OnlineShopTrades.Trade shop,PlayerHeal playerHeal) {
+      CompletableFuture<OnlineStore.RewardResult> result, OnlineShopTrades.Trade shop,PlayerEffect playerEffect) {
     GameplayEvent { drops=List.copyOf(drops); spellStrikes=spellStrikes==null ? List.of() : List.copyOf(spellStrikes); }
     GameplayEvent(UUID id, long gold, long experience, CharacterProgress progress, boolean worldReward,
         OnlineStore.CreatureStrike strike, OnlineStore.CreatureProvocation provocation,
@@ -616,8 +616,8 @@ final class PersistentSessions {
   }
 
   /** Reserves both online characters and commits one server-calculated heal under a single receipt. */
-  CompletionStage<OnlineStore.RewardResult> commitPlayerHeal(String token,long revision,UUID eventId,
-      CharacterProgress casterProgress,FriendTarget target,int amount) {
+  CompletionStage<OnlineStore.RewardResult> commitPlayerEffect(String token,long revision,UUID eventId,
+      CharacterProgress casterProgress,FriendTarget target,CharacterProgress recipientProgress) {
     var caster=active(token);var recipient=active(target.token());
     if(caster.event!=null || caster.awaitingRegionReady || caster.pending || caster.saved.revision()!=revision)
       throw new PreviewWorld.Rejected(409,"busy");
@@ -627,12 +627,9 @@ final class PersistentSessions {
         || recipient.event!=null || recipient.pending || recipient.awaitingRegionReady
         || recipient.saved.progress()==null || recipient.saved.progress().vitals().hp()<=0)
       throw new PreviewWorld.Rejected(409,"friend_unavailable");
-    if(amount<=0) throw new IllegalArgumentException("Invalid friend heal amount");
-    var vitals=recipient.saved.progress().vitals();
-    int hp=(int)Math.min(vitals.maxHp(),(long)vitals.hp()+amount);
-    if(hp==vitals.hp()) return commitGameplayEvent(token,revision,eventId,0,0,casterProgress);
+    Objects.requireNonNull(recipientProgress);
     var result=new CompletableFuture<OnlineStore.RewardResult>();
-    var linked=new PlayerHeal(recipient,target.revision(),amount);
+    var linked=new PlayerEffect(recipient,target.revision(),recipientProgress);
     var event=new GameplayEvent(eventId,0,0,casterProgress,false,null,null,null,null,null,null,null,null,
         List.of(),List.of(),null,result,null,linked);
     caster.event=event;recipient.event=event;recipient.pending=true;
@@ -771,11 +768,11 @@ final class PersistentSessions {
               refusal=conflict.getMessage();
             }
           } else {
-            if(event.playerHeal()!=null) {
-              var heal=event.playerHeal();
-              store.renew(heal.recipient().session);
-              var committed=store.commitPlayerHeal(binding.session,revision,event.id(),event.progress(),
-                  heal.recipient().session,heal.revision(),heal.amount());
+            if(event.playerEffect()!=null) {
+              var effect=event.playerEffect();
+              store.renew(effect.recipient().session);
+              var committed=store.commitPlayerEffect(binding.session,revision,event.id(),event.progress(),
+                  effect.recipient().session,effect.revision(),effect.progress());
               reward=new OnlineStore.RewardResult(committed.applied(),committed.caster());
               saved=committed.caster();partnerSaved=committed.recipient();
             } else {
@@ -837,9 +834,9 @@ final class PersistentSessions {
       binding.pending=false;
       if (completed.error()!=null) {
         // Fail closed on uncertain writes. Lease expiry permits recovery from the last DB commit.
-        var playerHeal=binding.event==null ? null : binding.event.playerHeal();
-        if(playerHeal!=null) {
-          var partner=playerHeal.recipient();partner.pending=false;
+        var playerEffect=binding.event==null ? null : binding.event.playerEffect();
+        if(playerEffect!=null) {
+          var partner=playerEffect.recipient();partner.pending=false;
           partner.region.world.remove(partner.token);bindings.remove(partner.token);invalidateRead(partner);
           partner.closed.completeExceptionally(new IllegalStateException("Persistence unavailable"));
         }
@@ -856,8 +853,8 @@ final class PersistentSessions {
         binding.allowedUntil=completed.allowedUntil();
         var refused=binding.event;
         binding.event=null;
-        if(refused.playerHeal()!=null) {
-          var partner=refused.playerHeal().recipient();partner.pending=false;partner.event=null;
+        if(refused.playerEffect()!=null) {
+          var partner=refused.playerEffect().recipient();partner.pending=false;partner.event=null;
         }
         // The database says this drop is no longer on the ground, so the cache was stale: drop it and re-sync.
         if ("loot_unavailable".equals(completed.refusal()) || OnlinePickupRules.LOOT_TAKEN.equals(completed.refusal())) {
@@ -875,8 +872,8 @@ final class PersistentSessions {
       } else {
         binding.saved=completed.saved();
         publishHealth(binding);
-        if(completed.partnerSaved()!=null && binding.event!=null && binding.event.playerHeal()!=null) {
-          var partner=binding.event.playerHeal().recipient();
+        if(completed.partnerSaved()!=null && binding.event!=null && binding.event.playerEffect()!=null) {
+          var partner=binding.event.playerEffect().recipient();
           partner.saved=completed.partnerSaved();partner.pending=false;partner.event=null;publishHealth(partner);
         }
         binding.allowedUntil=completed.allowedUntil();

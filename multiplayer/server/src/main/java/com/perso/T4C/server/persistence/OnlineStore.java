@@ -1336,17 +1336,19 @@ public final class OnlineStore implements AutoCloseable {
     }
   }
 
-  /** Atomically spends the caster's spell result and heals one other live character. */
-  public PlayerHealResult commitPlayerHeal(Session casterSession,long casterRevision,UUID event,
-      CharacterProgress casterProgress,Session recipientSession,long recipientRevision,int amount) throws SQLException {
+  /** Atomically spends a caster's spell result and applies its heal or buff to another live character. */
+  public PlayerHealResult commitPlayerEffect(Session casterSession,long casterRevision,UUID event,
+      CharacterProgress casterProgress,Session recipientSession,long recipientRevision,
+      CharacterProgress recipientProgress) throws SQLException {
     Objects.requireNonNull(casterSession);Objects.requireNonNull(recipientSession);Objects.requireNonNull(event);
     Objects.requireNonNull(casterProgress);
-    if(casterRevision<0 || recipientRevision<0 || amount<=0
+    if(casterRevision<0 || recipientRevision<0 || recipientProgress==null
         || casterSession.characterId().equals(recipientSession.characterId()))
-      throw new IllegalArgumentException("Invalid player heal");
+      throw new IllegalArgumentException("Invalid player effect");
     String casterEncoded=encodeProgress(casterProgress);
-    String payload="player-heal-v1\n"+casterSession.characterId()+"\n"+casterRevision+"\n"+casterEncoded
-        +"\n"+recipientSession.characterId()+"\n"+recipientRevision+"\n"+amount;
+    String recipientEncoded=encodeProgress(recipientProgress);
+    String payload="player-effect-v1\n"+casterSession.characterId()+"\n"+casterRevision+"\n"+casterEncoded
+        +"\n"+recipientSession.characterId()+"\n"+recipientRevision+"\n"+recipientEncoded;
     String digest=fingerprint(payload);
     try(var c=connections.open()) {
       c.setAutoCommit(false);
@@ -1363,7 +1365,7 @@ public final class OnlineStore implements AutoCloseable {
           try(var rows=q.executeQuery()) {
             if(rows.next()) {
               if(rows.getLong(1)!=0 || rows.getLong(2)!=0 || !digest.equals(rows.getString(3)))
-                throw new Conflict("Player heal receipt mismatch");
+                throw new Conflict("Player effect receipt mismatch");
               c.commit();return new PlayerHealResult(false,caster,recipient);
             }
           }
@@ -1372,10 +1374,6 @@ public final class OnlineStore implements AutoCloseable {
             || caster.progress()==null || recipient.progress()==null
             || caster.progress().vitals().hp()<=0 || recipient.progress().vitals().hp()<=0
             || caster.world()!=recipient.world()) throw new Conflict("Player heal target changed");
-        var before=recipient.progress().vitals();
-        int after=(int)Math.min(before.maxHp(),(long)before.hp()+amount);
-        if(after<=before.hp()) throw new Conflict("Player heal had no effect");
-        var recipientProgress=withHealth(recipient.progress(),after);
         try(var q=c.prepareStatement("INSERT INTO online_rewards(character_id,event_id,gold,experience,payload_hash) VALUES(?,?,0,0,?)")) {
           q.setObject(1,caster.id());q.setObject(2,event);q.setString(3,digest);q.executeUpdate();
         }
@@ -1390,8 +1388,8 @@ public final class OnlineStore implements AutoCloseable {
             UPDATE online_characters SET progress=?::jsonb,revision=revision+1,updated_at=now()
             WHERE id=? AND account_id=? AND session_id=? AND revision=?
             """)) {
-          q.setString(1,encodeProgress(recipientProgress));bindSession(q,recipientSession,2);q.setLong(5,recipientRevision);
-          if(q.executeUpdate()!=1) throw new Conflict("Stale player heal recipient");
+          q.setString(1,recipientEncoded);bindSession(q,recipientSession,2);q.setLong(5,recipientRevision);
+          if(q.executeUpdate()!=1) throw new Conflict("Stale player effect recipient");
         }
         caster=load(c,casterSession.accountId(),casterSession.characterId(),false);
         recipient=load(c,recipientSession.accountId(),recipientSession.characterId(),false);
