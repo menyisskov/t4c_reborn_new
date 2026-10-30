@@ -34,6 +34,14 @@ commit links, and finer-grained notes.
 ### Changed
 - Players who have learned Sneak can activate it online. Moving can reveal them as in single-player, and melee, ranged attacks and spell casts end concealment.
 
+## 2026-10-30 — Online server reliability checks and traffic figures (T4C-0353)
+
+### Added
+- The online server now keeps count of how much game traffic it sends and receives and how long its saves take, so a long test session can report real figures for network use and save speed.
+
+### Changed
+- The project's multiplayer acceptance notes now record four more reliability results from simulated players: a stop requested while the saving database is down is reported as a failure instead of a clean save, a backed-up realm restored into a separate database lets twenty simulated players keep playing, stop and reconnect with nothing lost or granted twice, a 30-minute twenty-player run with every measurement recorded, and a fresh pass of the cheating-attempt checks.
+
 ## 2026-10-30 — Equipment changes now show on your own character in online play (T4C-0342)
 
 ### Fixed
