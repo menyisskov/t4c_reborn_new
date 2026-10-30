@@ -12,12 +12,15 @@ import java.util.Set;
 
 /**
  * Strict allowlist of spells the online server may cast, apply from a consumable, or grant. Item
- * entries are restorative effects plus the specific Potion of Fury strength buff routed through
- * v2's persistent buff engine; other unsupported effects are refused at load.
+ * entries are restorative effects plus explicitly supported buff potions routed through v2's
+ * persistent buff engine; other unsupported effects are refused at load.
  */
 public final class SpellCatalog {
   private static final Set<Integer> CAST_EFFECTS = Set.of(1, 2);
   private static final Set<Integer> ITEM_EFFECTS = Set.of(1, 2);
+  private static final Set<String> ITEM_BUFF_KEYS = Set.of(
+      "spell.item_potion_of_fury", "spell.item_potion_of_nimbleness",
+      "spell.item_hyper_potion_of_nimbleness");
   private final SpellContent content;
 
   public SpellCatalog(SpellContent content) {
@@ -31,7 +34,7 @@ public final class SpellCatalog {
       case CAST -> requirePlain(spell, CAST_EFFECTS);
       case ITEM -> {
         requirePlain(spell, ITEM_EFFECTS);
-        if (!isManaRestore(spell) && !isPotionOfFuryBuff(spell))
+        if (!isManaRestore(spell) && !isSupportedItemBuff(spell))
           throw new IllegalArgumentException("unsupported_spell");
       }
     }
@@ -50,13 +53,14 @@ public final class SpellCatalog {
             .anyMatch(param -> param.id() == 2 && "MANA".equalsIgnoreCase(param.expression())));
   }
 
-  /** The one item buff routed through v2's authoritative persistent buff application. */
-  private static boolean isPotionOfFuryBuff(SpellContent.Spell spell) {
-    return "spell.item_potion_of_fury".equals(spell.key()) && !spell.effects().isEmpty()
+  /** Explicit item buffs routed through v2's authoritative persistent buff application. */
+  private static boolean isSupportedItemBuff(SpellContent.Spell spell) {
+    return ITEM_BUFF_KEYS.contains(spell.key()) && !spell.effects().isEmpty()
         && spell.effects().stream().allMatch(effect -> effect.type() == 2
+            && effect.params().stream().filter(param -> param.id() == 2).count() == 1
             && effect.params().stream().filter(param -> param.id() == 2)
                 .map(param -> BuffAttributes.normalize(param.expression()))
-                .anyMatch(attribute -> BuffAttributes.MODELLED.contains(attribute)));
+                .allMatch(attribute -> BuffAttributes.MODELLED.contains(attribute)));
   }
 
   /** The named spell, whatever its use. Unknown keys are refused. */

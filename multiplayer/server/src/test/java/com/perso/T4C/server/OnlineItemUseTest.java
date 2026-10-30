@@ -153,6 +153,97 @@ class OnlineItemUseTest {
     assertEquals(0, used.healthGained());
   }
 
+  @Test void potionOfNimblenessPersistsItsAuthoredAgilityBuffAndSpendsItsChargeAtomically() throws Exception {
+    var items = ItemCatalog.loadBundled();
+    var spells = SpellCatalog.loadBundled();
+    var stack = new CharacterProgress.Item(UUID.randomUUID(), "item.potion_of_nimbleness", 1, 1);
+    var p = progress(new CharacterProgress.Vitals(10, 100, 5, 40), List.of(stack), Map.of(), Map.of());
+
+    var used = OnlineItemUse.prepareUse(state(p), stack.id(), NOW, new Random(5), items, spells,
+        SpellCatalogV2.loadBundled());
+
+    assertTrue(used.progress().inventory().isEmpty());
+    assertEquals(1, used.progress().buffs().size());
+    var buff = used.progress().buffs().getFirst();
+    assertEquals("spell.item_potion_of_nimbleness", buff.spell());
+    assertEquals(NOW + 300_000, buff.expiresAt());
+    assertEquals(10, buff.modifiers().get("dex"));
+    assertEquals(NOW, used.progress().cooldowns().get(OnlineBuffs.ANCHOR));
+    assertEquals(used.progress(), OnlineBuffs.expire(used.progress(), NOW + 299_999));
+    assertTrue(OnlineBuffs.expire(used.progress(), NOW + 300_000).buffs().isEmpty());
+    assertEquals(0, used.manaSpent());
+    assertEquals(0, used.healthGained());
+  }
+
+  @Test void hyperPotionOfNimblenessUsesItsMinimumBonusBelowTheThreshold() throws Exception {
+    var used = useHyperPotion(120, 0, 0);
+
+    assertHyperPotionUse(used, 50);
+  }
+
+  @Test void hyperPotionScalesFromEquippedTrueAgilityButNotActiveDexterityBuffs() throws Exception {
+    // Base 180 plus 40 from equipped gear gives true_agility 220; the active +200 dex buff is excluded.
+    var used = useHyperPotion(180, 40, 200);
+
+    assertHyperPotionUse(used, 55);
+  }
+
+  private static OnlineCasting.Result useHyperPotion(int dexterity, int gearDexterity, int activeDexterityBuff)
+      throws Exception {
+    var items = ItemCatalog.loadBundled();
+    var itemDefinitions = new java.util.HashMap<>(items.items());
+    var inventory = new java.util.ArrayList<CharacterProgress.Item>();
+    var equipment = new java.util.HashMap<String, UUID>();
+    if (gearDexterity > 0) {
+      String gearKey = "item.test_hyper_potion_agility_gear";
+      itemDefinitions.put(gearKey, new ItemContent.Definition(gearKey, "Test Agility Gear",
+          com.perso.T4C.player.BodyPart.HEAD, null, null, null, null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          false, false, false, 900_001, 0, null, null, 0, false,
+          List.of(new ItemContent.Boost(1, 6, Integer.toString(gearDexterity), 0, 0)), List.of(), false, null));
+      var gear = new CharacterProgress.Item(UUID.randomUUID(), gearKey, 1, 0);
+      inventory.add(gear);
+      equipment.put("HEAD", gear.id());
+    }
+    var stack = new CharacterProgress.Item(UUID.randomUUID(), "item.hyper_potion_of_nimbleness", 1, 1);
+    inventory.add(stack);
+    var base = progress(new CharacterProgress.Vitals(10, 100, 5, 40), inventory, equipment, Map.of());
+    var attributes = new CharacterProgress.Attributes(base.attributes().strength(), base.attributes().endurance(),
+        dexterity, base.attributes().wisdom(), base.attributes().intelligence());
+    var buffs = activeDexterityBuff == 0 ? List.<CharacterProgress.Buff>of()
+        : List.of(new CharacterProgress.Buff("spell.item_potion_of_nimbleness", NOW + 600_000,
+            0, 0, Map.of("dex", activeDexterityBuff), NOW));
+    var state = new CharacterProgress(base.version(), base.characterClass(), base.gender(), attributes, base.vitals(),
+        base.advancement(), inventory, equipment, base.skills(), base.spells(), base.questFlags(), base.storage(),
+        base.storageGold(), base.respawn(), buffs, base.cooldowns(), base.hiddenUntil(), base.companion());
+    return OnlineItemUse.prepareUse(state(state), stack.id(), NOW, new Random(5),
+        new ItemContent(ItemContent.VERSION, itemDefinitions), SpellCatalog.loadBundled(), SpellCatalogV2.loadBundled());
+  }
+
+  private static void assertHyperPotionUse(OnlineCasting.Result used, int expectedDexterity) {
+    assertTrue(used.progress().inventory().stream()
+        .noneMatch(item -> item.key().equals("item.hyper_potion_of_nimbleness")),
+        "accepted use atomically consumes the single charge");
+    if (used.progress().equipment().containsKey("HEAD")) {
+      UUID gear = used.progress().equipment().get("HEAD");
+      assertTrue(used.progress().inventory().stream().anyMatch(item -> item.id().equals(gear)
+          && item.key().equals("item.test_hyper_potion_agility_gear")),
+          "using the potion retains its separate equipped gear instance");
+    }
+    var buff = used.progress().buffs().stream()
+        .filter(candidate -> candidate.spell().equals("spell.item_hyper_potion_of_nimbleness"))
+        .findFirst().orElseThrow();
+    assertEquals(NOW + 300_000, buff.expiresAt());
+    assertEquals(expectedDexterity, buff.modifiers().get("dex"));
+    assertEquals(NOW, used.progress().cooldowns().get(OnlineBuffs.ANCHOR));
+    assertEquals(used.progress(), OnlineBuffs.expire(used.progress(), NOW + 299_999));
+    var expired = OnlineBuffs.expire(used.progress(), NOW + 300_000);
+    assertFalse(expired.buffs().stream().anyMatch(candidate ->
+        candidate.spell().equals("spell.item_hyper_potion_of_nimbleness")));
+    assertEquals(used.progress().buffs().size() - 1, expired.buffs().size());
+    assertEquals(0, used.manaSpent());
+    assertEquals(0, used.healthGained());
+  }
+
   private static OnlineStore.CharacterState state(CharacterProgress p) {
     return new OnlineStore.CharacterState(UUID.randomUUID(), UUID.randomUUID(), "Drinker", 0, 3, 3, 0, 0, 0, p);
   }

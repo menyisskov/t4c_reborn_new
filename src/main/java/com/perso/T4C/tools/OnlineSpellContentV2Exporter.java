@@ -11,14 +11,18 @@ import com.perso.T4C.spell.SpellRegistry;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeMap;
 
 /**
- * Build-time bridge that exports player spells plus the item-only Potion of Fury spell (spells-v2)
+ * Build-time bridge that exports player spells plus supported item-only buff spells (spells-v2)
  * with the engine classification and the numbers the online spell engine reads. spells-v1 remains
- * the live cast allowlist; its item entries support restorative consumables and Potion of Fury.
+ * the live cast allowlist; its item entries support restorative consumables and modeled buff potions.
  */
 public final class OnlineSpellContentV2Exporter {
+  private static final Set<String> ITEM_BUFFS = Set.of(
+      "item.potion_of_fury", "item.potion_of_nimbleness", "item.hyper_potion_of_nimbleness");
+
   private OnlineSpellContentV2Exporter() {}
 
   public static SpellContentV2 snapshot() {
@@ -26,13 +30,14 @@ public final class OnlineSpellContentV2Exporter {
     for (SpellData spell : SpellRegistry.playerCastableSpells()) {
       spells.put(spell.getKey(), export(spell));
     }
-    // Item Potion of Fury is not player-castable, but the socket item path resolves its authored
-    // effect through the same v2 buff engine and persistent buff state as a learned buff spell.
+    // These item buffs are not player-castable, but the socket item path resolves their authored
+    // effects through the same v2 buff engine and persistent buff state as a learned buff spell.
     ItemRegistry.resetAdditionalDefinitions();
     ItemJsonLoader.loadAndRegister();
-    var fury = ItemRegistry.findByKey("item.potion_of_fury");
-    if (fury != null) {
-      for (var itemSpell : fury.getSpells()) {
+    for (var itemKey : ITEM_BUFFS) {
+      var item = ItemRegistry.findByKey(itemKey);
+      if (item == null) continue;
+      for (var itemSpell : item.getSpells()) {
         var spell = SpellRegistry.findById(itemSpell.getSpellId());
         if (spell != null) spells.put(spell.getKey(), export(spell));
       }

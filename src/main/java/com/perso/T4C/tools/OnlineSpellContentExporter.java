@@ -11,15 +11,18 @@ import com.perso.T4C.spell.SpellRegistry;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeMap;
 
 /**
  * Build-time bridge that exports only the spells the online server may run or grant: the castable
- * self heal, grant-only quest spells, restorative consumables, and the Potion of Fury buff consumable.
+ * self heal, grant-only quest spells, restorative consumables, and supported buff consumables.
  */
 public final class OnlineSpellContentExporter {
   static final String HEAL_LIGHT = "spell.heal_light";
   static final String RENEW_ARMOR = "spell.renew_armor";
+  private static final Set<String> ITEM_BUFFS = Set.of(
+      "item.potion_of_fury", "item.potion_of_nimbleness", "item.hyper_potion_of_nimbleness");
 
   private OnlineSpellContentExporter() {}
 
@@ -33,8 +36,8 @@ public final class OnlineSpellContentExporter {
     var spells = new TreeMap<String, SpellContent.Spell>();
     spells.put(HEAL_LIGHT, export(required(HEAL_LIGHT), SpellContent.Use.CAST));
     spells.put(RENEW_ARMOR, export(required(RENEW_ARMOR), SpellContent.Use.GRANT_ONLY));
-    // In-scope potions are finite consumables with no equipment slot and a restorative spell, except
-    // Potion of Fury, whose supported authored strength buff is handled through the v2 engine path.
+    // In-scope potions are finite consumables with no equipment slot and a restorative spell, or a
+    // supported authored buff handled through the v2 engine path.
     for (var item : items) {
       if (item.getBodyPart() != null || item.getNbCharges() <= 0 || item.getSpells().isEmpty()
           || (item.getNbCharges() > 1 && item.isUnlimitedUse())) continue;
@@ -42,7 +45,7 @@ public final class OnlineSpellContentExporter {
         // Unresolved or unsupported consumable spells are out of online scope and fail closed by omission.
         var spell = SpellRegistry.findById(itemSpell.getSpellId());
         if (spell != null && (isPlainRestore(spell)
-            || ("item.potion_of_fury".equals(item.getKey()) && isSupportedBuff(spell))))
+            || (ITEM_BUFFS.contains(item.getKey()) && isSupportedBuff(spell))))
           spells.putIfAbsent(spell.getKey(), export(spell, SpellContent.Use.ITEM));
       }
     }
@@ -108,6 +111,6 @@ public final class OnlineSpellContentExporter {
     var path = Path.of(args[0]);
     if (path.getParent() != null) Files.createDirectories(path.getParent());
     Files.writeString(path, render(snapshot()));
-    System.out.println("Exported castable, item and grant-only spell definitions; buffs and other effects are not executable online.");
+    System.out.println("Exported castable, restorative item, supported buff item and grant-only spell definitions.");
   }
 }
