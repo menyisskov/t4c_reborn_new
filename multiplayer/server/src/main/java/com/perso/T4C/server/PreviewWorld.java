@@ -46,6 +46,7 @@ public final class PreviewWorld {
     int dx, dy;
     double x, y;
     int hp=1,maxHp=1;
+    long hiddenUntil, detectInvisibleUntil;
     boolean frozen;
     final ServerMovement.Glide glide = new ServerMovement.Glide();
     double requestCredits = REQUEST_BURST;
@@ -194,9 +195,16 @@ public final class PreviewWorld {
   }
 
   public Snapshot snapshot(String token) {
+    return snapshot(token,System.currentTimeMillis());
+  }
+
+  Snapshot snapshot(String token,long now) {
     authenticate(token);
     List<PlayerView> result = new ArrayList<>(players.size());
-    for (Player p : players.values()) result.add(view(p));
+    Player observer=players.get(token);
+    boolean detectsInvisible=observer.detectInvisibleUntil>now;
+    for (Player p : players.values())
+      if(p==observer || p.hiddenUntil<=now || detectsInvisible) result.add(view(p));
     return new Snapshot(tick, List.copyOf(result),creatures.stream().filter(c -> !inactiveCreatures.contains(c.id()))
         .map(c -> {
           var position=creaturePosition(c.id());
@@ -226,6 +234,12 @@ public final class PreviewWorld {
   void health(String token,int hp,int maxHp) {
     if (hp<0 || maxHp<=0 || hp>maxHp) throw new IllegalArgumentException("Invalid player health");
     var p=players.get(token); if (p!=null) { p.hp=hp; p.maxHp=maxHp; }
+  }
+
+  /** Publishes the committed concealment and detection deadlines for snapshot filtering. */
+  void visibility(String token,long hiddenUntil,long detectInvisibleUntil) {
+    var p=players.get(token);
+    if(p!=null) { p.hiddenUntil=hiddenUntil; p.detectInvisibleUntil=detectInvisibleUntil; }
   }
 
   void freeze(String token,boolean frozen) {
