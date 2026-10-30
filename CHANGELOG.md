@@ -6,7 +6,7 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
-## 2026-10-30 — The online lobby says why a character could not be entered (T4C-0324)
+## 2026-10-30 — The online lobby says why a character could not be entered (T4C-0325)
 
 ### Fixed
 - In the online character list, pressing Play on a character that could not be entered used to drop you back to the list with no message. It now says why: the character is already in use (wait about 30 seconds, then press R), it cannot be played right now (for example its region is offline or it is respawning), or it is not on this account.

@@ -111,7 +111,7 @@ public final class LiveRunProvision {
   }
 
   /**
-   * T4C-0324 scene {@code lobby}: the accounts behind the rendered lobby error cases of milestone M1. Writes
+   * T4C-0325 scene {@code lobby}: the accounts behind the rendered lobby error cases of milestone M1. Writes
    * {@code player-a.json} (account A: one ready warrior "Lobby Alpha" at the temple, an unhosted-region character, a
    * character with no respawn point and 22 never-initialised ones, so the roster needs two pages), {@code player-b.json}
    * (account B, one ready warrior), {@code player-c.json} (an account with no characters), {@code player-s.json}

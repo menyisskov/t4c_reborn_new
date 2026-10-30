@@ -60,7 +60,7 @@ playthrough and recovery criteria pass. Never infer Done from a task count or te
 
 | Milestone | Current status | Existing related tasks | Main outstanding work |
 | --- | --- | --- | --- |
-| M1 — Enter and interact | Roster/NPC backend and actual adapter probes pass, including two local HTTPS adapters with trust/hostname refusal and a separate live account-key rotation check; selection and refusal messages verified rendered; creation bullet and remote HTTPS open | T4C-0192, 0195, 0196, 0216, 0219, 0232, 0233, 0234 | Native character select and its Create form are merged as an opt-in lobby (`-Lobby`, owner-approved look) and ran rendered against a live local server (T4C-0306 to T4C-0324; four of seven bullets ticked); in-client character creation is recorded here as out of Beta scope (characters are operator-provisioned) while the creation bullet still requires it: owner decision; remote deployment |
+| M1 — Enter and interact | Roster/NPC backend and actual adapter probes pass, including two local HTTPS adapters with trust/hostname refusal and a separate live account-key rotation check; selection and refusal messages verified rendered; creation bullet and remote HTTPS open | T4C-0192, 0195, 0196, 0216, 0219, 0232, 0233, 0234 | Native character select and its Create form are merged as an opt-in lobby (`-Lobby`, owner-approved look) and ran rendered against a live local server (T4C-0306 to T4C-0325; four of seven bullets ticked); in-client character creation is recorded here as out of Beta scope (characters are operator-provisioned) while the creation bullet still requires it: owner decision; remote deployment |
 | M2 — Inventory and loot | Server ground loot (drops, owner window, first-claim-wins, expiry, carry-weight rule), per-item corpse recovery within carry limits, native pickup/equip/inventory panels; all merged with CI evidence | Existing inventory/equipment work; T4C-0201, 0202, 0204, 0218, 0228 | The two-adapter loot probe now starts legitimately (T4C-0235) but has never run (needs a database and port window); rendered loot play against a live server |
 | M3 — Complete authored adventure | Quest service rules, flag allowlist, once-only turn-in rewards, native talk panel, and the Skeleton hunting ground hosted as one world-0 region with unhosted portals refused; merged | T4C-0193, 0194, 0195, 0206, 0218, 0231 | Kill credit played through end to end against a live server, the Goblin-to-Wild-Horse fight (owner accepted it as not simulated for Beta), rendered walkthrough |
 | M4 — Supported combat and abilities | Restricted melee/physical retaliation, server-authoritative patrol/pursuit with guarded persistence, two-native-adapter pursuit/restart proof, brief two-client pursuit/retaliation/reconnect check, local PostgreSQL proof of authored hostile-clan spell damage (T4C-0317), durable authored monster self-healing (T4C-0319) and ranged monster attacks (T4C-0320) | T4C-0189, 0190, 0209, 0210, 0211, 0212, 0229, 0230, 0236, 0237, 0317, 0319, 0320 | Remaining class abilities and spells, rendered clan-spell combat, longer rendered pursuit, reset/death and integrated M4/Beta acceptance remain open |
@@ -94,10 +94,10 @@ T4C-0306 (2026-10-29, local rendered, not remote): two real windows each selecte
 character in the lobby, drew each other, walked to Kilhiam and clicked him through the screen's own NPC click handler
 (each got exactly one letter; a repeat click and a greeting after a server stop/restart gave none); an out-of-range
 click was refused by the server. That ticks the Kilhiam appearance/talk bullet above. The dialogue bullet stayed open at
-that point because the lost-response case had not been driven; T4C-0310 and T4C-0324 below close it. See
+that point because the lost-response case had not been driven; T4C-0310 and T4C-0325 below close it. See
 [CLIENT_UNIFICATION_DESIGN.md](CLIENT_UNIFICATION_DESIGN.md) 3.15 and `multiplayer/design/live2-*.png`.
 
-T4C-0324 (2026-10-30, local rendered, one disposable PG16 cluster per run, not remote; details and per-case results in
+T4C-0325 (2026-10-30, local rendered, one disposable PG16 cluster per run, not remote; details and per-case results in
 [CLIENT_UNIFICATION_DESIGN.md](CLIENT_UNIFICATION_DESIGN.md) 3.18 and [ACCEPTANCE.md](ACCEPTANCE.md)) maps each bullet to its
 evidence and ticks four of the seven:
 

@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 
-/** M1: a refused entry into the game must end with a message the player can act on (T4C-0324). */
+/** M1: a refused entry into the game must end with a message the player can act on (T4C-0325). */
 class OnlineJoinFailureTest {
   private static final String KEY = "c".repeat(64);
 
