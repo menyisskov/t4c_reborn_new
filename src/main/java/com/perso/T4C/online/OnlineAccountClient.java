@@ -20,10 +20,15 @@ public final class OnlineAccountClient implements AutoCloseable {
   private GameSocketClient socket;
   private volatile boolean closed;
 
+  /** The server answered, but speaks another protocol version (or is not an account server). */
+  public static final class Incompatible extends IOException {
+    public Incompatible() { super("Incompatible account server; update client and server together"); }
+  }
+
   public static final class Rejected extends IOException {
     private final int statusCode;
     private final String code;
-    Rejected(int statusCode,String code) {
+    public Rejected(int statusCode,String code) {
       super("Account request rejected (status "+statusCode+")");this.statusCode=statusCode;this.code=code;
     }
     public int statusCode() { return statusCode; }
@@ -79,7 +84,7 @@ public final class OnlineAccountClient implements AutoCloseable {
     // Recheck before each account operation. The anonymous gate never carries the key.
     var hello=parse(request("GET","map","",null,null),Hello.class);
     if(hello==null || hello.protocolVersion()!=OnlineProtocol.VERSION || !hello.persistent())
-      throw new IOException("Incompatible account server; update client and server together");
+      throw new Incompatible();
   }
 
   private static void validatePage(OnlineRoster roster,UUID after) throws IOException {

@@ -142,6 +142,8 @@ public final class OnlineLobbyScreen extends InputAdapter implements Screen {
   private long loadStartedMs;
   private boolean everLoaded;
   private String errorMessage;
+  /** Why the last attempt to enter the game failed; shown once the roster has been read again. */
+  private String joinNotice;
   private int firstVisible;
   private int lastClickedIndex = -1;
   private long lastClickAtMs;
@@ -280,6 +282,10 @@ public final class OnlineLobbyScreen extends InputAdapter implements Screen {
             return roster;
           });
       everLoaded = true;
+      if (joinNotice != null) {
+        errorMessage = refineJoinNotice(joinNotice, model.selected().map(c -> c.availability()).orElse(null));
+        joinNotice = null;
+      }
       if (selectAfterLoad != null) {
         model.select(selectAfterLoad);
         selectAfterLoad = null;
@@ -301,12 +307,39 @@ public final class OnlineLobbyScreen extends InputAdapter implements Screen {
   static String describe(Throwable failure) {
     if (failure instanceof OnlineAccountClient.Rejected rejected) {
       int status = rejected.statusCode();
+      if (status == 426) return I18n.key("online.lobby.error.incompatible");
       if (status == 401 || status == 403) return I18n.key("online.lobby.error.rejected_auth");
       if (status == 429 || status == 503) return I18n.key("online.lobby.error.rejected_busy");
       return I18n.message("online.lobby.error.rejected", status);
     }
+    if (failure instanceof OnlineAccountClient.Incompatible) return I18n.key("online.lobby.error.incompatible");
     if (failure instanceof InterruptedException) return I18n.key("online.lobby.error.timeout");
     return I18n.key("online.lobby.error.unreachable");
+  }
+
+  /** Shows why entering the game failed, after the roster refresh that follows a failed join. */
+  public void showJoinFailure(String message) {
+    joinNotice = message;
+    if (everLoaded && pending == null) {
+      errorMessage = refineJoinNotice(message, model.selected().map(c -> c.availability()).orElse(null));
+      joinNotice = null;
+    }
+  }
+
+  /**
+   * The server answers every refused join the same way (an unknown key, another account's character, one in use and
+   * one it cannot place look alike on purpose). The freshly read roster row of the selected character is the player's
+   * own information, so a refused join of a row that says "in use" or cannot be hosted gets the specific text; any
+   * other row keeps the general one.
+   */
+  static String refineJoinNotice(String notice, String availability) {
+    if (!I18n.key("online.lobby.error.join_refused").equals(notice) || availability == null) return notice;
+    return switch (availability) {
+      case "in_use" -> I18n.key("online.lobby.error.in_use");
+      case "unhosted_region", "unavailable_respawn" ->
+          I18n.message("online.lobby.error.unavailable", availabilityLabel(availability));
+      default -> notice;
+    };
   }
 
   boolean loading() {

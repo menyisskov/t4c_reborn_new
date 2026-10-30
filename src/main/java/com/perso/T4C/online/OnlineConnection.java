@@ -126,6 +126,7 @@ public final class OnlineConnection implements AutoCloseable {
   private volatile boolean closed;
   private volatile View view;
   private volatile String status = "connecting";
+  private volatile String failureText;
 
   public OnlineConnection(URI endpoint) {
     this(endpoint, null);
@@ -196,6 +197,14 @@ public final class OnlineConnection implements AutoCloseable {
 
   public String status() {
     return status;
+  }
+
+  /**
+   * Plain-English reason the connection stopped without ever entering the game (refused join,
+   * incompatible version, unreachable server), or null. Never carries the key or raw exception text.
+   */
+  public String failureText() {
+    return failureText;
   }
 
   /** Nonblocking, single-flight command. No local equipment prediction or automatic replay. */
@@ -327,7 +336,7 @@ public final class OnlineConnection implements AutoCloseable {
             configuredSocketPort==0 ? GameSocketClient.defaultPort(endpoint) : configuredSocketPort);
         MapInfo map = JSON.fromJson(sendRetryingBusy("/map", null), MapInfo.class);
         if (map == null || map.protocolVersion() != OnlineProtocol.VERSION)
-          throw new IllegalStateException("Incompatible online protocol; update client and server together");
+          throw new OnlineJoinFailure.Incompatible("Incompatible online protocol; update client and server together");
         if (map.width() <= 0 || map.height() <= 0 || map.width() > 1024 || map.height() > 1024)
           throw new IllegalStateException("Invalid server map");
         if (map.persistent() != (credentials != null))
@@ -501,6 +510,12 @@ public final class OnlineConnection implements AutoCloseable {
             command.result().complete(new CommandResult(accepted, character,messageKey,messageArgs,shop));
           Thread.sleep(75);
         }
+      } catch (Exception error) {
+        // Recorded before the status flips, so the screen that sees "disconnected" can already read why.
+        if (!closed && !sessionJoined)
+          failureText = error instanceof Rejected rejected
+              ? OnlineJoinFailure.forRefusal(rejected.code, rejected.reason) : OnlineJoinFailure.forFailure(error);
+        throw error;
       } finally {
         status = "disconnected";
         view = null;
