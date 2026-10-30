@@ -19,7 +19,8 @@ public final class SpellCatalog {
   private static final Set<Integer> CAST_EFFECTS = Set.of(1, 2);
   private static final Set<Integer> ITEM_EFFECTS = Set.of(1, 2);
   private static final Set<String> ITEM_BUFF_KEYS = Set.of(
-      "spell.item_potion_of_fury", "spell.item_potion_of_nimbleness");
+      "spell.item_potion_of_fury", "spell.item_potion_of_nimbleness",
+      "spell.item_hyper_potion_of_nimbleness");
   private final SpellContent content;
 
   public SpellCatalog(SpellContent content) {
