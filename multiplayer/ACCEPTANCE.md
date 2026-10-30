@@ -42,6 +42,8 @@ T4C-0343 implementation evidence: focused online HUD button routing passed 1/1, 
 
 T4C-0344 implementation evidence: the native online action activates learned Sneak through the persistent socket; the server commits its cooldown/concealment and applies movement upkeep plus combat reveal. Focused client tests passed 49/49; focused server tests passed 19 total with 0 failures/errors and 6 skipped; root/server packages and `git diff --check` passed. The database-gated persistence/observer test was skipped without `T4C_DB_URL`; no rendered-client test or owner QA resource was used. This is implementation evidence only; M4/Beta remain incomplete.
 
+T4C-0351 implementation evidence: online spell and potion lists page through every server-supported entry, with Left/Right navigation and 1–9 selection scoped to the current page. Focused tests passed 13/13; root package and `git diff --check` passed on main `acb7f2ce`. No rendered-client or owner-QA check was run; M4/Beta remain incomplete.
+
 ## Verified foundation (updated 2026-10-27)
 
 T4C-0227 adds `httpTraffic` to the existing loopback/private-token
