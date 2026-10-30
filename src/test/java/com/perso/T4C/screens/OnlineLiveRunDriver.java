@@ -524,6 +524,7 @@ public final class OnlineLiveRunDriver extends MyGame {
     else if (scene.equals("mortal")) mortalScene();
     else if (scene.equals("m4")) m4Scene();
     else if (scene.equals("accept")) acceptScene();
+    else if (scene.equals("m5")) m5Scene();
     else skeletonScene();
     action(
         () -> {
@@ -604,6 +605,11 @@ public final class OnlineLiveRunDriver extends MyGame {
 
   /** {@code cycle} names the markers when a scene restarts the server more than once ({@code stop-ready-<cycle>}, {@code server-restarted-<cycle>}). */
   private void restartCycle(String cycle, Runnable afterRejoin) {
+    restartCycle(cycle, afterRejoin, null);
+  }
+
+  /** {@code whileDown} runs every frame until the connection shows disconnected (T4C-0343: the database-crash cycle keeps committing meanwhile). */
+  private void restartCycle(String cycle, Runnable afterRejoin, Runnable whileDown) {
     String suffix = cycle.isEmpty() ? "" : "-" + cycle;
     // 4. Server stop and restart (the operator does it between these markers).
     action(
@@ -616,7 +622,20 @@ public final class OnlineLiveRunDriver extends MyGame {
           signal(tag + ".stop-ready" + suffix);
         });
     long patience = scene.equals("quest") ? 1_200_000 : 180_000;
-    until("operator stopped the server (connection shows disconnected)", patience, () -> "disconnected".equals(connection().status()));
+    until(
+        "operator stopped the server (connection shows disconnected)",
+        patience,
+        () -> {
+          boolean down = "disconnected".equals(connection().status());
+          if (down) {
+            held.clear();
+            if (!signaled(tag + ".down" + suffix)) {
+              signal(tag + ".down" + suffix);
+              log("M5 DOWN" + suffix + ": connection shows disconnected");
+            }
+          } else if (whileDown != null) whileDown.run();
+          return down;
+        });
     waitMs(2000);
     action(() -> shot("server-stopped-disconnected-text"));
     until("operator restarted the server", patience, () -> signaled("server-restarted" + suffix));
@@ -1902,6 +1921,13 @@ public final class OnlineLiveRunDriver extends MyGame {
           + " remainingMs " + race.remainingBefore + " distance " + (item == null ? "n/a" : Math.round(distance(s, item.getPosition())) + " px")
           + " point " + at + " | " + state());
       if (at != null) click(s, at.x, at.y);
+      if (m5KillRace == race.number) {
+        m5PkDrop = race.id;
+        m5PkKey = race.key;
+        m5PkCarried = race.carriedBefore;
+        if (tag.endsWith("A")) write("kill-now-pk", race.id + " " + System.currentTimeMillis());
+        log("M5 PK: the claim click was delivered at " + System.currentTimeMillis());
+      }
     }
     if (race.clicked && !race.reported && now - race.clickedAt > 3500) {
       race.reported = true;
@@ -1950,39 +1976,43 @@ public final class OnlineLiveRunDriver extends MyGame {
   private void mixedSegment(String what, long ms) {
     // -Dbeta.scale shortens the session for a smoke test of the other chapters; the evidence run uses 1.
     double scale = Double.parseDouble(System.getProperty("beta.scale", "1"));
-    segment(
-        what,
-        Math.round(ms * scale),
-        () -> {
-          var s = game();
-          if (s == null) return;
-          long now = System.currentTimeMillis();
-          if (sessionStart == 0) {
-            sessionStart = now;
-            xpAtStart = view().character().experience();
-          }
-          watchDrops(now);
-          soakLog(now);
-          planRace(now);
-          followRace(s, now);
-          var vit = view().character().progress().vitals();
-          boolean idle = race == null && (now - sessionStart) % 300_000 >= 260_000 && vit.hp() * 100 >= vit.maxHp() * 50;
-          if (race != null && race.position != null && !race.clicked && now >= race.at - 15_000 && distance(s, race.position) > 50f) {
-            // Stand beside the drop before the agreed instant (drinking when hurt, no swings in the last seconds).
-            drinkIfHurt(view(), now);
-            walkToward(s, race.position, 40f);
-          } else if (race != null && race.position != null && !race.clicked && now >= race.at - 15_000) {
-            held.clear();
-            drinkIfHurt(view(), now);
-          } else {
-            combatFrame(s, !idle, race == null ? null : race.position);
-          }
-        });
+    segment(what, Math.round(ms * scale), this::mixedFrame);
+  }
+
+  private void mixedFrame() {
+    var s = game();
+    if (s == null) return;
+    long now = System.currentTimeMillis();
+    if (sessionStart == 0) {
+      sessionStart = now;
+      xpAtStart = view().character().experience();
+    }
+    watchDrops(now);
+    soakLog(now);
+    planRace(now);
+    followRace(s, now);
+    var vit = view().character().progress().vitals();
+    boolean idle = race == null && (now - sessionStart) % 300_000 >= 260_000 && vit.hp() * 100 >= vit.maxHp() * 50;
+    if (race != null && race.position != null && !race.clicked && now >= race.at - 15_000 && distance(s, race.position) > 50f) {
+      // Stand beside the drop before the agreed instant (drinking when hurt, no swings in the last seconds).
+      drinkIfHurt(view(), now);
+      walkToward(s, race.position, 40f);
+    } else if (race != null && race.position != null && !race.clicked && now >= race.at - 15_000) {
+      held.clear();
+      drinkIfHurt(view(), now);
+    } else {
+      combatFrame(s, !idle, race == null ? null : race.position);
+    }
   }
 
   // ---- chapter 6: death and individual corpse recovery
 
   private void deathChapter() {
+    deathChapter(false);
+  }
+
+  /** {@code killRecover}: the operator hard-kills the server right after the first recovery request (T4C-0343); both windows then rejoin and Bravo retries. */
+  private void deathChapter(boolean killRecover) {
     if (tag.endsWith("A")) {
       // Alpha keeps fighting near the corpse spot so the recovering player can reach it.
       final long[] began = {0};
@@ -1994,7 +2024,7 @@ public final class OnlineLiveRunDriver extends MyGame {
               log("SEGMENT start: Alpha guards while Bravo dies and recovers | " + state());
             }
             var s = game();
-            if (signaled("B.recovered") || now - began[0] > 900_000) {
+            if (signaled(killRecover ? "B.rk-ready" : "B.recovered") || now - began[0] > 900_000) {
               held.clear();
               log("SEGMENT end: Alpha guard after " + (now - began[0]) / 1000 + " s | " + state());
               return true;
@@ -2005,6 +2035,21 @@ public final class OnlineLiveRunDriver extends MyGame {
             }
             return false;
           });
+      if (killRecover) {
+        // The operator hard-kills the server after Bravo's first recovery request: Alpha rejoins too and keeps guarding.
+        restartCycle("rk", () -> log("M5 rk rejoined (Alpha): " + state()));
+        repeat(
+            "Bravo recovered after the restart",
+            600_000,
+            () -> {
+              var s = game();
+              if (s != null) {
+                soakLog(System.currentTimeMillis());
+                combatFrame(s, true, null);
+              }
+              return signaled("B.recovered");
+            });
+      }
       return;
     }
     final UUID[] corpse = {null};
@@ -2078,11 +2123,16 @@ public final class OnlineLiveRunDriver extends MyGame {
           if (distance(s, corpsePoint[0]) < 44f) {
             // Within the server's recovery reach (two tiles of walking range): ask, and ask again if it says out of range.
             held.clear();
+            if (killRecover && recoverTries[0] >= 1) return now - recoverAt[0] > 1200; // the kill step follows
             if (recoverAccepted[0] || recoverTries[0] >= 6) return true;
             if (now - recoverAt[0] > 3500 && corpse[0] != null) {
               recoverAt[0] = now;
               recoverTries[0]++;
               before = view().character().progress();
+              if (killRecover) {
+                write("kill-now-rk", corpse[0] + " " + now);
+                log("M5 RK: the recovery request is handed to the connection now; kill marker written; carried " + inventorySummary(before));
+              }
               log("RECOVER try " + recoverTries[0] + ": /recover through the connection (the screen has no corpse control) for " + corpse[0] + "; distance "
                   + Math.round(distance(s, corpsePoint[0])) + " px; " + state());
               connection().recover(corpse[0]).whenComplete((r, f) -> {
@@ -2114,6 +2164,43 @@ public final class OnlineLiveRunDriver extends MyGame {
           held.clear();
           log("RECOVER finished after " + recoverTries[0] + " tries, accepted " + recoverAccepted[0]);
         });
+    if (killRecover) {
+      action(() -> signal("B.rk-ready"));
+      restartCycle("rk", () -> log("M5 rk rejoined (Bravo): " + state() + "; corpses listed " + view().corpses()));
+      final UUID[] retryId = {null};
+      final long[] retryAt = {0};
+      final boolean[] done = {false};
+      repeat(
+          "recovery retried after the restart (or the corpse was already recovered)",
+          300_000,
+          () -> {
+            var s = game();
+            if (s == null) return false;
+            long now = System.currentTimeMillis();
+            var v = view();
+            boolean listed = false;
+            for (var c : v.corpses()) if (c.id().equals(corpse[0])) listed = true;
+            if (!listed) {
+              log("M5 RK RETRY: the corpse is no longer listed (the kill landed after the commit, or it was recovered): " + state());
+              return true;
+            }
+            if (now - retryAt[0] > 3500) {
+              retryAt[0] = now;
+              held.clear();
+              if (distance(s, corpsePoint[0]) > 40f) {
+                walkToward(s, corpsePoint[0], 20f);
+                retryAt[0] = now - 3000;
+                return false;
+              }
+              log("M5 RK RETRY: /recover again after the restart; " + state());
+              connection().recover(corpse[0]).whenComplete((r, f) -> {
+                if (r != null && r.accepted()) done[0] = true;
+                log("M5 RK RETRY reply: " + (f != null ? "failure " + f : "accepted=" + (r != null && r.accepted()) + " key=" + (r == null ? null : r.messageKey())));
+              });
+            }
+            return done[0];
+          });
+    }
     waitMs(4000);
     action(
         () -> {
@@ -3688,8 +3775,11 @@ public final class OnlineLiveRunDriver extends MyGame {
   }
 
   private void acceptScene() {
+    acceptScene(java.util.Arrays.asList(System.getProperty("accept.chapters", "equip,topic,hops,ground,kills,boundary,turnin,restart").split(",")));
+  }
+
+  private void acceptScene(List<String> chapters) {
     skeletonsOnly = true;
-    var chapters = java.util.Arrays.asList(System.getProperty("accept.chapters", "equip,topic,hops,ground,kills,boundary,turnin,restart").split(","));
     if (chapters.contains("equip")) acceptEquip();
     if (chapters.contains("topic")) topicChapter();
     if (chapters.contains("hops")) {
@@ -3775,15 +3865,155 @@ public final class OnlineLiveRunDriver extends MyGame {
     }
   }
 
+  // ---------------------------------------------------------------- m5 scene (T4C-0343)
+  //
+  // The M5 mixed session: the whole quest (accept, Lighthaven door pair, kills, turn-in) for both windows, then a graceful server
+  // restart, a forced server kill and a database crash with an exact before/after comparison of the committed state, a cave trip,
+  // a fight and loot segment in which the operator hard-kills the server right after a pickup claim (-Dm5.killRace=N), and a
+  // death with a corpse recovery request that is hard-killed too (-Dm5.killRecover=true). The operator (a script, not this class)
+  // performs every fault between the marker files: see multiplayer/tools/NATIVE_FAULT_DRILL.md "Rendered mixed session".
+
+  private final int m5KillRace = Integer.getInteger("m5.killRace", 0);
+  private final boolean m5KillRecover = Boolean.getBoolean("m5.killRecover");
+  private UUID m5PkDrop;
+  private String m5PkKey;
+  private int m5PkCarried;
+  private long m5TouchAt;
+  private boolean m5TouchRight;
+  private long m5SampleAt;
+
+  private String m5Snapshot() {
+    var c = view().character();
+    var p = c.progress();
+    java.util.TreeMap<String, Integer> carried = new java.util.TreeMap<>();
+    java.util.Map<UUID, String> keys = new java.util.HashMap<>();
+    p.inventory().forEach(i -> {
+      carried.merge(i.key(), i.quantity(), Integer::sum);
+      keys.put(i.id(), i.key());
+    });
+    java.util.TreeMap<String, String> worn = new java.util.TreeMap<>();
+    p.equipment().forEach((slot, id) -> worn.put(String.valueOf(slot), keys.getOrDefault(id, "?")));
+    return "gold=" + c.gold() + " xp=" + c.experience() + " level=" + p.advancement().level() + " quest=" + new java.util.TreeMap<>(p.questFlags())
+        + " spells=" + new java.util.TreeSet<>(p.spells()) + " carried=" + carried + " worn=" + worn;
+  }
+
+  /** Keeps the character committing (a short step left and right) while the realm is about to lose its database. */
+  private void m5Touch() {
+    long now = System.currentTimeMillis();
+    if (now - m5TouchAt > 1500) {
+      m5TouchAt = now;
+      m5TouchRight = !m5TouchRight;
+      held.clear();
+      held.add(m5TouchRight ? Input.Keys.D : Input.Keys.A);
+    }
+  }
+
+  /** One fault cycle: committed state before, the operator's fault between the markers, rejoin, exact comparison. */
+  private void m5Fault(String label, String what, boolean touch) {
+    final String[] snap = {null};
+    action(
+        () -> {
+          snap[0] = m5Snapshot();
+          log("M5 FAULT " + label + " (" + what + ") BEFORE: " + snap[0]);
+        });
+    restartCycle(
+        label,
+        () -> {
+          String after = m5Snapshot();
+          double moved = -1;
+          if (game() != null && positionBeforeRestart != null) {
+            var p = me(game()).getCoordinates();
+            moved = Math.hypot(p.getX() - positionBeforeRestart.x, p.getY() - positionBeforeRestart.y);
+          }
+          log("M5 COMPARE " + label + " (" + what + ") " + (snap[0].equals(after) ? "IDENTICAL" : "DIFF") + "; moved " + Math.round(moved) + " px"
+              + (touch ? " (the window walked left and right while waiting for the fault to show)" : "") + "\n  before " + snap[0] + "\n  after  " + after);
+        },
+        touch ? this::m5Touch : null);
+  }
+
+  private void m5Monitor(long now) {
+    if (now - m5SampleAt < 60_000 || view() == null) return;
+    m5SampleAt = now;
+    var rt = Runtime.getRuntime();
+    log("M5 SAMPLE t=" + (now - t0) / 1000 + "s heapMB " + (rt.totalMemory() - rt.freeMemory()) / 1_000_000 + " connection " + connection().status()
+        + " screen " + (game() != null ? "game" : getScreen() == null ? "none" : getScreen().getClass().getSimpleName()));
+  }
+
+  private void m5Scene() {
+    skeletonsOnly = true;
+    // The quest and the travel: topic panel, Lighthaven door pair, walk to the ground, kills to the goal, walk back, turn-in.
+    acceptScene(List.of("topic", "hops", "ground", "kills", "turnin"));
+    action(() -> log("M5 QUEST DONE: " + questState()));
+    waitMs(3000);
+    m5Fault("g", "graceful server restart", false);
+    waitMs(3000);
+    m5Fault("k", "forced server kill", false);
+    waitMs(3000);
+    m5Fault("d", "database crash", true);
+    waitMs(3000);
+    // Cave trip (a portal pair to a second region and back), each character in turn with the other watching.
+    acceptScene(List.of("ground"));
+    portalHop("A", 2770, 1095, "start", "skeleton-cave", true, "5-A-into-the-cave");
+    portalHop("B", 2770, 1095, "start", "skeleton-cave", false, "6-B-into-the-cave");
+    waitMs(4000);
+    portalHop("A", 136, 665, "skeleton-cave", "start", true, "7-A-out-of-the-cave");
+    portalHop("B", 136, 665, "skeleton-cave", "start", false, "8-B-out-of-the-cave");
+    // Fight and loot until the planned claim race has been clicked; the operator hard-kills the server right after it.
+    repeat(
+        "fight and loot until claim race " + m5KillRace + " was clicked",
+        1_500_000,
+        () -> {
+          mixedFrame();
+          return race != null && race.number == m5KillRace && race.clicked && System.currentTimeMillis() - race.clickedAt > 1200;
+        });
+    action(() -> held.clear());
+    restartCycle("pk", () -> log("M5 pk rejoined: " + state()));
+    waitMs(3000);
+    final int[] before = {0};
+    action(
+        () -> {
+          var s = game();
+          before[0] = count(view().character().progress(), m5PkKey.replace("item.", ""));
+          var item = s == null ? null : groundItemOf(s, m5PkDrop);
+          var loot = lootView(m5PkDrop);
+          log("M5 PK after the restart: the drop " + (item != null ? "is still on the ground" : "is not on the ground") + " (view " + (loot != null) + "); carried "
+              + before[0] + " of " + m5PkKey + " (before the claim " + m5PkCarried + ")");
+          race = null;
+          racesDone++;
+          lastRaceEnd = System.currentTimeMillis();
+          if (item != null) {
+            Vector2 at = aim(item.getPosition(), p -> item.isMouseOver(p.x, p.y));
+            log("M5 PK retry: click on the drop at " + at + ", distance " + Math.round(distance(s, item.getPosition())) + " px");
+            if (at != null) click(s, at.x, at.y);
+          }
+        });
+    waitMs(5000);
+    action(
+        () -> {
+          int after = count(view().character().progress(), m5PkKey.replace("item.", ""));
+          log("M5 PK final: carried " + after + " of " + m5PkKey + " (before the claim " + m5PkCarried + "); messages " + messagesSince(System.currentTimeMillis() - 6000)
+              + "; drop still listed " + (lootView(m5PkDrop) != null) + " | " + state());
+        });
+    mixedSegment("m5 fight and loot after the pickup kill", 420_000);
+    deathChapter(m5KillRecover);
+    action(
+        () -> {
+          log("M5 SESSION SUMMARY: " + state() + " minHp " + minHp + " attacks " + attacksSent + " drops seen " + dropsSeen.size() + " races " + racesDone
+              + " connection " + connection().status() + " elapsed " + (System.currentTimeMillis() - t0) / 1000 + " s");
+          shot("final");
+        });
+  }
+
   // ---------------------------------------------------------------- frame loop
 
   @Override
   public void render() {
     super.render();
     long now = System.currentTimeMillis();
-    if (scene.equals("beta") || scene.equals("m4") || scene.equals("accept")) pollMessage();
+    if (scene.equals("beta") || scene.equals("m4") || scene.equals("accept") || scene.equals("m5")) pollMessage();
+    if (scene.equals("m5")) m5Monitor(now);
     if (scene.equals("m4")) m4Monitor();
-    if (now > (scene.equals("quest") ? t0 + 1_500_000 : scene.equals("beta") ? t0 + 4_800_000 : scene.equals("m4") ? t0 + 3_000_000 : scene.equals("accept") ? t0 + 5_400_000 : deadline)) {
+    if (now > (scene.equals("quest") ? t0 + 1_500_000 : scene.equals("beta") ? t0 + 4_800_000 : scene.equals("m4") ? t0 + 3_000_000 : scene.equals("accept") ? t0 + 5_400_000 : scene.equals("m5") ? t0 + 7_200_000 : deadline)) {
       log("DRIVER TIMEOUT at step " + index);
       Gdx.app.exit();
       return;
