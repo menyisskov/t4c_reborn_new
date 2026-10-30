@@ -34,9 +34,12 @@ public final class ItemRegistry {
     if (extra == null || extra.isEmpty()) {
       return;
     }
-    List<ItemDefinition> merged = new ArrayList<>(additionalDefinitions);
-    merged.addAll(extra);
-    additionalDefinitions = List.copyOf(merged);
+    // Keyed so registering the same JSON set twice replaces instead of duplicating (a repeated
+    // item numeric id breaks every caller that expects ids to be unique).
+    Map<String, ItemDefinition> merged = new LinkedHashMap<>();
+    for (ItemDefinition existing : additionalDefinitions) merged.put(existing.getKey(), existing);
+    for (ItemDefinition added : extra) merged.put(added.getKey(), added);
+    additionalDefinitions = List.copyOf(merged.values());
     invalidate();
   }
 
