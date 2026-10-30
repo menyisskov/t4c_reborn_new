@@ -22,6 +22,9 @@ public interface RemoteIntents {
     return false;
   }
 
+  /** Recovers one selected stack from the player's own corpse; the server decides if it still fits. */
+  default boolean recover(UUID corpse, UUID item) { return false; }
+
   /** Asks the NPC about one authored topic (the server validates it); the quest offer is topic 0. */
   default boolean interact(String npc, int topic) {
     return false;

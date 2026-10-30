@@ -18,6 +18,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /** Network-only adapter for the local Alpha server; never touches graphics or character files. */
 public final class OnlineConnection implements AutoCloseable {
+  private static final int MAX_CORPSE_ITEMS_PER_CORPSE = 256;
+  private static final int MAX_CORPSE_ITEM_DETAILS = 2048;
   public record MapInfo(int originX, int originY, int width, int height, boolean persistent, int protocolVersion, int gameSocketPort,
       int world,String key,long locationEpoch) {
     public OnlineRegion region() { return new OnlineRegion(world,key,originX,originY,width,height,locationEpoch); }
@@ -72,7 +74,17 @@ public final class OnlineConnection implements AutoCloseable {
   public record Snapshot(long tick, List<Actor> players, Long characterRevision, List<CreatureView> creatures,
       OnlineRegion region, List<NpcView> npcs, List<GroundLootView> loot) {}
 
-  public record Corpse(java.util.UUID id, int world, double x, double y, int itemCount, long gold) {}
+  public record CorpseItem(java.util.UUID id, String key, int quantity, int charges) {}
+
+  public record Corpse(java.util.UUID id, int world, double x, double y, int itemCount, long gold,
+      List<CorpseItem> items) {
+    public Corpse {
+      items = items == null ? List.of() : List.copyOf(items);
+    }
+    public Corpse(java.util.UUID id, int world, double x, double y, int itemCount, long gold) {
+      this(id, world, x, y, itemCount, gold, List.of());
+    }
+  }
 
   public record View(long ownId, MapInfo map, Snapshot snapshot, OnlineCharacterView character,
       List<Corpse> corpses) {}
@@ -239,6 +251,12 @@ public final class OnlineConnection implements AutoCloseable {
   /** Reference-only recovery; ownership, range and contents remain server decisions. */
   public java.util.concurrent.CompletionStage<CommandResult> recover(java.util.UUID corpse) {
     return gameplayCommand("/recover",java.util.Objects.requireNonNull(corpse).toString());
+  }
+
+  /** Recovers exactly one server-owned corpse stack; ownership, reach and capacity stay server-side. */
+  public java.util.concurrent.CompletionStage<CommandResult> recover(java.util.UUID corpse, java.util.UUID item) {
+    return gameplayCommand("/recover",java.util.Objects.requireNonNull(corpse) + " "
+        + java.util.Objects.requireNonNull(item));
   }
 
   /**
@@ -548,11 +566,23 @@ public final class OnlineConnection implements AutoCloseable {
               var found = JSON.fromJson(sendSession("GET","/corpses",null),Corpse[].class);
               if (found==null || found.length>256) throw new IllegalStateException("Invalid corpse list");
               var identities=new java.util.HashSet<java.util.UUID>();
+              int totalCorpseItems = 0;
               for (var corpse:found) {
                 if (corpse==null || corpse.id()==null || !identities.add(corpse.id()) || corpse.world()<0
                     || !Double.isFinite(corpse.x()) || !Double.isFinite(corpse.y()) || corpse.x()<0 || corpse.y()<0
                     || corpse.itemCount()<0 || corpse.gold()<0)
                   throw new IllegalStateException("Invalid corpse state");
+                if (corpse.items().size() != corpse.itemCount()
+                    || corpse.items().size() > MAX_CORPSE_ITEMS_PER_CORPSE)
+                  throw new IllegalStateException("Invalid corpse items");
+                totalCorpseItems += corpse.items().size();
+                if (totalCorpseItems > MAX_CORPSE_ITEM_DETAILS)
+                  throw new IllegalStateException("Too many corpse items");
+                var itemIds = new java.util.HashSet<java.util.UUID>();
+                for (var item : corpse.items())
+                  if (item == null || item.id() == null || !itemIds.add(item.id()) || item.key() == null
+                      || item.key().isBlank() || item.key().length() > 256 || item.quantity() <= 0 || item.charges() < 0)
+                    throw new IllegalStateException("Invalid corpse item");
               }
               corpses=List.of(found);
             }

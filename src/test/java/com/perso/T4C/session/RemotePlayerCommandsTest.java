@@ -90,6 +90,11 @@ class RemotePlayerCommandsTest {
     }
 
     @Override
+    public CompletionStage<OnlineConnection.CommandResult> recover(UUID corpse, UUID item) {
+      return reply("recover " + corpse + " " + item);
+    }
+
+    @Override
     public CompletionStage<OnlineConnection.CommandResult> interact(String npc, int topic) {
       return reply("interact " + npc + " " + topic);
     }
@@ -333,6 +338,7 @@ class RemotePlayerCommandsTest {
     final List<String> messages = new ArrayList<>();
     final List<String> shops = new ArrayList<>();
     final List<String> talks = new ArrayList<>();
+    final List<UUID> corpses = new ArrayList<>();
 
     TestHost(Player player) {
       this.player = player;
@@ -357,6 +363,8 @@ class RemotePlayerCommandsTest {
     public void showTalk(String npc) {
       talks.add(npc);
     }
+
+    @Override public void showCorpse(UUID corpse) { corpses.add(corpse); }
   }
 
   private FakeLink link;
@@ -665,6 +673,7 @@ class RemotePlayerCommandsTest {
   @Test
   void clickingYourOwnCorpseAsksTheServerToRecoverItAndShowsItsAnswer() throws Exception {
     UUID id = UUID.randomUUID();
+    UUID itemId = UUID.randomUUID();
     var base = view(1, 4, actor(localX(100), localY(205), 0), List.of(), List.of(), List.of());
     link.view =
         new OnlineConnection.View(
@@ -673,7 +682,8 @@ class RemotePlayerCommandsTest {
             base.snapshot(),
             null,
             List.of(
-                new OnlineConnection.Corpse(id, 0, 103.5, 204.5, 2, 0),
+                new OnlineConnection.Corpse(id, 0, 103.5, 204.5, 1, 0,
+                    List.of(new OnlineConnection.CorpseItem(itemId, "item.dagger", 2, 3))),
                 new OnlineConnection.Corpse(UUID.randomUUID(), 5, 103.5, 204.5, 2, 0),
                 new OnlineConnection.Corpse(UUID.randomUUID(), 0, 110.5, 204.5, 0, 0)));
     tickWorld();
@@ -684,7 +694,14 @@ class RemotePlayerCommandsTest {
     GroundItemManager.PickupResult result = ground.pickUpAt(corpseX, corpseY, player, 99, 3);
 
     assertEquals(GroundItemManager.PickupStatus.REQUESTED, result.status);
-    assertEquals(List.of("recover " + id), link.calls);
+    assertEquals(List.of(), link.calls, "clicking opens selection without recovering every stack");
+    assertEquals(List.of(id), host.corpses);
+    int goldBefore = player.getGold();
+    int daggersBefore = InventoryService.count(player, "item.dagger");
+    assertTrue(session.commands().recover(id, itemId));
+    assertEquals(List.of("recover " + id + " " + itemId), link.calls);
+    assertEquals(goldBefore, player.getGold());
+    assertEquals(daggersBefore, InventoryService.count(player, "item.dagger"));
     link.answer("online.recover.out_of_range");
     session.commands().pump();
     assertEquals(List.of(I18n.key("online.recover.out_of_range")), host.messages);
@@ -696,9 +713,9 @@ class RemotePlayerCommandsTest {
     link.next = new CompletableFuture<>();
     host.messages.clear();
     assertEquals(GroundItemManager.PickupStatus.REQUESTED, ground.pickUpAt(corpseX, corpseY, player, 99, 3).status);
+    assertEquals(List.of(id, id), host.corpses);
+    assertEquals(1, link.calls.size(), "reopening a corpse does not retry the prior transaction");
     link.answer(null);
-    session.commands().pump();
-    assertEquals(List.of(I18n.key("online.recover.done")), host.messages);
   }
 
   @Test
