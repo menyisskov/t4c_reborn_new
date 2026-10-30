@@ -615,7 +615,7 @@ operator creates `server-restarted` in the sync directory after the restart.
 5. **Not edited: the pickup-race loser sees the generic refusal text** (`online.loot.refused`), not "someone else took it".
 6. After a server restart the lobby still holds the client 33 s (the 35 s lease hold is applied by the client whatever
    the cause). Safe, but a restart needs no hold; a UX point for the owner.
-8. Other players' legs: these runs used a build from before PR #266 (walk hold for other players), and the screenshots are single frames, so whether the other player's legs animate while walking was not observed and is not claimed. A later run on a build with #266 would show it.
+8. (Resolved in T4C-0358, 3.21: the restarts were late polls, not the route shape.) Other players' legs: these runs used a build from before PR #266 (walk hold for other players), and the screenshots are single frames, so whether the other player's legs animate while walking was not observed and is not claimed. A later run on a build with #266 would show it.
 7. A game run rewrites the tracked `t4c-chat.log`; it must be reverted before committing.
 
 ### 3.16 Live rendered gameplay panels: inventory, spells, potions, shop, walking frames, quest (T4C-0312)
@@ -951,6 +951,20 @@ The empty-roster text ("Press Create to make your first one") is correct now tha
 **Not done.** No remote or HTTPS creation, no class other than Paladin and Archer rendered, no fight with a created character (3.18 covers a Warrior, an
 Archer, a Paladin, a Healer and a Mage fighting), no click on the Options or window-close buttons, no creation of a fourth character against the
 slot limit in a window (`OnlineStoreTest` covers `roster_full`), and no screenshot of the in-game stat sheet.
+
+### 3.21 Other players' walking: root cause and replay buffer (T4C-0358)
+
+Owner report (twice): other players "glide, not walk". T4C-0305 (PR #266) held the walk flag 0.15 s after each position change; the live runs in 3.16 still showed the walk cycle restarting about every 0.35 s.
+
+Root cause, reproduced headlessly (`RemotePlayerWalkParityTest`: 34 Hz ticks at `PLAYER_SPEED`, polls returning the latest tick, 60 fps frames):
+
+1. The walking flag followed how recently a poll moved the target, and `PlayerAnimations.update` zeroes the walk timer whenever the flag is false. The real poll loop is two HTTP calls plus a 75 ms sleep, so gaps of 100 to 350 ms are normal on a loaded client; any gap over the 0.15 s hold dropped the legs to the standing pose and restarted the cycle. Slow-client run (polls every 100 to 300 ms), old code: 156 of 498 walking frames showed the standing pose and the cycle restarted 33 times; a single 0.25 s late poll gave 7 standing frames and a restart.
+2. The position chased the newest poll with a 60 ms exponential ease: jump, then slow down, in every poll interval. Even with ideal polls (50 to 110 ms) the largest per-frame step was 2.53 px against a nominal 1.25 px (2x bursts) and the 0.25 s speed was off the server pace by up to 20%. That is the "glide".
+3. Facing was recomputed from each poll's step, so a poll spanning a corner gave a diagonal glance.
+
+Fix (client only; wire and protocol unchanged): `RemotePlayerPlayback` records every received position as a sample on the server's own time line (tick / 34) and draws the puppet 0.1 to 0.4 s behind the newest sample (kept just above the recent longest poll gap by playing back at most 12% faster or slower), moving it along straight lines between samples. The walking flag is "the drawn position is moving right now" (50 ms flicker hold), so the legs run exactly while the picture moves; facing is the drawn segment's direction with a 25% dead zone for the minor axis (tile units); a jump over 4 tiles at over 900 px/s (portal, respawn) places the puppet at once. There is no extrapolation, so a stopping player is never drawn past its stop. After: 0 standing frames and 0 restarts in all 20 harness runs (straight, zig-zag, slow client, late poll), per-frame step at most 1.40 px (nominal 1.25), 0.25 s speed within 7 to 16% of the server pace in the worst windows (slow-client seeds, while the lag converges), facing changes only at path turns.
+
+Cost: other players are drawn about 0.2 s behind the server (before about 0.1 s). Not verified: a rendered two-window run (the sandbox refused WSL, so no disposable PostgreSQL cluster was started). The next live run should log the observed puppet's `isMoving`, walk timer and angle per frame.
 
 ## 4. Staged plan
 

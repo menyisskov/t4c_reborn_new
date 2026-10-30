@@ -1,3 +1,8 @@
+## 2026-10-30 — Other players now walk smoothly in online play (T4C-0358)
+
+### Fixed
+- Other players you see online now walk at a steady pace with their legs moving the whole time, instead of looking like they glide: their feet no longer snap back to the standing pose every fraction of a second, they no longer lurch forward and slow down in bursts, and they face the way they are really going, including around turns. A character who stops now stops cleanly, and a sudden jump such as a portal trip or a respawn still places them straight at the new spot.
+
 ## 2026-10-30 — Online HUD buttons and Warden Aelric's completed quest greeting (T4C-0343)
 
 ### Fixed
