@@ -3,6 +3,8 @@ package com.perso.T4C.tools;
 import com.perso.T4C.online.model.SpellContent;
 import com.perso.T4C.online.model.SpellContentV2;
 import com.perso.T4C.online.model.SpellContentV2.Kind;
+import com.perso.T4C.item.ItemRegistry;
+import com.perso.T4C.item.json.ItemJsonLoader;
 import com.perso.T4C.spell.SpellAreaTargeting;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellRegistry;
@@ -12,9 +14,9 @@ import java.util.List;
 import java.util.TreeMap;
 
 /**
- * Build-time bridge that exports all player spells (spells-v2) with the engine classification and
- * the numbers the online spell engine reads. spells-v1 and its exporter are unchanged: v1 stays the
- * live allowlist until the server serves v2.
+ * Build-time bridge that exports player spells plus the item-only Potion of Fury spell (spells-v2)
+ * with the engine classification and the numbers the online spell engine reads. spells-v1 remains
+ * the live cast allowlist; its item entries support restorative consumables and Potion of Fury.
  */
 public final class OnlineSpellContentV2Exporter {
   private OnlineSpellContentV2Exporter() {}
@@ -23,6 +25,17 @@ public final class OnlineSpellContentV2Exporter {
     var spells = new TreeMap<String, SpellContentV2.Spell>();
     for (SpellData spell : SpellRegistry.playerCastableSpells()) {
       spells.put(spell.getKey(), export(spell));
+    }
+    // Item Potion of Fury is not player-castable, but the socket item path resolves its authored
+    // effect through the same v2 buff engine and persistent buff state as a learned buff spell.
+    ItemRegistry.resetAdditionalDefinitions();
+    ItemJsonLoader.loadAndRegister();
+    var fury = ItemRegistry.findByKey("item.potion_of_fury");
+    if (fury != null) {
+      for (var itemSpell : fury.getSpells()) {
+        var spell = SpellRegistry.findById(itemSpell.getSpellId());
+        if (spell != null) spells.put(spell.getKey(), export(spell));
+      }
     }
     return new SpellContentV2(SpellContentV2.VERSION, spells);
   }

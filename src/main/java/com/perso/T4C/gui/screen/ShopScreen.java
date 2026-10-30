@@ -16,11 +16,13 @@ import com.perso.T4C.item.ItemRegistry;
 import com.perso.T4C.item.ItemSalePricing;
 import com.perso.T4C.item.ItemSaleService;
 import com.perso.T4C.item.ShopRules;
+import com.perso.T4C.online.model.ShopOffersReply;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.ui.FontManager;
 import com.perso.T4C.ui.SystemMessage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ShopScreen extends GuiListScreen {
   private static final float[] LIST_BOX = {
@@ -31,7 +33,13 @@ public class ShopScreen extends GuiListScreen {
   private static final float THUMB_BOTTOM_Y = 261f;
   private static final Color BLOCKED = Color.valueOf("E4A29B");
   private final Player player;
-  private final boolean selling;
+  private boolean selling;
+  private boolean online;
+  private String onlineNpc;
+  private String onlineDisplayName = "";
+  private Consumer<OnlineTrade> onlineTrade;
+  private Runnable onlineClose;
+  private ShopOffersReply onlineOffers;
   private final List<ShopEntry> entries = new ArrayList<>();
   private ShopEntry selected = null;
 
@@ -52,11 +60,88 @@ public class ShopScreen extends GuiListScreen {
     return new ShopScreen(player, itemKeys, true);
   }
 
+  /** Builds the familiar graphical shop for remote play; all displayed prices come from the server. */
+  public static ShopScreen forOnline(
+      Player player,
+      String npc,
+      String displayName,
+      ShopOffersReply offers,
+      Consumer<OnlineTrade> trade,
+      Runnable close) {
+    ShopScreen screen = new ShopScreen(player, List.of(), false);
+    screen.online = true;
+    screen.onlineNpc = npc;
+    screen.onlineDisplayName = displayName == null ? "" : displayName;
+    screen.onlineTrade = trade;
+    screen.onlineClose = close;
+    screen.onlineOffers = java.util.Objects.requireNonNull(offers);
+    screen.loadOnlineEntries();
+    screen.addOnlineModeButton();
+    screen.rebuildList();
+    return screen;
+  }
+
+  /** A committed server reply replaces this screen's displayed prices and available quantities. */
+  public void refreshOnlineOffers(ShopOffersReply offers) {
+    if (!online) return;
+    onlineOffers = java.util.Objects.requireNonNull(offers);
+    loadOnlineEntries();
+    rebuildList();
+  }
+
+  public record OnlineTrade(String npc, String itemKey, int quantity, boolean selling) {}
+
+  private void loadOnlineEntries() {
+    entries.clear();
+    List<ShopOffersReply.Line> lines = selling ? onlineOffers.sell() : onlineOffers.buy();
+    for (ShopOffersReply.Line line : lines) {
+      ItemDefinition def = ItemRegistry.findByKey(line.key());
+      if (def != null) {
+        int available = onlineQuantityLimit(selling, line);
+        entries.add(new ShopEntry(def, line.price(), available));
+      }
+    }
+    selected = null;
+  }
+
+  static int onlineQuantityLimit(boolean selling, ShopOffersReply.Line line) {
+    return selling
+        ? Math.min(line.quantity(), ShopRules.MAX_TRADE_QUANTITY)
+        : ShopRules.MAX_TRADE_QUANTITY;
+  }
+
+  private void addOnlineModeButton() {
+    GuiButton mode =
+        theme.button(
+            x + 584,
+            y + ACTION_BTN_Y,
+            92,
+            34,
+            () -> I18n.key(selling ? "ui.buy_action" : "ui.sell_action"),
+            () -> {
+              selling = !selling;
+              page = 0;
+              loadOnlineEntries();
+              rebuildList();
+            });
+    buttons.add(mode);
+  }
+
   private void addStaticLabels() {
     if (background == null) return;
     BitmapFont chewy = FontManager.getInstance().getT4CBeaulieuFont(22, GOLD);
     labels.add(
-        boxed(chewy, TITLE_BOX, 0f, () -> selling ? I18n.key("ui.sell") : I18n.key("ui.buy"), GOLD)
+        boxed(
+                chewy,
+                TITLE_BOX,
+                0f,
+                () ->
+                    online
+                        ? I18n.message(
+                            selling ? "online.shop.title_sell" : "online.shop.title_buy",
+                            onlineDisplayName)
+                        : selling ? I18n.key("ui.sell") : I18n.key("ui.buy"),
+                GOLD)
             .shrinkToFit());
     labels.add(
         boxed(
@@ -112,8 +197,11 @@ public class ShopScreen extends GuiListScreen {
       boolean isSelected = (entry == selected);
       boolean canAfford =
           selling
-              ? InventoryService.count(player, entry.def.getKey()) > entry.count
-              : player.getGold() >= basketCost() + entry.effectivePrice;
+              ? (online ? entry.available : InventoryService.count(player, entry.def.getKey()))
+                  > entry.count
+              : (online && entry.count >= entry.available
+                  ? false
+                  : displayedGold() >= basketCost() + entry.effectivePrice);
       TextureRegion icon = loadIcon(entry.def);
       if (icon != null) {
         animatedSprites.add(
@@ -156,7 +244,7 @@ public class ShopScreen extends GuiListScreen {
               x + SCROLL_X, y + SCROLL_DN_Y, SCROLL_W, SCROLL_BTN_H, () -> scrollPages(1)));
     }
     addScrollThumb(pages);
-    final long onHand = player.getGold();
+    final long onHand = online ? onlineOffers.gold() : player.getGold();
     final long cost = basketCost();
     final long left = selling ? Math.min(Integer.MAX_VALUE, onHand + cost) : onHand - cost;
     addDyn(
@@ -183,9 +271,9 @@ public class ShopScreen extends GuiListScreen {
   private void addBuyButton(boolean canBuy) {
     GuiButton buy =
         theme.button(
-            x + ACTION_BTN_X,
+            x + (online ? ACTION_BTN_X + 100 : ACTION_BTN_X),
             y + ACTION_BTN_Y,
-            180,
+            online ? 120 : 180,
             34,
             () -> selling ? I18n.key("ui.sell_action") : I18n.key("ui.buy_action"),
             this::buyBasket,
@@ -199,18 +287,31 @@ public class ShopScreen extends GuiListScreen {
     return entries.stream().mapToInt(e -> e.count).sum();
   }
 
+  private long displayedGold() {
+    return online ? onlineOffers.gold() : player.getGold();
+  }
+
   private long basketCost() {
     return entries.stream().mapToLong(e -> (long) e.count * e.effectivePrice).sum();
   }
 
   private void basketAdd(ShopEntry entry) {
+    if (online) {
+      for (ShopEntry other : entries) {
+        if (other != entry) other.count = 0;
+      }
+    }
     if (selling) {
-      if (entry.count < InventoryService.count(player, entry.def.getKey())) entry.count++;
+      int available = online ? entry.available : InventoryService.count(player, entry.def.getKey());
+      if (entry.count < available) entry.count++;
       selected = entry;
       rebuildList();
       return;
     }
-    if (!ShopRules.canAfford(player.getGold(), basketCost() + entry.effectivePrice)) {
+    if (online && entry.count >= entry.available) return;
+    if (online
+        ? !ShopRules.canAfford(displayedGold(), basketCost() + entry.effectivePrice)
+        : !ShopRules.canAfford(player.getGold(), basketCost() + entry.effectivePrice)) {
       return;
     }
     entry.count++;
@@ -235,6 +336,17 @@ public class ShopScreen extends GuiListScreen {
   private void buyBasket() {
     long cost = basketCost();
     if (basketCount() == 0) {
+      return;
+    }
+    if (online) {
+      ShopEntry entry =
+          entries.stream().filter(candidate -> candidate.count > 0).findFirst().orElse(null);
+      if (entry == null || onlineTrade == null) return;
+      int quantity = entry.count;
+      entry.count = 0;
+      onlineTrade.accept(new OnlineTrade(onlineNpc, entry.def.getKey(), quantity, selling));
+      selected = null;
+      rebuildList();
       return;
     }
     if (!selling && !ShopRules.canAfford(player.getGold(), cost)) {
@@ -312,10 +424,12 @@ public class ShopScreen extends GuiListScreen {
   protected String blockedReason(ListRow row) {
     ShopEntry entry = (ShopEntry) row;
     if (selling)
-      return InventoryService.count(player, entry.def.getKey()) <= entry.count
+      return (online ? entry.available : InventoryService.count(player, entry.def.getKey()))
+              <= entry.count
           ? I18n.key("message.insufficient_quantity")
           : null;
-    return player.getGold() < basketCost() + entry.effectivePrice
+    if (online && entry.count >= entry.available) return I18n.key("message.insufficient_quantity");
+    return (online ? displayedGold() : player.getGold()) < basketCost() + entry.effectivePrice
         ? I18n.key("message.not_enough_gold")
         : null;
   }
@@ -328,14 +442,50 @@ public class ShopScreen extends GuiListScreen {
     return firstLine < 0 ? null : text.substring(firstLine + 1);
   }
 
+  @Override
+  protected void closeWindow() {
+    if (online) {
+      com.perso.T4C.gui.core.GuiManager.close();
+      if (onlineClose != null) onlineClose.run();
+    } else {
+      super.closeWindow();
+    }
+  }
+
+  @Override
+  public boolean onKeyDown(int keycode) {
+    if (online && keycode == com.badlogic.gdx.Input.Keys.ESCAPE) {
+      closeWindow();
+      return true;
+    }
+    if (online && keycode == com.badlogic.gdx.Input.Keys.T) {
+      closeWindow();
+      return true;
+    }
+    if (online && keycode == com.badlogic.gdx.Input.Keys.TAB) {
+      selling = !selling;
+      page = 0;
+      loadOnlineEntries();
+      rebuildList();
+      return true;
+    }
+    return super.onKeyDown(keycode);
+  }
+
   private static final class ShopEntry implements ListRow {
     final ItemDefinition def;
     final long effectivePrice;
+    final int available;
     int count;
 
     ShopEntry(ItemDefinition d, long p) {
+      this(d, p, Integer.MAX_VALUE);
+    }
+
+    ShopEntry(ItemDefinition d, long p, int available) {
       def = d;
       effectivePrice = p;
+      this.available = available;
     }
 
     @Override

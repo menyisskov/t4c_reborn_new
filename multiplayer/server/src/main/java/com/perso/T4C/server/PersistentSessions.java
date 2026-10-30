@@ -259,7 +259,7 @@ final class PersistentSessions {
   CompletionStage<AbilityReply> useItem(String token,long revision,UUID instance) {
     var saved=usableCharacter(token,revision);
     var draft=OnlineItemUse.prepareUse(saved,Objects.requireNonNull(instance),wallClock.getAsLong(),
-        ThreadLocalRandom.current(),hosted.items,spells());
+        ThreadLocalRandom.current(),hosted.items,spells(),SpellCatalogV2.bundled());
     return commitAbility(token,revision,draft);
   }
 

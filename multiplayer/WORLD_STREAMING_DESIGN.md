@@ -527,7 +527,7 @@ a handoff.
   and starter-route pointers, a PEER_WORK note.
 * **Slice 2 (not started in this PR):** stage A behind the default-off option, with tests and an
   idle-tick measurement of the full world-0 plan with no players.
-* **Slice 2, part 1 (T4C-0359):** see section 11. Part 2 (creature activation, T4C-0363): requirements in section 10, record in section 12.
+* **Slice 2, part 1 (T4C-0359):** see section 11. Part 2 (creature activation, T4C-0366): requirements in section 10, record in section 12.
 
 ## 10. Owner requirements for stage A part 2 (creature activation), 2026-10-30
 
@@ -646,7 +646,7 @@ streamed region; `RegionGroundLoot` per-cell reads; `PersistentSessions` for the
 hook (section 10); `WORLD_STREAMING_DESIGN.md` section 5 file list and the unhostable list tool.
 Remaining test list is in section 4 (cell index, lifecycle, unhostable list, PostgreSQL gates).
 
-## 12. Stage A part 2 record (T4C-0363, default-off `--stream-world0`)
+## 12. Stage A part 2 record (T4C-0366, default-off `--stream-world0`)
 
 Scope shipped: creature activation and deactivation for the streamed world 0, exception-only persistence,
 the arrival hold, the windowed pursuit search, per-cell loot reads, the generated unhostable list, and the

@@ -439,7 +439,7 @@ Required behavior:
   pass (three in the restore check, one after the 30-minute load record, one after the tamper battery, one after the rotation probe, one at the end of the outage drill) returned
   HTTP 200 and exited 0, with empty stderr wherever it was captured, and the 30-minute run kept the pool within its limits (never above 8, 157,169 operations, mean pool wait 0.014 ms, 0 acquire timeouts). Limits: local PG16, native
   adapters, no rendered client; the exit code, not the HTTP 200, is the success signal (documented in [DATABASE_RUNTIME.md](DATABASE_RUNTIME.md)).
-- [ ] Reconnect and graceful/forced server restart recover the last committed state and correctly
+- [x] Reconnect and graceful/forced server restart recover the last committed state and correctly
   fence old leases, without inventing success or automatically replaying uncertain mutations.
   T4C-0207 verified the narrow two-adapter opening-letter case on schema 9, including real lease
   expiry after a forced server-process kill; the integrated rendered and broader mutation cases remain open.
@@ -459,8 +459,22 @@ Required behavior:
   old leases stayed live for the first 25 s and then expired on their 30 s clock, all twenty adapters were back at +40 s,
   and the final graceful stop exited 0. `NativeRestartProbe` (two adapters, letters, forced kill, real lease expiry 29.7 s)
   also passed again on the current build. Details and limits: [tools/NATIVE_FAULT_DRILL.md](tools/NATIVE_FAULT_DRILL.md).
-  The bullet stays open: no rendered forced kill, and a kill during a loot claim, quest turn-in or death was not exercised
+  That run left the bullet open: no rendered forced kill, and a kill during a loot claim, quest turn-in or death was not exercised
   (portal trips were mid-flight at the kill but no transfer was provably in flight).
+  **Ticked by T4C-0363 (2026-10-30, local PG16 WSL, one machine).** Two real rendered windows, started from the CLIENT QA package's
+  jars (source `bd7f869b`, content identical to main `0dcdb164`) against the SERVER QA package (`0dcdb164`, protocol 8), both from a
+  scrubbed process environment, survived four injected faults in one 52.9-minute session (an earlier 22-minute run, cut short by
+  an unrelated restart of the WSL virtual machine that killed its PostgreSQL, had repeated the first four with the same result):
+  a graceful stop and restart, a forced kill (`Stop-Process -Force`, 46 to 83 ms) and a database
+  crash (immediate PostgreSQL stop, server alive, 2 `checkpoint` persistence-failed lines and the characters disconnected), each
+  with both windows idle after the quest. Before each fault each window recorded its committed gold, experience, level, quest
+  flags, spells, carried items and worn items; after the rejoin (33.1 to 33.2 s later in every case: the lobby holds the
+  character for the 35 s lease) the same record was **identical** in both windows for all three faults (position within 4 px, or
+  80 px for the database case where the window walked to force a commit). A fourth forced kill landed right after a pickup-claim
+  click (below). No window replayed anything by itself; the only repeat was a human-style second click, answered "Another
+  player picked that up first." or "too far away". Limits: local loopback, one machine, native correction and Java from this
+  host, no remote HTTPS; the quest turn-in, a death and a transfer were not under a kill (see the next bullet). Method and tables:
+  [CLIENT_UNIFICATION_DESIGN.md](CLIENT_UNIFICATION_DESIGN.md) 3.20.
 - [x] Database unavailability/recovery fails safely and resumes from committed state. Test actual
   database recovery separately from an HTTP timeout or a mocked SQL failure.
   T4C-0208 passed a narrow two-adapter opening-letter drill against a newly created schema-9
@@ -488,6 +502,19 @@ Required behavior:
   passed again, 322 of 322, on the current build. Not exercised: a crash around a pickup claim (the loot probe needs a killer
   that survives the lethal starter ground, T4C-0248), a quest turn-in, a death, or a transfer provably in flight. The bullet
   stays open. See [tools/NATIVE_FAULT_DRILL.md](tools/NATIVE_FAULT_DRILL.md).
+  T4C-0363 (2026-10-30, rendered, from the QA packages) added two rendered kills around single requests. **Pickup claim:** the
+  driver delivered a real click on a ground drop and the operator hard-killed the server within a few milliseconds of it
+  (two runs). In both the database right after the kill still showed the drop `ON_GROUND` with no receipt (reply lost, nothing
+  applied); after the restart and the 33 s lease hold the second click on the same drop produced exactly one claimant and one
+  receipt (the first run: one window took the ring, the other was told "Another player picked that up first."; the second run:
+  both windows had wandered 582 px away and were refused "too far away", the drop stayed on the ground; the final database
+  report of that run has exactly one receipt for every claimed drop and none for any other). **Corpse recovery:** a `/recover` request (sent through the connection, as in 3.17) was followed by the same kill; the
+  database right after it showed the corpse already `recovered` with no stacks left (reply lost, applied), and the window's
+  request had failed with "Gameplay result unavailable; reconnect and reload committed state". The restart and the retry of
+  that run were **not** completed (a driver defect, fixed afterwards, ended both windows; a third run meant to repeat it never
+  produced a death within its ten-minute limit), so "the corpse is gone after the rejoin and nothing is duplicated" is shown by
+  the database only, not from the rendered window. Not exercised under a kill: quest turn-in, death itself, a transfer in flight.
+  The bullet stays open.
   T4C-0342 later covered the pickup claim and the corpse recovery (18 hard-killed rounds, each applied exactly once after the retry), and T4C-0353 reran that drill
   as step one of the restore check with the same result (see [tools/NATIVE_RESTORE_CHECK.md](tools/NATIVE_RESTORE_CHECK.md)); a quest turn-in, a death and a transfer provably in flight
   are still not exercised, so the bullet stays open.
@@ -554,6 +581,25 @@ Required behavior:
   used, no intentional reconnect or restart was part of the session, the quest kills and turn-in were not done by both windows, the
   death and recovery ran in a separate shorter session after a driver fix, the recovery bypassed the screen, and two
   Claude-lane refusals (busy equipment change, busy attack) were found and fixed in it (see CLIENT_UNIFICATION_DESIGN.md 3.17).
+  T4C-0363 (2026-10-30) ran the closest session yet, **on the two QA packages** (server `0dcdb164`, client source `bd7f869b`, scrubbed
+  environment, driver compiled against the packaged client jar; the packaged client directory gained only `logs/`, the server
+  package nothing): two real rendered windows for **52.9 minutes** (from the lobby until the operator's last kill), level-30
+  Warriors beside Warden Aelric. Quest: both accepted `renewed_wards`, took the Lighthaven door pair, walked to the Skeleton
+  ground, killed to 12 each and turned in once (about 9 minutes; status 2, 500 gold and 400 experience, one reward row each).
+  Then a graceful restart, a forced kill and a database crash with identical committed state afterwards (see the restart bullet),
+  the cave door pair, 25 more minutes of fight, idle and loot (about 1,600 and 950 attack clicks at the last periodic log, six
+  claim races, one under a hard kill) and the start of a corpse-recovery kill. Counts: client logs 0 `ERROR`, 0 `WARN` (the packaged `logs/t4c.log` also
+  has 0 and an empty `t4c-error.log`); disconnects 4 per window, every one an injected fault (graceful stop, kill, database
+  crash, pickup kill), 5 for Bravo with the recovery kill; server: 0 stderr lines except 2 `Online persistence failed
+  (operation=checkpoint ... 08001)` lines during the database crash, one per window; heap 1.4 to 4.5 GB sawtooth, client CPU 95
+  to 97 percent of one core on average, server working set 0.48 to 0.86 GB and 5 percent of a core. **The gate stays unticked**
+  because: (1) the session did not end as designed: after the recovery-request kill both windows were stopped by a driver
+  defect (a null connection read, fixed since) and the recovery rejoin and retry never ran; (2) no quest turn-in, death or
+  transfer was under a kill; (3) the death was incidental (both characters died at least once among the Skeletons over the
+  session; Alpha left two corpses unrecovered) and the deliberate attempt (Bravo keeps swinging, drinks nothing) needed longer than
+  its ten-minute limit in two runs and produced no death at all in a third; (4) the packages predate later merges of main, so
+  this is "a candidate", not the final integrated one. Details:
+  [CLIENT_UNIFICATION_DESIGN.md](CLIENT_UNIFICATION_DESIGN.md) 3.20.
 - [x] Record actual tick duration/debt, CPU/memory, bandwidth, database/command latency, occupancy
   and every error/recovery. Investigate stalls and growing queues/resources; do not count a failed
   run as passed merely because it ended.
@@ -609,6 +655,17 @@ account, other Windows build, antivirus/SmartScreen, firewall prompt, GPU or rem
 ticked. It found and fixed four Windows PowerShell 5.1 defects (builder `GetRelativePath`, `java -version` stderr, negative-test stderr and the
 client launcher dying on the client's first stderr line, which made `launch-online.bat` unable to start the client); the 5.1 shell is the only one
 on a stock Windows machine. Details: [CLIENT_DISTRIBUTION.md](CLIENT_DISTRIBUTION.md) and [SERVER_DISTRIBUTION.md](SERVER_DISTRIBUTION.md).
+
+**Rendered play from the packages (T4C-0363, 2026-10-30, same machine).** The packages were rebuilt from `0dcdb164`, zipped and extracted
+to new empty directories with spaces, and a 52.9-minute two-window session with injected faults ran from them (see M5). Honest scope: the
+server ran from the package, but the rendered clients were the **driver class** (`OnlineLiveRunDriver`, test scope, compiled against
+`app/T4C.jar` and launched with `java -cp app/T4C.jar;lib/*;<driver classes>` from the package directory), not `launch-online.bat`, so the
+package's launcher script was not the thing under test; the two accounts were provisioned with the dev provisioner
+`LiveRunProvision` (compiled against the server package jar) because it makes level-30 characters beside the quest giver. The packaged client
+directory changed only under `logs/`. Under a scrubbed environment PowerShell wrote a `Microsoft\Windows\PowerShell\ModuleAnalysisCache`
+file into the working directory it was started in, which made the server package's own integrity check fail ("Unlisted package file") on
+the next start; the harness now starts the server scripts from the output directory, but a tester who launches `start-server.ps1` from the
+package directory in a stripped environment could meet the same refusal. No M6 box is ticked.
 
 **What a real clean-machine delivery still needs (unchecked, for the second-machine pass):**
 

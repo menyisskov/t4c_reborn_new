@@ -2,6 +2,7 @@ package com.perso.T4C.server;
 
 import com.google.gson.Gson;
 import com.perso.T4C.online.model.SpellContent;
+import com.perso.T4C.spell.BuffAttributes;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -10,9 +11,9 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * Strict allowlist of spells the online server may cast, apply from a consumable, or grant. Any
- * spell whose effects are not a plain heal or mana restore is refused at load unless it is
- * grant-only, which is never executed online.
+ * Strict allowlist of spells the online server may cast, apply from a consumable, or grant. Item
+ * entries are restorative effects plus the specific Potion of Fury strength buff routed through
+ * v2's persistent buff engine; other unsupported effects are refused at load.
  */
 public final class SpellCatalog {
   private static final Set<Integer> CAST_EFFECTS = Set.of(1, 2);
@@ -30,7 +31,8 @@ public final class SpellCatalog {
       case CAST -> requirePlain(spell, CAST_EFFECTS);
       case ITEM -> {
         requirePlain(spell, ITEM_EFFECTS);
-        requireManaRestore(spell);
+        if (!isManaRestore(spell) && !isPotionOfFuryBuff(spell))
+          throw new IllegalArgumentException("unsupported_spell");
       }
     }
   }
@@ -42,11 +44,19 @@ public final class SpellCatalog {
   }
 
   /** A consumable mana effect must be a restore on MANA; any other type-2 effect is a buff the server cannot run. */
-  private static void requireManaRestore(SpellContent.Spell spell) {
-    boolean ok = spell.effects().stream().filter(effect -> effect.type() == 2)
+  private static boolean isManaRestore(SpellContent.Spell spell) {
+    return spell.effects().stream().filter(effect -> effect.type() == 2)
         .allMatch(effect -> effect.params().stream()
             .anyMatch(param -> param.id() == 2 && "MANA".equalsIgnoreCase(param.expression())));
-    if (!ok) throw new IllegalArgumentException("unsupported_spell");
+  }
+
+  /** The one item buff routed through v2's authoritative persistent buff application. */
+  private static boolean isPotionOfFuryBuff(SpellContent.Spell spell) {
+    return "spell.item_potion_of_fury".equals(spell.key()) && !spell.effects().isEmpty()
+        && spell.effects().stream().allMatch(effect -> effect.type() == 2
+            && effect.params().stream().filter(param -> param.id() == 2)
+                .map(param -> BuffAttributes.normalize(param.expression()))
+                .anyMatch(attribute -> BuffAttributes.MODELLED.contains(attribute)));
   }
 
   /** The named spell, whatever its use. Unknown keys are refused. */

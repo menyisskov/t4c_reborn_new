@@ -131,6 +131,28 @@ class OnlineItemUseTest {
     assertTrue(code.equals("no_effect") || code.equals("unsupported_spell"), code);
   }
 
+  @Test void potionOfFuryPersistsItsAuthoredStrengthBuffAndSpendsItsChargeAtomically() throws Exception {
+    var items = ItemCatalog.loadBundled();
+    var spells = SpellCatalog.loadBundled();
+    var stack = new CharacterProgress.Item(UUID.randomUUID(), "item.potion_of_fury", 1, 1);
+    var p = progress(new CharacterProgress.Vitals(10, 100, 5, 40), List.of(stack), Map.of(), Map.of());
+
+    var used = OnlineItemUse.prepareUse(state(p), stack.id(), NOW, new Random(5), items, spells,
+        SpellCatalogV2.loadBundled());
+
+    assertTrue(used.progress().inventory().isEmpty());
+    assertEquals(1, used.progress().buffs().size());
+    var buff = used.progress().buffs().getFirst();
+    assertEquals("spell.item_potion_of_fury", buff.spell());
+    assertEquals(NOW + 300_000, buff.expiresAt());
+    assertEquals(10, buff.modifiers().get("str"));
+    assertEquals(NOW, used.progress().cooldowns().get(OnlineBuffs.ANCHOR));
+    assertEquals(used.progress(), OnlineBuffs.expire(used.progress(), NOW + 299_999));
+    assertTrue(OnlineBuffs.expire(used.progress(), NOW + 300_000).buffs().isEmpty());
+    assertEquals(0, used.manaSpent());
+    assertEquals(0, used.healthGained());
+  }
+
   private static OnlineStore.CharacterState state(CharacterProgress p) {
     return new OnlineStore.CharacterState(UUID.randomUUID(), UUID.randomUUID(), "Drinker", 0, 3, 3, 0, 0, 0, p);
   }
