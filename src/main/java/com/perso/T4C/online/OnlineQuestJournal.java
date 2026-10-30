@@ -12,7 +12,7 @@ import java.util.Set;
 /** Read-only projection of the quest state currently committed by the online server. */
 public final class OnlineQuestJournal {
   /** Quest IDs present in the authoritative server's runnable content catalog. */
-  private static final Set<String> ONLINE_QUEST_IDS = Set.of("renewed_wards");
+  private static final Set<String> ONLINE_QUEST_IDS = Set.of("renewed_wards", "lighthaven_samaritan_rats");
 
   public record Entry(String id, String title, boolean completed, int kills, int requiredKills,
       String targetMonster) {}

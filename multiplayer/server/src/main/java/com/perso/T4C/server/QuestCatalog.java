@@ -47,7 +47,8 @@ public final class QuestCatalog {
   private static void requireRunnable(QuestContent.Quest quest) {
     if (quest.giverNpc() == null || quest.giverNpc().isBlank())
       throw new IllegalArgumentException("Quest has no giver");
-    if (quest.activationFlag() != null && !quest.activationFlag().isBlank())
+    if (quest.activationFlag() != null && !quest.activationFlag().isBlank()
+        && !"__NEWBIE_QUEST".equals(quest.activationFlag()))
       throw new IllegalArgumentException("Unsupported quest activation flag");
     if (quest.requiredKills() <= 0) throw new IllegalArgumentException("Quest has no kill objective");
   }
