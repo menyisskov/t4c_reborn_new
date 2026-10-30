@@ -122,7 +122,7 @@ final class OnlineMonsterPursuit {
     // The authored anchor is the exact integer tile coordinate already published by PreviewWorld.
     homeX = spawn.x() - map.originX;
     homeY = spawn.y() - map.originY;
-    if (!map.canStand(homeX, homeY) || !map.canStand(seed.x(), seed.y()))
+    if (!map.canStand(homeX, homeY) || !open(seed.x(), seed.y()))
       throw new IllegalArgumentException("Creature is outside walkable region");
     x = seed.x();
     y = seed.y();
@@ -321,12 +321,12 @@ final class OnlineMonsterPursuit {
 
   private boolean eligibleClan(ClanView view) {
     return view.alive() && view.world()==world && region.equals(view.region())
-        && enemyClans.contains(view.clan()) && map.canStand(view.x(),view.y());
+        && enemyClans.contains(view.clan()) && open(view.x(),view.y());
   }
 
   private boolean eligible(TargetView view) {
     return view.alive() && view.ready() && view.leaseValid() && view.world() == world
-        && region.equals(view.region()) && map.canStand(view.x(), view.y());
+        && region.equals(view.region()) && map.canRestOnGrid(view.x(), view.y());
   }
 
   private boolean inAttackRange(TargetView view) {
@@ -355,6 +355,15 @@ final class OnlineMonsterPursuit {
         && map.hasLineOfSight(x,y,view.x(),view.y());
   }
 
+  /**
+   * Single-player's creature rule: monsters and their A* look at the static foot collision of a tile only
+   * ({@code CollisionManager.hasStaticCollisionAtGrid}); the player's one-tile-above footprint fold ({@code canStand})
+   * does not apply to them, and players themselves rest by the same foot rule ({@code canRestOnGrid}).
+   */
+  private boolean open(double px, double py) {
+    return Double.isFinite(px) && Double.isFinite(py) && !map.blocksFoot((int) Math.floor(px), (int) Math.floor(py));
+  }
+
   private double distance(double otherX, double otherY) {
     return Math.hypot((otherX - x) * GRID_W, (otherY - y) * GRID_H);
   }
@@ -375,7 +384,7 @@ final class OnlineMonsterPursuit {
       double lengthStep = Math.min(Math.min(remaining, length), Math.min(GRID_W, GRID_H) / 5.0);
       double nx = x + dx / length * lengthStep / GRID_W;
       double ny = y + dy / length * lengthStep / GRID_H;
-      if (!map.canStand(nx, ny) || !map.canStand(nx, y) || !map.canStand(x, ny)) {
+      if (!open(nx, ny) || !open(nx, y) || !open(x, ny)) {
         pathFailed = true;
         retryDelay=.5;
         break;
@@ -432,7 +441,7 @@ final class OnlineMonsterPursuit {
     int radius = goal ? 0 : ENTITY_COLLISION_CLEARANCE_TILES;
     for (int yy = y - radius; yy <= y + radius; yy++)
       for (int xx = x - radius; xx <= x + radius; xx++)
-        if (!map.canStand(xx + .5, yy + .5)) return false;
+        if (map.blocksFoot(xx, yy)) return false;
     return true;
   }
 
@@ -449,7 +458,7 @@ final class OnlineMonsterPursuit {
       double radius=patrolRandom.nextDouble()*MONSTER_PATROL_RADIUS;
       double candidateX=homeX+Math.cos(angle)*radius/GRID_W;
       double candidateY=homeY+Math.sin(angle)*radius/GRID_H;
-      if(map.canStand(candidateX,candidateY)) { patrolX=candidateX;patrolY=candidateY;return; }
+      if(open(candidateX,candidateY)) { patrolX=candidateX;patrolY=candidateY;return; }
     }
     patrolX=null;patrolY=null;
   }

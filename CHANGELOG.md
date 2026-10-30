@@ -6,6 +6,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-30 — Online Skeletons follow and notice players standing next to walls (T4C-0334)
+
+### Fixed
+- In online play, a Skeleton you had hit could stop chasing you, and one that had not been hit could ignore you from a few steps away, whenever you stood on a tile directly below a wall. Online creatures now treat those tiles exactly as the single-player game does, so they notice you, follow you and reach you there, and can use the same gaps in the terrain.
+
 ## 2026-10-30 — Online combat fixes from a two-window run: quiver, casts and Fireball (T4C-0331)
 
 ### Fixed

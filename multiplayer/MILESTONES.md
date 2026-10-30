@@ -264,8 +264,12 @@ Required behavior:
   presented as a functional caster or as complete launch combat. (T4C-0331: the approved
   [SCOPE_PROPOSAL.md](SCOPE_PROPOSAL.md) section 1 declares Warrior and Paladin with Light Heal, and
   [PARITY.md](PARITY.md) widens it to six online classes; casting is shown live by a Healer, a Mage and the Paladin's list, see the T4C-0331 note below. The per-role native scenario is the Done evidence, still open.)
-- [ ] Required monsters acquire valid targets, pursue where authored, attack/retaliate, lose or
+- [x] Required monsters acquire valid targets, pursue where authored, attack/retaliate, lose or
   reset targets under the declared rules, die and respawn with durable life identities.
+  (T4C-0334: the whole server world step is tested against single-player's rules: acquisition, a long
+  retreat among many patrollers, reset beyond the leash without healing, and every hosted Skeleton on
+  the real maps. The live walk-away finding was a parity defect and is fixed; see the T4C-0334 note below.
+  A rendered re-run of the Skeleton walk-away is recommended follow-up evidence, not a gate.)
   [MONSTER_PURSUIT_DESIGN.md](MONSTER_PURSUIT_DESIGN.md) records the T4C-0209 architecture.
   T4C-0210 extracted offline-preserving scalar decisions; T4C-0211 chooses native facing/walk
   from committed position deltas. T4C-0212 delivered guarded server movement and a two-adapter
@@ -273,8 +277,10 @@ Required behavior:
   guard move and retaliate after a player pressed Space, followed by that player's reconnect with saved
   HP/gold/location. It did not test a long retreat, every facing, reset, death/respawn, all roles
   or the full M4 playthrough; details are in [ACCEPTANCE.md](ACCEPTANCE.md).
-- [ ] Server validates movement speed/collision, attack/cast timing, range, sight, sanctuary,
+- [x] Server validates movement speed/collision, attack/cast timing, range, sight, sanctuary,
   resource costs, attribute eligibility, effects and any applicable interruption rules.
+  (T4C-0334 adds the last two missing pins, sanctuary and the stun interruption, through the real
+  melee and spell paths; the rest was already covered, see the T4C-0331 and T4C-0334 notes below.)
 - [ ] Required skills/spells, mana, charges, buffs, cooldowns and advancement are usable through
   native controls, persisted appropriately and reflected by committed HUD/appearance state.
 - [x] Both clients observe consistent combat, deaths and respawns. One player's action does not
@@ -325,6 +331,12 @@ Ticked: the declaration, the two-client consistency and the quest-flag bullets. 
 - *Skills/spells, mana, charges, buffs, cooldowns and advancement*: spells, mana, cooldowns, a buff and its persistence are shown live, but there is no buff or cooldown display on the HUD, multi-charge items are refused, area spells aimed at a tile (20 spells) and area heals cannot be
   cast from the spell list, and stat allocation has no online control.
 - *Level progression/stat allocation and class behavior*: progression is covered by `OnlineProgressionTest` and live experience gains, but unspent stat points cannot be spent online and no old-save/single-player-unchanged check was part of this pass.
+
+T4C-0334 (2026-10-30, local tests on a disposable PG16 cluster, no rendered client; on `main` c009f9ed): **the live finding "a retaliating Skeleton did not follow a player walking away" was a parity defect, not an authored rule.**
+Root cause: single-player judges creatures by the static foot collision of a tile (`CollisionManager.hasStaticCollisionAtGrid`: the A* in `Pathfinding` and `BaseMonster.canMove`), and the Skeleton has no hunting-ground rule (`HuntingGrounds.at("Skeleton", ...)` is null; the hunting leash applies only to the authored hunting-ground types, and the retaliation leash is 60 tiles). The server judged creatures, their A* and the chased player by the player's stricter one-tile-above fold (`PreviewMap.canStand`), while players themselves have rested by the foot rule since T4C-0315 (`canRestOnGrid`). A player standing directly under a wall (any tile whose upper neighbour is blocked) was therefore "not eligible" to the Skeleton: no natural acquisition, an immediate reset of a retaliation chase, and no path through gaps single-player lets a Skeleton use. Creatures, saved creature positions, patrol goals and the chased player now use single-player's rule; spawn homes keep the stricter check so the unhostable-spawn list is unchanged.
+Proved by tests: `OnlineMonsterPursuitRealMapTest` (no database; every hosted Skeleton on the real starter and cave maps, provoked, follows a player standing 6, 12 or 20 tiles away in 16 directions on every tile single-player's A* reaches: 158 placements, 5 of which failed before the fix); `OnlineMonsterPursuitFootRuleTest` (a player under a wall is followed and, unprovoked, noticed; a creature may stand and be saved there but never on a wall or off the map); `OnlineMonsterPursuitWorldStepTest` (PostgreSQL, through `HostedWorlds.step` with 120 other patrolling Skeletons competing for the single path permit per tick: a provoked Skeleton closes on a player who walked 11 tiles away; an unprovoked player inside 8 tiles is acquired and persisted as the target, the chase is dropped beyond the 30-tile natural leash, the creature walks home, resumes its patrol, clears the persisted target and keeps its hit points, as `BaseMonster.loseAggroAndReturnHome` does). Not proved: that this defect is the only cause of the exact rendered observation (no rendered re-run was made), the 60-tile retaliation leash through the world step (unit-tested only), and Skeletons behind a portal (a player who leaves the region is outside the creature's region by design).
+Server validation, `OnlineCombatValidationTest` (PostgreSQL, real session, melee and spell paths; every refusal leaves the character and the creature lives unchanged): a safe-haven tile (terrain code 6, `SanctuaryCombatRules`) protects both sides: melee from a sanctuary and at a creature standing in one is refused `out_of_range_or_blocked`, a Fire Dart cast from or at a sanctuary is refused alike with no mana spent and no exhaustion started, and the same fight outside succeeds and costs one mana; authored stationary (peaceful) actors refuse melee and spells with `protected_target` and are never provoked; a player with an active `stun` is refused melee (`cooldown`) and spells (`exhausted`) and may act once it ends. Single-player has no source that stuns the player (`Player.stunFor` has no caller; monsters carry no stun blow) and no rule that damage interrupts a cast; its interruption is that casting reveals a hidden caster and resets the auto-attack target (`Player.disturb`), which the server mirrors (a successful cast reveals) or leaves to the client. Server-side movement gating by stun is not modeled because nothing creates the state.
+Ticked: the monsters acquire/pursue/reset bullet and the server-validation bullet. Still open in M4: the skills/spells/charges/HUD bullet (no buff or cooldown display, multi-charge items refused, tile-aimed area spells and area heals landed in #298 and are not re-verified here, no stat allocation online) and the level progression/stat allocation bullet, plus the Done evidence (a native scenario for every declared role).
 
 Done evidence: a native combat scenario for each declared starter role, including two players
 contending for a target, leaving reach/sight, death/recovery and reconnect with costs/cooldowns intact.
