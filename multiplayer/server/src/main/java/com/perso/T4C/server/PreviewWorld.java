@@ -113,7 +113,9 @@ public final class PreviewWorld {
   /** Committed simulation state only; network commands never supply creature coordinates. */
   void creaturePosition(long id, double x, double y) {
     if (!creaturePositions.containsKey(id)) throw new IllegalArgumentException("Unknown creature");
-    if (!map.canStand(x, y)) throw new IllegalArgumentException("Blocked creature position");
+    // Single-player's creature rule: static foot collision only, without the player's above-foot fold.
+    if (!Double.isFinite(x) || !Double.isFinite(y) || map.blocksFoot((int) Math.floor(x), (int) Math.floor(y)))
+      throw new IllegalArgumentException("Blocked creature position");
     creaturePositions.put(id, new CreaturePosition(x, y));
   }
   void creatureActive(long id, boolean active) {

@@ -65,7 +65,7 @@ final class PersistentCreatures implements AutoCloseable {
     double x=saved.currentX()==null ? spawn.spawn().x() : saved.currentX();
     double y=saved.currentY()==null ? spawn.spawn().y() : saved.currentY();
     double localX=x-map.originX,localY=y-map.originY;
-    if (!map.canStand(localX,localY)) throw new IllegalStateException("Saved creature position is blocked: "+saved.key());
+    if (!Double.isFinite(localX) || !Double.isFinite(localY) || map.blocksFoot((int)Math.floor(localX),(int)Math.floor(localY))) throw new IllegalStateException("Saved creature position is blocked: "+saved.key());
     world.creaturePosition(spawn.id(),localX,localY);
     world.creatureHealth(spawn.id(),saved.health());
     world.creatureActive(spawn.id(),saved.diedAt()==null);
