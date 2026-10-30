@@ -55,6 +55,11 @@ public final class SpellEngine {
           "spell.mana_surge",
           "spell.ultra_mana_surge");
 
+  private static final int ENTANGLE_ID = 10150;
+  private static final int ENTANGLE_EFFECT_ID = 10151;
+  private static final int ENTANGLE_MOVEMENT_ID = 10349;
+  private static final long DEFAULT_TIMER_FREQUENCY_MILLIS = 1_000L;
+
   private static final String RENEW_ARMOR = "spell.renew_armor";
 
   private SpellEngine() {}
@@ -78,7 +83,12 @@ public final class SpellEngine {
       double y,
       int health,
       boolean attackable,
-      SpellFormulaContexts.Elements resistance) {
+      SpellFormulaContexts.Elements resistance,
+      int strength,
+      int level) {
+    public UnitView(long id,double x,double y,int health,boolean attackable,SpellFormulaContexts.Elements resistance) {
+      this(id,x,y,health,attackable,resistance,0,0);
+    }
     boolean alive() {
       return health > 0;
     }
@@ -192,6 +202,11 @@ public final class SpellEngine {
       }
     }
 
+    /** A committed creature timer derived from Entangle's authored 10150 -> 10151 -> 10349 chain. */
+    record ScheduleCreatureEffect(long target, int sourceSpellId, int effectSpellId, int movementSpellId,
+        long durationMillis, long initialDelayMillis, long frequencyMillis,
+        int chancePercent, long movementExhaustionMillis, long movementInitialDelayMillis) implements Event {}
+
     /** The caster turns invisible for this long. */
     record Hide(long durationMillis) implements Event {}
 
@@ -234,7 +249,7 @@ public final class SpellEngine {
 
   public static CastResolution cast(CastRequest request, WorldView world, RandomGenerator random) {
     var spell = request.spell();
-    if ((spell.stage() > MAX_STAGE && !isRecall(spell)) || !supported(spell))
+    if ((spell.stage() > MAX_STAGE && !isRecall(spell) && !isEntangle(spell)) || !supported(spell))
       throw new IllegalArgumentException("unsupported_spell");
     UnitView primary = null;
     FriendView friend = null;
@@ -341,7 +356,11 @@ public final class SpellEngine {
           int heal = healAmount(spell, request.caster(), random);
           if (heal > 0) events.add(new Event.SelfHeal(heal));
         }
-        case NUKE, DRAIN, DEBUFF, DOT -> impact(request, spell, primary, world, events);
+        case NUKE, DRAIN, DEBUFF -> impact(request, spell, primary, world, events);
+        case DOT -> {
+          impact(request, spell, primary, world, events);
+          scheduleEntangle(request, spell, primary, events);
+        }
         case AREA_DAMAGE -> area(request, spell, primary, position, world, events);
         case SHIELD, GATEWAY -> {
           // Single-player installs no hook for a self cast: only the cost, the exhaustion and the visual.
@@ -372,10 +391,12 @@ public final class SpellEngine {
 
   /** True for the spell shapes this engine resolves; anything else must be refused by the caller. */
   public static boolean supported(SpellContentV2.Spell spell) {
+    if (spell == null || spell.helperOnly()) return false;
     return switch (spell.kind()) {
       case NUKE, HEAL, AREA_HEAL, AREA_DAMAGE -> onlyEffects(spell, 1);
-      // Tick-less damage over time: one hit, plus hooks single-player never installs (see the exporter).
-      case DOT -> allEffects(spell, 1, 2, 9);
+      // Tick-less DOTs are one hit. Entangle is the only linked DOT implemented by the online path.
+      case DOT -> allEffects(spell, 1, 2, 9)
+          && (!isEntangle(spell) || spell.id() == ENTANGLE_ID && allEffects(spell, 9));
       case SHIELD, GATEWAY -> onlyEffects(spell, 9);
       case DRAIN -> onlyEffects(spell, 10);
       case DEBUFF, BUFF -> onlyEffects(spell, 2);
@@ -385,6 +406,56 @@ public final class SpellEngine {
       case RECALL -> spell.key().equals("spell.word_of_recall") && allEffects(spell, 11, 13);
       default -> false;
     };
+  }
+
+  private static boolean isEntangle(SpellContentV2.Spell spell) {
+    return spell.id() == ENTANGLE_ID && "spell.entangle".equals(spell.key());
+  }
+
+  /** Resolves only Entangle's linked timer. The helper spells remain non-castable catalog data. */
+  private static void scheduleEntangle(CastRequest request, SpellContentV2.Spell spell,
+      UnitView target, List<Event> events) {
+    if (!isEntangle(spell)) return;
+    var sourceEffect = spell.effects().stream().filter(effect -> effect.type() == 9)
+        .filter(effect -> "OnTimer".equalsIgnoreCase(parameter(effect, 2))).findFirst()
+        .orElseThrow(() -> new IllegalArgumentException("unsupported_spell"));
+    var firstHelper = request.related().values().stream()
+        .filter(helper -> helper.helperOnly() && helper.id() == ENTANGLE_EFFECT_ID).findFirst()
+        .orElseThrow(() -> new IllegalArgumentException("unsupported_spell"));
+    var movementHelper = request.related().values().stream()
+        .filter(helper -> helper.helperOnly() && helper.id() == ENTANGLE_MOVEMENT_ID).findFirst()
+        .orElseThrow(() -> new IllegalArgumentException("unsupported_spell"));
+    int linked = integerParameter(sourceEffect, 1);
+    var timedEffect = firstHelper.effects().stream().filter(effect -> effect.type() == 9)
+        .filter(effect -> "OnTimer".equalsIgnoreCase(parameter(effect, 2))).findFirst()
+        .orElseThrow(() -> new IllegalArgumentException("unsupported_spell"));
+    if (linked != ENTANGLE_EFFECT_ID || integerParameter(timedEffect, 1) != ENTANGLE_MOVEMENT_ID)
+      throw new IllegalArgumentException("unsupported_spell");
+
+    var context = SpellFormulaContexts.against(request.caster(), target.resistance());
+    int chance = Math.max(0, Math.min(100, evaluate(parameter(sourceEffect, 3), context)));
+    if (chance <= 0) return;
+
+    var targetContext = new DiceFormula.Context(target.strength(),0,0,0,0,0,0,target.level());
+    long duration = Math.max(0L, evaluate(firstHelper.duration(), targetContext));
+    if (duration <= 0L) return;
+    long initialDelay = Math.max(0L, evaluate(parameter(timedEffect, 4), context));
+    if (initialDelay == 0L) initialDelay = DEFAULT_TIMER_FREQUENCY_MILLIS;
+    long frequency = Math.max(0L, evaluate(firstHelper.frequency(), context));
+    if (frequency <= 0L) frequency = DEFAULT_TIMER_FREQUENCY_MILLIS;
+    int tickChance = Math.max(0, Math.min(100, evaluate(parameter(timedEffect, 3), context)));
+    long movementMillis = Math.max(0L, evaluate(movementHelper.physicalExhaustion(), context));
+    if (tickChance <= 0 || movementMillis <= 0L) return;
+    long sourceDelay=Math.max(0L,evaluate(parameter(sourceEffect,4),context));
+    if(sourceDelay==0L) sourceDelay=DEFAULT_TIMER_FREQUENCY_MILLIS;
+    events.add(new Event.ScheduleCreatureEffect(target.id(), ENTANGLE_ID, ENTANGLE_EFFECT_ID, ENTANGLE_MOVEMENT_ID,
+        duration, sourceDelay, frequency, chance, movementMillis, initialDelay));
+  }
+
+  private static int integerParameter(SpellContent.Effect effect, int id) {
+    String value = parameter(effect, id);
+    try { return Integer.parseInt(value == null ? "" : value.trim()); }
+    catch (NumberFormatException invalid) { throw new IllegalArgumentException("unsupported_spell", invalid); }
   }
 
   private static boolean isRecall(SpellContentV2.Spell spell) {

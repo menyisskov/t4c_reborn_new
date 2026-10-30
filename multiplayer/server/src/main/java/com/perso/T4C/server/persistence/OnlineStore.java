@@ -47,17 +47,43 @@ public final class OnlineStore implements AutoCloseable {
   public record SpawnState(String key, long generation, UUID eventId, UUID recipient, java.time.Instant claimedAt,
       Integer health, UUID targetCharacter, long nextAttackAt, Double currentX, Double currentY,
       String mode, Long targetEpoch, long stateRevision, String targetSpawnKey, UUID targetLife,
-      java.time.Instant diedAt, String deathKind) {
+      java.time.Instant diedAt, String deathKind, java.util.List<SpawnTimedEffect> timedEffects) {
+    public SpawnState(String key, long generation, UUID eventId, UUID recipient, java.time.Instant claimedAt,
+        Integer health, UUID targetCharacter, long nextAttackAt, Double currentX, Double currentY,
+        String mode, Long targetEpoch, long stateRevision, String targetSpawnKey, UUID targetLife,
+        java.time.Instant diedAt, String deathKind) {
+      this(key,generation,eventId,recipient,claimedAt,health,targetCharacter,nextAttackAt,currentX,currentY,
+          mode,targetEpoch,stateRevision,targetSpawnKey,targetLife,diedAt,deathKind,java.util.List.of());
+    }
     public SpawnState(String key,long generation,UUID eventId,UUID recipient,java.time.Instant claimedAt,
         Integer health,UUID targetCharacter,long nextAttackAt,Double currentX,Double currentY,
         String mode,Long targetEpoch,long stateRevision) {
       this(key,generation,eventId,recipient,claimedAt,health,targetCharacter,nextAttackAt,currentX,currentY,
-          mode,targetEpoch,stateRevision,null,null,null,null);
+          mode,targetEpoch,stateRevision,null,null,null,null,java.util.List.of());
     }
     public SpawnState(String key,long generation,UUID eventId,UUID recipient,java.time.Instant claimedAt,
         Integer health,UUID targetCharacter,long nextAttackAt) {
       this(key,generation,eventId,recipient,claimedAt,health,targetCharacter,nextAttackAt,null,null,
-          targetCharacter==null ? "IDLE" : "RETALIATION",null,0);
+          targetCharacter==null ? "IDLE" : "RETALIATION",null,0,null,null,null,null,java.util.List.of());
+    }
+    public SpawnState { timedEffects=java.util.List.copyOf(timedEffects); }
+  }
+  /** Persisted, life-scoped Entangle timer; the spawn row's event_id fences it to one creature life. */
+  public record SpawnTimedEffect(int sourceSpellId, int linkedSpellId, int movementSpellId,
+      long expiresAt, long nextAt, long frequencyMillis, int chancePercent,
+      long movementMillis, long movementUntil, long linkedDurationMillis, long movementInitialDelayMillis) {
+    public SpawnTimedEffect {
+      if (sourceSpellId!=10150 || (linkedSpellId!=10151 && linkedSpellId!=10349) || movementSpellId!=10349
+          || expiresAt<0 || nextAt<0 || frequencyMillis<=0 || chancePercent<0 || chancePercent>100
+          || movementMillis<0 || movementUntil<0 || linkedDurationMillis<0 || movementInitialDelayMillis<0)
+        throw new IllegalArgumentException("Invalid creature timed effect");
+    }
+  }
+  /** Full replacement of one spawn's timed-effect list, fenced by its current life and revision. */
+  public record CreatureEffectUpdate(String key, UUID life, long stateRevision, java.util.List<SpawnTimedEffect> effects) {
+    public CreatureEffectUpdate {
+      spawnKey(key);Objects.requireNonNull(life);effects=java.util.List.copyOf(effects);
+      if(stateRevision<0 || effects.size()>16) throw new IllegalArgumentException("Invalid creature effect update");
     }
   }
   /** One captured authoritative pose. Coordinates are absolute tiles, never client input. */
@@ -215,7 +241,7 @@ public final class OnlineStore implements AutoCloseable {
         int version = 0;
         try (var rows = s.executeQuery("SELECT version FROM online_schema ORDER BY version")) {
           while (rows.next()) {
-            if (rows.getInt(1) != ++version || version > 13) throw new SQLException("Unsupported online schema version");
+            if (rows.getInt(1) != ++version || version > 14) throw new SQLException("Unsupported online schema version");
           }
         }
         if (version == 0) {
@@ -420,6 +446,11 @@ public final class OnlineStore implements AutoCloseable {
               """);
           s.execute("INSERT INTO online_schema(version) VALUES (13)");
         }
+        if (version < 14) {
+          // Timed creature effects are stored with the spawn life and never trusted across respawn.
+          s.execute("ALTER TABLE online_spawns ADD COLUMN timed_effects jsonb NOT NULL DEFAULT '[]'::jsonb CHECK(jsonb_typeof(timed_effects)='array')");
+          s.execute("INSERT INTO online_schema(version) VALUES (14)");
+        }
         c.commit();
       } catch (SQLException | RuntimeException error) { c.rollback(); throw error; }
     }
@@ -519,7 +550,7 @@ public final class OnlineStore implements AutoCloseable {
       try (var s=c.prepareStatement("""
           SELECT s.generation,s.event_id,r.character_id,r.claimed_at,s.health,s.target_character,s.next_attack_at,
                  s.current_x,s.current_y,s.mode,s.target_epoch,s.state_revision,
-                 s.target_spawn_key,s.target_life,s.died_at,s.death_kind
+                 s.target_spawn_key,s.target_life,s.died_at,s.death_kind,s.timed_effects
           FROM online_spawns s LEFT JOIN online_world_rewards r ON r.event_id=s.event_id
           WHERE s.spawn_key=?
           """)) {
@@ -530,9 +561,17 @@ public final class OnlineStore implements AutoCloseable {
           return new SpawnState(key,rows.getLong(1),rows.getObject(2,UUID.class),rows.getObject(3,UUID.class),
               claimedAt==null ? null : claimedAt.toInstant(),rows.getObject(5,Integer.class),rows.getObject(6,UUID.class),rows.getLong(7),
               rows.getObject(8,Double.class),rows.getObject(9,Double.class),rows.getString(10),rows.getObject(11,Long.class),rows.getLong(12),
-              rows.getString(13),rows.getObject(14,UUID.class),rows.getTimestamp(15)==null ? null : rows.getTimestamp(15).toInstant(),rows.getString(16));
+              rows.getString(13),rows.getObject(14,UUID.class),rows.getTimestamp(15)==null ? null : rows.getTimestamp(15).toInstant(),
+              rows.getString(16),timedEffects(rows.getString(17)));
         }
       }
+  }
+
+  private static java.util.List<SpawnTimedEffect> timedEffects(String json) throws SQLException {
+    try {
+      SpawnTimedEffect[] parsed=JSON.fromJson(json,SpawnTimedEffect[].class);
+      return parsed==null ? java.util.List.of() : java.util.List.of(parsed);
+    } catch(RuntimeException invalid) { throw new SQLException("Invalid persisted creature effects",invalid); }
   }
 
   /** Advance only a committed terminal life after its authored delay, using database time and CAS. */
@@ -546,7 +585,7 @@ public final class OnlineStore implements AutoCloseable {
     try (var c=connections.open(); var s=c.prepareStatement("""
         UPDATE online_spawns s SET generation=s.generation+1,event_id=?,health=NULL,target_character=NULL,next_attack_at=0,
           current_x=NULL,current_y=NULL,mode='IDLE',target_epoch=NULL,target_spawn_key=NULL,target_life=NULL,
-          died_at=NULL,death_kind=NULL,state_revision=state_revision+1
+          died_at=NULL,death_kind=NULL,timed_effects='[]'::jsonb,state_revision=state_revision+1
         WHERE s.spawn_key=? AND s.event_id=? AND s.state_revision=? AND s.died_at IS NOT NULL
           AND s.died_at<=clock_timestamp()-(? * interval '1 millisecond')
         RETURNING s.generation,s.event_id,s.state_revision
@@ -641,6 +680,7 @@ public final class OnlineStore implements AutoCloseable {
               next_attack_at=CASE WHEN ? THEN 0 ELSE next_attack_at END,
               died_at=CASE WHEN ? THEN clock_timestamp() ELSE died_at END,
               death_kind=CASE WHEN ? THEN 'CLAN' ELSE death_kind END,
+              timed_effects=CASE WHEN ? THEN '[]'::jsonb ELSE timed_effects END,
               state_revision=state_revision+1
             WHERE spawn_key=? AND event_id=? AND state_revision=? AND died_at IS NULL
               AND COALESCE(health,?)=?
@@ -651,9 +691,9 @@ public final class OnlineStore implements AutoCloseable {
           q.setObject(6,lethal ? null : target.targetEpoch());
           q.setString(7,lethal ? null : target.targetSpawnKey());
           q.setObject(8,lethal ? null : target.targetLife());
-          q.setBoolean(9,lethal);q.setBoolean(10,lethal);q.setBoolean(11,lethal);
-          q.setString(12,target.key());q.setObject(13,target.life());q.setLong(14,target.revision());
-          q.setInt(15,attack.maximumHealth());q.setInt(16,attack.before());
+          q.setBoolean(9,lethal);q.setBoolean(10,lethal);q.setBoolean(11,lethal);q.setBoolean(12,lethal);
+          q.setString(13,target.key());q.setObject(14,target.life());q.setLong(15,target.revision());
+          q.setInt(16,attack.maximumHealth());q.setInt(17,attack.before());
           if(q.executeUpdate()!=1) throw new Conflict("Clan target life changed");
         }
         var committed=new ClanAttackResult(loadSpawn(c,source.key()),loadSpawn(c,target.key()));
@@ -1112,6 +1152,7 @@ public final class OnlineStore implements AutoCloseable {
               UPDATE online_spawns SET health=?,state_revision=state_revision+CASE WHEN ? THEN 0 ELSE 1 END,
                 died_at=CASE WHEN ? THEN clock_timestamp() ELSE died_at END,
                 death_kind=CASE WHEN ? THEN 'PLAYER' ELSE death_kind END,
+              timed_effects=CASE WHEN ? THEN '[]'::jsonb ELSE timed_effects END,
                 target_character=CASE WHEN ? THEN NULL ELSE target_character END,
                 target_epoch=CASE WHEN ? THEN NULL ELSE target_epoch END,
                 target_spawn_key=CASE WHEN ? THEN NULL ELSE target_spawn_key END,
@@ -1121,9 +1162,9 @@ public final class OnlineStore implements AutoCloseable {
               WHERE spawn_key=? AND event_id=? AND died_at IS NULL AND COALESCE(health,?)=? AND (? OR current_x IS NULL)
               """)) {
             s.setInt(1,strike.after());s.setBoolean(2,motion!=null);
-            for(int p=3;p<=10;p++) s.setBoolean(p,strike.after()==0);
-            s.setString(11,strike.key()); s.setObject(12,strike.life());
-            s.setInt(13,strike.maximumHealth()); s.setInt(14,strike.before());s.setBoolean(15,motion!=null);
+            for(int p=3;p<=11;p++) s.setBoolean(p,strike.after()==0);
+            s.setString(12,strike.key()); s.setObject(13,strike.life());
+            s.setInt(14,strike.maximumHealth()); s.setInt(15,strike.before());s.setBoolean(16,motion!=null);
             if (s.executeUpdate()!=1) throw new Conflict("Creature life or health changed");
           }
         }
@@ -1140,7 +1181,7 @@ public final class OnlineStore implements AutoCloseable {
             // Older trusted world-event callers may claim a spawn life without a CreatureStrike.
             // Keep that claim terminal, and let a competing clan kill reject the whole reward.
             try(var q=c.prepareStatement("""
-                UPDATE online_spawns SET health=0,died_at=clock_timestamp(),death_kind='PLAYER',
+                UPDATE online_spawns SET health=0,died_at=clock_timestamp(),death_kind='PLAYER',timed_effects='[]'::jsonb,
                   target_character=NULL,target_epoch=NULL,target_spawn_key=NULL,target_life=NULL,
                   next_attack_at=0,mode='IDLE',state_revision=state_revision+1
                 WHERE event_id=? AND died_at IS NULL
@@ -1254,6 +1295,7 @@ public final class OnlineStore implements AutoCloseable {
               UPDATE online_spawns SET health=?,state_revision=state_revision+CASE WHEN ? THEN 0 ELSE 1 END,
                 died_at=CASE WHEN ? THEN clock_timestamp() ELSE died_at END,
                 death_kind=CASE WHEN ? THEN 'PLAYER' ELSE death_kind END,
+              timed_effects=CASE WHEN ? THEN '[]'::jsonb ELSE timed_effects END,
                 target_character=CASE WHEN ? THEN NULL ELSE target_character END,
                 target_epoch=CASE WHEN ? THEN NULL ELSE target_epoch END,
                 target_spawn_key=CASE WHEN ? THEN NULL ELSE target_spawn_key END,
@@ -1263,9 +1305,9 @@ public final class OnlineStore implements AutoCloseable {
               WHERE spawn_key=? AND event_id=? AND died_at IS NULL AND COALESCE(health,?)=? AND (? OR current_x IS NULL)
               """)) {
             s.setInt(1,strike.after());s.setBoolean(2,true);
-            for (int p=3;p<=10;p++) s.setBoolean(p,lethal);
-            s.setString(11,strike.key()); s.setObject(12,strike.life());
-            s.setInt(13,strike.maximumHealth()); s.setInt(14,strike.before());s.setBoolean(15,true);
+            for (int p=3;p<=11;p++) s.setBoolean(p,lethal);
+            s.setString(12,strike.key()); s.setObject(13,strike.life());
+            s.setInt(14,strike.maximumHealth()); s.setInt(15,strike.before());s.setBoolean(16,true);
             if (s.executeUpdate()!=1) throw new Conflict("Creature life or health changed");
           }
           if (!lethal) continue;
@@ -1297,6 +1339,72 @@ public final class OnlineStore implements AutoCloseable {
         state=load(c,account,character,false);
         c.commit(); return new RewardResult(true,state);
       } catch (SQLException | RuntimeException error) { c.rollback(); throw error; }
+    }
+  }
+
+  /** Cast receipt and life-fenced timed effects commit with the caster's mana/cooldown draft. */
+  public RewardResult commitSpellEffects(Session session,long revision,UUID event,CharacterProgress progress,
+      java.util.List<CreatureEffectUpdate> effects) throws SQLException {
+    if(revision<0) throw new IllegalArgumentException("Invalid revision");
+    Objects.requireNonNull(session);Objects.requireNonNull(event);Objects.requireNonNull(progress);
+    effects=effects.stream().sorted(java.util.Comparator.comparing(CreatureEffectUpdate::key)).toList();
+    if(effects.isEmpty() || effects.stream().map(CreatureEffectUpdate::key).distinct().count()!=effects.size())
+      throw new IllegalArgumentException("A creature-effect commit needs unique targets");
+    String encoded=encodeProgress(progress);
+    String fingerprint=fingerprint(encoded+"\nspell-effects-v1\n"+JSON.toJson(canonical(JSON.toJsonTree(effects))));
+    UUID account=session.accountId(),character=session.characterId();
+    try(var c=connections.open()) {
+      c.setAutoCommit(false);
+      try {
+        var state=lockSession(c,session);
+        try(var q=c.prepareStatement("SELECT gold,experience,payload_hash FROM online_rewards WHERE character_id=? AND event_id=?")) {
+          q.setObject(1,character);q.setObject(2,event);
+          try(var rows=q.executeQuery()) {
+            if(rows.next()) {
+              if(rows.getLong(1)!=0 || rows.getLong(2)!=0 || !Objects.equals(fingerprint,rows.getString(3)))
+                throw new Conflict("Reward event payload mismatch");
+              c.commit();return new RewardResult(false,state);
+            }
+          }
+        }
+        if(state.revision()!=revision) throw new Conflict("Stale gameplay event");
+        try(var q=c.prepareStatement("INSERT INTO online_rewards(character_id,event_id,gold,experience,payload_hash) VALUES (?,?,0,0,?)")) {
+          q.setObject(1,character);q.setObject(2,event);q.setString(3,fingerprint);q.executeUpdate();
+        }
+        for(var update:effects) {
+          try(var q=c.prepareStatement("""
+              UPDATE online_spawns SET timed_effects=?::jsonb,state_revision=state_revision+1
+              WHERE spawn_key=? AND event_id=? AND state_revision=? AND died_at IS NULL AND COALESCE(health,1)>0
+              """)) {
+            q.setString(1,JSON.toJson(update.effects()));q.setString(2,update.key());q.setObject(3,update.life());
+            q.setLong(4,update.stateRevision());
+            if(q.executeUpdate()!=1) throw new Conflict("Creature life changed");
+          }
+        }
+        try(var q=c.prepareStatement("UPDATE online_characters SET progress=?::jsonb,revision=revision+1,updated_at=now() WHERE id=?")) {
+          q.setString(1,encoded);q.setObject(2,character);q.executeUpdate();
+        }
+        state=load(c,account,character,false);c.commit();return new RewardResult(true,state);
+      } catch(SQLException|RuntimeException failure) { c.rollback();throw failure; }
+    }
+  }
+
+  /** Advances or expires one persisted timer with compare-and-set semantics before applying its effect. */
+  public SpawnState replaceTimedEffects(String key,UUID life,long revision,
+      java.util.List<SpawnTimedEffect> expected,java.util.List<SpawnTimedEffect> replacement) throws SQLException {
+    spawnKey(key);Objects.requireNonNull(life);expected=java.util.List.copyOf(expected);replacement=java.util.List.copyOf(replacement);
+    if(revision<0 || expected.size()>16 || replacement.size()>16) throw new IllegalArgumentException("Invalid timed-effect update");
+    try(var c=connections.open()) {
+      c.setAutoCommit(false);
+      try(var q=c.prepareStatement("""
+          UPDATE online_spawns SET timed_effects=?::jsonb,state_revision=state_revision+1
+          WHERE spawn_key=? AND event_id=? AND state_revision=? AND died_at IS NULL AND timed_effects=?::jsonb
+          """)) {
+        q.setString(1,JSON.toJson(replacement));q.setString(2,key);q.setObject(3,life);
+        q.setLong(4,revision);q.setString(5,JSON.toJson(expected));
+        if(q.executeUpdate()!=1) throw new Conflict("Creature timed effect changed");
+        var saved=loadSpawn(c,key);c.commit();return saved;
+      } catch(SQLException|RuntimeException failure) { c.rollback();throw failure; }
     }
   }
 

@@ -79,15 +79,17 @@ final class PersistentSessions {
       OnlineStore.MonsterAttack monsterAttack, OnlineStore.DeathTransition death, UUID corpse, UUID corpseItem,
       com.perso.T4C.server.persistence.PortalTransfer transfer, UUID loot, List<LootDropDraft> drops,
       List<OnlineStore.SpellStrike> spellStrikes, OnlineStore.MonsterHeal monsterHeal,
-      CompletableFuture<OnlineStore.RewardResult> result, OnlineShopTrades.Trade shop,PlayerEffect playerEffect) {
-    GameplayEvent { drops=List.copyOf(drops); spellStrikes=spellStrikes==null ? List.of() : List.copyOf(spellStrikes); }
+      CompletableFuture<OnlineStore.RewardResult> result, OnlineShopTrades.Trade shop,PlayerEffect playerEffect,
+      List<OnlineStore.CreatureEffectUpdate> creatureEffects) {
+    GameplayEvent { drops=List.copyOf(drops); spellStrikes=spellStrikes==null ? List.of() : List.copyOf(spellStrikes);
+      creatureEffects=creatureEffects==null ? List.of() : List.copyOf(creatureEffects); }
     GameplayEvent(UUID id, long gold, long experience, CharacterProgress progress, boolean worldReward,
         OnlineStore.CreatureStrike strike, OnlineStore.CreatureProvocation provocation,
         OnlineStore.MonsterAttack monsterAttack, OnlineStore.DeathTransition death, UUID corpse, UUID corpseItem,
         com.perso.T4C.server.persistence.PortalTransfer transfer, UUID loot, List<LootDropDraft> drops,
         List<OnlineStore.SpellStrike> spellStrikes, CompletableFuture<OnlineStore.RewardResult> result) {
       this(id,gold,experience,progress,worldReward,strike,provocation,monsterAttack,death,corpse,corpseItem,transfer,
-          loot,drops,spellStrikes,null,result,null,null);
+          loot,drops,spellStrikes,null,result,null,null,List.of());
     }
     GameplayEvent(UUID id,long gold,long experience,CharacterProgress progress,boolean worldReward,
         OnlineStore.CreatureStrike strike,OnlineStore.CreatureProvocation provocation,
@@ -96,7 +98,16 @@ final class PersistentSessions {
         List<OnlineStore.SpellStrike> spellStrikes,OnlineStore.MonsterHeal monsterHeal,
         CompletableFuture<OnlineStore.RewardResult> result,OnlineShopTrades.Trade shop) {
       this(id,gold,experience,progress,worldReward,strike,provocation,monsterAttack,death,corpse,corpseItem,
-          transfer,loot,drops,spellStrikes,monsterHeal,result,shop,null);
+          transfer,loot,drops,spellStrikes,monsterHeal,result,shop,null,List.of());
+    }
+    GameplayEvent(UUID id,long gold,long experience,CharacterProgress progress,boolean worldReward,
+        OnlineStore.CreatureStrike strike,OnlineStore.CreatureProvocation provocation,
+        OnlineStore.MonsterAttack monsterAttack,OnlineStore.DeathTransition death,UUID corpse,UUID corpseItem,
+        com.perso.T4C.server.persistence.PortalTransfer transfer,UUID loot,List<LootDropDraft> drops,
+        List<OnlineStore.SpellStrike> spellStrikes,OnlineStore.MonsterHeal monsterHeal,
+        CompletableFuture<OnlineStore.RewardResult> result,OnlineShopTrades.Trade shop,PlayerEffect playerEffect) {
+      this(id,gold,experience,progress,worldReward,strike,provocation,monsterAttack,death,corpse,corpseItem,
+          transfer,loot,drops,spellStrikes,monsterHeal,result,shop,playerEffect,List.of());
     }
   }
   private record Completion(Binding binding, OnlineStore.CharacterState saved, boolean finalSave,
@@ -507,6 +518,21 @@ final class PersistentSessions {
     return result.minimalCompletionStage();
   }
 
+  /** Cast receipt and timed creature effects are persisted with the caster's character draft. */
+  CompletionStage<OnlineStore.RewardResult> commitSpellEffects(String token,long expectedRevision,UUID eventId,
+      CharacterProgress progress,List<OnlineStore.CreatureEffectUpdate> effects) {
+    Objects.requireNonNull(eventId);Objects.requireNonNull(progress);effects=List.copyOf(effects);
+    if(effects.isEmpty()) throw new IllegalArgumentException("A spell effect commit needs a creature target");
+    var binding=active(token);
+    if(binding.event!=null || binding.awaitingRegionReady) throw new PreviewWorld.Rejected(409,"busy");
+    if(binding.saved.revision()!=expectedRevision) throw new PreviewWorld.Rejected(409,"revision");
+    var result=new CompletableFuture<OnlineStore.RewardResult>();
+    binding.event=new GameplayEvent(eventId,0,0,ProgressEdits.withHiddenUntil(progress,0),false,null,null,null,null,
+        null,null,null,null,List.of(),List.of(),null,result,null,null,effects);
+    if(!binding.pending) submit(binding);
+    return result.minimalCompletionStage();
+  }
+
   /**
    * Single-flight pickup of one committed drop. The database claim is authoritative; the simulation
    * only fences the epoch and rejects what its cache already knows is impossible.
@@ -888,6 +914,8 @@ final class PersistentSessions {
                 ? store.commitMonsterHeal(binding.session,revision,event.id(),event.progress(),event.monsterHeal())
                 : event.monsterAttack()!=null
                 ? store.commitMonsterAttack(binding.session,revision,event.id(),event.progress(),event.monsterAttack(),event.death())
+                : !event.creatureEffects().isEmpty()
+                ? store.commitSpellEffects(binding.session,revision,event.id(),event.progress(),event.creatureEffects())
                 : !event.spellStrikes().isEmpty()
                 ? store.commitSpellStrikes(binding.session,revision,event.id(),event.gold(),event.experience(),event.progress(),event.spellStrikes())
                 : event.strike()!=null
@@ -916,7 +944,7 @@ final class PersistentSessions {
     if (event.transfer()!=null) return com.perso.T4C.server.persistence.PersistenceFailure.Operation.TRANSFER;
     if (event.monsterAttack()!=null) return com.perso.T4C.server.persistence.PersistenceFailure.Operation.MONSTER_ATTACK;
     if (event.monsterHeal()!=null) return com.perso.T4C.server.persistence.PersistenceFailure.Operation.MONSTER_ATTACK;
-    if (!event.spellStrikes().isEmpty() || event.strike()!=null)
+    if (!event.creatureEffects().isEmpty() || !event.spellStrikes().isEmpty() || event.strike()!=null)
       return com.perso.T4C.server.persistence.PersistenceFailure.Operation.SPELL_CREATURE_STRIKE;
     if (event.worldReward()) return com.perso.T4C.server.persistence.PersistenceFailure.Operation.WORLD_REWARD;
     return com.perso.T4C.server.persistence.PersistenceFailure.Operation.GENERIC_EVENT;

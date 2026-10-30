@@ -137,8 +137,16 @@ class OnlineAbilityChoicesTest {
         .collect(java.util.stream.Collectors.toSet());
     var rows = OnlineAbilityChoices.castableSpells(progress(stageFourKeys, List.of(), Map.of()), ENGINE_CATALOG);
 
-    assertEquals(List.of("spell.word_of_recall"), rows.stream().map(OnlineAbilityChoices.SpellChoice::key).toList());
-    assertFalse(rows.getFirst().requiresCreatureTarget());
+    assertEquals(List.of("spell.entangle", "spell.word_of_recall"), rows.stream()
+        .map(OnlineAbilityChoices.SpellChoice::key).toList());
+    assertTrue(rows.getFirst().requiresCreatureTarget());
+    assertFalse(rows.getLast().requiresCreatureTarget());
+  }
+
+  @Test
+  void linkedEntangleEffectsAreNeverPlayerChoices() {
+    var learned=Set.of("spell.entangle_effect","spell.entangle_effect_2");
+    assertTrue(OnlineAbilityChoices.castableSpells(progress(learned,List.of(),Map.of()),ENGINE_CATALOG).isEmpty());
   }
 
   @Test

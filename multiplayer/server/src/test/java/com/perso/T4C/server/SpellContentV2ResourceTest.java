@@ -22,8 +22,10 @@ class SpellContentV2ResourceTest {
     assertEquals(2, content.version());
     // 132 player spells plus item spells (spell.item_*, one per online-usable potion effect), which grow with item parity work.
     long itemSpells = content.spells().keySet().stream().filter(key -> key.startsWith("spell.item_")).count();
-    assertEquals(132 + itemSpells, content.spells().size());
-    assertEquals(48, content.spells().values().stream().filter(spell -> spell.stage() == 1).count());
+    assertEquals(134 + itemSpells, content.spells().size());
+    assertEquals(48, content.spells().values().stream().filter(spell -> !spell.helperOnly() && spell.stage() == 1).count());
+    assertTrue(content.spells().get("spell.entangle_effect").helperOnly());
+    assertTrue(content.spells().get("spell.entangle_effect_2").helperOnly());
   }
 
   @Test void everyV1SpellThatIsAlsoAPlayerSpellKeepsItsFormulasInV2() throws Exception {
