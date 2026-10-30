@@ -3,7 +3,6 @@ package com.perso.T4C.session;
 import static com.perso.T4C.config.GameConstants.GRID_H;
 import static com.perso.T4C.config.GameConstants.GRID_W;
 
-import com.badlogic.gdx.math.Vector2;
 import com.perso.T4C.monster.core.BaseMonster;
 import com.perso.T4C.monster.core.MonsterManager;
 import com.perso.T4C.monster.core.MonsterRegistry;
@@ -52,10 +51,8 @@ import org.slf4j.LoggerFactory;
  */
 public final class RemoteWorldDriver implements WorldDriver {
   private static final Logger log = LoggerFactory.getLogger(RemoteWorldDriver.class);
-  private static final float PLAYER_EASE_SECONDS = 0.06f;
-  private static final float PLAYER_SNAP_DISTANCE = 4f * 32f;
-  /** Walking continues this long after the last server position change (a few 34 Hz ticks). */
-  private static final float PLAYER_WALK_HOLD_SECONDS = 0.15f;
+  /** A component of the drawn direction under this share of the other counts as zero (see facing). */
+  private static final float FACING_DEAD_ZONE = 0.25f;
 
   private final Supplier<OnlineConnection.View> views;
   private final GroundItemManager ground;
@@ -78,10 +75,9 @@ public final class RemoteWorldDriver implements WorldDriver {
 
   private static final class PlayerEntry {
     final Player player;
-    final Vector2 target = new Vector2();
 
-    /** Seconds since the server last moved this player; walking stays on while it is recent. */
-    float sinceTargetMoved = Float.MAX_VALUE;
+    /** The server's route for this player, played back at the pace the server moved it. */
+    final RemotePlayerPlayback route = new RemotePlayerPlayback();
 
     /** What the model was built from; a change rebuilds it. */
     final String look;
@@ -251,7 +247,7 @@ public final class RemoteWorldDriver implements WorldDriver {
     if (monsterRegistry != null) applyCreatures(snapshot.creatures(), originX, originY);
     if (npcRegistry != null) applyNpcs(snapshot.npcs(), originX, originY);
     applyLoot(snapshot.loot(), originX, originY);
-    applyPlayers(snapshot.players(), view.ownId(), originX, originY);
+    applyPlayers(snapshot.players(), snapshot.tick(), view.ownId(), originX, originY);
     lastTick = snapshot.tick();
     lastRegion = region;
   }
@@ -396,7 +392,7 @@ public final class RemoteWorldDriver implements WorldDriver {
   }
 
   private void applyPlayers(
-      List<OnlineConnection.Actor> actors, long ownId, int originX, int originY) {
+      List<OnlineConnection.Actor> actors, long tick, long ownId, int originX, int originY) {
     Set<Long> present = new HashSet<>();
     for (OnlineConnection.Actor actor : actors) {
       if (actor.id() == ownId) continue;
@@ -412,8 +408,7 @@ public final class RemoteWorldDriver implements WorldDriver {
           rebuilt.getCoordinates().setX(entry.player.getCoordinates().getX());
           rebuilt.getCoordinates().setY(entry.player.getCoordinates().getY());
           PlayerEntry replacement = new PlayerEntry(rebuilt, look);
-          replacement.target.set(entry.target);
-          replacement.sinceTargetMoved = entry.sinceTargetMoved;
+          replacement.route.copyFrom(entry.route);
           players.put(actor.id(), replacement);
           entry = replacement;
         } catch (RuntimeException failure) {
@@ -429,18 +424,14 @@ public final class RemoteWorldDriver implements WorldDriver {
           entry = new PlayerEntry(player, look);
           player.getCoordinates().setX(x);
           player.getCoordinates().setY(y);
-          entry.target.set(x, y);
+          entry.route.accept(tick, x, y);
           players.put(actor.id(), entry);
         } catch (RuntimeException failure) {
           log.warn("Could not build online player {}", actor.id(), failure);
           continue;
         }
       } else {
-        if (entry.target.x != x || entry.target.y != y) {
-          entry.player.getMovement().faceToward(entry.target.x, entry.target.y, x, y);
-          entry.sinceTargetMoved = 0f;
-        }
-        entry.target.set(x, y);
+        entry.route.accept(tick, x, y);
       }
       entry.player.setMaxHp(Math.max(1, actor.maxHp()));
       entry.player.setCurrentHp(Math.max(0, Math.min(actor.hp(), Math.max(1, actor.maxHp()))));
@@ -460,20 +451,23 @@ public final class RemoteWorldDriver implements WorldDriver {
     }
     for (PlayerEntry entry : players.values()) {
       Player player = entry.player;
-      Vector2 position = player.getPositionVector();
-      float distance = position.dst(entry.target);
-      entry.sinceTargetMoved += Math.max(0f, delta);
-      // At the single-player walking pace a server step is only a pixel or two, so the eased
-      // position is nearly always within the snap tolerance: walking must follow the server's
-      // recent movement, not the residual easing distance, or other players glide without legs.
-      boolean moving = entry.sinceTargetMoved < PLAYER_WALK_HOLD_SECONDS;
-      if (distance > PLAYER_SNAP_DISTANCE || distance <= 0.5f) {
-        player.getCoordinates().setX(entry.target.x);
-        player.getCoordinates().setY(entry.target.y);
-      } else {
-        float alpha = 1f - (float) Math.exp(-Math.max(0f, delta) / PLAYER_EASE_SECONDS);
-        player.getCoordinates().setX(position.x + (entry.target.x - position.x) * alpha);
-        player.getCoordinates().setY(position.y + (entry.target.y - position.y) * alpha);
+      // The puppet walks the server's recorded route at the server's pace (see
+      // RemotePlayerPlayback): position, walking flag and facing all come from the drawn motion,
+      // so the legs run exactly while the picture moves, with no restart between polls.
+      RemotePlayerPlayback route = entry.route;
+      route.advance(delta);
+      player.getCoordinates().setX(route.x());
+      player.getCoordinates().setY(route.y());
+      boolean moving = route.moving();
+      if (moving) {
+        // Facing follows the drawn direction like single-player's 8 directions: a component far
+        // smaller than the other (in tile units; the map is drawn at 2:1) is a rounding of the
+        // path, not a turn.
+        float dx = route.directionX() / GRID_W;
+        float dy = route.directionY() / GRID_H;
+        if (Math.abs(dy) < FACING_DEAD_ZONE * Math.abs(dx)) dy = 0f;
+        if (Math.abs(dx) < FACING_DEAD_ZONE * Math.abs(dy)) dx = 0f;
+        player.getMovement().faceToward(0f, 0f, dx, dy);
       }
       player.getMovement().puppetMoving(moving);
       player.getAnimations().update(delta, moving);
