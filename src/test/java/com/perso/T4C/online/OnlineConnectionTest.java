@@ -109,6 +109,7 @@ class OnlineConnectionTest {
                 case "/corpses" -> "[{\"id\":\""+corpseId+"\",\"world\":0,\"x\":2944,\"y\":1059,\"itemCount\":1,\"gold\":0,\"items\":[{\"id\":\""
                     + java.util.UUID.nameUUIDFromBytes("corpse-item".getBytes(StandardCharsets.UTF_8))
                     + "\",\"key\":\"item.dagger\",\"quantity\":2,\"charges\":3}]}]";
+                case "/chat" -> "{\"cursor\":0,\"messages\":[]}";
                 case "/equip", "/unequip", "/attack", "/recover" -> "{\"revision\":" + revision.get() + "}";
                 case "/interact" -> "{\"revision\":"+revision.get()+",\"messageKey\":\"npc.kilhiam."+(newLetter ? "letter" : "temple")+"\",\"changed\":"+newLetter+"}";
                 default -> "{}";
@@ -298,6 +299,7 @@ class OnlineConnectionTest {
         case "/character" -> reply = "{\"id\":\"" + credentials.characterId() + "\",\"name\":\"Loot tester\",\"gold\":0,"
             + "\"experience\":0,\"revision\":" + revision.get() + ",\"locationEpoch\":" + regionEpoch.get() + "}";
         case "/corpses" -> reply = "[]";
+        case "/chat" -> reply = "{\"cursor\":0,\"messages\":[]}";
         case "/pickup" -> {
           pickupCalls.incrementAndGet();
           pickupBodies.add(request);
@@ -398,6 +400,7 @@ class OnlineConnectionTest {
         case "/character" -> "{\"id\":\"" + credentials.characterId() + "\",\"name\":\"Loot tester\",\"gold\":0,"
             + "\"experience\":0,\"revision\":1,\"locationEpoch\":0}";
         case "/corpses" -> "[]";
+        case "/chat" -> "{\"cursor\":0,\"messages\":[]}";
         default -> "{}";
       };
       byte[] bytes = reply.getBytes(StandardCharsets.UTF_8);
@@ -455,6 +458,7 @@ class OnlineConnectionTest {
                 + "\"storageGold\":0,\"respawn\":{\"world\":0,\"x\":1,\"y\":1},\"buffs\":[],\"cooldowns\":{},"
                 + "\"hiddenUntil\":0,\"companion\":null}") + "}";
         case "/corpses" -> reply = "[]";
+        case "/chat" -> reply = "{\"cursor\":0,\"messages\":[]}";
         case "/cast" -> {
           bodies.add("cast " + request);
           if (request.contains("spell.arcane_spark")) {
@@ -575,6 +579,7 @@ class OnlineConnectionTest {
         case "/character" -> "{\"id\":\"" + credentials.characterId() + "\",\"name\":\"Caster\",\"gold\":0,"
             + "\"experience\":0,\"revision\":1,\"locationEpoch\":0}";
         case "/corpses" -> "[]";
+        case "/chat" -> "{\"cursor\":0,\"messages\":[]}";
         default -> "{}";
       };
       byte[] bytes = reply.getBytes(StandardCharsets.UTF_8);

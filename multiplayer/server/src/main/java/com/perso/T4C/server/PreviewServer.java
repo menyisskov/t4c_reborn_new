@@ -39,7 +39,7 @@ public final class PreviewServer implements AutoCloseable {
   static final int GROUND_LOOT_VIEW_LIMIT = 128;
   private static final Set<String> POST_ROUTES=Set.of("/join","/admin/shutdown","/input","/attack",
       "/recover","/equip","/unequip","/interact","/pickup","/cast","/use","/allocate-stats","/sneak","/region-ready","/leave",
-      "/account/characters","/shop-offers","/shop-buy","/shop-sell");
+      "/account/characters","/shop-offers","/shop-buy","/shop-sell","/chat");
   private static final Set<String> GET_ROUTES=Set.of("/","/client.js","/style.css","/strings",
       "/account/characters","/map","/state","/character","/corpses","/health","/admin/metrics");
   private record RegionJoined(String token,long id,com.perso.T4C.online.model.OnlineRegion region) {}
@@ -87,6 +87,8 @@ public final class PreviewServer implements AutoCloseable {
   private final HostedWorlds hosted;
   private final PreviewWorld world;
   private final OnlineStore store;
+  private final OnlineChat chat = new OnlineChat();
+  private final ConcurrentHashMap<String,String> chatNames = new ConcurrentHashMap<>();
   private final PersistentSessions persistent;
   private final PersistentCreatures persistentCreatures;
   private final OnlineMelee melee;
@@ -365,6 +367,7 @@ public final class PreviewServer implements AutoCloseable {
             : !type.toLowerCase(java.util.Locale.ROOT).startsWith("text/plain")))
           throw new PreviewWorld.Rejected(415, "input");
         if ("/join".equals(path) || "/pickup".equals(path) || "/cast".equals(path) || "/use".equals(path)
+            || "/chat".equals(path)
             || "/allocate-stats".equals(path)
             || path.startsWith("/shop-") || "/account/characters".equals(path)) {
           var versions = exchange.getRequestHeaders().get(OnlineProtocol.VERSION_HEADER);
@@ -373,6 +376,7 @@ public final class PreviewServer implements AutoCloseable {
             throw new PreviewWorld.Rejected(426, "protocol");
         }
         int limit="/account/characters".equals(path) ? 512
+            : "/chat".equals(path) ? 700
             : store!=null && "/join".equals(path) ? 101
             : "/interact".equals(path) ? 128
             : path.startsWith("/shop-") ? 256
@@ -398,12 +402,12 @@ public final class PreviewServer implements AutoCloseable {
         } catch(IOException failedRead) { observation.readFailed();throw failedRead; }
         if (count > limit) throw new PreviewWorld.Rejected(413, "input");
         String body;
-        if("/account/characters".equals(path)) {
+        if("/account/characters".equals(path) || "/chat".equals(path)) {
           try {
             body=StandardCharsets.UTF_8.newDecoder().onMalformedInput(CodingErrorAction.REPORT)
                 .onUnmappableCharacter(CodingErrorAction.REPORT).decode(ByteBuffer.wrap(bytes,0,count)).toString();
           } catch(java.nio.charset.CharacterCodingException invalid) {
-            throw new PreviewWorld.Rejected(400,"creation_input");
+            throw new PreviewWorld.Rejected(400,"input");
           }
         } else body=new String(bytes,0,count,StandardCharsets.US_ASCII);
         switch (path) {
@@ -421,7 +425,11 @@ public final class PreviewServer implements AutoCloseable {
           case "/join" -> {
             if (store==null) {
               if (!body.isEmpty()) throw new PreviewWorld.Rejected(400, "input");
-              json(exchange,observation, 200, onWorld(() -> { var joined=world.join();return new RegionJoined(joined.token(),joined.id(),hosted.regions.getFirst().descriptor(0)); }));
+              json(exchange,observation, 200, onWorld(() -> {
+                var joined=world.join();
+                chatNames.put(joined.token(),"Player "+joined.id());
+                return new RegionJoined(joined.token(),joined.id(),hosted.regions.getFirst().descriptor(0));
+              }));
             } else {
               if (!body.matches("[0-9a-f]{64} [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"))
                 throw new PreviewWorld.Rejected(400,"input");
@@ -432,6 +440,7 @@ public final class PreviewServer implements AutoCloseable {
               try {
                 var joined=onWorld(() -> persistent.join(session,started));
                 attached=true;
+                chatNames.put(joined.token(),session.character().name());
                 json(exchange,observation,200,onWorld(() -> new RegionJoined(joined.token(),joined.id(),persistent.region(joined.token()))));
               } finally { if (!attached) store.release(session); }
             }
@@ -652,8 +661,11 @@ public final class PreviewServer implements AutoCloseable {
             String token = token(exchange);
             if (persistent==null) onWorld(() -> { world.leave(token); return null; });
             else onWorld(() -> persistent.leave(token)).get(2,TimeUnit.SECONDS);
+            chatNames.remove(token);
+            chat.forget(token);
             json(exchange,observation, 200, Map.of("ok", true));
           }
+          case "/chat" -> json(exchange,observation,200,handleChat(token(exchange),body));
           default -> throw new PreviewWorld.Rejected(404, "route");
         }
       } else if ("GET".equals(method)) {
@@ -786,6 +798,35 @@ public final class PreviewServer implements AutoCloseable {
     if (value == null || !value.matches("Bearer [0-9a-f]{64}"))
       throw new PreviewWorld.Rejected(401, "session");
     return value.substring(7);
+  }
+
+  private record ChatContext(String region,String speaker) {}
+
+  private Map<String,Object> handleChat(String token,String body) throws Exception {
+    if(body.startsWith("send ")) {
+      String text=body.substring(5);
+      ChatContext context=onWorld(() -> chatContext(token));
+      var sent=chat.send(context.region(),token,context.speaker(),text,System.currentTimeMillis());
+      return Map.of("cursor",sent.id());
+    }
+    if(body.startsWith("poll ") && body.substring(5).matches("[0-9]{1,19}")) {
+      long cursor;
+      try { cursor=Long.parseLong(body.substring(5)); }
+      catch(NumberFormatException invalid) { throw new PreviewWorld.Rejected(400,"chat_input"); }
+      ChatContext context=onWorld(() -> chatContext(token));
+      var result=chat.poll(context.region(),cursor);
+      return Map.of("cursor",result.cursor(),"messages",result.messages());
+    }
+    throw new PreviewWorld.Rejected(400,"chat_input");
+  }
+
+  private ChatContext chatContext(String token) {
+    var actor=hosted.actor(token);
+    actor.world.admitRequest(token);
+    String speaker=chatNames.get(token);
+    if(speaker==null && persistent!=null) speaker=persistent.character(token).name();
+    if(speaker==null || speaker.isBlank()) throw new PreviewWorld.Rejected(401,"session");
+    return new ChatContext(actor.spec.world()+":"+actor.spec.key(),speaker);
   }
 
   private static String peer(HttpExchange exchange) {
@@ -934,6 +975,8 @@ public final class PreviewServer implements AutoCloseable {
   }
 
   private void socketDisconnected(String token) {
+    chatNames.remove(token);
+    chat.forget(token);
     if(closed.get()) return;
     try {
       if(persistent==null) onWorld(() -> { world.leave(token); return null; });
