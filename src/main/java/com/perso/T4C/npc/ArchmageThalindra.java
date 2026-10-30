@@ -28,6 +28,16 @@ public final class ArchmageThalindra extends ScriptedNpc {
 
   public static final String SPRITE_BASE = null;
 
+  /** The authored stock shared by Thalindra's offline dialogue and the online shop catalog. */
+  public static final List<String> SHOP_ITEMS =
+      List.of(
+          "pyromancers_mantle",
+          "tidecallers_mantle",
+          "geomancers_mantle",
+          "windweavers_mantle",
+          "lightbringers_mantle",
+          "shadowmancers_mantle");
+
   private static final NpcSpec SPEC =
       new NpcSpec(
           ID,
@@ -147,14 +157,7 @@ public final class ArchmageThalindra extends ScriptedNpc {
                   "${npc.topic.archmagethalindra.10}",
                   List.of(
                       new NpcSpec.Action(
-                          ActionType.OPEN_SHOP,
-                          List.of(
-                              "pyromancers_mantle",
-                              "tidecallers_mantle",
-                              "geomancers_mantle",
-                              "windweavers_mantle",
-                              "lightbringers_mantle",
-                              "shadowmancers_mantle"))))),
+                          ActionType.OPEN_SHOP, SHOP_ITEMS)))),
           "ArchmageThalindraNPC",
           new NpcSpec.CombatProfile(100, 1000000, 65, 67, 63, 1000000, 250, 65535, "1d23+16"));
 

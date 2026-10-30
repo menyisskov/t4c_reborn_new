@@ -105,6 +105,27 @@ class RegionNpcsTest {
     assertTrue(npcs.views().stream().anyMatch(n->n.id().equals("WardenAelric")));
   }
 
+  @Test void streamedArchmageAppearanceResolvesToItsOnlineShop() throws Exception {
+    var appearances=NpcAppearanceCatalog.loadBundled();
+    var source=appearances.inStreamedRegion(
+        new RegionMapLoader.Spec(0,"world0",4037,1498,12,12,4042,1503,true)).stream()
+        .filter(spawn->spawn.canonicalNpcId().equals("ArchmageThalindra"))
+        .findFirst().orElseThrow();
+    assertFalse(source.interactionSupported());
+    var spec=new RegionMapLoader.Spec(0,"world0",4037,1498,12,12,4042,1503,true);
+    var npcs=new RegionNpcs(NpcInteractionCatalog.loadBundled(),ItemCatalog.loadBundled(),
+        spec,appearances);
+    String viewId=NpcAppearanceCatalog.viewId(source);
+    assertTrue(npcs.views().stream().anyMatch(view->view.id().equals(viewId)));
+    var progress=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,
+        new Random(1)).progress();
+    var saved=new com.perso.T4C.server.persistence.OnlineStore.CharacterState(
+        java.util.UUID.randomUUID(),java.util.UUID.randomUUID(),"Tester",0,3,3,0,0,0,progress);
+    var map=new PreviewMap(new boolean[12][12],spec.originX(),spec.originY(),5,5);
+    assertEquals(java.util.Optional.of("ArchmageThalindra"),
+        npcs.reachableShopkeeper(saved,map,4.5,5.5,viewId));
+  }
+
   @Test void duplicateCanonicalNpcKeepsDistinctAppearanceButNoSecondInteraction() throws Exception {
     var catalog=NpcInteractionCatalog.loadBundled();
     var interactive=catalog.npcs().stream().filter(n->n.id().equals("Kilhiam"))

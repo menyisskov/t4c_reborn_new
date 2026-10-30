@@ -12,6 +12,41 @@
       ]
     },
     {
+      "npcId": "ArchmageThalindra",
+      "offers": [
+        {
+          "itemKey": "item.pyromancers_mantle",
+          "buyPrice": 1500000,
+          "sellPrice": 750000
+        },
+        {
+          "itemKey": "item.tidecallers_mantle",
+          "buyPrice": 1500000,
+          "sellPrice": 750000
+        },
+        {
+          "itemKey": "item.geomancers_mantle",
+          "buyPrice": 1500000,
+          "sellPrice": 750000
+        },
+        {
+          "itemKey": "item.windweavers_mantle",
+          "buyPrice": 1500000,
+          "sellPrice": 750000
+        },
+        {
+          "itemKey": "item.lightbringers_mantle",
+          "buyPrice": 1500000,
+          "sellPrice": 750000
+        },
+        {
+          "itemKey": "item.shadowmancers_mantle",
+          "buyPrice": 1500000,
+          "sellPrice": 750000
+        }
+      ]
+    },
+    {
       "npcId": "ChryseidaYolangda",
       "offers": [
         {
