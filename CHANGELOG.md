@@ -1,3 +1,8 @@
+## 2026-10-30 — Online HUD buttons and Warden Aelric's completed quest greeting (T4C-0343)
+
+### Fixed
+- The six buttons at the bottom of the online screen now open their existing character, inventory, spellbook, quest, map and options windows when clicked.
+- After finishing Renewed Wards, Warden Aelric now greets you with the completed line instead of repeating the offer.
 # Changelog
 
 All notable game-content and systems changes are documented here, newest first.
@@ -5,6 +10,11 @@ Format is loosely based on [Keep a Changelog](https://keepachangelog.com/),
 grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
+
+## 2026-10-30 — Sneak works in online play (T4C-0344)
+
+### Changed
+- Players who have learned Sneak can activate it online. Moving can reveal them as in single-player, and melee, ranged attacks and spell casts end concealment.
 
 ## 2026-10-30 — Equipment changes now show on your own character in online play (T4C-0342)
 

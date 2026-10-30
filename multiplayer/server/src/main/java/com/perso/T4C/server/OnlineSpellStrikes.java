@@ -118,8 +118,9 @@ final class OnlineSpellStrikes {
     };
     var plan = plan(saved, spellKey, target, now, random, items, spells, map, position.x(), position.y(),
         sessions.region(token).world(), source,friendView);
+    var castProgress=ProgressEdits.withHiddenUntil(plan.progress(),0);
     if(plan.events().stream().anyMatch(SpellEngine.Event.Recall.class::isInstance))
-      return sessions.recall(token,revision,plan.progress())
+      return sessions.recall(token,revision,castProgress)
           .thenApply(committed -> new Reply(committed.character().revision(),0,plan.manaSpent(),List.of(),plan.buffs()));
     if(playerTarget!=null) {
       var friendHeal=plan.events().stream().filter(SpellEngine.Event.FriendHeal.class::isInstance)
@@ -132,14 +133,14 @@ final class OnlineSpellStrikes {
         var pv=playerTarget.progress().vitals();
         int healedHp=(int)Math.min(pv.maxHp(),(long)pv.hp()+friendHeal.amount());
         if(healedHp==pv.hp())
-          return sessions.commitGameplayEvent(token,revision,UUID.randomUUID(),0,0,plan.progress())
+          return sessions.commitGameplayEvent(token,revision,UUID.randomUUID(),0,0,castProgress)
               .thenApply(committed -> new Reply(committed.character().revision(),0,plan.manaSpent(),List.of(),plan.buffs()));
         recipientProgress=ProgressEdits.withVitals(playerTarget.progress(),new CharacterProgress.Vitals(
             healedHp,pv.maxHp(),pv.mana(),pv.maxMana()));
       } else {
         recipientProgress=OnlineBuffs.apply(playerTarget.progress(),friendBuff,now);
       }
-      return sessions.commitPlayerEffect(token,revision,UUID.randomUUID(),plan.progress(),playerTarget,recipientProgress)
+      return sessions.commitPlayerEffect(token,revision,UUID.randomUUID(),castProgress,playerTarget,recipientProgress)
           .thenApply(committed -> new Reply(committed.character().revision(),0,plan.manaSpent(),List.of(),plan.buffs()));
     }
     var reserved = new ArrayList<Long>();
@@ -149,9 +150,9 @@ final class OnlineSpellStrikes {
         reserved.add(id);
       }
       CompletionStage<OnlineStore.RewardResult> pending = plan.strikes().isEmpty()
-          ? sessions.commitGameplayEvent(token, revision, UUID.randomUUID(), 0, 0, plan.progress())
+          ? sessions.commitGameplayEvent(token, revision, UUID.randomUUID(), 0, 0, castProgress)
           : sessions.commitSpellStrikes(token, revision, UUID.randomUUID(), plan.gold(), plan.experience(),
-              plan.progress(), plan.strikes());
+              castProgress, plan.strikes());
       return pending.whenComplete((result, error) -> {
         // Session completions run on the simulation owner, including its shutdown drain.
         for (long id : reserved) {

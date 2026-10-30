@@ -37,7 +37,7 @@ public final class PreviewServer implements AutoCloseable {
   /** Ground loot shown in one snapshot: at most this many drops, nearest the viewer first. */
   static final int GROUND_LOOT_VIEW_LIMIT = 128;
   private static final Set<String> POST_ROUTES=Set.of("/join","/admin/shutdown","/input","/attack",
-      "/recover","/equip","/unequip","/interact","/pickup","/cast","/use","/allocate-stats","/region-ready","/leave",
+      "/recover","/equip","/unequip","/interact","/pickup","/cast","/use","/allocate-stats","/sneak","/region-ready","/leave",
       "/account/characters","/shop-offers","/shop-buy","/shop-sell");
   private static final Set<String> GET_ROUTES=Set.of("/","/client.js","/style.css","/strings",
       "/account/characters","/map","/state","/character","/corpses","/health","/admin/metrics");
@@ -487,6 +487,19 @@ public final class PreviewServer implements AutoCloseable {
             }
             json(exchange, observation, 200,
                 Map.of("revision", committed.revision(), "allocatedPoints", committed.pointsSpent()));
+          }
+          case "/sneak" -> {
+            if(persistent==null) throw new PreviewWorld.Rejected(404,"route");
+            String token=token(exchange);
+            if(!body.matches("[0-9]{1,19} [0-9]{1,19}")) throw new PreviewWorld.Rejected(400,"input");
+            String[] parts=body.split(" ");long revision,epoch;
+            try { revision=Long.parseLong(parts[0]);epoch=Long.parseLong(parts[1]); }
+            catch(NumberFormatException bad) { throw new PreviewWorld.Rejected(400,"input"); }
+            var pending=onWorld(() -> { admit(token,epoch);return persistent.sneak(token,revision); });
+            OnlineStore.RewardResult committed;
+            try { committed=pending.toCompletableFuture().get(2,TimeUnit.SECONDS); }
+            catch(ExecutionException error) { if(error.getCause() instanceof PreviewWorld.Rejected rejected) throw rejected; throw error; }
+            json(exchange,observation,200,Map.of("revision",committed.character().revision()));
           }
           case "/recover" -> {
             if (persistent==null) throw new PreviewWorld.Rejected(404,"route");
