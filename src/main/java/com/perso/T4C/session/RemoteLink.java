@@ -28,6 +28,12 @@ public interface RemoteLink {
     throw new IllegalStateException("Corpse recovery is not available on this link");
   }
 
+  default CompletionStage<OnlineConnection.CommandResult> recover(UUID corpse, UUID item) {
+    return item == null ? recover(corpse)
+        : java.util.concurrent.CompletableFuture.failedFuture(
+            new IllegalStateException("Corpse item recovery is not available on this link"));
+  }
+
   /** As {@link #interact(String)}, asking the NPC about one authored topic (0-99). */
   default CompletionStage<OnlineConnection.CommandResult> interact(String npc, int topic) {
     throw new IllegalStateException("Topics are not available on this link");

@@ -106,7 +106,9 @@ class OnlineConnectionTest {
                 case "/character" ->
                     "{\"id\":\"" + credentials.characterId() + "\",\"name\":\"Online tester\",\"gold\":"
                         + (200 + revision.get()) + ",\"experience\":0,\"revision\":" + revision.get() + ",\"locationEpoch\":"+regionEpoch.get()+"}";
-                case "/corpses" -> "[{\"id\":\""+corpseId+"\",\"world\":0,\"x\":2944,\"y\":1059,\"itemCount\":1,\"gold\":0}]";
+                case "/corpses" -> "[{\"id\":\""+corpseId+"\",\"world\":0,\"x\":2944,\"y\":1059,\"itemCount\":1,\"gold\":0,\"items\":[{\"id\":\""
+                    + java.util.UUID.nameUUIDFromBytes("corpse-item".getBytes(StandardCharsets.UTF_8))
+                    + "\",\"key\":\"item.dagger\",\"quantity\":2,\"charges\":3}]}]";
                 case "/equip", "/unequip", "/attack", "/recover" -> "{\"revision\":" + revision.get() + "}";
                 case "/interact" -> "{\"revision\":"+revision.get()+",\"messageKey\":\"npc.kilhiam."+(newLetter ? "letter" : "temple")+"\",\"changed\":"+newLetter+"}";
                 default -> "{}";
@@ -195,9 +197,14 @@ class OnlineConnectionTest {
           assertEquals(4,attack.character().revision());
           assertEquals(attack.character(),connection.view().character());
           assertEquals(corpseId,connection.view().corpses().getFirst().id());
-          var recovered=connection.recover(corpseId).toCompletableFuture().get(3,TimeUnit.SECONDS);
+          assertEquals("item.dagger", connection.view().corpses().getFirst().items().getFirst().key());
+          assertEquals(2, connection.view().corpses().getFirst().items().getFirst().quantity());
+          assertEquals(3, connection.view().corpses().getFirst().items().getFirst().charges());
+          var corpseItemId = java.util.UUID.nameUUIDFromBytes("corpse-item".getBytes(StandardCharsets.UTF_8));
+          var recovered=connection.recover(corpseId, corpseItemId).toCompletableFuture().get(3,TimeUnit.SECONDS);
           assertTrue(recovered.accepted());
-          assertEquals("4 0 "+corpseId,equipmentBody.get(),"Recovery accepts only revision, location epoch and owned corpse identity");
+          assertEquals("4 0 "+corpseId+" "+corpseItemId,equipmentBody.get(),
+              "Item recovery sends only revision, location epoch, owned corpse and selected item identities");
           assertEquals(5,recovered.character().revision());
 
           var letter=connection.interact("Kilhiam").toCompletableFuture().get(3,TimeUnit.SECONDS);

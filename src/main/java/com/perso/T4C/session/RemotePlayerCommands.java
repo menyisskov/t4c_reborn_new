@@ -79,6 +79,9 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
 
     /** Called by {@link #pump()} after a greeting that opened no shop: offer the NPC's topics. */
     default void showTalk(String npc) {}
+
+    /** Opens the read-only item selector for one owner-listed corpse. */
+    default void showCorpse(UUID corpse) {}
   }
 
   /** The swing-cooldown refusal is routine and never shown (same key as the text client). */
@@ -237,8 +240,17 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
   @Override
   public boolean recover(UUID corpse) {
     if (corpse == null) return false;
+    if (host == null) return false;
+    host.showCorpse(corpse);
+    return true;
+  }
+
+  /** Sends only the selected stack identity; a null item is used for a gold-only corpse. */
+  @Override
+  public boolean recover(UUID corpse, UUID item) {
+    if (corpse == null) return false;
     try {
-      link.recover(corpse)
+      link.recover(corpse, item)
           .whenComplete(
               (result, failure) ->
                   outcomes.add(

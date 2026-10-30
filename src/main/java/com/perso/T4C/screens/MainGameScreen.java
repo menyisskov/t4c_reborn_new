@@ -154,6 +154,8 @@ public class MainGameScreen implements Screen {
       new com.perso.T4C.online.OnlineShopPanel();
   private final com.perso.T4C.online.OnlineInventoryPanel remoteInventoryPanel =
       new com.perso.T4C.online.OnlineInventoryPanel();
+  private final com.perso.T4C.online.OnlineCorpsePanel remoteCorpsePanel =
+      new com.perso.T4C.online.OnlineCorpsePanel();
   private final com.perso.T4C.online.OnlineAbilityMenu remoteAbilityMenu =
       new com.perso.T4C.online.OnlineAbilityMenu();
   private final com.perso.T4C.online.OnlineTalkPanel remoteTalkPanel =
@@ -406,6 +408,16 @@ public class MainGameScreen implements Screen {
             remoteTalkTileX = player.getCoordinates().getX();
             remoteTalkTileY = player.getCoordinates().getY();
           }
+        }
+        @Override public void showCorpse(java.util.UUID corpseId) {
+          closeRemoteShop();
+          remoteInventoryPanel.close();
+          remoteAbilityMenu.close();
+          remoteTalkPanel.close();
+          var view = remoteConnection == null ? null : remoteConnection.view();
+          if (view == null || view.corpses() == null) return;
+          view.corpses().stream().filter(corpse -> corpse.id().equals(corpseId)).findFirst()
+              .ifPresent(remoteCorpsePanel::open);
         }
       });
     } else {
@@ -1614,6 +1626,10 @@ public class MainGameScreen implements Screen {
               && (remoteConnection == null || !"connected".equals(remoteConnection.status()))) {
             remoteInventoryPanel.close();
           }
+          if (remoteCorpsePanel.isOpen()
+              && (remoteConnection == null || !"connected".equals(remoteConnection.status()))) {
+            remoteCorpsePanel.close();
+          }
           if (remoteAbilityMenu.isOpen()
               && (remoteConnection == null || !"connected".equals(remoteConnection.status()))) {
             remoteAbilityMenu.close();
@@ -1626,7 +1642,8 @@ public class MainGameScreen implements Screen {
               || remoteConnection!=null && !"connected".equals(remoteConnection.status())) {
             return;
           }
-          if (remoteShopPanel.isOpen() || remoteInventoryPanel.isOpen() || remoteAbilityMenu.isOpen())
+          if (remoteShopPanel.isOpen() || remoteInventoryPanel.isOpen() || remoteCorpsePanel.isOpen()
+              || remoteAbilityMenu.isOpen())
             session.commands().move(0, 0, delta);
           else inputHandler.handleInput(delta, player);
         });
@@ -5289,6 +5306,27 @@ public class MainGameScreen implements Screen {
             return true;
           }
         }
+        if (remoteCorpsePanel.isOpen()) {
+          if (keycode == Input.Keys.ESCAPE) {
+            remoteCorpsePanel.close();
+            return true;
+          }
+          var corpse = currentRemoteCorpse(remoteCorpsePanel.corpse());
+          if (keycode == Input.Keys.LEFT || keycode == Input.Keys.RIGHT) {
+            remoteCorpsePanel.turnPage(keycode == Input.Keys.RIGHT ? 1 : -1, corpse);
+            return true;
+          }
+          int digit = keycode >= Input.Keys.NUM_1 && keycode <= Input.Keys.NUM_9
+              ? keycode - Input.Keys.NUM_1 + 1 : 0;
+          if (digit == 0) return false;
+          var action = remoteCorpsePanel.choose(digit, corpse).orElse(null);
+          if (action != null) {
+            submitRemoteCorpseChoice(
+                (com.perso.T4C.session.RemotePlayerCommands) session.commands(), action);
+            remoteCorpsePanel.close();
+          }
+          return true;
+        }
         if (remoteAbilityMenu.isOpen()) {
           if (keycode == Input.Keys.ESCAPE) {
             remoteAbilityMenu.close();
@@ -5337,6 +5375,7 @@ public class MainGameScreen implements Screen {
         if (keycode == Input.Keys.C || keycode == Input.Keys.U) {
           closeRemoteShop();
           remoteInventoryPanel.close();
+          remoteCorpsePanel.close();
           var view = remoteConnection == null ? null : remoteConnection.view();
           var progress = view == null || view.character() == null ? null : view.character().progress();
           var kind = keycode == Input.Keys.C
@@ -5351,6 +5390,7 @@ public class MainGameScreen implements Screen {
           closeRemoteShop();
           remoteAbilityMenu.close();
           remoteInventoryPanel.open();
+          remoteCorpsePanel.close();
           return true;
         }
         if (remoteInventoryPanel.isOpen()) {
@@ -5413,9 +5453,11 @@ public class MainGameScreen implements Screen {
         if (keycode == Input.Keys.I) {
           closeRemoteShop();
           remoteAbilityMenu.close();
+          remoteCorpsePanel.close();
           remoteInventoryPanel.open();
           return true;
         }
+        if (keycode == Input.Keys.E) return openNearestRemoteCorpse();
         return false;
       }
     });
@@ -5464,6 +5506,9 @@ public class MainGameScreen implements Screen {
     if (remoteShopPanel.isOpen()) return remoteShopPanel.lines(MainGameScreen::onlineShopItemName);
     if (remoteInventoryPanel.isOpen())
       return remoteInventoryPanel.lines(progress, MainGameScreen::onlineShopItemName);
+    if (remoteCorpsePanel.isOpen())
+      return remoteCorpsePanel.lines(currentRemoteCorpse(remoteCorpsePanel.corpse()),
+          MainGameScreen::onlineShopItemName);
     if (remoteAbilityMenu.isOpen()) return remoteAbilityMenu.lines(progress);
     if (remoteTalkPanel.isOpen()) return remoteTalkPanel.lines();
     return java.util.List.of();
@@ -5472,8 +5517,33 @@ public class MainGameScreen implements Screen {
   private void closeRemotePanels() {
     closeRemoteShop();
     remoteInventoryPanel.close();
+    remoteCorpsePanel.close();
     remoteAbilityMenu.close();
     remoteTalkPanel.close();
+  }
+
+  private com.perso.T4C.online.OnlineConnection.Corpse currentRemoteCorpse(java.util.UUID id) {
+    var view = remoteConnection == null ? null : remoteConnection.view();
+    if (view == null || view.corpses() == null || id == null) return null;
+    return view.corpses().stream().filter(corpse -> id.equals(corpse.id())).findFirst().orElse(null);
+  }
+
+  private boolean openNearestRemoteCorpse() {
+    var view = remoteConnection == null ? null : remoteConnection.view();
+    if (view == null || view.snapshot() == null || view.map() == null) return false;
+    var own = view.snapshot().players().stream().filter(actor -> actor.id() == view.ownId()).findFirst().orElse(null);
+    if (own == null) return false;
+    var nearest = view.corpses().stream().filter(corpse -> corpse.world() == view.map().world())
+        .min(java.util.Comparator.comparingDouble(corpse -> Math.hypot(
+            (corpse.x() - view.map().originX() - own.x()) * GRID_W,
+            (corpse.y() - view.map().originY() - own.y()) * GRID_H))).orElse(null);
+    return nearest != null && ((com.perso.T4C.session.RemotePlayerCommands) session.commands()).recover(nearest.id());
+  }
+
+  static boolean submitRemoteCorpseChoice(
+      com.perso.T4C.session.RemoteIntents commands,
+      com.perso.T4C.online.OnlineCorpsePanel.Action action) {
+    return commands != null && action != null && commands.recover(action.corpse(), action.item());
   }
 
   /** Draws the open online list in the centred journal window, as single-player draws its screens. */

@@ -524,9 +524,17 @@ class PreviewServerTest {
       var summary=summaries.get(0).getAsJsonObject();
       assertEquals(corpse.toString(),summary.get("id").getAsString());
       assertEquals(death.transition().droppedItems().size(),summary.get("itemCount").getAsInt());
-      assertFalse(summary.has("items")); assertFalse(listed.body().contains(character.id().toString()));
-      assertFalse(listed.body().contains(ownedItem.id().toString()));
-      assertTrue(JsonParser.parseString(client.send(request(url,"/corpses",foreign,null),HttpResponse.BodyHandlers.ofString()).body()).getAsJsonArray().isEmpty());
+      var exposedItems = summary.getAsJsonArray("items");
+      assertEquals(death.transition().droppedItems().size(), exposedItems.size());
+      var exposedOwnedItem = exposedItems.asList().stream().map(e -> e.getAsJsonObject())
+          .filter(item -> ownedItem.id().toString().equals(item.get("id").getAsString())).findFirst().orElseThrow();
+      assertEquals(ownedItem.key(), exposedOwnedItem.get("key").getAsString());
+      assertEquals(ownedItem.quantity(), exposedOwnedItem.get("quantity").getAsInt());
+      assertEquals(ownedItem.charges(), exposedOwnedItem.get("charges").getAsInt());
+      assertFalse(listed.body().contains(character.id().toString()));
+      var foreignCorpses = JsonParser.parseString(
+          client.send(request(url,"/corpses",foreign,null),HttpResponse.BodyHandlers.ofString()).body()).getAsJsonArray();
+      assertTrue(foreignCorpses.isEmpty());
       assertEquals(409,client.send(request(url,"/recover",foreign,"0 0 "+corpse),HttpResponse.BodyHandlers.ofString()).statusCode());
       long revision=object(client.send(request(url,"/character",token,null),HttpResponse.BodyHandlers.ofString())).get("revision").getAsLong();
       assertEquals(409,client.send(request(url,"/recover",token,revision+" 1 "+corpse),HttpResponse.BodyHandlers.ofString()).statusCode());
