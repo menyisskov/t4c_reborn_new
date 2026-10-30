@@ -66,6 +66,10 @@ public interface RemoteLink {
     throw new IllegalStateException("Stat allocation is not available on this link");
   }
 
+  default CompletionStage<OnlineConnection.CommandResult> sneak() {
+    throw new IllegalStateException("Sneak is not available on this link");
+  }
+
   /** Holds a direction (each component -1..1); {@code frame} names the predicted client input. */
   void direction(int dx, int dy, long frame);
 

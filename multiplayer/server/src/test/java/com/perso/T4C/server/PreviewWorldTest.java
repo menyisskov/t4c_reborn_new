@@ -8,6 +8,27 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 class PreviewWorldTest {
+  @Test void movingWitnessUpkeepUsesActualMovementAndLivingCreaturesInAuthoredRange() throws Exception {
+    var map=new PreviewMap(new boolean[100][100],0,0,4,5);
+    var definition=MonsterCatalog.loadBundled().monsters().get("Skeleton");
+    var spawn=new MonsterContent.Spawn("witness","Skeleton",5,5,0,false,true);
+    var content=new MonsterContent(MonsterContent.VERSION,Map.of("Skeleton",definition),List.of(spawn));
+    var world=new PreviewWorld(map,content);
+    var player=world.join();
+    assertEquals(1,world.witnesses(player.token()));
+    var creature=world.creatureSpawns().getFirst();
+    world.creatureHealth(creature.id(),0);
+    assertEquals(0,world.witnesses(player.token()),"dead creatures do not witness Sneak upkeep");
+    assertFalse(world.moving(player.token()));
+    world.input(player.token(),1,1,0);
+    assertFalse(world.moving(player.token()),"input alone does not count as movement");
+    world.step();
+    assertTrue(world.moving(player.token()));
+    world.input(player.token(),2,0,0);
+    for(int i=0;i<PreviewWorld.TICK_RATE*2;i++) world.step();
+    assertFalse(world.moving(player.token()));
+  }
+
   @Test void commandFloodIsBoundedPerSessionAndRefillsOnlyWithServerTicks() {
     var world = openWorld();
     var flood = world.join();

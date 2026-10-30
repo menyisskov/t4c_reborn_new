@@ -45,6 +45,21 @@ class OnlineQuestsTest {
     assertEquals(p, greeting.progress());
   }
 
+  @Test void greetingForCompletedQuestUsesCompletedLineWithoutChangingProgressOrReward() throws Exception {
+    var definition = QuestCatalog.loadBundled().definition("renewed_wards");
+    var p = progress(1, 10, List.of(), Map.of(),
+        Map.of(FLAG, QuestRules.STATUS_COMPLETED, KILLS, 12), Set.of());
+
+    var greeting = OnlineQuests.greet(
+        state(p, 400), definition, ItemCatalog.loadBundled(), UUID::randomUUID, 100, new Random(1));
+
+    assertFalse(greeting.changed());
+    assertEquals("quest.renewed_wards.completed", greeting.messageKey());
+    assertEquals(0, greeting.gold());
+    assertEquals(0, greeting.experience());
+    assertEquals(p, greeting.progress());
+  }
+
   @Test void twelveOfTwelveTurnsInExactlyOnceWithRewardGoldExperienceAndSpell() throws Exception {
     var catalog = QuestCatalog.loadBundled();
     var definition = catalog.definition("renewed_wards");

@@ -150,6 +150,8 @@ evidence and ticks four of the seven:
   character profile keeps direct launch and can prefer lobby selection) cover the retained direct path; T4C-0212's rendered
   check and T4C-0311's packaged-client rehearsal used it live.
 
+T4C-0343 implementation evidence (local only): the existing six online HUD buttons now route clicks to their current actions; completed Renewed Wards greetings use the authored completed line in offline and server paths. Focused tests and both packages pass. No rendered-client check has been run for this delivery, so M1 remains open.
+
 Done evidence: both rendered clients create/select their own characters, connect, converse, close
 and reconnect. Retain operator profiles as a compatibility path. See [ACCOUNT_LIFECYCLE.md](ACCOUNT_LIFECYCLE.md)
 and [NPC_INTERACTION_DESIGN.md](NPC_INTERACTION_DESIGN.md) for current contracts and limits.
@@ -291,6 +293,8 @@ bullet or an in-world refusal text is wanted is the owner's call); *restart and 
 characters, but the delayed-intent half rests on the stale-epoch battery of T4C-0251, not re-run on this build, so it stays open). Also not driven: a lost response during the
 turn-in itself (T4C-0310 produced both outcomes for the opening-NPC reward through the same reward path).
 
+T4C-0343 adds the completed-state dialogue response to the online quest greeting without changing reward or progress state. The local server regression passes; this is not rendered quest-loop evidence, so M3 remains open.
+
 Done evidence: two rendered clients follow the declared quest from acceptance through travel,
 combat and turn-in; both progress and reconnect with their own exact rewards. Include one
 repeat turn-in and a lost-response/restart recovery check. See [MAP_TRANSFER_DESIGN.md](MAP_TRANSFER_DESIGN.md).
@@ -298,6 +302,8 @@ repeat turn-in and a lost-response/restart recovery check. See [MAP_TRANSFER_DES
 ## M4 — Play the supported combat and ability set
 
 Current evidence (T4C-0323, PR #285 merged): learned single-target heal effects route to another live nearby player through the game socket; atomic caster/recipient persistence and the PostgreSQL-backed socket route pass focused tests. No rendered-client evidence yet; this does not complete M4.
+
+T4C-0344 implementation evidence: learned online Sneak now commits concealment and its cooldown; movement upkeep uses the authored skill/stat/witness checks, and melee, ranged attacks and spell casts reveal it. Focused server tests passed 19 total (0 failures/errors, 6 skipped, including database-gated cases), focused client tests passed 49/49, root and server package builds passed, and `git diff --check` passed. The PostgreSQL persistence/observer case and rendered-client verification were not run. M4 and Beta remain open.
 
 Required behavior:
 
@@ -530,7 +536,7 @@ on a stock Windows machine. Details: [CLIENT_DISTRIBUTION.md](CLIENT_DISTRIBUTIO
 
 **What a real clean-machine delivery still needs (unchecked, for the second-machine pass):**
 
-**Closed by T4C-0343 (2026-10-30, same-machine evidence only; details in [CLIENT_DISTRIBUTION.md](CLIENT_DISTRIBUTION.md) and [SERVER_DISTRIBUTION.md](SERVER_DISTRIBUTION.md)):**
+**Closed by T4C-0345 (2026-10-30, same-machine evidence only; details in [CLIENT_DISTRIBUTION.md](CLIENT_DISTRIBUTION.md) and [SERVER_DISTRIBUTION.md](SERVER_DISTRIBUTION.md)):**
 
 - [x] Java requirement documented and enforced by the launchers: every launcher (client, `check-server`, `start-server`, `provision-online`, `verify-package`)
   now prints one plain message and exits 1 when `java` is missing, older than 21, not 64-bit, or not a Java at all. Proved by `test-package-java-check.ps1`
@@ -546,7 +552,7 @@ on a stock Windows machine. Details: [CLIENT_DISTRIBUTION.md](CLIENT_DISTRIBUTIO
   unlisted/changed/missing files and prints the manifest's own SHA-256; passing `-ManifestSha256 <value from the publisher>` also checks the manifest itself.
   The builders print that value. Proved on a copied package (match, mismatch, missing Java). A download/update channel is still an owner choice (below).
 
-**Still open (unchecked) after T4C-0343:**
+**Still open (unchecked) after T4C-0345:**
 
 - [ ] Java on a machine that really has none: the message is proved only with a fake `java.cmd` and a PATH without Java on this machine. Missing evidence: the
   same launchers on a second machine or clean VM with no JDK, plus the owner's choice between "document Java 21" and bundling a runtime (jlink or vendor).

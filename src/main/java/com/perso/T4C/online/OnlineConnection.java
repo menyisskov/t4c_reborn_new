@@ -331,6 +331,11 @@ public final class OnlineConnection implements AutoCloseable {
     return gameplayCommand("/allocate-stats", encoded);
   }
 
+  /** Requests the learned Sneak skill; concealment and cooldown are committed by the server. */
+  public java.util.concurrent.CompletionStage<CommandResult> sneak() {
+    return gameplayCommand("/sneak", "");
+  }
+
   /** Authored identity only; the server resolves dialogue, proximity and any item grant. */
   public java.util.concurrent.CompletionStage<CommandResult> interact(String npc) {
     return interact(npc, java.util.OptionalInt.empty());
@@ -380,7 +385,8 @@ public final class OnlineConnection implements AutoCloseable {
     if (closed || current == null || current.character() == null || !status.equals("connected"))
       throw new IllegalStateException("Persistent session is not connected");
     long revision = current.character().revision();
-    var command = new GameplayCommand(path, revision + " " + current.map().locationEpoch() + " " + arguments, revision,
+    String body=revision+" "+current.map().locationEpoch()+(arguments.isEmpty() ? "" : " "+arguments);
+    var command = new GameplayCommand(path, body, revision,
         new java.util.concurrent.CompletableFuture<>());
     if (!gameplay.compareAndSet(null, command)) throw new IllegalStateException("Gameplay command pending");
     // Close/disconnect may race publication of the command after the initial state check.

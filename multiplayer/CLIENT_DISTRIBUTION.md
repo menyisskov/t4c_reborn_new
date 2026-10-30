@@ -136,7 +136,7 @@ that a tester's machine may lack. Observed:
 - The only install-directory writes were the `logs/` files. The game wrote nothing under the
   profile directory except extracted native DLLs (LWJGL, libGDX, the pinned GLFW) in `TEMP`;
   at that time the GLFW extraction directory was not removed on exit (one small directory per launch);
-  T4C-0343 fixed this, see "Per-launch residue" below.
+  T4C-0345 fixed this, see "Per-launch residue" below.
 - With `assets/origin/` moved away, the client (started with `java -cp`, bypassing the
   manifest check) connected and rendered its window the same way, so that folder is dead weight
   in this package. Whether to stop shipping it is an owner decision (it also holds original
@@ -146,7 +146,7 @@ that a tester's machine may lack. Observed:
   on the client's first stderr line under 5.1 (so `launch-online.bat` could never start the
   client). The launcher now starts the client with `Start-Process` and file redirection.
 
-## Per-launch residue (T4C-0343)
+## Per-launch residue (T4C-0345)
 
 The online GLFW library cannot be deleted while the client is running on Windows, so the old per-launch temp folder was never removed. The
 client now extracts it to `%TEMP%\t4c-online-glfw-<first 16 hex of its SHA-256>\glfw3.dll`, reuses that folder on every launch of any package

@@ -1,6 +1,6 @@
 param(
     [Parameter(Mandatory)][ValidatePattern('^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$')][string]$Name,
-    # Opt-in size experiment (T4C-0343): leave out the tracked assets/origin/ folder (original-game files the online client does not read).
+    # Opt-in size experiment (T4C-0345): leave out the tracked assets/origin/ folder (original-game files the online client does not read).
     # The default package is unchanged; see CLIENT_DISTRIBUTION.md for the measured result before deciding to make this the default.
     [switch]$ExcludeOrigin
 )

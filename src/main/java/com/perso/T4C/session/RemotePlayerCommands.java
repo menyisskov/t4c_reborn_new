@@ -461,6 +461,24 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
     return sendRetrying(() -> link.useItem(itemInstance), ABILITY_BUSY_KEY, ABILITY_BUSY_KEY, true);
   }
 
+  @Override public boolean sneak() {
+    if(link.view()==null) return false;
+    try {
+      link.sneak().whenComplete((result,failure) -> {
+        if(failure!=null || result==null) outcomes.add(Outcome.message("online.sneak.refused",List.of()));
+        else if(!result.accepted() && ABILITY_BUSY_KEY.equals(result.messageKey())) {
+          try { link.sneak().whenComplete((retry,retryFailure) -> outcomes.add(Outcome.message(
+              retryFailure!=null || retry==null || retry.messageKey()==null ? "online.sneak.refused" : retry.messageKey(),
+              retryFailure!=null || retry==null ? List.of() : retry.args()))); }
+          catch(IllegalStateException unavailable) { outcomes.add(Outcome.message(ABILITY_BUSY_KEY,List.of())); }
+        } else if(result.accepted()) outcomes.add(Outcome.message("online.sneak.started",List.of()));
+        else outcomes.add(Outcome.message(result.messageKey()==null ? "online.sneak.refused" : result.messageKey(),result.args()));
+      });
+      return true;
+    } catch(IllegalStateException unavailable) { outcomes.add(Outcome.message(ABILITY_BUSY_KEY,List.of()));return true; }
+    catch(IllegalArgumentException invalid) { return false; }
+  }
+
   static final String STAT_BUSY_KEY = "online.stats.busy";
 
   @Override
