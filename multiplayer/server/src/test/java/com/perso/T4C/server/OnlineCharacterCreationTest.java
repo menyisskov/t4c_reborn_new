@@ -107,6 +107,47 @@ class OnlineCharacterCreationTest {
     }
   }
 
+  /** T4C-0350: a request that is retried while the first copy is still in flight (an impatient double Enter, a client retry
+   * after a timeout) creates one character and one kit, whichever copy commits first. */
+  @Test void concurrentCopiesOfOneRequestCreateOneCharacterAndOneKit() throws Exception {
+    var store=OnlineStore.fromEnvironment();store.migrate();var owner=store.provisionAccount();
+    var plan=HostedRegionPlan.startingSlice(Path.of("../../assets/maps/worldmap/worldmap.colbin"));
+    try(var server=new PreviewServer(plan,0,store,null,ServerTransport.local());
+        var client=HttpClient.newHttpClient()) {
+      server.start();String url=server.url(),id=UUID.randomUUID().toString();
+      String body="{\"requestId\":\""+id+"\",\"name\":\"Racer\",\"characterClass\":\"paladin\",\"gender\":\"female\",\"evil\":true}";
+      var pool=java.util.concurrent.Executors.newFixedThreadPool(8);
+      try {
+        var replies=new java.util.ArrayList<java.util.concurrent.Future<HttpResponse<String>>>();
+        var start=new java.util.concurrent.CountDownLatch(1);
+        for(int i=0;i<8;i++) replies.add(pool.submit(()-> {
+          start.await();
+          return client.send(post(url,owner.secret(),body,version(),"application/json"),HttpResponse.BodyHandlers.ofString());
+        }));
+        start.countDown();
+        var ids=new java.util.HashSet<UUID>();
+        for(var reply:replies) {
+          var response=reply.get(30,java.util.concurrent.TimeUnit.SECONDS);
+          // A copy may be asked to wait for the account lock; it may be told to try again (503), never to see a second character.
+          assertTrue(response.statusCode()==200 || response.statusCode()==503,response.body());
+          if(response.statusCode()==200) ids.add(JSON.fromJson(response.body(),OnlineCharacterCreation.Result.class).character().id());
+        }
+        assertEquals(1,ids.size(),"all accepted copies describe the same character");
+      } finally { pool.shutdownNow(); }
+      var roster=store.roster(owner.secret(),null);
+      assertEquals(1,roster.size(),"exactly one character on the account");
+      var saved=store.load(owner.accountId(),roster.getFirst().character().id());
+      var again=client.send(post(url,owner.secret(),body,version(),"application/json"),HttpResponse.BodyHandlers.ofString());
+      assertEquals(200,again.statusCode());
+      assertEquals(saved,store.load(owner.accountId(),saved.id()),"a later replay cannot regrant the kit or touch the record");
+      assertEquals("paladin",saved.progress().characterClass());
+      assertEquals(com.perso.T4C.helper.CharacterStartingKit.itemCounts(com.perso.T4C.helper.CharacterClass.PALADIN),
+          saved.progress().inventory().stream().collect(java.util.stream.Collectors.toMap(
+              com.perso.T4C.online.model.CharacterProgress.Item::key,
+              com.perso.T4C.online.model.CharacterProgress.Item::quantity,Integer::sum,java.util.TreeMap::new)));
+    }
+  }
+
   @Test void invalidKeyIsRejectedBeforeHeldCreationBody() throws Exception {
     var store=OnlineStore.fromEnvironment();store.migrate();var owner=store.provisionAccount();
     var plan=HostedRegionPlan.startingSlice(Path.of("../../assets/maps/worldmap/worldmap.colbin"));

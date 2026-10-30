@@ -19,7 +19,7 @@ re-measure before relying on a number.
 | Shops | 21 | 0 |
 | Quests | 35 | 1 (renewed_wards); rules generic, the rest wait on hosting their givers and kill grounds |
 | Player spells | 132 | Stage 1 and 2 (81 spells) plus Light Heal; starting spell kits are now offered to six online classes |
-| Classes | 7 | 6 (Warrior, Paladin, Cleric, Healer, Mage, Battle Mage); Archer awaits online ranged combat |
+| Classes | 7 | 7: all seven can be created in the lobby (Warrior, Archer, Paladin, Cleric, Healer, Mage, Battle Mage), each with its single-player starting kit (T4C-0350); Archer fights with a bow and quiver (T4C-0273) |
 | Combat | melee, bows, two weapons, stun blow, stealth, spells | melee, bows with a quiver, a learned stun blow and the supported spell stages; two weapons and stealth not yet verified online (see the T4C-0331 correction below) |
 | Interface | full GUI (inventory, spell book, minimap, macros, options, journal) | plain text panels |
 | Audio and effects | on | audio off, no spell effects |
@@ -114,8 +114,8 @@ re-measure before relying on a number.
 
 Each is a gap to close, never a decision to keep:
 
-- Archer remains excluded from online character creation until authoritative ranged combat is implemented; the other six classes now have online starter kits and the server-supported spell set.
-- Stage-1 and stage-2 spells (40 attack with splash, 4 drain, 4 heal; 25 timed buffs, the curse, invisibility and detection, 2 dispels, Renew Armor: 81 in all) are castable server-side (`spells-v2` stage gate, protocol 6); everything else stays refused. Casters cannot be created online yet, so only a character that already knows them can cast. Buffs are laid on the caster only; laying one on another player is resolved by the engine but not yet reachable (needs a two-character atomic commit).
+- All seven classes are created online with their shared starting kits and the server-supported spell set. Archer was held back until authoritative ranged combat existed; T4C-0273 added it (bow and quiver reach, line of sight, committed hit) and the lobby offers it. In-client creation is inside the Beta scope (owner decision 2026-10-30).
+- Stage-1 and stage-2 spells (40 attack with splash, 4 drain, 4 heal; 25 timed buffs, the curse, invisibility and detection, 2 dispels, Renew Armor: 81 in all) are castable server-side (`spells-v2` stage gate, protocol 6); everything else stays refused. All four caster classes can be created online with their starting spells (T4C-0272), so they can cast the supported ones. Buffs are laid on the caster only; laying one on another player is resolved by the engine but not yet reachable (needs a two-character atomic commit).
 - Corrected in T4C-0331 (this line used to say bows and stun blow refuse): the server accepts a bow attack when the quiver is worn and a learned stun blow (`OnlineMeleeTest.archerBowAttackUsesRangedReach...`, `learnedStunBlowAppliesOnlyAfterTheHitCommits...`). A bow without a quiver, a character with a companion or an unlisted quest flag, and scripted or unsupported monsters refuse as unsupported combat ("You cannot attack that yet."; live in `CLIENT_UNIFICATION_DESIGN.md` 3.18). Two-weapon fighting and stealth were not re-checked.
 - Combat fails closed while a world-event flag is active, or while a buff the server does not model (an older record without stored amounts, or an attribute outside `BuffAttributes.MODELLED`) is running. The 25 stage-2 buffs are modelled and fold into melee, retaliation, carry weight and spell numbers.
 - Other quests' flags block combat (quest-flag allowlist).
@@ -129,7 +129,7 @@ Each is a gap to close, never a decision to keep:
   they are a multiplayer rule, kept unless the owner removes them.
 - Movement: the server now steps players with single-player's grid-reservation rule through the shared `MovementRules` (T4C-0277): whole-tile reservation that is finished after the key is released, slide order -1,+1,-2,+2, the single-player diagonal corner rule, 300 px/s = 0.2757 tiles per tick, rest on tile centres (wire and database keep tile-centre doubles; fixed offset of half a tile to the rule's anchors). Open-ground speed and cardinal collision decisions equal the old loop (`ServerMovementParityTest`); `-Dt4c.server.movement=swept` is the rollback. Remaining debt: no dynamic blockers (monsters, NPCs, other players), no speed buffs or GM speed (the server has no player speed state), no stun/exhaust/attack gates beyond the existing frozen/dead stop, portal source tiles only on hosted regions, the hosted-crop loaders differ on the wall-foot rule (`PreviewMap.load` applies it, `RegionMapLoader` does not), and online client prediction (`MovementReconciler`) is still unused. Details and impact analysis: `CLIENT_UNIFICATION_DESIGN.md` 3.10.1.
 - Text HUD and panels; Space attacks the nearest target; audio disabled.
-- Characters are operator-provisioned accounts; no import of desktop saves.
+- Accounts are operator-provisioned and characters are created in the lobby's Create form (in Beta scope since 2026-10-30); no import of desktop saves.
 
 ## Build order
 

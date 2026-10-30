@@ -96,6 +96,19 @@ public final class LiveRunProvision {
       lobbyDatabaseStep(scene, out);
       return;
     }
+    if ("empty".equals(scene)) {
+      // T4C-0350: two accounts with NO characters (player-a.json, player-b.json) for the rendered creation run.
+      try (var store = OnlineStore.fromEnvironment()) {
+        writeProfile(out.resolve("player-a.json"), store.provisionAccount().secret(), null);
+        writeProfile(out.resolve("player-b.json"), store.provisionAccount().secret(), null);
+      }
+      System.out.println("PROVISION_OK");
+      return;
+    }
+    if ("create-report".equals(scene)) {
+      createReport(args.length > 3 ? args[3] : "Live ");
+      return;
+    }
     if ("move-skeletons".equals(scene) || "move-giver".equals(scene)) {
       move(plan, map, out, scene);
       return;
@@ -405,6 +418,22 @@ public final class LiveRunProvision {
           "SELECT right(s.spawn_key,28), s.health, s.mode, coalesce(t.name,'-') FROM online_spawns s "
               + "LEFT JOIN online_characters t ON t.id=s.target_character WHERE s.health IS NOT NULL ORDER BY s.spawn_key");
       report(db, "characters (name, hp-bearing revision)", "SELECT name, revision, experience, gold FROM online_characters ORDER BY name");
+    }
+  }
+
+  /** T4C-0350: non-secret rows of the characters the in-lobby Create form made (names starting with the given prefix). */
+  private static void createReport(String prefix) throws Exception {
+    try (var db = DriverManager.getConnection(System.getenv("T4C_DB_URL"), System.getenv("T4C_DB_USER"), System.getenv("T4C_DB_PASSWORD"))) {
+      report(db, "created characters (name, class, level, gold, stacks, equipped slots, spells, letters, creation receipts, revision)",
+          "SELECT c.name, c.progress->>'characterClass', c.progress->'advancement'->>'level', c.gold, jsonb_array_length(c.progress->'inventory'), "
+              + "(SELECT string_agg(k, ',' ORDER BY k) FROM jsonb_object_keys(c.progress->'equipment') k), "
+              + "(SELECT coalesce(string_agg(s, ',' ORDER BY s), '-') FROM jsonb_array_elements_text(c.progress->'spells') s), "
+              + "(SELECT count(*) FROM jsonb_array_elements(c.progress->'inventory') i WHERE i->>'key' LIKE '%letter%'), "
+              + "(SELECT count(*) FROM online_character_creations r WHERE r.character_id=c.id), c.revision "
+              + "FROM online_characters c WHERE c.name LIKE '" + prefix.replace("'", "") + "%' ORDER BY c.name");
+      report(db, "accounts (id tail, characters, creation receipts)",
+          "SELECT right(a.id::text,6), (SELECT count(*) FROM online_characters c WHERE c.account_id=a.id), "
+              + "(SELECT count(*) FROM online_character_creations r WHERE r.account_id=a.id) FROM online_accounts a ORDER BY 1");
     }
   }
 

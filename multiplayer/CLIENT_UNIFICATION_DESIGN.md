@@ -802,9 +802,9 @@ refusal (409 `account_or_session`, on purpose: no account oracle), and `OnlineCo
 `OnlineHandoffScreen` returned to the lobby without a word. `OnlineConnection.failureText()` now carries the reason (recorded
 before the status flips to disconnected), `OnlineJoinFailure` maps refusals to messages, and the lobby refines the general
 refusal with the freshly read row of the selected character (in use, Region offline, Respawning). Not changed: the lobby still
-offers Play on a row that says In use (the roster is advisory; the server decides); the Create form lists Archer although
-PARITY.md still says Archer awaits online ranged combat (the server's creation test accepts it); the empty-roster text points
-to Create while the milestone table calls in-client creation out of Beta scope. Both are owner decisions.
+offers Play on a row that says In use (the roster is advisory; the server decides). Two notes written here at the time are
+settled by T4C-0350 (section 3.20): PARITY.md's Archer line was stale (online archery exists since T4C-0273), and the owner
+ruled on 2026-10-30 that in-client creation is in Beta scope, so the empty-roster text that points to Create is correct.
 
 ### 3.18 Live rendered combat and abilities with two different roles: contention, spells, buff and rejoin, refusals, death seen from the other window (T4C-0331)
 
@@ -903,6 +903,54 @@ two-window runs (a chapter a run, because early runs found driver problems liste
 7. After 12 kills the quest counter stopped at 12 while the creature kill rewards went on (17 and 14); the counter caps at the goal.
 
 **Not driven:** a lost response or kill during the quest turn-in itself; a rendered corpse recovery and individual single-stack recovery (T4C-0321/0339 merged separately); the cave's own residents' combat (30 creatures in the cave snapshot, none fought); a package, remote or second-machine run; the stale-epoch battery on this build.
+
+### 3.20 Character creation: two rendered windows, an interrupted-request drill and all seven classes (T4C-0350, milestone M1)
+
+**Evidence class: rendered clients plus native adapter, local only.** Base `origin/main` acb7f2ce plus this branch, protocol 8.
+Owner decision 2026-10-30: in-client creation is in Beta scope (SCOPE_PROPOSAL.md, DESIGN_GUIDELINES.md). Two disposable PG16 clusters
+(`t4c_acc_179d2129a573` on loopback 57951 for the drill, `t4c_acc_703d46930f8c` on 57952 for the windows), one `ServerMain --online` each
+(18971 and 18981, game socket one above), all destroyed or stopped afterwards; no protected port, owner window or peer process.
+
+**Rendered run (new `OnlineLiveRunDriver` scenes `create` and `reenter`; `LiveRunProvision COLLISION empty OUT` makes two accounts with no
+characters, `create-report` prints the committed rows).** Driven through the screens' own input processors: `C` (open the form), the name
+as key-typed events, Down to the class row, `Enter` (create), `Enter` (play), the walk to Kilhiam, the NPC click, and for the close the
+screen's `switchCharacter` callback by reflection (the Options button was not clicked), then `Enter` in the lobby again. Arguments:
+`-Dcreate.name=<name> -Dcreate.classIndex=<index in the form's list>` before the class name; tags end in A and B as in 3.15.
+
+| Step | Observed (both windows, a Paladin "Aurelia" and an Archer "Borin") |
+|---|---|
+| Empty account, `create-1` | the lobby shows no rows and the text that points to Create ("This account has no characters yet. Press Create ..."); the roster read finished, no message. |
+| Form, `create-2` (`m1-create-form-seven-classes`) | seven class rows (Warrior, Archer, Paladin, Cleric, Healer, Mage, Battle Mage), gender and alignment buttons, the typed name; the form's state read back matched the typed name, class, male and good. |
+| Create, `create-3` | `Enter` created the character; the roster listed it as Ready with its class (one row on each account). |
+| In the world | the committed view showed the class kit: Paladin 216 gold, 17 stacks (seven worn: back, body, feet, head, legs, shield, weapon; Light Heal known), Archer 227 gold, 46 stacks (bow, quiver, arrows; no spells); each saw the other window's character. |
+| Kilhiam | 47 px away after a collision-aware walk of about 8 s: the first click gave one parchment letter, the repeat click none (`talk-first-greeting`, `talk-repeat-greeting`). |
+| Close and reconnect | `switchCharacter` returned to the lobby; `Enter` retried every 2.5 s rejoined after about 40 s (the lobby waits for the old lease); record identical, one letter; the third click gave no second letter (`m1-create-reconnect-kilhiam`). |
+| Window closed and reopened (`reenter`) | both processes exited, two new ones showed the character on the roster, entered, and a fourth click on Kilhiam gave no second letter. |
+| Database (`create-report`) | one character and one creation receipt per account; Aurelia paladin, level 1, 216 gold, 17 stacks, one letter, equipped slots as above; Borin archer, 227 gold, 47 stacks, one letter. Client logs showed no exception. |
+
+**Interrupted request (`multiplayer/tools/NativeCreateFaultDrill.java`, new).** The same real `OnlineAccountClient` that the lobby form
+uses sends the creation request; the server child is killed hard a fixed number of milliseconds later (0, 10, 35, 60, 80, 85 to 120 in
+steps of 5, 150, 200, 350, 600, 900, 0 and 20 ms; the class cycles through all seven). Judged against the committed database right after
+the kill and again after the restart: at most one character per account and one receipt, a character always carries its complete kit
+(class items, torches, potions, skills, spells, karma, gold range, distinct item ids), and after resending the same request id the
+record is byte-identical to the pre-retry one. Result of the passing run: 5 rounds had nothing committed (kills at 0 to 35 ms, and the
+two last), 15 had committed; one of those (round 16, 350 ms, Archer) had lost its reply to the client yet was already committed, and
+the retry returned that character without touching it. A replay changed nothing; the same name under a new request id came back
+`name_taken`; the same id with the other alignment came back `creation_conflict`; neither added a character. Two earlier runs failed on
+the drill's own pacing only (every client call costs two requests and the loopback peer budget is 40 refilled at one per two seconds, so
+the refusal probes were answered 429 `account_rate`); no record changed in them, and in the second of them round 4 (60 ms) also lost its
+reply and was already committed. Reproduce as `NativeLootFaultDrill` in NATIVE_FAULT_DRILL.md: `javac ... NativeCreateFaultDrill.java`,
+then `acceptance-cluster.ps1 -Action RunEnv -RunId t4c_acc_<id> -Command java ... NativeCreateFaultDrill <runtime> <java> <free-port> <new-output-dir>`.
+
+**Classes and text.** Every one of the seven classes was created in the drill (every kit compared with `CharacterStartingKit.itemCounts` and the
+class's equipment slots, spells and skills), and two of them rendered. The form, the server's class resolution and offline creation read the same
+seven classes (`CharacterKitParityTest` fails if the lists differ). PARITY.md's "Archer awaits online ranged combat" was stale: online archery exists
+since T4C-0273 (a bow with a worn quiver, `OnlineMeleeTest.archerBowAttackUsesRangedReach...`) and a rendered Archer was created and played here.
+The empty-roster text ("Press Create to make your first one") is correct now that creation is in scope.
+
+**Not done.** No remote or HTTPS creation, no class other than Paladin and Archer rendered, no fight with a created character (3.18 covers a Warrior, an
+Archer, a Paladin, a Healer and a Mage fighting), no click on the Options or window-close buttons, no creation of a fourth character against the
+slot limit in a window (`OnlineStoreTest` covers `roster_full`), and no screenshot of the in-game stat sheet.
 
 ## 4. Staged plan
 
