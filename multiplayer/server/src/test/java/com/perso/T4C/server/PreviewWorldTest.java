@@ -167,18 +167,41 @@ class PreviewWorldTest {
   @Test void invisibilityIsHiddenFromOtherObserversUnlessTheirDetectInvisibleIsActive() {
     var world=openWorld();
     var hidden=world.join();var observer=world.join();
-    world.visibility(hidden.token(),2_000,0);
+    world.visibility(hidden.token(),2_000,0,0);
     assertEquals(List.of(observer.id()),world.snapshot(observer.token(),1_000).players().stream()
         .map(PreviewWorld.PlayerView::id).toList());
     assertEquals(List.of(hidden.id(),observer.id()),world.snapshot(hidden.token(),1_000).players().stream()
         .map(PreviewWorld.PlayerView::id).toList(),"The hidden actor always sees their own actor");
 
-    world.visibility(observer.token(),0,1_500);
+    world.visibility(observer.token(),0,1_500,0);
     assertEquals(List.of(hidden.id(),observer.id()),world.snapshot(observer.token(),1_499).players().stream()
         .map(PreviewWorld.PlayerView::id).toList());
     assertEquals(List.of(observer.id()),world.snapshot(observer.token(),1_500).players().stream()
         .map(PreviewWorld.PlayerView::id).toList(),"Detection expires at its absolute server deadline");
     assertEquals(List.of(hidden.id(),observer.id()),world.snapshot(observer.token(),2_000).players().stream()
         .map(PreviewWorld.PlayerView::id).toList(),"Invisibility expires at its absolute server deadline");
+  }
+
+  @Test void detectHiddenOnlyRevealsIndefinitelyHiddenActors() {
+    var world=openWorld();
+    var indefinite=world.join();var invisible=world.join();var observer=world.join();
+    world.visibility(indefinite.token(),Long.MAX_VALUE,0,0);
+    world.visibility(invisible.token(),2_000,0,0);
+    assertEquals(List.of(observer.id()),world.snapshot(observer.token(),1_000).players().stream()
+        .map(PreviewWorld.PlayerView::id).toList());
+
+    world.visibility(observer.token(),0,0,1_500);
+    assertEquals(List.of(indefinite.id(),observer.id()),world.snapshot(observer.token(),1_499).players().stream()
+        .map(PreviewWorld.PlayerView::id).toList());
+    assertEquals(List.of(observer.id()),world.snapshot(observer.token(),1_500).players().stream()
+        .map(PreviewWorld.PlayerView::id).toList(),"Detect Hidden expires at its absolute server deadline");
+
+    world.visibility(observer.token(),0,1_800,0);
+    assertEquals(List.of(invisible.id(),observer.id()),world.snapshot(observer.token(),1_700).players().stream()
+        .map(PreviewWorld.PlayerView::id).toList(),"Detect Invisible does not reveal indefinite hidden actors");
+    assertEquals(List.of(invisible.id(),observer.id()),world.snapshot(observer.token(),2_000).players().stream()
+        .map(PreviewWorld.PlayerView::id).toList(),"Invisibility expires at its absolute server deadline");
+    assertEquals(List.of(indefinite.id(),observer.id()),world.snapshot(indefinite.token(),1_000).players().stream()
+        .map(PreviewWorld.PlayerView::id).toList(),"An indefinitely hidden actor retains self-view");
   }
 }

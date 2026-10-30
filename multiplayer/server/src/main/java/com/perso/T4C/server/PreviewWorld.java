@@ -46,7 +46,7 @@ public final class PreviewWorld {
     int dx, dy;
     double x, y;
     int hp=1,maxHp=1;
-    long hiddenUntil, detectInvisibleUntil;
+    long hiddenUntil, detectInvisibleUntil, detectHiddenUntil;
     boolean frozen;
     final ServerMovement.Glide glide = new ServerMovement.Glide();
     double requestCredits = REQUEST_BURST;
@@ -203,8 +203,13 @@ public final class PreviewWorld {
     List<PlayerView> result = new ArrayList<>(players.size());
     Player observer=players.get(token);
     boolean detectsInvisible=observer.detectInvisibleUntil>now;
-    for (Player p : players.values())
-      if(p==observer || p.hiddenUntil<=now || detectsInvisible) result.add(view(p));
+    boolean detectsHidden=observer.detectHiddenUntil>now;
+    for (Player p : players.values()) {
+      boolean indefiniteHidden=p.hiddenUntil==Long.MAX_VALUE;
+      boolean finiteInvisible=!indefiniteHidden && p.hiddenUntil>now;
+      if(p==observer || !indefiniteHidden && !finiteInvisible
+          || indefiniteHidden && detectsHidden || finiteInvisible && detectsInvisible) result.add(view(p));
+    }
     return new Snapshot(tick, List.copyOf(result),creatures.stream().filter(c -> !inactiveCreatures.contains(c.id()))
         .map(c -> {
           var position=creaturePosition(c.id());
@@ -237,9 +242,13 @@ public final class PreviewWorld {
   }
 
   /** Publishes the committed concealment and detection deadlines for snapshot filtering. */
-  void visibility(String token,long hiddenUntil,long detectInvisibleUntil) {
+  void visibility(String token,long hiddenUntil,long detectInvisibleUntil,long detectHiddenUntil) {
     var p=players.get(token);
-    if(p!=null) { p.hiddenUntil=hiddenUntil; p.detectInvisibleUntil=detectInvisibleUntil; }
+    if(p!=null) {
+      p.hiddenUntil=hiddenUntil;
+      p.detectInvisibleUntil=detectInvisibleUntil;
+      p.detectHiddenUntil=detectHiddenUntil;
+    }
   }
 
   void freeze(String token,boolean frozen) {
