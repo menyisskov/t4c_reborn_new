@@ -133,6 +133,7 @@
   "online.ability.potions_close": "U or Esc: close | 1-9: use",
   "online.ability.more": "%d more not shown",
   "online.ability.result": "Health %+d | Mana %+d",
+  "online.ability.damage_result": "Damage dealt: %d | Health %+d | Mana %+d",
   "online.ability.not_enough_mana": "You do not have enough mana.",
   "online.ability.cooldown": "That is not ready yet.",
   "online.ability.exhausted": "You are too exhausted to do that right now.",

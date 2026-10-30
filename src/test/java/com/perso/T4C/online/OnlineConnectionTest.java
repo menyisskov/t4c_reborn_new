@@ -442,8 +442,18 @@ class OnlineConnectionTest {
         case "/corpses" -> reply = "[]";
         case "/cast" -> {
           bodies.add("cast " + request);
-          status = 409;
-          reply = "{\"error\":\"not_enough_mana\"}";
+          if (request.contains("spell.arcane_spark")) {
+            reply = "{\"revision\":" + revision.incrementAndGet()
+                + ",\"healthGained\":0,\"manaSpent\":2,\"manaGained\":0,\"hits\":["
+                + "{\"target\":41,\"damage\":7,\"health\":13,\"killed\":false},"
+                + "{\"target\":42,\"damage\":3,\"health\":0,\"killed\":true}]}";
+          } else if (request.contains("spell.self_bless")) {
+            reply = "{\"revision\":" + revision.incrementAndGet()
+                + ",\"healthGained\":4,\"manaSpent\":1,\"manaGained\":0}";
+          } else {
+            status = 409;
+            reply = "{\"error\":\"not_enough_mana\"}";
+          }
         }
         case "/use" -> {
           bodies.add("use " + request);
@@ -475,28 +485,37 @@ class OnlineConnectionTest {
       assertEquals("cast 1 0 spell.heal_light", bodies.getFirst());
 
       var targeted = connection.cast("spell.arcane_spark", 42).toCompletableFuture().get(3, TimeUnit.SECONDS);
-      assertFalse(targeted.accepted());
+      assertTrue(targeted.accepted());
+      assertEquals("online.ability.damage_result", targeted.messageKey());
+      assertEquals(java.util.List.of(10, 0, -2), targeted.args(),
+          "The reported damage is the sum of the server's committed per-creature hits");
+      assertEquals(2, targeted.character().revision());
       assertEquals("cast 1 0 spell.arcane_spark u:42", bodies.getLast());
 
       var friend = connection.castToPlayer("spell.heal_light",9).toCompletableFuture().get(3,TimeUnit.SECONDS);
       assertFalse(friend.accepted());
-      assertEquals("cast 1 0 spell.heal_light a:9",bodies.getLast(),"The target actor id uses the existing socket cast command");
+      assertEquals("cast 2 0 spell.heal_light a:9",bodies.getLast(),"The target actor id uses the existing socket cast command");
 
       var tile = connection.castAtPosition("spell.area_blast", 8, 9).toCompletableFuture().get(3, TimeUnit.SECONDS);
       assertFalse(tile.accepted());
-      assertEquals("cast 1 0 spell.area_blast p:8,9", bodies.getLast());
+      assertEquals("cast 2 0 spell.area_blast p:8,9", bodies.getLast());
+
+      var selfCast = connection.cast("spell.self_bless").toCompletableFuture().get(3, TimeUnit.SECONDS);
+      assertTrue(selfCast.accepted());
+      assertEquals("online.ability.result", selfCast.messageKey());
+      assertEquals(java.util.List.of(4, -1), selfCast.args(), "A no-hit self cast keeps its existing result message");
 
       var used = connection.useItem(potion).toCompletableFuture().get(3, TimeUnit.SECONDS);
       assertTrue(used.accepted());
       assertEquals("online.ability.result", used.messageKey());
       assertEquals(java.util.List.of(9, 3), used.args(), "health gained and net mana");
-      assertEquals(2, used.character().revision());
-      assertEquals("use 1 0 " + potion, bodies.getLast());
-      assertEquals(5, bodies.size());
+      assertEquals(4, used.character().revision());
+      assertEquals("use 3 0 " + potion, bodies.getLast());
+      assertEquals(6, bodies.size());
       var picked = connection.pickUp(UUID.randomUUID()).toCompletableFuture().get(3, TimeUnit.SECONDS);
       assertTrue(picked.accepted(), "The version-gated pickup also stays usable through this adapter");
-      assertEquals(3, picked.character().revision());
-      assertEquals(6, bodies.size());
+      assertEquals(5, picked.character().revision());
+      assertEquals(7, bodies.size());
     } finally {
       server.stop(0);
     }

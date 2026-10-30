@@ -93,7 +93,10 @@ public final class OnlineConnection implements AutoCloseable {
   private record GameplayCommand(String path, String body, long revision,
       java.util.concurrent.CompletableFuture<CommandResult> result) {}
   /** Cast and use replies also say what the server changed; absent fields read as zero. */
-  private record Committed(Long revision, int healthGained, int manaSpent, int manaGained) {}
+  private record Committed(
+      Long revision, int healthGained, int manaSpent, int manaGained, List<SpellHit> hits) {}
+  /** One server-committed creature strike reported by a spell cast. */
+  private record SpellHit(Integer damage) {}
   /** A committed vendor trade: units moved and the gold paid or received, both the server's numbers. */
   private record ShopCommitted(Long revision, int quantity, long total) {}
   private static final class Rejected extends IllegalStateException {
@@ -105,6 +108,7 @@ public final class OnlineConnection implements AutoCloseable {
 
   /** Server cap for ground loot in one snapshot. */
   private static final int MAX_GROUND_LOOT = 128;
+  private static final int MAX_CREATURES = 256;
   private static final Gson JSON = new Gson();
   private final URI endpoint;
   private final int configuredSocketPort;
@@ -414,8 +418,15 @@ public final class OnlineConnection implements AutoCloseable {
                 requiredRevision = committed.revision();
                 if (command.path().equals("/cast") || command.path().equals("/use")) {
                   // Net mana: a potion restores it, a spell spends it; both are the server's numbers.
-                  messageKey = "online.ability.result";
-                  messageArgs = List.of(committed.healthGained(), committed.manaGained() - committed.manaSpent());
+                  int netMana = committed.manaGained() - committed.manaSpent();
+                  int damage = committedSpellDamage(committed.hits());
+                  if (command.path().equals("/cast") && damage > 0) {
+                    messageKey = "online.ability.damage_result";
+                    messageArgs = List.of(damage, committed.healthGained(), netMana);
+                  } else {
+                    messageKey = "online.ability.result";
+                    messageArgs = List.of(committed.healthGained(), netMana);
+                  }
                 }
               }
               accepted = true;
@@ -558,6 +569,18 @@ public final class OnlineConnection implements AutoCloseable {
       view = null;
       failCommand();
     }
+  }
+
+  private static int committedSpellDamage(List<SpellHit> hits) {
+    if (hits == null || hits.isEmpty()) return 0;
+    if (hits.size() > MAX_CREATURES) throw new IllegalStateException("Invalid spell hit count");
+    long total = 0;
+    for (SpellHit hit : hits) {
+      if (hit == null || hit.damage() == null || hit.damage() < 0)
+        throw new IllegalStateException("Invalid spell hit");
+      total += hit.damage();
+    }
+    return (int) Math.min(Integer.MAX_VALUE, total);
   }
 
   private MapInfo readMap(boolean persistent) throws Exception {
