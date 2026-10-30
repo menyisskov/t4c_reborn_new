@@ -136,7 +136,7 @@ public final class HostedRegionPlan {
     var primary=worldCollision.toAbsolutePath().normalize();
     var maps=new HashMap<Integer,Path>();
     maps.put(0,primary);maps.put(1,primary.getParent().getParent().resolve("dungeon/DungeonMap.colbin"));
-    maps.put(2,primary.getParent().getParent().resolve("cavern/CavernMap.colbin"));
+    if(streamWorld2) maps.put(2,primary.getParent().getParent().resolve("cavern/CavernMap.colbin")); // the server package ships worlds 0 and 1 only
     var destinations=PortalDestinations.load(maps);
     var specList=new ArrayList<RegionMapLoader.Spec>();
     specList.add(startSpec);
