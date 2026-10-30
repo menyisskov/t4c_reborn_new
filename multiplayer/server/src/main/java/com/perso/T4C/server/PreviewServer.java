@@ -30,6 +30,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /** Loopback-only QA transport with optional persistent sessions and no desktop dependencies. */
 public final class PreviewServer implements AutoCloseable {
+  private static final int MAX_CORPSE_ITEMS_PER_CORPSE = 256;
+  private static final int MAX_CORPSE_ITEM_DETAILS = 2048;
   private record PersistentSnapshot(long tick, java.util.List<PreviewWorld.PlayerView> players,
       long characterRevision, java.util.List<com.perso.T4C.online.model.CreatureView> creatures,com.perso.T4C.online.model.OnlineRegion region,java.util.List<com.perso.T4C.online.model.NpcView> npcs,JsonArray loot) {}
   /** Ground loot shown in one snapshot: at most this many drops, nearest the viewer first. */
@@ -686,8 +688,15 @@ public final class PreviewServer implements AutoCloseable {
             String token=token(exchange);
             var pending=onWorld(() -> { admit(token,null); return persistent.corpses(token); });
             var found=pending.toCompletableFuture().get(2,TimeUnit.SECONDS);
+            int itemDetails=0;
+            for (var corpse:found) {
+              if (corpse.items().size()>MAX_CORPSE_ITEMS_PER_CORPSE
+                  || (itemDetails+=corpse.items().size())>MAX_CORPSE_ITEM_DETAILS)
+                throw new PreviewWorld.Rejected(503,"busy");
+            }
             json(exchange,observation,200,found.stream().map(c -> Map.of("id",c.id(),"world",c.world(),"x",c.x(),"y",c.y(),
-                "itemCount",c.items().size(),"gold",c.gold())).toList());
+                "itemCount",c.items().size(),"gold",c.gold(),"items",c.items().stream().map(item -> Map.of(
+                    "id",item.id(),"key",item.key(),"quantity",item.quantity(),"charges",item.charges())).toList())).toList());
           }
           case "/health" -> json(exchange,observation, 200,
               Map.of("tick", loop.completedTicks(), "mode", store==null ? "local-preview" : "local-persistent", "capacity", PreviewWorld.MAX_PLAYERS));

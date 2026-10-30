@@ -92,6 +92,11 @@ public final class OnlineConnectionLink implements RemoteLink {
   }
 
   @Override
+  public CompletionStage<OnlineConnection.CommandResult> recover(UUID corpse, UUID item) {
+    return item == null ? connection.recover(corpse) : connection.recover(corpse, item);
+  }
+
+  @Override
   public CompletionStage<OnlineConnection.CommandResult> useItem(UUID itemInstance) {
     return connection.useItem(itemInstance);
   }
