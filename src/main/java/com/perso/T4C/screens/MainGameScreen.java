@@ -5281,6 +5281,33 @@ public class MainGameScreen implements Screen {
     GroundItemClickHandler lootClicks=new GroundItemClickHandler(camera,groundItemManager,player,systemMessage);
     InputMultiplexer remote=new InputMultiplexer();
     remote.addProcessor(new com.badlogic.gdx.InputAdapter() {
+      private boolean hudButtonCaptured;
+
+      @Override public boolean touchDown(int x, int y, int pointer, int button) {
+        if (GuiManager.isOpen()) {
+          GuiManager.onTouchDown(x, y, button);
+          return true;
+        }
+        hudButtonCaptured = routeRemoteHudButtonTouchDown(
+            hud, x, y, button,
+            Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)
+                || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT));
+        return hudButtonCaptured;
+      }
+
+      @Override public boolean touchUp(int x, int y, int pointer, int button) {
+        if (hudButtonCaptured) {
+          hudButtonCaptured = false;
+          return routeRemoteHudButtonTouchUp(hud, x, y, button);
+        }
+        if (GuiManager.isOpen()) {
+          GuiManager.onTouchUp(x, y);
+          return true;
+        }
+        return false;
+      }
+    });
+    remote.addProcessor(new com.badlogic.gdx.InputAdapter() {
       @Override public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.ESCAPE
             && selectedTargetedSpell != null
@@ -5497,6 +5524,22 @@ public class MainGameScreen implements Screen {
       boolean returnQueued) {
     return lobbyCapable && !returnQueued
         && ("connected".equals(connectionStatus) || "disconnected".equals(connectionStatus));
+  }
+
+  static boolean routeRemoteHudButtonTouchDown(
+      com.perso.T4C.ui.PlayerHUD hud,
+      int screenX,
+      int screenY,
+      int button,
+      boolean controlDown) {
+    return button == Input.Buttons.LEFT
+        && hud != null
+        && hud.chatBarButtonsTouchDown(screenX, screenY, controlDown);
+  }
+
+  static boolean routeRemoteHudButtonTouchUp(
+      com.perso.T4C.ui.PlayerHUD hud, int screenX, int screenY, int button) {
+    return button == Input.Buttons.LEFT && hud != null && hud.chatBarButtonsTouchUp(screenX, screenY);
   }
 
   /** The lines of whichever online panel is open, top to bottom; empty when none is. */
