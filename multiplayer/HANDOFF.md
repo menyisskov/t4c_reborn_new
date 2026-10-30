@@ -2,7 +2,15 @@
 
 Last reviewed: 2026-10-27, Asia/Jerusalem. This file is the restart point for a different model. Recheck Git and running processes before acting; this describes recorded evidence, not live state.
 
+### Online ability-menu paging (T4C-0351)
+
+Implemented on `codex/online-ability-pages-0351`, commit `179cec80`, based on main `acb7f2ce`. Online spell and potion lists now page through all learned, server-supported entries; Left/Right changes pages and 1–9 selects within the active page. Focused tests passed 13/13, root package and `git diff --check` passed. No rendered-client or owner-QA test was run. Local PR integration is next; M4/Beta remain open. T4C-0350 day/night remains in open PR #315, still labeled T4C-0349 pending author renumbering.
+
 ## Read first
+
+### Online Sneak parity (T4C-0344)
+
+Implemented on `codex/online-sneak-0344` from `origin/main` 0dcdb164. Learned Sneak now uses the persistent online socket, server-committed concealment/cooldown, moving witness checks and melee/ranged/spell reveal. Focused client tests passed 49/49; focused server tests passed 19 total (0 failures/errors, 6 skipped including database-gated cases); root/server packages and `git diff --check` passed. The PostgreSQL persistence/observer test and rendered-client acceptance remain unverified; no DB, server, desktop or owner QA resources were used. PR #309 is open from commit 392d2ca1. Next: merge after local validation, then arrange database and rendered checks without taking the owner's desktop. M4/Beta remain open.
 
 ### Online HUD and completed quest greeting (T4C-0343)
 
@@ -45,6 +53,14 @@ Both QA packages were rebuilt from `f3d4ed62` and rehearsed in a scrubbed enviro
 PowerShell 5.1 packaging defects were fixed and the remaining second-machine checklist is in [MILESTONES.md](MILESTONES.md) M6. Rebuild with
 `package-online-client.ps1 -Name <new>` and `package-online-server.ps1 -Name <new> -SourceRevision <sha>`; both now run under stock 5.1.
 
+### Package launcher hardening (T4C-0345, 2026-10-30)
+
+Launchers now check for Java 21 x64 with a plain message, the GLFW extraction folder is reused, the server package has `.bat` wrappers, a
+provisioning script and `verify-package`, and the client builder has an opt-in `-ExcludeOrigin` (default unchanged, owner decision open). The
+shared Java check lives in `multiplayer/tools/package-java-check.ps1` and is pasted into each generated script by the builders; run
+`test-package-java-check.ps1 [-ClientPackage ..] [-ServerPackage ..]` after changing it. The package checkers now expect the new files.
+Remaining owner decisions and second-machine evidence are listed in [MILESTONES.md](MILESTONES.md) M6.
+
 ### Latest live rendered evidence (T4C-0306, 2026-10-29)
 
 Two real rendered windows were run against a real server on a disposable PostgreSQL cluster with the test-scope
@@ -59,8 +75,8 @@ refusal, a scripted death/corpse recovery, spells, the quest loop and travel, a 
 
 The online create form and authenticated server endpoint now offer Warrior, Paladin, Cleric,
 Healer, Mage and Battle Mage. Starting attributes, equipment and spells come from the shared
-`CharacterClass`/`OnlineCharacterCreator`; server class resolution explicitly rejects Archer
-until ranged attacks are supported. Focused local form, kit and class-resolution tests passed;
+`CharacterClass`/`OnlineCharacterCreator`; server class resolution rejected Archer at that
+time (Archer is offered and created since T4C-0273 added ranged attacks; all seven classes now). Focused local form, kit and class-resolution tests passed;
 the authenticated creation integration tests passed 2/2 against a disposable PG16 cluster,
 which was destroyed and its port released. No desktop or owner QA resource was used. This is
 not full character parity or Beta acceptance. Next gameplay gaps remain ranged combat, broader

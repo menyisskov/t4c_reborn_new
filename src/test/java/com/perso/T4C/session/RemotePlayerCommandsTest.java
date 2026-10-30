@@ -109,6 +109,8 @@ class RemotePlayerCommandsTest {
       return reply("unequip " + slot);
     }
 
+    @Override public CompletionStage<OnlineConnection.CommandResult> sneak() { return reply("sneak"); }
+
     @Override
     public CompletionStage<OnlineConnection.CommandResult> cast(String spellKey) {
       return reply("cast " + spellKey);
@@ -190,6 +192,27 @@ class RemotePlayerCommandsTest {
     assertEquals(List.of("equip " + item + " WEAPON", "unequip WEAPON"), link.calls);
     assertEquals(beforeInventory, player.getInventory());
     assertEquals(beforeEquipment, player.getEquippedItems());
+  }
+
+  @Test void sneakIntentRoutesToTheRemoteConnectionWithoutLocalPrediction() {
+    FakeLink link=new FakeLink();
+    link.view=view(1,MAP.locationEpoch(),actor(localX(100),localY(205),0),List.of(),List.of(),List.of());
+    Player player=playerAtTile(100,205);
+    boolean wasHidden=player.isHidden();
+    var commands=new RemoteGameSession(link,new GroundItemManager()).commands();
+    host=new TestHost(player);
+    commands.bind(host);
+    assertTrue(commands.sneak());
+    assertEquals(List.of("sneak"),link.calls);
+    assertEquals(wasHidden,player.isHidden(),"the client does not predict concealment");
+    link.answer(null);
+    commands.pump();
+    assertTrue(host.messages.contains(I18n.key("online.sneak.started")));
+    var refusal=new CompletableFuture<OnlineConnection.CommandResult>();link.next=refusal;
+    assertTrue(commands.sneak());
+    refusal.complete(new OnlineConnection.CommandResult(false,null,"online.sneak.not_learned"));
+    commands.pump();
+    assertTrue(host.messages.contains(I18n.key("online.sneak.not_learned")));
   }
 
   @Test

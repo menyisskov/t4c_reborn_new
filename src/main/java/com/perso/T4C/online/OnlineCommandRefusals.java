@@ -46,6 +46,14 @@ final class OnlineCommandRefusals {
       case "/cast" -> ability(code, true);
       case "/use" -> ability(code, false);
       case "/attack" -> attack(code);
+      case "/sneak" -> switch(code) {
+        case "not_learned" -> "online.sneak.not_learned";
+        case "dead" -> "online.ability.dead";
+        case "stunned" -> "online.sneak.stunned";
+        case "cooldown" -> "online.ability.cooldown";
+        case "busy", "revision", "region", "uninitialized_character" -> "online.ability.busy";
+        default -> "online.sneak.refused";
+      };
       default -> null;
     };
   }

@@ -91,8 +91,10 @@ final class OnlineAbilityChoices {
     for (var item : progress.inventory()) {
       if (worn.contains(item.id())) continue;
       var definition = items.apply(item.key());
-      if (definition == null || definition.getBodyPart() != null || definition.getNbCharges() > 1) continue;
-      if (!definition.isUnlimitedUse() && item.charges() != 1) continue;
+      if (definition == null || definition.getBodyPart() != null) continue;
+      if (definition.getNbCharges() > 1) {
+        if (definition.isUnlimitedUse() || item.charges() < 1 || item.charges() > definition.getNbCharges()) continue;
+      } else if (!definition.isUnlimitedUse() && item.charges() != 1) continue;
       if (definition.getSpells().stream().noneMatch(spell -> itemSpellIds.contains(spell.getSpellId()))) continue;
       rows.add(new PotionChoice(item.id(), item.key(), I18n.resolve(definition.getName()), item.quantity()));
     }

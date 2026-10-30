@@ -60,7 +60,7 @@ playthrough and recovery criteria pass. Never infer Done from a task count or te
 
 | Milestone | Current status | Existing related tasks | Main outstanding work |
 | --- | --- | --- | --- |
-| M1 — Enter and interact | Roster/NPC backend and actual adapter probes pass, including two local HTTPS adapters with trust/hostname refusal and a separate live account-key rotation check; selection and refusal messages verified rendered; creation bullet and remote HTTPS open | T4C-0192, 0195, 0196, 0216, 0219, 0232, 0233, 0234 | Native character select and its Create form are merged as an opt-in lobby (`-Lobby`, owner-approved look) and ran rendered against a live local server (T4C-0306 to T4C-0325; four of seven bullets ticked); in-client character creation is recorded here as out of Beta scope (characters are operator-provisioned) while the creation bullet still requires it: owner decision; remote deployment |
+| M1 — Enter and interact | Roster/NPC backend and actual adapter probes pass, including two local HTTPS adapters with trust/hostname refusal and a separate live account-key rotation check; selection and refusal messages verified rendered; creation bullet ticked by T4C-0352; remote HTTPS open | T4C-0192, 0195, 0196, 0216, 0219, 0232, 0233, 0234 | Native character select and its Create form are merged as an opt-in lobby (`-Lobby`, owner-approved look) and ran rendered against a live local server (T4C-0306 to T4C-0325, T4C-0352; six of seven bullets ticked); in-client character creation is in Beta scope (owner decision 2026-10-30) and its idempotency is proven by a hard-kill drill plus two rendered windows creating their own characters (T4C-0352); open: remote HTTPS deployment and rendered-client credential evidence |
 | M2 — Inventory and loot | Server ground loot (drops, owner window, first-claim-wins, expiry, carry-weight rule), per-item corpse recovery within carry limits, native pickup/equip/inventory panels; all merged with CI evidence | Existing inventory/equipment work; T4C-0201, 0202, 0204, 0218, 0228, 0341 | Every bullet ticked (T4C-0306, 0312, 0318, 0341); the milestone's single integrated Done run, the corpse control and single-stack recovery from the screen, and remote or clean-machine evidence are open |
 | M3 — Complete authored adventure | Quest service rules, flag allowlist, once-only turn-in rewards, native talk panel, and the Skeleton hunting ground hosted as one world-0 region with unhosted portals refused; merged | T4C-0193, 0194, 0195, 0206, 0218, 0231, 0341 | Three of eight bullets ticked by T4C-0342 (kill credit, both players completing, region boundary); open: scope freeze, required-item quests, the unhosted-route refusal (no walkable unhosted route exists), restart with delayed intents; the Goblin-to-Wild-Horse fight (owner accepted it as not simulated for Beta) |
 | M4 — Supported combat and abilities | Restricted melee/physical retaliation, server-authoritative patrol/pursuit with guarded persistence, two-native-adapter pursuit/restart proof, brief two-client pursuit/retaliation/reconnect check, local PostgreSQL proof of authored hostile-clan spell damage (T4C-0317), durable authored monster self-healing (T4C-0319) and ranged monster attacks (T4C-0320) | T4C-0189, 0190, 0209, 0210, 0211, 0212, 0229, 0230, 0236, 0237, 0317, 0319, 0320, 0330 | T4C-0331 adds a rendered two-window run of different roles (contention, spells, buff and rejoin, refusals, death seen from the other window) and ticks three of the seven M4 bullets; pursuit of a fleeing player, sanctuary/interruption validation evidence, buff/cooldown HUD, tile-aimed area spells, stat allocation, rendered clan-spell combat and integrated M4/Beta acceptance remain open |
@@ -77,7 +77,7 @@ Required behavior:
 - [x] Each player uses a separate online account, with no desktop character/save import.
 - [x] The native client discovers only that account's characters, displays availability and lets
   the player select one. Pagination, an empty roster and unavailable characters remain usable.
-- [ ] Native character creation uses shared name/slot/class rules and server-generated initial
+- [x] Native character creation uses shared name/slot/class rules and server-generated initial
   stats, items and gold. A retried or interrupted request cannot create duplicates or regrant a kit.
 - [x] Invalid keys, foreign characters, a character already in use and incompatible versions give
   usable errors. Selection alone acquires no gameplay lease or player slot.
@@ -127,13 +127,27 @@ evidence and ticks four of the seven:
   second letter). Lost response: T4C-0310 `LostAck` produced both outcomes (reply lost before the commit, and reply lost after it)
   and every character ended with exactly one letter and one receipt. That drill used native adapters, not a rendered window,
   and the client never replays a gameplay request; this is the one judgement call in the four ticks.
-- **Native creation (left open, owner decision).** The lobby now has a working Create form (T4C-0272 and the lobby creation
-  work). This pass drove it rendered once as extra evidence (the form, one Archer typed and created, the roster listing it,
-  entering the game with the server-generated kit: 46 inventory stacks and 204 gold) and the server-side idempotency is covered
-  by `OnlineCharacterCreationTest` (PostgreSQL) and `OnlineCreateFormTest` (7). It is not ticked because the status table above
-  records in-client creation as outside the Beta scope while this bullet still requires it; the owner decides whether to keep
-  the bullet (then this evidence, plus one interrupted-request drill rendered, would support ticking it) or to rewrite it as
-  operator-provisioned. The "Done evidence" line below (both clients create) is blocked by the same decision.
+- **Native creation (ticked by T4C-0352, 2026-10-30; the owner ruled the same day that in-client creation is in Beta scope).**
+  Shared rules: the Create form takes its name rules from `CharacterCreationRules` and its class and gender lists from
+  `OnlineCharacterCreation`, the lists the server enforces (`OnlineCreateFormTest` 7, `CharacterCreationRulesTest`); the slot
+  limit is the server's `roster_full` (`OnlineStoreTest`, PostgreSQL); the server builds stats, kit and gold itself from the shared
+  class data, and every one of the seven offered classes gets exactly its single-player kit (`OnlineCharacterCreatorTest.everyOfferedClassGetsExactlyItsSinglePlayerKit`
+  and `CharacterKitParityTest`, both compared with `CharacterStartingKit.itemCounts`). Retries: `OnlineCharacterCreationTest`
+  (PostgreSQL, 3 of 3) proves a replayed request id returns the same character with an unchanged record, another body under the
+  same id is `creation_conflict`, a replay while the character is in play changes nothing, and eight concurrent copies of one request
+  create one character. Interrupted request, live: `NativeCreateFaultDrill` (new) sends the creation request through the lobby's
+  own `OnlineAccountClient` to a real `ServerMain --online`, hard-kills the server 0 to 900 ms later (20 rounds, all seven classes),
+  restarts it and resends the same request id: the database right after each kill held either no character or one character with the
+  complete kit and one receipt, never half (15 of 20 had committed; in the run that passed, round 16 lost its reply and was already
+  committed, in another run round 4 did); every retry ended with exactly one character, one receipt and a byte-identical record
+  for the 15 that had committed (nothing regranted), a second replay changed nothing, a new request id with the same name was
+  refused `name_taken` and the same id with another alignment `creation_conflict`, and every kit equalled its class kit. Rendered:
+  two real windows each created their own character through the lobby (`C`, typed name, class row, `Enter`; one Paladin and one Archer),
+  entered, were greeted by Kilhiam once, left through the screen's switch-character callback and reconnected, were greeted again
+  without a second letter, and after closing both windows and reopening them found the characters on the roster and entered
+  again (`CLIENT_UNIFICATION_DESIGN.md` 3.20, `ACCEPTANCE.md`). Limits: local PostgreSQL 16 only; the interrupted request was
+  driven by the native client, not a rendered window; the Options button and the window-close button were not clicked
+  (a reflected callback and process exit stood in); no remote or HTTPS creation run.
 - **Credentials and HTTPS (left open).** Credentials: after both runs a scan of every driver and server log, the preference file
   and the chat log for the six exact account keys (and for any 64-hex string in the run logs) found none; existing tests cover the
   profile, credentials and lobby `toString`, the roster, creation, join and metrics responses (`OnlineAccountProfileTest`,
@@ -153,7 +167,9 @@ evidence and ticks four of the seven:
 T4C-0343 implementation evidence (local only): the existing six online HUD buttons now route clicks to their current actions; completed Renewed Wards greetings use the authored completed line in offline and server paths. Focused tests and both packages pass. No rendered-client check has been run for this delivery, so M1 remains open.
 
 Done evidence: both rendered clients create/select their own characters, connect, converse, close
-and reconnect. Retain operator profiles as a compatibility path. See [ACCOUNT_LIFECYCLE.md](ACCOUNT_LIFECYCLE.md)
+and reconnect. (Met locally by T4C-0352 for the creating half: two rendered windows created their own characters through
+the lobby, connected, talked to Kilhiam, closed and reconnected, see the creation note above; M1 itself stays open because
+the remote HTTPS bullet is unticked.) Retain operator profiles as a compatibility path. See [ACCOUNT_LIFECYCLE.md](ACCOUNT_LIFECYCLE.md)
 and [NPC_INTERACTION_DESIGN.md](NPC_INTERACTION_DESIGN.md) for current contracts and limits.
 
 ## M2 — Use inventory and receive loot
@@ -241,7 +257,9 @@ Required behavior:
   currency, XP, ability rewards and completion state commit together, exactly once.
 - [x] Both players can independently complete the selected adventure without blocking each other
   through a stale flag, consumed shared objective, duplicated claim or unsupported-state guard.
-- [ ] Every required map/encounter is hosted. Authored entrances/returns and valid respawns work;
+- [ ] Every required map/encounter is hosted. (Owner decision 2026-10-30: reach the rest of the world by raising the
+  region bound with area-of-interest streaming; plan and stage gates in [WORLD_STREAMING_DESIGN.md](WORLD_STREAMING_DESIGN.md),
+  T4C-0349, design only so far.) Authored entrances/returns and valid respawns work;
   unknown/unhosted destinations produce an explicit refusal rather than a silent substitute.
   [HOSTED_STARTER_ROUTE_DESIGN.md](HOSTED_STARTER_ROUTE_DESIGN.md) records T4C-0214's
   read-only candidate 249×117 contiguous starting region and its real collision paths;
@@ -302,6 +320,10 @@ repeat turn-in and a lost-response/restart recovery check. See [MAP_TRANSFER_DES
 ## M4 — Play the supported combat and ability set
 
 Current evidence (T4C-0323, PR #285 merged): learned single-target heal effects route to another live nearby player through the game socket; atomic caster/recipient persistence and the PostgreSQL-backed socket route pass focused tests. No rendered-client evidence yet; this does not complete M4.
+
+T4C-0344 implementation evidence: learned online Sneak now commits concealment and its cooldown; movement upkeep uses the authored skill/stat/witness checks, and melee, ranged attacks and spell casts reveal it. Focused server tests passed 19 total (0 failures/errors, 6 skipped, including database-gated cases), focused client tests passed 49/49, root and server package builds passed, and `git diff --check` passed. The PostgreSQL persistence/observer case and rendered-client verification were not run. M4 and Beta remain open.
+
+T4C-0351 implementation evidence: the online ability menu pages through all learned, server-supported spells and usable potions; Left/Right changes pages and 1–9 selects within the current page. The focused menu tests passed 12/12 and screen key-routing test passed 1/1; root package and `git diff --check` passed on main `acb7f2ce`. No rendered-client test was run. M4 and Beta remain open.
 
 Required behavior:
 
@@ -534,19 +556,38 @@ on a stock Windows machine. Details: [CLIENT_DISTRIBUTION.md](CLIENT_DISTRIBUTIO
 
 **What a real clean-machine delivery still needs (unchecked, for the second-machine pass):**
 
-- [ ] Java: the packages bundle no JRE. Either bundle one (jlink or a vendor runtime, with its licence and update path) or document the Java 21 x64
-  requirement and a verified install step, and have the launcher print a plain message when `java` is missing or older than 21.
-- [ ] Execution policy / Mark of the Web: stock Windows refuses unsigned `.ps1` files (observed: "running scripts is disabled"). Docs now give
-  the `-ExecutionPolicy Bypass` and `Unblock-File` forms; a `.bat` wrapper for the server and a code-signing decision are still open.
-- [ ] SmartScreen and antivirus: the client ships unsigned scripts and a large tree including `assets/origin/` (original-game `.exe`/`.dll` files,
-  about 290 MB, observed unused by the online client). Decide whether to stop shipping that folder, and test on a machine with Defender real-time protection.
-- [ ] Size and transfer: about 640 MB extracted client; choose a download/update channel and verify the manifest after transfer.
+**Closed by T4C-0345 (2026-10-30, same-machine evidence only; details in [CLIENT_DISTRIBUTION.md](CLIENT_DISTRIBUTION.md) and [SERVER_DISTRIBUTION.md](SERVER_DISTRIBUTION.md)):**
+
+- [x] Java requirement documented and enforced by the launchers: every launcher (client, `check-server`, `start-server`, `provision-online`, `verify-package`)
+  now prints one plain message and exits 1 when `java` is missing, older than 21, not 64-bit, or not a Java at all. Proved by `test-package-java-check.ps1`
+  (fake `java.cmd` for Java 8, 17, 32-bit 21, junk, 21 x64 and 26-ea, plus a stock PATH with no Java, through the real `.bat` wrappers of a built client and
+  server package). No JRE is bundled; the jlink alternative is documented as an option only, with the measured size (about 49 MB, not built into any package).
+- [x] Execution policy: every operator script of the server package and the client's verify script now has a `.bat` wrapper that starts it with
+  `-ExecutionPolicy Bypass` for that one process (proved with the shell's default policy forced to Restricted: the bare `.ps1` is refused, the `.bat` runs).
+  A provisioning wrapper (`provision-online`) was added so the packaged JAR needs no hand-typed `java -jar` line.
+- [x] Per-launch residue: the pinned GLFW library now extracts to one checksum-named folder that every launch reuses, instead of a new `TEMP` folder per launch.
+  Proved with five packaged launches (three package builds, lobby and in-game) from a scrubbed environment and a fresh `TEMP`: exactly one
+  `t4c-online-glfw-*` folder after the first launch and after every later one. `OnlineNativeLibraryTest` covers reuse and replacement of a damaged file.
+- [x] Manifest verification after transfer: each package has `verify-package.ps1`/`.bat` that re-hashes every file against its own `SHA256SUMS.tsv`, rejects
+  unlisted/changed/missing files and prints the manifest's own SHA-256; passing `-ManifestSha256 <value from the publisher>` also checks the manifest itself.
+  The builders print that value. Proved on a copied package (match, mismatch, missing Java). A download/update channel is still an owner choice (below).
+
+**Still open (unchecked) after T4C-0345:**
+
+- [ ] Java on a machine that really has none: the message is proved only with a fake `java.cmd` and a PATH without Java on this machine. Missing evidence: the
+  same launchers on a second machine or clean VM with no JDK, plus the owner's choice between "document Java 21" and bundling a runtime (jlink or vendor).
+- [ ] Code signing and Mark of the Web: the `.bat` wrappers avoid the policy prompt, but unsigned scripts/JARs are unchanged. Missing evidence: the owner's
+  signing decision and a browser-downloaded zip on a second machine (Mark of the Web and `Unblock-File` not exercised).
+- [ ] SmartScreen and antivirus: not exercised (this machine's own Defender/SmartScreen state was not varied). Missing evidence: a second machine with
+  Defender real-time protection and SmartScreen enabled. Fact for the decision: `assets/origin/` is 287 MB of the 731 MB asset tree, 82 files including four
+  `.exe` and twelve `.dll` files, and a package built without it (`-ExcludeOrigin`) connected and rendered both the lobby and a game. The default builder still ships it.
+- [ ] Size and transfer channel: measured about 759 MB extracted client by default (472 MB with `-ExcludeOrigin`), 4.3 MB server. Missing: the owner's
+  download/update channel and whether to drop `assets/origin/` by default (the verify script covers integrity after transfer, not distribution).
 - [ ] Firewall and loopback: only the local-loopback launcher is rehearsed. A second machine needs the server bound to a reachable address,
   HTTP port plus the game socket (HTTP port + 1) allowed, and no Windows Firewall prompt left unanswered.
 - [ ] Remote HTTPS trust: a publicly trusted certificate and matching host name per [TLS.md](TLS.md), the client reaching it from another network,
   and a clear client error for an untrusted or mismatched certificate.
 - [ ] GPU and drivers: the client needs OpenGL 3.x; behavior on integrated/older GPUs and remote-desktop sessions is unknown.
-- [ ] Per-launch residue: the pinned GLFW extraction directory under `TEMP` is not removed on exit.
 - [ ] Repeat all of the above on a second physical machine (or a clean VM) with a different user account, record screenshots/logs without credentials,
   and obtain owner acceptance.
 

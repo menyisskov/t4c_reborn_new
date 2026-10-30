@@ -70,13 +70,14 @@ public final class ServerPackageCheck {
         || !facts.get("javaMinimum").equals("21"))
       throw new IOException("Missing or invalid package facts");
     for (String required : List.of("t4c-server.jar", "checker/server-package-check.jar",
-        "check-server.ps1", "start-server.ps1", "stop-server.ps1",
+        "check-server.ps1", "start-server.ps1", "stop-server.ps1", "provision-online.ps1", "verify-package.ps1",
+        "check-server.bat", "start-server.bat", "stop-server.bat", "provision-online.bat", "verify-package.bat",
         "assets/maps/worldmap/worldmap.colbin", "assets/maps/dungeon/DungeonMap.colbin")) {
       if (!listed.contains(required)) throw new IOException("Missing required package file: " + required);
     }
     long libraries = listed.stream().filter(s -> s.startsWith("lib/") && s.endsWith(".jar")
         && s.indexOf('/', 4) < 0).count();
-    if (libraries < 1 || listed.size() != 7 + libraries
+    if (libraries < 1 || listed.size() != 14 + libraries
         || listed.stream().anyMatch(s -> s.startsWith("lib/") && !s.matches("lib/[A-Za-z0-9_.-]+\\.jar")))
       throw new IOException("Invalid runtime dependency set");
     try (var jar = new JarFile(root.resolve("t4c-server.jar").toFile())) {

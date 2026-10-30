@@ -40,6 +40,12 @@ class OnlineAbilityMenuTest {
         .map(SpellContentV2.Spell::key).sorted().findFirst().orElseThrow();
   }
 
+  private static List<String> castables() {
+    return ENGINE_CATALOG.spells().values().stream()
+        .filter(s -> s.stage() <= OnlineSpellAllowlistV2.ENABLED_STAGE && SpellEngine.supported(s))
+        .map(SpellContentV2.Spell::key).sorted().toList();
+  }
+
   private static String targetedCastable() {
     return ENGINE_CATALOG.spells().values().stream()
         .filter(s -> s.stage() <= OnlineSpellAllowlistV2.ENABLED_STAGE && SpellEngine.supported(s))
@@ -178,6 +184,44 @@ class OnlineAbilityMenuTest {
     assertEquals(potion.id(), action.item());
     assertNull(action.spellKey());
     assertFalse(action.requiresCreatureTarget());
+  }
+
+  @Test
+  void learnedSpellsArePagedAndDigitsSelectWithinTheCurrentPage() {
+    var keys = castables();
+    assertTrue(keys.size() > OnlineAbilityMenu.MAX_CHOICES, "Fixture must exercise paging");
+    var state = progress(10, Set.copyOf(keys), List.of());
+    var menu = new OnlineAbilityMenu();
+    menu.toggle(OnlineAbilityMenu.Kind.SPELLS, true);
+    menu.turnPage(1, state);
+
+    var lines = menu.lines(state, ENGINE_CATALOG, ALLOWLIST);
+    assertTrue(lines.get(1).startsWith("1. "), lines.get(1));
+    assertTrue(lines.stream().anyMatch(line -> line.contains("Page 2 of")));
+    assertEquals(keys.get(OnlineAbilityMenu.MAX_CHOICES),
+        menu.choose(1, state, ENGINE_CATALOG, ALLOWLIST, true).orElseThrow().spellKey());
+  }
+
+  @Test
+  void usablePotionsArePagedAndPageClampsWhenInventoryShrinks() {
+    var potion = potionItem();
+    var items = java.util.stream.IntStream.range(0, OnlineAbilityMenu.MAX_CHOICES + 1)
+        .mapToObj(i -> new Item(UUID.randomUUID(), potion.key(), 1, 1)).toList();
+    var state = progress(10, Set.of(), items);
+    var menu = new OnlineAbilityMenu();
+    menu.toggle(OnlineAbilityMenu.Kind.POTIONS, true);
+    menu.turnPage(1, state);
+
+    assertEquals(1, menu.page());
+    assertTrue(menu.lines(state, ENGINE_CATALOG, ALLOWLIST).stream().anyMatch(line -> line.contains("Page 2 of 2")));
+    assertEquals(items.getLast().id(),
+        menu.choose(1, state, ENGINE_CATALOG, ALLOWLIST, true).orElseThrow().item());
+    menu.toggle(OnlineAbilityMenu.Kind.POTIONS, true);
+    menu.turnPage(1, state);
+    var afterConsumption = menu.lines(progress(10, Set.of(), List.of()), ENGINE_CATALOG, ALLOWLIST);
+    assertEquals(0, menu.page());
+    assertFalse(afterConsumption.stream().anyMatch(line -> line.contains("Page ")));
+    assertEquals("You carry nothing you can use online.", afterConsumption.get(1));
   }
 
   @Test

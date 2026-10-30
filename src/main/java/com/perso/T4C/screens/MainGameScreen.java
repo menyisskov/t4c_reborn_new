@@ -538,7 +538,7 @@ public class MainGameScreen implements Screen {
   private static com.perso.T4C.world.DayNightCycle loadDayNightCycle() {
     try {
       com.perso.T4C.helper.PlayerStateDto state = PlayerStateStore.load();
-      if (state != null && state.dayNightHour > 0f) {
+      if (state != null && state.dayNightHour >= 0f) {
         return new com.perso.T4C.world.DayNightCycle(state.dayNightHour);
       }
     } catch (Throwable ignored) {
@@ -4660,14 +4660,7 @@ public class MainGameScreen implements Screen {
     hud.setPersistence(session.persistence());
     if (session.commands() instanceof com.perso.T4C.session.RemotePlayerCommands remoteCommands)
       hud.setRemotePlayerCommands(remoteCommands);
-    hud.setBackpackAction(
-        () -> {
-          if (GuiManager.isCurrent(Inventory.class)) {
-            GuiManager.close();
-          } else {
-            GuiManager.open(new Inventory(player, hud));
-          }
-        });
+    hud.setBackpackAction(this::toggleCharacterInventory);
     hud.setCharacterAction(
         () -> {
           if (GuiManager.isCurrent(Statistics.class)) {
@@ -4742,6 +4735,37 @@ public class MainGameScreen implements Screen {
     lastMapZoneWorld = Integer.MIN_VALUE;
     lastMapZoneId = Integer.MIN_VALUE;
     updateMapZoneDisplay();
+  }
+
+  private void toggleCharacterInventory() {
+    if (remoteConnection == null) {
+      if (GuiManager.isCurrent(Inventory.class)) {
+        GuiManager.close();
+      } else {
+        GuiManager.open(new Inventory(player, hud));
+      }
+      return;
+    }
+
+    toggleRemoteInventory(
+        remoteInventoryPanel,
+        GuiManager::close,
+        () -> {
+          closeRemoteShop();
+          remoteAbilityMenu.close();
+          remoteCorpsePanel.close();
+        });
+  }
+
+  static void toggleRemoteInventory(
+      com.perso.T4C.online.OnlineInventoryPanel panel, Runnable closeGui, Runnable closeOtherPanels) {
+    if (panel.isOpen()) {
+      panel.close();
+      return;
+    }
+    if (closeGui != null) closeGui.run();
+    if (closeOtherPanels != null) closeOtherPanels.run();
+    panel.open();
   }
 
   private void playNpcCastVfx(SpellData spell, Player castOn, Vector2 casterPosition) {
@@ -5309,6 +5333,13 @@ public class MainGameScreen implements Screen {
     });
     remote.addProcessor(new com.badlogic.gdx.InputAdapter() {
       @Override public boolean keyDown(int keycode) {
+        if(keycode==Input.Keys.K && !isTextInputActive()
+            && !Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)
+            && !Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT) && player!=null
+            && player.getSkillLevel("sneak")>0) {
+          ((com.perso.T4C.session.RemotePlayerCommands)session.commands()).sneak();
+          return true;
+        }
         if (keycode == Input.Keys.ESCAPE
             && selectedTargetedSpell != null
             && isPositionTargetSpell(selectedTargetedSpell)) {
@@ -5358,6 +5389,11 @@ public class MainGameScreen implements Screen {
           if (keycode == Input.Keys.ESCAPE) {
             remoteAbilityMenu.close();
             return true;
+          }
+          if (keycode == Input.Keys.LEFT || keycode == Input.Keys.RIGHT) {
+            var view = remoteConnection == null ? null : remoteConnection.view();
+            var progress = view == null || view.character() == null ? null : view.character().progress();
+            if (turnRemoteAbilityMenuPage(remoteAbilityMenu, keycode, progress)) return true;
           }
           if (keycode == Input.Keys.C || keycode == Input.Keys.U) {
             var view = remoteConnection == null ? null : remoteConnection.view();
@@ -5540,6 +5576,14 @@ public class MainGameScreen implements Screen {
   static boolean routeRemoteHudButtonTouchUp(
       com.perso.T4C.ui.PlayerHUD hud, int screenX, int screenY, int button) {
     return button == Input.Buttons.LEFT && hud != null && hud.chatBarButtonsTouchUp(screenX, screenY);
+  }
+
+  static boolean turnRemoteAbilityMenuPage(
+      com.perso.T4C.online.OnlineAbilityMenu menu, int keycode,
+      com.perso.T4C.online.model.CharacterProgress progress) {
+    if (keycode != Input.Keys.LEFT && keycode != Input.Keys.RIGHT) return false;
+    menu.turnPage(keycode == Input.Keys.RIGHT ? 1 : -1, progress);
+    return true;
   }
 
   /** The lines of whichever online panel is open, top to bottom; empty when none is. */

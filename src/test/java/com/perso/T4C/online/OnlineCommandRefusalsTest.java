@@ -116,4 +116,15 @@ class OnlineCommandRefusalsTest {
       }
     }
   }
+
+  @Test void mapsSneakRefusalsToEnglishCatalogueEntries() {
+    assertEquals("online.sneak.not_learned",OnlineCommandRefusals.messageKey("/sneak","not_learned"));
+    assertEquals("online.sneak.stunned",OnlineCommandRefusals.messageKey("/sneak","stunned"));
+    assertEquals("online.ability.cooldown",OnlineCommandRefusals.messageKey("/sneak","cooldown"));
+    assertEquals("online.ability.dead",OnlineCommandRefusals.messageKey("/sneak","dead"));
+    assertEquals("online.ability.busy",OnlineCommandRefusals.messageKey("/sneak","revision"));
+    assertEquals("online.sneak.refused",OnlineCommandRefusals.messageKey("/sneak","unknown"));
+    for(var reason:List.of("not_learned","stunned","cooldown","dead","revision","unknown"))
+      assertTrue(I18n.has(OnlineCommandRefusals.messageKey("/sneak",reason)));
+  }
 }

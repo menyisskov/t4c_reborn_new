@@ -72,6 +72,7 @@ import java.util.function.Predicate;
  * directory, window x, window y.
  */
 public final class OnlineLiveRunDriver extends MyGame {
+  private final OnlineLobbyModel lobbyModel;
   private final Path out;
   private final Path sync;
   private final String tag;
@@ -111,6 +112,7 @@ public final class OnlineLiveRunDriver extends MyGame {
       String scene,
       Path sync) {
     super(endpoint, key, model);
+    this.lobbyModel = model;
     this.out = out;
     this.tag = tag;
     this.scene = scene;
@@ -473,6 +475,7 @@ public final class OnlineLiveRunDriver extends MyGame {
   private void script() {
     // 1. The lobby lists this account's character; Enter selects it.
     until("lobby shown", 60_000, () -> getScreen() instanceof OnlineLobbyScreen);
+    if (scene.equals("create")) createInLobby();
     waitMs(4000);
     action(() -> shot("lobby-roster"));
     action(
@@ -525,6 +528,8 @@ public final class OnlineLiveRunDriver extends MyGame {
     else if (scene.equals("m4")) m4Scene();
     else if (scene.equals("accept")) acceptScene();
     else if (scene.equals("m5")) m5Scene();
+    else if (scene.equals("create")) createScene();
+    else if (scene.equals("reenter")) reenterScene();
     else skeletonScene();
     action(
         () -> {
@@ -573,6 +578,138 @@ public final class OnlineLiveRunDriver extends MyGame {
           log("TALK " + label + ": inventory after: " + inventorySummary(after) + " (letters before " + count(before, "letter") + ", after " + count(after, "letter") + ")");
           shot("talk-" + label);
         });
+  }
+
+  // ---------------------------------------------------------------- M1 creation scenes (T4C-0352)
+
+  /**
+   * Scene {@code create}, first part: the account has no character. The lobby's own Create form is driven through the
+   * screen's input processor (C opens it, the name is typed as key-typed events, Down picks the class, Enter submits),
+   * then the roster is read again and the single new character is selected. Name and class come from
+   * {@code -Dcreate.name} and {@code -Dcreate.classIndex} (index into the form's class list).
+   */
+  private void createInLobby() {
+    String name = System.getProperty("create.name", "Live Creator");
+    int classIndex = Integer.parseInt(System.getProperty("create.classIndex", "0"));
+    until("roster read finished", 60_000, () -> getScreen() instanceof OnlineLobbyScreen l && !l.loading());
+    waitMs(1500);
+    action(
+        () -> {
+          log("CREATE: empty roster, entries=" + lobbyModel.entries().size() + ", message [" + ((OnlineLobbyScreen) getScreen()).errorMessage() + "]");
+          shot("create-1-empty-lobby");
+          Gdx.input.getInputProcessor().keyDown(Input.Keys.C);
+          Gdx.input.getInputProcessor().keyUp(Input.Keys.C);
+        });
+    waitMs(800);
+    action(
+        () -> {
+          for (char c : name.toCharArray()) Gdx.input.getInputProcessor().keyTyped(c);
+          for (int i = 0; i < classIndex; i++) {
+            Gdx.input.getInputProcessor().keyDown(Input.Keys.DOWN);
+            Gdx.input.getInputProcessor().keyUp(Input.Keys.DOWN);
+          }
+        });
+    waitMs(800);
+    action(
+        () -> {
+          var form = ((OnlineLobbyScreen) getScreen()).form();
+          log("CREATE: form shows name [" + form.name() + "] class " + form.characterClass() + " gender " + form.gender() + " evil " + form.evil());
+          shot("create-2-form");
+          Gdx.input.getInputProcessor().keyDown(Input.Keys.ENTER);
+          Gdx.input.getInputProcessor().keyUp(Input.Keys.ENTER);
+          log("CREATE: Enter delivered");
+        });
+    until("created and listed", 40_000, () -> getScreen() instanceof OnlineLobbyScreen l && !l.loading() && lobbyModel.entries().size() == 1);
+    waitMs(1200);
+    action(
+        () -> {
+          var c = lobbyModel.entries().getFirst();
+          log("CREATE: roster lists " + c.name() + " / " + c.characterClass() + " / " + c.availability());
+          shot("create-3-listed");
+        });
+  }
+
+  /** What the committed view says about the character, in one line (class, level, gold, stack and equipment counts). */
+  private String characterLine() {
+    var v = view();
+    var p = v.character().progress();
+    return v.character().name() + " class " + p.characterClass() + " level " + p.advancement().level() + " gold " + v.character().gold()
+        + " inventoryStacks " + p.inventory().size() + " equipped " + new java.util.TreeSet<>(p.equipment().keySet())
+        + " spells " + new java.util.TreeSet<>(p.spells()) + " letters " + count(p, "letter");
+  }
+
+  /** Walks to Kilhiam if needed, as the temple scene does. */
+  private void walkToKilhiam() {
+    repeat(
+        "walked within talking distance of Kilhiam",
+        60_000,
+        () -> {
+          var s = game();
+          var npc = s == null ? null : kilhiam(s);
+          if (npc == null) return false;
+          walkToward(s, npc.getPosition(), 70f);
+          return distance(s, npc.getPosition()) <= 70f;
+        });
+    action(() -> held.clear());
+    waitMs(800);
+  }
+
+  /** Leaves the world through the screen's switch-character callback and enters again from the lobby. */
+  private void leaveAndRejoin() {
+    action(
+        () -> {
+          held.clear();
+          log("CLOSE: " + characterLine());
+          try {
+            var m = MainGameScreen.class.getDeclaredMethod("switchCharacter");
+            m.setAccessible(true);
+            m.invoke(game());
+            log("CLOSE: MainGameScreen.switchCharacter() invoked by reflection (the Options button was not clicked)");
+          } catch (ReflectiveOperationException e) {
+            log("CLOSE: could not invoke switchCharacter: " + e);
+          }
+        });
+    until("back in the lobby", 30_000, () -> getScreen() instanceof OnlineLobbyScreen);
+    waitMs(2000);
+    action(() -> shot("create-5-lobby-after-close"));
+    final long[] rejoinStart = {0};
+    repeat(
+        "reconnected after closing",
+        150_000,
+        () -> {
+          long now = System.currentTimeMillis();
+          if (game() != null && "connected".equals(connection().status())) return true;
+          if (getScreen() instanceof OnlineLobbyScreen && now - rejoinStart[0] > 2500) {
+            rejoinStart[0] = now;
+            Gdx.input.getInputProcessor().keyDown(Input.Keys.ENTER);
+          }
+          return false;
+        });
+    waitMs(4000);
+    action(
+        () -> {
+          log("RECONNECT: " + characterLine());
+          shot("create-6-reconnected");
+        });
+  }
+
+  private void createScene() {
+    action(() -> log("ENTERED: " + characterLine()));
+    walkToKilhiam();
+    talkOnce("first-greeting");
+    talkOnce("repeat-greeting");
+    leaveAndRejoin();
+    walkToKilhiam();
+    talkOnce("greeting-after-reconnect");
+    action(() -> log("END: " + characterLine()));
+  }
+
+  /** Second process for the same account after the first window was closed: the created character is on the roster. */
+  private void reenterScene() {
+    action(() -> log("REENTERED: " + characterLine()));
+    walkToKilhiam();
+    talkOnce("greeting-after-window-close");
+    action(() -> log("END: " + characterLine()));
   }
 
   private void templeScene() {
