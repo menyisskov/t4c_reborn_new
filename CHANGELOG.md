@@ -11,6 +11,11 @@ grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
 
+## 2026-10-30 — Native loot check now runs end to end (T4C-0357)
+
+### Changed
+- The project's automated check of shared ground loot in online play (two players racing for one drop, a pickup refused for being too heavy, and a dropped connection around a pickup) now runs all the way through and passes. Nothing about the game itself changed.
+
 ## 2026-10-30 — New worlds start in the morning (T4C-0350)
 
 ### Fixed
