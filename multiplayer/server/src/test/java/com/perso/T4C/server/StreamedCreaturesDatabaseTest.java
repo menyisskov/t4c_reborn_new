@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.perso.T4C.combat.MonsterCombatRules;
 import com.perso.T4C.helper.CharacterClass;
+import com.perso.T4C.online.model.CharacterProgress;
+import com.perso.T4C.server.persistence.PortalTransfer;
+import java.util.UUID;
 import com.perso.T4C.server.persistence.OnlineStore;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -330,6 +333,139 @@ class StreamedCreaturesDatabaseTest {
       stepTicks(hosted, 3 * PreviewWorld.TICK_RATE);
       assertEquals(0, creatureRows(), "a creature back to pristine leaves no stale row");
       assertEquals(1, region.creatures.stats().pristineRowsDeleted());
+    }
+  }
+
+  /** T4C-0372: under the active cap the creatures nearest to a player are admitted first, the rest wait deterministically. */
+  @Test void underTheActiveCapTheNearestCreaturesAreAdmittedFirstAndTheRestWait() throws Exception {
+    var store = store();
+    clearCreatureRows();
+    final int cap = 40;
+    try (var hosted = host(store)) {
+      var region = hosted.regions.getFirst();
+      var creatures = region.creatures;
+      creatures.maxActive(cap);
+      var spawns = region.world.hostedSpawns();
+      var dense = densest(spawns, 129);
+      var spot = standable(region.map, dense[0], dense[1]);
+      double px = spot[0] + .5, py = spot[1] + .5;
+      var hero = hero(store, "Nearest first", px, py);
+      var joined = hosted.sessions.join(store.acquire(hero.account().secret(), hero.character().id()), System.nanoTime());
+      stepPaced(hosted, () -> creatures.stats().active() >= cap, 200);
+      stepTicks(hosted, 10);
+      var stats = creatures.stats();
+      assertEquals(cap, stats.active(), "the cap holds");
+      assertTrue(stats.queued() > 0, "more creatures wait than there is room for: " + stats);
+      assertTrue(stats.capRefusals() > 0);
+      // The expected admitted set: the cap nearest hosted spawns to the player, ties to the lower index (the same key).
+      var order = new ArrayList<long[]>();
+      for (var s : spawns) {
+        double dx = s.spawn().x() - region.map.originX - px, dy = s.spawn().y() - region.map.originY - py;
+        order.add(new long[] {(long) ((dx * dx + dy * dy) * 16), s.id()});
+      }
+      order.sort((a, b) -> a[0] != b[0] ? Long.compare(a[0], b[0]) : Long.compare(a[1], b[1]));
+      var expected = new HashSet<Long>();
+      for (int i = 0; i < cap; i++) expected.add(order.get(i)[1]);
+      var actual = new HashSet<Long>();
+      for (var s : spawns) if (creatures.lifecycleOf(s.id()) == PersistentCreatures.ACTIVE) actual.add(s.id());
+      assertEquals(expected, actual, "exactly the creatures nearest to the player are live");
+      // Room appears: the waiting creatures follow, nearest of the remainder first, and nothing is lost.
+      creatures.maxActive(PersistentCreatures.DEFAULT_MAX_ACTIVE);
+      stepPaced(hosted, () -> creatures.stats().queued() == 0 && creatures.stats().loading() == 0, 300);
+      assertTrue(creatures.stats().active() > cap);
+      var left = hosted.sessions.leave(joined.token());
+      stepPaced(hosted, left::isDone, 400);
+    }
+  }
+
+  /**
+   * T4C-0372: a real portal transfer out of and back into the streamed region. The destination window is activated
+   * while the transfer commits, the actor is released only once every snapshot-window creature is live, the first
+   * snapshot after release lists them all, and the epochs and the session lease fence the old session.
+   */
+  @Test void aRealPortalTransferIntoAndOutOfTheStreamedRegionHoldsTheArrivalAndFencesEpochs() throws Exception {
+    var store = store();
+    clearCreatureRows();
+    var hero = hero(store, "Streamed portal walker", 2944.5, 1059.5);
+    var firstSession = store.acquire(hero.account().secret(), hero.character().id());
+    try (var hosted = host(store)) {
+      var region = hosted.regions.getFirst();
+      var creatures = region.creatures;
+      var joined = hosted.sessions.join(firstSession, System.nanoTime());
+      var token = joined.token();
+      hosted.sessions.regionReady(token, 0);
+      stepPaced(hosted, () -> !hosted.sessions.arrivalHeld(token), 300);
+      assertEquals(0, hosted.sessions.region(token).locationEpoch());
+      // Out of the streamed region through the temple portal into the Lighthaven interior (a world-1 piece).
+      var start = hosted.actor(token);
+      start.world.relocate(token, 2931.5 - start.map.originX, 1056.5 - start.map.originY);
+      stepPaced(hosted, () -> hosted.sessions.region(token).locationEpoch() == 1, 400);
+      assertEquals(1, hosted.sessions.region(token).world());
+      assertEquals(1, store.load(hero.account().accountId(), hero.character().id()).world());
+      assertThrows(PreviewWorld.Rejected.class, () -> hosted.sessions.requireEpoch(token, 0), "the old epoch is fenced");
+      hosted.sessions.regionReady(token, 1);
+      stepPaced(hosted, () -> !hosted.sessions.arrivalHeld(token), 300);
+      // Stay away until the temple's creatures have all gone dormant (release hysteresis), so the return really activates them.
+      var interior = hosted.actor(token);
+      int away = (int) AreaOfInterest.RELEASE_TICKS + 3 * PreviewWorld.TICK_RATE;
+      for (int i = 0; i < away; i++) {
+        hosted.step();
+        if (i % 10 == 0) interior.world.snapshot(token); // a polling client keeps its session alive
+        java.util.concurrent.locks.LockSupport.parkNanos(PERIOD / 4);
+      }
+      assertEquals(0, creatures.stats().active(), "the temple's creatures are dormant while nobody is near");
+      long activatedBefore = creatures.stats().activated();
+      // Back in, through the interior's portal. The cooldown is retried by the session until the database clock agrees.
+      interior.world.relocate(token, 306.5 - interior.map.originX, 381.5 - interior.map.originY);
+      stepPaced(hosted, () -> hosted.sessions.region(token).locationEpoch() == 2, 600);
+      assertEquals(0, hosted.sessions.region(token).world(), "the hop lands in the streamed world-0 region");
+      assertSame(region.world, hosted.actor(token).world);
+      assertTrue(hosted.sessions.arrivalHeld(token), "the arrival is frozen while the transfer commits and the client loads");
+      assertThrows(PreviewWorld.Rejected.class, () -> hosted.sessions.requireEpoch(token, 1), "the interior epoch is fenced");
+      hosted.sessions.regionReady(token, 2); // the client is ready at once; only creature activation can still hold it
+      var at = region.world.position(token);
+      boolean liveAtRelease = false;
+      long held = 0;
+      for (int tick = 0; tick < 200 && hosted.sessions.arrivalHeld(token); tick++) {
+        hosted.step();
+        held++;
+        java.util.concurrent.locks.LockSupport.parkNanos(PERIOD);
+      }
+      assertFalse(hosted.sessions.arrivalHeld(token), "released");
+      liveAtRelease = creatures.windowActive(at.x(), at.y());
+      assertTrue(liveAtRelease, "the actor was not released before every window creature was live");
+      assertTrue(held * 1000.0 / PreviewWorld.TICK_RATE <= 1000, "held at most the 1.0 s budget: " + held + " ticks");
+      var window = AreaOfInterest.window(at.x(), at.y(), AreaOfInterest.SNAPSHOT_HALF_EXTENT, 6144, 3072);
+      var first = region.world.snapshot(token);
+      var ids = new HashSet<Long>();
+      for (var c : first.creatures()) ids.add(c.id());
+      var expected = new HashSet<Long>();
+      for (var s : region.world.hostedSpawns()) {
+        double x = s.spawn().x(), y = s.spawn().y();
+        if (x >= window.x() + 8 && x < window.right() - 8 && y >= window.y() + 8 && y < window.bottom() - 8) expected.add(s.id());
+      }
+      System.out.printf("STREAM_PORTAL_ARRIVAL heldTicks=%d snapshotCreatures=%d expectedInside=%d truncated=%s%n",
+          held, first.creatures().size(), expected.size(), first.truncated());
+      assertFalse(expected.isEmpty(), "the temple window holds creatures, so the check means something");
+      assertTrue(creatures.stats().activated() - activatedBefore >= expected.size(), "the return activated them from dormant");
+      assertTrue(ids.containsAll(expected), "the first snapshot after release lists every window creature");
+      assertEquals(2, store.load(hero.account().accountId(), hero.character().id()).locationEpoch());
+      var left = hosted.sessions.leave(token);
+      stepPaced(hosted, left::isDone, 400);
+    }
+    // The released lease fences the old session; a new session sees the committed place and epoch.
+    var draft = new PortalTransfer(16, "start", "lighthaven-interior", new CharacterProgress.Respawn(0, 2931.5, 1056.5),
+        new CharacterProgress.Respawn(1, 304.5, 383.5), 2, System.currentTimeMillis() + 350);
+    assertThrows(OnlineStore.Conflict.class, () -> store.commitTransfer(firstSession, 2, UUID.randomUUID(), draft));
+    try (var hosted = host(store)) {
+      var region = hosted.regions.getFirst();
+      var rejoined = hosted.sessions.join(store.acquire(hero.account().secret(), hero.character().id()), System.nanoTime());
+      hosted.sessions.regionReady(rejoined.token(), 2);
+      stepPaced(hosted, () -> !hosted.sessions.arrivalHeld(rejoined.token()), 300);
+      var at = region.world.position(rejoined.token());
+      assertTrue(region.creatures.windowActive(at.x(), at.y()), "a rejoin lands in a populated room too");
+      var left = hosted.sessions.leave(rejoined.token());
+      stepPaced(hosted, left::isDone, 400);
     }
   }
 

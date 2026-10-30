@@ -411,9 +411,54 @@ final class PersistentCreatures implements AutoCloseable {
     return interested((int)entry.spawn.id()-1,at.x(),at.y());
   }
 
+  /**
+   * Under the active cap, admission is nearest-first (T4C-0372): when more creatures wait than there is room for, the
+   * ones closest to any player are loaded first and the rest stay queued, in their original order, for the next tick.
+   * Ties go to the lower spawn index, so the choice is deterministic. With room for everyone nothing changes.
+   */
+  private void dispatchNearest(int budget,int room) {
+    if(room<=0) { capRefusals++;return; } // nothing can load; the queue is untouched and costs nothing this tick
+    var wasUrgent=new LinkedHashSet<Integer>(urgent);
+    var candidates=new LinkedHashSet<Integer>(wasUrgent);
+    candidates.addAll(queued);
+    urgent.clear();queued.clear();
+    var players=world.playerTiles();
+    var order=new long[candidates.size()];
+    int live=0;
+    var kept=new ArrayList<Integer>(candidates.size());
+    for(int index:candidates) {
+      if(lifecycle[index]!=QUEUED) continue;
+      if(!coverage.covered(cellIndex.homeCell(index)) && !coverage.covered(cellIndex.currentCell(index))) {
+        lifecycle[index]=DORMANT;queuedCount--;continue; // left every window before it was read: nothing written
+      }
+      var s=hosted.get(index).spawn();
+      double best=Double.MAX_VALUE;
+      for(var p:players) {
+        double dx=s.x()-map.originX-p[0],dy=s.y()-map.originY-p[1];
+        best=Math.min(best,dx*dx+dy*dy);
+      }
+      order[live++]=(Math.min(Integer.MAX_VALUE,(long)(best*16))<<32)|index;
+      kept.add(index);
+    }
+    order=java.util.Arrays.copyOf(order,live);
+    java.util.Arrays.sort(order);
+    if(live>room) capRefusals++;
+    int take=Math.min(Math.min(room,budget),live);
+    var chosen=new HashSet<Integer>();
+    var batch=new ArrayList<Integer>(take);
+    for(int i=0;i<take;i++) {
+      int index=(int)(order[i]&0xffffffffL);
+      chosen.add(index);batch.add(index);
+      lifecycle[index]=LOADING;queuedCount--;loadingCount++;
+    }
+    for(int index:kept) if(!chosen.contains(index)) (wasUrgent.contains(index) ? urgent : queued).add(index);
+    if(!batch.isEmpty()) submitActivationBatch(batch);
+  }
+
   private void dispatchActivations() {
     if(tick<retryAfterTick) return;
     int budget=activationBatch;
+    if(queuedCount>maxActive-entries.size()-loadingCount) { dispatchNearest(budget,maxActive-entries.size()-loadingCount);return; }
     var batch=new ArrayList<Integer>(budget);
     while(budget>0) {
       Integer index=!urgent.isEmpty() ? urgent.poll() : queued.poll();

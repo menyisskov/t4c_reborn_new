@@ -15,7 +15,7 @@ class UnhostableSpawnsTest {
     var bundled = UnhostableSpawnAudit.bundled();
     assertEquals(recomputed, bundled, "run UnhostableSpawnAudit and commit the output when content or rules change");
     assertEquals(153, bundled.footBlocked(), "the design's count: anchors on foot-blocked tiles");
-    assertEquals(bundled.entries().size(), bundled.footBlocked() + bundled.wallAbove() + bundled.noSprite());
+    assertEquals(bundled.entries().size(), bundled.footBlocked() + bundled.noSprite());
     var resource = new String(UnhostableSpawnAudit.class.getResourceAsStream(UnhostableSpawnAudit.RESOURCE).readAllBytes(),
         java.nio.charset.StandardCharsets.UTF_8);
     assertEquals(UnhostableSpawnAudit.toJson(recomputed), resource, "the committed file is the tool's exact output");
@@ -30,17 +30,17 @@ class UnhostableSpawnsTest {
     var excluded = new TreeSet<String>();
     for (var spawn : all) {
       var definition = monsters.monsters().get(spawn.definition());
-      if (!map.canStand(spawn.x(), spawn.y()) || definition.getWalkPattern() == null || definition.getWalkPattern().isBlank())
+      if (map.blocksFoot(spawn.x(), spawn.y()) || definition.getWalkPattern() == null || definition.getWalkPattern().isBlank())
         excluded.add(spawn.persistenceKey());
     }
-    assertEquals(listed, excluded, "exactly the unstandable or sprite-less set, never a pattern");
+    assertEquals(listed, excluded, "exactly the foot-blocked or sprite-less set, never a pattern");
     assertTrue(plan.unhostableSpawnKeys.containsAll(listed));
     try (var hosted = new HostedWorlds(plan, null, ItemCatalog.loadBundled(), MonsterCatalog.loadBundled())) {
       var world = hosted.regions.getFirst().world;
       assertTrue(world.streamedCreatures());
       assertEquals(all.size() - listed.size(), world.hostedSpawns().size(), "every standable authored world-0 spawn is hosted");
       assertTrue(world.creatureSpawns().isEmpty(), "nothing is live before a player is near");
-      for (var spawn : world.hostedSpawns()) assertTrue(map.canStand(spawn.spawn().x(), spawn.spawn().y()));
+      for (var spawn : world.hostedSpawns()) assertFalse(map.blocksFoot(spawn.spawn().x(), spawn.spawn().y()));
     }
     // The shipped plan is unchanged by the list.
     assertTrue(HostedRegionPlan.startingSlice(WORLD).unhostableSpawnKeys.stream().noneMatch(listed::contains));

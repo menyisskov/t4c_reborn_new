@@ -77,4 +77,20 @@ class RegionGroundLootTest {
     for (int i=0;i<300;i++) loot.removeClaimed(UUID.randomUUID(),who);
     assertFalse(loot.takenByOther(first,UUID.randomUUID()));
   }
+
+  @Test
+  void aStreamedReadThatHitsTheRowCapIsReportedAsCapped() {
+    var streamed=new RegionMapLoader.Spec(0,"start",0,0,6144,3072,2944,1059,true);
+    var loot=new RegionGroundLoot(streamed,clock::get);
+    var full=new java.util.ArrayList<OnlineStore.GroundLoot>();
+    for (int i=0;i<OnlineStore.LOOT_CELLS_LIMIT;i++)
+      full.add(new OnlineStore.GroundLoot(UUID.randomUUID(),0,2930,1050,"item.leather_gloves",1,0,null,0));
+    loot.beginRead();loot.endRead(full);
+    assertTrue(loot.readCapped());
+    loot.beginRead();loot.endRead(full.subList(0,OnlineStore.LOOT_CELLS_LIMIT-1));
+    assertFalse(loot.readCapped(),"a read under the cap is complete");
+    var plain=new RegionGroundLoot(SPEC,clock::get);
+    plain.beginRead();plain.endRead(full);
+    assertFalse(plain.readCapped(),"only a per-cell streamed read has a row cap");
+  }
 }

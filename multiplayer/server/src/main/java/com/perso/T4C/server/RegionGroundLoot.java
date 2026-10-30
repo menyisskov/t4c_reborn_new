@@ -110,8 +110,16 @@ final class RegionGroundLoot {
   void endRead(List<OnlineStore.GroundLoot> found) {
     reading=false;
     if (found==null) { changedDuringRead.clear(); dirty=true; }
-    else replace(found,readStartedAt);
+    else {
+      replace(found,readStartedAt);
+      // A per-cell read that came back full may have left drops out; the snapshot reports it as truncated.
+      readCapped=spec.streamed() && found.size()>=OnlineStore.LOOT_CELLS_LIMIT;
+    }
   }
+
+  private boolean readCapped;
+  /** True when the last database read of a streamed region hit its row cap, so the cached list may be incomplete. */
+  boolean readCapped() { return readCapped; }
 
   void abortRead() { reading=false; changedDuringRead.clear(); dirty=true; }
 
