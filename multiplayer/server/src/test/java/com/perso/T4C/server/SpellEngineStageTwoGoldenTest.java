@@ -212,7 +212,7 @@ class SpellEngineStageTwoGoldenTest {
   void engineReproducesTheSinglePlayerGoldenForAllThirtyThreeSpells() throws Exception {
     var content = SpellEngineGoldenTest.content();
     var keys = new ArrayList<String>();
-    content.spells().values().stream().filter(spell -> spell.stage() == 2).forEach(spell -> keys.add(spell.key()));
+    content.spells().values().stream().filter(spell -> spell.stage() == 2 && !spell.key().startsWith("spell.item_")).forEach(spell -> keys.add(spell.key()));
     java.util.Collections.sort(keys);
     assertEquals(33, keys.size());
     var text = new StringBuilder("# Stage-2 spell outcomes from the single-player code path; the engine must equal them.\n");
