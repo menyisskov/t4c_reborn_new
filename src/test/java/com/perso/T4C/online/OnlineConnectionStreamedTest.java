@@ -33,6 +33,7 @@ class OnlineConnectionStreamedTest {
         case "/join" -> "{\"token\":\"" + "a".repeat(64) + "\",\"id\":7,\"region\":" + region + "}";
         case "/state" -> "{\"tick\":8,\"region\":" + region + ",\"players\":[{\"id\":7,\"x\":" + playerX + ",\"y\":" + playerY
             + ",\"sequence\":0,\"hp\":10,\"maxHp\":10}]," + stateFields + "}";
+        case "/chat" -> "{\"cursor\":0,\"messages\":[]}";
         default -> "{}";
       };
       byte[] bytes = result.getBytes(StandardCharsets.UTF_8);
