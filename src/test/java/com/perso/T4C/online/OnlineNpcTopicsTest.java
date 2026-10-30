@@ -28,6 +28,17 @@ class OnlineNpcTopicsTest {
   }
 
   @Test
+  void lighthavenSamaritanExposesOnlyItsAuthoredErrandTopicAndPreservesItsActualIndex() {
+    Set<String> catalogue = Set.of(
+        "npc.topic.lighthavensamaritan.0", "npc.topic.lighthavensamaritan.37",
+        "npc.topic.lighthavensamaritan.38");
+    var topics = OnlineNpcTopics.available("LighthavenSamaritan", catalogue::contains);
+    assertEquals(List.of(37), topics);
+    assertEquals(OptionalInt.of(37), OnlineNpcTopics.choose(topics, 1));
+    assertTrue(OnlineNpcTopics.choose(topics, 2).isEmpty());
+  }
+
+  @Test
   void digitsChooseOnlyListedTopics() {
     var topics = List.of(0, 1);
     assertEquals(OptionalInt.of(0), OnlineNpcTopics.choose(topics, 1));

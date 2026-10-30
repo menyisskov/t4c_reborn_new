@@ -16,15 +16,20 @@ class OnlineQuestJournalTest {
         Map.of(
             "quest.renewed_wards.status", 1,
             "quest.renewed_wards.kills", 5,
+            "quest.lighthaven_samaritan_rats.status", 1,
+            "quest.__NEWBIE_QUEST.kills", 9,
             "quest.unhosted.status", 1);
     var progress = progress(flags);
 
     var entries = OnlineQuestJournal.entries(progress);
 
-    assertEquals(1, entries.size());
-    assertEquals("renewed_wards", entries.getFirst().id());
-    assertEquals(5, entries.getFirst().kills());
-    assertEquals(12, entries.getFirst().requiredKills());
+    assertEquals(2, entries.size());
+    var wards = entries.stream().filter(entry -> entry.id().equals("renewed_wards")).findFirst().orElseThrow();
+    assertEquals(5, wards.kills());
+    assertEquals(12, wards.requiredKills());
+    var rats = entries.stream().filter(entry -> entry.id().equals("lighthaven_samaritan_rats")).findFirst().orElseThrow();
+    assertEquals(9, rats.kills());
+    assertEquals(15, rats.requiredKills());
     assertTrue(
         OnlineQuestJournal.lines(progress).stream().anyMatch(line -> line.contains("5/12")));
     assertEquals(flags, progress.questFlags());
@@ -32,11 +37,12 @@ class OnlineQuestJournalTest {
 
   @Test
   void showsCompletedSupportedQuestAndOmitsNeverStartedQuest() {
-    var progress = progress(Map.of("quest.renewed_wards.status", 2));
+    var progress = progress(Map.of("quest.lighthaven_samaritan_rats.status", 2));
 
     var entries = OnlineQuestJournal.entries(progress);
 
     assertEquals(1, entries.size());
+    assertEquals("lighthaven_samaritan_rats", entries.getFirst().id());
     assertTrue(entries.getFirst().completed());
     assertTrue(
         OnlineQuestJournal.lines(progress).stream().anyMatch(line -> line.contains("Completed")));

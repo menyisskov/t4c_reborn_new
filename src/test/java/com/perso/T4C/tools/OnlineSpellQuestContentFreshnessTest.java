@@ -16,6 +16,19 @@ import org.junit.jupiter.params.provider.ValueSource;
 class OnlineSpellQuestContentFreshnessTest {
   @TempDir Path temporary;
 
+  @org.junit.jupiter.api.Test
+  void onlineQuestExportIncludesTheHostedLighthavenRatQuest() {
+    var quest = OnlineQuestContentExporter.snapshot().quests().get("lighthaven_samaritan_rats");
+    assertNotNull(quest);
+    assertEquals("LighthavenSamaritan", quest.giverNpc());
+    assertEquals("Brown Rat", quest.targetMonster());
+    assertEquals(15, quest.requiredKills());
+    assertEquals("__NEWBIE_QUEST", quest.activationFlag());
+    assertEquals("__NEWBIE_QUEST", com.perso.T4C.quest.QuestRegistry
+        .findById("lighthaven_samaritan_rats").getActivationFlag(),
+        "the offline authored definition keeps its legacy shared activation marker");
+  }
+
   @ParameterizedTest
   @ValueSource(strings = {"spells", "quests", "spells-v2"})
   void packagedContentMatchesActualRuntimeDefinitions(String kind) throws Exception {

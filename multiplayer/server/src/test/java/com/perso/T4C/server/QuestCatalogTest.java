@@ -44,7 +44,15 @@ class QuestCatalogTest {
     assertThrows(IllegalArgumentException.class,
         () -> new QuestCatalog(content(variant(base, "story.flag", 12, base.giverNpc())), monsters, items, spells));
     assertThrows(IllegalArgumentException.class,
+        () -> new QuestCatalog(content(variant(base, "__UNSUPPORTED_SHARED_FLAG", 12, base.giverNpc())), monsters, items, spells));
+    assertThrows(IllegalArgumentException.class,
         () -> new QuestCatalog(content(variant(base, null, 0, base.giverNpc())), monsters, items, spells));
+  }
+
+  @Test void bundledRatQuestPreservesItsLegacyActivationFlag() throws Exception {
+    var quest = QuestCatalog.loadBundled().definition("lighthaven_samaritan_rats");
+    assertNotNull(quest);
+    assertEquals("__NEWBIE_QUEST", quest.getActivationFlag());
   }
 
   @Test void twoQuestsCannotShareOneGiverBecauseOnlyTheFirstWouldBeReachable() throws Exception {

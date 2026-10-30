@@ -23,6 +23,8 @@ final class OnlineNpcTopics {
 
   /** Contiguous authored topics from index 0; the first gap ends the list. Capped at the number keys. */
   static List<Integer> available(String npcId, Predicate<String> catalogue) {
+    if ("LighthavenSamaritan".equals(npcId))
+      return catalogue.test(key(npcId, 37)) ? List.of(37) : List.of();
     var topics = new ArrayList<Integer>();
     for (int topic = 0; topic < MAX_CHOICES && catalogue.test(key(npcId, topic)); topic++) topics.add(topic);
     return List.copyOf(topics);

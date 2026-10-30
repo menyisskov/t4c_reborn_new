@@ -80,6 +80,36 @@ class OnlineNpcInteractionsTest {
     assertThrows(IllegalArgumentException.class,()->talk(interactions,state(accepted,0),aelric,OptionalInt.of(7),UUID::randomUUID));
   }
 
+  @Test void lighthavenAuthoredTopic37AcceptsReportsSharedRatProgressAndTurnsInOnGreeting() throws Exception {
+    var catalog=NpcInteractionCatalog.loadBundled();
+    var samaritan=catalog.require("LighthavenSamaritan");
+    var interactions=new OnlineNpcInteractions(catalog,ItemCatalog.loadBundled());
+    var progress=OnlineCharacterCreator.prepare(CharacterClass.WARRIOR,"male",false,new Random(1)).progress();
+    var offered=talk(interactions,state(progress,0),samaritan,OptionalInt.of(37),UUID::randomUUID);
+    assertTrue(offered.changed());
+    assertEquals("quest.lighthaven_samaritan_rats.offer",offered.messageKey());
+    assertEquals(1,offered.progress().questFlags().get("quest.lighthaven_samaritan_rats.status"));
+    assertEquals(0,offered.progress().questFlags().get("quest.__NEWBIE_QUEST.kills"));
+
+    var flags=new HashMap<>(offered.progress().questFlags());
+    flags.put("quest.__NEWBIE_QUEST.kills",8);
+    var partial=ProgressEdits.withFlags(offered.progress(),flags);
+    var reported=talk(interactions,state(partial,0),samaritan,OptionalInt.of(37),UUID::randomUUID);
+    assertFalse(reported.changed());
+    assertEquals("message.quest_progress_dialog",reported.messageKey());
+    assertEquals(List.of(8,15,7),reported.args());
+
+    flags.put("quest.__NEWBIE_QUEST.kills",15);
+    var ready=ProgressEdits.withFlags(partial,flags);
+    var turnedIn=talk(interactions,state(ready,0),samaritan,OptionalInt.empty(),UUID::randomUUID);
+    assertTrue(turnedIn.changed());
+    assertEquals("quest.lighthaven_samaritan_rats.completion",turnedIn.messageKey());
+    assertEquals(2500,turnedIn.experience());
+    assertEquals(2,turnedIn.progress().questFlags().get("quest.lighthaven_samaritan_rats.status"));
+    assertThrows(IllegalArgumentException.class,
+        ()->talk(interactions,state(ready,0),samaritan,OptionalInt.of(38),UUID::randomUUID));
+  }
+
   @Test void kilhiamHasNoTopicsAndInteractionChecksAuthoritativeLocationAndSightBeforeRewarding() throws Exception {
     var catalog=NpcInteractionCatalog.loadBundled();var npc=catalog.npcs().getFirst();
     var interactions=new OnlineNpcInteractions(catalog,ItemCatalog.loadBundled());
