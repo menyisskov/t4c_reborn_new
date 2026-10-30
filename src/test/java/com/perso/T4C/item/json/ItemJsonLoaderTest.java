@@ -17,6 +17,18 @@ class ItemJsonLoaderTest {
   }
 
   @Test
+  void loadingTheSameDirectoryTwiceDoesNotDuplicateNumericIds() {
+    ItemJsonLoader.loadAndRegister("assets/items");
+    int once = ItemRegistry.load().size();
+    ItemJsonLoader.loadAndRegister("assets/items");
+    assertEquals(once, ItemRegistry.load().size(), "a second load must replace, not duplicate");
+    var ids = new java.util.HashSet<Integer>();
+    for (ItemDefinition def : ItemRegistry.load())
+      if (def.getKey().startsWith("item.event_"))
+        assertTrue(ids.add(def.getNumId()), "duplicate numId " + def.getNumId() + " " + def.getKey());
+  }
+
+  @Test
   void loadsAncientCelestialFireArmorWithScaledStatsAndRequirements() {
     ItemJsonLoader.loadAndRegister("assets/items");
 
