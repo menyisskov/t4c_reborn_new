@@ -28,8 +28,8 @@ import org.junit.jupiter.api.parallel.ResourceLock;
  * by the tile aspect exactly as {@code GameInputHandler} projects it), seeded frame times, a
  * dynamic blocker, a player-passable (teleport) tile set and click-to-move paths. Each scenario
  * records the end position and a CRC over every frame's position, facing, moving flag and
- * reservation state. The golden is a recording of the code as it was before the movement step was
- * moved into the shared domain; the move must reproduce it bit for bit.
+ * reservation state. The golden records the current shared movement rule and speed; regenerate it
+ * when an intentional player movement change alters the recorded positions.
  *
  * <p>Regenerate only for an intended single-player movement change: {@code mvn -o
  * -Dt4c.movement.golden.update=true -Dtest=PlayerMovementGoldenTest test}.

@@ -121,6 +121,35 @@ class MovementRulesTest {
   }
 
   @Test
+  void advanceDoesNotSnapToTheTargetBeforeItsRemainingDistanceIsPaid() {
+    var step = new MovementRules.Reservation(6 * GRID_W, 5 * GRID_H, 1, 0);
+    var part = MovementRules.Grid.advance(6 * GRID_W - 0.001f, 5 * GRID_H, step, 0.0005f);
+    assertFalse(part.arrived());
+    assertTrue(part.x() < step.targetX());
+    assertEquals(0.0005f, part.spent());
+  }
+
+  @Test
+  void diagonalAdvanceDoesNotEnterOnlyOneCenteredTileAtABoundary() {
+    float x = (8.926465f - 0.5f) * GRID_W;
+    float y = (17.9264698f - 0.5f) * GRID_H;
+    var step = new MovementRules.Reservation(9 * GRID_W, 18 * GRID_H, 1, 1);
+    var moved = MovementRules.Grid.advance(x, y, step, 80f / 34f);
+    assertEquals((int) (x / GRID_W + 0.5f), (int) (moved.x() / GRID_W + 0.5f));
+    assertEquals((int) (y / GRID_H + 0.5f), (int) (moved.y() / GRID_H + 0.5f));
+  }
+
+  @Test
+  void negativeDiagonalAdvanceDoesNotEnterOnlyOneCenteredTileAtABoundary() {
+    float x = (9.073535f - 0.5f) * GRID_W;
+    float y = (18.073520f - 0.5f) * GRID_H;
+    var step = new MovementRules.Reservation(8 * GRID_W, 17 * GRID_H, -1, -1);
+    var moved = MovementRules.Grid.advance(x, y, step, 80f / 34f);
+    assertEquals((int) (x / GRID_W + 0.5f), (int) (moved.x() / GRID_W + 0.5f));
+    assertEquals((int) (y / GRID_H + 0.5f), (int) (moved.y() / GRID_H + 0.5f));
+  }
+
+  @Test
   void aVerticalStepCoversHalfThePixelsBecauseTilesAreTwiceAsWideAsTall() {
     var step = new MovementRules.Reservation(5 * GRID_W, 6 * GRID_H, 0, 1);
     var moved = MovementRules.Grid.advance(5 * GRID_W, 5 * GRID_H, step, 8f);
