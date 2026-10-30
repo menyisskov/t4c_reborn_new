@@ -3275,18 +3275,15 @@ public class MainGameScreen implements Screen {
       return false;
     }
     Vector3 worldCoords = camera.unproject(clickWorldCoordsTemp.set(screenX, screenY, 0));
-    if(isRemoteSession() && isTargetedHealSpell(selectedTargetedSpell)
-        && session.world() instanceof com.perso.T4C.session.RemoteWorldDriver remote) {
-      for(Player other:remote.otherPlayers()) {
-        if(!other.isMouseOver(worldCoords.x,worldCoords.y)) continue;
-        long actor=remote.playerId(other);
-        if(actor>0) {
-          var commands=(com.perso.T4C.session.RemotePlayerCommands)session.commands();
-          commands.castToPlayer(selectedTargetedSpell.getKey(),actor);
-          clearSelectedTargetedSpell(true);
-          return true;
-        }
-      }
+    if (isRemoteSession()
+        && session.world() instanceof com.perso.T4C.session.RemoteWorldDriver remote
+        && tryCastFriendlySpellOnRemotePlayer(
+            selectedTargetedSpell,
+            remote,
+            other -> other.isMouseOver(worldCoords.x, worldCoords.y),
+            (com.perso.T4C.session.RemotePlayerCommands) session.commands())) {
+      clearSelectedTargetedSpell(true);
+      return true;
     }
     if (!player.isMouseOver(worldCoords.x, worldCoords.y)) {
       return false;
@@ -3295,6 +3292,23 @@ public class MainGameScreen implements Screen {
     clearSelectedTargetedSpell(true);
     castDefensiveSpell(spell);
     return true;
+  }
+
+  static boolean tryCastFriendlySpellOnRemotePlayer(
+      SpellData spell,
+      com.perso.T4C.session.RemoteWorldDriver remote,
+      java.util.function.Predicate<Player> hitTest,
+      com.perso.T4C.session.RemotePlayerCommands commands) {
+    if (spell == null || remote == null || hitTest == null || commands == null) return false;
+    for (Player other : remote.otherPlayers()) {
+      if (!hitTest.test(other)) continue;
+      long actor = remote.playerId(other);
+      if (actor > 0) {
+        commands.castToPlayer(spell.getKey(), actor);
+        return true;
+      }
+    }
+    return false;
   }
 
   private void applySpellImpact(SpellData spell, BaseMonster monster) {
