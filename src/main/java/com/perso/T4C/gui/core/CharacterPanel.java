@@ -39,7 +39,7 @@ public abstract class CharacterPanel extends GuiScreenBase {
     };
     Runnable[] actions = {
       () -> GuiManager.open(new Statistics(player, hud)),
-      () -> GuiManager.open(new Inventory(player, hud)),
+      inventoryTabAction(player, hud),
       () -> GuiManager.open(new SpellBook(player, hud)),
       () -> GuiManager.open(new ElementalStats(player, hud)),
       () -> GuiManager.open(new MacrosScreen(player, hud)),
@@ -66,6 +66,16 @@ public abstract class CharacterPanel extends GuiScreenBase {
       }
       buttons.add(button);
     }
+  }
+
+  static Runnable inventoryTabAction(Player player, PlayerHUD hud) {
+    Runnable localInventory = () -> GuiManager.open(new Inventory(player, hud));
+    Runnable configuredRoute = hud == null ? null : hud.backpackActionOr(localInventory);
+    return inventoryTabAction(configuredRoute, localInventory);
+  }
+
+  static Runnable inventoryTabAction(Runnable configuredRoute, Runnable localFallback) {
+    return configuredRoute == null ? localFallback : configuredRoute;
   }
 
   protected void renderPanelBackground(SpriteBatch batch) {
