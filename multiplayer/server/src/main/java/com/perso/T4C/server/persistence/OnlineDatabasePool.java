@@ -11,6 +11,7 @@ public final class OnlineDatabasePool implements OnlineStore.Connections,AutoClo
   public static final int MAXIMUM_CONNECTIONS=8;
   public static final long ACQUIRE_TIMEOUT_MILLIS=1000;
   private final HikariDataSource source;
+  private final DatabaseMetrics metrics=new DatabaseMetrics();
 
   public OnlineDatabasePool(String url,String user,String password) {
     this(url,user,password,MAXIMUM_CONNECTIONS,ACQUIRE_TIMEOUT_MILLIS);
@@ -34,6 +35,7 @@ public final class OnlineDatabasePool implements OnlineStore.Connections,AutoClo
     config.setConnectionTimeout(acquireMillis);config.setValidationTimeout(250);
     config.setInitializationFailTimeout(1000);config.setIdleTimeout(60_000);
     config.setMaxLifetime(30*60_000);config.setKeepaliveTime(120_000);
+    config.setMetricsTrackerFactory(metrics);
     config.setAutoCommit(true);config.setTransactionIsolation("TRANSACTION_READ_COMMITTED");
     try { source=new HikariDataSource(config); }
     catch(RuntimeException unavailable) {
@@ -41,6 +43,8 @@ public final class OnlineDatabasePool implements OnlineStore.Connections,AutoClo
       throw new IllegalStateException("Database pool unavailable ("+PersistenceFailure.describe(unavailable)+")");
     }
   }
+
+  public DatabaseMetrics metrics() { return metrics; }
 
   @Override public Connection open() throws SQLException { return source.getConnection(); }
   @Override public void close() { source.close(); }

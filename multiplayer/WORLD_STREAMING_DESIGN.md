@@ -527,3 +527,121 @@ a handoff.
   and starter-route pointers, a PEER_WORK note.
 * **Slice 2 (not started in this PR):** stage A behind the default-off option, with tests and an
   idle-tick measurement of the full world-0 plan with no players.
+* **Slice 2, part 1 (T4C-0359):** see section 11. Part 2 (creature activation) is section 10.
+
+## 10. Owner requirements for stage A part 2 (creature activation), 2026-10-30
+
+Binding requirements; they refine 3.4 and the stage A gate. Part 1 does not implement them (the
+streamed world 0 hosts no creatures yet).
+
+1. **Dormant costs nothing, wakes fast, and is awake before the player arrives.** A creature with no
+   player in range is neither simulated nor held in memory (no `Entry`, no controller, no per-creature
+   map entries; only the shared immutable content `Spawn` and an index slot). It wakes quickly when a
+   player walks up *and* when one teleports or portals in. For every arrival (portal, respawn,
+   recall, transfer, join) the destination window must be **activated before the player is released
+   at the destination**: pre-activate during the transfer commit and readiness handshake
+   (`awaitingRegionReady` already freezes the actor), or hold the arrival until the first activation
+   batches have landed. The player must never see an empty room.
+   * Spec to write and then measure in part 2: activation latency for the busiest 384 x 384 windows
+     (about 500 creatures in world 0, 959 in world 2; the 97 x 97 snapshot window is far smaller) at
+     the 64-creatures-per-tick rate: 500 creatures is 8 ticks (0.24 s), 959 is 15 ticks (0.44 s) of
+     pure rate, plus the batch read (**arithmetic, not measured**). If the measured latency
+     including the database batch exceeds the arrival hold budget (target: at most 1.0 s from
+     commit to release), raise the batch size (it is a constant, not a design limit) or activate the
+     snapshot window first and the rest of the simulation window next.
+   * Gate: a test that portals/teleports a player into the densest world-0 and world-2 windows and
+     asserts every creature of the snapshot window is active in the first snapshot the player
+     receives; a latency record for both in `ACCEPTANCE.md`.
+2. **Exception-only persistence.** A creature at full health, at its spawn home, with no target and
+   no pending life event is fully described by the content files and needs **no `online_spawns`
+   row**. Rows are created and updated only for creatures that deviated: wounded, dead or waiting to
+   respawn, displaced from home, or holding a target. When a deviated creature returns to the
+   pristine state, its row is deleted or marked pristine (choose one in part 2 and test it). Startup
+   and database writes become proportional to what players disturbed, not to the 14,239 monsters;
+   the 3.4 startup scan becomes "read the deviated rows only". This replaces the "create the row at
+   first activation" rule of 3.4; the per-spawn `loadOrCreateSpawn` round trip and its insert for
+   pristine creatures go away.
+   * Gates: activating then deactivating an untouched creature writes zero rows; a wounded creature
+     writes exactly one and survives a restart; a creature that heals back to pristine leaves no
+     stale deviation; startup time with 0 and with N deviated rows is recorded.
+
+File lists in section 5 are unchanged, plus: `OnlineStore` gains the deviated-rows read and the
+delete/pristine rule; `PersistentSessions`/`PortalTransfer` gain the pre-activation hook before
+`regionReady` releases a frozen arrival.
+
+## 11. Stage A part 1 record (T4C-0359, default-off `--stream-world0`)
+
+Scope shipped: the shared pieces, the option and the protocol bump; **no creature activation**. With
+`--stream-world0` the server hosts region `start` as the whole of world 0 (6144 x 3072, origin 0, same
+key and spawn) next to the five unchanged world-1 pieces. The streamed region lists no creatures
+(the world's 7,614 spawns stay dormant content until part 2). With the option off nothing changes
+except the protocol number.
+
+What was built: `AreaOfInterest` (window math, 32-tile cells, 510-tick release hysteresis; pure),
+`SharedCollision` (1 byte per tile, 4-bit terrain palette plus foot, above-foot and portal bits;
+verified tile by tile against the file and against the array loader), a window-backed `PreviewMap`,
+`RegionMapLoader.Spec.streamed` (the 256 edge rule stays for every non-streamed spec; a streamed one
+may reach the model bound), `OnlineRegion` bound 8192 (`OnlineRegion.MAX_DIMENSION`), protocol 9
+with `/map` `streamed` (no `blocked`) and `/state` `window` and `truncated` (absent when not
+streamed), windowed player, NPC and loot lists, the client accepting a streamed map up to 8192 and
+validating the window (a streamed snapshot must carry one, it must fit the region, and everything
+listed must lie inside it; a window on a non-streamed map is refused).
+
+Limits handled: L1 `OnlineRegion` 8192; L2 `/map` publishes no grid for a streamed region (188 bytes
+instead of about 108 MB); client map cap stays 1024 for a map that is not streamed; L3 the 256 spawn
+cap in `PreviewWorld` still guards every region that lists its creatures, the streamed one lists
+none yet; L4 path-permit ordinal is `(regionIndex << 32) | id`; L9/L10 NPC and player lists are
+windowed (NPC: interactive first, then nearest, at most 64); L11 loot is filtered to the window and
+cut at 128, but the region cache still does one whole-region read capped at 256 oldest rows (per-cell
+loot reads are part 2); L12 no per-region copy of collision; L14 portals: no portal is newly derived
+(all 12 cross-region routes between hosted regions were already enabled; the 76 world-0 to world-0
+portals are same-region and stay refused with an explicit reason until stage B). L5-L8 and L13 are
+creature topics and belong to part 2.
+
+Deviations from the design text:
+* NPC appearances: 652 of world 0's 1,010 records have no verified sprite frame (or are not
+  deployable) and `inRegion` refuses them in a plain region. A streamed region leaves them out
+  (358 are published, including all 3 interactive NPCs) instead of failing startup.
+* The window type is `AreaOfInterest.Window` on the server and `OnlineWindow` in the shared model
+  (same JSON shape); the design named only one.
+* `--stream-world0` is a trailing argument of `--online COLLISION_FILE PORT`.
+* **Float precision (new risk).** Movement runs in float world pixels in region-local coordinates.
+  In a streamed region local equals absolute, so at x = 3700 a pixel coordinate is about 118,000
+  and a float step is about 0.008 px (0.016 px at the far east edge). Same-origin walks over the
+  shared grid and over the old arrays are identical to 1e-9 (tested); but against an origin-offset
+  crop the same walk drifts by a tile or two over hundreds of ticks (timing of glide arrivals). It is
+  not a rule difference, and the offline client has the same precision, but if a visible speed
+  difference at the far east matters, step in a viewer-relative frame (part 2 or later).
+* Build pitfall found: `OnlineProtocol.VERSION` is a compile-time constant inlined into callers.
+  Building the server module without `-am` against a stale installed `game-domain` jar bakes the old
+  number into `PreviewServer`; always build `multiplayer` with `-pl server -am`.
+
+Measured (this machine, Windows, JDK 21, 2026-10-30, disposable PostgreSQL 16 in WSL):
+
+| Quantity | Value |
+|---|---|
+| Idle tick, no players, paced 34 Hz, 1,200 counted ticks, default six-region plan | 0.557 ms mean |
+| Idle tick, no players, same, `--stream-world0` (streamed world 0, no creatures) | 0.462 ms mean (lower because the 38 start-crop creatures are not hosted yet; this is not the part 2 number) |
+| `/state` at the starter town (temple spawn, one player, 3 NPC views near, no creatures) | 4,572 bytes |
+| `/state` model for a viewer in an empty window (no NPCs, no creatures, no loot) | about 330 bytes |
+| `/map` for the streamed region | 188 bytes (was about 166 KB for the 249 x 117 crop) |
+| Plan build with world 0 streamed, including shared collision, portals and the five pieces | 325 ms (126 ms for the default plan; loaded cold in one JVM, so indicative) |
+| Heap held by the streamed world-0 plan | 20.4 MB (grid 18.0 MiB = 18,874,368 bytes, matches the 18.9 MB arithmetic) |
+| Shared grid load alone | 68 ms, 19.0 MB |
+
+Not measured in part 1: server process working set, activation cost, `/state` with creatures
+(165 B each), the soak. Part 2 owns them (gates in sections 4 and 10).
+
+### Handoff for part 2 (creature activation)
+
+Start from: `PreviewWorld` streamed constructor (`map.streamed()` skips `content.region`, so
+`creatures`, `creaturePositions`, `inactiveCreatures` and `creatureHealth` are empty and sized by the
+active set once activation exists); `AreaOfInterest.Coverage` (per-tick cell coverage with
+hysteresis, windows `SIMULATION_HALF_EXTENT` = 64 per player, not wired to anything yet);
+`HostedWorlds.step` and `PersistentCreatures` (which still takes the region's spawn list in its
+constructor and does one `loadOrCreateSpawn` per spawn, replace with the exception-only rule of
+section 10); `OnlineMonsterPursuit` path search allocates `width * height` ints per solve (about
+19 M for world 0), so it needs a windowed or hashed search before any creature can chase in a
+streamed region; `RegionGroundLoot` per-cell reads; `PersistentSessions` for the pre-activation
+hook (section 10); `WORLD_STREAMING_DESIGN.md` section 5 file list and the unhostable list tool.
+Remaining test list is in section 4 (cell index, lifecycle, unhostable list, PostgreSQL gates).

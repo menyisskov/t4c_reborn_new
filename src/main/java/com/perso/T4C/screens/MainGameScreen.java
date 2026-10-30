@@ -115,6 +115,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -247,6 +248,9 @@ public class MainGameScreen implements Screen {
   private volatile long nextRemoteWeaponAttackAtMs;
   private volatile boolean remoteWeaponAttackInFlight;
   private volatile long remoteWeaponAttackGeneration;
+  private volatile boolean remoteAutoSpellInFlight;
+  private volatile long remoteAutoSpellGeneration;
+  private volatile long remoteAutoSpellCooldownUntilMs;
   private static final long AUTO_WEAPON_TARGET_INTERVAL_MS = 250L;
   private BaseMonster selectedMonster = null;
   private long lastRemoteVitalsRevision = Long.MIN_VALUE;
@@ -2171,14 +2175,30 @@ public class MainGameScreen implements Screen {
     if (spellName == null || spellName.isEmpty()) {
       return false;
     }
-    // Online buff state is informational; recasting must go through an explicit server command.
-    if (isRemoteSession()) return true;
     long now = System.currentTimeMillis();
     if (spellName.equals(lastClickedBuffSpellName)
         && now - lastBuffClickMillis <= BUFF_DOUBLE_CLICK_MILLIS) {
-      SpellData spell = findSpellByName(spellName);
-      if (spell != null) {
-        castDefensiveSpell(spell);
+      if (isRemoteSession()) {
+        com.perso.T4C.session.RemotePlayerCommands commands =
+            session.commands() instanceof com.perso.T4C.session.RemotePlayerCommands remote
+                ? remote
+                : null;
+        var view = remoteConnection == null ? null : remoteConnection.view();
+        var progress = view == null || view.character() == null ? null : view.character().progress();
+        if (commands != null && progress != null) {
+          recastRemoteBuff(
+              spellName,
+              progress.buffs().stream()
+                  .filter(java.util.Objects::nonNull)
+                  .map(com.perso.T4C.online.model.CharacterProgress.Buff::spell)
+                  .toList(),
+              commands::cast);
+        }
+      } else {
+        SpellData spell = findSpellByName(spellName);
+        if (spell != null) {
+          castDefensiveSpell(spell);
+        }
       }
       lastClickedBuffSpellName = null;
       lastBuffClickMillis = 0L;
@@ -2201,6 +2221,23 @@ public class MainGameScreen implements Screen {
     return null;
   }
 
+  static boolean recastRemoteBuff(
+      String buffName,
+      Collection<String> ownBuffSpellKeys,
+      java.util.function.Consumer<String> cast) {
+    if (buffName == null || ownBuffSpellKeys == null || cast == null) return false;
+    SpellData spell = SpellRegistry.findByName(buffName);
+    if (spell == null
+        || ownBuffSpellKeys.stream()
+            .map(SpellRegistry::findByName)
+            .filter(java.util.Objects::nonNull)
+            .noneMatch(ownSpell -> spell.getKey().equals(ownSpell.getKey()))) {
+      return false;
+    }
+    cast.accept(spell.getKey());
+    return true;
+  }
+
   private boolean tryCastAttackSpell(BaseMonster monster) {
     if (monster == null
         || monster.isDead()
@@ -2215,11 +2252,7 @@ public class MainGameScreen implements Screen {
     SpellData spell = selectedTargetedSpell;
     if (isRemoteSession()) {
       if (session.world() instanceof com.perso.T4C.session.RemoteWorldDriver remote) {
-        tryCastHostileSpellOnRemoteMonster(
-            spell,
-            monster,
-            remote,
-            (com.perso.T4C.session.RemotePlayerCommands) session.commands());
+        startRemoteHostileSpell(spell, monster, remote);
       }
       clearSelectedTargetedSpell(true);
       return true;
@@ -2250,6 +2283,77 @@ public class MainGameScreen implements Screen {
     if (remote.creatureId(monster) <= 0) return false;
     commands.cast(spell.getKey(), monster);
     return true;
+  }
+
+  private void startRemoteHostileSpell(
+      SpellData spell, BaseMonster monster, com.perso.T4C.session.RemoteWorldDriver remote) {
+    if (remoteAutoSpellInFlight
+        || spell == null
+        || monster == null
+        || monster.isDead()
+        || remote == null
+        || remote.creatureId(monster) <= 0) {
+      return;
+    }
+    currentAttackTarget = monster;
+    currentAttackNpcTarget = null;
+    currentAttackSpell = spell;
+    remoteAutoSpellCooldownUntilMs = 0L;
+    sendRemoteAutoSpell(spell, monster);
+  }
+
+  private void sendRemoteAutoSpell(SpellData spell, BaseMonster target) {
+    if (remoteAutoSpellInFlight || spell == null || target == null) return;
+    remoteAutoSpellInFlight = true;
+    long generation = ++remoteAutoSpellGeneration;
+    boolean sent =
+        ((com.perso.T4C.session.RemotePlayerCommands) session.commands())
+            .castWithResult(
+                spell.getKey(),
+                target,
+                result -> {
+                  remoteAutoSpellInFlight = false;
+                  if (remoteAutoSpellGeneration != generation) return;
+                  long now = System.currentTimeMillis();
+                  if (result == null) {
+                    remoteAutoSpellCooldownUntilMs = now + AUTO_SPELL_RETRY_DELAY_MS;
+                    return;
+                  }
+                  long cooldownUntil = remoteSpellCooldownUntil(result, spell);
+                  remoteAutoSpellCooldownUntilMs = cooldownUntil;
+                  if (result.accepted()) return;
+                  if (isRemoteSpellRetryableReply(result.messageKey())) {
+                    if (remoteAutoSpellCooldownUntilMs <= now)
+                      remoteAutoSpellCooldownUntilMs = now + AUTO_SPELL_RETRY_DELAY_MS;
+                    return;
+                  }
+                  clearCurrentAttackTarget();
+                });
+    if (!sent) {
+      remoteAutoSpellInFlight = false;
+      clearCurrentAttackTarget();
+    }
+  }
+
+  private static boolean isRemoteSpellRetryableReply(String key) {
+    return "spell_cooldown".equals(key)
+        || "cooldown".equals(key)
+        || "mental_exhaustion".equals(key)
+        || "exhausted".equals(key)
+        || "spell_failed".equals(key)
+        || "online.ability.busy".equals(key);
+  }
+
+  private static long remoteSpellCooldownUntil(
+      com.perso.T4C.online.OnlineConnection.CommandResult result, SpellData spell) {
+    var character = result == null ? null : result.character();
+    var progress = character == null ? null : character.progress();
+    if (progress == null) return 0L;
+    var cooldowns = progress.cooldowns();
+    return Math.max(
+        Math.max(cooldowns.getOrDefault(spell.getKey(), 0L),
+            cooldowns.getOrDefault("mental_exhaustion", 0L)),
+        cooldowns.getOrDefault("stun", 0L));
   }
 
   private boolean tryCastTargetedSpell(BaseMonster monster) {
@@ -2917,6 +3021,10 @@ public class MainGameScreen implements Screen {
   /** Repeats weapon attack intents online while leaving every outcome to the server. */
   private void performRemoteWeaponAttackTick() {
     if (!isRemoteSession() || player == null) return;
+    if (currentAttackSpell != null && currentAttackTarget != null) {
+      performRemoteAutoSpellTick();
+      return;
+    }
     boolean interacting =
         GuiManager.isOpen()
             || isTextInputActive()
@@ -2981,6 +3089,21 @@ public class MainGameScreen implements Screen {
       remoteWeaponAttackInFlight = false;
       nextRemoteWeaponAttackAtMs = now + AUTO_WEAPON_TARGET_INTERVAL_MS;
     }
+  }
+
+  private void performRemoteAutoSpellTick() {
+    SpellData spell = currentAttackSpell;
+    BaseMonster target = currentAttackTarget;
+    if (player.getMovement().isMoving()
+        || target == null
+        || target.isDead()
+        || !target.canBeAttackedByPlayer()) {
+      clearCurrentAttackTarget();
+      return;
+    }
+    long now = System.currentTimeMillis();
+    if (spell == null || remoteAutoSpellInFlight || now < remoteAutoSpellCooldownUntilMs) return;
+    sendRemoteAutoSpell(spell, target);
   }
 
   private void performAutoSpellTick() {
@@ -3163,6 +3286,8 @@ public class MainGameScreen implements Screen {
     currentAttackNpcTarget = null;
     currentAttackSpell = null;
     nextAutoSpellAttemptAtMs = 0L;
+    remoteAutoSpellGeneration++;
+    remoteAutoSpellCooldownUntilMs = 0L;
     nextAutoWeaponTargetAtMs = 0L;
     remoteWeaponAttackGeneration++;
     nextRemoteWeaponAttackAtMs = 0L;
@@ -5307,6 +5432,14 @@ public class MainGameScreen implements Screen {
     remote.addProcessor(new com.badlogic.gdx.InputAdapter() {
       private boolean hudButtonCaptured;
 
+      @Override public boolean keyDown(int keycode) {
+        return routeRemoteGuiKeyDown(keycode);
+      }
+
+      @Override public boolean keyTyped(char character) {
+        return routeRemoteGuiKeyTyped(character);
+      }
+
       @Override public boolean touchDown(int x, int y, int pointer, int button) {
         if (GuiManager.isOpen()) {
           GuiManager.onTouchDown(x, y, button);
@@ -5554,6 +5687,18 @@ public class MainGameScreen implements Screen {
     });
     remote.addProcessor(monsters);remote.addProcessor(npcClicks);remote.addProcessor(lootClicks);
     Gdx.input.setInputProcessor(remote);
+  }
+
+  static boolean routeRemoteGuiKeyDown(int keycode) {
+    if (!GuiManager.isOpen()) return false;
+    GuiManager.onKeyDown(keycode);
+    return true;
+  }
+
+  static boolean routeRemoteGuiKeyTyped(char character) {
+    if (!GuiManager.isOpen()) return false;
+    GuiManager.onKeyTyped(character);
+    return true;
   }
 
   static boolean shouldQueueReturnToLobby(boolean lobbyCapable, String connectionStatus,

@@ -4,6 +4,6 @@ package com.perso.T4C.online.model;
 public final class OnlineProtocol {
   private OnlineProtocol() {}
 
-  public static final int VERSION = 8;
+  public static final int VERSION = 9;
   public static final String VERSION_HEADER = "X-T4C-Protocol";
 }

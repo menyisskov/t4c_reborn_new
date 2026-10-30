@@ -93,13 +93,30 @@ public final class MovementRules {
       float toX = moveToward(x, step.targetX(), Math.abs(step.moveX()) * pixelStep);
       float toY =
           moveToward(y, step.targetY(), Math.abs(step.moveY()) * pixelStep * GRID_H / GRID_W);
-      boolean arrived =
-          Math.abs(toX - step.targetX()) < 0.001f && Math.abs(toY - step.targetY()) < 0.001f;
+      boolean arrived = pixelStep >= remainingDistance;
       if (arrived) {
         toX = step.targetX();
         toY = step.targetY();
+      } else if (step.moveX() != 0 && step.moveY() != 0) {
+        boolean crossedX = centeredTile(toX, GRID_W) != centeredTile(x, GRID_W);
+        boolean crossedY = centeredTile(toY, GRID_H) != centeredTile(y, GRID_H);
+        if (crossedX && !crossedY) {
+          toX = beforeCrossedBoundary(toX, GRID_W, step.moveX());
+        } else if (crossedY && !crossedX) {
+          toY = beforeCrossedBoundary(toY, GRID_H, step.moveY());
+        }
       }
       return new Advance(toX, toY, arrived, pixelStep);
+    }
+
+    private static int centeredTile(float coordinate, float gridSize) {
+      return (int) Math.floor(coordinate / gridSize + 0.5f);
+    }
+
+    private static float beforeCrossedBoundary(float coordinate, float gridSize, int direction) {
+      float tile = (float) Math.floor(coordinate / gridSize + 0.5f);
+      float boundary = (tile + (direction > 0 ? -0.5f : 0.5f)) * gridSize;
+      return direction > 0 ? Math.nextDown(boundary) : Math.nextUp(boundary);
     }
 
     public static float reservationTarget(float value, float gridSize, int direction) {

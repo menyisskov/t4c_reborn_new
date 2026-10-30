@@ -112,7 +112,7 @@ final class HostedWorlds implements AutoCloseable {
     for(int regionIndex=0;regionIndex<regions.size();regionIndex++) {
       var region=regions.get(regionIndex);
       if(region.creatures!=null) for(long id:region.creatures.pendingReplans())
-        queue.add(new Pending(region,id,regionIndex*256L+id));
+        queue.add(new Pending(region,id,((long)regionIndex<<32)|id)); // ids are not bounded by 255 once a region streams
     }
     Pending permit=null;
     if(!queue.isEmpty()) {

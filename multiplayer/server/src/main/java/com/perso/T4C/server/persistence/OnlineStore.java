@@ -185,6 +185,9 @@ public final class OnlineStore implements AutoCloseable {
 
   @Override public void close() { if(ownedPool!=null) ownedPool.close(); }
 
+  /** Pool-side operation latency and wait measurements, or null for an injected (test or operator) connection factory. */
+  public DatabaseMetrics.Snapshot databaseMetrics() { return ownedPool==null ? null : ownedPool.metrics().snapshot(); }
+
   /** Short-lived operator commands and existing injected/test lifetimes need no persistent pool. */
   public static OnlineStore fromEnvironment() {
     String url = required("T4C_DB_URL"), user = required("T4C_DB_USER"), password = required("T4C_DB_PASSWORD");

@@ -67,6 +67,24 @@ final class NpcAppearanceCatalog {
     return List.copyOf(found);
   }
 
+  /**
+   * A streamed region holds a whole world, where hundreds of authored appearance records have no
+   * verified sprite frame or cannot be deployed (the 652 of world 0's 1,010 that
+   * {@link #inRegion} refuses). They are left out rather than refusing startup, and the snapshot
+   * window (nearest 64) is what bounds what a viewer receives; the region only keeps the index.
+   */
+  List<NpcAppearanceContent.Spawn> inStreamedRegion(RegionMapLoader.Spec region) {
+    if(!region.streamed()) throw new IllegalArgumentException("Not a streamed region");
+    var found=new ArrayList<NpcAppearanceContent.Spawn>();
+    for(var spawn:spawns) {
+      if(!region.contains(spawn.world(),spawn.x(),spawn.y()) || !spawn.deployable()) continue;
+      if(!"@invisible".equals(spawn.spriteBase())
+          && spawn.frameEvidence()!=NpcAppearanceContent.FrameEvidence.FRAME_NAME_PRESENT) continue;
+      found.add(spawn);
+    }
+    return List.copyOf(found);
+  }
+
   /** NpcView IDs must start with a letter and fit 64 characters; reject any truncated collision. */
   static String viewId(NpcAppearanceContent.Spawn spawn) {
     String key=spawn.spawnKey();

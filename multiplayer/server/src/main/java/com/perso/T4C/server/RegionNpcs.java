@@ -47,7 +47,7 @@ final class RegionNpcs {
     var supported=new HashMap<String,String>();
     var shopkeepers=new HashMap<String,String>();
     var ids=new HashSet<String>();
-    List<NpcAppearanceContent.Spawn> inRegion=appearances.inRegion(region);
+    List<NpcAppearanceContent.Spawn> inRegion=region.streamed() ? appearances.inStreamedRegion(region) : appearances.inRegion(region);
     for(var spawn:inRegion) {
       var registered=catalog.npcs().stream().filter(n->n.id().equals(spawn.canonicalNpcId())
           && n.world()==spawn.world() && n.x()==spawn.x() && n.y()==spawn.y()).findFirst();
@@ -70,6 +70,24 @@ final class RegionNpcs {
   }
 
   List<NpcView> views() { return views; }
+
+  /** The client lists at most this many NPCs in one snapshot. */
+  static final int MAX_SNAPSHOT_NPCS=64;
+
+  record Windowed(List<NpcView> views,boolean truncated) {}
+
+  /**
+   * The NPCs a streamed viewer sees: those inside the window, interactive ones first, then nearest
+   * first with the id as the stable tie-break, at most {@link #MAX_SNAPSHOT_NPCS}.
+   */
+  Windowed views(AreaOfInterest.Window window,double viewerX,double viewerY) {
+    var inside=views.stream().filter(n->window.contains(n.x(),n.y()))
+        .sorted(java.util.Comparator.<NpcView,Boolean>comparing(n->!supportedByView.containsKey(n.id()))
+            .thenComparingDouble(n->AreaOfInterest.distance(n.x(),n.y(),viewerX,viewerY))
+            .thenComparing(NpcView::id)).toList();
+    boolean truncated=inside.size()>MAX_SNAPSHOT_NPCS;
+    return new Windowed(truncated ? inside.subList(0,MAX_SNAPSHOT_NPCS) : inside,truncated);
+  }
 
   /** Vendor stock shared by every region; read once from the bundled content. */
   NpcShopCatalog shops() { return OnlineShops.catalog(); }

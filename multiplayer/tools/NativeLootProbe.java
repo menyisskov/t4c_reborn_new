@@ -58,6 +58,8 @@ public final class NativeLootProbe {
   private static final int WORLD=0;
   private static final String QUEST_ID="renewed_wards", MONSTER="Skeleton";
   private static final int START_SECONDS=30, STOP_SECONDS=100;
+  private static final int KILLER_LEVEL=Integer.getInteger("loot.probe.level",30);
+  private static final int POTION_STACK=20;                                  // healing potions every probe character carries
   private static final long TOTAL_MS=TimeUnit.MINUTES.toMillis(40);
   /** Per drop; ground loot lives 15 minutes ({@code OnlineStore.LOOT_LIFETIME_MILLIS}), so a drop is never held longer. */
   private static final long DROP_WAIT_MS=TimeUnit.MINUTES.toMillis(14);
@@ -70,7 +72,7 @@ public final class NativeLootProbe {
   private static final double PICKUP_TILES=7d;                              // server limit is 8 (OnlinePickupRules)
   private static final String[] REQUIRED_DB={"T4C_DB_URL","T4C_DB_USER","T4C_DB_PASSWORD"};
   /** The adapter maps server pickup codes to keys (OnlineCommandRefusals); a busy/revision race refusal maps to the generic key. */
-  private static final Set<String> RACE_REFUSALS=Set.of("online.loot.unavailable","online.loot.refused");
+  private static final Set<String> RACE_REFUSALS=Set.of("online.loot.taken","online.loot.unavailable","online.loot.refused");
   private static final String TOO_HEAVY="online.loot.too_heavy";
   private static final Diag DIAG=new Diag();
 
@@ -242,7 +244,11 @@ public final class NativeLootProbe {
       // XP award path (OnlineProgression), not by writing stats.
       int monsterLevel=MonsterCatalog.loadBundled().monsters().get(MONSTER).getLevel();
       int questMin=QuestCatalog.bundled().definition(QUEST_ID).getMinLevel();
-      int level=Math.max(Math.max(1,questMin),monsterLevel*2);
+      // T4C-0318/0331/0341 found that a level-8 warrior (91 HP) dies on this ground after two kills and that a
+      // level-12 one lost 100 of 119 HP to three; the live runs use level-30 warriors. The starter ground itself
+      // stays lethal for new characters exactly as in single-player (T4C-0248): this is only the probe's choice of
+      // killer, never a rule change.
+      int level=Math.max(Math.max(Math.max(1,questMin),monsterLevel*2),KILLER_LEVEL);
       report.put("skeletonLevel",monsterLevel);
       report.put("questMinimumLevel",questMin);
       report.put("probeCharacterLevel",level);
@@ -252,7 +258,7 @@ public final class NativeLootProbe {
       var killerP=provisionLeveled(store,"Loot probe killer","killer",start.x(),start.y(),killerKit,level,false,content,report);
       Fighter killer=new Fighter("killer",killerP,joined(endpoint,killerP)); open.add(killer.c);
       int protocol=killer.c.view().map().protocolVersion();
-      require(protocol==OnlineProtocol.VERSION && protocol==5,"Server protocol is not version 5");
+      require(protocol==OnlineProtocol.VERSION,"Server protocol "+protocol+" does not match the client adapter protocol "+OnlineProtocol.VERSION);
       report.put("protocolVersion",protocol);
       report.put("killerHpAtJoin",self(killer).maxHp());
 
@@ -386,6 +392,15 @@ public final class NativeLootProbe {
     return new Leveled(p,total);
   }
 
+  /** Adds an unequipped stack of healing potions (the drink-below-half-health routine needs them to last a long fight). */
+  private static CharacterProgress withPotions(CharacterProgress q) {
+    var stocked=new ArrayList<>(q.inventory());
+    stocked.add(new CharacterProgress.Item(UUID.randomUUID(),"item.healing_potion",POTION_STACK,1));
+    return new CharacterProgress(q.version(),q.characterClass(),q.gender(),q.attributes(),q.vitals(),
+        q.advancement(),stocked,q.equipment(),q.skills(),q.spells(),q.questFlags(),q.storage(),
+        q.storageGold(),q.respawn(),q.buffs(),q.cooldowns(),q.hiddenUntil(),q.companion());
+  }
+
   /**
    * Creates a leveled character through {@link OnlineStore#create} (the same path as before) and stores
    * the matching cumulative XP in the new row before the character ever joins, so the server's own two-sided
@@ -394,7 +409,7 @@ public final class NativeLootProbe {
   private static Player provisionLeveled(OnlineStore store,String name,String label,double x,double y,
       OnlineCharacterCreator.Prepared kit,int level,boolean overweight,ItemContent content,Report report) throws Exception {
     Leveled leveled=levelUp(kit.progress(),level,name);
-    CharacterProgress progress=leveled.progress();
+    CharacterProgress progress=withPotions(leveled.progress());
     if(overweight) {
       // The weighted character keeps its full equipped kit; the fixture stack is appended (T4C-0245).
       var fixture=OnlineOverweightFixture.size(progress,content);

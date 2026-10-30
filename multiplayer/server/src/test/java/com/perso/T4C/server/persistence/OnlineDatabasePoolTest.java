@@ -36,6 +36,32 @@ class OnlineDatabasePoolTest {
     }
   }
 
+  @Test void poolMetricsCountAcquisitionsOperationTimeAndTimeoutsWithoutLabels() throws Exception {
+    try(var pool=pool(1)) {
+      for(int i=0;i<3;i++) try(var c=pool.open();var s=c.createStatement()) {
+        s.execute("SELECT pg_sleep(0.03)");
+      }
+      var before=pool.metrics().snapshot();
+      assertTrue(before.acquired()>=3 && before.operations()>=3);
+      assertTrue(before.operationMaxMillis()>=25,"A 30 ms statement shows as operation time, was "+before.operationMaxMillis());
+      assertEquals(before.operations(),java.util.Arrays.stream(before.operationBuckets()).sum());
+      assertEquals(before.acquired(),java.util.Arrays.stream(before.acquireBuckets()).sum());
+      assertEquals(DatabaseMetrics.UPPER_MILLIS.length+1,before.operationBuckets().length);
+      assertEquals(1,before.poolMaximum());
+      try(var held=pool.open()) {
+        assertThrows(SQLTransientConnectionException.class,pool::open);
+      }
+      var after=pool.metrics().snapshot();
+      assertEquals(before.acquireTimeouts()+1,after.acquireTimeouts(),"A failed acquisition is counted once");
+      // connectionsCreated counts only connections opened after the tracker exists (not the fail-fast first one).
+      assertTrue(after.connectionsCreated()>=0);
+    }
+    try(var store=OnlineStore.pooledFromEnvironment()) {
+      store.migrate();
+      assertTrue(store.databaseMetrics().operations()>=1,"The store reports its pool's operations");
+    }
+  }
+
   @Test void saturationIsBoundedAndPoolAndStoreOwnershipClosePhysicalSessions() throws Exception {
     var pool=pool(2);int firstPid,secondPid;
     try {

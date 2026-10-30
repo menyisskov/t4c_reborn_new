@@ -1,10 +1,31 @@
 # Multiplayer implementation handoff
 
-Last reviewed: 2026-10-27, Asia/Jerusalem. This file is the restart point for a different model. Recheck Git and running processes before acting; this describes recorded evidence, not live state.
+Last reviewed: 2026-10-30, Asia/Jerusalem. This file is the restart point for a different model. Recheck Git and running processes before acting; this describes recorded evidence, not live state.
+
+### Player walking speed (T4C-0360)
+
+PR #327 merged at `8514f07c` (tested head `00d67c61`, source `fabcc3cc`). Shared `PLAYER_SPEED` is 80 offline and online; `MONSTER_SPEED` remains 45. Focused offline/shared tests passed 49/49; `ServerMovementParityTest` passed 19/19; root/server packages and diff check passed. The shared rule charges the remaining distance before arrival and keeps diagonal tile-boundary crossings synchronized; the randomized blocked-tile assertion is unchanged. No rendered-client check was run. No Beta milestone is complete from this change.
+
+### Online hostile spell repeat (T4C-0361)
+
+PR #329 merged at `73e31073` (tested head `adc6e953`, source `863bfa5d`). Online targeted hostile casts repeat only after the prior command resolves, use the server's cooldown state, retry transient busy responses after the existing short delay, and stop on movement, dead targets or terminal server refusals. Offline behavior is unchanged. Focused tests passed 45/45; root package and diff check passed. No rendered-client check was run; M4/Beta remain open.
+
+### Shared GUI keyboard routing (T4C-0356)
+
+Implemented in `codex/online-remote-gui-keyboard-0356`, commit `e95c177b`, based on main `1710e2c5`. Open shared GUI screens now receive remote keyDown/keyTyped before online shortcuts and consume those events while open; closed-GUI shortcuts and offline input are unchanged. Focused tests passed 4/4, package and diff checks passed. PR #323 is open. No rendered-client check; M1/M4/Beta remain open.
+
+
+### Online buff-bar recast (T4C-0355)
+
+Implemented in `codex/online-buff-recast-0355`, commit `f32f36bc`, based on latest main `b2490b75`. A double-click resolves only a buff in the connected character's committed progress, maps it through SpellRegistry, and sends its canonical key with the existing RemotePlayerCommands.cast. The server remains authoritative for learned spells, cooldown and content support. Offline double-click recast is unchanged. Focused test 2/2, package and diff check passed. No rendered-client check was run. Next: open and merge the locally validated PR; M4/Beta remain open.
+
+### Journal inventory routing (T4C-0354)
+
+Merged as PR #320 at dbd7da1b, tested head cda1311e. Online character-journal Inventory opens the authoritative remote inventory panel; single-player fallback remains unchanged. Focused tests 3/3, package and diff check passed. No rendered check; M2/Beta remain open. The PR title used 0353 before PR #319 took that ID; canonical task ID is 0354.
 
 ### Online ability-menu paging (T4C-0351)
 
-Implemented on `codex/online-ability-pages-0351`, commit `179cec80`, based on main `acb7f2ce`. Online spell and potion lists now page through all learned, server-supported entries; Left/Right changes pages and 1–9 selects within the active page. Focused tests passed 13/13, root package and `git diff --check` passed. No rendered-client or owner-QA test was run. Local PR integration is next; M4/Beta remain open. T4C-0350 day/night remains in open PR #315, still labeled T4C-0349 pending author renumbering.
+Implemented in PR #317, merged `01ee5dab`, based on main `acb7f2ce`. Online spell and potion lists page through learned, server-supported entries; Left/Right changes pages and 1–9 selects within the page. Focused tests passed 13/13, package and diff checks passed. No rendered-client or owner-QA test was run; M4/Beta remain open. T4C-0350 day/night PR #315 merged as `e33a6744`.
 
 ## Read first
 

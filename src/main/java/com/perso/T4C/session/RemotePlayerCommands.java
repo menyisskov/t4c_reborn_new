@@ -382,28 +382,41 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
       String busyKey,
       String failureKey,
       boolean mayRetry) {
+    return sendRetrying(command, busyKey, failureKey, mayRetry, null);
+  }
+
+  private boolean sendRetrying(
+      Supplier<CompletionStage<OnlineConnection.CommandResult>> command,
+      String busyKey,
+      String failureKey,
+      boolean mayRetry,
+      Consumer<OnlineConnection.CommandResult> completion) {
     try {
       command
           .get()
           .whenComplete(
               (result, failure) -> {
                 if (failure != null || result == null) {
-                  outcomes.add(Outcome.message(failureKey, List.of()));
+                  var failed = new OnlineConnection.CommandResult(false, null, failureKey);
+                  outcomes.add(Outcome.completion(failureKey, List.of(), completion, failed));
                   return;
                 }
                 if (!result.accepted() && mayRetry && busyKey.equals(result.messageKey())) {
+                  boolean retried = false;
                   try {
-                    sendRetrying(command, busyKey, failureKey, false);
-                    return;
+                    retried = sendRetrying(command, busyKey, failureKey, false, completion);
                   } catch (IllegalStateException | IllegalArgumentException unavailable) {
                     // fall through: show the refusal
                   }
+                  if (retried) return;
                 }
-                outcomes.add(Outcome.message(result.messageKey(), result.args()));
+                outcomes.add(
+                    Outcome.completion(result.messageKey(), result.args(), completion, result));
               });
       return true;
     } catch (IllegalStateException pendingOrOffline) {
-      outcomes.add(Outcome.message(failureKey, List.of()));
+      var failed = new OnlineConnection.CommandResult(false, null, failureKey);
+      outcomes.add(Outcome.completion(failureKey, List.of(), completion, failed));
       return true;
     } catch (IllegalArgumentException invalidIdentity) {
       return false;
@@ -450,6 +463,22 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
         view.snapshot().creatures().stream().anyMatch(creature -> creature.id() == id && creature.health() > 0);
     if (!liveInSnapshot) return false;
     return sendRetrying(() -> link.cast(spellKey, id), ABILITY_BUSY_KEY, ABILITY_BUSY_KEY, true);
+  }
+
+  /** Cast a hostile spell and report its final server reply on the next render-thread pump. */
+  public boolean castWithResult(
+      String spellKey, BaseMonster target, Consumer<OnlineConnection.CommandResult> completion) {
+    if (spellKey == null || target == null || target.isDead() || completion == null) return false;
+    long id = creatureIds.applyAsLong(target);
+    if (id <= 0) return false;
+    OnlineConnection.View view = link.view();
+    if (view == null || view.snapshot() == null || view.snapshot().creatures() == null) return false;
+    boolean liveInSnapshot =
+        view.snapshot().creatures().stream()
+            .anyMatch(creature -> creature.id() == id && creature.health() > 0);
+    if (!liveInSnapshot) return false;
+    return sendRetrying(
+        () -> link.cast(spellKey, id), ABILITY_BUSY_KEY, ABILITY_BUSY_KEY, true, completion);
   }
 
   @Override

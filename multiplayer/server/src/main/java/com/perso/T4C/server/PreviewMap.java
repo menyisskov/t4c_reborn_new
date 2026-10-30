@@ -24,6 +24,24 @@ public final class PreviewMap {
   public final int height;
   public final double spawnX;
   public final double spawnY;
+  /** Non-null for a window over a world's shared read-only grid; the four arrays above are then null. */
+  private final SharedCollision shared;
+
+  /**
+   * A window of {@code width x height} tiles at world tile {@code (originX, originY)} over a shared
+   * grid (streamed regions): no per-region copy of the collision exists. Spawn is region-local.
+   */
+  PreviewMap(SharedCollision shared, int originX, int originY, int width, int height, int spawnX, int spawnY) {
+    if (shared == null || width < 1 || height < 1 || originX < 0 || originY < 0
+        || (long) originX + width > shared.width() || (long) originY + height > shared.height())
+      throw new IllegalArgumentException("Window outside shared collision");
+    this.shared = shared;
+    this.blocked = null; this.terrain = null; this.footBlocked = null; this.portalPassable = null;
+    this.originX = originX; this.originY = originY; this.width = width; this.height = height;
+    this.spawnX = spawnX + 0.5;
+    this.spawnY = spawnY + 0.5;
+    if (!canStand(this.spawnX, this.spawnY)) throw new IllegalArgumentException("Blocked spawn");
+  }
 
   PreviewMap(boolean[][] blocked, int originX, int originY, int spawnX, int spawnY) {
     this(blocked, null, originX, originY, spawnX, spawnY);
@@ -40,6 +58,7 @@ public final class PreviewMap {
    */
   PreviewMap(boolean[][] blocked, byte[][] terrain, boolean[][] footBlocked, boolean[][] portalPassable,
       int originX, int originY, int spawnX, int spawnY) {
+    shared = null;
     height = blocked.length;
     if (height == 0 || blocked[0].length == 0) throw new IllegalArgumentException("Empty map");
     width = blocked[0].length;
@@ -118,17 +137,29 @@ public final class PreviewMap {
 
   /** Local tile; tiles outside this map block. Static terrain only (no actors, no above-foot fold). */
   boolean blocksFoot(int tileX, int tileY) {
-    return tileX < 0 || tileY < 0 || tileX >= width || tileY >= height || footBlocked[tileY][tileX];
+    return tileX < 0 || tileY < 0 || tileX >= width || tileY >= height || footAt(tileX, tileY);
+  }
+
+  /** True when this map reads a world's shared grid instead of owning arrays (streamed regions). */
+  boolean streamed() { return shared != null; }
+
+  private boolean blockedAt(int x, int y) { return shared != null ? shared.blocked(originX + x, originY + y) : blocked[y][x]; }
+
+  private boolean footAt(int x, int y) { return shared != null ? shared.foot(originX + x, originY + y) : footBlocked[y][x]; }
+
+  private int terrainAt(int x, int y) { return shared != null ? shared.terrain(originX + x, originY + y) : terrain[y][x]; }
+
+  private boolean portalAt(int x, int y) {
+    return shared != null ? shared.portal(originX + x, originY + y) : portalPassable != null && portalPassable[y][x];
   }
 
   /** Local tile; true for authored portal sources, which the offline rule lets players enter. */
   boolean portalPassable(int tileX, int tileY) {
-    return portalPassable != null && tileX >= 0 && tileY >= 0 && tileX < width && tileY < height
-        && portalPassable[tileY][tileX];
+    return tileX >= 0 && tileY >= 0 && tileX < width && tileY < height && portalAt(tileX, tileY);
   }
 
   public boolean canStand(double x, double y) {
-    return contains(x, y) && !blocked[(int) y][(int) x];
+    return contains(x, y) && !blockedAt((int) x, (int) y);
   }
 
   /**
@@ -142,7 +173,7 @@ public final class PreviewMap {
 
   private boolean restTile(int tileX, int tileY) {
     return tileX >= 0 && tileY >= 0 && tileX < width && tileY < height
-        && (!footBlocked[tileY][tileX] || portalPassable(tileX, tileY));
+        && (!footAt(tileX, tileY) || portalPassable(tileX, tileY));
   }
 
   private static final double LATTICE_EPSILON = 2e-3;
@@ -181,8 +212,8 @@ public final class PreviewMap {
   /** Local tile coordinates only. Outside/invalid positions never authorize combat. */
   boolean combatEndpointsSafe(double fromX, double fromY, double toX, double toY, boolean pvp) {
     if (!contains(fromX, fromY) || !contains(toX, toY)) return false;
-    int from = terrain[(int) fromY][(int) fromX] & 255;
-    int to = terrain[(int) toY][(int) toX] & 255;
+    int from = terrainAt((int) fromX, (int) fromY) & 255;
+    int to = terrainAt((int) toX, (int) toY) & 255;
     if (pvp ? CollisionRules.isPvpSafeHaven(from) || CollisionRules.isPvpSafeHaven(to)
         : CollisionRules.isSafeHaven(from) || CollisionRules.isSafeHaven(to)) return false;
     return true;
@@ -257,7 +288,7 @@ public final class PreviewMap {
 
   private boolean blocksSight(int x, int y) {
     return x < 0 || y < 0 || x >= width || y >= height
-        || CollisionRules.blocksLineOfSight(terrain[y][x] & 255);
+        || CollisionRules.blocksLineOfSight(terrainAt(x, y) & 255);
   }
 
   private boolean blockedEndpoint(double x, double y) {
@@ -268,7 +299,9 @@ public final class PreviewMap {
         || (x == tx && y == ty && blocksSight(tx - 1, ty - 1));
   }
 
+  /** The whole grid for {@code /map}; never available for a streamed region (it publishes no grid). */
   public boolean[][] cells() {
+    if (shared != null) throw new IllegalStateException("A streamed region publishes no collision grid");
     boolean[][] copy = new boolean[height][];
     for (int y = 0; y < height; y++) copy[y] = blocked[y].clone();
     return copy;

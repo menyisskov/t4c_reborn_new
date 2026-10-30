@@ -1,3 +1,8 @@
+## 2026-10-30 — Other players now walk smoothly in online play (T4C-0358)
+
+### Fixed
+- Other players you see online now walk at a steady pace with their legs moving the whole time, instead of looking like they glide: their feet no longer snap back to the standing pose every fraction of a second, they no longer lurch forward and slow down in bursts, and they face the way they are really going, including around turns. A character who stops now stops cleanly, and a sudden jump such as a portal trip or a respawn still places them straight at the new spot.
+
 ## 2026-10-30 — Online HUD buttons and Warden Aelric's completed quest greeting (T4C-0343)
 
 ### Fixed
@@ -10,6 +15,11 @@ Format is loosely based on [Keep a Changelog](https://keepachangelog.com/),
 grouped by content pass rather than by individual commit. Every entry
 references a task ID from [`TASKS.md`](TASKS.md) — see that file for status,
 commit links, and finer-grained notes.
+
+## 2026-10-30 — Native loot check now runs end to end (T4C-0357)
+
+### Changed
+- The project's automated check of shared ground loot in online play (two players racing for one drop, a pickup refused for being too heavy, and a dropped connection around a pickup) now runs all the way through and passes. Nothing about the game itself changed.
 
 ## 2026-10-30 — New worlds start in the morning (T4C-0350)
 
@@ -33,6 +43,14 @@ commit links, and finer-grained notes.
 
 ### Changed
 - Players who have learned Sneak can activate it online. Moving can reveal them as in single-player, and melee, ranged attacks and spell casts end concealment.
+
+## 2026-10-30 — Online server reliability checks and traffic figures (T4C-0353)
+
+### Added
+- The online server now keeps count of how much game traffic it sends and receives and how long its saves take, so a long test session can report real figures for network use and save speed.
+
+### Changed
+- The project's multiplayer acceptance notes now record four more reliability results from simulated players: a stop requested while the saving database is down is reported as a failure instead of a clean save, a backed-up realm restored into a separate database lets twenty simulated players keep playing, stop and reconnect with nothing lost or granted twice, a 30-minute twenty-player run with every measurement recorded, and a fresh pass of the cheating-attempt checks.
 
 ## 2026-10-30 — Equipment changes now show on your own character in online play (T4C-0342)
 

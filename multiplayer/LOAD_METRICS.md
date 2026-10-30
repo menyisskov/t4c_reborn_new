@@ -142,12 +142,63 @@ does not turn these application counters into wire-bandwidth measurements.
 Keep all player, account, session, host, and credential identifiers out of this
 snapshot. This is operator data, not public gameplay state.
 
-Still required: measured wire bandwidth and throughput, database
-operation latency/error and pool-wait observations, process resident/native memory
-if required by the capacity budget, and sustained native-client load evidence with
-latency/deadline observations and reconnect/restart checks. A wall-clock ticks-per-
-second proxy alone cannot substitute for these measurements. CPU/memory snapshots
-and the scheduler counters here are groundwork, not a completed benchmark.
+T4C-0227 left these unmeasured; T4C-0353 (next section) adds game-socket bytes, database operation time,
+pool wait and timeouts, and a Windows working-set sampler, and records one 30-minute run with all of them. Still not
+measured: NIC-level bytes including TCP/IP headers, TLS framing (no TLS run), remote latency, process native memory beyond
+the working set, and a sustained run on the integrated release candidate. A wall-clock ticks-per-second proxy alone cannot
+substitute for these measurements.
+
+### Game-socket bytes and database operation time (T4C-0353)
+
+`GET /admin/metrics` now also returns `gameSocket` and `database` objects next to `httpTraffic`. Both are
+fixed-cardinality counters with no per-connection, per-route, per-account or per-statement label and no history.
+
+- `gameSocket`: `connectionsAccepted`, `connectionsRefusedFull`, `connectionsOpen`, `bytesRead`, `bytesWritten`. The counters
+  wrap the accepted TCP socket's streams, so they are the application-protocol bytes the server actually read from and
+  handed to the socket (every frame header and payload byte, the version handshake included). They exclude TCP/IP headers,
+  retransmissions and TLS framing, which the JVM cannot see; on loopback there is no other wire. This is the native
+  clients' real traffic. `httpTraffic` bodies also count these requests, because socket requests are dispatched through
+  the same handlers, but without the frame JSON around each body, so the socket figure is the larger and more honest one.
+- `database` (persistent server only, absent when the store is an injected connection factory): taken from the owned
+  pool's metrics hook. `operations` and its histogram are the time a pooled connection was held from borrow to return, i.e.
+  one store operation's SQL, transaction and driver round trips, in **whole milliseconds** as the pool reports them (an
+  operation under 1 ms lands in the first bucket, so the mean is only as precise as that rounding). `acquired` and the
+  `acquire*` fields are the pool wait in nanoseconds; `acquireTimeouts` counts failed acquisitions; `pool*` are the gauges
+  at the moment of the sample (active, idle, pending, total, maximum); `connectionsCreated` counts connections opened after
+  the tracker exists (the fail-fast first one is not counted). Histogram bounds are 1, 5, 20, 100, 500, 2,000 ms and an
+  overflow bucket. A pool-level view cannot name which operation was slow, and it does not include time queued for a
+  worker thread before the borrow.
+
+`run-native-load-record.ps1` runs a twenty-adapter soak on a disposable cluster with the operator file set, samples the
+server's Windows working set, private bytes, CPU seconds, thread and handle counts every 15 s, stops the server through the
+private stop (must exit 0) and `summarize-load-record.ps1` turns the soak report into the record lines below. All rates are
+differences between the first and last operator snapshot of one server process; nothing is estimated by hand.
+
+#### Recorded 30-minute record (T4C-0353, 2026-10-30, local PG16 WSL, protocol 8, schema 13, `origin/main` 3e147d8b plus this branch)
+
+Twenty native adapters (default 120 s reconnect churn), eight of them taking paced portal trips (30 s interval, 10 s dwell),
+disposable cluster `t4c_acc_115677693125` on 57703 (destroyed), server on 18841. The soak tool, the graceful stop (HTTP 200,
+exit 0) and the run all finished clean; server stderr was empty (0 bytes).
+
+| Measure | Result |
+| --- | --- |
+| Duration, occupancy | 1,800.1 s; maximum 20; 930.7 s (51.7%) at 20 adapters, 1,760.6 s (97.8%) at 19 or more, 0.8 s with none (the 20 are never all connected at once because each reconnects every 120 s on purpose) |
+| Tick duration | 61,154 ticks completed, 0 failed, 0 over budget; observed 34.000 ticks/s against the 34 Hz step (29.412 ms); mean callback 1.258 ms; maximum callback 22.57 ms |
+| Tick debt | maximum start lateness 21.32 ms, maximum deadline debt 0 ms, 0 deadline resets, 0 ms discarded schedule |
+| CPU | 16.8% of one core (0.6% of 28 logical processors) over the interval |
+| Memory | JVM heap used maximum 607.6 MB of 1,024 MB committed (340.4 MB at the end); non-heap 47.9 MB; Windows working set 808.8 MB at the first sample, 850 to 863 MB from minute 10 to the end (max 863.3 MB, last 856.2 MB); threads 82 to 91 (max 96); handles 699 to 814, flat after the first minutes. No growth after warm-up |
+| Bandwidth (game socket) | server to clients 3,500.3 KiB/s total = 175.0 KiB/s per adapter (6,148.3 MiB over the run); clients to server 25.3 KiB/s total (44.5 MiB); 312 connections accepted over the run (the churn), 0 refused full, 20 open at the end. Application-protocol bytes, no TCP/IP headers |
+| Bandwidth (handler bodies) | 5,668,659,053 B written and 2,974,304 B read by 626,298 completed handlers, 0 read or response failures (the unframed view of the same traffic) |
+| Database operation latency | 157,169 operations (85.8 per second): mean 0.941 ms, maximum 148 ms; <=1 ms 110,660, <=5 ms 45,993, <=20 ms 492, <=100 ms 22, <=500 ms 2, none above 500 ms |
+| Database pool wait | 157,169 acquisitions: mean 0.014 ms, maximum 8.27 ms; <=1 ms 157,130, <=5 ms 36, <=20 ms 3; 0 acquire timeouts; pool never above 8 connections (4 total, 0 active, 0 pending at the end; 12 connections created after startup) |
+| Database server | 224,240 commits, 0 rollbacks, 0 deadlocks, +1.49 MB, backend connections 7 to 5 |
+| Command latency (adapter send to result) | 988 observations: <=250 ms 92, <=500 ms 880, <=1,000 ms 16, none above 1,000 ms |
+| Gameplay | 982 attacks (679 accepted, 309 rejected commands of all kinds), 6 recoveries, 2,327 HP changes, 273,606 movement observations, 248 region transfers by the eight walkers (114 of 122 started trips completed, 1 aborted, 0 leg timeouts) |
+| Errors and recovery | 0 adapter failures, no adapter error kind, 0 health failures (mean health request 0.86 ms), 0 operator-sample failures of 358; 272 reconnects, all the scheduled churn (13 or 14 per adapter), each rejoined without a failure |
+
+This completes the missing bandwidth and database-latency measures and is clean, but it is a 30-minute native-adapter run on the
+development build (not the integrated release candidate, not rendered clients, not remote). The two-hour run in T4C-0315
+remains the long-duration baseline (flat CPU and heap, 625 transfers); compare, do not merge, the two.
 
 ## Reproduction and recorded evidence
 

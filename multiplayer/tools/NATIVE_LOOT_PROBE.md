@@ -14,7 +14,7 @@ It is not rendered-client evidence and does not complete M2.
    level derived from the data (see "Killer level" below). The other three characters (racer,
    weighted, second racer) do not exist until the drop they need exists (see "Positioning the other
    characters" below).
-3. Checks that the protocol is 5 and that the killer joined.
+3. Checks that the server's protocol equals the client adapter's `OnlineProtocol.VERSION` (8 at T4C-0357; the old literal 5 was stale) and that the killer joined.
 4. The killer fights Skeletons until a drop appears, each in turn: it retargets by DISTANCE (nearest
    live Skeleton, not the first in the snapshot), walks toward it with the adapter's movement
    direction when out of melee reach, and attacks inside reach. It drinks a carried healing potion
@@ -24,7 +24,7 @@ It is not rendered-client evidence and does not complete M2.
    live Skeleton stops the run with a message instead of spinning.
 5. Simultaneous claim race (first drop): a racer is provisioned beside the drop and joins; once the
    owner window has expired the killer and the racer submit `pickUp` for the same drop, released by one
-   latch. Exactly one result must be accepted. The loser must be refused as `online.loot.unavailable`
+   latch. Exactly one result must be accepted. The loser must be refused as `online.loot.taken` (server `loot_taken`, T4C-0307: another character's claim is committed), `online.loot.unavailable`
    (server `loot_unavailable`) or the adapter's generic `online.loot.refused` (server `busy` or a stale
    revision; the adapter maps those to the generic key). The database check below is the authority that
    exactly one claim happened.
@@ -100,8 +100,11 @@ circle anchors. That is informative, not a hard-coded input: the probe recompute
 
 The `renewed_wards` quest has `minLevel` 0, so the data does not say which level should fight its
 Skeletons. The Skeleton is level 4 with 69 health, hits for 4 to 10 and has 13 anchors a few tiles apart
-inside the 8-tile aggro range, so two can engage at once. The probe therefore provisions every character
-at twice the monster level (level 8, about 91 health), and prints `skeletonLevel`, `questMinimumLevel`
+inside the 8-tile aggro range, so two can engage at once. A level-8 killer (about 91 health) died after two kills
+(run 3). Since T4C-0357 the probe provisions every character at level 30 (`-Dloot.probe.level` overrides it; never below
+twice the monster level), as the live rendered runs T4C-0318/0331/0341 did, with a 20-stack of Healing Potions (charges 1,
+which the server's item-use rule requires) so the drink-below-half routine lasts. The starter ground stays lethal for new
+characters exactly as single-player (T4C-0248); this only picks the probe's killer. It prints `skeletonLevel`, `questMinimumLevel`
 and `probeCharacterLevel`. This is a probe headroom choice, not a balance statement.
 
 How: `levelUp` feeds the server's own award path (`OnlineProgression.award`, the code a kill runs) in
@@ -297,3 +300,39 @@ tile, there is no mid-tile reversal, and blocked steps slide. The probe's `steer
 to the tile the player is arriving on (the last direction sent) with a half-tile dead band, so the stop-at-once
 assumption no longer makes it oscillate around a target. It compiles against the current runtime; it was **not run**
 for this change (the Skeleton ground is lethal for new characters, T4C-0248).
+
+## Run 4 (T4C-0357): PASS, native adapters, throwaway Docker PostgreSQL 18.1
+
+Owner-approved window on 2026-10-30. Image `postgres:18.1` (pinned, digest
+`sha256:1090bc3a8ccfb0b55f78a494d76f8d603434f7e4553543d6e807bc7bd6bbd17f`; CI uses the floating `postgres:18`), one container
+published only on 127.0.0.1:58431 with a generated per-run password held in process environment only, database
+`t4c_loot_397a09f6daf3` (the probe's name guard untouched), `ServerMain --online` on 18981 started and gracefully stopped by
+the probe (exit 0). Protocol 8. Server JAR SHA-256 `8FFF1D33EE26E82B7EA4D06292CAD1FBE77618FB1CE19E6FB4BA7EB28E2DC569`, client JAR
+`A503A842FB35EB0BAC7940EBEBB8AE516C8D93723BB5C3178D7D27190742C778`, passing probe `151494FE7249BC9B6546A3FA72BF6E0465420A0A5A6ABF0A596974AFD23F91F2`.
+Container, anonymous volume and TEMP runtime removed afterwards; the image stays.
+
+Getting there took four probe-only repairs, each found by a failed attempt on the same container setup (a fresh container per
+attempt): (1) the literal protocol-5 assertion was stale (server and client are at 8); (2) the killer is level 30 with 262 HP
+instead of level 8; (3) the race-loser key set predated T4C-0307, so a loser correctly refused as `online.loot.taken` failed
+the run; (4) the probe's own potion stack had charges 0, which the server's item-use rule refuses as `unsupported_item`, so
+the killer ran out of working potions and died after 12 kills in the attempt before the final one. That attempt did pass
+the race and over-weight assertions. No server code, balance or assertion was weakened; the database authority check is unchanged.
+
+Result of the passing run (6 min 18 s, 13 Skeleton kills, 3 drops, killer at 5,800,350 XP):
+
+- Drop observed by a second adapter: yes (`observerSawFirstDrop`).
+- Simultaneous claim after the 60 s owner window: killer won, the racer was refused `online.loot.taken`. Database: that drop
+  `CLAIMED`, held by exactly one character (the killer), one claim receipt.
+- Over-weight refusal: a level-30 warrior carrying the `item.asile_chest` fixture (carried 10,095 against a maximum of 145)
+  was refused `online.loot.too_heavy`; the drop stayed `ON_GROUND`, no holder, no receipt.
+- Lost response: a second racer sent a pickup and closed its adapter at once; it rejoined with the same credentials and the
+  probe issued no replay. The server had answered before the close (`lostResponseAnsweredBeforeClose` true) and the drop
+  ended `ON_GROUND`, no holder, no receipt (no duplicate).
+- Graceful shutdown of the owned child with exit 0, then the database check above: all three rows matched exactly.
+- Attacks: 118 accepted (157 busy and 89 cooldown refusals come from the 300 ms attack loop), 5 no-target; 7 potions accepted.
+
+Not proven: the rendered client, a server restart during a claim (covered by `NativeLootFaultDrill`), the CI PostgreSQL
+service (local Docker 18.1 only; CI stays the authority), corpse weight parity (L11).
+
+Finding for the live-run lane (not fixed here): `LiveRunProvision.makeWithHeadroom` also adds its healing-potion stack with
+charges 0, which the server refuses as `unsupported_item`. The probe was fixed; the provisioning script was not touched.

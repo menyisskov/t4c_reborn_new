@@ -2,6 +2,7 @@ package com.perso.T4C.screens;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.perso.T4C.monster.core.BaseMonster;
@@ -21,6 +22,90 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
 
 class MainGameScreenRemoteAutoAttackTest {
+  @Test
+  void remoteHostileSpellAllowsOnlyOneCastAtATimeAndWaitsForCooldownReply() throws Exception {
+    AtomicReference<CompletableFuture<OnlineConnection.CommandResult>> pending =
+        new AtomicReference<>();
+    AtomicInteger casts = new AtomicInteger();
+    AtomicReference<OnlineConnection.View> view = new AtomicReference<>(view(List.of(
+        new CreatureView(21, "Training 1 Skeleton", 1, 0, 20, 20, "idle", null, null))));
+    RemoteLink link = spellLink(pending, casts, view);
+    MainGameScreen screen = screen(link);
+    Player player = player();
+    set(screen, "player", player);
+    set(screen, "currentAttackTarget", installTarget(screen));
+    set(screen, "currentAttackSpell", hostileSpell());
+
+    tick(screen);
+    tick(screen);
+    assertEquals(1, casts.get(), "a pending cast must not overlap another cast");
+    assertEquals(20, ((BaseMonster) get(screen, "currentAttackTarget")).getHealth(),
+        "online spell intents never apply local damage");
+
+    long serverCooldownUntil = System.currentTimeMillis() + 60_000L;
+    pending.get().complete(cooldownReply(serverCooldownUntil));
+    ((RemoteGameSession) get(screen, "session")).commands().pump();
+    long retryAt = (long) get(screen, "remoteAutoSpellCooldownUntilMs");
+    assertEquals(serverCooldownUntil, retryAt, "the server's committed cooldown controls the retry");
+    tick(screen);
+    assertEquals(1, casts.get());
+    set(screen, "remoteAutoSpellCooldownUntilMs", 0L);
+    tick(screen);
+    assertEquals(2, casts.get(), "the selected hostile spell retries after its cooldown wait");
+  }
+
+  @Test
+  void remoteHostileSpellStopsOnMovementDeadTargetAndTerminalRefusal() throws Exception {
+    AtomicReference<CompletableFuture<OnlineConnection.CommandResult>> pending =
+        new AtomicReference<>();
+    AtomicInteger casts = new AtomicInteger();
+    AtomicReference<OnlineConnection.View> view = new AtomicReference<>(view(List.of(
+        new CreatureView(21, "Training 1 Skeleton", 1, 0, 20, 20, "idle", null, null))));
+    RemoteLink link = spellLink(pending, casts, view);
+    MainGameScreen screen = screen(link);
+    Player player = player();
+    set(screen, "player", player);
+    BaseMonster monster = installTarget(screen);
+    set(screen, "currentAttackTarget", monster);
+    set(screen, "currentAttackSpell", hostileSpell());
+
+    tick(screen);
+    player.getMovement().puppetMoving(true);
+    tick(screen);
+    player.getMovement().stop();
+    pending.get().complete(new OnlineConnection.CommandResult(true, null));
+    ((RemoteGameSession) get(screen, "session")).commands().pump();
+    tick(screen);
+    assertEquals(1, casts.get(), "movement cancels repeats even if the outstanding cast later succeeds");
+
+    set(screen, "currentAttackTarget", monster);
+    set(screen, "currentAttackSpell", hostileSpell());
+    Field dead = BaseMonster.class.getDeclaredField("isDead");
+    dead.setAccessible(true);
+    dead.setBoolean(monster, true);
+    tick(screen);
+    assertEquals(1, casts.get(), "a dead target is not recast");
+
+    monster = installTarget(screen);
+    set(screen, "currentAttackTarget", monster);
+    set(screen, "currentAttackSpell", hostileSpell());
+    tick(screen);
+    pending.get().complete(new OnlineConnection.CommandResult(false, null, "online.ability.busy"));
+    ((RemoteGameSession) get(screen, "session")).commands().pump();
+    assertEquals(3, casts.get(), "the command layer makes one bounded retry after busy");
+    pending.get().complete(new OnlineConnection.CommandResult(false, null, "online.ability.busy"));
+    ((RemoteGameSession) get(screen, "session")).commands().pump();
+    assertTrue(get(screen, "currentAttackSpell") != null, "transient busy replies retain auto-repeat");
+    assertTrue((long) get(screen, "remoteAutoSpellCooldownUntilMs") > System.currentTimeMillis());
+
+    set(screen, "remoteAutoSpellCooldownUntilMs", 0L);
+    tick(screen);
+    assertEquals(4, casts.get(), "the spell retries after the short busy delay");
+    pending.get().complete(new OnlineConnection.CommandResult(false, null, "online.cast.wrong_target"));
+    ((RemoteGameSession) get(screen, "session")).commands().pump();
+    assertNull(get(screen, "currentAttackSpell"), "terminal server refusals stop auto-repeat");
+  }
+
   @Test
   void repeatsValidTargetIntentsOnlyAfterPriorReplyAndLeavesLocalCombatStateUntouched()
       throws Exception {
@@ -126,6 +211,63 @@ class MainGameScreenRemoteAutoAttackTest {
                 return CompletableFuture.completedFuture(new OnlineConnection.CommandResult(true, null));
               return null;
             });
+  }
+
+  private static RemoteLink spellLink(
+      AtomicReference<CompletableFuture<OnlineConnection.CommandResult>> pending,
+      AtomicInteger casts,
+      AtomicReference<OnlineConnection.View> view) {
+    return (RemoteLink)
+        java.lang.reflect.Proxy.newProxyInstance(
+            RemoteLink.class.getClassLoader(),
+            new Class<?>[] {RemoteLink.class},
+            (proxy, method, args) -> {
+              if (method.getName().equals("view")) return view.get();
+              if (method.getName().equals("cast")) {
+                casts.incrementAndGet();
+                var future = new CompletableFuture<OnlineConnection.CommandResult>();
+                pending.set(future);
+                return future;
+              }
+              if (method.getReturnType() == CompletableFuture.class
+                  || java.util.concurrent.CompletionStage.class.isAssignableFrom(method.getReturnType()))
+                return CompletableFuture.completedFuture(new OnlineConnection.CommandResult(true, null));
+              return null;
+            });
+  }
+
+  private static com.perso.T4C.spell.SpellData hostileSpell() {
+    return new com.perso.T4C.spell.SpellData(
+        "spell.fireball", "", "10", 1, 2, 0, 0, true, false, null, null, null,
+        0, 0, null, null, 0, null, null, 0, null, 1, 0, 1, 0,
+        null, null, null, null, 0, 0, false, List.of());
+  }
+
+  private static OnlineConnection.CommandResult cooldownReply(long until) {
+    var progress =
+        new com.perso.T4C.online.model.CharacterProgress(
+            1,
+            "warrior",
+            "male",
+            new com.perso.T4C.online.model.CharacterProgress.Attributes(10, 10, 10, 10, 10),
+            new com.perso.T4C.online.model.CharacterProgress.Vitals(10, 20, 5, 10),
+            new com.perso.T4C.online.model.CharacterProgress.Advancement(1, 0, 0, 0, 0),
+            List.of(),
+            java.util.Map.of(),
+            java.util.Map.of(),
+            java.util.Set.of("spell.fireball"),
+            java.util.Map.of(),
+            List.of(),
+            0,
+            new com.perso.T4C.online.model.CharacterProgress.Respawn(0, 1, 1),
+            List.of(),
+            java.util.Map.of("spell.fireball", until),
+            0,
+            null);
+    var character =
+        new com.perso.T4C.online.model.OnlineCharacterView(
+            java.util.UUID.randomUUID(), "Tester", 0, 0, 1, progress);
+    return new OnlineConnection.CommandResult(false, character, "spell_cooldown");
   }
 
   private static OnlineConnection.View view(List<CreatureView> creatures) {

@@ -114,7 +114,7 @@ public final class NativeFaultDrill {
     return list;
   }
 
-  private static void greet(Path dir, String endpoint) throws Exception {
+  static void greet(Path dir, String endpoint) throws Exception {
     int granted = 0;
     for (var credentials : credentials(dir)) {
       try (var connection = new OnlineConnection(java.net.URI.create(endpoint), credentials)) {
@@ -190,7 +190,7 @@ public final class NativeFaultDrill {
     return credentials(dir).stream().map(OnlineConnection.Credentials::characterId).toList();
   }
 
-  private static void monitor(Path dir, Path stateFile, Path stopFile) throws Exception {
+  static void monitor(Path dir, Path stateFile, Path stopFile) throws Exception {
     var characters = ids(dir);
     var state = new State();
     state.startedMs = System.currentTimeMillis();
@@ -260,7 +260,7 @@ public final class NativeFaultDrill {
 
   // ---------------------------------------------------------------- verification
 
-  private static boolean verify(Path dir, Path stateFile, Path reportFile, boolean expectLetters) throws Exception {
+  static boolean verify(Path dir, Path stateFile, Path reportFile, boolean expectLetters) throws Exception {
     var characters = ids(dir);
     State seen = Files.exists(stateFile) ? GSON.fromJson(Files.readString(stateFile), State.class) : new State();
     var out = new ArrayList<String>();

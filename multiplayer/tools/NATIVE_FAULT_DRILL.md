@@ -11,6 +11,8 @@ local PostgreSQL 16 evidence only (the CI PostgreSQL 18 job stays the authority 
 | `DatabaseCrash` | the owned acceptance cluster is stopped in immediate mode (`acceptance-cluster.ps1 -Action Crash`, a verified `pg_ctl stop -m immediate` of the cluster's own postmaster) while the server keeps running, and started again (PostgreSQL crash recovery) | the server fails closed (characters disconnected, no invented success), stays alive, recovers on its own when the database returns, committed state intact, all twenty rejoin |
 | `LostAck` | seven to twelve rounds that hard-kill the owned server a fixed number of milliseconds after one character's opening-NPC greeting request has been handed to the adapter (the kill races the reward commit), then restart; after lease expiry every character greets again | exactly one opening letter per character whether or not the kill landed before or after the commit; a committed-but-unacknowledged reward is visible on rejoin |
 
+| `ShutdownOutage` (T4C-0353) | the acceptance cluster is crashed as in `DatabaseCrash` and the private operator stop (`/admin/shutdown`) is requested about 1.5 s later, while the sessions are still bound | the stop is a visible failure: the server exits **non-zero** within 120 s with `Server shutdown failed ...` / `Persistence flush incomplete` on stderr, never exit 0; committed state survives PostgreSQL crash recovery; the unreleased leases expire on their own clock; a restarted server serves all twenty adapters; its final graceful stop exits 0 |
+
 ## Safety
 
 - Creates ONE new acceptance cluster (`acceptance-cluster.ps1`, id `t4c_acc_<12 hex>`, WSL Ubuntu PostgreSQL 16, loopback
@@ -105,6 +107,18 @@ Not run, and why: `NativeDatabaseRecoveryProbe` (T4C-0208) hard-codes PostgreSQL
 above supersedes its scope but is a different tool. `NativeLootProbe` (retried pickup, lost response) needs a killer that
 survives the lethal starter ground (open owner decision T4C-0248) and was not run. `NativeTransferProbe` was not re-run
 (portal traversals are exercised by the walker drills). No rendered clients, no TLS, no remote host, no wire-level packet loss.
+
+## Operator stop while the database is down (`ShutdownOutage`, T4C-0353)
+
+Recorded 2026-10-30 (local PG16 WSL, protocol 8, schema 13, `origin/main` 3e147d8b plus the T4C-0353 branch, disposable cluster `t4c_acc_30b26fc029fe` on 57705, server on 18861, 300 s soak, destroyed afterwards):
+PostgreSQL was stopped in immediate mode 101.5 s into the soak with 20 live leases; the private operator stop was requested 1,542 ms later. The server answered HTTP 200 (the request was accepted,
+which is not a success claim) and **exited with code 1, 30 s later** (the 12 s accepted-write drain, the separate termination wait and creature flush). Its stderr held 19 checkpoint and 1 monster-attack
+`Online persistence failed ... character disconnected. Recover after lease expiry.` lines, `Server shutdown failed; closing owned database pool after incomplete teardown. Recover from committed state.`,
+`Server teardown reported a failure` and `Persistence flush incomplete; recover from last committed state after lease expiry` with suppressed `Creature persistence flush incomplete`; nothing claimed a save and nothing was replayed.
+The monitor could not reach the database from +1.7 s to +35.2 s. After PostgreSQL's crash recovery `verify` passed on everything the monitor had seen committed; all 20 leases expired on their own clock (0 live from +36.2 s),
+a new server was healthy 1.6 s after launch with empty stderr, all twenty adapters were live again at +60.7 s, the soak recorded only outage-class errors (107 failures, 126 reconnects), the final `verify` passed, and the final
+graceful stop exited 0. A first attempt the same day stopped at the greeting step because this script let a native command's stderr line reach its parent's `Stop` error handling; `Java-Tool` now merges stderr into its output.
+It is local PG16, native-adapter evidence; it does not show a stuck-worker stop (that is the unit test `incompleteFlushWaitsForAcceptedWorkerExitAndReportsFailure`) or a rendered client.
 
 ## Loot claim and corpse recovery under a hard kill (`NativeLootFaultDrill`, T4C-0342)
 
