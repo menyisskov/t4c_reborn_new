@@ -40,13 +40,18 @@ public final class UnhostableSpawnAudit {
 
   /** Recomputes the list from the real world-0 collision file and the bundled monster content. */
   public static Document audit(Path worldCollision) throws IOException {
-    var grid = SharedCollision.load(worldCollision, 0, List.of());
-    var spec = new RegionMapLoader.Spec(0, "start", 0, 0, HostedRegionPlan.WORLD0_WIDTH, HostedRegionPlan.WORLD0_HEIGHT, 2944, 1059, true);
+    return audit(worldCollision, 0, 2944, 1059);
+  }
+
+  /** Same audit for any streamed world (T4C-0397 uses it at startup for world 2 instead of a bundled list). */
+  static Document audit(Path worldCollision, int world, int spawnX, int spawnY) throws IOException {
+    var grid = SharedCollision.load(worldCollision, world, List.of());
+    var spec = new RegionMapLoader.Spec(world, "start", 0, 0, grid.width(), grid.height(), spawnX, spawnY, true);
     var map = RegionMapLoader.loadStreamed(grid, spec);
     var monsters = HostedWorlds.withoutNpcOwnedSpawns(MonsterCatalog.loadBundled());
     var entries = new ArrayList<Entry>();
     int foot = 0, noSprite = 0;
-    for (var spawn : monsters.region(0, 0, 0, spec.width(), spec.height())) {
+    for (var spawn : monsters.region(world, 0, 0, spec.width(), spec.height())) {
       var definition = spawn.definition() == null ? null : monsters.monsters().get(spawn.definition());
       if (map.blocksFoot(spawn.x(), spawn.y())) { foot++; entries.add(new Entry(spawn.persistenceKey(), spawn.x(), spawn.y(), "foot_blocked")); }
       else if (definition == null || definition.getWalkPattern() == null || definition.getWalkPattern().isBlank()) {
@@ -55,7 +60,7 @@ public final class UnhostableSpawnAudit {
       }
     }
     entries.sort(Comparator.comparing(Entry::key));
-    return new Document(VERSION, 0, foot, noSprite, List.copyOf(entries));
+    return new Document(VERSION, world, foot, noSprite, List.copyOf(entries));
   }
 
   /** The bundled list. */

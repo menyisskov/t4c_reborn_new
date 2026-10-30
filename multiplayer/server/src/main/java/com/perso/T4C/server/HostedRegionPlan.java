@@ -92,6 +92,8 @@ public final class HostedRegionPlan {
       "authored-v1:cf0bd2eb81001880a0b396cbe727595908d905c49908bd832e656b1701875918");
   /** World 0 is 6144 x 3072 tiles; the streamed region is the whole world at origin 0, so local equals absolute. */
   static final int WORLD0_WIDTH=6144,WORLD0_HEIGHT=3072;
+  /** The cavern is world 2; its streamed region covers the whole world at origin 0. */
+  static final String WORLD2_KEY="cavern";
   /** Collision shared by every region of a world, present only for streamed plans (worlds without one use arrays). */
   Map<Integer,SharedCollision> sharedCollision=Map.of();
   /** The routes this plan enables (the shipped list, plus the derived ones when world 0 streams). */
@@ -109,6 +111,15 @@ public final class HostedRegionPlan {
    * portals that stay inside the streamed region wait for stage B (same-region transfers).
    */
   public static HostedRegionPlan startingSlice(Path worldCollision,boolean streamWorld0) throws IOException {
+    return startingSlice(worldCollision,streamWorld0,false);
+  }
+  /**
+   * {@code streamWorld2} (server option {@code --stream-world2}, needs streamWorld0, default off) also hosts the whole
+   * cavern (world 2) as one streamed region. Portals between world 0 and world 2 are then derived like any other
+   * cross-region portal; portals inside world 2 wait for same-region transfers.
+   */
+  public static HostedRegionPlan startingSlice(Path worldCollision,boolean streamWorld0,boolean streamWorld2) throws IOException {
+    if(streamWorld2 && !streamWorld0) throw new IllegalArgumentException("World 2 streaming needs world 0 streaming");
     PortalContent content;
     try(var in=HostedRegionPlan.class.getResourceAsStream("/content/portals-v1.json")) {
       if(in==null) throw new IOException("Missing portal content");
@@ -122,15 +133,27 @@ public final class HostedRegionPlan {
     var startSpec=streamWorld0
         ? new RegionMapLoader.Spec(0,"start",0,0,WORLD0_WIDTH,WORLD0_HEIGHT,2944,1059,true)
         : new RegionMapLoader.Spec(0,"start",START_X,START_Y,START_WIDTH,START_HEIGHT,2944,1059);
-    var specs=List.of(startSpec,
+    var primary=worldCollision.toAbsolutePath().normalize();
+    var maps=new HashMap<Integer,Path>();
+    maps.put(0,primary);maps.put(1,primary.getParent().getParent().resolve("dungeon/DungeonMap.colbin"));
+    maps.put(2,primary.getParent().getParent().resolve("cavern/CavernMap.colbin"));
+    var destinations=PortalDestinations.load(maps);
+    var specList=new ArrayList<RegionMapLoader.Spec>();
+    specList.add(startSpec);
+    if(streamWorld2) {
+      // Spawn: the first authored portal target in world 2 a character can stand on (a fallback only; arrivals use portals).
+      var spawn=content.portals().stream().filter(p->p.targetWorld()==2 && destinations.canStand(new CharacterProgress.Respawn(2,p.targetX(),p.targetY()))).findFirst()
+          .orElseThrow(()->new IOException("World 2 has no standable portal target"));
+      specList.add(new RegionMapLoader.Spec(2,WORLD2_KEY,0,0,destinations.width(2),destinations.height(2),spawn.targetX(),spawn.targetY(),true));
+    }
+    var specs0=List.of(
         new RegionMapLoader.Spec(1,INTERIOR_KEY,INTERIOR_X,INTERIOR_Y,INTERIOR_WIDTH,INTERIOR_HEIGHT,304,383),
         new RegionMapLoader.Spec(1,CAVE_KEY,CAVE_X,CAVE_Y,CAVE_SIZE,CAVE_SIZE,134,667),
         new RegionMapLoader.Spec(1,SEWER_UPPER_KEY,SEWER_UPPER_X,SEWER_UPPER_Y,SEWER_UPPER_WIDTH,SEWER_UPPER_HEIGHT,168,201),
         new RegionMapLoader.Spec(1,SEWER_MIDDLE_KEY,SEWER_MIDDLE_X,SEWER_MIDDLE_Y,SEWER_MIDDLE_WIDTH,SEWER_MIDDLE_HEIGHT,121,332),
         new RegionMapLoader.Spec(1,SEWER_LOWER_KEY,SEWER_LOWER_X,SEWER_LOWER_Y,SEWER_LOWER_WIDTH,SEWER_LOWER_HEIGHT,154,529));
-    var primary=worldCollision.toAbsolutePath().normalize();
-    var maps=Map.of(0,primary,1,primary.getParent().getParent().resolve("dungeon/DungeonMap.colbin"));
-    var destinations=PortalDestinations.load(maps);
+    specList.addAll(specs0);
+    var specs=List.copyOf(specList);
     for(var portal:listed) {
       if(specs.stream().filter(s->s.contains(portal.sourceWorld(),portal.sourceX(),portal.sourceY())).count()!=1
           || specs.stream().filter(s->s.contains(portal.targetWorld(),portal.targetX(),portal.targetY())).count()!=1
@@ -179,6 +202,10 @@ public final class HostedRegionPlan {
         throw new IOException("Refused portal "+portal.id()+" unexpectedly has a hosted destination");
     }
     var unhostable=new HashSet<>(UNHOSTABLE_SPAWN_KEYS);
+    if(streamWorld2) {
+      var spawn=specs.stream().filter(s->s.world()==2).findFirst().orElseThrow();
+      for(var e:UnhostableSpawnAudit.audit(maps.get(2),2,spawn.spawnX(),spawn.spawnY()).entries()) unhostable.add(e.key());
+    }
     if(streamWorld0) unhostable.addAll(UnhostableSpawnAudit.bundledKeys()); // world 0 hosts every authored spawn a creature can stand on
     var plan=new HostedRegionPlan(regions,new PortalCatalog(new PortalContent(1,enabled)),true,refused,unhostable);
     plan.sharedCollision=Map.copyOf(shared);
