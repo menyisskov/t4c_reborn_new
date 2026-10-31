@@ -1,5 +1,19 @@
 # Multiplayer implementation handoff
 
+## Active refactor — start here (2026-10-31, T4C-0405)
+
+The owner requests exact whole-game single-player reuse and rendered end-to-end verification.
+Latest instruction: push tested work directly to main, no PR waits; Claude is not currently
+working, and must be able to take over remaining work from this document.
+
+- Source checkout: `C:/Users/menyi/.codex/worktrees/shared-game-runtime-0405`, branch `codex/shared-game-runtime-0405`.
+- Latest tested source: `8d5a661e`, original-source runtime, real frame metadata and NPC presentation boundaries; full non-DB reactor and rendered offline goldens pass (exact evidence below). This does not enable original server gameplay yet.
+- Next work: participant conversation isolation and optional original inventory mutation journal, prepared privately while the tested checkpoint was frozen. Recheck Git and canonical ownership for their current application/test status.
+- Root is the only Git integrator. Build windows are serialized. Do not use the stale dirty main checkout as the source baseline or overwrite its personal saves/preferences.
+- Full plan: [SHARED_GAMEPLAY_EXECUTION_PLAN.md](SHARED_GAMEPLAY_EXECUTION_PLAN.md). Exact next-step briefs, known state-loss risks and participant isolation requirements are at the end of this handoff.
+- Whole-game parity, server adoption and rendered two-client acceptance are unfinished. No test build has been handed back as ready for manual acceptance.
+
+
 Last reviewed: 2026-10-30, Asia/Jerusalem. This file is the restart point for a different model. Recheck Git and running processes before acting; this describes recorded evidence, not live state.
 
 ### Online player chat (T4C-0363)
@@ -784,3 +798,134 @@ were used. Exact final source SHA-256 values:
 - `src/test/java/com/perso/T4C/helper/GridPathfindingParityTest.java` — `BCF97D75E7E28272BD976AD8F2362BCF23EA0436C36590AD62CF65ADD01A3EC8`
 - `src/test/java/com/perso/T4C/helper/PathfindingAdapterTest.java` — `90AB2138B3F8C1771CEFC4B594E58FE741F951826AC8892FDDCF221B8B9E0761`
 - `multiplayer/domain/pom.xml` — `94B5402C437198200903872579633D921CDFFD92A24F5216A96E8C81C10ACD86`
+
+## Owner direct-main execution override — 2026-10-31
+
+The owner states Claude is not working and explicitly directs full-speed implementation,
+pushing tested changes directly to main with no PRs, and durable remaining-work notes for
+Claude takeover when the session reaches its token limit. This supersedes the PR/merge-wait/
+rebranch boundaries above for this session. Root remains sole Git integrator; author self-review,
+focused checks and package verification remain required. Read newest canonical peer messages
+and open PR list before every action under the current coordination rule.
+
+The first original NPC locomotion/path extraction is shipped on main `43501f16`; former PR368
+closed after the direct push. Its local 8 root/4 domain tests and package evidence are recorded
+above. This does not establish server use, original UI parity or whole-game acceptance.
+
+Active next work: cheap runtime module/domain-facade build proof and parallel disjoint cheap
+real sprite metadata/timeline boundary, with serial Maven. No protected server/database/GUI
+resource is authorized by the source override. All remaining whole-game phases and unchecked
+rendered acceptance gates remain open; preserve exact continuation instructions for Claude.
+
+## Next independent NPC presentation slice and continuation
+
+Root can assign a third cheap implementation agent the reserved BaseNPC.java, ScriptedNpc.java,
+npc/behavior/NpcBehaviorContext.java, new npc/core/NpcPresentation.java, LocalNpcPresentation.java
+and root NpcPresentationTest.java. Add a per-instance presentation port with the current local
+adapter as default, settable before lifecycle execution. Do not introduce process-global or
+thread-local recipient state. Default adapter invokes the same SystemMessage dialogue/system
+calls, LearnScreen/ShopScreen constructors and NpcCastVfxHook/SoundManager calls in the original
+order. Actual scripts still use concrete Player and ScriptedNpc and mutate original state.
+Keep validation/filtering and dialogue wrap/paging/keyword/name substitution in their original
+methods; only redirect the final presentation operation. Route context self/target VFX through
+the actor port without changing damage or self-destruct scheduling. Capture-only tests must
+execute real original dialogue/training behavior and assert ordered payloads, with no GUI
+construction and unchanged state; local adapter remains byte-for-byte semantic delegation.
+Existing LearnScreen.TrainingOffer may remain a transitional declared data type for this slice
+without constructing a screen; extract a shared offer DTO later if needed. Animation-owned
+sound calls and all other direct authored GUI calls require follow-up inventory; do not claim
+this slice covers all NPC presentation.
+
+After runtime and real metadata proof, pilot the existing PersistentSessions.interact prepare
+boundary with actual NpcFactoryRegistry/BaseNPC.onClick/ScriptedNpc.onInteractStart execution,
+including original lifecycle, quest auto-turnin/welcome and reachability. Do not invoke only a
+behavior callback and skip its owner lifecycle. Keep current session/busy/readiness/revision,
+row/session/epoch checks and atomic receipt commit. Capture effects before commit, publish only
+after success. A no-op conversation still has an ordered recipient result. Preserve every
+untouched authoritative CharacterState/CharacterProgress field; never map through ProgressMirror
+or PlayerStateDto. Greeting can journal exact original item adds and flags against trusted
+inputs while copying all other fields unchanged. It is a migration pilot, not permission to
+silently run unpopulated fields or label a script allowlist complete.
+
+Before full conversation routing, isolate pending yes/no, dialog paging, response flags and
+interaction suspension per participant. They currently live on a shared NPC instance; one
+player's answer must not consume another player's prompt. Shared world actor lifecycle/AI
+still ticks once. State and presentation drafts roll back together on refusal/failure.
+Donation/spend scripts need an atomic signed balance mutation path: current generic reward
+commit only admits nonnegative gold/XP. Instance-aware inventory journal must preserve UUIDs,
+per-instance charges, quantity and container ownership. Large authoritative balances must not
+be truncated to original Player int fields. Complete exact runtime state mapping remains work.
+
+Remaining after these slices: shared server callers and world contexts; generic authored NPC
+lifecycle/conversation/services; original monster manager/AI/combat/life/loot/respawn; actual
+spell lifecycle and effects; complete original UI/controls/economy/progression/item/world
+systems/content; persistence/recovery/security; paired offline/online rendered scenarios and
+two-client integrated acceptance. None is complete from headless construction, frame metadata,
+unit counts or this plan. Canonical PARITY and MILESTONES govern final gates with the latest
+owner duration decision. Preserve failures, exact versions and credentials-free evidence.
+
+2026-10-31 T4C-0405 NPC participant-state audit (read-only after presentation-port source freeze):
+A single BaseNPC presently owns one isInteracting flag, savedPatrolTarget/savedPauseTimer/wasPaused, lastInteractionRequestAt, dialogLines/dialogPageIndex/dialogActive, dialog keyword and link bounds, and shoutUntil. onClick(), update(), checkPlayerRange(), endInteraction(), advanceDialog(), handleDialogClick(), and talk() all consume this one state. ScriptedNpc adds one pendingYesNoState and conversationResponseShown. Two participants using the same physical NPC would therefore share or clear each other's yes/no answer, dialogue page, click bounds, interaction retry and patrol restoration; update() also receives only one playerPosition for facing. The presentation adapter only routes final effects and does not solve this.
+
+Next design must keep one authoritative physical NPC for position, patrol, hostility, HP, combat and animation, while isolating conversation state and presentation recipient by participant identity with explicit session binding (no thread-local/global recipient). An extraction of BaseNPC fields alone is insufficient: authored subclasses hold mutable dialogue state, including LighthavenSamaritan.awaitingQuestionAnswer and closeAfterDialog, and CampaignWitnessNpc.testimonyHeard. Characterize those exact scripts and choose a session-bound original-script instance/view or a complete explicit state port before implementation. Player quest flags in NpcBehaviorContext already target its concrete Player. In contrast BaseNPC.scriptFlags are NPC-instance state via context.npcFlag: confirmed callers include CryptCoffin1 respawn cooldown, GaenenElthorn/GabrielArchonis hit windows, Geena infection, Lantalir book timer, LordoftheShops timer and TtayhMark black-market roll. Preserve their NPC/world scope according to each original call path rather than blanket-moving them into participant sessions. No participant isolation is implemented or verified in this slice.
+
+## Next inventory/state boundary — architecture handoff (2026-10-31)
+
+An optional original-operation journal is reserved next in Player, InventoryService,
+InventoryMutationJournal, JournaledInventoryState and the existing InventoryServiceTest.
+The offline default remains unchanged. Capture original operation arguments/results and
+ordered underlying list/map changes, including nested calls, setters and iterator/map-view
+mutations. Seal by replaying recorded changes against the starting projection and comparing
+actual final collections; unexplained writes invalidate preparation. Exceptions invalidate
+the draft, which must be restored before any publication. This is operation capture, not a
+server state adapter or completed inventory parity.
+
+The original Player uses string-key inventory/equipment and aggregate charges by key;
+online items have UUIDs, quantities and per-instance charges. Multiple partial same-key
+instances cannot always map to the original aggregate spending/removal semantics. Preserve
+that incompatibility as an explicit regression/prerequisite. Do not redistribute charges,
+guess identities from a final list diff, or run different spending rules behind original
+execution. All direct mutation paths must be covered, not only InventoryService calls.
+
+Before connecting server commands, define an exact PlayerRuntimeState snapshot covering
+inherited stats, flag expirations, rolled buffs, deadlines, regeneration, movement, progression
+and inventory. A classification check should detect newly added fields lacking persistent
+or transient treatment. Retain stable Player identity across commands because authored NPCs
+compare references. Draft concrete state and conversation/effects, restore the starting state
+while persistence is pending, then install the prepared result only after revision/epoch/
+receipt commit; failures publish nothing. Full snapshot and identity-aware persistence remain
+unfinished. Legacy PlayerStateDto and ProgressMirror are not acceptable authoritative bridges.
+
+Original gold/storage backing is int while existing server balances are long. Deliberate
+shared-model widening and save-compatibility checks are a separate required phase; no clamp,
+cast, hidden remainder or misleading int facade. The journal slice does not resolve this.
+## T4C-0405 shared runtime, metadata and presentation checkpoint — 2026-10-31
+
+The server reactor now compiles the original game source once in game-runtime; game-domain
+is a compatibility facade and contributes no duplicate production classes. Desktop backend,
+freetype and native DLL resources are excluded from server runtime dependencies. A headless
+fixture constructs the real Player and authored Warden Vortimer and executes an original item
+grant. NPC presentation is per-instance injectable with unchanged local UI/audio/VFX defaults.
+Player, NPC and monster animation discovery/timelines use real sprite metadata independently
+of texture loading. The production server still uses its existing simulation: these boundaries
+are preparation, not complete original gameplay adoption.
+
+Final validation on the combined checkout based on main43501f16:
+
+- Root focused NPC/presentation/keyword/path suite: 12 passed, zero failures/errors/skips.
+- `mvn -o '-Dtest=HeadlessAnimationMetadataTest,PlayerWalkAnimationTest,MonsterAnimationsAttackPoseTest,NPCAttackPoseTest' test`: 15 passed; real sprite binaries, duplicate metadata and shard rules, attack/walk timing covered.
+- `mvn -o '-Dtest=MainGameScreenGoldenTest' test`: 3 passed, zero skips at 11:30:05; real rendered reference screenshots matched, autosave cadence/reload passed, no golden update. Disposable fixture, no personal save writes.
+- `mvn -o -q -f multiplayer/pom.xml -pl server -am verify`: runtime 1/1, domain 101/101; server 440 total = 312 passed + 128 expected database-dependent skips; zero failures/errors. No live database acceptance claimed.
+- Clean server reactor package and latest `mvn -o -q '-DskipTests' package` client package passed. Dependency/jar inspection confirms one gameplay-class owner and no desktop backend/freetype/native DLL runtime payload.
+
+Preserved failed checks: initial headless test included provided desktop dependencies until
+explicit test-classpath exclusions were added; first server suite encountered the pre-existing
+OnlineBuffsTest total/Entangle assertion left stale by PR357. That test-only expectation now
+checks the named supported stage-four spells instead of an incidental count; no spell rules
+were changed. Authors self-reviewed their boundaries and scoped diff checks passed.
+
+Remaining: participant-isolated conversations, exact authoritative state/journal and transaction
+adapters, server use of original NPC/monster/spell/player execution, original online UI and all
+world/content paths, recovery/security and paired offline/online two-rendered-client acceptance.
+Real sprite metadata must be loaded before headless actors; server asset packaging/bootstrap
+is still a follow-up. No full-game or milestone completion is claimed.

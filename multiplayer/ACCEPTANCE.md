@@ -429,3 +429,34 @@ were used. Exact final source SHA-256 values:
 - `src/test/java/com/perso/T4C/helper/GridPathfindingParityTest.java` — `BCF97D75E7E28272BD976AD8F2362BCF23EA0436C36590AD62CF65ADD01A3EC8`
 - `src/test/java/com/perso/T4C/helper/PathfindingAdapterTest.java` — `90AB2138B3F8C1771CEFC4B594E58FE741F951826AC8892FDDCF221B8B9E0761`
 - `multiplayer/domain/pom.xml` — `94B5402C437198200903872579633D921CDFFD92A24F5216A96E8C81C10ACD86`
+
+## T4C-0405 shared runtime, metadata and presentation checkpoint — 2026-10-31
+
+The server reactor now compiles the original game source once in game-runtime; game-domain
+is a compatibility facade and contributes no duplicate production classes. Desktop backend,
+freetype and native DLL resources are excluded from server runtime dependencies. A headless
+fixture constructs the real Player and authored Warden Vortimer and executes an original item
+grant. NPC presentation is per-instance injectable with unchanged local UI/audio/VFX defaults.
+Player, NPC and monster animation discovery/timelines use real sprite metadata independently
+of texture loading. The production server still uses its existing simulation: these boundaries
+are preparation, not complete original gameplay adoption.
+
+Final validation on the combined checkout based on main43501f16:
+
+- Root focused NPC/presentation/keyword/path suite: 12 passed, zero failures/errors/skips.
+- `mvn -o '-Dtest=HeadlessAnimationMetadataTest,PlayerWalkAnimationTest,MonsterAnimationsAttackPoseTest,NPCAttackPoseTest' test`: 15 passed; real sprite binaries, duplicate metadata and shard rules, attack/walk timing covered.
+- `mvn -o '-Dtest=MainGameScreenGoldenTest' test`: 3 passed, zero skips at 11:30:05; real rendered reference screenshots matched, autosave cadence/reload passed, no golden update. Disposable fixture, no personal save writes.
+- `mvn -o -q -f multiplayer/pom.xml -pl server -am verify`: runtime 1/1, domain 101/101; server 440 total = 312 passed + 128 expected database-dependent skips; zero failures/errors. No live database acceptance claimed.
+- Clean server reactor package and latest `mvn -o -q '-DskipTests' package` client package passed. Dependency/jar inspection confirms one gameplay-class owner and no desktop backend/freetype/native DLL runtime payload.
+
+Preserved failed checks: initial headless test included provided desktop dependencies until
+explicit test-classpath exclusions were added; first server suite encountered the pre-existing
+OnlineBuffsTest total/Entangle assertion left stale by PR357. That test-only expectation now
+checks the named supported stage-four spells instead of an incidental count; no spell rules
+were changed. Authors self-reviewed their boundaries and scoped diff checks passed.
+
+Remaining: participant-isolated conversations, exact authoritative state/journal and transaction
+adapters, server use of original NPC/monster/spell/player execution, original online UI and all
+world/content paths, recovery/security and paired offline/online two-rendered-client acceptance.
+Real sprite metadata must be loaded before headless actors; server asset packaging/bootstrap
+is still a follow-up. No full-game or milestone completion is claimed.

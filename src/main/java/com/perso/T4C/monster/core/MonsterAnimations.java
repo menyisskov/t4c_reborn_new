@@ -9,6 +9,7 @@ import com.perso.T4C.config.NativeTimingProfile;
 import com.perso.T4C.entity.EntityAnimationsBase;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.helper.SpriteLoader;
+import com.perso.T4C.helper.SpriteFrameMetadata;
 import com.perso.T4C.render.SpriteOffsetUtil;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,9 +32,9 @@ public class MonsterAnimations extends EntityAnimationsBase {
   private final PatternParts walkParts;
   private final PatternParts attackParts;
   private final PatternParts deathParts;
-  private final Map<String, List<TextureRegion>> walkAnimations = new HashMap<>();
-  private final Map<String, List<TextureRegion>> attackAnimations = new HashMap<>();
-  private final Map<String, List<TextureRegion>> deathAnimations = new HashMap<>();
+  private final Map<String, List<SpriteFrameMetadata>> walkAnimations = new HashMap<>();
+  private final Map<String, List<SpriteFrameMetadata>> attackAnimations = new HashMap<>();
+  private final Map<String, List<SpriteFrameMetadata>> deathAnimations = new HashMap<>();
   private float animTimer = 0f;
   private float attackTimer = 0f;
   private float deathTimer = 0f;
@@ -182,7 +183,7 @@ public class MonsterAnimations extends EntityAnimationsBase {
       String entityName,
       boolean showName) {
     refreshIfNeeded();
-    List<TextureRegion> frames;
+    List<SpriteFrameMetadata> frames;
     int frameIndex;
     String patternBase;
     boolean appendAngle;
@@ -220,7 +221,7 @@ public class MonsterAnimations extends EntityAnimationsBase {
     }
     if (frames.isEmpty()) return;
     frameIndex = Math.min(frameIndex, frames.size() - 1);
-    TextureRegion reg = frames.get(frameIndex);
+    TextureRegion reg = renderRegion(frames.get(frameIndex));
     String name =
         activeParts.numericFrameCount > 0
             ? activeParts.numericFrameName(frameIndex)
@@ -269,7 +270,7 @@ public class MonsterAnimations extends EntityAnimationsBase {
 
   private float computeAttackDuration() {
     int maxFrames = 0;
-    for (List<TextureRegion> frames : attackAnimations.values()) {
+    for (List<SpriteFrameMetadata> frames : attackAnimations.values()) {
       if (frames != null) {
         maxFrames = Math.max(maxFrames, frames.size());
       }
@@ -283,15 +284,15 @@ public class MonsterAnimations extends EntityAnimationsBase {
   private void loadAnimationPattern(
       SpriteLoader loader,
       PatternParts pattern,
-      Map<String, List<TextureRegion>> animMap,
+      Map<String, List<SpriteFrameMetadata>> animMap,
       boolean useAngle) {
     String baseName = pattern.baseName;
     char stopLetter = pattern.stopLetter;
     if (pattern.numericFrameCount > 0) {
-      List<TextureRegion> frames = new ArrayList<>();
+      List<SpriteFrameMetadata> frames = new ArrayList<>();
       for (int i = 0; i < pattern.numericFrameCount; i++) {
         String key = pattern.numericFrameName(i);
-        TextureRegion region = loader.getRegionFromSpriteName(key);
+        SpriteFrameMetadata region = loader.getFrameMetadata(key);
         if (region == null) {
           break;
         }
@@ -306,10 +307,10 @@ public class MonsterAnimations extends EntityAnimationsBase {
     }
     if (useAngle && !pattern.angleless) {
       for (String angle : ANGLES) {
-        List<TextureRegion> frames = new ArrayList<>();
+        List<SpriteFrameMetadata> frames = new ArrayList<>();
         for (char c = FRAME_START; c <= stopLetter; c++) {
           String key = baseName + angle + "-" + c;
-          TextureRegion r = loader.getRegionFromSpriteName(key);
+          SpriteFrameMetadata r = loader.getFrameMetadata(key);
           if (r == null) {
             break;
           }
@@ -322,10 +323,10 @@ public class MonsterAnimations extends EntityAnimationsBase {
         }
       }
     } else {
-      List<TextureRegion> frames = new ArrayList<>();
+      List<SpriteFrameMetadata> frames = new ArrayList<>();
       for (char c = FRAME_START; c <= stopLetter; c++) {
         String key = baseName + "-" + c;
-        TextureRegion r = loader.getRegionFromSpriteName(key);
+        SpriteFrameMetadata r = loader.getFrameMetadata(key);
         if (r == null) {
           break;
         }
@@ -339,8 +340,8 @@ public class MonsterAnimations extends EntityAnimationsBase {
     }
   }
 
-  private List<TextureRegion> getWalkFrames(String angle) {
-    List<TextureRegion> frames = walkAnimations.get(angle);
+  private List<SpriteFrameMetadata> getWalkFrames(String angle) {
+    List<SpriteFrameMetadata> frames = walkAnimations.get(angle);
     if (frames != null) {
       return frames;
     }
@@ -349,7 +350,7 @@ public class MonsterAnimations extends EntityAnimationsBase {
 
   private int getCurrentWalkFrameIndex() {
     int frameCount = 0;
-    for (List<TextureRegion> frames : walkAnimations.values()) {
+    for (List<SpriteFrameMetadata> frames : walkAnimations.values()) {
       if (frames != null && frames.size() > frameCount) {
         frameCount = frames.size();
       }
@@ -360,15 +361,15 @@ public class MonsterAnimations extends EntityAnimationsBase {
     return (int) (animTimer / NativeTimingProfile.current().frameDurationSeconds()) % frameCount;
   }
 
-  private List<TextureRegion> getAttackFrames(String angle) {
-    List<TextureRegion> frames = attackAnimations.get(angle);
+  private List<SpriteFrameMetadata> getAttackFrames(String angle) {
+    List<SpriteFrameMetadata> frames = attackAnimations.get(angle);
     if (frames != null) {
       return frames;
     }
     return attackAnimations.getOrDefault("000", Collections.emptyList());
   }
 
-  private List<TextureRegion> getDeathFrames(String angle) {
+  private List<SpriteFrameMetadata> getDeathFrames(String angle) {
     return deathAnimations.getOrDefault(angle, Collections.emptyList());
   }
 

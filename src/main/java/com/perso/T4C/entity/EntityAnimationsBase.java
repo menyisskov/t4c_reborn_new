@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.perso.T4C.helper.SpriteLoader;
+import com.perso.T4C.helper.SpriteFrameMetadata;
+import com.perso.T4C.exception.GameException;
 import com.perso.T4C.render.SpriteOffsetUtil;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +16,7 @@ public abstract class EntityAnimationsBase {
   protected static final Vector2 ZERO_OFFSET = new Vector2(0, 0);
   protected final Map<String, Vector2> offset1 = new HashMap<>();
   protected final Map<String, Vector2> offset2 = new HashMap<>();
-  private final Map<String, TextureRegion> shadowRegions = new HashMap<>();
+  private final Map<String, SpriteFrameMetadata> shadowRegions = new HashMap<>();
   private int lastTextureGen = -1;
 
   protected void cacheOffsets(String name, SpriteLoader loader) {
@@ -33,7 +35,7 @@ public abstract class EntityAnimationsBase {
   protected void cacheShadow(String frameName, SpriteLoader loader) {
     String shadowName = frameName + "Shd";
     try {
-      TextureRegion shadow = loader.getRegionFromSpriteName(shadowName);
+      SpriteFrameMetadata shadow = loader.getFrameMetadata(shadowName);
       if (shadow != null) {
         shadowRegions.put(frameName, shadow);
         cacheOffsets(shadowName, loader);
@@ -43,8 +45,9 @@ public abstract class EntityAnimationsBase {
   }
 
   protected void renderShadow(SpriteBatch batch, String frameName, Vector2 pos, boolean flipX) {
-    TextureRegion shadow = shadowRegions.get(frameName);
-    if (shadow == null) return;
+    SpriteFrameMetadata metadata = shadowRegions.get(frameName);
+    if (metadata == null) return;
+    TextureRegion shadow = renderRegion(metadata);
     String shadowName = frameName + "Shd";
     Vector2 off =
         SpriteOffsetUtil.selectOffset(
@@ -62,6 +65,12 @@ public abstract class EntityAnimationsBase {
 
   protected void clearShadowCache() {
     shadowRegions.clear();
+  }
+
+  protected TextureRegion renderRegion(SpriteFrameMetadata metadata) {
+    TextureRegion region = SpriteLoader.getInstance().getRegionFromSpriteName(metadata.name());
+    if (region == null) throw new GameException("Missing sprite frame: " + metadata.name());
+    return region;
   }
 
   protected boolean isTextureGenCurrent() {

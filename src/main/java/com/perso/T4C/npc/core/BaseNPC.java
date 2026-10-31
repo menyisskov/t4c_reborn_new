@@ -25,12 +25,12 @@ import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.model.Stats;
 import com.perso.T4C.movement.BaseMovement;
 import com.perso.T4C.player.Player;
-import com.perso.T4C.ui.SystemMessage;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 import java.util.regex.Pattern;
 import lombok.Getter;
@@ -60,6 +60,12 @@ public abstract class BaseNPC extends Stats implements Nameable {
   protected final NPCAnimations animations;
 
   protected final BaseMovement movement;
+
+  private NpcPresentation presentation = new LocalNpcPresentation();
+
+  public final void setPresentation(NpcPresentation presentation) {
+    this.presentation = Objects.requireNonNull(presentation, "presentation");
+  }
 
   protected Vector2 patrolTarget = null;
 
@@ -662,7 +668,7 @@ public abstract class BaseNPC extends Stats implements Nameable {
 
   private void playNpcSound(String sound) {
     if (sound != null && !sound.isBlank()) {
-      com.perso.T4C.audio.SoundManager.animateSound(sound);
+      presentation.sound(sound);
     }
   }
 
@@ -988,7 +994,7 @@ public abstract class BaseNPC extends Stats implements Nameable {
 
     dialogActive = true;
 
-    SystemMessage.showSharedNpcDialogue(displayedText, getDialogKeywords());
+    presentation.dialogue(displayedText, getDialogKeywords());
   }
 
   public void shout(String text, long durationMs) {

@@ -773,3 +773,6 @@ in DESIGN_GUIDELINES. Record actual mixed-session duration and all remaining gam
 stability/security/recovery requirements; older minimum-duration text is historical.
 
 T4C-0405 bounded implementation evidence: original offline NPC locomotion/path extraction passed8 root tests,4 domain path tests and final client package on base f4b34fa3; exact commands/hashes/failures in ACCEPTANCE. No server adapter or rendered evidence; M1/M4 and whole-game parity remain open.
+
+
+T4C-0405 continuation: original-source server runtime boundary, real animation metadata and NPC presentation adapter verified locally; offline rendered goldens3/3, metadata15/15, NPC/path12/12 and non-DB reactor checks pass. See ACCEPTANCE for exact commands/skips. M1-M6/full parity remain open: server original execution and integrated two-client playthrough are unfinished.

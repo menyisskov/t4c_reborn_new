@@ -9,13 +9,17 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.perso.T4C.exception.GameException;
 import java.io.DataInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import javax.imageio.ImageIO;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,6 +29,7 @@ public class SpriteLoader {
   private static final SpriteLoader INSTANCE = new SpriteLoader();
   private final Map<String, Integer> nameToId = new HashMap<>();
   private final Map<String, Sprite> metaByLowerName = new HashMap<>();
+  private final Map<Integer, int[]> headlessImageSizeById = new HashMap<>();
   private TextureRegion[] regionCacheById = new TextureRegion[0];
   private Texture[] textureCacheById = new Texture[0];
   private final Map<String, TextureRegion> maskedRegionCache = new HashMap<>();
@@ -69,6 +74,37 @@ public class SpriteLoader {
         throw new GameException("Failed to load sprite binary: " + shard.path(), e);
       }
     }
+    finishLoad();
+  }
+
+  /** Loads the same authored binary catalog from disk when no LibGDX file backend exists. */
+  public void loadSpriteBin(Path binPath) throws GameException {
+    clearAll();
+    Path directory = binPath.toAbsolutePath().getParent();
+    String fileName = binPath.getFileName().toString();
+    String baseName = fileName.endsWith(".bin")
+        ? fileName.substring(0, fileName.length() - 4) : fileName;
+    List<Path> shards = new ArrayList<>();
+    for (int i = 0; ; i++) {
+      Path shard = directory.resolve(SpriteBinIO.shardName(baseName, i));
+      if (!Files.isRegularFile(shard)) break;
+      shards.add(shard);
+    }
+    if (shards.isEmpty() && Files.isRegularFile(binPath)) shards.add(binPath);
+    if (shards.isEmpty()) throw new GameException("Sprite binary not found: " + binPath);
+    for (Path shard : shards) {
+      try {
+        SpriteBinIO.readShard(shard, packed -> sprites.add(new Sprite(
+            packed.name(), packed.width(), packed.height(), packed.type(),
+            packed.off1X(), packed.off1Y(), packed.off2X(), packed.off2Y(), packed.png())));
+      } catch (IOException e) {
+        throw new GameException("Failed to load sprite binary: " + shard, e);
+      }
+    }
+    finishLoad();
+  }
+
+  private void finishLoad() {
     textureCacheById = new Texture[sprites.size()];
     regionCacheById = new TextureRegion[sprites.size()];
     nameToId.clear();
@@ -240,6 +276,27 @@ public class SpriteLoader {
     return metaByLowerName.get(name.toLowerCase(Locale.ROOT));
   }
 
+  public SpriteFrameMetadata getFrameMetadata(String name) {
+    if (name == null) return null;
+    String key = name.toLowerCase(Locale.ROOT);
+    Integer id = nameToId.get(key);
+    if (id == null) return null;
+    Sprite texture = sprites.get(id);
+    Sprite offsets = metaByLowerName.get(key);
+    int[] imageSize = headlessImageSizeById.computeIfAbsent(id, ignored -> decodeImageSize(texture));
+    return SpriteFrameMetadata.from(texture, offsets, imageSize[0], imageSize[1]);
+  }
+
+  private static int[] decodeImageSize(Sprite sprite) {
+    try {
+      var image = ImageIO.read(new ByteArrayInputStream(sprite.pngData));
+      if (image == null) throw new IOException("Unsupported image payload");
+      return new int[] {image.getWidth(), image.getHeight()};
+    } catch (IOException | RuntimeException e) {
+      throw new GameException("Failed to decode sprite PNG: " + sprite.name, e);
+    }
+  }
+
   public Pixmap createPixmapForRegion(TextureRegion region) {
     if (region == null) return null;
     Texture texture = region.getTexture();
@@ -310,6 +367,7 @@ public class SpriteLoader {
     sprites.clear();
     nameToId.clear();
     metaByLowerName.clear();
+    headlessImageSizeById.clear();
     textureGeneration++;
     notifyReloadListeners();
   }

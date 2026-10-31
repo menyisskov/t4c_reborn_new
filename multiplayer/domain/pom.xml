@@ -10,6 +10,11 @@
     <artifactId>game-domain</artifactId>
     <dependencies>
         <dependency>
+            <groupId>com.perso.t4c</groupId>
+            <artifactId>game-runtime</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.38</version>
@@ -27,74 +32,13 @@
         </dependency>
     </dependencies>
     <build>
-        <!-- Transitional boundary: compile the same source and tests as offline play, without
-             moving files or depending on the desktop artifact. No copied gameplay formulas. -->
-        <sourceDirectory>${project.basedir}/../../src/main/java</sourceDirectory>
+        <!-- Compatibility artifact: focused domain tests use the one shared game-runtime jar. -->
         <testSourceDirectory>${project.basedir}/../../src/test/java</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <includes>
-                        <include>com/perso/T4C/death/DeathRules.java</include>
-                        <include>com/perso/T4C/quest/CrimsonscaleLetterRules.java</include>
-                        <include>com/perso/T4C/combat/CombatProfile.java</include>
-                        <include>com/perso/T4C/combat/MonsterCombatRules.java</include>
-                        <include>com/perso/T4C/monster/loot/LootTable.java</include>
-                        <include>com/perso/T4C/monster/loot/LootEntry.java</include>
-                        <include>com/perso/T4C/monster/loot/LootResult.java</include>
-                        <include>com/perso/T4C/monster/loot/MonsterLootTables.java</include>
-                        <include>com/perso/T4C/item/ItemKeys.java</include>
-                        <include>com/perso/T4C/item/CarryCapacityRules.java</include>
-                        <include>com/perso/T4C/item/ShopRules.java</include>
-                        <include>com/perso/T4C/combat/CombatResolver.java</include>
-                        <include>com/perso/T4C/combat/CombatResult.java</include>
-                        <include>com/perso/T4C/combat/PhysicalAttackRequest.java</include>
-                        <include>com/perso/T4C/combat/WeaponDamageRules.java</include>
-                        <include>com/perso/T4C/combat/WeaponTimingRules.java</include>
-                        <include>com/perso/T4C/combat/EquipmentBoostRules.java</include>
-                        <include>com/perso/T4C/combat/EquipmentEligibilityRules.java</include>
-                        <include>com/perso/T4C/combat/QuiverSplash.java</include>
-                        <include>com/perso/T4C/spell/SpellAreaTargeting.java</include>
-                        <include>com/perso/T4C/spell/SpellData.java</include>
-                        <include>com/perso/T4C/combat/SkillBonusRules.java</include>
-                        <include>com/perso/T4C/combat/RegenerationRules.java</include>
-                        <include>com/perso/T4C/helper/DiceFormula.java</include>
-                        <include>com/perso/T4C/helper/RandomSource.java</include>
-                        <include>com/perso/T4C/helper/GridPathfinding.java</include>
-                        <include>com/perso/T4C/world/WorldCollision.java</include>
-                        <include>com/perso/T4C/world/CollisionRules.java</include>
-                        <include>com/perso/T4C/config/GameConstants.java</include>
-                        <include>com/perso/T4C/helper/BinaryIOUtils.java</include>
-                        <include>com/perso/T4C/helper/CharacterCreationRules.java</include>
-                        <include>com/perso/T4C/helper/CharacterClass.java</include>
-                        <include>com/perso/T4C/helper/CharacterStartingKit.java</include>
-                        <include>com/perso/T4C/player/BodyPart.java</include>
-                        <include>com/perso/T4C/player/ProgressionState.java</include>
-                        <include>com/perso/T4C/player/PlayerProgression.java</include>
-                        <include>com/perso/T4C/helper/XpCurve.java</include>
-                        <include>com/perso/T4C/mapping/definition/XpCurveDefinitions.java</include>
-                        <include>com/perso/T4C/monster/core/MonsterExperience.java</include>
-                        <include>com/perso/T4C/monster/core/MonsterSpellDamageRules.java</include>
-                        <include>com/perso/T4C/online/model/*.java</include>
-                        <include>com/perso/T4C/monster/core/MonsterDef.java</include>
-                        <include>com/perso/T4C/monster/core/MonsterPursuitRules.java</include>
-                        <include>com/perso/T4C/npc/core/NpcLocomotion.java</include>
-                        <include>com/perso/T4C/quest/QuestDef.java</include>
-                        <include>com/perso/T4C/quest/QuestRules.java</include>
-                        <include>com/perso/T4C/spell/SpellKeys.java</include>
-                        <include>com/perso/T4C/spell/BuffAttributes.java</include>
-                        <include>com/perso/T4C/spell/SpellCastRules.java</include>
-                        <include>com/perso/T4C/spell/SpellHealRules.java</include>
-                        <include>com/perso/T4C/spell/ElementRules.java</include>
-                        <include>com/perso/T4C/spell/SpellSplash.java</include>
-                        <include>com/perso/T4C/spell/engine/*.java</include>
-                        <include>com/perso/T4C/spell/SpellFormulaContexts.java</include>
-                        <include>com/perso/T4C/world/LineOfSightRules.java</include>
-                        <include>com/perso/T4C/world/MovementRules.java</include>
-                        <include>com/perso/T4C/world/MovementReconciler.java</include>
-                    </includes>
                     <testIncludes>
                         <testInclude>com/perso/T4C/monster/core/MonsterPursuitRulesTest.java</testInclude>
                         <testInclude>com/perso/T4C/monster/core/MonsterSpellDamageRulesTest.java</testInclude>

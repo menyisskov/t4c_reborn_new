@@ -4,9 +4,7 @@ import static com.perso.T4C.config.GameConstants.GRID_W;
 import static com.perso.T4C.config.GameConstants.NPC_PATROL_RADIUS;
 
 import com.perso.T4C.exception.GameException;
-import com.perso.T4C.gui.core.GuiManager;
 import com.perso.T4C.gui.screen.LearnScreen;
-import com.perso.T4C.gui.screen.ShopScreen;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.InventoryService;
 import com.perso.T4C.item.ItemRegistry;
@@ -20,10 +18,8 @@ import com.perso.T4C.npc.catalog.TrainingCatalog;
 import com.perso.T4C.npc.companion.CompanionManager;
 import com.perso.T4C.player.Player;
 import com.perso.T4C.quest.QuestService;
-import com.perso.T4C.spell.NpcCastVfxHook;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellRegistry;
-import com.perso.T4C.ui.SystemMessage;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
@@ -668,7 +664,7 @@ public abstract class ScriptedNpc extends BaseNPC {
 
   public void systemMessage(String text) {
 
-    if (text != null && !text.isBlank()) SystemMessage.showShared(I18n.resolve(text));
+    if (text != null && !text.isBlank()) getPresentation().systemMessage(I18n.resolve(text));
   }
 
   public void askYesNo(String state) {
@@ -751,7 +747,7 @@ public abstract class ScriptedNpc extends BaseNPC {
                     })
                 .toList();
 
-        GuiManager.open(new LearnScreen(player, valid));
+        getPresentation().spellLearning(player, valid);
       }
 
       case OPEN_SKILL_LEARNING -> {
@@ -767,7 +763,7 @@ public abstract class ScriptedNpc extends BaseNPC {
                     })
                 .toList();
 
-        GuiManager.open(LearnScreen.forTraining(player, valid));
+        getPresentation().skillLearning(player, valid);
       }
 
       case OPEN_SHOP -> {
@@ -784,7 +780,7 @@ public abstract class ScriptedNpc extends BaseNPC {
                     })
                 .toList();
 
-        GuiManager.open(new ShopScreen(player, valid));
+        getPresentation().shop(player, valid);
       }
 
       case GIVE_ITEM -> {
@@ -836,7 +832,7 @@ public abstract class ScriptedNpc extends BaseNPC {
     List<String> valid =
         itemKeys.stream().filter(id -> ItemRegistry.findByKey(id) != null).toList();
 
-    GuiManager.open(new ShopScreen(player, valid));
+    getPresentation().shop(player, valid);
   }
 
   public void openSellShop(Player player) {
@@ -859,7 +855,7 @@ public abstract class ScriptedNpc extends BaseNPC {
       }
     }
 
-    GuiManager.open(ShopScreen.forSelling(player, sellable));
+    getPresentation().sellShop(player, sellable);
   }
 
   public void openSpellLearning(Player player, List<String> spellKeys) {
@@ -874,14 +870,14 @@ public abstract class ScriptedNpc extends BaseNPC {
                         || SpellRegistry.findByName(id.replace("spell.", "")) != null)
             .toList();
 
-    GuiManager.open(new LearnScreen(player, valid));
+    getPresentation().spellLearning(player, valid);
   }
 
   public void openSkillLearning(Player player, List<LearnScreen.TrainingOffer> offers) {
 
     if (player == null || offers == null) return;
 
-    GuiManager.open(LearnScreen.forTrainingOffers(player, offers));
+    getPresentation().trainingOffers(player, offers);
   }
 
   private void summonCompanion(NpcSpec.Action action, Player player) {
@@ -927,13 +923,13 @@ public abstract class ScriptedNpc extends BaseNPC {
 
       if (healingSpell != null) {
 
-        NpcCastVfxHook.playOnPlayer(healingSpell, player, position);
+        getPresentation().castOnPlayer(healingSpell, player, position);
       }
     }
 
     showDialog(I18n.message("message.healed_dialog"), 0L);
 
-    SystemMessage.showShared(I18n.message("message.wounds_healed"));
+    getPresentation().systemMessage(I18n.message("message.wounds_healed"));
   }
 
   private static String normalizeCommand(String value) {
