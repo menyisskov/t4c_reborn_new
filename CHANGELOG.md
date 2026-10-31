@@ -1,3 +1,8 @@
+## 2026-10-31 — Elysana's wax-apple referral opens Samuel's commission (T4C-0409)
+
+### Fixed
+- After Elysana suggests a wax apple, Samuel will now offer to make one once you have dealt with the Death Jester. The referral could previously never be completed.
+
 ## 2026-10-31 — The Good and Evil Seraph quests can now be entered (T4C-0408)
 
 ### Fixed

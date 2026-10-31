@@ -205,6 +205,12 @@ public final class ElysanaBlackrose extends ScriptedNpc {
           return true;
         }
 
+        if (k.equals("WAX") || k.equals("APPLE")) {
+          // Elysana's referral is the prerequisite for Samuel's wax-apple commission.
+          c.flag("__QUEST_WAX_APPLE", 1);
+          return false; // Let the authored WAX/APPLE topic supply the original dialogue.
+        }
+
         if (k.equals("INGREDIENT")) {
 
           if (c.hasItem("pouch_of_woody_nightshade")
