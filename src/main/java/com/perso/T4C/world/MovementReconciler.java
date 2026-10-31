@@ -30,6 +30,9 @@ public final class MovementReconciler {
   @FunctionalInterface
   public interface Rule {
     Position apply(Position from, Input input);
+
+    /** Restore the server's unfinished grid step before replaying newer inputs. */
+    default void restore(MovementRules.Reservation reservation) {}
   }
 
   /** What a reconciliation changed: how far the prediction moved and whether to snap. */
@@ -59,6 +62,11 @@ public final class MovementReconciler {
    * Reconciles with a snapshot. Acknowledgements that go backwards are ignored (a late snapshot).
    */
   public Correction acknowledge(long appliedSequence, Position serverPosition) {
+    return acknowledge(appliedSequence, serverPosition, null);
+  }
+
+  public Correction acknowledge(
+      long appliedSequence, Position serverPosition, MovementRules.Reservation reservation) {
     if (appliedSequence < lastAcknowledged) {
       return new Correction(0, false, predicted);
     }
@@ -68,6 +76,7 @@ public final class MovementReconciler {
     }
     Position before = predicted;
     Position replayed = serverPosition;
+    rule.restore(reservation);
     for (Input input : pending) {
       replayed = rule.apply(replayed, input);
     }
@@ -78,8 +87,13 @@ public final class MovementReconciler {
 
   /** Teleports, respawns and map changes: forget the history and continue from here. */
   public void reset(Position position) {
+    reset(position, null);
+  }
+
+  public void reset(Position position, MovementRules.Reservation reservation) {
     pending.clear();
     predicted = Objects.requireNonNull(position, "position");
+    rule.restore(reservation);
   }
 
   public Position predicted() {

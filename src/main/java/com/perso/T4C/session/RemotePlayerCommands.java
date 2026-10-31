@@ -794,28 +794,39 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
         new MovementReconciler.Position(
             (view.map().originX() + own.x() - 0.5) * GRID_W,
             (view.map().originY() + own.y() - 0.5) * GRID_H);
+    MovementRules.Reservation glide = own.glide();
+    if (glide != null) {
+      glide = new MovementRules.Reservation(
+          glide.targetX() + view.map().originX() * (float) GRID_W,
+          glide.targetY() + view.map().originY() * (float) GRID_H,
+          glide.moveX(), glide.moveY());
+    }
 
     if (epoch != lastEpoch) {
       // First view, teleport, respawn or map change: the server position is the truth.
       lastEpoch = epoch;
       lastTick = tick;
-      reconciler.reset(server);
+      reconciler.reset(server, glide);
       easeX = 0;
       easeY = 0;
-      if (tilesBetween(player, server) >= EASE_FLOOR_TILES) place(player, server);
+      if (tilesBetween(player, server) >= EASE_FLOOR_TILES) {
+        place(player, server);
+        player.getMovement().restoreOnlineGridStep(player, rule.currentReservation());
+      }
       return;
     }
     if (tick == lastTick) return;
     lastTick = tick;
-    if (reconciler.unacknowledged() > MAX_PENDING_FRAMES) reconciler.reset(server);
+    if (reconciler.unacknowledged() > MAX_PENDING_FRAMES) reconciler.reset(server, glide);
 
     MovementReconciler.Correction correction =
-        reconciler.acknowledge(link.acknowledgedFrame(own.sequence()), server);
+        reconciler.acknowledge(link.acknowledgedFrame(own.sequence()), server, glide);
     double error = tilesBetween(player, correction.position());
     if (error >= MovementReconciler.SNAP_DISTANCE_TILES) {
       easeX = 0;
       easeY = 0;
       place(player, correction.position());
+      player.getMovement().restoreOnlineGridStep(player, rule.currentReservation());
     } else if (error >= EASE_FLOOR_TILES) {
       easeX = (float) (correction.position().x() - player.getCoordinates().getX());
       easeY = (float) (correction.position().y() - player.getCoordinates().getY());
@@ -832,6 +843,7 @@ public final class RemotePlayerCommands implements PlayerCommands, RemoteIntents
     float stepY = easeY * fraction;
     var at = player.getCoordinates();
     player.setWorldPosition(at.getX() + stepX, at.getY() + stepY, at.getZ());
+    player.getMovement().restoreOnlineGridStep(player, rule.currentReservation());
     easeX -= stepX;
     easeY -= stepY;
     if (Math.abs(easeX) < 0.5f && Math.abs(easeY) < 0.5f) {

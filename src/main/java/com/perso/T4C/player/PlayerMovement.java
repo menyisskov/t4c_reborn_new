@@ -75,6 +75,15 @@ public class PlayerMovement {
     clearActiveGridStep();
   }
 
+  /** Keep the authoritative unfinished step when online reconciliation adjusts the player's position. */
+  public void restoreOnlineGridStep(Player player, MovementRules.Reservation reservation) {
+    if (reservation == null) {
+      clearActiveGridStep();
+    } else {
+      reserveGridStep(player.getCoordinates(), reservation);
+    }
+  }
+
   public boolean recoverLoadedCollisionPosition(Player player) {
     CollisionManager collisionManager = CollisionManager.getInstance();
     if (player == null

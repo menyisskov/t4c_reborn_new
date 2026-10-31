@@ -53,7 +53,8 @@ public final class OnlineConnection implements AutoCloseable {
    * (or an actor with no committed character) leaves them null and the actor draws in the default look.
    */
   public record Actor(long id, double x, double y, long sequence, long appearance, int hp, int maxHp,
-      String name, String gender, java.util.Map<String, String> equipment) {
+      String name, String gender, java.util.Map<String, String> equipment,
+      com.perso.T4C.world.MovementRules.Reservation glide) {
     public Actor {
       if (equipment != null) {
         equipment = java.util.Collections.unmodifiableMap(new java.util.LinkedHashMap<>(equipment));
@@ -61,7 +62,12 @@ public final class OnlineConnection implements AutoCloseable {
     }
 
     public Actor(long id, double x, double y, long sequence, long appearance, int hp, int maxHp) {
-      this(id, x, y, sequence, appearance, hp, maxHp, null, null, null);
+      this(id, x, y, sequence, appearance, hp, maxHp, null, null, null, null);
+    }
+
+    public Actor(long id, double x, double y, long sequence, long appearance, int hp, int maxHp,
+        String name, String gender, java.util.Map<String, String> equipment) {
+      this(id, x, y, sequence, appearance, hp, maxHp, name, gender, equipment, null);
     }
 
     /** Whether the optional public look is well formed; bounded so a hostile server cannot flood the renderer. */
@@ -77,6 +83,17 @@ public final class OnlineConnection implements AutoCloseable {
         }
       }
       return true;
+    }
+
+    boolean glideValid(MapInfo map) {
+      if (glide == null) return true;
+      return Float.isFinite(glide.targetX()) && Float.isFinite(glide.targetY())
+          && glide.targetX() >= 0 && glide.targetY() >= 0
+          && glide.targetX() < map.width() * (float) com.perso.T4C.config.GameConstants.GRID_W
+          && glide.targetY() < map.height() * (float) com.perso.T4C.config.GameConstants.GRID_H
+          && glide.moveX() >= -1 && glide.moveX() <= 1
+          && glide.moveY() >= -1 && glide.moveY() <= 1
+          && (glide.moveX() != 0 || glide.moveY() != 0);
     }
   }
 
@@ -582,7 +599,7 @@ public final class OnlineConnection implements AutoCloseable {
                 || actor.x() < 0
                 || actor.y() < 0
                 || actor.maxHp() <= 0 || actor.hp() < 0 || actor.hp() > actor.maxHp()
-                || !actor.lookValid()
+                || !actor.lookValid() || !actor.glideValid(map)
                 || actor.x() >= map.width()
                 || actor.y() >= map.height()
                 || outsideWindow(window, actor.x(), actor.y()))

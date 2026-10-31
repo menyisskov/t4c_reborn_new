@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.perso.T4C.helper.CollisionManager;
 import com.perso.T4C.helper.CollisionMapIO;
 import com.perso.T4C.helper.CollisionReader;
+import com.perso.T4C.world.MovementRules;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
@@ -26,6 +27,19 @@ import org.junit.jupiter.api.parallel.ResourceLock;
 
 @ResourceLock("CollisionManager")
 class PlayerMovementCollisionTest {
+  @Test
+  void onlinePositionCorrectionKeepsTheAuthoritativeReservedTile() {
+    Player player = new Player();
+    player.setMapBounds(20 * GRID_W, 20 * GRID_H);
+    player.setWorldPosition(3 * GRID_W, 3 * GRID_H, 0);
+    player.move(1, 0, 0.05f);
+    player.setWorldPosition(3 * GRID_W + 8, 3 * GRID_H, 0);
+    player.getMovement().restoreOnlineGridStep(
+        player, new MovementRules.Reservation(4 * GRID_W, 3 * GRID_H, 1, 0));
+    player.move(-1, 0, 0.05f);
+    assertEquals(3 * GRID_W + 14.4f, player.getCoordinates().getX(), 0.001f);
+  }
+
   @Test
   void movementReservationMatchesOriginalT4cUserSpeed() {
     assertEquals(1f, PLAYER_MOVEMENT_RESERVATION_STEP_TILES);

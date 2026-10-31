@@ -28,9 +28,14 @@ public final class PreviewWorld {
    * committed state; they are null for an actor with no committed character.
    */
   public record PlayerView(long id, double x, double y, long sequence, long appearance, int hp, int maxHp,
-      String name, String gender, java.util.Map<String,String> equipment) {
+      String name, String gender, java.util.Map<String,String> equipment,
+      MovementRules.Reservation glide) {
+    public PlayerView(long id, double x, double y, long sequence, long appearance, int hp, int maxHp,
+        String name, String gender, java.util.Map<String,String> equipment) {
+      this(id,x,y,sequence,appearance,hp,maxHp,name,gender,equipment,null);
+    }
     public PlayerView(long id, double x, double y, long sequence, long appearance, int hp, int maxHp) {
-      this(id,x,y,sequence,appearance,hp,maxHp,null,null,null);
+      this(id,x,y,sequence,appearance,hp,maxHp,null,null,null,null);
     }
   }
   /**
@@ -328,7 +333,7 @@ public final class PreviewWorld {
   }
 
   private static PlayerView view(Player p) {
-    return new PlayerView(p.id,p.x,p.y,p.sequence,p.appearance,p.hp,p.maxHp,p.name,p.gender,p.equipment);
+    return new PlayerView(p.id,p.x,p.y,p.sequence,p.appearance,p.hp,p.maxHp,p.name,p.gender,p.equipment,p.glide.reservation());
   }
 
   /** Publishes the committed public look of one actor; the map is copied and never shared with the caller. */

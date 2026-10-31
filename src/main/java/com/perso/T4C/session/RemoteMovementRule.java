@@ -10,23 +10,21 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 /**
- * The shared single-player grid rule ({@link MovementRules.Grid}) as a stateless replay step for
+ * The shared single-player grid rule ({@link MovementRules.Grid}) as a replay step for
  * {@link MovementReconciler}: from a pixel position and one frame of input, reserve the next tile
  * and glide toward it with the frame's budget, as many tiles as the budget pays for. The server
  * runs the same rule (T4C-0277), so a replay from its position lands where it will.
  *
- * <p>Statelessness is the one approximation: a glide interrupted at a frame boundary is not
- * remembered, so the next frame reserves again from the middle of the tile. In the held direction
- * that is the same target, so the path is the same; after a reversal the real movement finishes
- * its reserved tile first and the replay turns at once. The difference is below one tile and the
- * reconciler's tolerance absorbs it.
+ * The active reservation survives frame boundaries and is restored from each authoritative
+ * snapshot before pending inputs are replayed, just as offline and server movement retain it.
  */
 final class RemoteMovementRule implements MovementReconciler.Rule {
-  private static final int MAX_TILES_PER_FRAME = 8;
+  private static final int MAX_TILES_PER_FRAME = 256;
 
   private final MovementRules.Terrain terrain;
   private final BooleanSupplier collisions;
   private final Supplier<Player> player;
+  private MovementRules.Reservation held;
 
   RemoteMovementRule(
       MovementRules.Terrain terrain, BooleanSupplier collisions, Supplier<Player> player) {
@@ -38,7 +36,6 @@ final class RemoteMovementRule implements MovementReconciler.Rule {
   @Override
   public MovementReconciler.Position apply(
       MovementReconciler.Position from, MovementReconciler.Input input) {
-    if (input.dx() == 0 && input.dy() == 0) return from;
     Player p = player.get();
     float multiplier = p == null ? 1f : p.getEffectiveSpeedMultiplier();
     float budget = PLAYER_SPEED * (float) Math.max(0d, input.dt()) * multiplier;
@@ -48,17 +45,30 @@ final class RemoteMovementRule implements MovementReconciler.Rule {
     boolean check = collisions.getAsBoolean();
     float x = (float) from.x();
     float y = (float) from.y();
-    for (int i = 0; i < MAX_TILES_PER_FRAME && budget >= MovementRules.Grid.POSITION_EPSILON; i++) {
-      MovementRules.Reservation step =
-          MovementRules.Grid.reserve(terrain, x, y, input.dx(), input.dy(), check, width, height);
-      if (step == null) break;
-      MovementRules.Grid.Advance advance = MovementRules.Grid.advance(x, y, step, budget);
+    for (int i = 0; i < MAX_TILES_PER_FRAME; i++) {
+      if (held == null) {
+        if (input.dx() == 0 && input.dy() == 0) break;
+        held = MovementRules.Grid.reserve(terrain, x, y, input.dx(), input.dy(), check, width, height);
+        if (held == null) break;
+      }
+      if (budget < MovementRules.Grid.POSITION_EPSILON) break;
+      MovementRules.Grid.Advance advance = MovementRules.Grid.advance(x, y, held, budget);
       x = advance.x();
       y = advance.y();
       budget -= advance.spent();
+      if (advance.arrived()) held = null;
       if (!advance.arrived()) break;
     }
     return new MovementReconciler.Position(x, y);
+  }
+
+  @Override
+  public void restore(MovementRules.Reservation reservation) {
+    held = reservation;
+  }
+
+  MovementRules.Reservation currentReservation() {
+    return held;
   }
 
   /** The desktop collision singleton as the rule's terrain (the same four questions as offline). */

@@ -73,6 +73,10 @@ final class ServerMovement {
       return reservation != null;
     }
 
+    MovementRules.Reservation reservation() {
+      return reservation;
+    }
+
     void clear() {
       reservation = null;
     }

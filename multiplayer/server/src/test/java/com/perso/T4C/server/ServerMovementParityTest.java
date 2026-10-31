@@ -118,6 +118,9 @@ class ServerMovementParityTest {
     grid.step();
     swept.step();
     double afterFirst = view(grid, g).x();
+    assertEquals(4 * GRID_W, view(grid, g).glide().targetX(), 0.001f,
+        "snapshot carries the exact reserved tile for client replay");
+    assertEquals(1, view(grid, g).glide().moveX());
     double sweptFirst = view(swept, s).x();
     assertEquals(sweptFirst, afterFirst, 1e-4);
     input(grid, g, 0, 0);
@@ -128,6 +131,7 @@ class ServerMovementParityTest {
     assertTrue(view(grid, g).x() > afterFirst, "released input still advances the reserved tile");
     for (int i = 0; i < CARDINAL_TILE_TICKS; i++) grid.step();
     assertEquals(4.5, view(grid, g).x(), 1e-9);
+    assertEquals(null, view(grid, g).glide(), "completed reservation clears from snapshots");
     assertEquals(3.5, view(grid, g).y(), 1e-9);
   }
 
