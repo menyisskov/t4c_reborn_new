@@ -1,3 +1,8 @@
+## 2026-10-31 — The online lobby locks its buttons when the server is down (T4C-0401)
+
+### Fixed
+- When the online server is down or cannot be reached, Play and Create are now greyed out and the character creation form cannot be opened or submitted. They come back as soon as a Refresh reaches the server.
+
 ## 2026-10-30 — Your character now walks with moving legs in online play (T4C-0400)
 
 ### Fixed
