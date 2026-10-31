@@ -100,3 +100,20 @@ dialogue but not of the gate: no player could pass it.
 - The Olin Haad counter counts guards 3, 4 and 5 because the Bible names no guard type; if a later source ties it to the
   "Flagged" spawn group only, restrict it to guard 5.
 - No coordinates were invented for the never-placed NPCs and monsters; they stay open until a canonical source is found.
+
+## Further checks run after the repairs (T4C-0408), nothing to fix
+
+- **Yes/no prompts nobody answers.** Every `askYesNo("state")` was matched with a handler for the same state in the same NPC. Six
+  files differ: Bastien Milandra's `believe*` prompts are handled with `startsWith`, the four Remort NPCs build their state names by
+  concatenation, and Witch Doctor Kwarlgloth's `shop_browse` is answered by the shared `ShopBehavior`. No dead prompt was found.
+- **Stone of Life.** Yrian starts it, Asarr sells the stone for gold, Mhorgwloth's alternative needs `WHO_HAS_THE_STONE_FLAG == 2`,
+  which nothing sets. The quest is finishable through Asarr, so this is an unreachable alternative, not a blocked quest.
+- **Crowbanner's poison apple** is handed in correctly (the Bible's -23 karma on this step is not applied; the Bible fetch for
+  this pass could not be repeated, so the number was not changed). `EVIL_QUEST_COMPLETED_ON_RD` (Monsignor Damien's Elvenbane
+  release) is read but not set; which Raven's Dust step completes the evil quest could not be established from the reference, so it
+  stays open.
+- **The never-placed monsters are not in the original data.** The Psykowasp family, Centaur Archer/Shaman, Cobra, Dungeon Bat, Large
+  Rat, Hoofcrusher, Psi Monk, Robin Hood and the other candidates do not appear in the original game's NPC libraries or its
+  executable, so they were added from the Bible's monster chart by earlier passes, and that chart gives no coordinates. They are
+  not a missing connection to repair; they need a design decision on where each lives.
+- **Sabrina's rat counter** (`RATS_KILLED`) is flavour: she thanks the player for the rats killed around her; nothing is rewarded.
