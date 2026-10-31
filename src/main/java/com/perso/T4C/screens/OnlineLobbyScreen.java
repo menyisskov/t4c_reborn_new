@@ -141,6 +141,8 @@ public final class OnlineLobbyScreen extends InputAdapter implements Screen {
   private Future<Map<UUID, OnlineRoster>> pending;
   private long loadStartedMs;
   private boolean everLoaded;
+  /** True only while the last roster read succeeded; Play and Create stay off while the server is down or unreachable. */
+  private boolean serverReachable;
   private String errorMessage;
   /** Why the last attempt to enter the game failed; shown once the roster has been read again. */
   private String joinNotice;
@@ -267,6 +269,7 @@ public final class OnlineLobbyScreen extends InputAdapter implements Screen {
       if (clock.getAsLong() - loadStartedMs > LOAD_DEADLINE_MS) {
         pending.cancel(true);
         pending = null;
+        serverReachable = false;
         errorMessage = I18n.key("online.lobby.error.timeout");
       }
       return;
@@ -282,6 +285,7 @@ public final class OnlineLobbyScreen extends InputAdapter implements Screen {
             return roster;
           });
       everLoaded = true;
+      serverReachable = true;
       if (joinNotice != null) {
         errorMessage = refineJoinNotice(joinNotice, model.selected().map(c -> c.availability()).orElse(null));
         joinNotice = null;
@@ -292,13 +296,17 @@ public final class OnlineLobbyScreen extends InputAdapter implements Screen {
       }
       firstVisible = OnlineLobbyLayout.scrollToShow(firstVisible, model.selectedIndex(), count());
     } catch (ExecutionException failed) {
+      serverReachable = false;
       errorMessage = describe(failed.getCause());
     } catch (InterruptedException interrupted) {
       Thread.currentThread().interrupt();
+      serverReachable = false;
       errorMessage = I18n.key("online.lobby.error.timeout");
     } catch (IOException invalid) {
+      serverReachable = false;
       errorMessage = describe(invalid);
     } catch (java.util.concurrent.CancellationException cancelled) {
+      serverReachable = false;
       errorMessage = I18n.key("online.lobby.error.timeout");
     }
   }
@@ -524,7 +532,7 @@ public final class OnlineLobbyScreen extends InputAdapter implements Screen {
   // ---------------------------------------------------------------- input
 
   private boolean canPlay(long now) {
-    return !loading() && !finished && model.confirm(now).isPresent();
+    return serverReachable && !loading() && !finished && model.confirm(now).isPresent();
   }
 
   private int count() {
@@ -598,7 +606,7 @@ public final class OnlineLobbyScreen extends InputAdapter implements Screen {
   }
 
   private void play() {
-    if (finished || loading()) return;
+    if (finished || loading() || !serverReachable) return;
     var credentials = model.confirm(clock.getAsLong());
     if (credentials.isEmpty()) return;
     finished = true;
@@ -609,7 +617,7 @@ public final class OnlineLobbyScreen extends InputAdapter implements Screen {
   // ---------------------------------------------------------------- creation
 
   boolean canCreate() {
-    return creator != null && !finished && !loading() && model.phase(clock.getAsLong()) == ReturnPhase.IDLE;
+    return creator != null && serverReachable && !finished && !loading() && model.phase(clock.getAsLong()) == ReturnPhase.IDLE;
   }
 
   Mode mode() {
@@ -644,7 +652,7 @@ public final class OnlineLobbyScreen extends InputAdapter implements Screen {
   }
 
   private void submitCreate() {
-    if (creating != null || creator == null) return;
+    if (creating != null || creator == null || !serverReachable) return;
     var request = form.request();
     if (request == null) {
       createError = form.nameProblem();
@@ -751,7 +759,7 @@ public final class OnlineLobbyScreen extends InputAdapter implements Screen {
 
     boolean busy = creating != null;
     drawFormButton(x + OnlineLobbyLayout.BUTTON_X, y + OnlineCreateLayout.CREATE_Y,
-        I18n.key("online.create.submit"), form.canSubmit() && !busy, Target.CREATE);
+        I18n.key("online.create.submit"), form.canSubmit() && !busy && serverReachable, Target.CREATE);
     drawFormButton(x + OnlineLobbyLayout.BUTTON_X, y + OnlineCreateLayout.BACK_Y,
         I18n.key("online.create.back"), !busy, Target.BACK);
 

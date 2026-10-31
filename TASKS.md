@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0401`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0402`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0401 | Online lobby: Play, Create and the creation form stay disabled until the roster has been read successfully, so an unreachable or down server can no longer be walked into character creation | Multiplayer / lobby | In Progress | | [2026-10-31](CHANGELOG.md) |
 | T4C-0400 | Online play never advanced the own character's walk animation (the screen skipped the update that moves the legs when the session is remote), so the character slid in a frozen pose; it now animates by distance walked online too | Multiplayer / feel | In Progress | | [2026-10-30](CHANGELOG.md) |
 | T4C-0399 | Fix T4C-0398 regression: the server always loaded the cavern collision map, which the server package does not ship, so a packaged server could not start; load it only with `--stream-world2` | Multiplayer / Beta world hosting | Done | | [2026-10-30](CHANGELOG.md) |
 | T4C-0398 | Stage B part 2a: host the cavern (world 2) as a second streamed region behind `--stream-world2` (default off), derive the 406 world 0 / world 2 portals, compute its unhostable spawns at startup | Multiplayer / Beta world hosting | In Progress | | [2026-10-30](CHANGELOG.md) |
