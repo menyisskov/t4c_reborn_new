@@ -8,6 +8,7 @@
     <packaging>pom</packaging>
     <name>T4C Multiplayer (opt-in)</name>
     <modules>
+        <module>runtime</module>
         <module>domain</module>
         <module>server</module>
     </modules>

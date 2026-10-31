@@ -11,7 +11,6 @@ import com.perso.T4C.npc.core.NpcScriptRuntime;
 import com.perso.T4C.npc.core.NpcWorldFlags;
 import com.perso.T4C.npc.core.ScriptedNpc;
 import com.perso.T4C.player.Player;
-import com.perso.T4C.spell.NpcCastVfxHook;
 import com.perso.T4C.spell.SpellData;
 import com.perso.T4C.spell.SpellRegistry;
 import java.util.List;
@@ -261,7 +260,7 @@ public final class NpcBehaviorContext {
       return false;
     }
 
-    NpcCastVfxHook.playOnSelf(spell, new Vector2(npc.getPosition().x, npc.getPosition().y));
+    npc.getPresentation().castOnSelf(spell, new Vector2(npc.getPosition().x, npc.getPosition().y));
     npc.scheduleSelfDestructFrom(spell);
 
     return true;
@@ -278,7 +277,7 @@ public final class NpcBehaviorContext {
       return false;
     }
 
-    NpcCastVfxHook.playOnSelf(spell, new Vector2(npc.getPosition().x, npc.getPosition().y));
+    npc.getPresentation().castOnSelf(spell, new Vector2(npc.getPosition().x, npc.getPosition().y));
     npc.scheduleSelfDestructFrom(spell);
 
     int min = Math.max(0, spell.getMinDamage());
@@ -301,7 +300,7 @@ public final class NpcBehaviorContext {
       return false;
     }
 
-    NpcCastVfxHook.playOnPlayer(
+    npc.getPresentation().castOnPlayer(
         spell, player, new Vector2(npc.getPosition().x, npc.getPosition().y));
 
     int min = Math.max(0, spell.getMinDamage());
@@ -325,7 +324,7 @@ public final class NpcBehaviorContext {
       return false;
     }
 
-    NpcCastVfxHook.playOnPlayer(
+    npc.getPresentation().castOnPlayer(
         spell, player, new Vector2(npc.getPosition().x, npc.getPosition().y));
 
     return true;

@@ -212,3 +212,13 @@ storage, rolled buffs, deadlines, large balances and old record versions), then 
 real original service/script mutation, refusal rollback and lost-ack replay. Atomic receipt,
 revision/epoch and creature-life claims remain the commit authority. Multi-character actions
 share one atomic unit; only after success are concrete state and presentation published.
+
+## Session delivery override (2026-10-31)
+
+Owner explicitly requests full-speed execution and direct pushes to main with no PRs, and
+remaining-work documentation for Claude takeover on token exhaustion. For this session this
+supersedes the PR/merge-wait/rebranch sequence above; keep bounded commits, author self-review,
+focused verification and package checks. Root alone integrates Git. First extraction shipped
+main43501f16, offline-only evidence as recorded in ACCEPTANCE; no full parity claim. Current
+parallel exact source scopes are runtime/domain build proof and real sprite metadata/timeline,
+with serialized Maven and no shared live runtime access.

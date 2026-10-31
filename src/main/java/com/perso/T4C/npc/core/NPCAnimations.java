@@ -14,6 +14,7 @@ import com.perso.T4C.exception.GameException;
 import com.perso.T4C.helper.AppearanceDefaultsCatalog;
 import com.perso.T4C.helper.ConcealmentResolver;
 import com.perso.T4C.helper.SpriteLoader;
+import com.perso.T4C.helper.SpriteFrameMetadata;
 import com.perso.T4C.helper.SpriteBinIO;
 import com.perso.T4C.player.BodyPart;
 import java.nio.IntBuffer;
@@ -41,7 +42,7 @@ public class NPCAnimations extends EntityAnimationsBase {
 
   private final com.perso.T4C.player.PlayerAnimations playerAnimations;
 
-  private final Map<String, Map<String, List<TextureRegion>>> animations = new HashMap<>();
+  private final Map<String, Map<String, List<SpriteFrameMetadata>>> animations = new HashMap<>();
 
   private final List<DrawPart> drawParts = new ArrayList<>();
 
@@ -507,13 +508,13 @@ public class NPCAnimations extends EntityAnimationsBase {
       boolean showName,
       float healthPercent) {
 
-    List<TextureRegion> frames = getFrames(spriteBase, angle);
+    List<SpriteFrameMetadata> frames = getFrames(spriteBase, angle);
 
     if (frames.isEmpty()) return;
 
     int frameIndex = animatedFrameIndex(frames.size(), moving);
 
-    TextureRegion reg = frames.get(frameIndex);
+    TextureRegion reg = renderRegion(frames.get(frameIndex));
 
     String name = frameSpriteName(spriteBase, angle, frameIndex);
 
@@ -562,7 +563,7 @@ public class NPCAnimations extends EntityAnimationsBase {
 
   private Bounds calculateStableBounds(Vector2 pos, String angle, boolean flipX) {
 
-    List<TextureRegion> frames = getFrames(spriteBase, angle);
+    List<SpriteFrameMetadata> frames = getFrames(spriteBase, angle);
 
     if (frames.isEmpty()) return null;
 
@@ -576,7 +577,7 @@ public class NPCAnimations extends EntityAnimationsBase {
 
     for (int index = 0; index < frames.size(); index++) {
 
-      TextureRegion region = frames.get(index);
+      SpriteFrameMetadata region = frames.get(index);
 
       String name = frameSpriteName(spriteBase, angle, index);
 
@@ -585,11 +586,11 @@ public class NPCAnimations extends EntityAnimationsBase {
 
       minX = Math.min(minX, pos.x + off.x);
 
-      maxX = Math.max(maxX, pos.x + off.x + region.getRegionWidth());
+      maxX = Math.max(maxX, pos.x + off.x + region.width());
 
       minY = Math.min(minY, pos.y + off.y);
 
-      maxY = Math.max(maxY, pos.y + off.y + region.getRegionHeight());
+      maxY = Math.max(maxY, pos.y + off.y + region.height());
     }
 
     return new Bounds(minX, maxX, minY, maxY);
@@ -597,13 +598,13 @@ public class NPCAnimations extends EntityAnimationsBase {
 
   private Bounds calculateBounds(Vector2 pos, String angle, boolean flipX, boolean moving) {
 
-    List<TextureRegion> frames = getFrames(spriteBase, angle);
+    List<SpriteFrameMetadata> frames = getFrames(spriteBase, angle);
 
     if (frames.isEmpty()) return null;
 
     int frameIndex = animatedFrameIndex(frames.size(), moving);
 
-    TextureRegion reg = frames.get(frameIndex);
+    SpriteFrameMetadata reg = frames.get(frameIndex);
 
     String name = frameSpriteName(spriteBase, angle, frameIndex);
 
@@ -612,9 +613,9 @@ public class NPCAnimations extends EntityAnimationsBase {
 
     return new Bounds(
         pos.x + off.x,
-        pos.x + off.x + reg.getRegionWidth(),
+        pos.x + off.x + reg.width(),
         pos.y + off.y,
-        pos.y + off.y + reg.getRegionHeight());
+        pos.y + off.y + reg.height());
   }
 
   public List<com.badlogic.gdx.math.Rectangle> getDialogWordBounds(
@@ -656,15 +657,15 @@ public class NPCAnimations extends EntityAnimationsBase {
     }
   }
 
-  private List<TextureRegion> loadStaticFrames(SpriteLoader loader, String baseName) {
+  private List<SpriteFrameMetadata> loadStaticFrames(SpriteLoader loader, String baseName) {
 
     String spriteName = baseName.substring(STATIC_PREFIX.length());
 
-    List<TextureRegion> frames = new ArrayList<>();
+    List<SpriteFrameMetadata> frames = new ArrayList<>();
 
     if (!hasFrameSuffix(spriteName)) {
 
-      TextureRegion single = loader.getRegionFromSpriteName(spriteName);
+      SpriteFrameMetadata single = loader.getFrameMetadata(spriteName);
 
       if (single != null) {
 
@@ -682,7 +683,7 @@ public class NPCAnimations extends EntityAnimationsBase {
 
       String key = family + c;
 
-      TextureRegion region = loader.getRegionFromSpriteName(key);
+      SpriteFrameMetadata region = loader.getFrameMetadata(key);
 
       if (region == null) break;
 
@@ -717,7 +718,7 @@ public class NPCAnimations extends EntityAnimationsBase {
 
   private void loadBaseAnimations(SpriteLoader loader, String baseName) throws GameException {
 
-    Map<String, List<TextureRegion>> angleMap = new HashMap<>();
+    Map<String, List<SpriteFrameMetadata>> angleMap = new HashMap<>();
 
     if (baseName.equals("@invisible")) {
 
@@ -728,7 +729,7 @@ public class NPCAnimations extends EntityAnimationsBase {
 
     if (isStaticBase(baseName)) {
 
-      List<TextureRegion> frames = loadStaticFrames(loader, baseName);
+      List<SpriteFrameMetadata> frames = loadStaticFrames(loader, baseName);
 
       if (!frames.isEmpty()) {
 
@@ -742,13 +743,13 @@ public class NPCAnimations extends EntityAnimationsBase {
 
     for (String angle : ANGLES) {
 
-      List<TextureRegion> frames = new ArrayList<>();
+      List<SpriteFrameMetadata> frames = new ArrayList<>();
 
       for (char c = FRAME_START; ; c++) {
 
         String key = baseName + angle + "-" + c;
 
-        TextureRegion r = loader.getRegionFromSpriteName(key);
+        SpriteFrameMetadata r = loader.getFrameMetadata(key);
 
         if (r == null) break;
 
@@ -771,9 +772,9 @@ public class NPCAnimations extends EntityAnimationsBase {
     animations.put(baseName, angleMap);
   }
 
-  private List<TextureRegion> getFrames(String base, String angle) {
+  private List<SpriteFrameMetadata> getFrames(String base, String angle) {
 
-    Map<String, List<TextureRegion>> am = animations.get(base);
+    Map<String, List<SpriteFrameMetadata>> am = animations.get(base);
 
     if (am == null) {
 
@@ -793,7 +794,7 @@ public class NPCAnimations extends EntityAnimationsBase {
       }
     }
 
-    List<TextureRegion> f = am.get(angle);
+    List<SpriteFrameMetadata> f = am.get(angle);
 
     return f != null ? f : Collections.emptyList();
   }

@@ -18,6 +18,7 @@ import com.perso.T4C.config.GameConstants;
 import com.perso.T4C.config.NativeTimingProfile;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.helper.SpriteLoader;
+import com.perso.T4C.helper.SpriteFrameMetadata;
 import com.perso.T4C.render.SpriteOffsetUtil;
 import java.nio.IntBuffer;
 import java.util.*;
@@ -28,9 +29,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PlayerAnimations extends EntityAnimationsBase {
   private final Map<BodyPart, String> partMap = new EnumMap<>(BodyPart.class);
-  private final Map<String, Map<String, List<TextureRegion>>> animations = new HashMap<>();
-  private final Map<String, Map<String, List<TextureRegion>>> attackAnimations = new HashMap<>();
-  private final Map<String, Map<String, List<TextureRegion>>> bowAttackAnimations = new HashMap<>();
+  private final Map<String, Map<String, List<SpriteFrameMetadata>>> animations = new HashMap<>();
+  private final Map<String, Map<String, List<SpriteFrameMetadata>>> attackAnimations = new HashMap<>();
+  private final Map<String, Map<String, List<SpriteFrameMetadata>>> bowAttackAnimations = new HashMap<>();
   private float animTimer = 0f;
   private boolean attacking = false;
   private boolean holdingMeleeAttackPose = false;
@@ -88,10 +89,10 @@ public class PlayerAnimations extends EntityAnimationsBase {
         attackTimer -= frameDuration;
         attackFrame++;
         int max = 1;
-        Map<String, Map<String, List<TextureRegion>>> activeAttack =
+        Map<String, Map<String, List<SpriteFrameMetadata>>> activeAttack =
             bowAttack ? bowAttackAnimations : attackAnimations;
-        for (Map<String, List<TextureRegion>> angleMap : activeAttack.values()) {
-          for (List<TextureRegion> frames : angleMap.values()) {
+        for (Map<String, List<SpriteFrameMetadata>> angleMap : activeAttack.values()) {
+          for (List<SpriteFrameMetadata> frames : angleMap.values()) {
             if (frames.size() > max) {
               max = frames.size();
             }
@@ -284,7 +285,7 @@ public class PlayerAnimations extends EntityAnimationsBase {
     boolean attackPoseVisible = isAttackPoseVisible();
     String effAngle = attackPoseVisible ? attackAngle : angle;
     ResolvedFrames bodyResolved = resolveFrames(bodyBase, effAngle);
-    List<TextureRegion> bodyFrames = bodyResolved.frames;
+    List<SpriteFrameMetadata> bodyFrames = bodyResolved.frames;
     if (bodyFrames.isEmpty()) {
       return pos.y;
     }
@@ -304,18 +305,18 @@ public class PlayerAnimations extends EntityAnimationsBase {
       String base = partMap.get(part);
       if (base == null || base.isEmpty()) continue;
       ResolvedFrames resolved = resolveFrames(base, effAngle);
-      List<TextureRegion> frames = resolved.frames;
+      List<SpriteFrameMetadata> frames = resolved.frames;
       if (frames.isEmpty()) continue;
       int fi =
           attackPoseVisible
               ? (resolved.attackSequence ? Math.min(attackFrame, frames.size() - 1) : 0)
               : Math.min(frameIndex, frames.size() - 1);
-      TextureRegion reg = frames.get(fi);
+      SpriteFrameMetadata frame = frames.get(fi);
       String name = resolveFrameName(resolved, effAngle, fi);
       Vector2 off =
           SpriteOffsetUtil.selectOffset(offset1.get(name), offset2.get(name), flipX, ZERO_OFFSET);
       float topLeftY = pos.y + off.y;
-      float bottomY = topLeftY + reg.getRegionHeight();
+      float bottomY = topLeftY + frame.height();
       if (bottomY > maxBottom) {
         maxBottom = bottomY;
       }
@@ -338,7 +339,7 @@ public class PlayerAnimations extends EntityAnimationsBase {
     boolean attackPoseVisible = isAttackPoseVisible();
     String angle = attackPoseVisible ? attackAngle : angleIn;
     ResolvedFrames bodyResolved = resolveFrames(bodyBase, angle);
-    List<TextureRegion> bodyFrames = bodyResolved.frames;
+    List<SpriteFrameMetadata> bodyFrames = bodyResolved.frames;
     if (bodyFrames.isEmpty()) return;
     int frameIndex =
         attackPoseVisible
@@ -358,13 +359,13 @@ public class PlayerAnimations extends EntityAnimationsBase {
       String base = partMap.get(part);
       if (base == null || base.isEmpty()) continue;
       ResolvedFrames resolved = resolveFrames(base, angle);
-      List<TextureRegion> frames = resolved.frames;
+      List<SpriteFrameMetadata> frames = resolved.frames;
       if (frames.isEmpty()) continue;
       int fi =
           attackPoseVisible
               ? (resolved.attackSequence ? Math.min(attackFrame, frames.size() - 1) : 0)
               : Math.min(frameIndex, frames.size() - 1);
-      TextureRegion reg = frames.get(fi);
+      SpriteFrameMetadata frame = frames.get(fi);
       String name = resolveFrameName(resolved, angle, fi);
       if (spriteLog != null) {
         if (spriteLog.length() > 0) spriteLog.append(", ");
@@ -374,9 +375,9 @@ public class PlayerAnimations extends EntityAnimationsBase {
           SpriteOffsetUtil.selectOffset(offset1.get(name), offset2.get(name), flipX, ZERO_OFFSET);
       float topLeftX = pos.x + off.x;
       float topLeftY = pos.y + off.y;
-      int w = reg.getRegionWidth();
-      int h = reg.getRegionHeight();
-      out.add(new DrawPart(reg, topLeftX, topLeftY, w, h, flipX));
+      int w = frame.width();
+      int h = frame.height();
+      out.add(new DrawPart(frame, topLeftX, topLeftY, w, h, flipX));
       if (!boundsInitialized) {
         bounds.set(topLeftX, topLeftY, w, h);
         boundsInitialized = true;
@@ -454,18 +455,19 @@ public class PlayerAnimations extends EntityAnimationsBase {
     outlineRegion = new TextureRegion(texture);
   }
 
-  private static void drawPart(SpriteBatch batch, DrawPart part, float offsetX, float offsetY) {
+  private void drawPart(SpriteBatch batch, DrawPart part, float offsetX, float offsetY) {
     float x = part.topLeftX + offsetX;
     float y = part.topLeftY + offsetY;
+    TextureRegion region = renderRegion(part.frame);
     if (part.flipX) {
-      batch.draw(part.region, x + part.width, y + part.height, -part.width, -part.height);
+      batch.draw(region, x + part.width, y + part.height, -part.width, -part.height);
     } else {
-      batch.draw(part.region, x, y + part.height, part.width, -part.height);
+      batch.draw(region, x, y + part.height, part.width, -part.height);
     }
   }
 
   private static final class DrawPart {
-    private final TextureRegion region;
+    private final SpriteFrameMetadata frame;
     private final float topLeftX;
     private final float topLeftY;
     private final int width;
@@ -473,13 +475,13 @@ public class PlayerAnimations extends EntityAnimationsBase {
     private final boolean flipX;
 
     private DrawPart(
-        TextureRegion region,
+        SpriteFrameMetadata frame,
         float topLeftX,
         float topLeftY,
         int width,
         int height,
         boolean flipX) {
-      this.region = region;
+      this.frame = frame;
       this.topLeftX = topLeftX;
       this.topLeftY = topLeftY;
       this.width = width;
@@ -537,7 +539,7 @@ public class PlayerAnimations extends EntityAnimationsBase {
     SpriteLoader loader = SpriteLoader.getInstance();
     for (String base : partMap.values()) {
       if (base == null || base.isEmpty()) continue;
-      Map<String, List<TextureRegion>> byAngle = new HashMap<>();
+      Map<String, List<SpriteFrameMetadata>> byAngle = new HashMap<>();
       loadAnimationsForBase(base, "", byAngle, true, loader);
       animations.put(base, byAngle);
     }
@@ -547,7 +549,7 @@ public class PlayerAnimations extends EntityAnimationsBase {
     SpriteLoader loader = SpriteLoader.getInstance();
     for (String base : partMap.values()) {
       if (base == null || base.isEmpty()) continue;
-      Map<String, List<TextureRegion>> byAngle = new HashMap<>();
+      Map<String, List<SpriteFrameMetadata>> byAngle = new HashMap<>();
       loadAnimationsForBase(base, "A", byAngle, false, loader);
       attackAnimations.put(base, byAngle);
     }
@@ -557,7 +559,7 @@ public class PlayerAnimations extends EntityAnimationsBase {
     SpriteLoader loader = SpriteLoader.getInstance();
     for (String base : partMap.values()) {
       if (base == null || base.isEmpty()) continue;
-      Map<String, List<TextureRegion>> byAngle = new HashMap<>();
+      Map<String, List<SpriteFrameMetadata>> byAngle = new HashMap<>();
       loadAnimationsForBase(base, "B", byAngle, false, loader);
       bowAttackAnimations.put(base, byAngle);
     }
@@ -566,22 +568,22 @@ public class PlayerAnimations extends EntityAnimationsBase {
   private void loadAnimationsForBase(
       String base,
       String prefix,
-      Map<String, List<TextureRegion>> target,
+      Map<String, List<SpriteFrameMetadata>> target,
       boolean allowSingleFrame,
       SpriteLoader loader)
       throws GameException {
     for (String ang : ANGLES) {
-      List<TextureRegion> frames = new ArrayList<>();
+      List<SpriteFrameMetadata> frames = new ArrayList<>();
       String baseWithAngle = base + prefix + ang;
       for (char c = FRAME_START; c <= 'z'; c++) {
         String name = baseWithAngle + "-" + c;
-        TextureRegion r = loader.getRegionFromSpriteName(name);
+        SpriteFrameMetadata r = loader.getFrameMetadata(name);
         if (r == null) continue;
         frames.add(r);
         cacheOffsets(name, loader);
       }
       if (frames.isEmpty() && allowSingleFrame) {
-        TextureRegion r = loader.getRegionFromSpriteName(baseWithAngle);
+        SpriteFrameMetadata r = loader.getFrameMetadata(baseWithAngle);
         if (r != null) {
           frames.add(r);
           cacheOffsets(baseWithAngle, loader);
@@ -598,7 +600,7 @@ public class PlayerAnimations extends EntityAnimationsBase {
     if (!bowAttack) {
       return new ResolvedFrames(base, "A", getAttackFrames(base, angle), true);
     }
-    List<TextureRegion> frames = getBowAttackFrames(base, angle);
+    List<SpriteFrameMetadata> frames = getBowAttackFrames(base, angle);
     if (!frames.isEmpty()) {
       return new ResolvedFrames(base, "B", frames, true);
     }
@@ -622,11 +624,11 @@ public class PlayerAnimations extends EntityAnimationsBase {
   private static final class ResolvedFrames {
     private final String base;
     private final String prefix;
-    private final List<TextureRegion> frames;
+    private final List<SpriteFrameMetadata> frames;
     private final boolean attackSequence;
 
     private ResolvedFrames(
-        String base, String prefix, List<TextureRegion> frames, boolean attackSequence) {
+        String base, String prefix, List<SpriteFrameMetadata> frames, boolean attackSequence) {
       this.base = base;
       this.prefix = prefix;
       this.frames = frames == null ? Collections.emptyList() : frames;
@@ -634,20 +636,20 @@ public class PlayerAnimations extends EntityAnimationsBase {
     }
   }
 
-  private List<TextureRegion> getFrames(String base, String angle) {
-    Map<String, List<TextureRegion>> byAngle = animations.get(base);
+  private List<SpriteFrameMetadata> getFrames(String base, String angle) {
+    Map<String, List<SpriteFrameMetadata>> byAngle = animations.get(base);
     if (byAngle == null) return Collections.emptyList();
     return byAngle.getOrDefault(angle, Collections.emptyList());
   }
 
-  private List<TextureRegion> getAttackFrames(String base, String angle) {
-    Map<String, List<TextureRegion>> byAngle = attackAnimations.get(base);
+  private List<SpriteFrameMetadata> getAttackFrames(String base, String angle) {
+    Map<String, List<SpriteFrameMetadata>> byAngle = attackAnimations.get(base);
     if (byAngle == null) return Collections.emptyList();
     return byAngle.getOrDefault(angle, Collections.emptyList());
   }
 
-  private List<TextureRegion> getBowAttackFrames(String base, String angle) {
-    Map<String, List<TextureRegion>> byAngle = bowAttackAnimations.get(base);
+  private List<SpriteFrameMetadata> getBowAttackFrames(String base, String angle) {
+    Map<String, List<SpriteFrameMetadata>> byAngle = bowAttackAnimations.get(base);
     if (byAngle == null) return Collections.emptyList();
     return byAngle.getOrDefault(angle, Collections.emptyList());
   }

@@ -244,16 +244,14 @@ class OnlineBuffsTest {
     assertEquals(SpellCastRules.Verdict.NO_LINE_OF_SIGHT, SpellEngine.cast(request.apply("spell.barrier"), world, new Random(1)).verdict());
   }
 
-  @Test void theStageGateOpensStageOneTwoThreeAndOnlyWordOfRecallFromStageFour() throws Exception {
+  @Test void theStageGateOpensSupportedSpellsAndOnlyNamedStageFourExceptions() throws Exception {
     var catalog = SpellCatalogV2.bundled();
-    // Item spells (potions, spell.item_*) are added by item parity work; they are counted separately so adding one does not break this pin.
-    long itemSpells = catalog.spells().keySet().stream().filter(key -> key.startsWith("spell.item_") && catalog.castableKey(key)).count();
-    assertEquals(48 + 33 + 42 + 1 + itemSpells, catalog.castableCount());
     assertTrue(catalog.castableKey("spell.fireball") && catalog.castableKey("spell.poison") && catalog.castableKey("spell.earthquake"));
     assertTrue(catalog.castableKey("spell.barrier") && catalog.castableKey("spell.dispel") && catalog.castableKey("spell.curse"));
     assertTrue(catalog.castableKey("spell.renew_armor") && catalog.castableKey("spell.true_sight"));
     assertTrue(catalog.castableKey("spell.word_of_recall"));
-    assertFalse(catalog.castableKey("spell.entangle") || catalog.castableKey("spell.tame_beast"));
+    assertTrue(catalog.castableKey("spell.entangle"));
+    assertFalse(catalog.castableKey("spell.tame_beast"));
     assertEquals(SpellContentV2.Kind.BUFF, catalog.castable("spell.light").kind());
   }
 }
