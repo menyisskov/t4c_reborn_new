@@ -4132,7 +4132,22 @@ public class MainGameScreen implements Screen {
     }
   }
 
+  /** True while the walking arrow is the shown cursor, so it is put back to the normal one when the drag ends. */
+  private boolean walkCursorShown;
+
   private void updateAttackCursor() {
+    int walkOctant = mouseMovementHandler == null ? -1 : mouseMovementHandler.steeringOctant();
+    if (walkOctant >= 0 && game != null && game.cursorManager != null) {
+      game.cursorManager.applyWalkCursor(game, walkOctant);
+      clearCursorState();
+      walkCursorShown = true;
+      return;
+    }
+    if (walkCursorShown) {
+      walkCursorShown = false;
+      if (game != null && game.cursorManager != null) game.cursorManager.applyDefaultCursor(game);
+      clearCursorState();
+    }
     int screenX = Gdx.input.getX();
     int screenY = Gdx.input.getY();
     if (GuiManager.isPointerOver(screenX, screenY)) {
