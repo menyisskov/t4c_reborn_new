@@ -263,12 +263,36 @@ public final class BeltiganWhitesword extends ScriptedNpc {
           return true;
         }
 
+        if (k.contains("PLEDGE")) {
+
+          // T4C-0408: the only way to become a Lightbringer of Artherk (original dialogue: "I pledge to serve
+          // Artherk"). Nothing granted the flag before, so every Lightbringer-only step of the Good Seraph
+          // path (Soul, Heart and Will of Artherk, the staff of hope, ...) was shut to everyone.
+          if (c.flag("__FLAG_FOLLOWER_OF_OGRIMAR") == 1) c.sayKey("npc.beltigan.pledge.dark");
+          else if (c.flag("__FLAG_LIGHTBRINGER_OF_ARTHERK") == 1) c.sayKey("npc.beltigan.pledge.already");
+          else if (c.flag("__QUEST_FIXED_ALIGNMENT") < 1) c.sayKey("npc.beltigan.pledge.champion");
+          else {
+            c.sayKey("npc.beltigan.pledge.ask");
+            c.askYesNo("beltigan_pledge");
+          }
+          return true;
+        }
+
         return false;
       }
 
       @Override
       public boolean onYesNo(
           com.perso.T4C.npc.behavior.NpcBehaviorContext c, String subject, boolean yes) {
+        if ("beltigan_pledge".equals(subject)) {
+          if (yes && c.flag("__FLAG_FOLLOWER_OF_OGRIMAR") != 1 && c.flag("__QUEST_FIXED_ALIGNMENT") >= 1) {
+            c.flag("__FLAG_LIGHTBRINGER_OF_ARTHERK", 1);
+            c.sayKey("npc.beltigan.pledge.done.1");
+            c.sayKey("npc.beltigan.pledge.done.2");
+            c.sayKey("npc.beltigan.pledge.done.3");
+          } else c.sayKey("npc.beltigan.pledge.no");
+          return true;
+        }
         if (!"beltigan_rings".equals(subject)) return false;
         if (yes && c.karma() >= 100 && c.itemCount("ring_of_the_lion") >= 2) {
           c.takeItem("ring_of_the_lion");

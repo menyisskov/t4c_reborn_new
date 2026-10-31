@@ -271,12 +271,33 @@ public final class Mordenthal extends ScriptedNpc {
           return true;
         }
 
+        if (k.contains("ALLEGIANCE") || k.contains("SWEAR")) {
+
+          // T4C-0408: the only way to become a follower of Ogrimar (original dialogue: "I swear allegiance to
+          // Ogrimar"). Nothing granted the flag before, so every follower-only step of the Evil Seraph path
+          // (Khan's skull, Meltar's crown, Zhakar's spellbooks, Weethgwotha's ritual, ...) was shut to everyone.
+          if (c.flag("__FLAG_FOLLOWER_OF_OGRIMAR") == 1) c.sayKey("npc.mordenthal.oath.already");
+          else if (c.flag("__FLAG_LIGHTBRINGER_OF_ARTHERK") == 1) c.sayKey("npc.mordenthal.oath.light");
+          else {
+            c.sayKey("npc.mordenthal.oath.ask");
+            c.askYesNo("mordenthal_oath");
+          }
+          return true;
+        }
+
         return StaticDialogueBehavior.INSTANCE.onKeyword(c, text);
       }
 
       @Override
       public boolean onYesNo(
           com.perso.T4C.npc.behavior.NpcBehaviorContext c, String s, boolean yes) {
+        if ("mordenthal_oath".equals(s)) {
+          if (yes && c.flag("__FLAG_LIGHTBRINGER_OF_ARTHERK") != 1) {
+            c.flag("__FLAG_FOLLOWER_OF_OGRIMAR", 1);
+            c.sayKey("npc.mordenthal.oath.done");
+          } else c.sayKey("npc.mordenthal.oath.no");
+          return true;
+        }
 
         if (!"mordenthal_rings".equals(s)) return false;
 

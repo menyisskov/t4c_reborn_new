@@ -1996,3 +1996,7 @@ deliberate NPC-plus-MONSTER dual spawn) and found the real gaps elsewhere. A per
 have a writer (a monster death, a dialogue step); scan for read-without-write after normalising the `__`, `GLOBAL_` and `FLAG_`
 prefixes. Never invent spawn coordinates for an unplaced NPC or monster: leave it listed in
 `docs/content-ideas/2026-10-content-audit-recheck.md` until a canonical source gives one.
+
+A title or alignment flag that many NPCs read (Lightbringer of Artherk, Follower of Ogrimar, Champion of Light) needs exactly one
+granting dialogue; check the original NPC DLLs in `assets/origin` (strings dump around the NPC's name) for the grant before
+assuming the gate is built. Followers and Lightbringers are mutually exclusive.

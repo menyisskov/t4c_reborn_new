@@ -258,6 +258,9 @@ public final class Zhakar extends ScriptedNpc {
 
             c.flag("__FLAG_ZHAKAR_GAVE_SPELLBOOKS", 1);
 
+            // T4C-0408: Zion Thunderheart's hand-in reads this count (two spellbooks); nothing set it.
+            c.flag("__FLAG_USER_HAS_ARCANE_SPELLBOOK", 2);
+
             c.sayKey("npc.zhakar.spellbook.give");
           }
 

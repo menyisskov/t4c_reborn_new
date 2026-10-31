@@ -1,4 +1,4 @@
-# Original-game content audit: recheck against current code (T4C-0407)
+# Original-game content audit: recheck against current code (T4C-0407, T4C-0408)
 
 Scope: single-player content only (monsters, NPC scripts, items, quest flags, spawns). The earlier notes
 ([quest audit](2026-09-original-quest-audit.md), [Bible audit progress](2026-10-original-bible-audit-progress.md)) were treated
@@ -34,6 +34,21 @@ portal NPC and checks the player lands in the centre room; the portals stay shut
 not open the portal for another, and 21 guard kills across the three guard types satisfy Olin Haad's gate while the counter
 stays capped. The npc, monster, quest and spawn test packages pass.
 
+### Second pass (T4C-0408): the Seraph endgame was shut to everyone
+
+| Path | Evidence | Repair |
+| --- | --- | --- |
+| **Lightbringer of Artherk** (Good Seraph path). `__FLAG_LIGHTBRINGER_OF_ARTHERK` is read by Dionysus, Liurn Clar, Mithanna and Nissus; the Soul, Heart and Will of Artherk and the staff of hope are Lightbringer-only. Nothing ever set it. | The original NPC DLLs (`assets/origin/NPC Stoneheim.dll`) show the grant: Sir Beltigan, "I pledge to serve Artherk", then a yes/no, then "You are now a Lightbringer!". Beltigan's script only had the Ring of the Lion trade and the Key of Artherk. | `BeltiganWhitesword` now handles the pledge: it needs the Champion of Light title (the oath to King Theodore via Chamberlain Thomar), refuses a follower of Ogrimar, asks, and grants the flag on "yes". The original lines were added to `lang.json`. |
+| **Follower of Ogrimar** (Evil Seraph path). `__FLAG_FOLLOWER_OF_OGRIMAR` is read by about twelve NPCs (Khan Wulgworth, Meltar's crown, Zhakar's spellbooks, Weethgwotha's ritual, Oogla, the Chieftains, Theoran, Nissus). Nothing set it. | Same DLL: Mordenthal, "I swear allegiance to Ogrimar", yes/no, "Yes, it will do." | `Mordenthal` now handles the oath and refuses a Lightbringer. |
+| **Zion Thunderheart's hand-in** (Skull of Evil + Crown of Corruption + two arcane spellbooks reveals where the Skull of Ogrimar is hidden). He reads `USER_HAS_CROWN_OF_CORRUPTION` and `USER_HAS_ARCANE_SPELLBOOK >= 2`; Oogla sets the skull flag when he gives the skull, but Meltar and Zhakar never set theirs. | Flag read in `ZionThunderheart`, written nowhere. | `MeltarWinterstorm` sets the crown flag when he gives the crown; `Zhakar` sets the spellbook count (2) when he gives the two spellbooks, exactly as Oogla already does for the skull. |
+
+End-to-end proof: `SeraphPledgeTest` (8 tests) runs the real NPC scripts: a champion's pledge makes a Lightbringer only after
+confirming, declining or a missing Champion title changes nothing, an Ogrimar follower cannot become a Lightbringer and the
+reverse, Zhakar gives no spellbooks before the oath and two after it, and the whole evil chain (oath, spellbooks, crown, skull)
+ends with Zion revealing the hiding place and taking the three item types. The npc, i18n, quest and item test packages pass.
+The earlier claim in the September audit that the Good and Evil Seraph questlines were "already real" was true of the NPC
+dialogue but not of the gate: no player could pass it.
+
 ### Lead disproved (do not re-investigate)
 
 - **"55 dialogue NPCs sit at (0,0,0)."** Of the 53 origin spawns now in code, 25 NPCs already have a second spawn with real
@@ -58,11 +73,21 @@ stays capped. The npc, monster, quest and spawn test packages pass.
   divergence rather than a missing line), `QUEST_KALASTOR_MISSION` (Liurn Clar, Renegade Orc Leader), `QUEST_KRAANIAN_EYES` (Bane
   Blackblood), `QUEST_URANOS` (Marsac Cred), `QUEST_BRIGAND_GOT_THE_REPORT` (Lord Sunrock), `QUEST_USER_IS_A_TRAITOR`,
   `RATS_KILLED` (Sabrina's counter), `GUARDIANS_KILLED` (Celestina), `WHO_HAS_THE_STONE_FLAG` (Mhorgwloth), `TITLE_MORDRICK`,
-  `LIGHTBRINGER_OF_ARTHERK`, `FOLLOWER_OF_OGRIMAR`, `FACTION_WITH_THIEVES`, `EVIL_QUEST_COMPLETED_ON_RD`, `ADDON_GLURIURL_PRESENT`,
-  `ADDON_NEXUS_STONEHEIM_ACTIVATED`, `USER_HAS_ARCANE_SPELLBOOK`, `USER_HAS_CROWN_OF_CORRUPTION`, `USER_HAS_ROBBED_THE_SAFE_BEFORE`,
+  `FACTION_WITH_THIEVES`, `EVIL_QUEST_COMPLETED_ON_RD`, `ADDON_GLURIURL_PRESENT`,
+  `ADDON_NEXUS_STONEHEIM_ACTIVATED`, `USER_HAS_ROBBED_THE_SAFE_BEFORE`,
   and the Colosseum flags. The Bible pages fetched this pass (Add-on, Raven's Dust) do not mention Uranos, Sabrina, Sunrock's
   report or the level-25 mission, so there was no reference to repair against. Several look like flavour reads rather than gates;
   each needs its own reading of the original script before changing it.
+- **The Shadow Guild missions are a whole unported system, not a missing line.** Kalastor (apprentice thief, spawned at 2882,1128),
+  Shadowstalker and Edgar hand out "missions" for members of the guild ("you'll have to earn it by doing missions for us"). The
+  flags `QUEST_KALASTOR_MISSION` (Liurn Clar, Renegade Orc Leader's gloomblade hand-in), `FACTION_WITH_THIEVES` (Meltar),
+  `QUEST_BRIGAND_GOT_THE_REPORT` (Lord Sunrock), `QUEST_USER_IS_A_TRAITOR`, `USER_HAS_ROBBED_THE_SAFE_BEFORE` and the bank-robbery
+  record are all parts of it, and `Kalastor.java` has no behaviour beyond static dialogue. It needs its own design pass from the
+  original scripts rather than one-line flag writers.
+- **Zhakar's scroll route to the Arcane Spellbook** (kill the "Sweeper" rodents Zhakar's tower spawns, bring ten arcane scrolls and
+  35,000 gold, "start over" resets it) is not ported: the code gives followers of Ogrimar two spellbooks for free instead, and no
+  Sweeper is ever spawned. This is why the Sweeper class is unplaced. Followers are served by the repair above; non-followers have
+  no spellbook route.
 - **Monster definitions with no placement** (120 by the crude name match; most are aliases of placed monsters). Real candidates to
   check against the Bible's monster chart: the seven Psykowasp monsters, Centaur Archer, Centaur Shaman, Cobra, Dungeon Bat,
   Large Rat, Hoofcrusher, Psi Monk, Puppet Master, Robin Hood, Acid Slime, Battle Bard, Battle Priest, Faith Warrior and Heretic

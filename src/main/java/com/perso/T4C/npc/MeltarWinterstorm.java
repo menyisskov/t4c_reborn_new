@@ -178,6 +178,9 @@ public final class MeltarWinterstorm extends ScriptedNpc {
 
             c.flag("__FLAG_MELTAR_GAVE_CROWN", 1);
 
+            // T4C-0408: Zion Thunderheart's hand-in reads this, as it reads Oogla's skull flag; nothing set it.
+            c.flag("__FLAG_USER_HAS_CROWN_OF_CORRUPTION", 1);
+
             c.sayKey("npc.meltar.crown.give");
           }
 
