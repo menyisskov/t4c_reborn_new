@@ -27,6 +27,7 @@ public class GameCursorManager {
   private final java.util.List<Cursor> talkCursors = new java.util.ArrayList<>();
   private final java.util.List<Cursor> spellCursors = new java.util.ArrayList<>();
   private final java.util.List<Cursor> bowCursors = new java.util.ArrayList<>();
+  private final Cursor[] walkCursors = new Cursor[8];
   private int talkIndex = 0;
   private float talkTimer = 0f;
   private int spellIndex = 0;
@@ -152,6 +153,58 @@ public class GameCursorManager {
     }
   }
 
+  /** Shows the walking arrow for steering octant 0-7 (0 = east, counted toward screen-down); the map is drawn at 2:1, so diagonals point along the tile diamond. */
+  public void applyWalkCursor(MyGame game, int octant) {
+    if (game == null || octant < 0 || octant > 7) return;
+    try {
+      if (walkCursors[octant] == null) walkCursors[octant] = buildWalkCursor(octant);
+      Gdx.graphics.setCursor(walkCursors[octant]);
+      mode = CursorMode.DEFAULT;
+    } catch (Throwable t) {
+      log.warn("Failed to show the walking cursor", t);
+    }
+  }
+
+  private static Cursor buildWalkCursor(int octant) {
+    final int size = 32, mid = size / 2;
+    double angle = octant * Math.PI / 4;
+    float ux = (float) Math.cos(angle), uy = (float) Math.sin(angle) * 0.5f;
+    float length = (float) Math.sqrt(ux * ux + uy * uy);
+    ux /= length;
+    uy /= length;
+    float px = -uy, py = ux;
+    Pixmap pixmap = new Pixmap(size, size, Pixmap.Format.RGBA8888);
+    pixmap.setColor(0, 0, 0, 0);
+    pixmap.fill();
+    float tipX = mid + ux * 14, tipY = mid + uy * 14;
+    float tailX = mid - ux * 11, tailY = mid - uy * 11;
+    float baseX = tipX - ux * 10, baseY = tipY - uy * 10;
+    for (int pass = 0; pass < 2; pass++) {
+      float grow = pass == 0 ? 2f : 0f;
+      pixmap.setColor(pass == 0 ? 0f : 1f, pass == 0 ? 0f : 0.95f, pass == 0 ? 0f : 0.55f, 1f);
+      int thickness = pass == 0 ? 2 : 1;
+      for (int t = -thickness; t <= thickness; t++) {
+        pixmap.drawLine(
+            Math.round(tailX + px * t), Math.round(tailY + py * t),
+            Math.round(baseX + px * t), Math.round(baseY + py * t));
+      }
+      pixmap.fillTriangle(
+          Math.round(tipX + ux * grow), Math.round(tipY + uy * grow),
+          Math.round(baseX + px * (7 + grow)), Math.round(baseY + py * (7 + grow)),
+          Math.round(baseX - px * (7 + grow)), Math.round(baseY - py * (7 + grow)));
+    }
+    Cursor cursor = Gdx.graphics.newCursor(pixmap, mid, mid);
+    pixmap.dispose();
+    return cursor;
+  }
+
+  private void clearWalkCursors() {
+    for (int i = 0; i < walkCursors.length; i++) {
+      disposeCursor(walkCursors[i]);
+      walkCursors[i] = null;
+    }
+  }
+
   public void ensureDefaultCursor(MyGame game) {
     if (defaultCursor != null) {
       return;
@@ -168,6 +221,7 @@ public class GameCursorManager {
     clearTalkCursors();
     clearSpellCursors();
     clearBowCursors();
+    clearWalkCursors();
     disposeCursor(defaultCursor);
     defaultCursor = null;
     mode = CursorMode.DEFAULT;
@@ -182,6 +236,7 @@ public class GameCursorManager {
     clearTalkCursors();
     clearSpellCursors();
     clearBowCursors();
+    clearWalkCursors();
     attackCursor = null;
     defaultCursor = null;
     mode = CursorMode.DEFAULT;

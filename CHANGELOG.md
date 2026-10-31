@@ -1,3 +1,8 @@
+## 2026-10-31 — A walking arrow follows your drag (T4C-0404)
+
+### Added
+- While you hold the left mouse button and drag to walk, the mouse pointer turns into an arrow pointing the way you are walking, and goes back to the normal pointer when you let go.
+
 ## 2026-10-31 — You can walk online with the mouse (T4C-0403)
 
 ### Fixed

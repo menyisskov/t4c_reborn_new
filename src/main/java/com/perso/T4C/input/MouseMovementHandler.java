@@ -76,6 +76,15 @@ public final class MouseMovementHandler extends InputAdapter {
     return dragging;
   }
 
+  /**
+   * The steering octant (0-7, 45 degrees each, 0 = east, counted toward screen-down) while the character is being steered
+   * by the mouse, otherwise -1. Drives the walking cursor.
+   */
+  public int steeringOctant() {
+    if (!dragging || pointer < 0 || lastOctant == Integer.MIN_VALUE) return -1;
+    return Math.floorMod(lastOctant, 8);
+  }
+
   public Vector2 direction() {
     movement.setZero();
     if (pointer < 0) return movement;
