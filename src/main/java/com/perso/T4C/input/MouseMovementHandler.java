@@ -21,6 +21,9 @@ public final class MouseMovementHandler extends InputAdapter {
   private final Vector3 target = new Vector3();
   private int pointer = -1, startX, startY;
   private boolean dragging;
+  /** Last steering octant (0-7, 45 degrees each); the cursor must clearly cross into the next one to turn, so a hand wobbling on a boundary does not flicker the walk direction. */
+  private int lastOctant = Integer.MIN_VALUE;
+  private static final float TURN_MARGIN = MathUtils.PI / 32f;
 
   public MouseMovementHandler(
       OrthographicCamera camera, Player player, BooleanSupplier blocked, Runnable onBegin) {
@@ -63,6 +66,7 @@ public final class MouseMovementHandler extends InputAdapter {
   }
 
   public void cancel() {
+    lastOctant = Integer.MIN_VALUE;
     pointer = -1;
     dragging = false;
     movement.setZero();
@@ -82,8 +86,19 @@ public final class MouseMovementHandler extends InputAdapter {
     if (!dragging) return movement;
     target.set(Gdx.input.getX(), Gdx.input.getY(), 0);
     camera.unproject(target);
-    return projectDirection(
-        target.x - player.getPositionVector().x, target.y - player.getPositionVector().y, movement);
+    float dx = target.x - player.getPositionVector().x, dy = target.y - player.getPositionVector().y;
+    float gridX = dx / GameConstants.GRID_W, gridY = dy / GameConstants.GRID_H;
+    if (gridX * gridX + gridY * gridY < .35f * .35f) return movement;
+    float step = MathUtils.PI / 4;
+    float angle = MathUtils.atan2(gridY, gridX);
+    int octant = Math.round(angle / step);
+    if (lastOctant != Integer.MIN_VALUE && octant != lastOctant) {
+      float away = Math.abs(MathUtils.atan2(MathUtils.sin(angle - lastOctant * step), MathUtils.cos(angle - lastOctant * step)));
+      if (away < step / 2 + TURN_MARGIN) octant = lastOctant;
+    }
+    lastOctant = octant;
+    return GameInputHandler.projectGridDirection(
+        Math.round(MathUtils.cos(octant * step)), Math.round(MathUtils.sin(octant * step)), movement);
   }
 
   static Vector2 projectDirection(float dx, float dy, Vector2 result) {

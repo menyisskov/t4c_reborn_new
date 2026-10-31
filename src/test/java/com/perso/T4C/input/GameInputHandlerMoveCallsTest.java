@@ -83,53 +83,19 @@ class GameInputHandlerMoveCallsTest {
   }
 
   @Test
-  void keyboardDirectionsProjectToTheTileAspectAndArriveEveryFrame() {
+  void keyboardKeysNeverWalkTheCharacterButMovementIsStillCalledEveryFrame() {
     GameInputHandler handler = handler();
-    held.add(Input.Keys.D);
-    frame(handler, 0.016f);
-    held.clear();
-    held.add(Input.Keys.S);
-    frame(handler, 0.016f);
-    held.add(Input.Keys.A); // down + left
-    frame(handler, 0.02f);
-    held.clear();
-    held.add(Input.Keys.UP);
-    frame(handler, 0.016f);
-    held.clear();
-    frame(handler, 0.016f);
-    assertEquals(
-        List.of(
-            new Call(1f, 0f, 0.016f),
-            new Call(0f, ASPECT, 0.016f),
-            new Call(-1f, ASPECT, 0.02f),
-            new Call(0f, -ASPECT, 0.016f),
-            new Call(0f, 0f, 0.016f)),
-        calls);
-  }
-
-  @Test
-  void everyAliasKeyMapsToItsDirectionAndOpposingKeysCancel() {
-    GameInputHandler handler = handler();
-    int[][] keys = {
-      {Input.Keys.Q, -1, 0}, {Input.Keys.LEFT, -1, 0}, {Input.Keys.RIGHT, 1, 0},
-      {Input.Keys.Z, 0, -1}, {Input.Keys.W, 0, -1}, {Input.Keys.DOWN, 0, 1}
-    };
-    for (int[] key : keys) {
+    for (int key :
+        new int[] {
+          Input.Keys.W, Input.Keys.A, Input.Keys.S, Input.Keys.D, Input.Keys.Q, Input.Keys.Z,
+          Input.Keys.UP, Input.Keys.DOWN, Input.Keys.LEFT, Input.Keys.RIGHT
+        }) {
       held.clear();
-      held.add(key[0]);
+      held.add(key);
       frame(handler, 0.016f);
     }
-    held.clear();
-    held.add(Input.Keys.A);
-    held.add(Input.Keys.D);
-    held.add(Input.Keys.W);
-    held.add(Input.Keys.S);
-    frame(handler, 0.016f);
-    assertEquals(7, calls.size());
-    for (int i = 0; i < keys.length; i++) {
-      assertEquals(new Call(keys[i][1], keys[i][2] * ASPECT, 0.016f), calls.get(i), "key " + i);
-    }
-    assertEquals(new Call(0f, 0f, 0.016f), calls.get(6));
+    assertEquals(10, calls.size());
+    assertTrue(calls.stream().allMatch(c -> c.dx() == 0f && c.dy() == 0f));
   }
 
   @Test
@@ -171,7 +137,7 @@ class GameInputHandlerMoveCallsTest {
   }
 
   @Test
-  void keyboardWinsOverTheMouseAndAnOpenWindowBlocksTheMouse() {
+  void theMouseWalksEvenWithAKeyHeldAndAnOpenWindowBlocksTheMouse() {
     GameInputHandler handler = handler();
     handler.setMouseMovementSupplier(() -> new Vector2(-1f, 0f));
     held.add(Input.Keys.D);
@@ -182,7 +148,7 @@ class GameInputHandlerMoveCallsTest {
     GuiManager.close();
     frame(handler, 0.016f);
     assertEquals(
-        List.of(new Call(1f, 0f, 0.016f), new Call(0, 0, 0.016f), new Call(-1f, 0f, 0.016f)),
+        List.of(new Call(-1f, 0f, 0.016f), new Call(0, 0, 0.016f), new Call(-1f, 0f, 0.016f)),
         calls);
   }
 

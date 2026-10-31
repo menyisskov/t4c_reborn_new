@@ -55,33 +55,17 @@ public class GameInputHandler {
     this.textInputActiveSupplier = textInputActiveSupplier;
   }
 
+  /**
+   * Walking is mouse only, as in the original game: hold the left button and drag toward where the character should go
+   * (see {@link MouseMovementHandler}). The keyboard does not move the character.
+   */
   public void handleInput(float delta, Player player) {
-    int gridDx = 0, gridDy = 0;
-    // Ctrl+W / Ctrl+Q etc. are window shortcuts; they must not also walk the character.
-    if (!isTextInputActive() && !isCtrlDown()) {
-      boolean left =
-          Gdx.input.isKeyPressed(Input.Keys.A)
-              || Gdx.input.isKeyPressed(Input.Keys.Q)
-              || Gdx.input.isKeyPressed(Input.Keys.LEFT);
-      boolean right =
-          Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT);
-      boolean up =
-          Gdx.input.isKeyPressed(Input.Keys.W)
-              || Gdx.input.isKeyPressed(Input.Keys.Z)
-              || Gdx.input.isKeyPressed(Input.Keys.UP);
-      boolean down =
-          Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN);
-      gridDx = (right ? 1 : 0) - (left ? 1 : 0);
-      gridDy = (down ? 1 : 0) - (up ? 1 : 0);
-    }
     if (!isTextInputActive()) {
       handleGlobalKeys();
     }
-    projectGridDirection(gridDx, gridDy, movementInput);
+    movementInput.setZero();
     Vector2 mouseMovement = mouseMovementSupplier == null ? null : mouseMovementSupplier.get();
-    if (gridDx == 0
-        && gridDy == 0
-        && !isTextInputActive()
+    if (!isTextInputActive()
         && !isCtrlDown()
         && !GuiManager.isOpen()
         && mouseMovement != null) movementInput.set(mouseMovement);
