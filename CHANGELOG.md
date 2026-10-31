@@ -1,3 +1,8 @@
+## 2026-10-31 — Selected spells use monster clicks online (T4C-0405)
+
+### Fixed
+- Selecting a targeted spell and clicking a monster now attempts to cast that spell online instead of starting a weapon attack.
+
 ## 2026-10-31 — The Raven's Dust demon crypt can be finished (T4C-0407)
 
 ### Fixed

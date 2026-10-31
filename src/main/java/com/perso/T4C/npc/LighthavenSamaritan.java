@@ -88,6 +88,20 @@ public final class LighthavenSamaritan extends BaseNPC {
 
   private boolean awaitingQuestionAnswer;
 
+  private record Conversation(boolean awaitingQuestionAnswer, boolean closeAfterDialog) {}
+
+  @Override
+  protected Object captureAuthoredConversationState() {
+    return new Conversation(awaitingQuestionAnswer, closeAfterDialog);
+  }
+
+  @Override
+  protected void installAuthoredConversationState(Object state) {
+    Conversation conversation = (Conversation) state;
+    awaitingQuestionAnswer = conversation.awaitingQuestionAnswer();
+    closeAfterDialog = conversation.closeAfterDialog();
+  }
+
   public LighthavenSamaritan(NpcContext context) throws GameException {
 
     super(ID, SPRITE_BASE);

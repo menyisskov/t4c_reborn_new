@@ -3,8 +3,8 @@
 ## Active refactor — start here (2026-10-31, T4C-0405)
 
 The owner requests exact whole-game single-player reuse and rendered end-to-end verification.
-Latest instruction: push tested work directly to main, no PR waits; Claude is not currently
-working, and must be able to take over remaining work from this document.
+Latest instruction: push tested work directly to main, no PR waits. Claude is separately
+auditing content and must be able to take over remaining runtime work from this document.
 
 - Source checkout: `C:/Users/menyi/.codex/worktrees/shared-game-runtime-0405`, branch `codex/shared-game-runtime-0405`.
 - Latest tested source: `8d5a661e`, original-source runtime, real frame metadata and NPC presentation boundaries; full non-DB reactor and rendered offline goldens pass (exact evidence below). This does not enable original server gameplay yet.
@@ -929,3 +929,41 @@ adapters, server use of original NPC/monster/spell/player execution, original on
 world/content paths, recovery/security and paired offline/online two-rendered-client acceptance.
 Real sprite metadata must be loaded before headless actors; server asset packaging/bootstrap
 is still a follow-up. No full-game or milestone completion is claimed.
+2026-10-31 T4C-0405 participant conversation isolation slice (uncommitted at this entry): `NpcConversationSessions` binds a stable participant ID, the same concrete Player reference and its presentation to the original physical NPC for each click/talk/page/dialogue-click/range/end operation. BaseNPC, ScriptedNpc and exact authored LighthavenSamaritan/CampaignWitnessNpc/ElderOphira transient conversation fields are captured/installed explicitly; physical position/patrol/HP/hostility/scriptFlags/RNG/lifecycle and durable Player quest flags remain on their original owners. The first active participant holds patrol; another participant ending does not resume it; the last ending restores it. Tick chooses the first engaged Player and updates the one physical actor once. Direct single-player paths remain opt-in unchanged. Focused `mvn -o -q '-Dtest=NpcConversationSessionsTest,NpcPresentationTest,NpcLocomotionParityTest,ScriptedNpcKeywordTest' test` passed 10/10, zero failures/errors/skips on the applied tree; scoped diff check passed. A distinct thrown-callback restoration case was added; the inventory owner's combined current-tree rerun passed NpcConversationSessionsTest 4/4 alongside InventoryServiceTest 9/9 and MainGameScreenRemoteAutoAttackTest 6/6 (19/19 total, zero failures/errors/skips). This verifies ambient presentation restoration and a subsequent participant after an authored callback throws. Full combined package/verify after all current slices remains root-owned.
+
+This is not server-ready: existing NPCManager invokes `update`, `checkPlayerRange`, `endInteraction`, removal and attacked handling directly outside the participant binder. ScriptedNpc timed self-destruct is polled later by NPCManager, which may remove an actor outside a bound participant; provoke/despawn must invalidate sessions atomically. The three scoped authored NPCs have no separate asynchronous conversation-end callback; synchronous `NpcBehaviorContext.endConversation`, ScriptedNpc END_CONVERSATION and LighthavenSamaritan paging execute inside bound operations. A server caller must route all interaction lifecycle paths through the binder, keep stable Player identity and transaction-safe state persistence before using this for authoritative gameplay. No two-client or server parity claim follows from these unit tests.
+
+## T4C-0405 conversation/journal/spell-click checkpoint — 2026-10-31
+
+Implemented the optional original InventoryService mutation journal with tracked direct
+list/map/view/setter mutations, nested operation provenance, replay sealing and inventory
+projection rollback. Offline operation bodies remain the default. Runtime-only journal state
+is transient; existing saves use explicit PlayerStateDto mapping. Per-instance UUID/charge
+mapping, complete Player snapshots, long balances and server transaction adoption remain open.
+The participant conversation binder is implemented and characterized separately above; host
+NPCManager lifecycle/removal integration remains open.
+
+The online MonsterInputHandler now delegates selected targeted spells to the existing casting
+method. A selected unsupported remote tame spell cannot start a local-only taming outcome.
+Existing mouse steering and cursor changes were preserved. This fixes input routing; it does
+not implement all spell effects or complete online spell parity.
+
+Final tests and builds on latest main6ed944bd plus the scoped changes:
+
+- `mvn -o '-Dtest=InventoryServiceTest,MainGameScreenRemoteAutoAttackTest,NpcConversationSessionsTest' test`: first successful combined batch 19/19; a later equip/refusal journal regression brings inventory to 10 cases.
+- Alphabetically ordered same-JVM metadata-to-remote regression: metadata 3, RemoteClickHooks 8, RemotePlayerCommands 40, spell/quest freshness 4, new content Addon counters 5, InventoryService 10 = 70 passed, zero failures/errors/skips.
+- `mvn -o -q '-Dtest=MainGameScreenRemoteAutoAttackTest,NpcConversationSessionsTest' package`: 10/10 (6 spell-click, 4 conversation), current client package passed.
+- `mvn -o -q -f multiplayer/pom.xml -pl server -am '-DskipTests' package`: current server package passed. Both source spell bundles and packaged resources match exporter SHA256 beginning B233197A; the only generated difference is 143 explicit helperOnly:false values.
+- Source self-review and diff checks passed. The server distribution archive now includes root source resources required by the new runtime module; its actual committed distribution check is still pending.
+
+Preserve failures: two initial journal fixtures incorrectly assumed a one-charge potion had
+multiple charges; fixtures now select a real finite multi-charge definition. The metadata
+fixture introduced singleton catalog pollution that made later headless GroundItem tests
+attempt GL texture creation; an after-each valid-empty catalog cleanup fixes the fixture.
+The ordered 70-test run proves that failure path is gone without masking production GL use.
+The stale spell resource was regenerated from the real exporter, with no spell-rule change.
+
+Current production limitations: GroundItem and other remaining presentation-bound constructors
+still require separation before full headless game use. The optional binder/journal are not yet
+connected to authoritative server commands. Rendered online spell-click verification is next;
+whole-game/two-client acceptance remains incomplete.

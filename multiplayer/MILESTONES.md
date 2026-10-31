@@ -776,3 +776,5 @@ T4C-0405 bounded implementation evidence: original offline NPC locomotion/path e
 
 
 T4C-0405 continuation: original-source server runtime boundary, real animation metadata and NPC presentation adapter verified locally; offline rendered goldens3/3, metadata15/15, NPC/path12/12 and non-DB reactor checks pass. See ACCEPTANCE for exact commands/skips. M1-M6/full parity remain open: server original execution and integrated two-client playthrough are unfinished.
+
+T4C-0405 continuation: opt-in original NPC conversation binder isolates transient dialogue state for two participants on one physical NPC; applied-tree focused10/10 passed, then the added exception-restoration case passed in the combined current-tree NpcConversationSessionsTest4/4. Server NPCManager lifecycle and timed-removal paths, transaction persistence, and rendered two-client acceptance remain unverified. M1-M6/full parity stay open; see ACCEPTANCE and HANDOFF.

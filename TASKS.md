@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0408`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0409`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,10 +18,11 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0408 | Seraph endgame gates: Beltigan's Lightbringer pledge, Mordenthal's oath to Ogrimar, and the flags Meltar and Zhakar owe Zion Thunderheart; findings of the second audit pass | Content / audit | Done | | [2026-10-31](CHANGELOG.md) |
 | T4C-0407 | Original-game content audit recheck against current code; repair the confirmed gaps (Raven's Dust demon crypt portals, Olin Haad guard count); document findings and the still-open leads | Content / audit | Done | | [2026-10-31](CHANGELOG.md) |
 | T4C-0406 | Process rule: every agent rereads the peer register and open PRs for new messages before every action, not once per session | Process/Tooling | Done | | [2026-10-31](CHANGELOG.md) |
 
-| T4C-0405 | Whole-game shared single-player runtime refactor | Multiplayer / parity | In Progress; offline runtime foundations verified, server adoption unfinished | Runtime/presentation checkpoint 8d5a661e; runtime/domain/server checks green, rendered offline 3/3, metadata15/15 and NPC/path12/12 | [2026-10-31](CHANGELOG.md) |
+| T4C-0405 | Whole-game shared single-player runtime refactor | Multiplayer / parity | In Progress; runtime foundations, conversation binder and optional inventory journal verified; server adoption unfinished | Runtime checkpoint 8d5a661e; next conversation/journal/spell-click checkpoint locally verified, rendered online pending | [2026-10-31](CHANGELOG.md) |
 | T4C-0404 | Walking cursor: while the character is steered with the mouse the pointer becomes an arrow showing the walk direction, and returns to normal when the drag ends | Systems / feel | In Progress | | [2026-10-31](CHANGELOG.md) |
 | T4C-0403 | Fix T4C-0402: online play has its own input chain that never had mouse steering, so removing the keys left no way to walk online; add hold-and-drag walking to it | Multiplayer / feel | Done | | [2026-10-31](CHANGELOG.md) |
 | T4C-0402 | Walking is mouse only (hold the left button and drag), keyboard walking removed; steering keeps its direction near octant boundaries to stop flicker | Systems / feel | In Progress | | [2026-10-31](CHANGELOG.md) |

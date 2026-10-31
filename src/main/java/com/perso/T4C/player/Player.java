@@ -12,6 +12,8 @@ import com.perso.T4C.helper.SanctuaryCombatRules;
 import com.perso.T4C.helper.XpCurve;
 import com.perso.T4C.i18n.I18n;
 import com.perso.T4C.item.EquipmentBonusRules;
+import com.perso.T4C.item.InventoryMutationJournal;
+import com.perso.T4C.item.JournaledInventoryState;
 import com.perso.T4C.model.Coordinates;
 import com.perso.T4C.model.Stats;
 import com.perso.T4C.spell.SpellData;
@@ -138,6 +140,7 @@ public class Player extends Stats implements ProgressionState {
   private String talkText;
   private long talkTextExpiresAt;
   @Getter private List<String> inventory = new ArrayList<>();
+  @Getter private transient InventoryMutationJournal inventoryMutationJournal;
   @Getter private Map<BodyPart, String> equippedItems = new HashMap<>();
   @Getter private Map<String, Integer> itemCharges = new HashMap<>();
   @Getter private List<String> storage = new ArrayList<>();
@@ -217,8 +220,40 @@ public class Player extends Stats implements ProgressionState {
     return position;
   }
 
+  public InventoryMutationJournal beginInventoryMutationJournal() {
+    if (inventoryMutationJournal != null) throw new IllegalStateException("Inventory journal already active");
+    InventoryMutationJournal journal = new InventoryMutationJournal(this, inventory, equippedItems, itemCharges);
+    JournaledInventoryState tracked = journal.state();
+    inventoryMutationJournal = journal;
+    inventory = tracked.inventory();
+    equippedItems = tracked.equipment();
+    itemCharges = tracked.charges();
+    return journal;
+  }
+
+  /** Called only when the journal has sealed or the owner restores its exact initial projection. */
+  public void finishInventoryMutationJournal(InventoryMutationJournal journal, boolean restoreInitial) {
+    if (journal == null || inventoryMutationJournal != journal || !journal.isClosed())
+      throw new IllegalStateException("Inventory journal is not closed and attached");
+    if (restoreInitial) {
+      var initial = journal.initial();
+      inventory = new ArrayList<>(initial.inventory());
+      equippedItems = new HashMap<>(initial.equipment());
+      itemCharges = new HashMap<>(initial.charges());
+    } else {
+      inventory = new ArrayList<>(inventory);
+      equippedItems = new HashMap<>(equippedItems);
+      itemCharges = new HashMap<>(itemCharges);
+    }
+    inventoryMutationJournal = null;
+  }
+
   public void setInventory(List<String> inventory) {
-    this.inventory = inventory == null ? new ArrayList<>() : new ArrayList<>(inventory);
+    List<String> replacement = inventory == null ? new ArrayList<>() : new ArrayList<>(inventory);
+    if (inventoryMutationJournal != null) {
+      this.inventory.clear();
+      this.inventory.addAll(replacement);
+    } else this.inventory = replacement;
   }
 
   public void setStorage(List<String> storage) {
@@ -235,7 +270,12 @@ public class Player extends Stats implements ProgressionState {
   }
 
   public void setEquippedItems(Map<BodyPart, String> equippedItems) {
-    this.equippedItems = equippedItems == null ? new HashMap<>() : new HashMap<>(equippedItems);
+    Map<BodyPart, String> replacement =
+        equippedItems == null ? new HashMap<>() : new HashMap<>(equippedItems);
+    if (inventoryMutationJournal != null) {
+      this.equippedItems.clear();
+      this.equippedItems.putAll(replacement);
+    } else this.equippedItems = replacement;
   }
 
   public void showTalkText(String text) {
@@ -296,7 +336,12 @@ public class Player extends Stats implements ProgressionState {
   }
 
   public void setItemCharges(Map<String, Integer> itemCharges) {
-    this.itemCharges = itemCharges == null ? new HashMap<>() : new HashMap<>(itemCharges);
+    Map<String, Integer> replacement =
+        itemCharges == null ? new HashMap<>() : new HashMap<>(itemCharges);
+    if (inventoryMutationJournal != null) {
+      this.itemCharges.clear();
+      this.itemCharges.putAll(replacement);
+    } else this.itemCharges = replacement;
   }
 
   public void setRespawnPoint(float worldX, float worldY, int worldZ) {

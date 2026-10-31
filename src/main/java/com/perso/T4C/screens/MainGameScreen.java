@@ -2383,6 +2383,11 @@ public class MainGameScreen implements Screen {
   }
 
   private boolean tryCastTargetedSpell(BaseMonster monster) {
+    if (isRemoteSession() && isTameSpellSelected()) {
+      showSystemMessage(I18n.key("online.cast.unsupported"));
+      clearSelectedTargetedSpell(true);
+      return true;
+    }
     return isTameSpellSelected() ? tryStartTame(monster) : tryCastAttackSpell(monster);
   }
 
@@ -5509,8 +5514,7 @@ public class MainGameScreen implements Screen {
     inputHandler=new GameInputHandler(log,mapRenderer,player,session.commands()) {
       @Override public void handleGlobalKeys() {}
     };
-    MonsterInputHandler monsters=new MonsterInputHandler(camera,monsterManager,player,null,null,systemMessage);
-    monsters.setOnAttackTargetSelected(this::handleRemoteAttackTargetSelected);
+    MonsterInputHandler monsters=createRemoteMonsterInputHandler();
     monsters.setOnClickedElsewhere(() -> setSelectedMonster(null));
     com.badlogic.gdx.InputAdapter npcClicks=new com.badlogic.gdx.InputAdapter() {
       private final Vector3 at=new Vector3();
@@ -5804,6 +5808,13 @@ public class MainGameScreen implements Screen {
     inputHandler.setMouseMovementSupplier(mouseMovementHandler::direction);
     remote.addProcessor(mouseMovementHandler);
     Gdx.input.setInputProcessor(remote);
+  }
+
+  MonsterInputHandler createRemoteMonsterInputHandler() {
+    MonsterInputHandler monsters = new MonsterInputHandler(
+        camera, monsterManager, player, this::tryCastTargetedSpell, null, systemMessage);
+    monsters.setOnAttackTargetSelected(this::handleRemoteAttackTargetSelected);
+    return monsters;
   }
 
   private void handleRemoteAttackTargetSelected(BaseMonster monster) {

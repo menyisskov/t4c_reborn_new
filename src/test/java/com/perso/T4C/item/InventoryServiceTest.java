@@ -3,6 +3,7 @@ package com.perso.T4C.item;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.perso.T4C.player.Player;
 import com.perso.T4C.spell.SpellData;
@@ -130,5 +131,133 @@ class InventoryServiceTest {
     } finally {
       ItemRegistry.resetAdditionalDefinitions();
     }
+  }
+
+  @Test
+  void journalRecordsOriginalChargeExhaustionAsOneUnderlyingItemRemoval() {
+    Player player = new Player();
+    player.setStrength(1000);
+    String key = finiteMultiChargeItem().getKey();
+    InventoryMutationJournal journal = player.beginInventoryMutationJournal();
+    assertTrue(InventoryService.add(player, key).success());
+    int charges = ItemRegistry.findByKey(key).getNbCharges();
+    assertTrue(charges > 1);
+    for (int index = 0; index < charges; index++) {
+      assertTrue(InventoryService.useCharge(player, key).success());
+    }
+    var prepared = journal.seal();
+    assertTrue(prepared.finalState().inventory().isEmpty());
+    assertEquals(1, prepared.mutations().stream()
+        .filter(m -> m.container() == JournaledInventoryState.Container.INVENTORY
+            && m.change() == JournaledInventoryState.Change.DELETE).count());
+    var outer = prepared.operations().stream()
+        .filter(o -> o.name().equals("useCharge"))
+        .reduce((first, last) -> last).orElseThrow();
+    var destroy = prepared.operations().stream()
+        .filter(o -> o.name().equals("destroyOne")).findFirst().orElseThrow();
+    var remove = prepared.operations().stream()
+        .filter(o -> o.name().equals("remove")).findFirst().orElseThrow();
+    assertEquals(outer.id(), destroy.parentId());
+    assertEquals(destroy.id(), remove.parentId());
+    assertEquals(0, prepared.mutations().stream()
+        .filter(m -> m.change() == JournaledInventoryState.Change.DELETE).findFirst()
+        .orElseThrow().key());
+  }
+
+  @Test
+  void journalTracksSettersIteratorsAndMapViewsThenSealsExactProjection() {
+    Player player = new Player();
+    String key = "item.breuvage_de_soin";
+    player.setInventory(List.of(key, key));
+    player.getEquippedItems().put(com.perso.T4C.player.BodyPart.RING1, key);
+    player.getItemCharges().put(key, 7);
+    InventoryMutationJournal journal = player.beginInventoryMutationJournal();
+    var items = player.getInventory().listIterator();
+    assertEquals(key, items.next());
+    items.set("changed");
+    items.add(key);
+    items.next();
+    items.remove();
+    player.getEquippedItems().values().removeIf(key::equals);
+    player.getEquippedItems().put(com.perso.T4C.player.BodyPart.RING2, key);
+    player.getEquippedItems().entrySet().iterator().next().setValue("changed");
+    player.getItemCharges().keySet().removeIf(key::equals);
+    player.setInventory(List.of(key));
+    player.setEquippedItems(java.util.Map.of(com.perso.T4C.player.BodyPart.RING1, key));
+    player.setItemCharges(java.util.Map.of(key, 2));
+    InventoryService.removeExtractedCharges(player, key, 1);
+    var prepared = journal.seal();
+    assertEquals(List.of(key), prepared.finalState().inventory());
+    assertEquals(java.util.Map.of(com.perso.T4C.player.BodyPart.RING1, key),
+        prepared.finalState().equipment());
+    assertEquals(java.util.Map.of(key, 1), prepared.finalState().charges());
+    assertTrue(prepared.mutations().stream().anyMatch(m -> m.operationId() == 0));
+    assertEquals(1, prepared.operations().stream()
+        .filter(o -> o.name().equals("removeExtractedCharges")).count());
+  }
+
+  @Test
+  void exceptionInvalidatesAndRollbackRestoresOriginalInventoryProjection() {
+    Player player = new Player();
+    player.setInventory(List.of("first"));
+    InventoryMutationJournal journal = player.beginInventoryMutationJournal();
+    assertThrows(IllegalStateException.class, () -> journal.capture("failed", () -> {
+      player.getInventory().add("second");
+      throw new IllegalStateException("injected failure");
+    }));
+    assertTrue(journal.isInvalid());
+    assertThrows(IllegalStateException.class, journal::seal);
+    journal.rollback();
+    assertEquals(List.of("first"), player.getInventory());
+    assertEquals(null, player.getInventoryMutationJournal());
+  }
+
+  @Test
+  void originalAggregateChargesCannotIdentifyTwoDistinctPartialInstances() {
+    Player player = new Player();
+    ItemDefinition item = finiteMultiChargeItem();
+    String key = item.getKey();
+    player.setInventory(List.of(key, key));
+    player.setItemCharges(java.util.Map.of(key, item.getNbCharges() * 2 - 1));
+    // The original aggregate selects one partial copy but cannot name either owned UUID.
+    assertEquals(item.getNbCharges() - 1, InventoryService.chargesForNextInstance(player, key));
+  }
+  @Test
+  void journalKeepsOriginalEquipDisplacementAndRefusalWithoutExtraWrites() {
+    var tier = WarriorEquipment.TIERS.getFirst();
+    Player player = new Player();
+    player.setStrength(tier.strength());
+    player.setEndurance(tier.endurance());
+    String prefix = "item.warrior_" + tier.key() + "_";
+    String blade = prefix + "warblade";
+    String shield = prefix + "shield";
+    String greatsword = prefix + "greatsword";
+    player.setInventory(List.of(blade, shield, greatsword));
+    var main = com.perso.T4C.player.BodyPart.WEAPON;
+    var shieldSlot = com.perso.T4C.player.BodyPart.SHIELD;
+    InventoryMutationJournal journal = player.beginInventoryMutationJournal();
+    assertEquals(InventoryService.Failure.UNKNOWN_ITEM,
+        InventoryService.equip(player, main, "missing_item").failure());
+    assertTrue(InventoryService.equip(player, main, blade).success());
+    assertTrue(InventoryService.equip(player, shieldSlot, shield).success());
+    assertTrue(InventoryService.equip(player, main, greatsword).success());
+    var prepared = journal.seal();
+    assertEquals(greatsword, prepared.finalState().equipment().get(main));
+    assertEquals(greatsword,
+        prepared.finalState().equipment().get(com.perso.T4C.player.BodyPart.WEAPON2));
+    assertFalse(prepared.finalState().equipment().containsKey(shieldSlot));
+    assertEquals(1, java.util.Collections.frequency(prepared.finalState().inventory(), shield));
+    var refused = prepared.operations().stream()
+        .filter(o -> o.name().equals("equip") &&
+            "missing_item".equals(o.arguments().get(1))).findFirst().orElseThrow();
+    assertFalse(((InventoryService.Result) refused.result()).success());
+    assertTrue(prepared.mutations().stream().noneMatch(m -> m.operationId() == refused.id()));
+  }
+
+  private static ItemDefinition finiteMultiChargeItem() {
+    return ItemRegistry.load().stream()
+        .filter(item -> item.getNbCharges() > 1 && !item.isUnlimitedUse()
+            && item.getBodyPart() == null)
+        .findFirst().orElseThrow();
   }
 }
