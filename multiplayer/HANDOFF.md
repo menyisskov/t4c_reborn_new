@@ -1,4 +1,5 @@
 # Multiplayer implementation handoff
+
 ## Active refactor — start here (2026-10-31, T4C-0405)
 
 The owner requests exact whole-game single-player reuse and rendered end-to-end verification.
@@ -6,8 +7,8 @@ Latest instruction: push tested work directly to main, no PR waits; Claude is no
 working, and must be able to take over remaining work from this document.
 
 - Source checkout: `C:/Users/menyi/.codex/worktrees/shared-game-runtime-0405`, branch `codex/shared-game-runtime-0405`.
-- Latest delivered source: main `43501f16`, original NPC locomotion and pathfinding extraction; focused root 8/8, domain 4/4 and package pass. This does not enable original server gameplay yet.
-- Current uncommitted work: runtime Maven module/domain facade; real sprite metadata and animation timing without textures; NPC per-instance presentation boundary. Recheck Git and canonical ownership before edits/builds.
+- Latest tested source: `8d5a661e`, original-source runtime, real frame metadata and NPC presentation boundaries; full non-DB reactor and rendered offline goldens pass (exact evidence below). This does not enable original server gameplay yet.
+- Next work: participant conversation isolation and optional original inventory mutation journal, prepared privately while the tested checkpoint was frozen. Recheck Git and canonical ownership for their current application/test status.
 - Root is the only Git integrator. Build windows are serialized. Do not use the stale dirty main checkout as the source baseline or overwrite its personal saves/preferences.
 - Full plan: [SHARED_GAMEPLAY_EXECUTION_PLAN.md](SHARED_GAMEPLAY_EXECUTION_PLAN.md). Exact next-step briefs, known state-loss risks and participant isolation requirements are at the end of this handoff.
 - Whole-game parity, server adoption and rendered two-client acceptance are unfinished. No test build has been handed back as ready for manual acceptance.
