@@ -194,6 +194,9 @@ playable world content.
 
 The original-game audit is not complete until these checks and repairs are done.
 
+Recheck (2026-10-31, T4C-0407): see [2026-10-content-audit-recheck.md](2026-10-content-audit-recheck.md) for what is
+confirmed, repaired, disproved and still open.
+
 ## Angelic gods follow-on
 
 The user subsequently directed implementation of the gods feature. Artherk and

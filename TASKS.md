@@ -18,7 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
-| T4C-0407 | Recheck original-game content audit and repair confirmed quest/item/monster gaps | Content audit | In Progress (Claude) | See PEER_WORK | pending |
+| T4C-0407 | Original-game content audit recheck against current code; repair the confirmed gaps (Raven's Dust demon crypt portals, Olin Haad guard count); document findings and the still-open leads | Content / audit | Done | | [2026-10-31](CHANGELOG.md) |
 | T4C-0406 | Process rule: every agent rereads the peer register and open PRs for new messages before every action, not once per session | Process/Tooling | Done | | [2026-10-31](CHANGELOG.md) |
 
 | T4C-0405 | Whole-game shared single-player runtime refactor | Multiplayer / parity | In Progress; offline runtime foundations verified, server adoption unfinished | Runtime/presentation checkpoint 8d5a661e; runtime/domain/server checks green, rendered offline 3/3, metadata15/15 and NPC/path12/12 | [2026-10-31](CHANGELOG.md) |
