@@ -1,3 +1,8 @@
+## 2026-10-31 — You can walk online with the mouse (T4C-0403)
+
+### Fixed
+- In online play the character could not walk at all once the keyboard walking was removed. Holding the left mouse button and dragging toward where you want to go now walks your character online, as it does in single-player.
+
 ## 2026-10-31 — Walking is mouse only, like the original game (T4C-0402)
 
 ### Changed
