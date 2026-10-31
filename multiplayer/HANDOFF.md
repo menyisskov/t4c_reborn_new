@@ -967,3 +967,9 @@ Current production limitations: GroundItem and other remaining presentation-boun
 still require separation before full headless game use. The optional binder/journal are not yet
 connected to authoritative server commands. Rendered online spell-click verification is next;
 whole-game/two-client acceptance remains incomplete.
+
+## T4C-0410 — Online movement reservation replay (2026-10-31)
+
+Base `79a85dee`, protocol 9. The offline `PlayerMovement` and server `ServerMovement` retain an unfinished tile reservation when input reverses or releases. The previous `RemoteMovementRule` discarded it between frames and during reconciliation, so a replay from a mid-tile snapshot could turn early or select a different obstacle slide. Server player snapshots now include the active reservation in region-local pixels; the client validates it, converts it to world pixels and restores it before pending-frame replay. Position correction also restores that reservation into the local `PlayerMovement` expected-position guard. Older snapshots omit the optional field and remain readable; their mid-step replay cannot establish this parity.
+
+Focused validation on the isolated worktree: `mvn -q '-Dtest=RemoteMovementRuleTest,MovementReconcilerTest,RemotePlayerCommandsTest,PlayerMovementCollisionTest' test` (client); `mvn -q -f multiplayer/pom.xml -pl server -am '-Dtest=ServerMovementParityTest' '-Dsurefire.failIfNoSpecifiedTests=false' test` (server). Focused client tests passed 81/81, server parity passed 19/19. Final root and server reactor `-DskipTests` packages passed after the local-correction test. `git diff --check` passed. No rendered client, live server, database, remote or two-player acceptance is claimed. The server owns 34 Hz ticks while the client predicts render-frame deltas, so exact per-frame position equality remains unproven.

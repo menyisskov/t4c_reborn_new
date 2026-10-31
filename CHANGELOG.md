@@ -1,3 +1,8 @@
+## 2026-10-31 — Online turns now finish their current step (T4C-0410)
+
+### Fixed
+- Releasing or reversing direction partway through a tile online now finishes the current step, matching single-player movement and avoiding incorrect position corrections near obstacles.
+
 ## 2026-10-31 — Elysana's wax-apple referral opens Samuel's commission (T4C-0409)
 
 ### Fixed
