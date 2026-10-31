@@ -1,3 +1,10 @@
+## 2026-10-31 — The Good and Evil Seraph quests can now be entered (T4C-0408)
+
+### Fixed
+- Sir Beltigan now lets a Champion of Light pledge to serve Artherk and become a Lightbringer, and Mordenthal now takes the oath of allegiance to Ogrimar. Until now nobody could take either step, so everything that required being a Lightbringer or a follower of Ogrimar was closed to every player.
+- The two paths exclude each other: a Lightbringer cannot swear to Ogrimar and a follower of Ogrimar cannot pledge to Artherk.
+- Receiving the Crown of Corruption from Meltar Winterstorm and the two spellbooks from Zhakar now counts toward Zion Thunderheart, who reveals where the Skull of Ogrimar is hidden once you bring the Skull of Evil, the Crown of Corruption and the two spellbooks.
+
 ## 2026-10-31 — Selected spells use monster clicks online (T4C-0405)
 
 ### Fixed
