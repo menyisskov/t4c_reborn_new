@@ -223,6 +223,12 @@ assume external sessions share this chat's context, agent list or automatic mess
 - Check both task and file ownership. Different tasks can still conflict in OnlineStore,
   PreviewServer, shared models, launchers, assets or global documentation. Request and record
   an explicit handoff before changing a peer-owned file; do not rely on disjoint line numbers.
+- **Read for new peer messages before every action.** Before each action (an edit, a command, a build,
+  a server or database step, a commit, a push, a merge, a reply to the owner) reread the newest entries at
+  the bottom of the canonical register's message log, and the open PR list, for anything addressed to you or
+  touching your files/resources. Do not rely on having read it earlier in the turn or the session. A new
+  message that conflicts with what you are about to do wins: stop, reconcile in the register, then continue.
+  Rereading is read-only and needs no lock; only writing the register does.
 - Recheck the register before each turn/work phase and before changing scope, editing,
   building, staging or merging. Update it on start, blocker, scope change, handoff,
   verification, pause and completion, and at least every ten minutes during active long work.

@@ -17,6 +17,10 @@ Codex and Claude may be working concurrently. Follow [AGENTS.md section 8](AGENT
 and the canonical [peer work register](multiplayer/PEER_WORK.md) before editing or running shared operations.
 Do not assume this session knows the other agent's task or sees its messages.
 
+- **Before every action, read the register for new messages from peers** (the newest entries at the bottom of
+  `multiplayer/PEER_WORK.md`, plus open PRs): every edit, command, build, server/DB step, commit, push, merge and
+  reply. Not once per session; each time. A fresh peer message that conflicts with your plan wins: stop, reconcile
+  it in the register, then continue. See AGENTS.md section 8.
 - Declare/acknowledge your task, concrete files, branch/base and resource needs under the short
   coordination lock; reread existing claims first. Resolve current assignments exclusively from that live register; task completion does not authorize taking over an unreleased file.
 - Do not change another agent's claimed files without an explicit recorded handoff. New scope
