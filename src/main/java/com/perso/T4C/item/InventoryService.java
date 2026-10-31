@@ -7,6 +7,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public final class InventoryService {
   public enum Failure {
@@ -33,6 +34,13 @@ public final class InventoryService {
   }
 
   private InventoryService() {}
+
+  private static Result capture(Player player, String operation, Supplier<Result> original,
+      Object... arguments) {
+    InventoryMutationJournal journal = player == null ? null : player.getInventoryMutationJournal();
+    return journal == null ? original.get() : journal.capture(operation, original, arguments);
+  }
+
 
   // T4C-0054: raised the asymptote (was 500/100, saturating to ~90% of its ceiling by str 1000
   // and leaving essentially no headroom above that) because gear alone hands out +600 strength
@@ -91,6 +99,11 @@ public final class InventoryService {
   }
 
   public static Result add(Player player, String itemKey, int remainingCharges) {
+    return capture(player, "add", () -> addOriginal(player, itemKey, remainingCharges),
+        itemKey, remainingCharges);
+  }
+
+  private static Result addOriginal(Player player, String itemKey, int remainingCharges) {
     ItemDefinition definition = ItemRegistry.findByKey(itemKey);
     if (player == null || definition == null) return Result.failure(Failure.UNKNOWN_ITEM, itemKey);
     String canonicalKey = definition.getKey();
@@ -111,6 +124,11 @@ public final class InventoryService {
   }
 
   public static Result remove(Player player, int index, String expectedItemKey) {
+    return capture(player, "remove", () -> removeOriginal(player, index, expectedItemKey),
+        index, expectedItemKey);
+  }
+
+  private static Result removeOriginal(Player player, int index, String expectedItemKey) {
     if (player == null || player.getInventory().isEmpty()) {
       return Result.failure(Failure.INVENTORY_EMPTY, expectedItemKey);
     }
@@ -127,6 +145,11 @@ public final class InventoryService {
   }
 
   public static Result equip(Player player, BodyPart requestedSlot, String itemKey) {
+    return capture(player, "equip", () -> equipOriginal(player, requestedSlot, itemKey),
+        requestedSlot, itemKey);
+  }
+
+  private static Result equipOriginal(Player player, BodyPart requestedSlot, String itemKey) {
     Result validation = validateEquip(player, requestedSlot, itemKey);
     if (!validation.success()) return validation;
     ItemDefinition definition = ItemRegistry.findByKey(itemKey);
@@ -190,6 +213,10 @@ public final class InventoryService {
   }
 
   public static Result unequip(Player player, BodyPart slot) {
+    return capture(player, "unequip", () -> unequipOriginal(player, slot), slot);
+  }
+
+  private static Result unequipOriginal(Player player, BodyPart slot) {
     if (player == null || slot == null) return Result.failure(Failure.ITEM_NOT_OWNED, null);
     String itemKey = player.getEquippedItems().get(slot);
     if (itemKey == null) return Result.failure(Failure.ITEM_NOT_OWNED, null);
@@ -208,6 +235,10 @@ public final class InventoryService {
   }
 
   public static Result useCharge(Player player, String itemKey) {
+    return capture(player, "useCharge", () -> useChargeOriginal(player, itemKey), itemKey);
+  }
+
+  private static Result useChargeOriginal(Player player, String itemKey) {
     ItemDefinition definition = ItemRegistry.findByKey(itemKey);
     if (player == null || definition == null) return Result.failure(Failure.UNKNOWN_ITEM, itemKey);
     if (definition.isUnlimitedUse() || definition.getNbCharges() <= 0)
@@ -227,6 +258,10 @@ public final class InventoryService {
   }
 
   public static Result destroyOne(Player player, String itemKey) {
+    return capture(player, "destroyOne", () -> destroyOneOriginal(player, itemKey), itemKey);
+  }
+
+  private static Result destroyOneOriginal(Player player, String itemKey) {
     if (player == null || itemKey == null) return Result.failure(Failure.ITEM_NOT_OWNED, itemKey);
     String canonical = canonicalKey(itemKey);
     int index = -1;
@@ -310,6 +345,15 @@ public final class InventoryService {
   }
 
   public static void removeExtractedCharges(Player player, String itemKey, int extractedCharges) {
+    InventoryMutationJournal journal = player == null ? null : player.getInventoryMutationJournal();
+    if (journal == null) removeExtractedChargesOriginal(player, itemKey, extractedCharges);
+    else journal.capture("removeExtractedCharges", () -> {
+      removeExtractedChargesOriginal(player, itemKey, extractedCharges);
+      return null;
+    }, itemKey, extractedCharges);
+  }
+
+  private static void removeExtractedChargesOriginal(Player player, String itemKey, int extractedCharges) {
     if (player == null || extractedCharges < 0) return;
     int remaining =
         Math.max(0, player.getItemCharges().getOrDefault(itemKey, 0) - extractedCharges);

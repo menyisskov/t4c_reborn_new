@@ -17,11 +17,18 @@ import java.io.ByteArrayOutputStream;
 import java.nio.file.Path;
 import java.util.List;
 import javax.imageio.ImageIO;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 class HeadlessAnimationMetadataTest {
   @TempDir Path temp;
+
+  @AfterEach
+  void clearLoadedSpriteFixture() throws Exception {
+    SpriteBinIO.writePayload(temp.resolve("empty_0.bin"), List.of());
+    SpriteLoader.getInstance().loadSpriteBin(temp.resolve("empty.bin"));
+  }
 
   @Test
   void originalActorsDiscoverRealFramesAndAdvanceWithoutGraphics() {

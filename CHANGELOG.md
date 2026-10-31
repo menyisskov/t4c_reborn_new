@@ -5,6 +5,11 @@
 - The two paths exclude each other: a Lightbringer cannot swear to Ogrimar and a follower of Ogrimar cannot pledge to Artherk.
 - Receiving the Crown of Corruption from Meltar Winterstorm and the two spellbooks from Zhakar now counts toward Zion Thunderheart, who reveals where the Skull of Ogrimar is hidden once you bring the Skull of Evil, the Crown of Corruption and the two spellbooks.
 
+## 2026-10-31 — Selected spells use monster clicks online (T4C-0405)
+
+### Fixed
+- Selecting a targeted spell and clicking a monster now attempts to cast that spell online instead of starting a weapon attack.
+
 ## 2026-10-31 — The Raven's Dust demon crypt can be finished (T4C-0407)
 
 ### Fixed

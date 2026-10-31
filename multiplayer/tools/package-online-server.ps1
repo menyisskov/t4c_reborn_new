@@ -29,7 +29,7 @@ $build = Join-Path $env:TEMP ('t4c-online-server-package-build-' + $Name + '-' +
 New-Item -ItemType Directory -Path $build -ErrorAction Stop | Out-Null
 $archive = Join-Path $build 'committed-source.zip'
 $source = Join-Path $build 'source'
-& git -C $repo archive --format=zip "--output=$archive" $revision multiplayer src/main/java assets/i18n/lang.json assets/maps/worldmap/worldmap.colbin assets/maps/dungeon/DungeonMap.colbin
+& git -C $repo archive --format=zip "--output=$archive" $revision multiplayer src/main/java src/main/resources assets/i18n/lang.json assets/maps/worldmap/worldmap.colbin assets/maps/dungeon/DungeonMap.colbin
 if ($LASTEXITCODE -ne 0) { throw 'Could not archive the selected committed source.' }
 Expand-Archive -LiteralPath $archive -DestinationPath $source -ErrorAction Stop
 & mvn -B -f (Join-Path $source 'multiplayer/pom.xml') '-DskipTests' '-Dmaven.compiler.useIncrementalCompilation=true' package 'org.apache.maven.plugins:maven-dependency-plugin:3.1.2:build-classpath' '-DincludeScope=runtime' '-Dmdep.outputFile=target/runtime-classpath.txt'

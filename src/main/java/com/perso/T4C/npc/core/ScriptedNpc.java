@@ -76,6 +76,27 @@ public abstract class ScriptedNpc extends BaseNPC {
 
   private boolean conversationResponseShown;
 
+  private record ScriptConversation(
+      String pendingYesNoState, boolean responseShown, Object subclassState) {}
+
+  @Override
+  protected final Object captureAuthoredConversationState() {
+    return new ScriptConversation(
+        pendingYesNoState, conversationResponseShown, captureScriptConversationState());
+  }
+
+  @Override
+  protected final void installAuthoredConversationState(Object state) {
+    ScriptConversation conversation = (ScriptConversation) state;
+    pendingYesNoState = conversation.pendingYesNoState();
+    conversationResponseShown = conversation.responseShown();
+    installScriptConversationState(conversation.subclassState());
+  }
+
+  protected Object captureScriptConversationState() { return null; }
+
+  protected void installScriptConversationState(Object state) {}
+
   protected NpcBehavior javaBehavior() {
 
     return null;

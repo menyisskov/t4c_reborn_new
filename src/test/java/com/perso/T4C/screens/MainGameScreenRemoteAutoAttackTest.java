@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.perso.T4C.monster.core.BaseMonster;
 import com.perso.T4C.monster.core.MonsterManager;
 import com.perso.T4C.monster.core.MonsterRegistry;
+import com.perso.T4C.input.MonsterInputHandler;
 import com.perso.T4C.online.OnlineConnection;
 import com.perso.T4C.online.model.CreatureView;
 import com.perso.T4C.player.Player;
@@ -22,6 +23,61 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
 
 class MainGameScreenRemoteAutoAttackTest {
+  @Test
+  void remoteMonsterClickCastsSelectedSpellAndOtherwiseAttacks() throws Exception {
+    AtomicInteger casts = new AtomicInteger();
+    AtomicInteger attacks = new AtomicInteger();
+    AtomicReference<OnlineConnection.View> view = new AtomicReference<>(view(List.of(
+        new CreatureView(21, "Training 1 Skeleton", 1, 0, 20, 20, "idle", null, null))));
+    RemoteLink link = (RemoteLink) java.lang.reflect.Proxy.newProxyInstance(
+        RemoteLink.class.getClassLoader(), new Class<?>[] {RemoteLink.class},
+        (proxy, method, args) -> {
+          if (method.getName().equals("view")) return view.get();
+          if (method.getName().equals("cast")) casts.incrementAndGet();
+          if (method.getName().equals("attack")) attacks.incrementAndGet();
+          if (method.getReturnType() == CompletableFuture.class
+              || java.util.concurrent.CompletionStage.class.isAssignableFrom(method.getReturnType()))
+            return CompletableFuture.completedFuture(new OnlineConnection.CommandResult(true, null));
+          return null;
+        });
+    MainGameScreen screen = screen(link);
+    set(screen, "player", player());
+    BaseMonster monster = installTarget(screen);
+    MonsterInputHandler handler = screen.createRemoteMonsterInputHandler();
+    Field spellField = MonsterInputHandler.class.getDeclaredField("spellCastHandler");
+    spellField.setAccessible(true);
+    @SuppressWarnings("unchecked")
+    var spellClick = (java.util.function.Function<BaseMonster, Boolean>) spellField.get(handler);
+    Field attackField = MonsterInputHandler.class.getDeclaredField("onAttackTargetSelected");
+    attackField.setAccessible(true);
+    @SuppressWarnings("unchecked")
+    var attackClick = (java.util.function.Consumer<BaseMonster>) attackField.get(handler);
+
+    set(screen, "selectedTargetedSpell", hostileSpell());
+    assertTrue(spellClick.apply(monster));
+    assertEquals(1, casts.get());
+    assertEquals(0, attacks.get());
+    assertNull(get(screen, "selectedTargetedSpell"));
+
+    assertFalse(spellClick.apply(monster));
+    attackClick.accept(monster);
+    assertEquals(1, attacks.get());
+
+    set(screen, "selectedTargetedSpell", tameSpell());
+    assertTrue(spellClick.apply(monster), "online tame must be consumed without a local channel");
+    assertEquals(1, casts.get());
+    assertEquals(1, attacks.get());
+    assertNull(get(screen, "tameChannel"));
+    assertNull(get(screen, "selectedTargetedSpell"));
+  }
+
+  private static com.perso.T4C.spell.SpellData tameSpell() {
+    return new com.perso.T4C.spell.SpellData(
+        "spell.tame_beast", "", "10", 1, 2, 0, 0, true, false, null, null, null,
+        0, 0, null, null, 0, null, null, 0, null, 1, 0, 1, 0,
+        null, null, null, null, 0, 0, false, List.of());
+  }
+
   @Test
   void remoteHostileSpellAllowsOnlyOneCastAtATimeAndWaitsForCooldownReply() throws Exception {
     AtomicReference<CompletableFuture<OnlineConnection.CommandResult>> pending =

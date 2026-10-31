@@ -20,6 +20,20 @@ abstract class CampaignWitnessNpc extends ScriptedNpc {
   private Player testimonyPlayer;
   private boolean testimonyHeard;
 
+  private record Conversation(Player testimonyPlayer, boolean testimonyHeard) {}
+
+  @Override
+  protected Object captureScriptConversationState() {
+    return new Conversation(testimonyPlayer, testimonyHeard);
+  }
+
+  @Override
+  protected void installScriptConversationState(Object state) {
+    Conversation conversation = (Conversation) state;
+    testimonyPlayer = conversation.testimonyPlayer();
+    testimonyHeard = conversation.testimonyHeard();
+  }
+
   protected CampaignWitnessNpc(
       NpcSpec spec, NpcContext context, String branch, int firstQuestIndex, String clueFlag)
       throws GameException {

@@ -167,6 +167,54 @@ public abstract class BaseNPC extends Stats implements Nameable {
 
   @Setter private DamageCallback damageCallback = null;
 
+  /** Subclasses expose only transient dialogue fields here; physical NPC state stays shared. */
+  protected Object captureAuthoredConversationState() { return null; }
+
+  protected void installAuthoredConversationState(Object state) {}
+
+  final NpcConversationState captureConversationState() {
+    Map<String, List<Rectangle>> links = new LinkedHashMap<>();
+    dialogLinkBounds.forEach((key, bounds) -> links.put(key, copyBounds(bounds)));
+    return new NpcConversationState(
+        isInteracting,
+        savedPatrolTarget == null ? null : new Vector2(savedPatrolTarget),
+        savedPauseTimer,
+        wasPaused,
+        dialogLines == null ? null : List.copyOf(dialogLines),
+        dialogPageIndex,
+        dialogActive,
+        dialogKeyword,
+        copyBounds(dialogKeywordBounds),
+        links,
+        lastInteractionRequestAt,
+        shoutUntil,
+        captureAuthoredConversationState());
+  }
+
+  final void installConversationState(NpcConversationState state) {
+    isInteracting = state.interacting();
+    savedPatrolTarget = state.savedPatrolTarget() == null ? null : new Vector2(state.savedPatrolTarget());
+    savedPauseTimer = state.savedPauseTimer();
+    wasPaused = state.wasPaused();
+    dialogLines = state.dialogLines() == null ? null : new ArrayList<>(state.dialogLines());
+    dialogPageIndex = state.dialogPageIndex();
+    dialogActive = state.dialogActive();
+    dialogKeyword = state.dialogKeyword();
+    dialogKeywordBounds.clear();
+    dialogKeywordBounds.addAll(copyBounds(state.keywordBounds()));
+    dialogLinkBounds.clear();
+    state.linkBounds().forEach((key, bounds) -> dialogLinkBounds.put(key, copyBounds(bounds)));
+    lastInteractionRequestAt = state.lastInteractionRequestAt();
+    shoutUntil = state.shoutUntil();
+    installAuthoredConversationState(state.authoredState());
+  }
+
+  private static List<Rectangle> copyBounds(List<Rectangle> bounds) {
+    List<Rectangle> copy = new ArrayList<>(bounds.size());
+    for (Rectangle bound : bounds) copy.add(new Rectangle(bound));
+    return copy;
+  }
+
   protected BaseNPC(String name, Object... parts) throws GameException {
 
     this(name, null, parts);

@@ -95,6 +95,20 @@ public final class ElderOphira extends ScriptedNpc {
   private QuestDef selectedQuest;
   private Player conversationPlayer;
 
+  private record Conversation(QuestDef selectedQuest, Player conversationPlayer) {}
+
+  @Override
+  protected Object captureScriptConversationState() {
+    return new Conversation(selectedQuest, conversationPlayer);
+  }
+
+  @Override
+  protected void installScriptConversationState(Object state) {
+    Conversation conversation = (Conversation) state;
+    selectedQuest = conversation.selectedQuest();
+    conversationPlayer = conversation.conversationPlayer();
+  }
+
   public ElderOphira(NpcContext context) throws GameException {
     super(SPEC, context);
   }
