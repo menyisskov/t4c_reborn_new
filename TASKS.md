@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0405`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0406`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0405 | Process rule: every agent rereads the peer register and open PRs for new messages before every action, not once per session | Process/Tooling | Done | | [2026-10-31](CHANGELOG.md) |
 | T4C-0404 | Walking cursor: while the character is steered with the mouse the pointer becomes an arrow showing the walk direction, and returns to normal when the drag ends | Systems / feel | In Progress | | [2026-10-31](CHANGELOG.md) |
 | T4C-0403 | Fix T4C-0402: online play has its own input chain that never had mouse steering, so removing the keys left no way to walk online; add hold-and-drag walking to it | Multiplayer / feel | Done | | [2026-10-31](CHANGELOG.md) |
 | T4C-0402 | Walking is mouse only (hold the left button and drag), keyboard walking removed; steering keeps its direction near octant boundaries to stop flicker | Systems / feel | In Progress | | [2026-10-31](CHANGELOG.md) |

@@ -1,3 +1,8 @@
+## 2026-10-31 — The project's rules now require checking for teammates' messages before every action (T4C-0405)
+
+### Changed
+- The project's working rules for AI helpers now say they must look for new messages from the other helpers before each action they take, instead of once at the start, so a change of plan is never missed.
+
 ## 2026-10-31 — A walking arrow follows your drag (T4C-0404)
 
 ### Added
