@@ -1,3 +1,9 @@
+## 2026-10-31 — Walking is mouse only, like the original game (T4C-0402)
+
+### Changed
+- Your character now walks only with the mouse: hold the left button and drag toward where you want to go. The keyboard keys (W A S D, Q, Z and the arrow keys) no longer walk the character, in single-player and online.
+- Mouse walking now holds its direction while the cursor sits near the line between two directions, so the character no longer jitters when your hand wobbles there.
+
 ## 2026-10-31 — The online lobby locks its buttons when the server is down (T4C-0401)
 
 ### Fixed

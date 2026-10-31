@@ -84,6 +84,15 @@
 - Applies to the local player and to other players in online play. Monsters, NPCs and companions keep their own clock-driven animation (they pace themselves) until the owner reports the same glide on them.
 - Open gap: the original also moved in discrete 8 x 4 px (or 4 x 2 px) ticks; drawn movement here stays smooth. Snapping the drawn position to those ticks is an untried option, to be taken only if distance-locked legs still feel like gliding.
 
+## Walking is mouse only (T4C-0402)
+
+The owner's rule (2026-10-31): the original game walks by holding the left mouse button and dragging toward where the
+character should go, so WASD, ZQSD and the arrow keys no longer walk the character, offline or online. Mouse steering
+snaps to the eight directions and keeps the current one until the cursor clearly crosses into the next, so a wobbling
+hand does not flicker the walk direction. Open gap: the 1.68 behavior audit says the original native client also read
+the arrow keys; the owner chose mouse only anyway. The plain developer preview client (`OnlineClient`) still accepts
+keys.
+
 ## Mythic monster encounters (T4C-0153)
 
 - The owner wants new monsters at level 1000 and above that feel substantially tougher than Arch Drake. They remain optional challenge content above the level-400 player cap; their level does not raise that cap.
