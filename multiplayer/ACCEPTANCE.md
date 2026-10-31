@@ -373,3 +373,59 @@ Prioritize these separately with the owner after the essential release is accept
 The online-only GLFW correction and its bounded focus-switching evidence are recorded above and in `native/README.md`. Preserve the offline native dependency selection. Further rendered testing remains pending because the owner stopped desktop control.
 
 Two-region travel and the opening NPC service are delivered; bounded pooled operation now passes its focused smoke. Next finish native account/character selection, NPC controls, required loot/quests/abilities and broader hosted routes, wire measured load evidence and repeat the failed sustained baseline on the integrated release. Then verify full native playthroughs, crash/database/backup recovery, remote deployment and final sustained mixed gameplay. Optional utilities and polish do not take precedence over these release gates.
+
+## Whole-game shared execution continuation — T4C-0405 (2026-10-31)
+
+The owner requests exact single-player execution and appearance for EVERYTHING before this
+work is handed back: controls, original UI, authored NPC/script/service/quest behavior,
+characters, movement, combat, spells, inventory/economy/progression, world/content and all
+animation, effects and sound. Reuse the existing execution; parallel online subsets and
+approximate patrol/allowlist replacements do not satisfy this request. Prior interim generic
+online UI acceptance does not reduce this completion scope.
+
+The concrete dependency phases, review boundaries and complete coverage ledger are in
+[SHARED_GAMEPLAY_EXECUTION_PLAN.md](SHARED_GAMEPLAY_EXECUTION_PLAN.md). Base `f4b34fa3`;
+isolated branch `codex/shared-game-runtime-0405`. Current work extracts original offline NPC
+locomotion and original pathfinding first; server adaptation follows shared-path verification.
+No full-game, server-NPC, rendered-client or milestone completion is claimed from extraction.
+All relevant whole-game gates remain open. Preserve historical evidence and failed runs.
+
+Duration clarification: the owner removed the fixed two-hour minimum on 2026-10-28, recorded
+in DESIGN_GUIDELINES. Record actual mixed-session duration and all remaining gameplay,
+stability/security/recovery requirements; older minimum-duration text is historical.
+
+## T4C-0405 original offline locomotion/path extraction — local verification
+
+Baseline `f4b34fa3`, branch `codex/shared-game-runtime-0405`; original offline BaseNPC patrol
+now delegates NpcLocomotion, and original Pathfinding delegates GridPathfinding. Both helpers
+compile as the same sources in domain. BaseNPC retains protected state and its original path
+cache shared with hostile/flee behavior. No server caller/adapter was added.
+
+Passing final commands in the isolated worktree:
+
+- `mvn -o '-Dtest=GridPathfindingParityTest,PathfindingAdapterTest,NpcLocomotionParityTest' test`: 8 tests, zero failures/errors/skips (pure paths 4, real CollisionManager wrapper 1, locomotion/reference and actual Lighthaven NPC wrapper 3).
+- `mvn -o -f multiplayer/pom.xml -pl domain -am '-Dtest=GridPathfindingParityTest,NpcLocomotionParityTest' '-Dsurefire.failIfNoSpecifiedTests=false' test`: 4 pure path tests passed; the root-only NPC fixture is deliberately excluded from lightweight domain compilation.
+- `mvn -o -q '-DskipTests' package`: client package passed after final combined source changes.
+- Scoped `git diff --check` passed. An independent diagnostic compiled frozen baseline Pathfinding separately and compared 1,000 seeded blocked-map traces, exact ordered paths equal.
+
+Author self-review compared original branch/float/random order and path wrapper boundaries.
+Seeded path fixtures use a controlled clock; production still uses System.nanoTime, 16 ms
+guard every 32 expansions and the original expansion/comparator/neighbor/clearance policy.
+Preserve first fixture failures: NPC reference used a different patrol radius, then passed a
+null player position during interaction; corrected fixtures use real radius/live position.
+Initial domain test compilation included a client-only adapter fixture; splitting it to the
+root-only adapter test restored the intended dependency boundary. No production workaround
+or original behavior change was made for these failures.
+
+This is local offline extraction evidence, NOT online NPC parity, a rendered comparison,
+whole-game acceptance or a completed M1/M4/Beta gate. No DB/server/ports/GUI/protected saves
+were used. Exact final source SHA-256 values:
+
+- `src/main/java/com/perso/T4C/npc/core/BaseNPC.java` — `2CD12949C4151AD69223A4E8EB64B56FB73EA76388E927C06D8D7D8A6BEDEF9C`
+- `src/main/java/com/perso/T4C/npc/core/NpcLocomotion.java` — `ADD5EF13D178D1BC1EC782F9AC2A5E03F706CF3E4FD2486F200E0D92DD2E2A5A`
+- `src/main/java/com/perso/T4C/helper/Pathfinding.java` — `8364950CF95A211768CE9E4D7E9ED8E4D69D09678454F64F1611F12FC8263C35`
+- `src/main/java/com/perso/T4C/helper/GridPathfinding.java` — `56617B1A06E6BC9B45D41DE27081DA170039B796C5493B0A5831EC9A52A378DA`
+- `src/test/java/com/perso/T4C/npc/core/NpcLocomotionParityTest.java` — `BD20F3D0EF8D2F273466AF7E9E1E2C2740F73177B25EFB32831CCC78F9466182`
+- `src/test/java/com/perso/T4C/helper/GridPathfindingParityTest.java` — `BCF97D75E7E28272BD976AD8F2362BCF23EA0436C36590AD62CF65ADD01A3EC8`
+- `src/test/java/com/perso/T4C/helper/PathfindingAdapterTest.java` — `90AB2138B3F8C1771CEFC4B594E58FE741F951826AC8892FDDCF221B8B9E0761`
+- `multiplayer/domain/pom.xml` — `94B5402C437198200903872579633D921CDFFD92A24F5216A96E8C81C10ACD86`

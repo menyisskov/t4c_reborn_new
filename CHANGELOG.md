@@ -1,3 +1,8 @@
+## 2026-10-31 — One complete game experience online and offline (T4C-0405)
+
+### Changed
+- Multiplayer's completion requirements cover the entire single-player game, including its original controls, screens, quests, combat, spells and presentation. Partial demonstrations do not qualify as the finished multiplayer experience.
+
 ## 2026-10-31 — A walking arrow follows your drag (T4C-0404)
 
 ### Added

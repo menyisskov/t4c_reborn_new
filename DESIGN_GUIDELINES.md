@@ -1973,3 +1973,17 @@ Health/mana uses a compact bottom-center orb; active spell icons wrap beside it 
 ## Online NPC, shop and list windows are interim for Beta (owner, 2026-10-30)
 
 The owner accepted the current online interaction windows for Beta: NPC talk (digit-picked topics), the shop, the inventory, spell and potion lists all draw in the generic journal-style window (OnlineListWindow, T4C-0313). They are not the intended GA look: the single-player rule still stands that online must look and play like single-player, so before GA the real single-player screens (typed-keyword dialogue, the graphical Inventory, SpellBook and ShopScreen) run against the remote session (client unification design stages 3 and 5). Until then this window is the accepted Beta interface and is not to be mistaken for a design decision to keep it.
+
+## Whole-game shared execution owner clarification (2026-10-31, T4C-0405)
+
+The requested refactor completes only when online uses the original single-player execution
+and original presentation for everything, verified end to end. This includes original controls,
+UI, NPC lifecycle/scripts/services, quests, combat/AI/spells, all items/economy/progression,
+world/content and audiovisual timing. Extract original execution offline-first, then adapt the
+server around it; do not implement parallel approximations or reduce scope to a starter subset.
+Historical interim generic online UI acceptance does not satisfy this requested handback.
+Keep auth, receipts, atomic persistence and participant ordering authoritative; tick a shared
+entity once rather than once per connected player. Preserve current mouse-only walking,
+shared 128 px/s speed, distance-driven legs, walking arrow cursor, unreachable-server lobby
+buttons and streamed-world defaults. The concrete plan and evidence ledger live in
+multiplayer/SHARED_GAMEPLAY_EXECUTION_PLAN.md. All unchecked parity gates remain open.

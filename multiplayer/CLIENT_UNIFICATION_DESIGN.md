@@ -1095,3 +1095,23 @@ not run concurrently with any other edit to `MainGameScreen`, `Inventory`, `Play
 | `OnlineCommandRefusals`, `OnlineCreatureMotion` | **Kept and reused** (refusal messages, puppet interpolation) |
 | `OnlineClient` | Kept as a fallback behind a `--text-client` flag from stage 1 to stage 6, then reduced to a launcher that opens the lobby and the real screen |
 | `OnlineHudText`, `OnlineInventoryRows`, `OnlineAbilityMenu`, `OnlineAbilityChoices`, `OnlineNpcTopics`, `OnlineSpellAllowlist` | **Deleted in stage 8**, with their tests, once the matching single-player screens are wired (allowlist goes when the spell engine serves all spells) |
+
+## Whole-game shared execution continuation — T4C-0405 (2026-10-31)
+
+The owner requests exact single-player execution and appearance for EVERYTHING before this
+work is handed back: controls, original UI, authored NPC/script/service/quest behavior,
+characters, movement, combat, spells, inventory/economy/progression, world/content and all
+animation, effects and sound. Reuse the existing execution; parallel online subsets and
+approximate patrol/allowlist replacements do not satisfy this request. Prior interim generic
+online UI acceptance does not reduce this completion scope.
+
+The concrete dependency phases, review boundaries and complete coverage ledger are in
+[SHARED_GAMEPLAY_EXECUTION_PLAN.md](SHARED_GAMEPLAY_EXECUTION_PLAN.md). Base `f4b34fa3`;
+isolated branch `codex/shared-game-runtime-0405`. Current work extracts original offline NPC
+locomotion and original pathfinding first; server adaptation follows shared-path verification.
+No full-game, server-NPC, rendered-client or milestone completion is claimed from extraction.
+All relevant whole-game gates remain open. Preserve historical evidence and failed runs.
+
+Duration clarification: the owner removed the fixed two-hour minimum on 2026-10-28, recorded
+in DESIGN_GUIDELINES. Record actual mixed-session duration and all remaining gameplay,
+stability/security/recovery requirements; older minimum-duration text is historical.

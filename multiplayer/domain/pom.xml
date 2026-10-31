@@ -62,6 +62,7 @@
                         <include>com/perso/T4C/combat/RegenerationRules.java</include>
                         <include>com/perso/T4C/helper/DiceFormula.java</include>
                         <include>com/perso/T4C/helper/RandomSource.java</include>
+                        <include>com/perso/T4C/helper/GridPathfinding.java</include>
                         <include>com/perso/T4C/world/WorldCollision.java</include>
                         <include>com/perso/T4C/world/CollisionRules.java</include>
                         <include>com/perso/T4C/config/GameConstants.java</include>
@@ -79,6 +80,7 @@
                         <include>com/perso/T4C/online/model/*.java</include>
                         <include>com/perso/T4C/monster/core/MonsterDef.java</include>
                         <include>com/perso/T4C/monster/core/MonsterPursuitRules.java</include>
+                        <include>com/perso/T4C/npc/core/NpcLocomotion.java</include>
                         <include>com/perso/T4C/quest/QuestDef.java</include>
                         <include>com/perso/T4C/quest/QuestRules.java</include>
                         <include>com/perso/T4C/spell/SpellKeys.java</include>
@@ -111,6 +113,7 @@
                         <testInclude>com/perso/T4C/combat/RegenerationRulesTest.java</testInclude>
                         <testInclude>com/perso/T4C/combat/QuiverSplashTest.java</testInclude>
                         <testInclude>com/perso/T4C/helper/DiceFormulaTest.java</testInclude>
+                        <testInclude>com/perso/T4C/helper/GridPathfindingParityTest.java</testInclude>
                         <testInclude>com/perso/T4C/helper/CharacterCreationRulesTest.java</testInclude>
                         <testInclude>com/perso/T4C/world/WorldCollisionTest.java</testInclude>
                         <testInclude>com/perso/T4C/item/CarryCapacityRulesTest.java</testInclude>

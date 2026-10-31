@@ -75,6 +75,41 @@ public abstract class BaseNPC extends Stats implements Nameable {
 
   protected Random random = new Random();
 
+  private final NpcLocomotion.State patrolState =
+      new NpcLocomotion.State() {
+        @Override public float x() { return position.x; }
+        @Override public float y() { return position.y; }
+        @Override public void position(float x, float y) { position.set(x, y); }
+        @Override public float homeX() { return initialPosition.x; }
+        @Override public float homeY() { return initialPosition.y; }
+        @Override public NpcLocomotion.Point target() {
+          return patrolTarget == null ? null : new NpcLocomotion.Point(patrolTarget.x, patrolTarget.y);
+        }
+        @Override public void target(NpcLocomotion.Point target) {
+          patrolTarget = target == null ? null : new Vector2(target.x(), target.y());
+        }
+        @Override public boolean paused() { return isPaused; }
+        @Override public void paused(boolean value) { isPaused = value; }
+        @Override public float pauseTimer() { return pauseTimer; }
+        @Override public void pauseTimer(float value) { pauseTimer = value; }
+        @Override public float radius() { return getPatrolRadius(); }
+        @Override public float nextFloat() { return random.nextFloat(); }
+        @Override public boolean collisionInitialized() {
+          return CollisionManager.getInstance().isInitialized();
+        }
+        @Override public boolean collides(float x, float y) {
+          return CollisionManager.getInstance()
+              .hasCollisionNear(x, y, ENTITY_COLLISION_CLEARANCE_TILES);
+        }
+        @Override public NpcLocomotion.Point nextPathWaypoint(NpcLocomotion.Point target) {
+          Vector2 waypoint = BaseNPC.this.nextPathWaypoint(new Vector2(target.x(), target.y()));
+          return waypoint == null ? null : new NpcLocomotion.Point(waypoint.x, waypoint.y);
+        }
+        @Override public void clearPath() { clearPlannedPath(); }
+        @Override public void stop() { movement.stop(); }
+        @Override public void direction(float x, float y) { movement.setDirection(x, y); }
+      };
+
   @Setter protected boolean isHovered = false;
 
   private final Rectangle mouseOverBounds = new Rectangle();
@@ -338,139 +373,7 @@ public abstract class BaseNPC extends Stats implements Nameable {
   }
 
   private void updatePatrol(float delta) {
-
-    if (isPaused) {
-
-      pauseTimer -= delta;
-
-      if (pauseTimer <= 0) {
-
-        isPaused = false;
-
-        pickNewPatrolTarget();
-      }
-
-      movement.stop();
-
-      return;
-    }
-
-    if (patrolTarget != null) {
-
-      float dx = patrolTarget.x - position.x;
-
-      float dy = patrolTarget.y - position.y;
-
-      float distance = (float) Math.sqrt(dx * dx + dy * dy);
-
-      if (distance < 2f) {
-
-        position.set(patrolTarget);
-
-        isPaused = true;
-
-        pauseTimer =
-            random.nextFloat() * (NPC_PATROL_PAUSE_MAX - NPC_PATROL_PAUSE_MIN)
-                + NPC_PATROL_PAUSE_MIN;
-
-        movement.stop();
-
-        patrolTarget = null;
-
-        clearPlannedPath();
-
-      } else {
-
-        Vector2 moveTarget = nextPathWaypoint(patrolTarget);
-
-        if (moveTarget == null) {
-
-          pickNewPatrolTarget();
-
-          movement.stop();
-
-          return;
-        }
-
-        dx = moveTarget.x - position.x;
-
-        dy = moveTarget.y - position.y;
-
-        distance = (float) Math.sqrt(dx * dx + dy * dy);
-
-        if (distance <= 0.001f) {
-
-          movement.stop();
-
-          return;
-        }
-
-        float ndx = dx / distance;
-
-        float ndy = dy / distance;
-
-        float step = Math.min(NPC_SPEED * delta, distance);
-
-        float newX = position.x + ndx * step;
-
-        float newY = position.y + ndy * step;
-
-        CollisionManager collisionManager = CollisionManager.getInstance();
-
-        if (collisionManager.isInitialized()) {
-
-          if (collisionManager.hasCollisionNear(newX, newY, ENTITY_COLLISION_CLEARANCE_TILES)) {
-
-            pickNewPatrolTarget();
-
-            movement.stop();
-
-            return;
-          }
-        }
-
-        position.x = newX;
-
-        position.y = newY;
-
-        movement.setDirection(ndx, ndy);
-      }
-
-    } else {
-
-      pickNewPatrolTarget();
-    }
-  }
-
-  private void pickNewPatrolTarget() {
-
-    clearPlannedPath();
-
-    CollisionManager collisionManager = CollisionManager.getInstance();
-
-    float patrolRadius = getPatrolRadius();
-
-    for (int attempt = 0; attempt < 12; attempt++) {
-
-      float angle = random.nextFloat() * 2f * (float) Math.PI;
-
-      float radius = random.nextFloat() * patrolRadius;
-
-      float targetX = initialPosition.x + (float) Math.cos(angle) * radius;
-
-      float targetY = initialPosition.y + (float) Math.sin(angle) * radius;
-
-      if (!collisionManager.isInitialized()
-          || !collisionManager.hasCollisionNear(
-              targetX, targetY, ENTITY_COLLISION_CLEARANCE_TILES)) {
-
-        patrolTarget = new Vector2(targetX, targetY);
-
-        return;
-      }
-    }
-
-    patrolTarget = null;
+    NpcLocomotion.updatePatrol(patrolState, delta);
   }
 
   private Vector2 nextPathWaypoint(Vector2 target) {

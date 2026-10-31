@@ -156,3 +156,23 @@ Steps 3 and 6 are server and shared-rules work and can run in parallel with step
 - Visual work copies the single-player screens; do not invent a separate online look.
 - Balance questions are answered by the existing single-player numbers, not by online-only
   changes. The starter Skeleton ground stays exactly as single-player has it.
+
+## Whole-game shared execution continuation — T4C-0405 (2026-10-31)
+
+The owner requests exact single-player execution and appearance for EVERYTHING before this
+work is handed back: controls, original UI, authored NPC/script/service/quest behavior,
+characters, movement, combat, spells, inventory/economy/progression, world/content and all
+animation, effects and sound. Reuse the existing execution; parallel online subsets and
+approximate patrol/allowlist replacements do not satisfy this request. Prior interim generic
+online UI acceptance does not reduce this completion scope.
+
+The concrete dependency phases, review boundaries and complete coverage ledger are in
+[SHARED_GAMEPLAY_EXECUTION_PLAN.md](SHARED_GAMEPLAY_EXECUTION_PLAN.md). Base `f4b34fa3`;
+isolated branch `codex/shared-game-runtime-0405`. Current work extracts original offline NPC
+locomotion and original pathfinding first; server adaptation follows shared-path verification.
+No full-game, server-NPC, rendered-client or milestone completion is claimed from extraction.
+All relevant whole-game gates remain open. Preserve historical evidence and failed runs.
+
+Duration clarification: the owner removed the fixed two-hour minimum on 2026-10-28, recorded
+in DESIGN_GUIDELINES. Record actual mixed-session duration and all remaining gameplay,
+stability/security/recovery requirements; older minimum-duration text is historical.
