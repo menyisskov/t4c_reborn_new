@@ -1,3 +1,9 @@
+## 2026-10-31 — The Raven's Dust demon crypt can be finished (T4C-0407)
+
+### Fixed
+- Killing the Terror Demon, the Chaos Demon and the Darkness Demon now counts. Once all three are dead, the three portals in the middle of their dungeon open and take you to Lothar, who gives the Caledbolg. Before, the portals stayed shut no matter what you killed.
+- Olin Haad now notices the guards you have defeated: after about twenty of his guards he greets you accordingly.
+
 ## 2026-10-31 — The project's rules now require checking for teammates' messages before every action (T4C-0406)
 
 ### Changed

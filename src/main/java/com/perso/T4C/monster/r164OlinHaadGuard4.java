@@ -4,8 +4,11 @@ import java.util.Map;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
+import com.perso.T4C.monster.core.MonsterLifecycle;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
+import com.perso.T4C.player.Player;
 
-public final class r164OlinHaadGuard4 extends DataMonster {
+public final class r164OlinHaadGuard4 extends DataMonster implements MonsterLifecycle {
   public static final String SOUND_ATTACK = "Whooshh 1.wav";
   public static final String SOUND_DEATH = "Male Dying 1.wav";
   public static final String SOUND_HIT = "Male Hit 1.wav";
@@ -14,6 +17,18 @@ public final class r164OlinHaadGuard4 extends DataMonster {
       throws GameException {
 
     super(definition, worldX, worldY);
+  }
+
+  // T4C-0407: Olin Haad (npc/OlinHaad1.java) tells a player who has cleared about twenty of his
+  // guards that he is ready to hear them out, reading this per-player counter; nothing counted
+  // the kills before. Guard 3, 4 and 5 all count as Olin Haad guards.
+  @Override
+  public NpcScriptRuntime.Effects onDeath(Player player) {
+    if (player != null) {
+      String flag = "ADDON_NUMBER_OF_OLIN_HAAD_GUARDS_KILLED";
+      player.setQuestFlag(flag, Math.min(99, player.getQuestFlag(flag) + 1));
+    }
+    return NpcScriptRuntime.Effects.empty();
   }
 
   public static MonsterDef definition() {

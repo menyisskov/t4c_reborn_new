@@ -1987,3 +1987,12 @@ entity once rather than once per connected player. Preserve current mouse-only w
 shared 128 px/s speed, distance-driven legs, walking arrow cursor, unreachable-server lobby
 buttons and streamed-world defaults. The concrete plan and evidence ledger live in
 multiplayer/SHARED_GAMEPLAY_EXECUTION_PLAN.md. All unchecked parity gates remain open.
+
+## Content audits: leads are not proof (T4C-0407)
+
+Old audit notes are leads. Before building anything from one, re-derive it from the current code (and the original-game
+reference where the repair needs a fact): the 2026-10 recheck disproved the "55 NPCs at the origin" lead (most are the
+deliberate NPC-plus-MONSTER dual spawn) and found the real gaps elsewhere. A per-player flag that an NPC or portal reads must
+have a writer (a monster death, a dialogue step); scan for read-without-write after normalising the `__`, `GLOBAL_` and `FLAG_`
+prefixes. Never invent spawn coordinates for an unplaced NPC or monster: leave it listed in
+`docs/content-ideas/2026-10-content-audit-recheck.md` until a canonical source gives one.

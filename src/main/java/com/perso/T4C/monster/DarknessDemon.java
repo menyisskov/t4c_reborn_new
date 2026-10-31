@@ -4,10 +4,13 @@ import java.util.Map;
 import com.perso.T4C.exception.GameException;
 import com.perso.T4C.monster.core.DataMonster;
 import com.perso.T4C.monster.core.MonsterDef;
+import com.perso.T4C.monster.core.MonsterLifecycle;
+import com.perso.T4C.npc.core.NpcScriptRuntime;
+import com.perso.T4C.player.Player;
 import com.perso.T4C.spawn.Spawn;
 
 @Spawn(type = "Darkness Demon", x = 1475, y = 1514, z = 1, stationary = false, aggressive = true)
-public final class DarknessDemon extends DataMonster {
+public final class DarknessDemon extends DataMonster implements MonsterLifecycle {
   public static final String SOUND_ATTACK = "Demon Attack.wav";
   public static final String SOUND_DEATH = "Demon Dying.wav";
   public static final String SOUND_HIT = "Demon Hit.wav";
@@ -23,6 +26,15 @@ public final class DarknessDemon extends DataMonster {
   public String getCanonicalName() {
 
     return CANONICAL_NAME;
+  }
+
+  // T4C-0407: the three Chaos centre portals (npc/Chaos*ToCenterPortal.java) open only once the
+  // player has killed the Terror, Chaos and Darkness demons; nothing set these flags before, so
+  // Lothar and the Caledbolg behind the portals were unreachable.
+  @Override
+  public NpcScriptRuntime.Effects onDeath(Player player) {
+    if (player != null) player.setQuestFlag("ADDON_DARKNESS_DEMON_KILLED", 1);
+    return NpcScriptRuntime.Effects.empty();
   }
 
   public static MonsterDef definition() {

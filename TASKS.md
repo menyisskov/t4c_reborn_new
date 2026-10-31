@@ -10,7 +10,7 @@ The multiplayer roadmap and milestone acceptance criteria are in
 [MILESTONES.md](multiplayer/MILESTONES.md). This ledger tracks individual work items,
 not milestone completion; release evidence is in [ACCEPTANCE.md](multiplayer/ACCEPTANCE.md).
 
-**Next free ID: `T4C-0407`.** When starting new work, claim the next ID,
+**Next free ID: `T4C-0408`.** When starting new work, claim the next ID,
 
 add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 (with a commit range and a `CHANGELOG.md` entry) when it ships. See
@@ -18,6 +18,7 @@ add a row below with status `Planned`/`In Progress`, and flip it to `Done`
 
 | ID | Title | Type | Status | Commits | Changelog |
 |---|---|---|---|---|---|
+| T4C-0407 | Original-game content audit recheck against current code; repair the confirmed gaps (Raven's Dust demon crypt portals, Olin Haad guard count); document findings and the still-open leads | Content / audit | Done | | [2026-10-31](CHANGELOG.md) |
 | T4C-0406 | Process rule: every agent rereads the peer register and open PRs for new messages before every action, not once per session | Process/Tooling | Done | | [2026-10-31](CHANGELOG.md) |
 
 | T4C-0405 | Whole-game shared single-player runtime refactor; offline-first extraction and multiplayer adapters with complete parity verification | Multiplayer / parity | In Progress | Initial offline extraction 676df1aa; focused 8/8 plus domain 4/4 and package passed; online/rendered acceptance open | [2026-10-31](CHANGELOG.md) |
