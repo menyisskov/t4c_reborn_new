@@ -5767,6 +5767,27 @@ public class MainGameScreen implements Screen {
       }
     });
     remote.addProcessor(monsters);remote.addProcessor(npcClicks);remote.addProcessor(lootClicks);
+    // Walking is mouse only (T4C-0402): an unclaimed ground press that is dragged steers the character. The online chain
+    // is separate from the single-player one, so it needs its own handler (T4C-0403).
+    mouseMovementHandler =
+        new com.perso.T4C.input.MouseMovementHandler(
+            camera,
+            player,
+            () ->
+                GuiManager.isOpen()
+                    || isTextInputActive()
+                    || remoteShopPanel.isOpen()
+                    || remoteInventoryPanel.isOpen()
+                    || remoteCorpsePanel.isOpen()
+                    || remoteAbilityMenu.isOpen()
+                    || remoteTalkPanel.isOpen()
+                    || Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)
+                    || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT)
+                    || remoteListWindowHit(Gdx.input.getX(), Gdx.input.getY())
+                    || (hud != null && hud.isHudHit(Gdx.input.getX(), Gdx.input.getY())),
+            this::cancelActiveTargetedSpell);
+    inputHandler.setMouseMovementSupplier(mouseMovementHandler::direction);
+    remote.addProcessor(mouseMovementHandler);
     Gdx.input.setInputProcessor(remote);
   }
 
